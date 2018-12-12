@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.StockChangeQueueReadDao">
+	<resultMap id="stockChangeQueueResult" type="com.haier.shop.model.StockChangeQueue">
+		<result property="id" column="id" />
+		<result property="scode" column="scode" />
+		<result property="sku" column="sku" />
+		<result property="isArrivalNotice" column="is_arrival_notice" />
+	</resultMap>
+	<select id="getListToProcess" parameterType="map" resultMap="stockChangeQueueResult">
+		select `id`,`scode`,`sku`,`is_arrival_notice`
+		from `stock_change_queue`
+		limit #{topX}
+	</select>
+</mapper>

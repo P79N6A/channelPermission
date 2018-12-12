@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.InvoiceQueueReadDao">
+    <resultMap id="invoiceQueueResult" type="com.haier.shop.model.InvoiceQueue">
+        <result property="id" column="id" />
+        <result property="orderProductId" column="order_product_id" />
+        <result property="success" column="success" />
+        <result property="addTime" column="add_time" />
+        <result property="processTime" column="process_time" />
+        <result property="lastMessage" column="last_message" />
+    </resultMap>
+
+    <select id="getInvoiceQueueExistFlag" parameterType="Integer" resultType="Integer">
+        select count(1) from invoice_queue where order_product_id = #{opId}
+    </select>
+    <select id="getByOrderProductId" parameterType="Integer" resultMap="invoiceQueueResult">
+        select `id`,`order_product_id`,`success`,`add_time`,`process_time`,`last_message`
+        from `invoice_queue`
+        where `order_product_id` = #{orderProductId}
+    </select>
+    <select id="getBySuccess" parameterType="Integer" resultMap="invoiceQueueResult">
+        select `id`,`order_product_id`,`success`,`add_time`,`process_time`,`last_message`
+        from `invoice_queue`
+        where `success` = #{success}
+        limit 1000
+    </select>
+</mapper>

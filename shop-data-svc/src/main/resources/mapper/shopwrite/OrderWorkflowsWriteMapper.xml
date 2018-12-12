@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderWorkflowsWriteDao">
+
+    <update id="updateAfterLesShipped" parameterType="com.haier.shop.model.OrderWorkflows">
+        UPDATE `OrderWorkflows`
+        SET `lesShipTime` = #{lesShipTime}
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="updateAfterPayment" parameterType="com.haier.shop.model.OrderWorkflows">
+        UPDATE `OrderWorkflows`
+        SET `payTime` = #{payTime}
+        WHERE `orderId` = #{orderId}
+    </update>
+
+    <update id="updateTime" parameterType="com.haier.shop.model.OrderWorkflows">
+        UPDATE `OrderWorkflows`
+        SET `payTime` = #{payTime}, `mustConfirmTime` = #{mustConfirmTime}, `ewConfirmTime` = #{ewConfirmTime}
+        WHERE `id` = #{id}
+    </update>
+    <insert id="insert" parameterType="com.haier.shop.model.OrderWorkflows">
+        INSERT INTO `OrderWorkflows` (`orderId`, `orderProductId`, `addTime`, `payTime`, `confirmTime`, `confirmPeople`, `sendHpTime`, `hpAllotNetPointTime`, `lesShipping`, `lesShipTime`, `netPointAcceptTime`, `netPointRefuseTime`, `netPointShipTime`, `userAcceptTime`, `userRefuseTime`, `receiptTime`, `finishTime`, `finishPeople`, `cancelTime`, `cancelPeople`, `mustHpAllotNetPointTime`, `ewHpAllotNetPointTime`, `mustLesShipping`, `ewLesShipping`, `mustNetPointAcceptTime`, `ewNetPointAcceptTime`, `mustUserAcceptTime`, `ewUserAcceptTime`, `shippingMode`, `shippingTime`, `isTimeoutFree`, `netPointArriveTime`)
+        VALUES (#{orderId}, #{orderProductId}, #{addTime}, #{payTime}, #{confirmTime}, #{confirmPeople}, #{sendHpTime},
+                #{hpAllotNetPointTime}, #{lesShipping}, #{lesShipTime}, #{netPointAcceptTime}, #{netPointRefuseTime},
+                #{netPointShipTime}, #{userAcceptTime}, #{userRefuseTime}, #{receiptTime}, #{finishTime},
+                #{finishPeople}, #{cancelTime}, #{cancelPeople}, #{mustHpAllotNetPointTime}, #{ewHpAllotNetPointTime},
+                #{mustLesShipping}, #{ewLesShipping}, #{mustNetPointAcceptTime}, #{ewNetPointAcceptTime},
+                #{mustUserAcceptTime}, #{ewUserAcceptTime}, #{shippingMode}, #{shippingTime}, #{isTimeoutFree},
+                #{netPointArriveTime})
+    </insert>
+    <update id="updateForConformOrder" parameterType="com.haier.shop.model.OrderWorkflows">
+        UPDATE `OrderWorkflows`
+        SET `confirmPeople` = #{confirmPeople}, `confirmTime` = #{confirmTime}
+        WHERE `orderId` = #{orderId}
+    </update>
+    <update id="updateNetPointArriveTime">
+        UPDATE `OrderWorkflows`
+        SET `netPointArriveTime` = #{netPointArriveTime}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateNetPointAcceptTime">
+        UPDATE `OrderWorkflows`
+        SET `netPointAcceptTime` = #{netPointAcceptTime}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateNetPointShipTime">
+        UPDATE `OrderWorkflows`
+        SET `netPointShipTime` = #{netPointShipTime}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateUserAcceptTime">
+        UPDATE `OrderWorkflows`
+        SET `userAcceptTime` = #{userAcceptTime}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateFinishTime">
+        UPDATE `OrderWorkflows`
+        SET `finishTime` = #{finishTime}
+        WHERE `id` = #{id}
+    </update>
+    <!--
+	<update id="update" parameterType="com.haier.shop.model.OrderWorkflows">
+		update `OrderWorkflows` set `orderId`=#{orderId},`orderProductId`=#{orderProductId},`addTime`=#{addTime},`payTime`=#{payTime},`confirmTime`=#{confirmTime},`confirmPeople`=#{confirmPeople},`sendHpTime`=#{sendHpTime},`hpAllotNetPointTime`=#{hpAllotNetPointTime},`lesShipping`=#{lesShipping},`lesShipTime`=#{lesShipTime},`netPointAcceptTime`=#{netPointAcceptTime},`netPointRefuseTime`=#{netPointRefuseTime},`netPointShipTime`=#{netPointShipTime},`userAcceptTime`=#{userAcceptTime},`userRefuseTime`=#{userRefuseTime},`receiptTime`=#{receiptTime},`finishTime`=#{finishTime},`finishPeople`=#{finishPeople},`cancelTime`=#{cancelTime},`cancelPeople`=#{cancelPeople},`mustHpAllotNetPointTime`=#{mustHpAllotNetPointTime},`ewHpAllotNetPointTime`=#{ewHpAllotNetPointTime},`mustLesShipping`=#{mustLesShipping},`ewLesShipping`=#{ewLesShipping},`mustNetPointAcceptTime`=#{mustNetPointAcceptTime},`ewNetPointAcceptTime`=#{ewNetPointAcceptTime},`mustUserAcceptTime`=#{mustUserAcceptTime},`ewUserAcceptTime`=#{ewUserAcceptTime},`shippingMode`=#{shippingMode},`shippingTime`=#{shippingTime},`isTimeoutFree`=#{isTimeoutFree},`netPointArriveTime`=#{netPointArriveTime}
+		where `id` = #{id}
+	</update> -->
+    <update id="updateAfterSyncOrderToLes" parameterType="com.haier.shop.model.OrderWorkflows">
+        UPDATE `OrderWorkflows`
+        SET `lesShipping` = #{lesShipping}
+        WHERE orderProductId = #{orderProductId}
+    </update>
+    <update id="updateAfterCnShipped" parameterType="com.haier.shop.model.OrderWorkflows">
+        UPDATE `OrderWorkflows`
+        SET `lesShipping` = #{lesShipping},`lesShipTime` = #{lesShipTime}
+        WHERE orderProductId = #{orderProductId}
+    </update>
+    <update id="updateForPubCountTime" parameterType="com.haier.shop.model.OrderWorkflows">
+        update `OrderWorkflows` set `orderProductId`=#{orderProductId}
+        <if test="mustNetPointAcceptTime!=null and mustNetPointAcceptTime>0 ">
+            ,`mustNetPointAcceptTime` = #{mustNetPointAcceptTime}
+        </if>
+        <if test="ewNetPointAcceptTime!=null and ewNetPointAcceptTime>0 ">
+            ,`ewNetPointAcceptTime` = #{ewNetPointAcceptTime}
+        </if>
+        <if test="mustUserAcceptTime!=null and mustUserAcceptTime>0 ">
+            ,`mustUserAcceptTime` = #{mustUserAcceptTime}
+        </if>
+        <if test="ewUserAcceptTime!=null and ewUserAcceptTime>0 ">
+            ,`ewUserAcceptTime` = #{ewUserAcceptTime}
+        </if>
+        <if test="shippingTime!=null and shippingTime>0 ">
+            ,`shippingTime` = #{shippingTime}
+        </if>
+        <if test="mustHpAllotNetPointTime!=null and mustHpAllotNetPointTime>0 ">
+            ,`mustHpAllotNetPointTime` = #{mustHpAllotNetPointTime}
+        </if>
+        <if test="ewHpAllotNetPointTime!=null and ewHpAllotNetPointTime>0 ">
+            ,`ewHpAllotNetPointTime` = #{ewHpAllotNetPointTime}
+        </if>
+        <if test="hpAllotNetPointTime!=null and hpAllotNetPointTime>0 ">
+            ,`hpAllotNetPointTime` = #{hpAllotNetPointTime}
+        </if>
+        where orderProductId=#{orderProductId}
+    </update>
+
+    <update id="updateForCancelOrder" parameterType="com.haier.shop.model.OrderWorkflows">
+        UPDATE `OrderWorkflows`
+        SET `cancelPeople` = #{cancelPeople}, `cancelTime` = #{cancelTime}
+        WHERE `orderId` = #{orderId}
+    </update>
+    
+    <update id="updateIsTimeoutFree" parameterType="map" statementType="PREPARED">
+		update 
+		    `OrderWorkflows` 
+		set
+		    isTimeoutFree = #{isTimeoutFree}
+		WHERE
+			orderProductId = #{orderProductId}
+	</update>
+</mapper>

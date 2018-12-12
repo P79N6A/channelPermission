@@ -1,0 +1,34 @@
+<form id="configform" name="configform" method="post" >
+	<input type="hidden"  id="id" name="id" value="$!{row.id}"/>
+	<table border="0" align="center">
+	<tr>
+        <td width="12%;" align="right"><font color="red">*</font>渠道：</td>
+        <td width="12%;">
+			<input id="channelCode" name="channelCode" value="$!{row.channelCode}"/>
+		</td>
+		<td width="12%;" align="right"><font color="red">*</font>预留时间（小时）：</td>
+		<td width="12%;">
+			<input id="lockHours" name="lockHours" value="$!{row.lockHours}"/>
+		</td>
+	</tr>
+	<tr>
+		<td  align="right">单号：</td>
+		<td>
+			<input id="ref" name="ref" value="$!{row.ref}"/>
+		</td>
+		<td  align="right"><font color="red">*</font>是否启用：</td>
+        <td>
+			<select id="status" name="status">
+				<option #if($row.status==0) selected="selected" #end value="0">否</option>
+				<option #if($row.status==1) selected="selected" #end value="1">是</option>
+            </select>
+		</td>
+	
+	</tr>
+</table> 
+     <div class="modal-footer">
+    	<a href="#" id="saveBtn" class="btn btn-primary" onclick="saveConfig();">保存</a>
+		<a href="#" style="display:none;" id="showBtn" class="btn btn-primary">保存</a>
+    </div>
+ </form>
+

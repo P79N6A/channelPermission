@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--广播注册中心暴露服务地址 -->
+    <!--<dubbo:registry id="serviceRegistry" protocol="zookeeper" address="127.0.0.1:2181"/>-->
+    <!--  暴露服务 -->
+    <dubbo:service retries="0" interface="com.haier.svc.service.T2OrderService"
+                   ref="t2OrderServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.DataDictionaryService"
+                   ref="dataDictionaryServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.ItemService"
+                   ref="itemServiceImpl" version="1.0.0" timeout="1200000" executes="100"/>
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.LogAuditService"
+                   ref="logAuditServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.T2OrderQueryService"
+                   ref="t2OrderQueryServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <!--<dubbo:registry id="demoRegistry" protocol="zookeeper" address="127.0.0.1:2181"/>-->
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.OrderOperationService"
+                   ref="orderOperationServiceImpl"  version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.job.T2OrderTimingService"
+                   ref="t2OrderTimingServiceImpl" timeout="120000" />
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.GateService"
+                   ref="gateServiceImpl" version="1.0.0" timeout="120000" />
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.PayCenterFallBackService"
+                   ref="payCenterFallBackImpl" version="1.0.0" timeout="120000" />
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.PurchaseBaseCommonService"
+                   ref="purchaseBaseCommonServiceImpl" version="1.0.0" timeout="120000" />
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.PurchaseCommonService"
+                   ref="purchaseCommonServiceImpl" version="1.0.0" timeout="120000" />
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.CrmOrderManualService"
+                   ref="crmOrderManualServiceImpl" version="1.0.0" timeout="120000" />
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.HaierInRrsItemService"
+                   ref="haierInRrsItemServiceImpl" version="1.0.0" timeout="120000" />
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.ProductPaymentService"
+                   ref="productPaymentServiceImpl" version="1.0.0" timeout="120000" />
+
+    <dubbo:service retries="0" interface="com.haier.svc.service.SequenceService"
+                   ref="sequenceServiceImpl" version="1.0.0" timeout="120000" />
+
+</beans>
+	
+    
+	

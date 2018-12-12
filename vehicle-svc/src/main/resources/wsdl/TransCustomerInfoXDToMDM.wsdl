@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="TransCustomerInfoXDToMDM" targetNamespace="http://www.example.org/TransCustomerInfoXDToMDM/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/TransCustomerInfoXDToMDM/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/TransCustomerInfoXDToMDM/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/TransCustomerInfoXDToMDM/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="TransCustomerInfoXDToMDM">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="IN_SYS_NAME" type="xsd:string"/>
+            <xsd:element name="IN_MASTER_TYPE" type="xsd:string"/>
+            <xsd:element name="IN_TABLE_NAME" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="IN_FIELDS_VALUE_TABLE" type="tns:HAIERMDM.FIELDS_VALUE_TABLE"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TransCustomerInfoXDToMDMResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="OUT_RESULT" type="xsd:string"/>
+            <xsd:element name="OUT_RETMSG" type="xsd:string"/>
+            <xsd:element name="OUT_RETCODE" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="HAIERMDM.FIELDS_VALUE_TABLE">
+        <xsd:sequence>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="IN_FIELDS_VALUE_TABLE_ITEM" type="tns:HAIERMDM.FIELDS_VALUE_TYPE"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="HAIERMDM.FIELDS_VALUE_TYPE">
+        <xsd:sequence>
+          <xsd:element name="FIELD_NAME" type="xsd:string"/>
+          <xsd:element name="FIELD_VALUE" type="xsd:string"/>
+          <xsd:element name="FIELD_QUERY_TYPE" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="TransCustomerInfoXDToMDMRequest">
+    <WL5G3N0:part element="WL5G3N1:TransCustomerInfoXDToMDM" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="TransCustomerInfoXDToMDMResponse">
+    <WL5G3N0:part element="WL5G3N1:TransCustomerInfoXDToMDMResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="TransCustomerInfoXDToMDM">
+    <WL5G3N0:operation name="TransCustomerInfoXDToMDM">
+      <WL5G3N0:input message="WL5G3N1:TransCustomerInfoXDToMDMRequest"/>
+      <WL5G3N0:output message="WL5G3N1:TransCustomerInfoXDToMDMResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="TransCustomerInfoXDToMDMSOAP" type="WL5G3N1:TransCustomerInfoXDToMDM">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="TransCustomerInfoXDToMDM">
+      <WL5G3N2:operation soapAction="http://www.example.org/TransCustomerInfoXDToMDM/TransCustomerInfoXDToMDM"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="TransCustomerInfoXDToMDM">
+    <WL5G3N0:documentation>OSB Service</WL5G3N0:documentation>
+    <WL5G3N0:port binding="WL5G3N1:TransCustomerInfoXDToMDMSOAP" name="TransCustomerInfoXDToMDMSOAP">
+      <WL5G3N2:address location="http://10.135.1.110:7001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EAI_INT_2765"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

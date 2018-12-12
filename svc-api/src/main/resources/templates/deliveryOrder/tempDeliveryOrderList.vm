@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../vehicle/css/quickLink.css"/>
+    <link rel="stylesheet" href="../vehicle/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../vehicle/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../vehicle/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../vehicle/css/common.css">
+    <link rel="stylesheet" href="../vehicle/css/staticHtml.css">
+    <script src="../vehicle/third/jquery.js"></script>
+    <script src="../vehicle/js/jquery.cookie.js"></script>
+    <script src="../vehicle/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../vehicle/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../vehicle/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../vehicle/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../vehicle/js/utils.js"></script>
+    <script src="../vehicle/js/easyui-extention_ws.js"></script>
+    <script src="../vehicle/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label_80">开单日期</span>
+                <inpu class="easyui-datebox" id="startDate" name="openmin"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label_80">至</span>
+                <inpu class="easyui-datebox" id="endDate" name="openmax"/>
+            </div>
+            <a href="javascript:void(0)" class="easyui-linkbutton" id="searchBtn"
+               data-options="iconCls:'icon-search',plain:true">查询</a>
+        </div>
+    </form>
+
+</div>
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid">
+    </table>
+</div>
+<div id="addDlg" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:100%;height:100%;"
+     closed="true" buttons="#dlg-buttons_dataDictionary">
+    <form id="addForm" method="post" __actType="">
+        <div id="orderDetail_div">
+            <div id="paramForm_waAddressT" class="param-form" style="height: 35px ">
+                <span style="font-size: 16px;padding-left: 20px;">核对订单信息</span>
+                <!--<a class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:false"-->
+                <!--value="返回" onclick="goback()"-->
+                <!--style="float: right;margin-right: 20px;">返回</a>-->
+            </div>
+            <div class="detail_content">
+                <div class="zcOrderinfo">
+                    <h4><b></b>订单信息</h4>
+                    <div class="zcOrderinfoDiv">
+                        <table class="zcOrderinfoTab">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    系统单号：
+                                </td>
+                                <td>
+                                    20000592051
+                                </td>
+                                <td>
+                                    客户仓库：
+                                </td>
+                                <td>
+                                    高密市顺河家电经营部
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    配送中心：
+                                </td>
+                                <td>
+                                    (C12809)即墨海尔物流配送中心
+                                </td>
+                                <td>
+                                    生产基地：
+                                </td>
+                                <td>
+                                    青岛(QD10)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    开单日期：
+                                </td>
+                                <td>
+                                    2017-08-31
+                                </td>
+                                <td>
+                                    到货日期：
+                                </td>
+                                <td>
+                                    2017-09-22
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    总体积：
+                                </td>
+                                <td>
+
+                                    <div id="volum">4.25m³</div>
+                                </td>
+                                <script type="text/javascript">
+                                    var volum = 4.2457586;
+                                    $("#volum").html(volum.toFixed(2) + "m³");
+                                </script>
+                                <td>
+                                    车型：
+                                </td>
+                                <td>
+                                    X8.7K
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    已添加：
+                                </td>
+                                <td>
+                                    1 条商品信息
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="orderinfo-width clearfix">
+                    <p class="orderinfo-one">已选产品</p>
+
+                    <div id="orderInfo">
+
+                        <table id="tablelist" class="zcProTab" cellspacing="0" cellpadding="0"
+                               style="table-layout:fixed">
+                            <thead>
+                            <tr>
+                                <th align="center" name="showth">产品</th>
+                                <th align="center" name="showth">小单号</th>
+                                <th align="center" name="showth">扣点</th>
+                                <th align="center" name="showth">开票价</th>
+                                <th align="center" name="showth">台返</th>
+                                <th align="center" name="showth">数量</th>
+                                <th align="center" name="showth">总价</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr style="height: 50px;">
+                                <td align="center" header="INVSTD"><span
+                                        title="&nbsp;BC-50EN&nbsp;">&nbsp;BC-50EN&nbsp;</span></td>
+                                <td align="center" header="IBL_KORDERNO"
+                                    style="overflow: hidden; white-space: nowrap; word-break: keep-all;"><span
+                                        title="&nbsp;ZK2000059205101&nbsp;">&nbsp;ZK2000059205101&nbsp;</span></td>
+                                <td align="center" header="BATERATE">&nbsp;0.18&nbsp;</td>
+                                <td align="center" header="UNITPRICE">￥&nbsp;573.18&nbsp;</td>
+                                <td align="center" header="TFPRICE">￥&nbsp;0.00&nbsp;</td>
+                                <td align="center" header="NUM"><span title="&nbsp;23&nbsp;">&nbsp;23&nbsp;</span></td>
+                                <td align="center" header="SUMMONEY">￥&nbsp;13183.14&nbsp;</td>
+                                <td align="center" style="display:none;">0</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="orderinfo-gross">
+                    返利总计：
+                    <span class="red" id="fantprice">￥0.00</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    订单总计：
+                    <span class="red" id="totalprice">￥13183.14</span>
+                </div>
+
+            </div>
+            <div class="orderinfo-btn">
+                <a href="javascript:void(0);" style="margin-left:20px" class="button"
+                   id="orderCommit">提交订单</a>
+                <a href="deliveryOrder.html"
+                   style="background-color:gray" class="button tabs-close">返回</a>
+            </div>
+
+        </div>
+    </form>
+    <div id="dlg-buttons_dataDictionary">
+        <a href="javascript:void(0)" class="easyui-linkbutton" id="addDlgSaveBtn" btnCart iconCls="icon-ok">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg').dialog('close')">取消</a>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var formatDate = function (val, row, index) {
+        var date = new Date(val);
+        return $.fn.dateFormat("yyyy-MM-dd hh:mm:ss", date)
+    }
+
+    var showWhat = function (val, row, index) {
+        return '<a href="javascript:void(0)" style="margin-right: 15px;" onclick="tempEdit(\'' + row.orderId + '\')">去处理</a>' +
+                '<a href="javascript:void(0)" style="margin-right: 15px;" onclick="tempCancel(\'' + row.orderNo + '\')">作废</a>'
+    }
+
+
+    function slideUpSlideClk(t) {
+        var $this =
+        $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../vehicle/js/delivery_order/tempDeliveryOrderList.js"></script>
+</body>
+</html>

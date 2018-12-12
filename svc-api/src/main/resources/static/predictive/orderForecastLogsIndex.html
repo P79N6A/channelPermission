@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>orderForecastLogs</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastLogs" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+
+    <table id="datagrid_orderForecastLogs"></table>
+
+</div>
+
+<div id="datagridToolbar_orderForecastLogs">
+
+    <div style="line-height: inherit">
+        <input value="主表" id="mainsheet" class="easyui-linkbutton" style="background-color: #efefef;" readonly="true"
+               onclick="on_tab('main')"/>
+        <input value="库位" id="secsheet" class="easyui-linkbutton" style="background-color: #efefef;" readonly="true"
+               onclick="on_tab('sec')"/>
+        <input value="型号" id="skusheet" class="easyui-linkbutton" style="background-color: #efefef;" readonly="true"
+               onclick="on_tab('sku')"/>
+    </div>
+
+
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+
+    <form id="1paramForm_orderForecastLogs" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth">
+        <span class="search-row-label">
+          库位
+        </span>
+                <input class="easyui-textbox" name="secCode"/>
+            </div>
+            <div class="search-row_nowidth">
+        <span class="search-row-label">
+          渠道
+        </span>
+                <select name="channel" class="easyui-combobox" disabled="disabled">
+                    <option value="ALL">全部</option>
+                    <option value="sc">商城</option>
+                    <option value="tb">天猫</option>
+                    <option value="dkh">大客户</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+        <span class="search-row-label">
+          品类
+        </span>
+                <select name="product_type_name" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="冰箱">冰箱</option>
+                    <option value="冷柜">冷柜</option>
+                    <option value="商用空调">商用空调</option>
+                    <option value="空调">空调</option>
+                    <option value="洗衣机">洗衣机</option>
+                    <option value="彩电">彩电</option>
+                    <option value="小帅影院">小帅影院</option>
+                    <option value="热水器">热水器</option>
+                    <option value="生活家电">生活家电</option>
+                    <option value="厨电">厨电</option>
+                    <option value="家居">家居</option>
+                    <option value="计算机">计算机</option>
+                    <option value="数码">数码</option>
+                    <option value="手机">手机</option>
+                    <option value="水家电">水家电</option>
+                    <option value="生物医疗">生物医疗</option>
+                    <option value="统帅彩电">统帅彩电</option>
+                    <option value="社会化彩电">社会化彩电</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+        <span class="search-row-label">
+          物料编码
+        </span>
+                <input class="easyui-textbox" name="sku"/>
+            </div>
+            <div class="search-row_nowidth">
+        <span class="search-row-label">
+          上单时间
+        </span>
+                <select class="easyui-combobox" value="2017" name="orderyear">
+                    <option value="2014">2014年</option>
+                    <option value="2015">2015年</option>
+                    <option value="2016">2016年</option>
+                    <option value="2017" selected>2017年</option>
+                    <option value="2018">2018年</option>
+                    <option value="2019">2019年</option>
+                    <option value="2020">2020年</option>
+                    <option value="2021">2021年</option>
+                    <option value="2022">2022年</option>
+                    <option value="2023">2023年</option>
+                    <option value="2024">2024年</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">上单周</span>
+
+
+                <select class="easyui-combobox" value="33" name="orderweek">
+                    <option value="1">1周</option>
+                    <option value="2">2周</option>
+                    <option value="3">3周</option>
+                    <option value="4">4周</option>
+                    <option value="5">5周</option>
+                    <option value="6">6周</option>
+                    <option value="7">7周</option>
+                    <option value="8">8周</option>
+                    <option value="9">9周</option>
+                    <option value="10">10周</option>
+                    <option value="11">11周</option>
+                    <option value="12">12周</option>
+                    <option value="13">13周</option>
+                    <option value="14">14周</option>
+                    <option value="15">15周</option>
+                    <option value="16">16周</option>
+                    <option value="17">17周</option>
+                    <option value="18">18周</option>
+                    <option value="19">19周</option>
+                    <option value="20">20周</option>
+                    <option value="21">21周</option>
+                    <option value="22">22周</option>
+                    <option value="23">23周</option>
+                    <option value="24">24周</option>
+                    <option value="25">25周</option>
+                    <option value="26">26周</option>
+                    <option value="27">27周</option>
+                    <option value="28">28周</option>
+                    <option value="29">29周</option>
+                    <option value="30">30周</option>
+                    <option value="31">31周</option>
+                    <option value="32">32周</option>
+                    <option value="33" selected>33周</option>
+                    <option value="34">34周</option>
+                    <option value="35">35周</option>
+                    <option value="36">36周</option>
+                    <option value="37">37周</option>
+                    <option value="38">38周</option>
+                    <option value="39">39周</option>
+                    <option value="40">40周</option>
+                    <option value="41">41周</option>
+                    <option value="42">42周</option>
+                    <option value="43">43周</option>
+                    <option value="44">44周</option>
+                    <option value="45">45周</option>
+                    <option value="46">46周</option>
+                    <option value="47">47周</option>
+                    <option value="48">48周</option>
+                    <option value="49">49周</option>
+                    <option value="50">50周</option>
+                    <option value="51">51周</option>
+                    <option value="52">52周</option>
+                    <option value="53">53周</option>
+                    <option value="54">54周</option>
+                </select>
+            </div>
+
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderForecastLogs"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastLogs"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn_orderForecastLogs"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+
+    </form>
+</div>
+
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastLogs').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/predictive/orderForecastLogsIndex.js"></script>
+</body>
+</html>

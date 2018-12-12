@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>电子发票重推开票</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/jqueryui/redmond/jquery.ui.all.css" />
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+
+    <script type="text/javascript">
+        //电子发票批量重推开票
+        function onSend_invoices(){
+            if(jQuery("#cOrderSns_invoices").val().trim() == ""){
+                alert('请输入网单号!');
+                return false;
+            }else{
+
+                $.messager.confirm('确认','确定要重新推送发票开票?', function(r){
+                    if (r){
+                        jQuery("#dialog-message").dialog("open");
+                        $("#list").html("<div style='width:318px;height:130px;text-align:center;'><br/><br/>数据正在加载，请稍后。。。<br/><br/><div id='timecount' style='width:100%;height:20px;text-align:center;font-size:10pt;font-family:Arial,Helvetica,sans-serif;'></div><br/></div>");
+
+                        jQuery.ajax({
+                            url: "/invoice/eInvoiceBatchReBilling",
+                            data: $( "#filterForm_invoices" ).serialize(),
+                            type: "POST",
+                            success: function(result) {
+                                $("#dialog-message").dialog("close");
+                                jQuery("#cOrderSns_invoices").val("");
+                                alert(result.message);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        $(function () {
+            $("#dialog-message").dialog({
+                autoOpen: false,
+                modal: false,
+                closeOnEscape: false,
+                resizable: false,
+                minHeight: 130,
+                width: 320,
+                title: '请稍后'
+            });
+        });
+
+        function selectTypetable(type){
+            $("#invoices_table").attr("style","display:none");
+            $("#"+type+"_table").attr("style","display:block");
+        }
+
+    </script>
+
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;" title="电子发票批量重推开票"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <form id="filterForm_invoices" name="filterForm_invoices" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <input  type="radio" name="type" value="invoices" id="invoices" style="width:30px;margin-left:10px;" checked onclick="selectTypetable('invoices')"/>
+                <label>电子发票批量重推开票(invoices)</label>
+            </div>
+            <div class="clearfix"></div>
+            <div class="search-row" style="width: 100%">
+			<span class="search-row-label" style="float:left;font-weight:bold;font-size:16px;">
+			  网单号<br/><span style="color: red">多条用“,”分割）</span>
+			</span>
+                <textarea rows="18"name="cOrderSns_invoices" id="cOrderSns_invoices" style="resize: none;width:600px;"></textarea>
+                <div style="margin-left:150px">
+                    <span style="color: red">【注意】发票必须是电子发票，开票失败，二次开票不要录入原网单号（执行完5分钟后，方可查看结果）</span><br/>
+                    <div class="clearfix"></div>
+                    <div>
+                        <a href="#" class="easyui-linkbutton" iconCls="icon-ok"  onClick="onSend_invoices()">提交</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="dialog-message" title="请稍后" closed="true" style="display:none;">
+    <div id="list" class="list2" style="background:#ffffff;overflow-x:auto;overflow-y:auto;">
+    </div>
+</div>
+</body>
+</html>

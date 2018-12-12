@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.distribute.data.dao.distribute.ProductTypesDao">
+    <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.Producttypes">
+        <result property="id" column="id"/>
+        <result property="siteId" column="siteId"/>
+        <result property="attrCateId" column="attrCateId"/>
+        <result property="typeName" column="typeName"/>
+        <result property="supportCod" column="supportCod"/>
+        <result property="codExcludeSkus" column="codExcludeSkus"/>
+    </resultMap>
+    <select id="getById" parameterType="Integer" resultMap="BaseResultMap">
+		select
+		`id`,`siteId`,`attrCateId`,`typeName`,`supportCod`,`codExcludeSkus`
+		from `ProductTypes`
+		where `id` = #{id}
+	</select>
+    <select id="selectByProducttypesSku" resultMap="BaseResultMap">
+    select 
+    id,typeName
+    from ProductTypes 
+    where  id = #{id,jdbcType=INTEGER}
+   </select>
+    <select id="selectByProducttypes" resultMap="BaseResultMap">
+    select 
+    id,typeName
+    from ProductTypes 
+    where  supportCod='1'
+   </select>
+    <select id="getByIdNew" parameterType="Integer" resultMap="BaseResultMap">
+    select
+    `id`,`siteId`,`attrCateId`,`typeName`,`supportCod`,`codExcludeSkus`
+    from `ProductTypes`
+    where `id` = #{id}
+  </select>
+    <select id="getOneById" resultMap="BaseResultMap">
+        select
+        `id`,`siteId`,`attrCateId`,`typeName`,`supportCod`,`codExcludeSkus`
+        from `ProductTypes`
+        where `id`=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.CorderStatusToLesWriteDao" >
+  <update id="updateByPrimaryKey" parameterType="com.haier.shop.model.CorderStatusToLes" >
+    update CorderStatusToLes
+    <set >
+      <if test="orderproductid != null" >
+        orderProductId = #{orderproductid,jdbcType=INTEGER},
+      </if>
+      <if test="cordersn != null" >
+        cOrderSn = #{cordersn,jdbcType=VARCHAR},
+      </if>
+      <if test="success != null" >
+        success = #{success,jdbcType=TINYINT},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=TINYINT},
+      </if>
+      <if test="addtime != null" >
+        addTime = #{addtime,jdbcType=INTEGER},
+      </if>
+      <if test="successtime != null" >
+        successTime = #{successtime,jdbcType=INTEGER},
+      </if>
+      <if test="createtype != null" >
+        createType = #{createtype,jdbcType=TINYINT},
+      </if>
+      <if test="corderflag != null" >
+        corderFlag = #{corderflag,jdbcType=VARCHAR},
+      </if>
+      <if test="pushdata != null" >
+        pushData = #{pushdata,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="lastmessage != null" >
+        lastMessage = #{lastmessage,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

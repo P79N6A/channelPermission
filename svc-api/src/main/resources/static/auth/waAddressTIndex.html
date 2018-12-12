@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <link rel="stylesheet" href="../static/css/staticHtml.css">
+  <title>waAddressT</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/easyui-extention.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_waAddressT" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+  <table id="datagrid_waAddressT"></table>
+</div>
+
+<div id="datagridToolbar_waAddressT">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="paramForm_waAddressT" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          库位码
+        </span>
+          <input class="easyui-textbox" name="scode"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          所属中心
+        </span>
+          <input class="easyui-textbox" name="centername"/>
+      </div>
+      <!--<div class="search-row">
+        <span class="search-row-label">
+          中心代码
+        </span>
+          <input class="easyui-textbox" name="ccode"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          所属省级
+        </span>
+          <input class="easyui-textbox" name="province"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          市
+        </span>
+          <input class="easyui-textbox" name="city"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          县区
+        </span>
+          <input class="easyui-textbox" name="county"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          LES省级代码
+        </span>
+          <input class="easyui-textbox" name="lescode"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          地址
+        </span>
+          <input class="easyui-textbox" name="address"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          邮编
+        </span>
+          <input class="easyui-textbox" name="zipcode"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          CGO\DBM正品退货联系人
+        </span>
+          <input class="easyui-textbox" name="contactCgodbm"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          CRM正品退货联系人
+        </span>
+          <input class="easyui-textbox" name="contactCrm"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          联系电话(手机)
+        </span>
+          <input class="easyui-textbox" name="mobilephone"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          固定电话
+        </span>
+          <input class="easyui-textbox" name="phone"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          是否启用
+        </span>
+          <input class="easyui-textbox" name="isEnabled"/>
+      </div>-->
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn_waAddressT" data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_waAddressT" data-options="iconCls:'icon-redo',plain:true">重置</a>
+    <a href="#" class="easyui-linkbutton" id="addBtn_waAddressT" data-options="iconCls:'icon-add',plain:true">增加</a>
+    <a href="#" class="easyui-linkbutton" id="editBtn_waAddressT" data-options="iconCls:'icon-edit',plain:true">修改</a>
+    <a href="#" class="easyui-linkbutton" id="deleteBtn_waAddressT" data-options="iconCls:'icon-remove',plain:true">删除</a>
+    <a href="#" class="easyui-linkbutton" id="reuseBtn_waAddressT" data-options="iconCls:'icon-ok',plain:true">启用</a>
+    <a href="#" class="easyui-linkbutton" id="unuseBtn_waAddressT" data-options="iconCls:'icon-no',plain:true">禁用</a>
+    <a href="#" class="easyui-linkbutton" id="exportBtn_waAddressT" data-options="iconCls:'icon-save',plain:true">导出</a>
+    <a href="#" class="easyui-linkbutton" id="exportAllBtn_waAddressT" data-options="iconCls:'icon-save',plain:true">导出全部</a>
+  </form>
+</div>
+<div id="addDlg_waAddressT" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:800px;height:400px;"
+     closed="true" buttons="#dlg-buttons_waAddressT">
+  <form id="addForm_waAddressT" method="post">
+    <input name="id" type="text" style="display:none;"/>
+    <input __actType type="hidden"/>
+    <div class="fitem">
+      <label>库位码<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="scode" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>所属中心<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="centername" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>中心代码<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="ccode" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>所属省级<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="province" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>市<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="city" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>县区<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="county" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>LES省级代码<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="lescode" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>地址<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="address" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>邮编<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="zipcode" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>CGODBM正品退货联系人<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="contactCgodbm" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>CRM正品退货联系人<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="contactCrm" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>联系电话(手机):<span style="color: red">*</span></label>
+        <input class="easyui-textbox" name="mobilephone" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>固定电话</label>
+        <input class="easyui-textbox" name="phone" required="true"/>
+    </div>
+   <!-- <div class="fitem">
+      <label>状态:</label>
+        <input class="easyui-textbox" name="isEnabled" required="true"/>
+    </div>-->
+  </form>
+  <div id="dlg-buttons_waAddressT">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_waAddressT" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_waAddressT').dialog('close')">取消</a>
+  </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_waAddressT').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/auth/waAddressTIndex.js"></script>
+</body>
+</html>

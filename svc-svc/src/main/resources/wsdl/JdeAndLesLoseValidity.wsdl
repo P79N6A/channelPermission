@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="JdeAndLesLoseValidity" targetNamespace="http://www.example.org/JdeAndLesLoseValidity/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/JdeAndLesLoseValidity/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/JdeAndLesLoseValidity/" xmlns:pref="http://www.example.org/CommonType" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/JdeAndLesLoseValidity/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import namespace="http://www.example.org/CommonType" schemaLocation="http://10.135.28.77:10101/EAI/service/LES/JdeAndLesLoseValidity/JdeAndLesLoseValidity?SCHEMA%2FEAI%2FCommonType"/>
+      <xsd:element name="JdeAndLesLoseValidity">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="ABGRU" type="xsd:string">
+    							</xsd:element>
+                  <xsd:element name="VBELN" type="xsd:string">
+    							</xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="JdeAndLesLoseValidityResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="FLAG" type="xsd:string">
+    							</xsd:element>
+                  <xsd:element name="MESSAGE" type="xsd:string">
+    							</xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="JdeAndLesLoseValidityRequest">
+    <WL5G3N0:part element="WL5G3N1:JdeAndLesLoseValidity" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="JdeAndLesLoseValidityResponse">
+    <WL5G3N0:part element="WL5G3N1:JdeAndLesLoseValidityResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="JdeAndLesLoseValidity">
+    <WL5G3N0:operation name="JdeAndLesLoseValidity">
+      <WL5G3N0:input message="WL5G3N1:JdeAndLesLoseValidityRequest"/>
+      <WL5G3N0:output message="WL5G3N1:JdeAndLesLoseValidityResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="JdeAndLesLoseValiditySOAP" type="WL5G3N1:JdeAndLesLoseValidity">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="JdeAndLesLoseValidity">
+      <WL5G3N2:operation soapAction="http://www.example.org/JdeAndLesLoseValidity/JdeAndLesLoseValidity"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="JdeAndLesLoseValidity">
+    <WL5G3N0:port binding="WL5G3N1:JdeAndLesLoseValiditySOAP" name="JdeAndLesLoseValiditySOAP">
+      <WL5G3N2:address location="http://10.135.1.110:7001/EAI/service/LES/JdeAndLesLoseValidity/JdeAndLesLoseValidity?INT_CODE=EHAIER_INT_LES_3"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

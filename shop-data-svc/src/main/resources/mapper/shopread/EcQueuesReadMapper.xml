@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.EcQueuesReadDao">
+	<resultMap id="ecQueuesResult" type="com.haier.shop.model.EcQueues">
+		<result property="id" column="id" />
+		<result property="orderId" column="order_id" />
+		<result property="orderProductId" column="order_product_id" />
+		<result property="addTime" column="add_time" />
+		<result property="pushData" column="push_data" />
+		<result property="returnData" column="return_data" />
+		<result property="success" column="success" />
+		<result property="count" column="count" />
+		<result property="successTime" column="success_time" />
+		<result property="lastTryTime" column="last_try_time" />
+		<result property="modifyTime" column="modify_time" />
+	</resultMap>
+
+	<select id="get" parameterType="Integer" resultMap="ecQueuesResult">
+		select `id`,`order_id`,`order_product_id`,`add_time`,`push_data`,`return_data`,`success`,`count`,`success_time`,`last_try_time`,`modify_time` from ec_queues
+		where `id`=#{id}
+	</select>
+
+	<select id="getByOrderProductId" parameterType="Integer" resultMap="ecQueuesResult">
+		select `id`,`order_id`,`order_product_id`,`add_time`,`push_data`,`return_data`,`success`,`count`,`success_time`,`last_try_time`,`modify_time` from ec_queues
+		where `order_product_id`=#{orderProductId}
+	</select>
+
+	<select id="getUnSendOrders" resultMap="ecQueuesResult">
+		select `id`,`order_id`,`order_product_id`,`add_time`,`push_data`,`return_data`,`success`,`count`,`success_time`,`last_try_time`,`modify_time` from ec_queues
+		where 
+			success=0
+		and count &lt;= #{sendNum}
+		order by 
+			id
+		limit #{unSendQueryNum}
+	</select>
+
+</mapper>

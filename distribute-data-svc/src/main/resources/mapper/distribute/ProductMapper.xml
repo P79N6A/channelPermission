@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.distribute.data.dao.distribute.PopProductDao">
+<resultMap id="ProductMap" type="com.haier.distribute.data.model.Product" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="channelId" property="channelId" jdbcType="INTEGER" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="skuName" property="skuName" jdbcType="VARCHAR" />
+    <result column="productTypeId" property="productTypeId" jdbcType="INTEGER" />
+    <result column="productCode" property="productCode" jdbcType="VARCHAR" />
+    <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="onSale" property="onSale" jdbcType="CHAR" />
+    <result column="channelName" property="channelName" jdbcType="VARCHAR" />
+    <result column="productTypeName" property="productTypeName" jdbcType="VARCHAR" />
+    <result column="productName" property="productName" jdbcType="VARCHAR" />
+    <result column="departmentName" property="departmentName" jdbcType="VARCHAR" />
+    <result column="salePrice" property="salePrice"  />
+  </resultMap>
+  
+  <resultMap id="PushProductMap" type="com.haier.distribute.data.model.ProductTiming" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="productName" property="productName" jdbcType="INTEGER" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="productTitle" property="productTitle"  />
+    <result column="packagePrice" property="packagePrice" />
+    <result column="brandName" property="brandName"  />
+    <result column="saleGuidePrice" property="saleGuidePrice"  />
+    <result column="onSale" property="onSale"  />
+    <result column="typeName" property="typeName"  />
+    <result column="productDetail" property="productDetail"  />
+    <result column="productDetail2" property="productDetail2"  />
+    <result column="cateName" property="cateName"  />
+    <result column="isDelete" property="isDelete"  />
+    <result column="packageId" property="packageId"  />
+    <result column="price" property="price"  />
+    <result column="priceStartTime" property="priceStartTime"  />
+    <result column="priceEndTime" property="priceEndTime"  />
+    <result column="salePrice" property="salePrice"  />
+  </resultMap>
+   <!-- 通用查询结果列 -->
+  <sql id="Base_Column_List" >
+    id, channelId, sku, skuName, productTypeId, productCode, salePrice, createBy, createTime, updateBy, 
+    updateTime, remark, onSale, channelName, productTypeName, productName,departmentName
+  </sql>
+  <!-- 通用查询条件 -->
+  <sql id="where_fragement">
+  where 1=1
+  <if test="entity!=null">
+      <if test="entity.id != null and entity.id !='' ">
+        <![CDATA[ and id  = #{entity.id} ]]>
+      </if>
+      <if test="entity.channelId != null and entity.channelId !=''">
+        <![CDATA[ and channelId  LIKE concat('%', #{entity.channelId}, '%')]]>
+      </if>
+      <if test="entity.sku != null and entity.sku !='' ">
+        <![CDATA[ and sku  LIKE concat('%', #{entity.sku}, '%')]]>
+      </if>
+      <if test="entity.skuName != null and entity.skuName !='' ">
+        <![CDATA[ and skuName  LIKE concat('%', #{entity.skuName}, '%')]]>
+      </if>
+      <if test="entity.productTypeId != null and entity.productTypeId !='' ">
+        <![CDATA[ and productTypeId  LIKE concat('%', #{entity.productTypeId}, '%')]]>
+      </if>
+      <if test="entity.productCode != null and entity.productCode !='' ">
+        <![CDATA[ and productCode  LIKE concat('%', #{entity.productCode}, '%')]]>
+      </if>
+      <if test="entity.createBy != null and entity.createBy !='' ">
+        <![CDATA[ and createBy  LIKE concat('%', #{entity.createBy}, '%')]]>
+      </if>
+      <if test="entity.createTime != null ">
+        <![CDATA[ and createTime  = #{entity.createTime} ]]>
+      </if>
+      <if test="entity.updateBy != null and entity.updateBy !='' ">
+        <![CDATA[ and updateBy  LIKE concat('%', #{entity.updateBy}, '%')]]>
+      </if>
+      <if test="entity.updateTime != null ">
+        <![CDATA[ and updateTime  = #{entity.updateTime} ]]>
+      </if>
+	    <if test="entity.remark != null and entity.remark !='' ">
+        <![CDATA[ and remark  LIKE concat('%', #{entity.remark}, '%')]]>
+      </if>
+	    <if test="entity.onSale != null and entity.onSale !='' ">
+        <![CDATA[ and onSale  LIKE concat('%', #{entity.onSale}, '%')]]>
+      </if>
+      <if test="entity.channelName != null and entity.channelName !='' ">
+        <![CDATA[ and channelName  LIKE concat('%', #{entity.channelName}, '%')]]>
+      </if>
+      <if test="entity.productTypeName != null and entity.productTypeName !='' ">
+        <![CDATA[ and productTypeName  LIKE concat('%', #{entity.productTypeName}, '%')]]>
+      </if>
+      <if test="entity.productName != null and entity.productName !='' ">
+        <![CDATA[ and productName  LIKE concat('%', #{entity.productName}, '%')]]>
+      </if>
+      <if test="entity.departmentName != null and entity.departmentName !='' ">
+        <![CDATA[ and departmentName  LIKE concat('%', #{entity.departmentName}, '%')]]>
+      </if>
+  </if>
+  </sql>
+  <!-- 根据Id查询 -->
+  <select id="selectByPrimaryKey" resultMap="ProductMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sale_product
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+    <select id="pushProductInfo" resultMap="PushProductMap" parameterType="java.lang.Integer" >
+		   SELECT
+			p.id,
+			p.sku,
+			p.productName,
+			p.productTitle,
+			b.brandName,
+			p.packagePrice,
+			p.saleGuidePrice,
+			pt.typeName,
+			p.productDetail,
+			p.productDetail2,
+			pc.cateName,
+			p.onSale,
+			p.isDelete,
+			p.packageId,
+			t.salePrice,
+			tp.salePrice price,
+			tp.priceStartTime,
+			tp.priceEndTime
+		FROM
+			Products p,
+			t_sale_product t,
+			Brands b,
+			ProductTypes pt,
+			ProductCates pc,
+			t_sale_product_price tp
+		WHERE
+			p.productName = t.skuName
+		AND p.brandId = b.id
+		AND p.productTypeId = pt.id
+		AND p.productCateId = pc.id
+		AND t.id = tp.saleId
+		AND t.channelId = #{channelId,jdbcType=INTEGER}
+		LIMIT 50
+    
+  </select>
+  <!-- 查询list -->
+  <select id="listByCondition" resultMap="ProductMap">
+	SELECT
+	<include refid="Base_Column_List"/>
+	FROM t_sale_product
+	<include refid="where_fragement"/>
+  </select>
+  <!-- 根据条件(渠道,物料,品类)查询数据 -->
+  <select id="selectProductList" resultMap="ProductMap">
+	SELECT
+	<include refid="Base_Column_List"/>
+	FROM t_sale_product
+	where 1=1 
+	<if test="entity!=null">
+		<if test="entity.id != null and entity.id !='' ">
+        <![CDATA[ and id = #{entity.id} ]]>
+      </if>
+      <if test="entity.channelId != null and entity.channelId !='' ">
+        <![CDATA[ and channelId = #{entity.channelId} ]]>
+      </if>
+	  <if test="entity.productTypeId != null and entity.productTypeId !='' ">
+        <![CDATA[ and productTypeId = #{entity.productTypeId}]]>
+      </if>
+	  <if test="entity.sku != null and entity.sku !='' ">
+        <![CDATA[ and skuName like #{entity.sku}]]>
+      </if>
+	</if>
+  </select>
+  <!-- 根据渠道查询商品编码 -->
+    <select id="selectByproductCode" resultType="int">
+	SELECT
+	COUNT(id)
+	FROM t_sale_product
+	where 
+	channelId =#{channelId,jdbcType=INTEGER}
+	and
+	productCode =#{productCode,jdbcType=INTEGER}
+	<if test="id != null and id !='' ">
+      <![CDATA[ and id != #{id} ]]>
+  </if>
+  </select>
+  <!-- 分页查询 -->
+  <select id="selectProductListf" resultMap="ProductMap">
+	SELECT
+	<include refid="Base_Column_List"/>
+	FROM t_sale_product
+	where 1=1 
+	<if test="entity!=null">
+		<if test="entity.id != null and entity.id !='' ">
+        <![CDATA[ and id = #{entity.id} ]]>
+      </if>
+      <if test="entity.channelId != null and entity.channelId !='' ">
+        <![CDATA[ and channelId = #{entity.channelId} ]]>
+      </if>
+	  <if test="entity.productTypeId != null and entity.productTypeId !='' ">
+        <![CDATA[ and productTypeId = #{entity.productTypeId}]]>
+      </if>
+	  <if test="entity.sku != null and entity.sku !='' ">
+        <![CDATA[ and sku like #{entity.sku}]]>
+      </if>
+	</if>
+	<include refid="pagination" />
+  </select>
+  
+  <select id="getPagerCountS" resultType="int">
+		select count(id) from t_sale_product
+			where 1=1 
+	<if test="entity!=null">
+		<if test="entity.id != null and entity.id !='' ">
+        <![CDATA[ and id = #{entity.id} ]]>
+      </if>
+      <if test="entity.channelId != null and entity.channelId !='' ">
+        <![CDATA[ and channelId = #{entity.channelId} ]]>
+      </if>
+	  <if test="entity.productTypeId != null and entity.productTypeId !='' ">
+        <![CDATA[ and productTypeId = #{entity.productTypeId}]]>
+      </if>
+	  <if test="entity.sku != null and entity.sku !='' ">
+        <![CDATA[ and sku like #{entity.sku}]]>
+      </if>
+	</if>
+	</select>
+  <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sale_product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.haier.distribute.data.model.Product" >
+    insert into t_sale_product (id, channelId, sku, 
+      skuName, productTypeId, productCode, 
+      createBy, createTime, updateBy, 
+      updateTime, remark, onSale, 
+      channelName, productTypeName, productName,departmentName
+      )
+    values (#{id,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{sku,jdbcType=VARCHAR}, 
+      #{skuName,jdbcType=VARCHAR}, #{productTypeId,jdbcType=INTEGER}, #{productCode,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{onSale,jdbcType=CHAR}, 
+      #{channelName,jdbcType=VARCHAR}, #{productTypeName,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}
+      , #{departmentName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"   parameterType="com.haier.distribute.data.model.Product" >
+    insert into t_sale_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null and id != '' " >
+        id,
+      </if>
+      <if test="channelId != null and channelId != '' " >
+        channelId,
+      </if>
+      <if test="sku != null and sku != ''" >
+        sku,
+      </if>
+      <if test="skuName != null and skuName != ''" >
+        skuName,
+      </if>
+      <if test="productTypeId != null and productTypeId != ''" >
+        productTypeId,
+      </if>
+      <if test="productCode != null and productCode != ''" >
+        productCode,
+      </if>
+      <if test="createBy != null and createBy != ''" >
+        createBy,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateBy != null and updateBy != ''" >
+        updateBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="remark != null and remark != ''" >
+        remark,
+      </if>
+      <if test="onSale != null and onSale != ''" >
+        onSale,
+      </if>
+      <if test="channelName != null and channelName != ''" >
+        channelName,
+      </if>
+      <if test="productTypeName != null and productTypeName != ''" >
+        productTypeName,
+      </if>
+      <if test="productName != null and productName != ''" >
+        productName,
+      </if>
+      <if test="departmentName != null and departmentName != ''" >
+        departmentName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null and id != ''" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="channelId != null and channelId != ''" >
+        #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="sku != null and sku != ''" >
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="skuName != null and skuName != ''" >
+        #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="productTypeId != null and productTypeId != ''" >
+        #{productTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="productCode != null and productCode != ''" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null and createBy != ''" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null and updateBy != ''" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="onSale != null and onSale != ''" >
+        #{onSale,jdbcType=CHAR},
+      </if>
+      <if test="channelName != null and channelName != ''" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="productTypeName != null and productTypeName != ''" >
+        #{productTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null and productName != ''" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+       <if test="departmentName != null and departmentName != ''" >
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.Product" >
+    update t_sale_product
+    <set >
+      <if test="channelId != null" >
+        channelId = #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="sku != null" >
+        sku = #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="skuName != null" >
+        skuName = #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="productTypeId != null" >
+        productTypeId = #{productTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="productCode != null" >
+        productCode = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="onSale != null" >
+        onSale = #{onSale,jdbcType=CHAR},
+      </if>
+      <if test="channelName != null" >
+        channelName = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="productTypeName != null" >
+        productTypeName = #{productTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        productName = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null" >
+        departmentName = #{departmentName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.Product" >
+    update t_sale_product
+    set channelId = #{channelId,jdbcType=INTEGER},
+      sku = #{sku,jdbcType=VARCHAR},
+      skuName = #{skuName,jdbcType=VARCHAR},
+      productTypeId = #{productTypeId,jdbcType=INTEGER},
+      productCode = #{productCode,jdbcType=VARCHAR},
+      createBy = #{createBy,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateBy = #{updateBy,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      onSale = #{onSale,jdbcType=CHAR},
+      channelName = #{channelName,jdbcType=VARCHAR},
+      productTypeName = #{productTypeName,jdbcType=VARCHAR},
+      productName = #{productName,jdbcType=VARCHAR},
+      departmentName = #{departmentName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="checkSkuAndChannel" resultMap="ProductMap">
+        SELECT * FROM t_sale_product WHERE sku = #{sku} AND channelId = (SELECT id from t_channels_info WHERE channelCode
+        = #{channelCode})
+    </select>
+</mapper>

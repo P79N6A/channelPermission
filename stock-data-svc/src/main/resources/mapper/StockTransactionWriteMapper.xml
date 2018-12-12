@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.StockTransactionWriteDao">
+	<!-- 查询接口日志 -->
+	<update id="updateStockTransaction" parameterType="java.util.Map">
+		update inv_stock_transaction set process_status = #{status} where 1=1 
+			<if test="financeId != null and financeId !=''">
+				and id in
+			        <foreach collection="financeId" index="index" item="id" 
+			        open="(" separator="," close=")">
+			            #{id}
+			        </foreach>
+	        </if>
+	</update>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderPriceCostPoolUseInfoWriteDao">
+
+	<insert id="batchInsert" parameterType="com.haier.shop.model.OrderPriceCostPoolUseInfo">
+		insert into order_price_cost_pool_use_info(`order_source`,`channel_code`,`industry_code`,`product_group`,`corder_sn`,`order_sn`,`sku`,`cate_id`,`cate_name`,`brand_id`,`brand_name`,`order_product_price`,`coupon_amount`,`platform_coupon_amount`,`cost_pool_use_amount`,`order_product_amount`,`order_product_number`,`create_time`,`update_time`) values
+		<foreach collection="list" item="item" index="index"  separator=",">
+		(#{item.orderSource},#{item.channelCode},#{item.industryCode},#{item.productGroup},#{item.corderSn},#{item.orderSn},#{item.sku},#{item.cateId},#{item.cateName},#{item.brandId},#{item.brandName},#{item.orderProductPrice},#{item.couponAmount},#{item.platformCouponAmount},#{item.costPoolUseAmount},#{item.orderProductAmount},#{item.orderProductNumber},#{item.createTime},#{item.updateTime})
+		</foreach>
+	</insert>
+	
+	<insert id="insert" parameterType="com.haier.shop.model.OrderPriceCostPoolUseInfo">
+		insert into `order_price_cost_pool_use_info`
+        (`order_source`,`channel_code`,`industry_code`,`product_group`,`corder_sn`,`order_sn`,`sku`,`cate_id`,`cate_name`,`brand_id`,`brand_name`,`order_product_price`,`coupon_amount`,`platform_coupon_amount`,`cost_pool_use_amount`,`order_product_amount`,`order_product_number`,`create_time`,`update_time`)
+        select
+        	#{orderSource},#{channelCode},#{industryCode},#{productGroup},#{corderSn},#{orderSn},#{sku},#{cateId},#{cateName},#{brandId},#{brandName},#{orderProductPrice},#{couponAmount},#{platformCouponAmount},#{costPoolUseAmount},#{orderProductAmount},#{orderProductNumber},#{createTime},#{updateTime}
+        from 
+        	dual 
+		where not exists (select 1 from order_price_cost_pool_use_info where corder_sn = #{corderSn})
+	</insert>
+
+</mapper>

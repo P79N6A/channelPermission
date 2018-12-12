@@ -1,0 +1,91 @@
+ 
+ <form id="reservedform" name="reservedform" method="post" >
+	<input type="hidden"  id="id" name="id" value="$!{row.id}"/>
+	<table border="0" align="center">
+		<tr>
+			
+			<td width="12%;" align="right"><font color="red">*</font>物料编码：</td>
+            <td width="12%;">
+    			<input id="sku" name="sku" value="$!{sku}"/>
+    		</td>
+    		<td width="12%;" align="right"><font color="red">*</font>调出库位：</td>
+            <td width="12%;">
+        			<input id="secCode" name="secCode" value="$!{secCode}"/>
+        	</td>
+		</tr>
+	<tr>
+		<td width="12%;" align="right"><font color="red">*</font>调出渠道：</td>
+        <td width="12%;">
+			<select name="channelFrom" id="channelFrom" style="width:105px">
+			<!-- 	#if($isReserved==true)
+					<option value="WA">全部</option>
+				#end
+				<option value="DKH">大客户渠道</option>
+				    			<option value="SC">商城渠道</option>
+				    			<option value="TB">天猫渠道</option>
+				    			<option value="JD">京东渠道</option>
+				    			<option value="YX">易迅渠道</option> -->
+			</select>
+    	</td>
+		<td width="12%;" align="right"><font color="red">*</font>调入渠道：</td>
+        <td width="12%;">
+			<select name="channelTo" id="channelTo" style="width:105px">
+				<!-- 
+				#if($isReserved==false)
+					<option value="WA">WA共享</option>
+				#else
+					<option value="DKH">大客户渠道</option>
+					<option value="SC">商城渠道</option>
+					<option value="TB">天猫渠道</option>
+					<option value="JD">京东渠道</option>
+					<option value="YX">易迅渠道</option>
+				#end -->
+				
+			</select>
+    	</td>
+	</tr>
+	<tr>
+		<td width="12%;" align="right"><font color="red">*</font>数量：</td>
+		<td width="12%;">
+			<input id="qty" name="qty" value="$!{qty}"/>
+		</td>
+		<td width="12%;" align="right"><font color="red">*</font>锁定时间（小时）：</td>
+		<td width="12%;">
+			<input id="lockHours"
+				 #if($isReserved==false)
+					readonly="true"
+				 #end
+				name="lockHours" value="$!{lockHours}"/>
+		</td>
+	</tr>
+</table> 
+     <div >
+    	<a href="#" id="saveBtn" class="btn btn-primary" onclick="saveReservedOrRelease($!{isReserved});">保存</a>
+		<a href="#" style="display:none;" id="showBtn" class="btn btn-primary">保存</a>
+    </div>
+ </form> <script >
+ 		jQuery.getJSON("/stock/group_param?group=GROUP_CHANNEL_STOCK", function (result) {
+            jQuery.each(result.data, function (i, v) {
+				if ( v.paramKey =='ALL') {
+					if ('$isReserved'=='true' ){
+						$("#channelFrom").append("<option value=" + 'WA' + ">" + v.paramName + "</option>");
+					}
+				} else {
+               		 $("#channelFrom").append("<option value=" + v.paramKey + ">" + v.paramName + "</option>");
+				}
+            });
+			});
+		jQuery.getJSON("/stock/group_param?group=GROUP_CHANNEL_STOCK", function (result) {
+            jQuery.each(result.data, function (i, v) {
+				if ( v.paramKey =='ALL') {
+					if ('$isReserved' =='false' ) {
+						$("#channelTo").append("<option value=" + 'WA' + ">" + 'WA共享' + "</option>");
+					}
+				} else {
+                	$("#channelTo").append("<option value=" + v.paramKey + ">" + v.paramName + "</option>");
+				}
+            });
+			});
+ </script>
+ 
+

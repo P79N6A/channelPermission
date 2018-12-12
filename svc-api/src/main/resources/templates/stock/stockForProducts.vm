@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>$!title</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+#*<script src="../static/js/easyui-extention.js"></script>*#
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="easyui-layout">
+<table id="dataGrid" ></table>
+#*<input name="channel_code" id="channel_code" type="hidden" value="$!channel"/>*#
+<div id="tb" style="padding:5px;height:auto">
+    <form id="filterForm">
+       #* <input type="radio" name="selectType" value="1" id="selectType1" style="width:20px;" onclick="jumpUrl(this);"/><label for="selectType1">到渠道到产品</label>
+        <input type="radio" name="selectType" value="2" id="selectType2" style="width:20px;" onclick="jumpUrl(this);"/><label for="selectType2">到产品到渠道</label>
+        <input type="radio" name="selectType" value="3" id="selectType3" style="width:20px;" onclick="jumpUrl(this);"/><label for="selectType3">到渠道</label>
+        <input type="radio" name="selectType" value="4" id="selectType4" style="width:20px;" onclick="jumpUrl(this);"/><label for="selectType4">到产品</label><br/>*#
+        报表日期
+        <input id="date" name="date" class="easyui-datebox"  value="$!shijian"/>
+        <input name="channel_code" id="channel_code" type="hidden" value="$!productGroupName" class="easyui-textbox"/>
+        <label color="red">金额单位：（人民币）万元 数据类型：正品</label><br/>
+        <a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="">查询</a>
+        <a id='export' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
+    </form>
+</div>
+<script type="text/javascript">
+    function jumpUrl(obj){
+        var date = $('#date').val();
+        if(obj.value == '1'){//到渠道到产品
+            window.location.href = "/stock/countStockAgesToChannelsToSku.html?date="+date;
+        }else if (obj.value == '2'){//到产品到渠道
+            window.location.href = "/stock/countStockAgesToSkuToChannels.html?date="+date;
+        }else if (obj.value == '3'){//到渠道
+            window.location.href = "/stock/countStockAgesWithChannels.html?date="+date;
+        }else if (obj.value == '4'){//到产品
+            window.location.href = "/stock/countStockAgesWithSku.html?date="+date;
+        }
+    }
+    function onExport() {
+        var a=$('#channel_code').val();
+        $('#filterForm').attr("action", '/stock/exportStockAgeForChinnelWithProductGroup.html');
+        $('#filterForm').submit();
+    }
+    function onSelect() {
+        var a=$('#channel_code').val();
+        alert(a);
+        $('#filterForm').attr("action", '/stock/countStockAgesWithChannelsBySku.html' + '?date=' + $('#date').datebox('getValue') + '&channel=' +a );
+        $('#filterForm').submit();
+    }
+    function onShowDetail(param, param_name) {
+
+        var win = window.open('about:blank');
+        var url;
+        var date = $('#date').val();
+        url = '/stock/countStockAgesWithChannelsBySku.html' + '?date=' + $('#date').datebox('getValue') + '&param=' + param + '&title=' + param_name;
+
+
+        jQuery.ajax({
+            url: url,   // 提交的页面
+            type: "GET",                   // 设置请求类型为"POST"，默认为"GET"
+            success: function (data) {
+                $("#date").datebox("setValue","2011-11-11")
+                win.document.open();
+                win.document.write(data);
+                win.document.close();
+            }
+        });
+
+        return false;
+    }
+
+
+    $('#search').click(function () {
+        $('#dataGrid').datagrid('load', {date: $('#date').datebox("getValue"),productGroupName:$('#channel_code').val()});
+    });
+
+    $('#export').click(function () {
+        window.location.href = '/stock/exportStockAgeForChinnelWithProductGroup.html'+ '?date=' + $('#date').datebox('getValue') + '&productGroupName=' +encodeURI($('#channel_code').val());
+    });
+    var ageRanges = [ 'a7', 'a14', 'a21', 'a30', 'a44', 'a60', 'a75', 'a90', 'a120', 'a180', 'a365', 'a-1', 'a-1001', 'a-1002', 'a-1003', 'a-1004' ];
+    function getData(s, n) {
+        var data = new Array();
+        for (var i = 0; i < n; i++) {
+            var idx = i + s;
+            data[2 * i] =
+                    {
+                        field: ageRanges[idx],
+                        title: '数量',
+                        align: 'right',
+                        width: 50,
+                        formatter: function (value, row, index) {
+                            var age = value.age;
+                            if (age == -1 || age == -1002 || age > 60)
+                                return '<span style="color:red;">' + value.stockQuantity + '</span>';
+                            else if (age == -1004)
+                                return value.stockQuantity + '%';
+                            else
+                                return value.stockQuantity;
+                        }
+                    };
+            data[2 * i + 1] =
+                    {
+                        field: 'a' + ageRanges[idx],
+                        title: '金额',
+                        align: 'right',
+                        formatter: function (value, row, index) {
+                            var age = value.age;
+                            if (age == -1 || age == -1002 || age > 60)
+                                return '<span style="color:red;">' + value.value + '</span>';
+                            else if (age == -1004)
+                                return value.value + '%';
+                            else return value.value;
+                        }
+                    };
+        }
+        return data;
+    }
+    var dataGrid;
+    $(function () {
+        var now = new Date();
+        /*$('#date').datebox('setValue', myformatter(now));*/
+        $('#date').datebox('calendar').calendar({
+            validator: function (date) {
+                var d2 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                return  date <= d2;
+            }
+        });
+        dataGrid = $('#dataGrid').datagrid({
+            url: '/stock/getStockAgeForChinnelWithProductGroup.html',
+            fit: true,
+            fitColumns: false,
+            pagination: false,
+            toolbar: $('#tb'),
+            nowrap: true,
+            rownumbers: true,
+            singleSelect: true,
+            queryParams: {
+                date: $('#date').val(),
+                productGroupName: $('#channel_code').val()
+            },
+            frozenColumns: [
+                [
+                    {
+                        field: 'channel',
+                        title: '渠道',
+                        width: 170,
+                        align: 'center',
+                        rowspan: 2,
+                        formatter: function (value, row, index) {
+                            if (index == 0)
+                                return '总计';
+                            else
+                                return row.channelName;
+                        }
+                    } ,
+                    {
+                        title: '1-7天',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '8-14天',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '15-21天',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '22-30天',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                ],
+                getData(0, 4)
+            ],
+            columns: [
+                [
+                    {
+                        title: '31-44天',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '45-60天',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '61-75天',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '75-90天',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '3-4月',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '4-6月',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '6-12月',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '一年以上',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '正常小计',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '超期小计',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '合计',
+                        align: 'center',
+                        colspan: 2,
+                    },
+                    {
+                        title: '超期占比',
+                        align: 'center',
+                        colspan: 2,
+                    }
+                ],
+                getData(4, 12)
+            ]
+        })
+        ;
+    })
+    ;
+</script>
+</body>
+</html>

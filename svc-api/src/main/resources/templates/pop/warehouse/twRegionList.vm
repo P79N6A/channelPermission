@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+     <style type="text/css">
+   .dlg{
+     width:400px;
+     height:100px;
+     padding:10px;	
+     margin-top:20px;	
+    },
+    easyui-panel.{
+    overflow-x: show;
+    }
+  </style>
+    
+</head>
+<body class="iframe-body">
+
+<!--tree-->
+<div id="oDialog" class="easyui-dialog" title="选择"
+     style="width: 500px; height: 440px; padding: 0px 0px; center:true"
+     closed="true" center="true" modal="true,overflow: hidden;">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+        
+        <div data-options="region:'center'">
+            <div region="west" class="west" title="导航菜单">
+                <ul id="tree" data-options="animate:true,state:closed"></ul>
+            </div>
+        </div>
+
+        <div id="dlg-buttons" data-options="region:'south'" style="height:30px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetCodeValue()" iconcls="icon-ok">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript:$('#oDialog').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+
+    </div>
+</div>
+<!--修改时加载的tree -->
+<div id="uDialog" class="easyui-dialog" title="选择"
+     style="width: 500px; height: 440px; padding: 0px 0px; center:true"
+     closed="true" center="true" modal="true,overflow: hidden;">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+
+        <div data-options="region:'center'">
+            <div region="west" class="west" title="导航菜单">
+                <ul id="update_tree" data-options="animate:true,state:closed"></ul>
+            </div>
+        </div>
+
+        <div id="dlg-buttons" data-options="region:'south'" style="height:30px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetUpdateCode()" iconcls="icon-ok">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript:$('#uDialog').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+    </div>
+</div>
+
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_warehouseListGoal"></table>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+        
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">渠道名称</span>
+                <select id="source" name="source" style="height: 26px; width: 134px;"  onchange="auto1()">
+                <option value="">请输入渠道名称</option>
+            	#foreach($cid in $cidList)
+            		<option value="$cid.id">$cid.channelName</option>
+     			#end  
+            </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">区域名称</span>
+                <input id="selectCounty" class="easyui-textbox" data-options="prompt:'请输入区域名称'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">配送仓库</span>
+                <select id="warehouseid" name="warehouseid" style="height: 26px; width: 134px;">
+               <option value="">请输入配送仓库</option>
+            	#foreach($tw in $twhList)
+            		<option value="$tw.id">$tw.warehouseName</option>
+     			#end
+            </select>        
+            </div>        
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderForecastGoal"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <!--<a href="#" class="easyui-linkbutton" id="importBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出</a>-->
+    </form>
+</div>
+<div id="addDlg_warehouse" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:244px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_warehouse" method="post">
+        <div class="fitem">
+            <label>渠道编码<span style="color: red;">*</span></label>
+            <select id="a_channelId" name="a_channelId" style="height: 29px; width: 134px;"  onchange="auto()">
+            	<option value=""></option>
+            	#foreach($cid in $cidList)
+            		<option value="$cid.id">$cid.channelName</option>
+     			#end  
+            </select>
+        </div>
+        <div class="fitem">
+            <label>区域名称<span style="color: red;">*</span></label>
+            <input id="a_county" name="a_county" style="height: 29px;"/>
+            <input id="a_regionId" name="a_regionId" type="hidden"/>
+        </div>
+        <div class="fitem">
+            <label>配送仓库<span style="color: red;">*</span></label>
+            <select id="a_warehouseId" name="a_warehouseId" style="height: 29px; width: 134px;">
+            </select>
+        </div>        
+        <div class="fitem">
+            <label>备注</label>
+            <input id="a_remark" name="a_remark" class="easyui-textbox" style="height: 29px;" />
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_warehouse" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" id="a" iconCls="icon-cancel"onclick="javascript:$('#addDlg_warehouse').dialog('close')">取消</a>
+    </div>
+</div>
+
+<!-- 修改-->
+<div id="updateDlg_warehouse" data-options="title:'修改',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:244px;"
+     closed="true" buttons="#u-dlg-buttons_orderForecastGoal">
+    <form id="updateForm_warehouse" method="post">
+        <input name="id" id="id" type="text" style="display:none;"/>
+        <div class="fitem">
+            <label>渠道编码<span style="color: red;">*</span></label>
+            <select id="channelId" name="channelId" style="height: 29px; width: 134px;"  onchange="autoForUpdate()">
+                <option value=""></option>
+                #foreach($cid in $cidList)
+                    <option value="$cid.id">$cid.channelName</option>
+                #end
+            </select>
+        </div>
+        <div class="fitem">
+            <label>区域名称<span style="color: red;">*</span></label>
+            <input id="county" name="county" style="height: 29px;"/>
+            <input id="regionId" name="regionId" type="hidden"/>
+            <input id="regionParentPath" name="regionParentPath" type="hidden"/>
+        </div>
+        <div class="fitem">
+            <label>配送仓库<span style="color: red;">*</span></label>
+            <select id="warehouseId" name="warehouseId" style="height: 29px; width: 134px;">
+            </select>
+        </div>
+        <div class="fitem">
+            <label>备注</label>
+            <input id="remark" name="remark" class="easyui-textbox" style="height: 29px;" />
+        </div>
+    </form>
+    <div id="u-dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="updateDlgSaveBtn_warehouse" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" id="u" onclick="javascript:$('#updateDlg_warehouse').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_warehouseListGoal').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="/static/js/pop/warehouse/twRegionList.js"></script>
+</body>
+</html>

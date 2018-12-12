@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>productLimitGateT</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/easyui-extention.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_productLimitGateT" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+  <table id="datagrid_productLimitGateT"></table>
+</div>
+
+<div id="datagridToolbar_productLimitGateT">
+  <!--<div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>-->
+  <form id="paramForm_productLimitGateT" class="param-form">
+    <div class="search-panel">
+      <div class="search-row_240">
+        <span class="">
+          渠道
+        </span>
+        <select class="easyui-combobox" name="channelCode">
+          <option value="">全部</option>
+          <option value="quan">全渠道</option>
+          <option value="dkh">大客户渠道</option>
+          <option value="jd">京东渠道</option>
+          <option value="mk">模卡渠道</option>
+          <option value="wd">微店渠道</option>
+          <option value="sc">商城渠道</option>
+          <option value="tm">天猫渠道</option>
+          <option value="ts">统帅渠道</option>
+          <option value="690ds">690电商渠道</option>
+        </select>
+      </div>
+      <div class="search-row_240">
+        <span class="">
+          品类
+        </span>
+        <select class="easyui-combobox" name="productType">
+          <option value="">全部</option>
+          <option value="bx">冰箱</option>
+          <option value="lg">冷柜</option>
+          <option value="sykt">商用空调</option>
+          <option value="kt">空调</option>
+          <option value="xyj">洗衣机</option>
+          <option value="cd">彩电</option>
+          <option value="xsyy">小帅影院</option>
+          <option value="rsq">热水器</option>
+          <option value="shjd">生活家电</option>
+          <option value="cf">厨电</option>
+          <option value="jd">家居</option>
+          <option value="jsj">计算机</option>
+          <option value="sm">数码</option>
+          <option value="sj">手机</option>
+          <option value="sjd">水家电</option>
+          <option value="swyl">生物医疗</option>
+          <option value="tscd">统帅彩电</option>
+          <option value="shhcd">社会化彩电</option>
+        </select>
+      </div>
+      <div class="search-row_240">
+        <span class="">
+          产品组
+        </span>
+        <select class="easyui-combobox" name="groupType">
+          <option value="">全部</option>
+          <option value="bx">冰箱</option>
+          <option value="ld">冷柜</option>
+          <option value="zykt">中央空调</option>
+          <option value="sykt">商用空调</option>
+          <option value="slhekt">三菱海尔空调</option>
+          <option value="syqk">商用柜嵌</option>
+          <option value="jykt">家用空调</option>
+          <option value="blxyj">波轮洗衣机</option>
+          <option value="gtxyj">滚筒洗衣机</option>
+          <option value="pbds">平板电视</option>
+          <option value="CRTTV">CRT电视</option>
+          <option value="jdh">机顶盒</option>
+          <option value="yjp">液晶屏</option>
+        </select>
+      </div>
+      <div class="search-row_240">
+        <span class="">
+          物料号
+        </span>
+          <input class="easyui-textbox" name="modelType"/>
+      </div>
+      <div class="search-row_240">
+        <span class="">
+          类别
+        </span>
+        <select class="easyui-combobox" name="type">
+          <option value="">全部</option>
+          <option value="xs">下市</option>
+          <option value="sd">上单</option>
+        </select>
+      </div>
+
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn_productLimitGateT" data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_productLimitGateT" data-options="iconCls:'icon-redo',plain:true">重置</a>
+    <a href="#" class="easyui-linkbutton" id="addBtn_productLimitGateT" data-options="iconCls:'icon-add',plain:true">增加</a>
+    <a href="#" class="easyui-linkbutton" id="editBtn_productLimitGateT" data-options="iconCls:'icon-edit',plain:true">修改</a>
+    <a href="#" class="easyui-linkbutton" id="deleteBtn_productLimitGateT" data-options="iconCls:'icon-remove',plain:true">删除</a>
+    <a href="#" class="easyui-linkbutton" id="importBtn_productLimitGateT" data-options="iconCls:'icon-save',plain:true">导出</a>
+    <a href="#" class="easyui-linkbutton" id="importAllBtn_productLimitGateT" data-options="iconCls:'icon-save',plain:true">导出全部</a>
+  </form>
+</div>
+<div id="addDlg_productLimitGateT" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:400px;"
+     closed="true" buttons="#dlg-buttons_productLimitGateT">
+  <form id="addForm_productLimitGateT" method="post">
+    <input name="id" type="text" style="display:none;"/>
+    <input __actType type="hidden"/>
+    <div class="fitem">
+      <label>渠道<span style="color: red;">*</span></label>
+      <select class="easyui-combobox" name="channelCode" required="true">
+        <option value="">全部</option>
+        <option value="quan">全渠道</option>
+        <option value="dkh">大客户渠道</option>
+        <option value="jd">京东渠道</option>
+        <option value="mk">模卡渠道</option>
+        <option value="wd">微店渠道</option>
+        <option value="sc">商城渠道</option>
+        <option value="tm">天猫渠道</option>
+        <option value="ts">统帅渠道</option>
+        <option value="690ds">690电商渠道</option>
+      </select>
+    </div>
+    <div class="fitem">
+      <label>产品组<span style="color: red;">*</span></label>
+      <select class="easyui-combobox" name="groupType" required="true">
+        <option value="">全部</option>
+        <option value="bx">冰箱</option>
+        <option value="ld">冷柜</option>
+        <option value="zykt">中央空调</option>
+        <option value="sykt">商用空调</option>
+        <option value="slhekt">三菱海尔空调</option>
+        <option value="syqk">商用柜嵌</option>
+        <option value="jykt">家用空调</option>
+        <option value="blxyj">波轮洗衣机</option>
+        <option value="gtxyj">滚筒洗衣机</option>
+        <option value="pbds">平板电视</option>
+        <option value="CRTTV">CRT电视</option>
+        <option value="jdh">机顶盒</option>
+        <option value="yjp">液晶屏</option>
+      </select>
+    </div>
+    <div class="fitem">
+      <label>品类<span style="color: red;">*</span></label>
+      <select class="easyui-combobox" name="productType" required="true">
+        <option value="">全部</option>
+        <option value="bx">冰箱</option>
+        <option value="lg">冷柜</option>
+        <option value="sykt">商用空调</option>
+        <option value="kt">空调</option>
+        <option value="xyj">洗衣机</option>
+        <option value="cd">彩电</option>
+        <option value="xsyy">小帅影院</option>
+        <option value="rsq">热水器</option>
+        <option value="shjd">生活家电</option>
+        <option value="cf">厨电</option>
+        <option value="jd">家居</option>
+        <option value="jsj">计算机</option>
+        <option value="sm">数码</option>
+        <option value="sj">手机</option>
+        <option value="sjd">水家电</option>
+        <option value="swyl">生物医疗</option>
+        <option value="tscd">统帅彩电</option>
+        <option value="shhcd">社会化彩电</option>
+      </select>
+    </div>
+    <div class="fitem">
+      <label>物料号<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="modelType" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>类型<span style="color: red;">*</span></label>
+      <select class="easyui-combobox" name="type" required="true">
+        <option value="xs">下市</option>
+        <option value="sd">上单</option>
+      </select>
+    </div>
+
+    <div class="fitem">
+      <label>起始时间<span style="color: red;">*</span></label>
+        <input class="easyui-datebox" name="startTime" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>截止时间<span style="color: red;">*</span></label>
+        <input class="easyui-datebox" name="endTime" required="true"/>
+    </div>
+  </form>
+  <div id="dlg-buttons_productLimitGateT">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_productLimitGateT" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_productLimitGateT').dialog('close')">取消</a>
+  </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_productLimitGateT').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/product/productLimitGateTIndex.js"></script>
+</body>
+</html>

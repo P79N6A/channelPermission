@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.vehcile.OesMaterielDao">
+	<select id="findOesMaterielList"
+		resultType="com.haier.purchase.data.model.vehcile.OesMaterielDTO">
+		SELECT
+		id,productgroup,materialcode,materialname,tradecode,tradename,parkcode,
+		parkname,pri,maxqty,minqty,updateuser,updatetime,seriescode,plantcode,
+		plantname,orderflag,arriveweek,user_pri,delete_flag
+		FROM oes_park_priority
+		WHERE 1==1
+		and plantcode = #{plantcode}
+		<if test="tradecode != null and tradecode != ''">
+			and tradecode = #{tradecode}
+		</if>
+		<if test="materialcode != null and materialcode != ''">
+			and materialcode = #{materialcode}
+		</if>
+	</select>
+</mapper>

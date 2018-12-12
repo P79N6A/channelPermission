@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderCouponsReadDao">
+
+	<resultMap id="orderCouponsResult" type="com.haier.shop.model.OrderCoupons">
+		<result property="id" column="id" />
+		<result property="orderId" column="orderId" />
+		<result property="orderProductId" column="orderProductId" />
+		<result property="cOrderSn" column="cOrderSn" />
+		<result property="number" column="number" />
+		<result property="price" column="price" />
+		<result property="productAmount" column="productAmount" />
+		<result property="jfbAmount" column="jfbAmount" />
+		<result property="hbAmount" column="hbAmount" />
+		<result property="dqAmount" column="dqAmount" />
+		<result property="couponAmount" column="couponAmount" />
+		<result property="points" column="points" />
+		<result property="tyqAmount" column="tyqAmount" />
+		<result property="djqAmount" column="djqAmount" />
+		<result property="djpzAmount" column="djpzAmount" />
+		<result property="dpxdljAmount" column="dpxdljAmount" />
+		<result property="dpCouponAmount" column="dpCouponAmount" />
+		<result property="dphbAmount" column="dphbAmount" />
+		<result property="createTime" column="createTime" />
+		<result property="updateTime" column="updateTime" />
+		<result property="kjCode" column="kjCode" />
+		<result property="lpjCode" column="lpjCode" />
+	</resultMap>
+
+	<select id="getOrderCouponsByCOrderSn" resultMap="orderCouponsResult">
+		select `id`,`orderId`,`orderProductId`,`cOrderSn`,`number`,`price`,`productAmount`,`jfbAmount`,`hbAmount`,`dqAmount`,`couponAmount`,`points`,`tyqAmount`,`djqAmount`,`djpzAmount`,`dpxdljAmount`,`dpCouponAmount`,`dphbAmount`,`createTime`,`updateTime`,`kjCode`,lpjCode 
+		from OrderCoupons
+		where cOrderSn=#{cOrderSn}
+		limit 1
+	</select>
+	
+	<select id="getLpTotalFeeNum" resultType="java.util.Map">
+		select sum(number) as totalNum,sum(price*number) as totalPrice
+		from OrderCoupons
+		where orderId=#{orderId}
+	</select>
+
+</mapper>

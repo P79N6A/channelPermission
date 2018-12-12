@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.OrdersWriteDao">
+
+     <update id="updateSmConfirmStatus" parameterType="com.haier.shop.model.Orders">
+          update `Orders` set `smConfirmStatus` = #{smConfirmStatus}
+          where `id` = #{id}
+     </update>
+         <select id="findOrderNum" resultType="Integer" parameterType="java.lang.String">
+  SELECT count(*) from Orders o  LEFT JOIN
+(select id as did,FROM_UNIXTIME(addtime) as date
+from Orders
+) d
+on o.id = did
+where d.date between #{begintime} and #{endtime}
+  </select>
+</mapper>

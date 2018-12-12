@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStockOrderLockDao">
+	<resultMap id="InvStockOrderLockResult" type="com.haier.stock.model.InvStockOrderLockEntity">
+	<result property="id" column="id" />
+	<result property="sku" column="sku" />
+	<result property="itemProperty" column="item_property" />
+	<result property="storeCode" column="store_code" />
+	<result property="scode" column="scode" />
+	<result property="refNo" column="ref_no" />
+	<result property="source" column="source" />
+	<result property="lockQty" column="lock_qty" />
+	<result property="lockTime" column="lock_time" />
+	<result property="lockUser" column="lock_user" />
+	</resultMap>
+
+	<sql id="selectAllColumns">
+		select
+		id,sku,item_property,store_code,scode,ref_no,source,lock_qty,lock_time,lock_user
+		from inv_stock_order_lock
+	</sql>
+	
+	<select id="findInvStockOrderLockById" parameterType="String" resultMap="InvStockOrderLockResult">
+	    <include refid="selectAllColumns" />
+	    where id = #{id}
+	</select>
+
+	<select id="findLockQtyByScodeAndStoreCodeAndSku" resultType="java.lang.Integer">
+	    select IFNULL(sum(lock_qty),0)
+	    FROM `inv_stock_order_lock`
+	    where 1=1 
+	    <if test="scode != null and scode != '' ">
+	    	and scode = #{scode}
+	    </if>
+	    <if test="storeCode != null and storeCode != '' ">
+	   		and store_code = #{storeCode}
+	    </if>
+	    <if test="refNo != null and refNo != '' ">
+	   		and ref_no != #{refNo}
+	    </if>
+	    and sku = #{sku}
+	    <!-- 获取当前时间以后的锁定数据 -->
+	    and lock_time &gt; now()
+	</select>
+	
+	<select id="findLockQtyByScodeAndSku" resultMap="InvStockOrderLockResult">
+	    select scode,sku,IFNULL(sum(lock_qty),0) as lock_qty
+	    FROM `inv_stock_order_lock`
+	    where 1=1 
+	    <if test="arrayScode != null and arrayScode != '' ">
+			and scode in 
+			<foreach collection="arrayScode" index="index" item="sCode" open="(" separator="," close=")">
+	            #{sCode}
+	        </foreach>
+	    </if>
+	    <if test="arraySku != null and arraySku != '' ">
+	    	and sku in 
+	    	<foreach collection="arraySku" index="index" item="sku" open="(" separator="," close=")">
+	            #{sku}
+	        </foreach>
+	    </if>
+	    <!-- 获取当前时间以后的锁定数据 -->
+	    and lock_time &gt; now()
+	    group by scode,sku
+	</select>
+	
+	<!-- 根据refNo查询数据 -->
+	<select id="findInvStockOrderLockByRefNo" parameterType="String" resultMap="InvStockOrderLockResult">
+		<include refid="selectAllColumns" />
+		where ref_no = #{refNo}
+		limit 1
+	</select>
+
+	<!-- 下单锁库 -->
+	<insert id="insertStockOrderLock" parameterType="com.haier.stock.model.InvStockOrderLockEntity">
+		insert into
+		inv_stock_order_lock(sku,item_property,store_code,scode,ref_no,source,lock_qty,lock_time,lock_user)
+		values(#{sku},10,#{storeCode},#{scode},#{refNo},#{source},#{lockQty},#{lockTime},#{lockUser})
+	</insert>
+
+	<!-- 锁库释放，删除数据 -->
+	<delete id="releaseOrderLockByRefNo">
+		<![CDATA[
+			DELETE FROM inv_stock_order_lock WHERE lock_time < now()
+		]]>
+	</delete>
+	
+	<!-- 付款成功锁库释放，删除数据 -->
+	<delete id="paymentSuccessReleaseOrderLock" parameterType="String">
+		DELETE FROM inv_stock_order_lock WHERE ref_no=#{refNo}
+	</delete>
+	
+	<update id="updateStockOrderLock" parameterType="com.haier.stock.model.InvStockOrderLockEntity">
+		update `inv_stock_order_lock` set
+		`sku`=#{sku},`store_code`=#{storeCode},`scode`=#{scode},`ref_no`=#{refNo},`source`=#{source},`lock_qty`=#{lockQty},`lock_time`=#{lockTime},`lock_user`=#{lockUser}
+		where `id` = #{id}
+	</update>
+</mapper>

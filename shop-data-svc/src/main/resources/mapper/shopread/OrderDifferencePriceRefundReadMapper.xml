@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderDifferencePriceRefundReadDao">
+
+	<resultMap id="orderDifferencePriceRefundResult" type="com.haier.shop.model.OrderDifferencePriceRefund">
+		<result property="id" column="id" />
+		<result property="corderSn" column="corder_sn" />
+		<result property="orderSn" column="order_sn" />
+		<result property="memberId" column="member_id" />
+		<result property="sku" column="sku" />
+		<result property="productName" column="product_name" />
+		<result property="orderProductPrice" column="order_product_price" />
+		<result property="orderProductNumber" column="order_product_number" />
+		<result property="orderProductDifferencePrice" column="order_product_difference_price" />
+		<result property="totalRefundPrice" column="total_refund_price" />
+		<result property="alipayAccount" column="alipay_account" />
+		<result property="alipayName" column="alipay_name" />
+		<result property="accptedStatus" column="accpted_status" />
+		<result property="applyReason" column="apply_reason" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="getValidCountByCorderSn" resultType="Integer" statementType="PREPARED">
+		select count(*) count
+		from order_difference_price_refund
+		where corder_sn=#{cOrderSn}
+		and accpted_status != 3 and accpted_status != 4
+	</select>
+	
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvLesStockDao">
+	<resultMap id="invLesStockResult" type="com.haier.stock.model.InvLesStock">
+		<result property="id" column="id" />
+		<result property="sku" column="sku" />
+		<result property="secCode" column="sec_code" />
+		<result property="stockQty" column="stock_qty" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="invLesStockResult">
+		select `id`,`sku`,`sec_code`,`stock_qty`,`create_time`,`update_time`
+		from `inv_les_stock`
+		where `id` = #{id}
+	</select>
+	<select id="getBySecCodeAndSku" parameterType="Map" resultMap="invLesStockResult">
+		select `id`,`sku`,`sec_code`,`stock_qty`,`create_time`,`update_time`
+		from `inv_les_stock`
+		where `sku` = #{sku} and `sec_code`=#{secCode}
+	</select>
+	<insert id="insert" parameterType="com.haier.stock.model.InvLesStock">
+		insert into `inv_les_stock`(`sku`,`sec_code`,`stock_qty`,`create_time`,`update_time`)
+		values(#{sku},#{secCode},#{stockQty},now(),now())
+	</insert>
+	<update id="update" parameterType="com.haier.stock.model.InvLesStock">
+		update `inv_les_stock` set `stock_qty`=#{stockQty},`update_time`=now()
+		where `id` = #{id}
+	</update>
+</mapper>

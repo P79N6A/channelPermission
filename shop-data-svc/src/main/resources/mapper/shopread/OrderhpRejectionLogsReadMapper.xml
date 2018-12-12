@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.OrderhpRejectionLogsReadDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.OrderhpRejectionLogs" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="so_num" property="soNum" jdbcType="VARCHAR" />
+    <result column="vbelnso" property="vbelnso" jdbcType="VARCHAR" />
+    <result column="product_type_id" property="productTypeId" jdbcType="VARCHAR" />
+    <result column="product_no" property="productNo" jdbcType="VARCHAR" />
+    <result column="count_num" property="countNum" jdbcType="INTEGER" />
+    <result column="inwh_id" property="inwhId" jdbcType="VARCHAR" />
+    <result column="inwh_date" property="inwhDate" jdbcType="VARCHAR" />
+    <result column="key_product_no" property="keyProductNo" jdbcType="VARCHAR" />
+    <result column="main_sku" property="mainSku" jdbcType="VARCHAR" />
+    <result column="sub_count" property="subCount" jdbcType="INTEGER" />
+    <result column="channel_order_sn" property="channelOrderSn" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="VARCHAR" />
+    <result column="sec_code" property="secCode" jdbcType="VARCHAR" />
+    <result column="hp_les_id" property="hpLesId" jdbcType="VARCHAR" />
+    <result column="hp_les_date" property="hpLesDate" jdbcType="DATE" />
+    <result column="resp_division" property="respDivision" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.haier.shop.model.OrderhpRejectionLogs" extends="BaseResultMap" >
+    
+  </resultMap>
+  
+ <resultMap id="ReportResultMap" type="com.haier.shop.model.PutAway" >
+    <result column="cOrderSn" property="netListNum" jdbcType="VARCHAR" />
+    <result column="sec_code" property="secCode" jdbcType="VARCHAR" />
+    <result column="typeName" property="category" jdbcType="VARCHAR" />
+    <result column="product_type_id" property="materielNum" jdbcType="VARCHAR" />
+    <result column="product_no" property="machineNum" jdbcType="VARCHAR" />
+    <result column="recordSn" property="pushWarehouseNum" jdbcType="VARCHAR" />
+    <result column="addtimeTs" property="addtimeTs" jdbcType="DATE" />
+    <result column="hp_les_id" property="negativeLadingListNum" jdbcType="VARCHAR" />
+    <result column="hp_les_date" property="negativeProduceDate" jdbcType="DATE" />
+    <result column="inspectTime" property="pushTime" jdbcType="VARCHAR" />
+    <result column="successTime" property="returnResultTime" jdbcType="DATE" />
+    <result column="TwoAppraisalDate" property="secondPushTime" jdbcType="DATE" />
+   	<result column="storageType" property="storageType" jdbcType="TINYINT" />
+   	<result column="is_tz" property="istz"  />	
+   	<result column="parentPath" property="parentPath" />
+   	<result column="checkType" property="checkType" />
+   	<result column="woId" property="woId" />
+   	<result column="orderSn" property="orderNum" />
+   	<result column="repairSn" property="repairsNum" />
+    <result column="repairdate" property="repairsDate" />
+   	<result column="NetPointTime" property="NetPointTime" />
+   	<result column="reversePush" property="reversePush" /> 
+   	<result column="quality" property="quality" /> 
+   	<result column="handleStatus" property="handleStatus" /> 
+   	<result column="typeFlag" property="rejectOrSign" /> 
+   	<result column="productName" property="productName" /> 
+   	<result column="refundAmount" property="refundAmount" /> 
+   	<result column="reason" property="reason" /> 
+   	<result column="description" property="description" /> 
+   	<result column="netPointCode" property="netPointCode" /> 
+   	<result column="finishTime" property="rejectOrSignDate" /> 
+ </resultMap>
+  <sql id="Base_Column_List" >
+    id, so_num, vbelnso, product_type_id, product_no, count_num, inwh_id, inwh_date, 
+    key_product_no, main_sku, sub_count, channel_order_sn, channel, sec_code, hp_les_date, 
+    resp_division
+  </sql>
+  <sql id="Blob_Column_List" >
+    hp_les_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from OrderHPRejectionLogs
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+   <select id="notfitcount" resultType="Integer" >
+   SELECT 
+	count(1)
+		from OrderHPRejectionLogs orl 
+		left join OrderRepairHPRecords orhr
+		on orl.product_no = orhr.machineNum
+		LEFT JOIN OrderRepairLESRecords oles
+		on orhr.orderProductId = oles.orderProductId
+		LEFT JOIN OrderProducts op
+		on op.id = orhr.orderProductId
+		LEFT JOIN OrderRepairs  ore
+		on ore.id = orhr.orderRepairId 
+		LEFT JOIN Orders  o
+		on o.id = ore.orderId
+		LEFT JOIN ProductTypes pt
+		on pt.attrCateId = op.productType
+		LEFT JOIN OrderRepairFromHps ofp
+		on ofp.orderProductId = op.id
+		LEFT JOIN OrderProductsAttributes opa
+		on opa.order_product_id = op.id
+		where orhr.checkResult = '2'
+  </select>
+
+    <select id="findNotFit" resultMap="ReportResultMap"  >
+SELECT 
+		orl.sec_code,
+		orl.product_type_id,
+		orl.product_no,
+		orl.hp_les_id,
+		orl.hp_les_date,
+		orhr.orderProductId,
+		orhr.inspectTime,
+		orhr.checkType checkType,
+		orhr.woId,
+		oles.storageType,
+		op.cOrderSn,FROM_UNIXTIME(oles.addTime) addtimeTs,
+		pt.typeName,
+		opa.is_tz,
+		o.orderSn,
+		orhr.quality quality,
+		ore.repairSn,
+		ore.handleStatus,
+		FROM_UNIXTIME(ore.addTime) repairdate
+		from OrderHPRejectionLogs orl 
+		left join OrderRepairHPRecords orhr
+		on orl.product_no = orhr.machineNum
+		LEFT JOIN OrderRepairLESRecords oles
+		on orhr.orderProductId = oles.orderProductId
+		LEFT JOIN OrderProducts op
+		on op.id = orhr.orderProductId
+		LEFT JOIN OrderRepairs  ore
+		on ore.id = orhr.orderRepairId 
+		LEFT JOIN Orders  o
+		on o.id = ore.orderId
+		LEFT JOIN ProductTypes pt
+		on pt.attrCateId = op.productType
+		LEFT JOIN OrderRepairFromHps ofp
+		on ofp.orderProductId = op.id
+		LEFT JOIN OrderProductsAttributes opa
+		on opa.order_product_id = op.id
+		where orhr.checkResult = '2'
+  </select>
+     <select id="findNotInStockWarning" resultMap="ReportResultMap" >
+  SELECT 
+		orl.sec_code,
+		orl.product_type_id,
+		orl.product_no,
+		orl.hp_les_id,
+		orl.hp_les_date,
+		orhr.orderProductId,
+		orhr.inspectTime,
+		orhr.netPointCode,
+		orhr.checkType checkType,
+		orhr.woId,
+    	orhr.TwoAppraisalDate,
+		oles.storageType,
+		op.productName,
+		op.cOrderSn,FROM_UNIXTIME(oles.addTime) addtimeTs,
+		pt.typeName,
+		opa.is_tz,
+		o.orderSn,
+		orhr.quality quality,
+		ore.repairSn,
+		ore.refundAmount,
+		ore.reason,
+		ore.description,
+		ore.typeFlag,
+		FROM_UNIXTIME(ore.finishTime) finishTime,
+		ore.handleStatus,
+		FROM_UNIXTIME(ore.addTime) repairdate
+		from OrderHPRejectionLogs orl 
+		left join OrderRepairHPRecords orhr
+		on orl.product_no = orhr.machineNum
+		LEFT JOIN OrderRepairLESRecords oles
+		on orhr.orderProductId = oles.orderProductId
+		LEFT JOIN OrderProducts op
+		on op.id = orhr.orderProductId
+		LEFT JOIN OrderRepairs  ore
+		on ore.id = orhr.orderRepairId 
+		LEFT JOIN Orders  o
+		on o.id = ore.orderId
+		LEFT JOIN ProductTypes pt
+		on pt.attrCateId = op.productType
+		LEFT JOIN OrderRepairFromHps ofp
+		on ofp.orderProductId = op.id
+		LEFT JOIN OrderProductsAttributes opa
+		on opa.order_product_id = op.id
+		where ore.storageStatus = '2'
+
+  </select>
+     <select id="findNoChangeWarning" resultMap="ReportResultMap" >
+   SELECT 
+		orl.sec_code,
+		orl.product_type_id,
+		orl.product_no,
+		orl.hp_les_id,
+		orl.hp_les_date,
+		orhr.orderProductId,
+		orhr.inspectTime,
+		orhr.checkType checkType,
+		orhr.woId,
+    	orhr.TwoAppraisalDate,
+		oles.storageType,
+		op.cOrderSn,FROM_UNIXTIME(oles.addTime) addtimeTs,
+		pt.typeName,
+		opa.is_tz,
+		o.orderSn,
+		orhr.quality quality,
+		ore.repairSn,
+		ore.handleStatus,
+		FROM_UNIXTIME(ore.addTime) repairdate
+		from OrderHPRejectionLogs orl 
+		left join OrderRepairHPRecords orhr
+		on orl.product_no = orhr.machineNum
+		LEFT JOIN OrderRepairLESRecords oles
+		on orhr.orderProductId = oles.orderProductId
+		LEFT JOIN OrderProducts op
+		on op.id = orhr.orderProductId
+		LEFT JOIN OrderRepairs  ore
+		on ore.id = orhr.orderRepairId 
+		LEFT JOIN Orders  o
+		on o.id = ore.orderId
+		LEFT JOIN ProductTypes pt
+		on pt.attrCateId = op.productType
+		LEFT JOIN OrderRepairFromHps ofp
+		on ofp.orderProductId = op.id
+		LEFT JOIN OrderProductsAttributes opa
+		on opa.order_product_id = op.id
+		where orhr.packResult != '1'
+  </select>
+  <select id="findbox" resultMap="ReportResultMap"  >
+SELECT 
+		orl.sec_code,
+		orl.product_type_id,
+		orl.product_no,
+		orl.hp_les_id,
+		orl.hp_les_date,
+		orhr.orderProductId,
+		orhr.inspectTime,
+		orhr.TwoAppraisalDate,
+		oles.recordSn,
+		oles.storageType,
+		op.cOrderSn,FROM_UNIXTIME(oles.addTime) addtimeTs,pt.typeName,
+		FROM_UNIXTIME(ofp.successTime) successTime	
+		from OrderHPRejectionLogs orl 
+		left join OrderRepairHPRecords orhr
+		on orl.product_no = orhr.machineNum
+		LEFT JOIN OrderRepairLESRecords oles
+		on orhr.orderProductId = oles.orderProductId
+		LEFT JOIN OrderProducts op
+		on op.id = orhr.orderProductId
+		LEFT JOIN ProductTypes pt
+		on pt.attrCateId = op.productType
+		LEFT JOIN OrderRepairFromHps ofp
+		on ofp.orderProductId = op.id
+		where orhr.quality = '2' and oles.operate = '12'
+
+  </select>
+  
+  
+    <select id="findnotinstock" resultMap="ReportResultMap"  >
+SELECT 
+		orl.sec_code,
+		orl.product_type_id,
+		orl.product_no,
+		orl.hp_les_id,
+		orl.hp_les_date,
+		orhr.orderProductId,
+		orhr.inspectTime,
+		orhr.TwoAppraisalDate,
+		oles.recordSn,
+		oles.storageType,
+		op.cOrderSn,FROM_UNIXTIME(oles.addTime) addtimeTs,
+		pt.typeName,
+		opa.is_tz,
+		pc.parentPath as parentPath,
+		FROM_UNIXTIME(ofp.successTime) successTime	
+		from OrderHPRejectionLogs orl 
+		left join OrderRepairHPRecords orhr
+		on orl.product_no = orhr.machineNum
+		LEFT JOIN OrderRepairLESRecords oles
+		on orhr.orderProductId = oles.orderProductId
+		LEFT JOIN OrderProducts op
+		on op.id = orhr.orderProductId
+		LEFT JOIN ProductTypes pt
+		on pt.attrCateId = op.productType
+		LEFT JOIN OrderRepairFromHps ofp
+		on ofp.orderProductId = op.id
+		LEFT JOIN OrderProductsAttributes opa
+		on opa.order_product_id = op.id
+		LEFT JOIN ProductCates pc
+		on pt.typeName = pc.cateName
+		where orhr.quality = '2' and oles.operate = '12' 
+
+  </select>
+      <select id="findoutnum" resultType="String"  >
+SELECT 
+		oles.recordSn
+		from OrderHPRejectionLogs orl 
+		left join OrderRepairHPRecords orhr
+		on orl.product_no = orhr.machineNum
+		LEFT JOIN OrderRepairLESRecords oles
+		on orhr.orderProductId = oles.orderProductId
+		LEFT JOIN OrderProducts op
+		on op.id = orhr.orderProductId
+		where orhr.quality = '2' and oles.operate = '11' and oles.storageType = '22'
+  </select>
+  
+  
+    <select id="findmach" resultMap="ReportResultMap"  >
+		SELECT orl.sec_code,
+		orl.product_type_id,
+		orl.product_no,
+		orl.hp_les_id,
+		orl.hp_les_date,orhr.orderProductId,oles.recordSn,op.cOrderSn,FROM_UNIXTIME(oles.addTime) addtimeTs,pt.typeName 
+		from OrderHPRejectionLogs orl 
+		left join OrderRepairHPRecords orhr
+		on orl.product_no = orhr.machineNum
+		LEFT JOIN OrderRepairLESRecords oles
+		on orhr.orderProductId = oles.orderProductId
+		LEFT JOIN OrderProducts op
+		on op.id = orhr.orderProductId
+		LEFT JOIN ProductTypes pt
+		on pt.attrCateId = op.productType
+		where orhr.quality = '5' or orhr.quality = '6' and oles.operate = '12'
+  </select>
+  
+  <select id="quereHPRejection" parameterType="java.lang.String" resultType="java.lang.String">
+  SELECT
+	id
+FROM
+	OrderHPRejectionLogs
+WHERE
+	channel_order_sn =#{orderReprisSn}
+  </select>
+  
+	  <select id="quereEmptyOutSAP" resultMap="BaseResultMap">
+	 SELECT
+		h.id,
+		h.channel_order_sn,
+		h.count_num,
+		h.product_no,
+		h.sec_code,
+		h.channel_order_sn
+	FROM
+		OrderHPRejectionLogs h,
+		OrderRepairs r
+	WHERE
+		h.channel_order_sn = r.repairSn
+	and h.EmptyOut='0'
+	and r.handleStatus !='6'
+	and h.inwh_id !=NULL
+	and EmptyIn ='1'
+	  </select>
+</mapper>

@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.stock.dao.stock.InvSectionDao">
+    <resultMap id="BaseResultMap" type="com.haier.stock.model.InvSection">
+        <id column="sec_code" property="secCode" jdbcType="VARCHAR"/>
+        <result column="les_sec_code" property="lesSecCode" jdbcType="VARCHAR"/>
+        <result column="sec_name" property="secName" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="wh_code" property="whCode" jdbcType="CHAR"/>
+        <result column="section_property" property="sectionProperty" jdbcType="VARCHAR"/>
+        <result column="channel_code" property="channelCode" jdbcType="VARCHAR"/>
+        <result column="item_property" property="itemProperty" jdbcType="CHAR"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="corp_code" property="corpCode" jdbcType="VARCHAR"/>
+        <result column="cust_code" property="custCode" jdbcType="VARCHAR"/>
+        <result column="region_code" property="regionCode" jdbcType="VARCHAR"/>
+        <result column="ehaier_deliver_code" property="ehaierDeliverCode" jdbcType="VARCHAR"/>
+        <result column="les_0e_code" property="les0eCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    sec_code, les_sec_code, sec_name, status, wh_code, section_property, channel_code, 
+    item_property, create_user, create_time, update_user, update_time, corp_code, cust_code, 
+    region_code, ehaier_deliver_code, les_0e_code
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from inv_section
+        where sec_code = #{secCode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from inv_section
+    where sec_code = #{secCode,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.haier.stock.model.InvSection">
+    insert into inv_section (sec_code, les_sec_code, sec_name, 
+      status, wh_code, section_property, 
+      channel_code, item_property, create_user, 
+      create_time, update_user, update_time, 
+      corp_code, cust_code, region_code, 
+      ehaier_deliver_code, les_0e_code)
+    values (#{secCode,jdbcType=VARCHAR}, #{lesSecCode,jdbcType=VARCHAR}, #{secName,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{whCode,jdbcType=CHAR}, #{sectionProperty,jdbcType=VARCHAR}, 
+      #{channelCode,jdbcType=VARCHAR}, #{itemProperty,jdbcType=CHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{corpCode,jdbcType=VARCHAR}, #{custCode,jdbcType=VARCHAR}, #{regionCode,jdbcType=VARCHAR}, 
+      #{ehaierDeliverCode,jdbcType=VARCHAR}, #{les0eCode,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.haier.stock.model.InvSection">
+        insert into inv_section
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="secCode != null">
+                sec_code,
+            </if>
+            <if test="lesSecCode != null">
+                les_sec_code,
+            </if>
+            <if test="secName != null">
+                sec_name,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="whCode != null">
+                wh_code,
+            </if>
+            <if test="sectionProperty != null">
+                section_property,
+            </if>
+            <if test="channelCode != null">
+                channel_code,
+            </if>
+            <if test="itemProperty != null">
+                item_property,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="corpCode != null">
+                corp_code,
+            </if>
+            <if test="custCode != null">
+                cust_code,
+            </if>
+            <if test="regionCode != null">
+                region_code,
+            </if>
+            <if test="ehaierDeliverCode != null">
+                ehaier_deliver_code,
+            </if>
+            <if test="les0eCode != null">
+                les_0e_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="secCode != null">
+                #{secCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lesSecCode != null">
+                #{lesSecCode,jdbcType=VARCHAR},
+            </if>
+            <if test="secName != null">
+                #{secName,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="whCode != null">
+                #{whCode,jdbcType=CHAR},
+            </if>
+            <if test="sectionProperty != null">
+                #{sectionProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="channelCode != null">
+                #{channelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="itemProperty != null">
+                #{itemProperty,jdbcType=CHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="corpCode != null">
+                #{corpCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custCode != null">
+                #{custCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regionCode != null">
+                #{regionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ehaierDeliverCode != null">
+                #{ehaierDeliverCode,jdbcType=VARCHAR},
+            </if>
+            <if test="les0eCode != null">
+                #{les0eCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.haier.stock.model.InvSection">
+        update inv_section
+        <set>
+            <if test="lesSecCode != null">
+                les_sec_code = #{lesSecCode,jdbcType=VARCHAR},
+            </if>
+            <if test="secName != null">
+                sec_name = #{secName,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="whCode != null">
+                wh_code = #{whCode,jdbcType=CHAR},
+            </if>
+            <if test="sectionProperty != null">
+                section_property = #{sectionProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="channelCode != null">
+                channel_code = #{channelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="itemProperty != null">
+                item_property = #{itemProperty,jdbcType=CHAR},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="corpCode != null">
+                corp_code = #{corpCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custCode != null">
+                cust_code = #{custCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regionCode != null">
+                region_code = #{regionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ehaierDeliverCode != null">
+                ehaier_deliver_code = #{ehaierDeliverCode,jdbcType=VARCHAR},
+            </if>
+            <if test="les0eCode != null">
+                les_0e_code = #{les0eCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where sec_code = #{secCode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.haier.stock.model.InvSection">
+    update inv_section
+    set les_sec_code = #{lesSecCode,jdbcType=VARCHAR},
+      sec_name = #{secName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      wh_code = #{whCode,jdbcType=CHAR},
+      section_property = #{sectionProperty,jdbcType=VARCHAR},
+      channel_code = #{channelCode,jdbcType=VARCHAR},
+      item_property = #{itemProperty,jdbcType=CHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      corp_code = #{corpCode,jdbcType=VARCHAR},
+      cust_code = #{custCode,jdbcType=VARCHAR},
+      region_code = #{regionCode,jdbcType=VARCHAR},
+      ehaier_deliver_code = #{ehaierDeliverCode,jdbcType=VARCHAR},
+      les_0e_code = #{les0eCode,jdbcType=VARCHAR}
+    where sec_code = #{secCode,jdbcType=VARCHAR}
+  </update>
+
+    <sql id="where_fragement">
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.secCode != null and entity.secCode !='' ">
+                <![CDATA[ and sec_code LIKE CONCAT('%', #{entity.secCode} ,'%') ]]>
+            </if>
+            <if test="entity.lesSecCode != null and entity.lesSecCode !='' ">
+                <![CDATA[ and les_sec_code LIKE CONCAT('%', #{entity.lesSecCode} ,'%') ]]>
+            </if>
+            <if test="entity.secName != null and entity.secName !='' ">
+                <![CDATA[ and sec_name LIKE CONCAT('%', #{entity.secName} ,'%') ]]>
+            </if>
+        </if>
+    </sql>
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+    <!-- 查询page -->
+    <select id="getPageByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from inv_section
+        <include refid="where_fragement"/>
+        order by create_time desc
+        <include refid="pagination"/>
+    </select>
+    <select id="exportSection" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from inv_section
+        <include refid="where_fragement"/>
+        order by create_time desc
+    </select>
+    <!--分页count -->
+    <select id="getPagerCount" resultType="long"
+            parameterType="com.haier.stock.model.InvSection">
+        select count(1) from inv_section
+        <include refid="where_fragement"/>
+    </select>
+    <select id="checkSame" resultType="long"
+            parameterType="com.haier.stock.model.InvSection">
+		select count(1) from inv_section where sec_code = #{secCode}
+	</select>
+	
+	<select id="getBySecCode" parameterType="String" resultMap="BaseResultMap">
+        SELECT
+            `sec_code`,
+            `les_sec_code`,
+            `sec_name`,
+            `status`,
+            `wh_code`,
+            `section_property`,
+            `channel_code`,
+            `item_property`,
+            `create_user`,
+            `create_time`,
+            `update_user`,
+            `update_time`,
+            `corp_code`,
+            `cust_code`,
+            `region_code`,
+            `ehaier_deliver_code`,
+            `les_0e_code`
+        FROM `inv_section`
+        WHERE `sec_code` = #{secCode}
+    </select>
+     <select id="getByChannelCode" parameterType="String" resultMap="BaseResultMap">
+        SELECT
+            `sec_code`,
+            `les_sec_code`,
+            `sec_name`,
+            `status`,
+            `wh_code`,
+            `section_property`,
+            `channel_code`,
+            `item_property`,
+            `create_user`,
+            `create_time`,
+            `update_user`,
+            `update_time`,
+            `corp_code`,
+            `cust_code`,
+            `region_code`,
+            `ehaier_deliver_code`,
+            `les_0e_code`
+        FROM `inv_section`
+        WHERE `status` = 1 AND item_property = 10
+              AND `wh_code` = #{whCode} AND `channel_code` = #{channelCode}
+    </select>
+    
+     <select id="getByStatus" parameterType="Map" resultMap="BaseResultMap">
+        select
+        `sec_code`,`les_sec_code`,`sec_name`,`status`,`wh_code`,`section_property`,`channel_code`,`item_property`,`create_user`,`create_time`,`update_user`,`update_time`,`corp_code`,`cust_code`,`region_code`,`ehaier_deliver_code`,`les_0e_code`
+        from `inv_section`
+        <if test="status != null">
+            where `status` = #{status}
+        </if>
+    </select>
+      <select id="getInvSection" resultMap="BaseResultMap">
+        select
+        `sec_code`,`les_sec_code`,`sec_name`,`status`,`wh_code`,`section_property`,`channel_code`,`item_property`,`create_user`,`create_time`,`update_user`,`update_time`,`corp_code`,`cust_code`,`region_code`,`ehaier_deliver_code`,`les_0e_code`
+        from `inv_section`
+        where 1=1
+        <if test="itemProperty != null and itemProperty !=''">
+            and `item_property` = #{itemProperty}
+        </if>
+        <if test="lesSecCode != null and lesSecCode != ''">
+            and `les_sec_code` = #{lesSecCode}
+        </if>
+        <if test="channelCode != null and channelCode != ''">
+            and `channel_code` = #{channelCode}
+        </if>
+    </select>
+    
+    <select id="getByLesSecCodeAndChannelCode" resultMap="BaseResultMap">
+        SELECT
+            `sec_code`,
+            `les_sec_code`,
+            `sec_name`,
+            `status`,
+            `wh_code`,
+            `section_property`,
+            `channel_code`,
+            `item_property`,
+            `create_user`,
+            `create_time`,
+            `update_user`,
+            `update_time`,
+            `corp_code`,
+            `cust_code`,
+            `region_code`,
+            `ehaier_deliver_code`,
+            `les_0e_code`
+        FROM `inv_section`
+        WHERE `status` = 1 AND item_property = 10
+              AND `les_sec_code` = #{les_sec_code} AND `channel_code` = #{channelCode}
+    </select>
+</mapper>

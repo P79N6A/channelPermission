@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
+    
+    <title>测试 </title>
+    <script src="/static/third/easyui/jquery.min2.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/third/easyui/glo.js"></script>
+    <script src="/static/third/easyui/comm.js"></script>
+    <script src="/static/third/easyui/commgrid.js"></script>
+    <script src="/static/third/easyui/jQuery.Form.js"></script>
+    <script src="/static/js/pop/common/pop.js"></script>
+    <script src="/static/js/bootstrap-datepicker.js"></script>
+</head>
+<body style="font-size:11px">
+<style>
+
+
+    label {
+        font-weight: 600;
+    }
+
+    .fitem {
+        width: 100%;
+    }
+
+    .fitem input {
+        margin: 0 auto;
+    }
+    .panel-title{
+        font-size:16px
+
+    }
+
+</style>
+<div class="easyui-layout" style="width:100%;height:100%;">
+    <div id="toolbar_list" data-options="region:'north'" style="height:110px">
+        <div style="height: 18px"></div>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">店铺</span>
+            <!--<input id="policyYear" class="easyui-numberbox" type="text"/>-->
+            <input id="ccategoryId" name="dept" value="全部" name="productType"/>
+
+        </div>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">物料编码</span>
+                <input id="22" name="dept" value="全部" name="productType"/>
+        </div>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">外部产品编码</span>
+            <input id="cbrandId" name="dept" data-options="prompt:'全部'" name="productType"/>
+
+        </div>
+   <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">库位编码</span>
+            <input id="cbrandId" name="dept" data-options="prompt:'全部'" name="productType"/>
+
+        </div>
+         <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">外部库位编码</span>
+            <input id="cbrandId" name="dept" data-options="prompt:'全部'" name="productType"/>
+
+        </div>
+         <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">库存同步数量</span>
+            <input id="cbrandId" name="dept" data-options="prompt:'全部'" name="productType"/>
+
+        </div>
+         <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">同步结果</span>
+            <input id="cbrandId" name="dept" data-options="prompt:'全部'" name="productType"/>
+
+        </div>
+        <div style="font-size:14px;width: 100%">
+            <a href="#" class="easyui-linkbutton" onclick="SearchUnit()"
+               data-options="iconCls:'icon-search',plain:true">查询</a>
+            <a href="#" class="easyui-linkbutton" onclick="Add()"
+               data-options="iconCls:'icon-add',plain:true">增加</a>
+            <a href="#" class="easyui-linkbutton" onclick="list()"
+               data-options="iconCls:'icon-edit',plain:true">修改</a>
+            <a href="#" class="easyui-linkbutton" onclick="Delete()"
+               data-options="iconCls:'icon-remove',plain:true">删除</a>
+            <a href="#" class="easyui-linkbutton" onclick="SearchClear()"
+                   data-options="iconCls:'icon-redo',plain:true">重置</a>
+
+        </div>
+    </div>
+    <div data-options="region:'west'" style="width:100%;height: 100%">
+        <table id="gridView" style="width:100%;height: 100%"></table>
+    </div>
+
+</div>
+
+<!-- 修改表格 -->
+<div id="oDialog4" class="easyui-dialog" title="修改"
+     style="width: 300px; height: 265px;font-size:14px; padding: 0px 0px;overflow-y: hidden"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;display: block">
+
+
+        <div data-options="region:'center'" style="width:100%;height:100%;">
+
+            <br/>
+            &numsp;
+            
+            <label >来源店铺<span style="color: red;padding-right:20px">*</span></label>
+            &numsp;&numsp; &numsp;&numsp;
+            <input id="sku"   name="categoryName"  style="height:24px;width: 135px" readonly/>
+            <br/>
+            <br/>
+            &numsp;
+            <label style="padding-left: 1px">库位编码<span style="color: red;padding-right:7px">*</span></label>
+            &numsp;&numsp;&numsp;&numsp;&numsp;&numsp;
+            <input id="productName"   name="productName"  style="height:24px;width: 134px;    padding-right: 1px" readonly/>
+            <br/>
+            <br/>
+
+            &numsp;
+            <label style="padding-left: 3px;padding-right: 2px">外部库位编码<span style="color: red;padding-right:7px">*</span></label>
+            &numsp;&numsp; 
+            <input id="categoryName"   name="categoryName"  style="height:24px;width: 135px" readonly/>
+
+           
+           
+
+       
+
+            <input id="id" type="text" hidden>
+            <input id="brandId" type="text" hidden>
+            <input id="categoryId" type="text" hidden>
+
+
+        </div>
+
+
+        <div id="dlg-buttons6" data-options="region:'south'" style="height:40px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetCodeValue4()" iconcls="icon-ok">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript: $('#oDialog4').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+
+    </div>
+</div>
+
+<div id="oDialog" class="easyui-dialog" title="选择"
+     style="width: 500px; height: 440px; padding: 0px 0px; center:true;font-size:14px"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div data-options="region:'north'" style="height:40px">
+
+                <span class="search-row-label_80">物料编码</span>
+                <input id="sku1" style="width:100px" type="text" data-options="prompt:'物料编码'">
+                <span class="search-row-label_80">物料名称</span>
+                <input id="productName1" style="width:100px" type="text" data-options="prompt:'物料名称'">
+                <a href="#" class="easyui-linkbutton" onclick="product()"
+                   data-options="plain:true">查找</a>
+            </div>
+
+            <div data-options="region:'center'">
+                <table class="easyui-datagrid" id="code" style="width:600px;height:auto" fit="true"
+                       data-options="singleSelect:true,region:'center'">
+                    <thead>
+                    <tr>
+                        <th data-options="field:'ck',checkbox:true ,width:50,
+                            checkOnSelect: true,
+                            selectOnCheck :true">选择
+                        </th>
+                        <th data-options="field:'sku',width:200">物料编码</th>
+                        <th data-options="field:'productName',width:200">物料名称</th>
+                        <th data-options="field:'productTypeid',width:200" hidden>品类的id</th>
+
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div id="dlg-buttons1" data-options="region:'south'" style="height:35px" align="right">
+                <a href="javascript:void(0)" class="easyui-linkbutton"
+                   onclick="javascript:SetCodeValuep()" iconcls="icon-ok">确定</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+                   onclick="javascript:$('#oDialog').dialog('close')"
+                   iconcls="icon-cancel">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="oDialog2" class="easyui-dialog" title="选择"
+     style="width: 210px; height: 300px;font-size:14px; padding: 0px 0px; center:true"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+
+        <div data-options="region:'center'">
+            <div region="west" class="west" title="导航菜单"id="datetimepicker"  >
+
+            </div>
+        </div>
+
+
+        <div id="dlg-buttons4" data-options="region:'south'" style="height:40px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript:$('#oDialog2').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+    </div>
+</div>
+
+<div id="oDialog3" class="easyui-dialog" title="选择"
+     style="width: 210px; height: 300px;font-size:14px; padding: 0px 0px; center:true"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+
+        <div data-options="region:'center'">
+            <div region="west" class="west" title="导航菜单"id="datetimepicker1"  >
+
+            </div>
+        </div>
+
+
+        <div id="dlg-buttons3" data-options="region:'south'" style="height:40px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript:$('#oDialog3').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+    </div>
+</div>
+<script src="/static/js/pop/test/test3.js"></script>
+</body>
+</html>

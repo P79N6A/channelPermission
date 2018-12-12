@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderRepairTcRecordsWriteDao">
+
+	<update id="updateHpReturn" parameterType="com.haier.shop.model.OrderRepairTcRecords" >
+		update 
+		    `OrderRepairTcRecords` 
+		<set>
+		    <if test="lesOrderSn != null">
+				lesOrderSn = #{lesOrderSn},
+			</if>
+			<if test="lesOrderSnTime != null">
+				lesOrderSnTime = #{lesOrderSnTime},
+			</if>
+			<if test="hpCheckType != null">
+				hpCheckType = #{hpCheckType},
+			</if>
+			<if test="lesOutPing != null">
+				lesOutPing = #{lesOutPing},
+			</if>
+			<if test="lesOutPingTime != null">
+				lesOutPingTime = #{lesOutPingTime},
+			</if>
+			<if test="wwwScode != null">
+				wwwScode = #{wwwScode},
+			</if>
+			<if test="hpCheckType != null">
+				hpCheckType = #{hpCheckType},
+			</if>
+			<if test="vomNum != null">
+				vomNum = #{vomNum},
+			</if>
+			<if test="machineNum != null">
+				machineNum = #{machineNum}
+			</if>
+		</set>
+		where 
+		orderRepairSn=#{orderRepairSn} and sku=#{sku}
+	</update>
+	
+	<update id="updateAfterVomAccepted" parameterType="com.haier.shop.model.OrderRepairTcRecords">
+        UPDATE `OrderRepairTcRecords`
+        SET `lesOrderSnTime` = #{lesOrderSnTime}, `lesOrderSn` = #{lesOrderSn}
+        WHERE `id` = #{id}
+    </update>
+    
+    <update id="updateAfterLesInStorage" parameterType="com.haier.shop.model.OrderRepairTcRecords">
+		update `OrderRepairTcRecords` set `lesOutPing`=#{lesOutPing},`lesOutPingTime`= #{lesOutPingTime},
+		`wwwScode`=#{wwwScode},`vomNum`=#{vomNum}
+		where `id` = #{id}
+	</update>
+
+</mapper>

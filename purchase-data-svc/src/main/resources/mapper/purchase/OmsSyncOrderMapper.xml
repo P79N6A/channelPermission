@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.OmsSyncDao">
+	<resultMap id="omsOrderResult" type="com.haier.purchase.data.model.OmsOrderVO">
+		<result property="orderSoCode" column="oms_order_id" />
+		<!-- <result property="forecastFlang" column="" /> -->
+		<result property="orderState" column="status" />
+		<result property="latestArrivalTime" column="latest_arrive_date" />
+		<result property="plannedShipDate" column="plan_deliver_date" />
+		<result property="promisedArrivalDate" column="promise_arrive_date" />
+		<result property="actualShipDate" column="actual_deliver_date" />
+		<result property="reqArrivalDate" column="dn_create_date" />
+		<result property="transitArrivalDate" column="industry_trade_take_date" />
+		<result property="tradeSendDate" column="industry_trade_deliver_date" />
+		<result property="signDate" column="custom_sign_date" />
+		<result property="podDate" column="return_order_date" />
+		<result property="oesPredictRevDate" column="predict_arrive_date" />
+		<result property="custRevQty" column="sign_num" />
+		<result property="cancelReason" column="no_pass_reason" />
+		<result property="gvsOrderCode" column="gvs_order_id" />
+		<result property="gvsDn" column="dn_id" />
+		<result property="custOrderCode" column="order_id" />
+		<result property="confirmDate" column="confirm_order_time" />
+		<result property="submitDate" column="commit_time" />
+		<result property="eChannel" column="ed_channel_id" />
+		<result property="latest_leave_base_date" column="latest_leave_base_date" />
+		<result property="transit_code" column="shipment_combination_id" />
+		<result property="made_fectory_name" column="factory_name" />
+		<result property="made_fectory_code" column="factory_id" />
+		<result property="order_type_name" column="oms_order_type" />
+		<result property="md5" column="md5" />
+	</resultMap>
+
+	<parameterMap type="map" id="omsOrderMap"> 
+		<parameter property="orderSoCode" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="orderState" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="latestArrivalTime" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="plannedShipDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="promisedArrivalDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="actualShipDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="reqArrivalDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="transitArrivalDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="tradeSendDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="signDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="podDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="oesPredictRevDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="custRevQty" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="cancelReason" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="gvsOrderCode" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="gvsDn" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="custOrderCode" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="confirmDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="submitDate" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="eChannel" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="latest_leave_base_date" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="transit_code" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="made_fectory_name" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="made_fectory_code" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="order_type_name" jdbcType="VARCHAR" mode="IN"/> 
+	</parameterMap> 
+	<select id="getOrderIds"
+		parameterType="com.haier.purchase.data.model.OmsOrderVO$QueryCondition"
+		resultType="java.lang.String">
+		SELECT oms_order_id
+		FROM haier_t2_order_t
+		where (oms_order_id is not null
+		<if test="exclude_flag != null and exclude_flag != ''">
+			<![CDATA[
+			and flow_flag not in (${exclude_flag})
+			]]>
+		</if>
+		<if test="min_flow_flag != null and min_flow_flag != ''">
+			<![CDATA[
+			and flow_flag >= #{min_flow_flag}
+			]]>
+		</if>
+		<if test="max_flow_flag != null and max_flow_flag != ''">
+			<![CDATA[
+			and flow_flag <= #{max_flow_flag}
+			]]>
+		</if>
+		<if test="orderSoCode != null and orderSoCode != ''">
+			<![CDATA[
+			and oms_order_id = #{orderSoCode}
+			]]>
+		</if>
+		<if test="md5 != null and md5 != ''">
+			<![CDATA[
+			and md5 = #{md5}
+			]]>
+		</if>
+		)		
+		<if test="addition_contidition != null and addition_contidition != ''">
+		    ${addition_contidition}
+		</if>
+	</select>
+	
+	<select id="getOmsOrder"
+		parameterType="com.haier.purchase.data.model.OmsOrderVO$QueryCondition"
+		resultMap="omsOrderResult">
+		SELECT oms_order_id,
+		status,
+		date_format(latest_arrive_date,'%Y-%m-%d') as latest_arrive_date,
+		date_format(plan_deliver_date,'%Y-%m-%d') as plan_deliver_date,
+		date_format(promise_arrive_date,'%Y-%m-%d') as promise_arrive_date,
+		date_format(actual_deliver_date,'%Y-%m-%d') as actual_deliver_date,
+		date_format(dn_create_date,'%Y-%m-%d') as dn_create_date,
+		date_format(industry_trade_take_date,'%Y-%m-%d') as industry_trade_take_date,
+		date_format(industry_trade_deliver_date,'%Y-%m-%d') as industry_trade_deliver_date,
+		date_format(custom_sign_date,'%Y-%m-%d') as custom_sign_date,
+		date_format(return_order_date,'%Y-%m-%d') as return_order_date,
+		date_format(predict_arrive_date,'%Y-%m-%d') as predict_arrive_date,
+		sign_num,
+		no_pass_reason,
+		gvs_order_id,
+		dn_id,
+		order_id,
+		date_format(confirm_order_time,'%Y-%m-%d') as confirmDate,
+		date_format(commit_time,'%Y-%m-%d') as commit_time,
+		ed_channel_id,
+		date_format(latest_leave_base_date,'%Y-%m-%d') as latest_leave_base_date,
+		shipment_combination_id,
+		factory_name,
+		factory_id,
+		oms_order_type,
+		md5
+		FROM haier_t2_order_t
+		<where>
+			<if test="exclude_flag != null and exclude_flag != ''">
+				<![CDATA[
+				flow_flag not in (${exclude_flag})
+				]]>
+			</if>
+			<if test="min_flow_flag != null and min_flow_flag != ''">
+				<![CDATA[
+				and flow_flag >= #{min_flow_flag}
+				]]>
+			</if>
+			<if test="max_flow_flag != null and max_flow_flag != ''">
+				<![CDATA[
+				and flow_flag <= #{max_flow_flag}
+				]]>
+			</if>
+			<if test="orderSoCode != null and orderSoCode != ''">
+				<![CDATA[
+				and oms_order_id = #{orderSoCode}
+				]]>
+			</if>
+			<if test="md5 != null and md5 != ''">
+				<![CDATA[
+				and md5 = #{md5}
+				]]>
+			</if>
+		</where>
+	</select>
+
+	<update id="updateOrderFlowFlag"
+		parameterType="com.haier.purchase.data.model.OmsOrderVO">
+		update haier_t2_order_t
+		set
+		<choose>
+		    <when test="flow_flag != null and flow_flag != ''">
+		        flow_flag=#{flow_flag}
+		    </when>
+		    <otherwise>
+		        flow_flag=flow_flag
+		    </otherwise>
+		</choose>
+		where oms_order_id=#{orderSoCode}
+		<if test="flow_flag != null and flow_flag != ''">
+		    <![CDATA[ and ((flow_flag >= 0 and flow_flag < 60) or ${flow_flag} < 0 or flow_flag = -30)]]>
+		</if>
+	</update>
+	<update id="updateOrderStatus"
+		parameterType="com.haier.purchase.data.model.OmsOrderVO">
+		update haier_t2_order_t
+		set
+			status=#{orderState},
+			<choose>
+				<when test="latestArrivalTime != null and latestArrivalTime != ''">
+					latest_arrive_date=str_to_date(#{latestArrivalTime}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					latest_arrive_date = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="plannedShipDate != null and plannedShipDate != ''">
+					plan_deliver_date=str_to_date(#{plannedShipDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					plan_deliver_date = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="promisedArrivalDate != null and promisedArrivalDate != ''">
+					promise_arrive_date=str_to_date(#{promisedArrivalDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					promise_arrive_date = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="actualShipDate != null and actualShipDate != ''">
+					actual_deliver_date=str_to_date(#{actualShipDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					actual_deliver_date = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="reqArrivalDate != null and reqArrivalDate != ''">
+					dn_create_date=str_to_date(#{reqArrivalDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					dn_create_date = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="transitArrivalDate != null and transitArrivalDate != ''">
+					industry_trade_take_date=str_to_date(#{transitArrivalDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					industry_trade_take_date = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="tradeSendDate != null and tradeSendDate != ''">
+					industry_trade_deliver_date=str_to_date(#{tradeSendDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					industry_trade_deliver_date = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="signDate != null and signDate != ''">
+					custom_sign_date=str_to_date(#{signDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					custom_sign_date = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="podDate != null and podDate != ''">
+					return_order_date=str_to_date(#{podDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					return_order_date = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="oesPredictRevDate != null and oesPredictRevDate != ''">
+					predict_arrive_date=str_to_date(#{oesPredictRevDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					predict_arrive_date = NULL,
+				</otherwise>
+			</choose>
+			sign_num=#{custRevQty},
+			no_pass_reason=#{cancelReason},
+			gvs_order_id=#{gvsOrderCode},
+			dn_id=#{gvsDn},
+			<choose>
+				<when test="confirmDate != null and confirmDate != ''">
+					confirm_order_time=str_to_date(#{confirmDate}, '%Y-%m-%d %H:%i:%s'),
+				</when>
+				<otherwise>
+					confirm_order_time = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="submitDate != null and submitDate != ''">
+					commit_time=str_to_date(#{submitDate}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					commit_time = NULL,
+				</otherwise>
+			</choose>
+			<choose>
+				<when test="latest_leave_base_date != null and latest_leave_base_date != ''">
+					latest_leave_base_date=str_to_date(#{latest_leave_base_date}, '%Y-%m-%d'),
+				</when>
+				<otherwise>
+					latest_leave_base_date = NULL,
+				</otherwise>
+			</choose>
+			<if test="custpodetailcode != null and custpodetailcode != ''">
+			    custpodetailcode=#{custpodetailcode},
+			</if>
+			<if test="prodseriescode != null and prodseriescode != ''">
+			    series_id=#{prodseriescode},
+			</if>			
+			shipment_combination_id=#{transit_code},
+			factory_name=#{made_fectory_name},
+			factory_id=#{made_fectory_code},
+			oms_order_type=#{order_type_name}
+			<if test="md5 != null and md5 != ''">
+				,md5=#{md5}
+			</if>
+		where
+			oms_order_id=#{orderSoCode}
+	</update>
+	
+	<update id="callUpdateProc" parameterMap="omsOrderMap" statementType="CALLABLE">
+		{call updateOrder(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}
+	</update>
+	
+	<update id="replaceOrderStatus" parameterType="com.haier.purchase.data.model.OmsOrderVO">
+	INSERT INTO haier_t2_order_t(
+			status,
+			latest_arrive_date,
+			plan_deliver_date,
+			promise_arrive_date,
+			actual_deliver_date,
+			dn_create_date,
+			industry_trade_take_date,
+			industry_trade_deliver_date,
+			custom_sign_date,
+			return_order_date,
+			predict_arrive_date,
+			sign_num,
+			no_pass_reason,
+			gvs_order_id,
+			dn_id,
+			oms_order_id,
+			confirm_order_time,
+			commit_time,
+			ed_channel_id,
+			latest_leave_base_date,
+			shipment_combination_id,
+			factory_name,
+			factory_id,
+			oms_order_type,
+			order_id
+	)
+	VALUES(#{orderState},
+			str_to_date(#{latestArrivalTime}, '%Y-%m-%d %H:%i:%s'),
+			str_to_date(#{plannedShipDate}, '%Y-%m-%d	%H:%i:%s'),
+			str_to_date(#{promisedArrivalDate}, '%Y-%m-%d %H:%i:%s'),
+			str_to_date(#{actualShipDate}, '%Y-%m-%d %H:%i:%s'),
+			str_to_date(#{reqArrivalDate}, '%Y-%m-%d %H:%i:%s'),
+			str_to_date(#{transitArrivalDate}, '%Y-%m-%d %H:%i:%s'),
+			str_to_date(#{tradeSendDate}, '%Y-%m-%d %H:%i:%s'),
+			str_to_date(#{signDate}, '%Y-%m-%d %H:%i:%s'),
+			str_to_date(#{podDate}, '%Y-%m-%d %H:%i:%s'),
+			str_to_date(#{oesPredictRevDate}, '%Y-%m-%d	%H:%i:%s'),
+			#{custRevQty},
+			#{cancelReason},
+			#{gvsOrderCode},
+			#{gvsDn},
+			#{orderSoCode},
+			str_to_date(#{confirmDate}, '%Y-%m-%d'),
+			str_to_date(#{submitDate}, '%Y-%m-%d'),
+			#{eChannel},
+			str_to_date(#{latest_leave_base_date}, '%Y-%m-%d %H:%i:%s'),
+			#{transit_code},
+			#{made_fectory_name},
+			#{made_fectory_code},
+			#{order_type_name},
+			#{custOrderCode})
+	ON DUPLICATE KEY UPDATE
+		status=VALUES(status),
+		latest_arrive_date=VALUES(latest_arrive_date),
+		plan_deliver_date=VALUES(plan_deliver_date),
+		promise_arrive_date=VALUES(promise_arrive_date),
+		actual_deliver_date=VALUES(actual_deliver_date),
+		dn_create_date=VALUES(dn_create_date),
+		industry_trade_take_date=VALUES(industry_trade_take_date),
+		industry_trade_deliver_date=VALUES(industry_trade_deliver_date),
+		custom_sign_date=VALUES(custom_sign_date),
+		return_order_date=VALUES(return_order_date),
+		predict_arrive_date=VALUES(predict_arrive_date),
+		sign_num=VALUES(sign_num),
+		no_pass_reason=VALUES(no_pass_reason),
+		gvs_order_id=VALUES(gvs_order_id),
+		dn_id=VALUES(dn_id),
+		confirm_order_time=VALUES(confirm_order_time),
+		commit_time=VALUES(commit_time),
+		ed_channel_id=VALUES(ed_channel_id),
+		latest_leave_base_date=VALUES(latest_leave_base_date),
+		shipment_combination_id=VALUES(shipment_combination_id),
+		factory_name=VALUES(factory_name),
+		factory_id=VALUES(factory_id),
+		oms_order_type=VALUES(oms_order_type)
+	</update>
+	
+	<insert id="insertUpdateTable" parameterType="com.haier.purchase.data.model.OmsOrderVO">
+	insert into haier_t2_order_update(
+		status,
+		latest_arrive_date,
+		plan_deliver_date,
+		promise_arrive_date,
+		actual_deliver_date,
+		dn_create_date,
+		industry_trade_take_date,
+		industry_trade_deliver_date,
+		custom_sign_date,
+		return_order_date,
+		predict_arrive_date,
+		sign_num,
+		no_pass_reason,
+		gvs_order_id,
+		dn_id,
+		confirm_order_time,
+		commit_time,
+		ed_channel_id,
+		latest_leave_base_date,
+		shipment_combination_id,
+		factory_name,
+		factory_id,
+		oms_order_type,
+		oms_order_id,
+		md5)
+	values(
+		#{orderState},
+		str_to_date(#{latestArrivalTime}, '%Y-%m-%d %H:%i:%s'),
+		str_to_date(#{plannedShipDate}, '%Y-%m-%d	%H:%i:%s'),
+		str_to_date(#{promisedArrivalDate}, '%Y-%m-%d %H:%i:%s'),
+		str_to_date(#{actualShipDate}, '%Y-%m-%d %H:%i:%s'),
+		str_to_date(#{reqArrivalDate}, '%Y-%m-%d %H:%i:%s'),
+		str_to_date(#{transitArrivalDate}, '%Y-%m-%d %H:%i:%s'),
+		str_to_date(#{tradeSendDate}, '%Y-%m-%d %H:%i:%s'),
+		str_to_date(#{signDate}, '%Y-%m-%d %H:%i:%s'),
+		str_to_date(#{podDate}, '%Y-%m-%d %H:%i:%s'),
+		str_to_date(#{oesPredictRevDate}, '%Y-%m-%d	%H:%i:%s'),
+		#{custRevQty},
+		#{cancelReason},
+		#{gvsOrderCode},
+		#{gvsDn},
+		str_to_date(#{confirmDate}, '%Y-%m-%d %H:%i:%s'),
+		str_to_date(#{submitDate}, '%Y-%m-%d %H:%i:%s'),
+		#{eChannel},
+		str_to_date(#{latest_leave_base_date}, '%Y-%m-%d %H:%i:%s'),
+		#{transit_code},
+		#{made_fectory_name},
+		#{made_fectory_code},
+		#{order_type_name},
+		#{orderSoCode},
+		#{md5})
+	</insert>
+	
+	<update id="syncDataFromUpdateTable">
+	UPDATE haier_t2_order_t a
+	INNER JOIN haier_t2_order_update b ON a.oms_order_id = b.oms_order_id
+	SET a. STATUS = b. STATUS,
+	 a.latest_arrive_date = b.latest_arrive_date,
+	 a.plan_deliver_date = b.plan_deliver_date,
+	 a.promise_arrive_date = b.promise_arrive_date,
+	 a.actual_deliver_date = b.actual_deliver_date,
+	 a.dn_create_date = b.dn_create_date,
+	 a.industry_trade_take_date = b.industry_trade_take_date,
+	 a.industry_trade_deliver_date = b.industry_trade_deliver_date,
+	 a.custom_sign_date = b.custom_sign_date,
+	 a.return_order_date = b.return_order_date,
+	 a.predict_arrive_date = b.predict_arrive_date,
+	 a.sign_num = b.sign_num,
+	 a.no_pass_reason = b.no_pass_reason,
+	 a.gvs_order_id = b.gvs_order_id,
+	 a.dn_id = b.dn_id,
+	 a.confirm_order_time = b.confirm_order_time,
+	 a.commit_time = b.commit_time,
+	 a.ed_channel_id = b.ed_channel_id,
+	 a.latest_leave_base_date = b.latest_leave_base_date,
+	 a.shipment_combination_id = b.shipment_combination_id,
+	 a.factory_name = b.factory_name,
+	 a.factory_id = b.factory_id,
+	 a.oms_order_type = b.oms_order_type
+	</update>
+	
+	<delete id="deleteUpdateTable">
+		delete from haier_t2_order_update
+	</delete>
+</mapper>

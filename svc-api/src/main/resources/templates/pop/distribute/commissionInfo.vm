@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>订单佣金信息</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+    <script src="/static/js/pop/common/pop.js"></script>
+    <script src="/static/third/easyui/glo.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false,showFooter:true">
+    <table id="datagrid_orderForecastGoal"></table>
+</div>
+<div class="datagrid-footer-inner" style="display: block;">
+    <table class="datagrid-ftable" cellspacing="0" cellpadding="0" border="0" style="">
+        <tbody>
+        <tr class="datagrid-row" datagrid-row-index="0" style="height: 35px;">
+            <td class="datagrid-td-rownumber">
+                <div class="datagrid-cell-rownumber" style="visibility: hidden;">1</div>
+            </td>
+            <td field="id">
+                <div style="visibility: hidden;" class="datagrid-cell-check"><input type="checkbox" name="id" value="">
+                </div>
+            </td>
+            <td field="orderNo">
+                <div style="height:auto;" class="datagrid-cell datagrid-cell-c1-orderNo"><span style="color:#3c8dbc; ">总金额</span>
+                </div>
+            </td>
+            <td field="afterPay">
+                <div style="height:auto;" class="datagrid-cell datagrid-cell-c1-afterPay"><span
+                        style="color:#3c8dbc;font-weight: bold;">18895元</span></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="export">
+    <form id="exportForm" action="#">
+        <input id="sureYearMonth_e" name="sureYearMonth_e" type="hide">
+        <input id="source_e" name="source_e" type="hidden">
+        <input id="ccategoryId_e" name="ccategoryId_e" type="hidden">
+        <input id="orderNo_e" name="orderNo_e" type="hidden">
+        <input id="sourceOrderNo_e" name="sourceOrderNo_e" type="hidden">
+        <input id="itemName_e" name="itemName_e" type="hidden">
+        <input id="itemSku_e" name="itemSku_e" type="hidden">
+        <input id="payTime_e" name="payTime_e" type="hidden">
+        <input id="payTimeEnd_e" name="payTimeEnd_e" type="hidden">
+        <input id="code" name="code" type="hidden">
+    </form>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+       
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <!-- <div class="search-row_nowidth mar_r6px">
+                 <span class="search-row-label_80">网单号</span>
+                 <input id="cOrderNo" class="easyui-textbox" data-options="prompt:'请输入网单号'">
+             </div>-->
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">确认月份</span>
+                <input id="sureYearMonth" class="easyui-datebox" data-options="prompt:'请选择确认月份'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">订单来源</span>
+                <select id="source" name="source" class="easyui-combobox">
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">订单号</span>
+                <input id="orderNo" class="easyui-textbox" data-options="prompt:'请输入订单号'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">来源订单号</span>
+                <input id="sourceOrderNo" class="easyui-textbox" data-options="prompt:'请输入来源订单号'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">商品名称</span>
+                <input id="itemName" class="easyui-textbox" data-options="prompt:'请输入商品名称'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">商品编号</span>
+                <input id="itemSku" class="easyui-textbox" data-options="prompt:'请输入商品编号'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">产品组</span>
+                <input id="ccategoryId" class="easyui-textbox" name="productType" data-options="prompt:'请选择产品组'"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">确认时间</span>
+                <input id="payTime" name="payTime" class="easyui-datebox" data-options="prompt:'请选择确认时间'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">至</span>
+                <input id="payTimeEnd" name="payTimeEnd" class="easyui-datebox" data-options="prompt:'请选择确认时间'">
+            </div>
+            </select>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn_productList"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+        <input id="e_code" hidden>
+    </form>
+</div>
+<!--<div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:350px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>物料编码<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="sku" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>型号<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="materialdescription" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>渠道<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="channelcode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单周<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderweek" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单年<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderyear" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>目标销售<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="goalqty" required="true"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_orderForecastGoal').dialog('close')">取消</a>
+    </div>
+</div>-->
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this =
+        $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastGoal').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="/static/js/pop/distribute_order/commissionInfo.js"></script>
+</body>
+</html>

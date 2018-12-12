@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.InvoicesReadyReadDao">
+    <resultMap id="invoicesReadyResult" type="com.haier.shop.model.InvoicesReady">
+        <result property="id" column="id" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="status" column="status" />
+        <result property="addTime" column="addTime" />
+        <result property="doTime" column="doTime" />
+        <result property="message" column="message" />
+    </resultMap>
+    <select id="getByOrderProductId" parameterType="Integer" resultMap="invoicesReadyResult">
+        select `id`,`orderProductId`,`status`,`addTime`,`doTime`,`message`
+        from `InvoicesReady`
+        where `orderProductId` = #{orderProductId}
+        limit 1
+    </select>
+</mapper>

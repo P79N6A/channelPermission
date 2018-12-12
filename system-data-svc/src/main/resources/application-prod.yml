@@ -1,0 +1,39 @@
+interconn:
+  project: 3W-CBS
+  app: system-data
+  monitor:
+    url: http://collector.c.haier.net
+    enable: false
+  trace:
+    url: http://collector-trace.c.haier.net
+    sample: 0.1 #抽样率，0：关闭，1：全采样，sample<1：部分采样
+
+dubbo:
+  registry: 10.138.8.223:2181,10.138.8.224:2181,10.138.8.225:2181
+  port: 20896     #服务提供者服务端口，默认-1
+  threads: 100    #服务线程池大小(固定大小)，默认为2
+  heartBeats: 10000 #心跳间隔，检查连接是否已断开，默认30000
+  serialization: hessian2    #协议序列化方式（可选配置，Dubbo有默认值）;
+
+
+spring:
+  datasource:
+    base:
+     url: jdbc:mysql://10.135.30.137:5637/base_system?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+     username: root
+     password: Haier,123
+     driver-class-name: com.mysql.jdbc.Driver
+     testOnBorrow: true
+     testOnReturn: true
+     testWhileIdle: true
+     validation-query: SELECT 1
+     time-between-eviction-runs-millis: 30000
+     min-evictable-idle-time-millis: 60000
+     max-active: 200
+     max-idle: 10
+
+
+mybatis:
+  typeAliasesPackage: com.haier.system
+  mapper-locations: classpath:mapper/*/*Mapper.xml
+

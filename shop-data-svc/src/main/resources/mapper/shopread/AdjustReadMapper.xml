@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.AdjustReadDao">
+
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="popOrderMap" type="com.haier.shop.model.Adjust">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
+		<result column="afterPay" property="afterPay" jdbcType="VARCHAR" />
+		<result column="book" property="book" jdbcType="VARCHAR" />
+		<result column="orderSource" property="orderSource" jdbcType="VARCHAR" />
+		<result column="sourceOrder" property="sourceOrder" jdbcType="VARCHAR" />
+		<result column="invoiceType" property="invoiceType" jdbcType="VARCHAR" />
+		<result column="makeOrderTime" property="makeOrderTime" jdbcType="VARCHAR" />
+		<result column="syncShopTime" property="syncShopTime" jdbcType="VARCHAR" />
+		<result column="firstConfirmTime" property="firstConfirmTime" jdbcType="VARCHAR" />
+		<result column="payTime" property="payTime" jdbcType="VARCHAR" />
+		<result column="memberLevel" property="memberLevel" jdbcType="DATE" />
+		<result column="orderMoney" property="orderMoney" jdbcType="INTEGER" />
+		<result column="orderType" property="orderType" jdbcType="DECIMAL" />
+		<result column="orderStatus" property="orderStatus" jdbcType="VARCHAR" />
+		<result column="payStatus" property="payStatus" jdbcType="INTEGER" />
+		<result column="haveConfirmTime" property="haveConfirmTime" jdbcType="VARCHAR" />
+		<result column="field0" property="field0" jdbcType="DATE" />
+		<result column="field1" property="field1" jdbcType="VARCHAR" />
+		<result column="field2" property="field2" jdbcType="VARCHAR" />
+		
+		<result column="jsfs" property="jsfs" jdbcType="VARCHAR"/>
+        <result column="tszt" property="tszt" jdbcType="VARCHAR"/>
+        <result column="shzt" property="shzt" jdbcType="VARCHAR"/>
+        <result column="tssj" property="tssj" jdbcType="DATE"/>
+        
+         <result column="attYearMonth" property="attYearMonth" jdbcType="VARCHAR"/>
+         <result column="memberLevels" property="memberLevels" jdbcType="DATE"/>
+         <result column="memberLevele" property="memberLevele" jdbcType="DATE"/>
+         <result column="field0s" property="field0s" jdbcType="DATE"/>
+         <result column="field0e" property="field0e" jdbcType="DATE"/>
+         
+         <result column="field0s1" property="field0s1" jdbcType="VARCHAR" />
+          <result column="memberLevels1" property="memberLevels1" jdbcType="VARCHAR"/>
+            
+	</resultMap>
+
+	<!-- =========================================================== -->
+	<!-- 公共变量定义 -->
+	<!-- =========================================================== -->
+	<!-- oracle 分页头部 -->
+	<sql id="pagination_Head">
+    <![CDATA[
+        select * from ( select row_.*, rownum rownum_ from (
+        ]]>
+	</sql>
+	<!-- oracle 分页尾部 -->
+	<sql id="pagination_Tail">
+    <![CDATA[
+        ) row_ where rownum < (#{pager.page} * #{pager.rows} +1) ) where rownum_ >= ((#{pager.page} -1) * #{pager.rows} +1)
+        ]]>
+	</sql>
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+    <![CDATA[
+        select count(1) from (
+        ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+    <![CDATA[
+        )
+        ]]>
+	</sql>
+	<sql id="pagination_OrderBy">
+		<if test="pager.sort != null and pager.sort !=''">
+			ORDER BY ${pager.sort} ${pager.order}
+		</if>
+	</sql>
+
+	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id,	
+		orderNo,
+	    afterPay,
+        book,
+	    orderSource,
+		sourceOrder,
+		invoiceType,
+		makeOrderTime,
+		syncShopTime,
+		payTime,
+		firstConfirmTime,
+		DATE_FORMAT(memberLevel, '%Y-%m-%d %H:%i:%s') as memberLevels1,
+		memberLevel,
+ 	    orderMoney,
+		orderType,
+		orderStatus,
+		payStatus,
+		haveConfirmTime,
+		DATE_FORMAT(field0, '%Y-%m-%d %H:%i:%s') as field0s1,
+		field0,
+ 		field1,
+		field2,
+		jsfs,
+		shzt,
+		tszt,
+		tssj
+	</sql>
+
+	<!-- 查询条件 -->
+	<sql id="where_fragement">
+		where 1=1
+		 <if test="entity!=null">
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id = #{entity.id} ]]>
+			</if>
+			<if test="entity.attYearMonth != null and entity.attYearMonth !='' ">
+                <![CDATA[ and (haveConfirmTime = #{entity.haveConfirmTime} and payStatus = #{entity.payStatus}) ]]>
+			</if>
+			<if test="entity.jsfs != null and entity.jsfs !='' ">
+                <![CDATA[ and jsfs = #{entity.jsfs}]]>
+			</if>
+			<if test="entity.field2 != null and entity.field2 !='' ">
+                <![CDATA[ and field2 = #{entity.field2} ]]>
+			</if>
+			<if test="entity.sourceOrder != null and entity.sourceOrder !='' ">
+                 <![CDATA[ and sourceOrder  LIKE CONCAT('%',#{entity.sourceOrder},'%')]]>
+			</if>
+			
+			<if test="entity.memberLevels != null and entity.memberLevels !='' ">
+                <![CDATA[ and memberLevel >= #{entity.memberLevels} ]]>
+			</if>
+			<if test="entity.memberLevele != null and entity.memberLevele !='' ">
+                <![CDATA[ and memberLevel <= #{entity.memberLevele} ]]>
+			</if>
+			
+			<if test="entity.field0s != null and entity.field0s !='' ">
+                <![CDATA[ and field0 >= #{entity.field0s} ]]>
+			</if>
+			<if test="entity.field0e != null and entity.field0e !='' ">
+                <![CDATA[ and field0 <= #{entity.field0e} ]]>
+			</if>
+
+		</if>
+	</sql>
+
+	<!-- 相等查询条件 -->
+	<sql id="where_fragement_equals">
+		where 1=1
+		<!-- <if test="entity!=null">
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id  = #{entity.id} ]]>
+			</if>
+			<if test="entity.orderSn != null and entity.orderSn !='' ">
+                <![CDATA[ and orderSn  = #{entity.orderSn} ]]>
+			</if>
+			<if test="entity.sourceOrderSn != null and entity.sourceOrderSn !='' ">
+                <![CDATA[ and sourceOrderSn  = #{entity.sourceOrderSn} ]]>
+			</if>
+		</if> -->
+	</sql>
+
+	<!-- =========================================================== -->
+	<!-- Mapper中的基本增删改查方法 -->
+	<!-- =========================================================== -->
+	<!-- 根据id查询 -->
+	<select id="getOneById" resultMap="popOrderMap" parameterType="Long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM Adjust
+		WHERE order_id = #{id}
+	</select>
+
+	<!-- 根据Condition查询 -->
+	<select id="getOneByCondition" resultMap="popOrderMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM Adjust
+		<include refid="where_fragement_equals" />
+	</select>
+
+	<!-- 查询page -->
+	<select id="getPageByCondition" resultMap="popOrderMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM Adjust
+		<include refid="where_fragement" />
+		<include refid="pagination" />
+	</select>
+	<!--分页count -->
+	<select id="getPagerCount" resultType="long"
+		parameterType="com.haier.shop.model.Adjust">
+		select count(1) from Adjust
+		<include refid="where_fragement" />
+	</select>
+
+	<!--查询总条数 -->
+	<select id="countByCondition" parameterType="com.haier.shop.model.Adjust"
+		resultType="long">
+		<include refid="count_Start_Head" />
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM Adjust
+		<include refid="where_fragement" />
+		<include refid="count_Start_Tail" />
+	</select>
+
+	<!-- 查询list -->
+	<select id="listByCondition" resultMap="popOrderMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM Adjust
+		<include refid="where_fragement" />
+	</select>
+</mapper>

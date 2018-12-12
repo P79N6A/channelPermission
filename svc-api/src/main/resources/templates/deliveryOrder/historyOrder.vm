@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../vehicle/css/quickLink.css"/>
+    <link rel="stylesheet" href="../vehicle/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../vehicle/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../vehicle/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../vehicle/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../vehicle/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../vehicle/css/common.css">
+    <link rel="stylesheet" href="../vehicle/css/staticHtml.css">
+    <style type="text/css">
+    </style>
+    <title></title>
+    <script src="../vehicle/third/jquery.js"></script>
+    <script src="../vehicle/js/jquery.cookie.js"></script>
+    <script src="../vehicle/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../vehicle/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../vehicle/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../vehicle/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../vehicle/js/utils.js"></script>
+    <script src="../vehicle/js/easyui-extention_ws.js"></script>
+    <script src="../vehicle/js/customConfig.js"></script>
+
+    <style>
+        .search-panel .kx-searchTable{width: 100%;}
+        .search-panel .kx-searchTable th{text-align:left;padding:5px 10px;width:100px;font-weight:normal;}
+        .search-panel .kx-searchTable td{padding:5px;}
+    </style>
+</head>
+<body class="iframe-body">
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm" class="param-form">
+        <div class="search-panel">
+
+            <table class="kx-searchTable">
+                <tr>
+                    <th>单号</th>
+                    <td ><input class="easyui-textbox" id="order" name="order"/></td>
+                    <th>开单时间</th>
+                    <td><input class="easyui-datebox" id="startDate" name="beginDate"/></td>
+                    <th>至</th>		
+                    <td><input class="easyui-datebox" id="endDate" name="endDate"/></td>
+                    <th>订单状态</th>
+                    <td><select class="easyui-combobox" id="orderStatus" name="xwCode"></select></td>
+                </tr>
+            </table>
+
+##            <div class="search-row">
+##			<span class="search-row-label">
+##			  单号
+##			</span>
+##                <input class="easyui-textbox" id="order" name="order"/>
+##            </div>
+
+##            <div class="search-row">
+##			<span class="search-row-label">
+##			  开单时间
+##			</span>
+##                <input class="easyui-datebox" id="startDate" name="beginDate"/>
+##            </div>
+
+##            <div class="search-row">
+##			<span class="search-row-label">
+##			  至
+##			</span>
+##                <input class="easyui-datebox" id="endDate" name="endDate"/>
+##            </div>
+
+##            <div class="search-row">
+##			<span class="search-row-label">
+##			  订单状态
+##			</span>
+##                <select class="easyui-combobox" id="orderStatus" name="xwCode">
+##                </select>
+##            </div>
+        </div>
+    </form>
+
+    <div style="" class="checkbox_css_1">
+        <a href="javascript:void(0)" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" id="searchBtn_dmmbcsMtlMeasure"
+               data-options="iconCls:'icon-save',plain:true">导出</a>
+    #*        <a href="javascript:void(0)" class="easyui-linkbutton" id="searchBtn_dmmbcsMtlMeasure"
+               data-options="iconCls:'icon-save',plain:true">导出</a>
+            <div style="float: right;padding-top: 4px;width: 151px;">
+                <input class="checkbox_input" type="checkbox" name="id" value="">导出时包括评价内容
+            </div>*#
+    </div>
+</div>
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid">
+    </table>
+</div>
+<div id="addDlg" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:100%;height:100%;"
+     closed="true" buttons="#dlg-buttons_dataDictionary">
+    <form id="addForm" method="post" __actType="">
+        <div class="mycart-thead clearfix">
+            <div class="column t-goods" style="width:320px;text-align: left">商品</div>
+            <div class="column t-pricepro" style="width:80px">商品价格</div>
+            <div class="column t-quantity" style="width:140px">数量</div>
+            <div class="column t-price" style="width:80px">小计</div>
+        </div>
+        <div class="cartPlist clearfix">
+            <div class="item item_selected last">
+                <div class="item_form clearfix">
+
+                    <div class="cell p-goods" style="width:320px;">
+                        <a id="s_GBNAME" target="_blank" href="">BCD-649WADV</a>
+                    </div>
+                    <div class="cell p-pricepro" style="width:80px;display: inline;margin-top: -3px;">
+                        <span class="red">￥</span><span id="s_price" class="price red">3241.98</span>
+                    </div>
+
+                    <div class="cell p-quantity" style="wiDth:140px;display: inline;margin-top: -3px;">
+                        <div class="quantity-form">
+                            <input type="hidden" id="minQty" value="1">
+                            <input type="hidden" id="maxQty" value="50">
+                            <a class="decrement" href="javascript:;"
+                               onclick="$(this).next().val($(this).next().val()*1-1);if($(this).next().val()*1<$('#minQty').val()){$(this).next().val($('#minQty').val());} $('#s_sumprice').html((($('#s_price').text()*1)*$('#num').val()).toFixed(2));">-</a>
+                            <input id="num" name="num" type="text" value="1" class="quantity-text"
+                                   onkeyup="replaceValue(this);$('#s_sumprice').html((($('#s_price').text()*1)*$('#num').val()).toFixed(2));"
+                                   onblur="setvalusss(this)">
+                            <a class="increment" href="javascript:;"
+                               onclick="$(this).prev().val($(this).prev().val()*1+1);if($(this).prev().val()*1>$('#maxQty').val()){$(this).prev().val($('#maxQty').val());} $('#s_sumprice').html((($('#s_price').text()*1)*$('#num').val()).toFixed(2));">+</a>
+                        </div>
+                    </div>
+                    <div class="cell p-price" style="wiDth:80px;display: inline;margin-top: -3px;"><span
+                            class="red">￥</span><span id="s_sumprice"
+                                                      class="price red">3241.98</span>
+                    </div>
+                </div>
+            </div><!-- item enD -->
+        </div>
+        <div id="priceDiv" class="cartp-border clearfix">
+
+            <div>
+                <input type="checkbox" checked="checked" id="normal" value="normal" onclick="selectPrice(this);"> 普通版本型号<span
+                    class="red"></span>
+                <div style="float:right;font-size:13px;">
+                    供价:￥<span id="show_idprice">3906.00</span>,&nbsp;&nbsp;开票价:￥<span id="show_price">3241.98</span>&nbsp;&nbsp;直扣点:<span
+                        id="show_backbl">0.17</span><!-- ，单台返利:￥<span id="show_TF_Unprice"> -->
+                </div>
+            </div>
+        </div>
+        <div class="cartp-borDer clearfix" style="margin-top:30px;">
+            <div style="float:left;margin-left:20px;padding-top: 5px;"> 付款方:</div>
+            <select class="easyui-combobox" style="width: 350px;">
+                <option>(8700044838)高密市顺河家电经营部</option>
+                <option>(C200019139)(日日顺)高密顺河家电</option>
+                <option>(C200019140)(日日顺)(空调户)高密市顺河家电</option>
+            </select>
+        </div>
+    </form>
+    <form  id="exportForm" method="post">
+    	<input id="exportData" name="orderNoList" type="hidden"/>
+    </form>
+    <div id="dlg-buttons_dataDictionary">
+        <a href="javascript:void(0)" class="easyui-linkbutton" id="addDlgSaveBtn" btnCart iconCls="icon-ok">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg').dialog('close')">取消</a>
+    </div>
+</div>
+<div id="detailDialog" data-options="title:'订单详情',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:100%;height:100%;"
+     closed="true" buttons="#dlg-buttons_detail">
+    <div class="easyui-panel" title="订单信息"
+         style="width:100%;height:auto;padding:10px;margin-bottom:20px "
+         data-options="iconCls:'icon-position',collapsed:false,
+    collapsible:false">
+        <div class="search-panel">
+            <table class="kx-searchTable">
+                <tr>
+                    <th>系统单号:</th>
+                    <td><span orderNo></span></td>
+                    <th>送达方:</th>
+                    <td><span deliveryName></span></td>
+                    <th>配送中心:</th>
+                    <td><span distributionCentreName></span></td>
+                </tr>
+                <tr>
+                    <th>生产基地:</th>
+                    <td><span jdName></span></td>
+                    <th>开单日期:</th>
+                    <td><span orderTime></span></td>
+                    <th>到货日期:</th>
+                    <td><span dateOfArrival></span></td>
+                </tr>
+                <tr>
+                    <th>总体积:</th>
+                    <td><span loadingVolume></span></td>
+                    <th>车型:</th>
+                    <td><span carTypeName></span></td>
+                    <th>已添加:</th>
+                    <td><span><span rows>1</span>条商品信息</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="easyui-panel" style="width:100%;height:70%;overflow: hidden">
+        <div class="easyui-tabs" style="width:100%;height: 80%">
+            <div title="商品明细" style="padding:10px">
+                <table id="tabDg1">
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td>ZK200059135501</td>
+                        <td>BC-50EN</td>
+                        <td>￥0.18</td>
+                        <td>￥573.18</td>
+                        <td>￥0.00</td>
+                        <td>30</td>
+                        <td>￥17195.40</td>
+                        <td>提交成功</td>
+                        <td>未开始扣款</td>
+                        <td>提交成功</td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="easyui-panel"
+             style="width: 100%;background-color: #fffdeb;border-color:#e3d68a;border-width:2px;">
+            <div class="search-row" style="float:right;width:100%">
+            <span style="margin: 20px 15px;float: right">订单总计：<span
+                    style="color:red;font-size:24px" amount>￥17195.40</span></span>
+            </div>
+        </div>
+    </div>
+    <div id="dlg-buttons_detail">
+        <!--<a href="#" class="easyui-linkbutton" onclick="createData()" iconCls="icon-ok">确认</a>-->
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#detailDialog').dialog('close')">关闭</a>
+    </div>
+</div>
+<script src="../vehicle/third/quicklink/common.js"></script>
+<script src="../vehicle/third/quicklink/quick_links.js"></script>
+
+<script type="text/javascript">
+    var opt = function () {
+        return '<button class="zcCart-btn" href="javascript:void(0)">撤销</button>'
+    }
+
+    var look = function () {
+        return '<button class="zcCart-btn" style="background: grey" href="javascript:void(0)">查看</button>'
+    }
+
+
+    var showWhat = function (val, row, index) {
+        return '<button class="zcCart-btn" style="margin-right:15px" onclick="detail(\'' + row.orderNo + '\')">查看详情</button>'
+    }
+
+    var showStatus = function (val, row, index) {
+        return showStatus.status[val]
+    }
+
+    var formatDate = function (val, row, index) {
+        var date = new Date(val);
+        return $.fn.dateFormat("yyyy-MM-dd hh:mm:ss", date)
+    }
+
+    var ispingcar = function (val, row, index) {
+        if (val == 1) {
+            return '是'
+        } else {
+            return '否'
+        }
+    }
+
+    function button2() {
+        window.location.href = "/vehicle/order?orderId=2000591351"
+    }
+
+    function loadingVolume(val, row, index) {
+        return val + "m³"
+    }
+
+
+    var tabDg1 = {
+        fit: true,
+        fitColumns: false,
+        columns: [[
+            {title: '采购单号', field: 'itemNo', sortable: true, align: 'center', width: 200},
+            {title: '扣款单号', field: 'zqItemNo', sortable: true, align: 'center', width: 200},
+            {title: '一次DN1', field: 'vbelnDn1', sortable: true, align: 'center', width: 200},
+            {title: '二次DN5', field: 'vbelnDn5', sortable: true, align: 'center', width: 200},
+            {title: '预约LBX备用DN', field: 'vbelnSpare', sortable: true, align: 'center', width: 200},
+            {title: 'LBX单号', field: 'lbx', sortable: true, align: 'center', width: 200},
+            {title: 'LBX入库时间', field: 'zspdt', sortable: true, align: 'center', width: 200,
+            formatter : function(value) {
+            		if(value !=null && value!=""){
+            			var date = new Date(value);
+	                        var year = date.getFullYear().toString();
+	                        var month = (date.getMonth() + 1);
+	                        var day = date.getDate().toString();
+	                        var hour = date.getHours().toString();
+	                        var minutes = date.getMinutes().toString();
+	                        var seconds = date.getSeconds().toString();
+	                        if (month < 10) {
+	                            month = "0" + month;
+	                        }
+	                        if (day < 10) {
+	                            day = "0" + day;
+	                        }
+	                        if (hour < 10) {
+	                            hour = "0" + hour;
+	                        }
+	                        if (minutes < 10) {
+	                            minutes = "0" + minutes;
+	                        }
+	                        if (seconds < 10) {
+	                            seconds = "0" + seconds;
+	                        }
+	                        return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+            		}else{
+            			return "";
+            		}
+	                        
+	                    }},
+	        
+            {title: 'LBX入库状态', field: 'lbxStatus', sortable: true, align: 'center', width: 200,
+            	formatter : function(value) {
+	                    	if(value == "NEW"){
+	                    		return "未开始处理";
+	                    	}
+	                    	if(value == "ACCEPT"){
+	                    		return "仓库接单";
+	                    	}
+	                    	if(value == "PARTFULFILLED"){
+	                    		return "部分收货完成";
+	                    	}
+	                    	if(value == "FULFILLED"){
+	                    		return "收货完成";
+	                    	}
+	                    	if(value == "EXCEPTION"){
+	                    		return "异常";
+	                    	}
+	                    	if(value == "CANCELED"){
+	                    		return "取消";
+	                    	}
+	                    	if(value == "CLOSED"){
+	                    		return "关闭";
+	                    	}
+	                    	if(value == "REJECT"){
+	                    		return "拒单";
+	                    	}
+	                    	if(value == "CANCELEDFAIL"){
+	                    		return "取消失败";
+	                    	}else {
+	                    		return "";
+	                    	}
+	                    }
+            	
+            	},
+            {title: '型号', field: 'materielName', sortable: true, align: 'center', width: 200},
+            {title: '开票价', field: 'unitPrice', sortable: true, align: 'center', width: 200},
+            {title: '数量', field: 'qty', sortable: true, align: 'center', width: 200},
+            {title: '总金额', field: 'amount', sortable: true, align: 'center', width: 200},
+            {title: '提交状态', field: 'status', sortable: true, align: 'center', width: 200, formatter: showStatus},
+            {title: '扣款状态', field: 'zqStatus', sortable: true, align: 'center', width: 200, formatter: showStatus},
+            {title: '推送sap状态', field: 'sapStatus', sortable: true, align: 'center', width: 200,
+            	formatter : function(value) {
+	                    	if(value == "1"){
+	                    		return "推送SAP成功";
+	                    	}
+	                    	if(value == "2"){
+	                    		return "推送SAP失败";
+	                    	}
+	                    	if(value == "0"){
+	                    		return "未推送SAP";
+	                    	}else {
+	                    		return "未推送SAP";
+	                    	}
+	                    }
+            },
+            {title: '信息', field: 'remark', sortable: true, align: 'center', width: 200}
+        ]],
+        striped: true
+    }
+
+    var detail = function (orderNo) {
+        $.ajax({
+            url: "/vehicle/orderDetail",
+            data: {orderNo: orderNo},
+            dataType: "json",
+            type: "post",
+            success: function (data) {
+                if (data) {
+                    var arr = data.details
+                    var amount = 0
+                    for (var i = 0; i < arr.length; i++) {
+                        amount += arr[i].amount
+                    }
+                    data.order.amount = "￥" + amount.toFixed(2)
+                    for (var key in data.order) {
+                        if (data.order[key]) {
+                            if (key == "type") {
+                                continue
+                            }
+                            if (key == "orderTime" || key == "dateOfArrival") {
+                                $("[" + key + "]").html($.fn.dateFormat("yyyy-MM-dd", new Date(data.order[key])))
+                            } else if (key == "loadingVolume") {
+                                $("[loadingVolume]").html(data.order[key] + "m³")
+                            } else {
+                                $("[" + key + "]").html(data.order[key])
+                            }
+                        }
+                    }
+                    tabDg1.data = {"total": data.details.length, rows: data.details}
+                    $("#tabDg1").datagrid(tabDg1)
+                    $("#detailDialog").dialog("open")
+                }
+            }
+        })
+    }
+
+    function slideUpSlideClk(t) {
+        var $this =
+        $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid').datagrid('resize');
+        }, 500);
+    }
+    
+    //点击导出
+$('#searchBtn_dmmbcsMtlMeasure').click(function(){
+	
+	//获得选中行
+	var checkedItems = $('#datagrid').datagrid('getSelections');
+	var exportData = new Array();
+	//将订单号存入Array
+	$.each(checkedItems, function(index, item){
+			exportData.push(item.orderNo);
+	});
+	$("#exportData").val(JSON.stringify(exportData));
+	//判断是否都没选中
+	if(exportData==null||exportData.length==0){
+		//alert("请至少选择一行要导出的行！");
+		$.messager.alert('错误','请至少选择一行要导出的行！','error');
+		return;
+	}
+	$.messager.confirm('确认', '确定要导出吗？', function(r){
+		if (r){
+			$('#exportForm').attr("action", '/vehicle/exportVehicle.export');
+			$('#exportForm').submit();
+		}
+	});
+});
+
+</script>
+<script src="../vehicle/js/delivery_order/historyOrder.js"></script>
+</body>
+</html>

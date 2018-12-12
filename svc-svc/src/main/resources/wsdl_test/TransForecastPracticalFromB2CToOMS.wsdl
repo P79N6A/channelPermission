@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="TransForecastPracticalFromB2CToOMS" targetNamespace="http://www.example.org/TransForecastPracticalFromB2CToOMS/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/TransForecastPracticalFromB2CToOMS/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/TransForecastPracticalFromB2CToOMS/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/TransForecastPracticalFromB2CToOMS/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="TransForecastPracticalFromB2CToOMS">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="customerCode" type="xsd:string"/>
+            <xsd:element name="customerName" type="xsd:string"/>
+            <xsd:element name="fromSystem" type="xsd:string"/>
+            <xsd:element name="omsRole" type="xsd:string"/>
+            <xsd:element name="roleChannel" type="xsd:string"/>
+            <xsd:element name="tradeCode" type="xsd:string"/>
+            <xsd:element name="itemcode" type="xsd:string"/>
+            <xsd:element name="itemname" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TransForecastPracticalFromB2CToOMSResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="out" type="tns:outType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="outType">
+        <xsd:sequence>
+          <xsd:element name="categorycode" type="xsd:string"/>
+          <xsd:element name="catn" type="xsd:string"/>
+          <xsd:element name="itemcode" type="xsd:string"/>
+          <xsd:element name="itemname" type="xsd:string"/>
+          <xsd:element name="message" type="xsd:string"/>
+          <xsd:element name="plname" type="xsd:string"/>
+          <xsd:element name="pltype" type="xsd:string"/>
+          <xsd:element name="productLineId" type="xsd:string"/>
+          <xsd:element name="productSeriesId" type="xsd:string"/>
+          <xsd:element name="salesChanManagerID" type="xsd:string"/>
+          <xsd:element name="salesChanManagerName" type="xsd:string">
+      		</xsd:element>
+          <xsd:element name="smbCcode" type="xsd:string"/>
+          <xsd:element name="smbName" type="xsd:string"/>
+          <xsd:element name="tradeCode" type="xsd:string"/>
+          <xsd:element name="Msg" type="xsd:string"/>
+          <xsd:element name="Flag" type="xsd:string"/>
+          <xsd:element name="Msg_detail" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="TransForecastPracticalFromB2CToOMSRequest">
+    <WL5G3N0:part element="WL5G3N1:TransForecastPracticalFromB2CToOMS" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="TransForecastPracticalFromB2CToOMSResponse">
+    <WL5G3N0:part element="WL5G3N1:TransForecastPracticalFromB2CToOMSResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="TransForecastPracticalFromB2CToOMS">
+    <WL5G3N0:operation name="TransForecastPracticalFromB2CToOMS">
+      <WL5G3N0:input message="WL5G3N1:TransForecastPracticalFromB2CToOMSRequest"/>
+      <WL5G3N0:output message="WL5G3N1:TransForecastPracticalFromB2CToOMSResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="TransForecastPracticalFromB2CToOMSSOAP" type="WL5G3N1:TransForecastPracticalFromB2CToOMS">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="TransForecastPracticalFromB2CToOMS">
+      <WL5G3N2:operation soapAction="http://www.example.org/TransForecastPracticalFromB2CToOMS/TransForecastPracticalFromB2CToOMS"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="TransForecastPracticalFromB2CToOMS">
+    <WL5G3N0:port binding="WL5G3N1:TransForecastPracticalFromB2CToOMSSOAP" name="TransForecastPracticalFromB2CToOMSSOAP">
+      <WL5G3N2:address location="http://10.135.1.198:7001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EAI_INT_1926"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

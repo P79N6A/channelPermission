@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.LesStockInfoDao">
+	<resultMap id="stackInfoResult" type="com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity">
+    	<result property="mblnr" column="MBLNR"/>
+    	<result property="mjahr" column="MJAHR"/>
+    	<result property="zeile" column="ZEILE"/>
+    	<result property="cpudt" column="CPUDT"/>
+    	<result property="cputm" column="CPUTM"/>
+    	<result property="bwart" column="BWART"/>
+    	<result property="shkzg" column="SHKZG"/>
+    	<result property="matnr" column="MATNR"/>
+    	<result property="matkl" column="MATKL"/>
+    	<result property="charg" column="CHARG"/>
+    	<result property="lfimg" column="LFIMG"/>
+    	<result property="lgort" column="LGORT"/>
+    	<result property="kunnrsaleto" column="KUNNR_SALETO"/>
+    	<result property="kunnrsendto" column="KUNNR_SENDTO"/>
+    	<result property="vbelnso" column="VBELN_SO"/>
+    	<result property="vbelndn" column="VBELN_DN"/>
+    	<result property="tknum" column="TKNUM"/>
+    	<result property="bstnk" column="BSTNK"/>
+    	<result property="auart" column="AUART"/>
+    	<result property="reserve1" column="RESERVE1"/>
+    	<result property="reserve2" column="RESERVE2"/>
+    	<result property="bstkd" column="BSTKD"/>
+	</resultMap>
+	<update id="updateInOutInfo"  parameterType="com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity" >
+		UPDATE les_in_out_t
+		SET MJAHR=#{MJAHR},
+			ZEILE=#{ZEILE},
+			<if test="CPUDT !=null and CPUDT != ''">
+			CPUDT=#{CPUDT},
+			</if>
+			<if test="CPUTM !=null and CPUTM != ''">
+			CPUTM=#{CPUTM},
+			</if>
+			BWART=#{BWART},
+			SHKZG=#{SHKZG},
+			MATNR=#{MATNR},
+			MATKL=#{MATKL},
+			CHARG=#{CHARG},
+			LFIMG=#{LFIMG},
+			LGORT=#{LGORT},
+			KUNNR_SALETO=#{KUNNRSALETO},
+			KUNNR_SENDTO=#{KUNNRSENDTO},
+			VBELN_SO=#{VBELNSO},
+			VBELN_DN=#{VBELNDN},
+			TKNUM=#{TKNUM},
+			BSTNK=#{BSTNK},
+			AUART=#{AUART},
+			RESERVE1=#{RESERVE1},
+			<if test="RESERVE2 !=null and RESERVE2 != ''">
+				RESERVE2=#{RESERVE2},
+			</if>
+			BSTKD=#{BSTKD}
+		 where MBLNR = #{MBLNR}
+	</update>
+	
+	 <insert id="insertInOutInfo" parameterType="com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity">
+	  insert into `les_in_out_t`(`MBLNR`,`ZEILE`,
+	  <if test="CPUDT !=null and CPUDT != ''">
+	  `CPUDT`,
+	  </if>
+	  <if test="CPUTM !=null and CPUTM != ''">
+	  `CPUTM`,
+	  </if>
+	  `MJAHR`,`BWART`,`SHKZG`,`MATNR`,`MATKL`,
+	  `CHARG`,`LFIMG`,`LGORT`,`KUNNR_SALETO`,`KUNNR_SENDTO`,
+	  `VBELN_SO`,`VBELN_DN`,`TKNUM`,`BSTNK`,`AUART`,`RESERVE1`,
+	  <if test="RESERVE2 !=null and RESERVE2 != ''">
+	  `RESERVE2`,
+	  </if>
+	  `BSTKD`)
+		values(#{MBLNR},#{ZEILE},
+		<if test="CPUDT !=null and CPUDT != ''">
+		#{CPUDT},
+		</if>
+		<if test="CPUTM !=null and CPUTM != ''">
+		#{CPUTM},
+		</if>
+		#{MJAHR},#{BWART},#{SHKZG},#{MATNR},#{MATKL},
+		#{CHARG},#{LFIMG},#{LGORT},#{KUNNRSALETO},#{KUNNRSENDTO},
+		#{VBELNSO},#{VBELNDN},#{TKNUM},#{BSTNK},#{AUART},#{RESERVE1},
+		<if test="RESERVE2 !=null and RESERVE2 != ''">
+		#{RESERVE2},
+		</if>
+		#{BSTKD});
+	</insert>
+	<select id="selectInOutInfo" parameterType="com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity" resultType="Integer">
+		SELECT 
+		count(1)
+		FROM les_in_out_t
+		where MBLNR=#{MBLNR}
+	</select>
+	
+	<update id="updateStockInfo"  parameterType="com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity" >
+		UPDATE les_stock_t
+		SET LFIMG=#{lfimg}
+		 where KUNNR=#{KUNNR} and LGORT_D=#{lgort} and MATNR=#{MATNR} and CHARG_D=#{charg}
+	</update>
+	
+	 <insert id="insertStockInfo" parameterType="com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity">
+	  insert into `les_stock_t`(`KUNNR`,`LGORT_D`,`MATNR`,`CHARG_D`,`LFIMG`)
+		values(#{KUNNR},#{lgort},#{MATNR},#{charg},#{lfimg});
+	</insert>
+	<select id="selectStockInfo" parameterType="com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity" resultType="Integer">
+		SELECT 
+		count(1)
+		FROM les_stock_t
+		where KUNNR=#{KUNNR} and LGORT_D=#{lgort} and MATNR=#{MATNR} and CHARG_D=#{charg}
+	</select>
+  
+	<select id="selectInOutInfoByBSTNK"  resultMap="stackInfoResult">
+         Select
+         *
+         from les_in_out_t where BSTNK in
+                  <foreach item="item" index="index" collection="list" 
+                         open="(" separator="," close=")">
+                        #{item}
+                </foreach>
+  	</select>
+  	
+	<select id="selectInOutInfoBySO"  resultMap="stackInfoResult">
+         Select
+         *
+         from les_in_out_t where VBELN_SO in
+                  <foreach item="item" index="index" collection="list" 
+                         open="(" separator="," close=")">
+                        #{item}
+                </foreach>
+  	</select>
+  
+  <select id="selectInOutInfoBySo"  resultMap="stackInfoResult">
+         Select
+         *
+         from les_in_out_t where VBELN_SO in
+                  <foreach item="item" index="index" collection="list" 
+                         open="(" separator="," close=")">
+                        #{item}
+                </foreach>
+  </select>
+  
+  <select id="selectInOutInfoByDn"  resultMap="stackInfoResult">
+         Select
+         *
+         from les_in_out_t where BSTNK in
+                  <foreach item="item" index="index" collection="list" 
+                         open="(" separator="," close=")">
+                        #{item}
+                </foreach>
+  </select>
+<select id="selectInOutInfoBySingleDn"  resultMap="stackInfoResult">
+         Select
+         *
+         from les_in_out_t where BSTNK = #{dn}
+  </select>
+  <select id="selectLastSyncTime" resultType="java.lang.String">
+  	SELECT
+		CONCAT(CPUDT, ' ', CPUTM)
+	FROM
+		les_in_out_t
+	ORDER BY
+		CPUDT DESC,
+		CPUTM DESC
+	LIMIT 1,1
+  </select>
+</mapper>

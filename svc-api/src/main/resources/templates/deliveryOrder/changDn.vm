@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../vehicle/css/quickLink.css"/>
+    <link rel="stylesheet" href="../vehicle/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../vehicle/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../vehicle/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../vehicle/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../vehicle/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../vehicle/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../vehicle/css/common.css">
+    <link rel="stylesheet" href="../vehicle/css/staticHtml.css">
+    <style type="text/css">
+    </style>
+    <title></title>
+    <script src="../vehicle/third/jquery.js"></script>
+    <script src="../vehicle/js/jquery.cookie.js"></script>
+    <script src="../vehicle/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../vehicle/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../vehicle/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../vehicle/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../vehicle/js/utils.js"></script>
+    <script src="../vehicle/js/easyui-extention_ws.js"></script>
+    <script src="../vehicle/js/customConfig.js"></script>
+
+    <style>
+        .search-panel .kx-searchTable{width: 100%;}
+        .search-panel .kx-searchTable th{text-align:left;padding:5px 10px;width:100px;font-weight:normal;}
+        .search-panel .kx-searchTable td{padding:5px;}
+    </style>
+</head>
+<body class="iframe-body">
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm" class="param-form">
+        <div class="search-panel">
+
+            <table class="kx-searchTable">
+                <tr>
+                    <th>单号</th>
+                    <td ><input class="easyui-textbox" id="order" name="order"/></td>
+                </tr>
+            </table>
+        </div>
+    </form>
+
+    <div style="" class="checkbox_css_1">
+        <a href="javascript:void(0)" class="easyui-linkbutton" id="searchZk"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+    </div>
+</div>
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid">
+    </table>
+</div>
+<div id="reviewDiv" title="预约LBX备用DN" class="easyui-dialog" >
+	<div data-options="region:'center',border:false" style="height: 220px;overflow: auto; " align="left">
+		<form id="reviewForm" action="#">
+			<table align="left" >
+				<tr>
+					<td>备用DN</td>
+					<td>
+						<input type='text' id='subvbelnSpare' name='vbelnSpare' class="easyui-validatebox" >
+						<input type='hidden' id='subitemNo' name='itemNo' class="easyui-validatebox" >
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td  width="200px">
+						<a id='passReview' href="#" class="easyui-linkbutton" iconCls="icon-ok" >确定</a>
+						&nbsp;
+	    				<a id='close' href="#" class="easyui-linkbutton" iconCls="icon-back">关闭</a>
+		 			</td>
+				</tr>
+			</table>
+			<!-- 下面隐藏控件用来存放点击审核后的数据 -->
+			<input id="reviewData" name="reviewData" type="hidden"/>
+			<input id="reviewFlag" name="reviewFlag" type="hidden"/>
+			<input id="audit_remark" name="audit_remark" type="hidden"/>
+		</form>
+	</div>
+</div>
+<script src="../vehicle/third/quicklink/common.js"></script>
+<script src="../vehicle/third/quicklink/quick_links.js"></script>
+
+<script type="text/javascript">
+
+var tabDg = {
+        fit: true,
+        fitColumns: false,
+        columns: [[
+            {title: '主单号', field: 'orderNo', sortable: true, align: 'center', width: 200},
+            {title: '采购单号', field: 'itemNo', sortable: true, align: 'center', width: 200},
+            {title: '一次DN1', field: 'vbelnDn1', sortable: true, align: 'center', width: 200},
+            {title: '二次DN5', field: 'vbelnDn5', sortable: true, align: 'center', width: 200},
+            {title: '预约LBX备用DN', field: 'vbelnSpare', sortable: true, align: 'center', width: 200},
+            {title : '操作', field : 'option', sortable : true, align : 'center', 
+            	formatter : 
+				function (val, row, index) {
+			        return '<button class="zcCart-btn" style="margin-right:15px" onclick="review(\'' + row.itemNo + '\',\'' + row.vbelnSpare + '\')">修改</button>'
+			    }
+				, width : 200}
+        ]],
+        striped: true
+    }
+$("#searchZk").on('click', function() {
+       if($("#order").val() == ''){
+       		alert("请输入单号");
+       		tabDg.data = {"total": data.details.length, rows: data.details};
+	                $("#datagrid").datagrid(tabDg);
+       }
+		$("#searchZk").linkbutton("disable")
+		$.ajax({
+            url: "/vehicle/orderDetail",
+            data: {orderNo: $("#order").val()},
+            dataType: "json",
+            type: "post",
+            success: function (data) {
+                if (data) {
+                    var arr = data.details
+                    if(arr.length==0){
+                    	alert("未获取到数据");
+                    }else{
+                    	var amount = 0
+	                    for (var i = 0; i < arr.length; i++) {
+	                        amount += arr[i].amount
+	                    }
+	                    data.order.amount = "￥" + amount.toFixed(2)
+	                    for (var key in data.order) {
+	                        if (data.order[key]) {
+	                            if (key == "type") {
+	                                continue
+	                            }
+	                            if (key == "orderTime" || key == "dateOfArrival") {
+	                                $("[" + key + "]").html($.fn.dateFormat("yyyy-MM-dd", new Date(data.order[key])))
+	                            } else if (key == "loadingVolume") {
+	                                $("[loadingVolume]").html(data.order[key] + "m³")
+	                            } else {
+	                                $("[" + key + "]").html(data.order[key])
+	                            }
+	                        }
+	                    }
+                    }
+                    tabDg.data = {"total": data.details.length, rows: data.details}
+	                $("#datagrid").datagrid(tabDg)
+                }
+            }
+        });
+		$("#searchZk").linkbutton("enable");
+	})
+    var opt = function () {
+        return '<button class="zcCart-btn" href="javascript:void(0)">撤销</button>'
+    }
+
+    var look = function () {
+        return '<button class="zcCart-btn" style="background: grey" href="javascript:void(0)">查看</button>'
+    }
+
+
+    var showWhat = function (val, row, index) {
+        return '<button class="zcCart-btn" style="margin-right:15px" onclick="detail(\'' + row.itemNo + '\')">修改</button>'
+    }
+
+    var showStatus = function (val, row, index) {
+        return showStatus.status[val]
+    }
+
+    var formatDate = function (val, row, index) {
+        var date = new Date(val);
+        return $.fn.dateFormat("yyyy-MM-dd hh:mm:ss", date)
+    }
+
+    var ispingcar = function (val, row, index) {
+        if (val == 1) {
+            return '是'
+        } else {
+            return '否'
+        }
+    }
+
+    function slideUpSlideClk(t) {
+        var $this =
+        $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid').datagrid('resize');
+        }, 500);
+    }
+    
+    function review(itemNo,vbelnSpare){
+	    $("#reviewDiv").show();
+		$("#reviewDiv").panel('open');
+		$("#subitemNo").val(itemNo);
+		if(vbelnSpare != 'null'){
+			$("#subvbelnSpare").val(vbelnSpare);
+		}else {
+			$("#subvbelnSpare").val("");
+		}
+    }
+    
+     $("#close").click(function() {
+		 $("#reviewForm").form("clear");
+		 $("#reviewDiv").window('close');
+		 reviewData=[];
+	});
+	
+	$("#passReview").click(function(){
+		jQuery.ajax({
+	         url: "/vehicle/saveChang",   // 提交的页面
+	         type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+	         data:{
+	        	 "itemNo":$("#subitemNo").val(),
+	        	 "vbelnSpare": $("#subvbelnSpare").val()
+	        	 },
+        	 beforeSend: function(){  
+		        var win = $.messager.progress({  
+		                title:'请等待',  
+		                msg:'数据保存中...',
+		                text:'处理中',
+		                interval:700
+		            });  
+		      },  
+		      complete: function(){  
+		        //AJAX请求完成时隐藏loading提示  
+		        $.messager.progress('close'); 
+		      },  
+	         success: function (data) {
+	        	 if(data.data != null) {
+	        	 	$.messager.alert('错误',data.data,'error');
+	        	 } else {
+	        	 	var message = data.message;
+	 		 		if(data.message == "success"){
+	 		 		$.messager.alert('提示',"预约LBX备用DN更新成功！",'info',function(r){
+	 		 			$("#reviewDiv").window('close');
+	 		 			 $("#searchZk").click();
+	 		 		});
+	 		 	}else{
+	 		 		$.messager.alert('提示',"预约LBX备用DN更新失败！",'info');
+	            }
+	         }}
+		 });
+	});
+$(function(){
+	$("#reviewDiv").panel('close');
+});
+</script>
+<script src="../vehicle/js/delivery_order/historyOrder.js"></script>
+</body>
+</html>

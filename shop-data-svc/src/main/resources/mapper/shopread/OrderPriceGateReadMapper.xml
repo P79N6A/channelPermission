@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderPriceGateReadDao">
+
+	<resultMap id="orderPriceGateResult" type="com.haier.shop.model.OrderPriceGate">
+		<result property="id" column="id" />
+		<result property="orderSource" column="order_source" />
+		<result property="channelCode" column="channel_code" />
+		<result property="industryCode" column="industry_code" />
+		<result property="productGroup" column="product_group" />
+		<result property="corderSn" column="corder_sn" />
+		<result property="orderSn" column="order_sn" />
+		<result property="sku" column="sku" />
+		<result property="cateId" column="cate_id" />
+		<result property="cateName" column="cate_name" />
+		<result property="brandId" column="brand_id" />
+		<result property="brandName" column="brand_name" />
+		<result property="orderProductPrice" column="order_product_price" />
+		<result property="couponAmount" column="coupon_amount" />
+		<result property="platformCouponAmount" column="platform_coupon_amount" />
+		<result property="orderProductAmount" column="order_product_amount" />
+		<result property="orderProductNumber" column="order_product_number" />
+		<result property="guaranteePrice" column="guarantee_price" />
+		<result property="subductionPrice" column="subduction_price" />
+		<result property="orderAddTime" column="order_add_time" />
+		<result property="createTime" column="create_time" />
+		<result property="lockReason" column="lock_reason" />
+		<result property="operator" column="operator" />
+		<result property="responsiblePerson" column="responsible_person" />
+		<result property="unlockReason" column="unlock_reason" />
+		<result property="unlockTime" column="unlock_time" />
+		<result property="gateStatus" column="gate_status" />
+		<result property="gateType" column="gate_type" />
+		<result property="orderStatus" column="order_status" />
+		<result property="orderProductStatus" column="order_product_status" />
+		<result property="payStatus" column="cpayment_status" />
+		<result property="productName" column="productName " />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<select id="getOrderPriceGatebyCOrderSn" resultMap="orderPriceGateResult">
+		select `id`,`order_source`,`channel_code`,`industry_code`,`product_group`,`corder_sn`,`order_sn`,`sku`,`cate_id`,`cate_name`,`brand_id`,`brand_name`,`order_product_price`,`coupon_amount`,`platform_coupon_amount`,`order_product_amount`,`order_product_number`,`guarantee_price`,`subduction_price`,`order_add_time`,`create_time`,`lock_reason`,`operator`,`responsible_person`,`unlock_reason`,`unlock_time`,`gate_status`,`gate_type`,`update_time`
+		from order_price_gate
+		where corder_sn = #{cOrderSn}
+		and gate_type = #{gateType}
+	</select>
+
+	<select id="getUnLockbyOrderSn" resultType="java.util.Map">
+		select os.id as orderId,op.id as orderProductId,op.netPointId,os.paymentStatus,os.orderStatus,op.status,price.gate_type,price.subduction_price,price.channel_code,price.industry_code,price.corder_sn
+		from 
+			order_price_gate price
+				inner join
+			Orders os on price.order_sn=os.orderSn
+				inner join
+			OrderProducts op on price.corder_sn=op.cOrderSn
+		where 
+			order_sn = #{orderSn} and gate_status=1
+	</select>
+	
+	<select id="getBrandNameByBrandId" resultType="java.lang.String">
+		select 
+			brandName
+		from 
+			Brands
+		where 
+			id = #{id}
+	</select>
+	
+	<select id="getCateNameByCateId" resultType="java.lang.String">
+		select 
+			cateName
+		from 
+			ProductCates
+		where 
+			id = #{id}
+	</select>
+
+</mapper>

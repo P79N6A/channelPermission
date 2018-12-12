@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.HpQueuesReadDao">
+	<resultMap id="hPQueuesResult" type="com.haier.shop.model.HPQueues">
+		<result property="id" column="id" />
+		<result property="orderProductId" column="orderProductId" />
+		<result property="pushData" column="pushData" />
+		<result property="success" column="success" />
+		<result property="count" column="count" />
+		<result property="addTime" column="addTime" />
+		<result property="lastMessage" column="lastMessage" />
+		<result property="successTime" column="successTime" />
+	</resultMap>
+
+	<select id="getCountByOpId" resultType="int">
+		select count(id) from HPQueues where orderProductId = #{orderProductId}
+	</select>
+	<select id="getByOrderProductId" parameterType="Integer" resultMap="hPQueuesResult">
+        SELECT `id`,`orderProductId`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`successTime`
+        FROM `HPQueues`
+        WHERE `orderProductId` = #{orderProductId}
+    </select>
+
+</mapper>

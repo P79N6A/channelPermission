@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>库存列表 - 海尔商城核心业务系统</title>
+	 <script src="../static/third/jquery.js"></script>
+	  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+	<!-- <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" /> -->
+	<link rel="stylesheet" type="text/css" href="../static/css/stock/bootstrap-cerulean.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/stock/app.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/stock/bootstrap-responsive.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/stock/uniform.default.css" />
+
+	<script type="text/javascript">
+		function onLock(){
+		var che = $("input[name='toggle']:checked").val();
+		
+			var secCode = $("#secCode");
+			var sku = $("#sku");
+			if ( secCode && $.trim(secCode.val()) =='') {
+				alert("库位编码不能为空");
+				return false;
+			}
+			if ( sku && $.trim(sku.val()) =='') {
+				alert("物料编码不能为空");
+				return false;
+			}
+			if(!isNum($( "#frozenQty" ).val())){
+				return false;
+			}
+			if(che==1){
+		    if(!isLength($( "#refNo" ).val())){
+		      return false;
+		      }
+		    }
+    		jQuery.ajax({
+    				url: "/memStockLockController/lockStock",   
+    				data: $('#filterForm').serialize(), 
+    				type: "GET",                 
+    				success: function(data) {
+						if (data.message.trim().length >0 ){
+							alert(data.message);
+							return;
+						} else {
+    						$("#refNo").val(data.data);
+							alert('占用成功!');
+						}
+						
+    				}
+    			});
+			
+			return false;
+		}
+		function isNum(id){
+			if(id == ""){
+				return true;
+			}
+			var regx = /^[0-9]{1,10}$/;
+			if (!isNaN(id)) {
+				if(regx.exec(id)){
+					return true;
+				}else{
+					alert("请输入0或正整数，不能输入空格，且长度不超过10位!");
+					return false;
+				}
+			} else {
+				alert("锁定数量必须输入数字");
+				return false;
+			}		
+		}
+		
+		function isLength(str){
+		  if(str == ""){
+				return true;
+			}
+		  var regx = /[WD][0-9]{1,28}$/;
+		  if(regx.exec(str)){
+					return true;
+				}else{
+					alert("以WD开头，数字组成，长度不超过30，且不能输入空格");
+					return false;
+				}
+		}
+		
+		function radio1(){
+		  //$("#refNo").removeAttr("readonly"); 
+		  if($("input[type='checkbox']").is(':checked')){
+		    $("#refNo").removeAttr("readonly"); 
+		    $("#refNo").val("WD"); 
+		    $("#span1").show();
+		  }else{
+		    $("#refNo").attr("readonly","readonly"); 
+		    $("#span1").hide();
+		    $("#refNo").val(""); 
+		  }
+		}
+		
+	</script>
+</head>
+<body>
+
+	<div id="content" class="span10">
+		<div class="row-fluid sortable ui-sortable">
+			<div class="box span12">
+				<div data-original-title="" class="box-header well">
+					<h2>冻结库存</h2>
+				</div>
+				<div class="box-content">
+					<div role="grid" class="dataTables_wrapper" id="DataTables_Table_0_wrapper">
+						<div class="row-fluid">
+							<div class="span12">
+								<div id="filter" class="dataTables_length">
+									<form id="filterForm" name="filterForm" method="POST">
+										<table align="center">
+											<tr>
+												<td>库位编码：</td>
+												<td><input type="text" id="secCode" name="secCode" class="short" style="width:200px;" title="输入库位编码查询关键字"></td>
+											</tr>
+											<tr>
+												<td>物料编码：</td>
+												<td><input type="text" id="sku" name="sku" class="short" style="width:200px;" title="输入物料编码查询关键字"></td>
+											</tr>
+											<tr>
+												<td>占用数量：</td>
+												<td><input type="text" id="frozenQty" name="frozenQty" class="short" style="width:200px;" title="输入锁定数量"></td>
+											</tr>
+											<tr>
+												<td>网单号：</td>
+												<td><input type="text" id="refNo" name="refNo" readonly class="short" style="width:200px;" title="请输入网单号，以WD开头，长度不超过30">
+												  <label class="checkbox inline">
+												    <input type="checkbox" name="toggle" id="show"  value="1" onclick="radio1();" />WD单号
+												  </label>  
+												  &nbsp;
+												  
+												</td>
+											</tr>
+											<tr>
+											    <td></td>
+											    <td><span id="span1" style="color:orange;display:none;">请输入网单号，以WD开头，长度不超过30<span></td>
+											</tr>
+											
+										 <tr>
+											<td colspan="2" align="center">
+												
+													<a title="占用" href="#" class="btn" id="onlock" onclick="onLock();"><i class="icon-search"></i>占用</a>
+											
+											</td>
+										 </tr>
+										</table>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

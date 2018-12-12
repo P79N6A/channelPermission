@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.GiftCardNumbersWriteDao" >
+
+  <update id="update" parameterType="com.haier.shop.model.GiftCardNumbers" >
+    update giftcardnumbers
+    <set >
+      <if test="siteId != null" >
+        siteId = #{siteId},
+      </if>
+      <if test="productId != null" >
+        productId = #{productId},
+      </if>
+      <if test="orderId != null" >
+        orderId = #{orderId},
+      </if>
+      <if test="orderProductId != null" >
+        orderProductId = #{orderProductId},
+      </if>
+      <if test="cardNumber != null" >
+        cardNumber = #{cardNumber},
+      </if>
+      <if test="cardPassword != null" >
+        cardPassword = #{cardPassword},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance},
+      </if>
+      <if test="tempMemberId != null" >
+        tempMemberId = #{tempMemberId},
+      </if>
+      <if test="memberId != null" >
+        memberId = #{memberId},
+      </if>
+      <if test="bindMemberId != null" >
+        bindMemberId = #{bindMemberId},
+      </if>
+      <if test="memberName != null" >
+        memberName = #{memberName},
+      </if>
+      <if test="memberEmail != null" >
+        memberEmail = #{memberEmail},
+      </if>
+      <if test="memberMobile != null" >
+        memberMobile = #{memberMobile},
+      </if>
+      <if test="hasBind != null" >
+        hasBind = #{hasBind},
+      </if>
+      <if test="addTime != null" >
+        addTime = #{addTime},
+      </if>
+      <if test="isActivation != null" >
+        isActivation = #{isActivation},
+      </if>
+      <if test="activationTime != null" >
+        activationTime = #{activationTime},
+      </if>
+      <if test="activationPerson != null" >
+        activationPerson = #{activationPerson},
+      </if>
+      <if test="exportTime != null" >
+        exportTime = #{exportTime},
+      </if>
+      <if test="exportPerson != null" >
+        exportPerson = #{exportPerson},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

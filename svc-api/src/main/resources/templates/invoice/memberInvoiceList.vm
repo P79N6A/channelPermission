@@ -1,0 +1,606 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>订单发票列表</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+
+    <div class="action-header">
+        <p style="color: red">
+            您可以在这里查看或审核所有订单的发票信息，列表页默认显示<b>“待审核”</b>的<b>“增值税发票”</b>。
+        </p>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  订单编号
+			</span>
+                <input class="easyui-textbox" id="orderSn" name="orderSn"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  订单状态
+			</span>
+
+                <select class="easyui-combobox"id="orderStatus"  name="orderStatus"  style="width: 174px;">
+                    <option value="-1"  selected="true">全部</option>
+                    <option value="200">未确认</option>
+                    <option value="201">已确认</option>
+                    <option value="202">已取消</option>
+                    <option value="203">已完成</option>
+                    <option value="204">部分缺货</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  支付状态
+			</span>
+                <select class="easyui-combobox" id="paymentStatus"  name="paymentStatus" style="width: 174px;">
+                    <option value="-1"  selected="true">全部</option>
+                    <option value="100">未付款</option>
+                    <option value="101">已付款</option>
+                    <option value="102">待退款</option>
+                    <option value="103">已退款</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  订单来源
+			</span>
+
+                <select class="easyui-combobox" id="source"  name="source" style="width: 174px;">
+                    <option selected="true" value="-1">全部</option>
+                    <option value="1">商城订单</option>
+                    <option value="DXS">商城订单-大学生项目订单</option>
+                    <option value="TBSC">淘宝海尔官方旗舰店</option>
+                    <option value="TOPDHSC">海尔生活家电旗舰店</option>
+                    <option value="TOPFENXIAO">淘宝海尔官方旗舰店分销平台</option>
+                    <option value="TOPFENXIAODHSC">淘宝海尔生活家电旗舰店分销平台</option>
+                    <option value="TOPBUYBANG">淘宝海尔买帮专卖店</option>
+                    <option value="TOPBOILER">淘宝海尔热水器专卖店</option>
+                    <option value="TOPSHJD">淘宝海尔生活电器专卖店</option>
+                    <option value="TOPMOBILE">淘宝空调旗舰店</option>
+                    <option value="TONGSHUAI">统帅日日顺乐家专卖店</option>
+                    <option value="CCBSC">企业订单_建行龙卡商城订单</option>
+                    <option value="CCBSR">企业订单_建行善融商城订单</option>
+                    <option value="95533">企业内购-建行</option>
+                    <option value="CORPORATE">企业订单</option>
+                    <option value="CORPORATE_SJMG">企业订单_四季沐歌</option>
+                    <option value="112">商城订单_海尔地产</option>
+                    <option value="YIHAODIAN">企业订单_1号店订单</option>
+                    <option value="DALOU">企业订单_大楼订单</option>
+                    <option value="113">企业订单_内购</option>
+                    <option value="114">企业订单_集采</option>
+                    <option value="115">企业订单_B2B</option>
+                    <option value="19">充值订单</option>
+                    <option value="ZPTH">正品退货</option>
+                    <option value="CHINAUNICOM">中国联通_广电</option>
+                    <option value="TOPPAD">淘宝海尔PAD专卖店</option>
+                    <option value="HPB2B">海朋转TC订单</option>
+                    <option value="TOPXB">海尔新宝旗舰店</option>
+                    <option value="TOPFENXIAOXB">淘宝海尔新宝旗舰店分销平台</option>
+                    <option value="C2BWASHER">C2B滚筒洗衣机订单</option>
+                    <option value="MOBILE">移动商城</option>
+					<option value="ICBC">平台大客户-工商银行</option>
+                    <option value="YHD">平台大客户-1号店</option>
+                    <option value="TONGSHUAIFX">统帅分销</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  审核状态
+			</span>
+                <select class="easyui-combobox" id="state"  name="state" style="width: 174px;">
+                    <option value="-1">全部</option>
+                    <option value="0" selected="true">待审核</option>
+                    <option value="1">审核通过</option>
+                    <option value="2">拒绝</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  发票类型
+			</span>
+                <select class="easyui-combobox" id="invoiceType"  name="invoiceType" style="width: 174px;">
+                    <option value="-1">全部</option>
+                    <option value="1" selected="true">增值税发票</option>
+                    <option value="2">普通发票</option>
+                    <option value="3">增值税发票（普）</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  是否电子发票
+			</span>
+                <select class="easyui-combobox" id="electricFlag"  name="electricFlag" style="width: 174px;">
+                    <option value="-1">全部</option>
+                    <option value="1">电子发票</option>
+                    <option value="0">纸质发票</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  会员名称
+			</span>
+                <input class="easyui-textbox" id="memberName" name="memberName"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  注册公司名称
+			</span>
+                <input class="easyui-textbox" id="invoiceTitle" name="invoiceTitle"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  注册地址
+			</span>
+                <input class="easyui-textbox" id="registerAddress" name="registerAddress"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  注册电话
+			</span>
+                <input class="easyui-textbox" id="registerPhone" name="registerPhone"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  开户行
+			</span>
+                <input class="easyui-textbox" id="bankName" name="bankName"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  银行卡号
+			</span>
+                <input class="easyui-textbox" id="bankCardNumber" name="bankCardNumber"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  纳税人识别号
+			</span>
+                <input class="easyui-textbox" id="taxPayerNumber" name="taxPayerNumber"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  生成时间
+			</span>
+                <input class="easyui-datebox" id="addTimeMin" name="addTimeMin"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datebox" id="addTimeMax" name="addTimeMax"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  审核时间
+			</span>
+                <input class="easyui-datebox" id="auditTimeMin" name="auditTimeMin" />
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datebox" id="auditTimeMax" name="auditTimeMax"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="export"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+        <!-- 修改时传的id-->
+        <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+        <input id="exportData" name="exportData" type="hidden"/>
+        <input id="ids" name="ids" type="hidden"/>
+
+    </form>
+</div>
+
+<div id="memberInvoiceDetail" style="display:none" title="编辑或查看发票信息">
+</div>
+<script type="text/javascript">
+
+var datagrid;
+var queryParameters;
+
+$(function () {
+    datagrid = {
+        fit: true,
+        fitColumns: true,
+        toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure',
+        striped: true,
+        singleSelect: false,
+        pagination: true,
+        columns: [[
+            {title: "序号", field: "id", hidden: true},
+            {checkbox:true, field: "checked"},
+            {title: "操作", field: "caozuo", sortable: true},
+            {title: "订单号", field: "orderSn", sortable: true},
+            {title: "会员名称", field: "memberName", sortable: true},
+            {title: "发票类型", field: "invoiceType", sortable: true},
+            {title: "发票抬头", field: "bankName", sortable: true},
+            {title: "开户行", field: "invoiceTitle", sortable: true},
+            {title: "纳税人识别号", field: "taxPayerNumber", sortable: true},
+            {title: "注册地址", field: "registerAddress", sortable: true},
+            {title: "注册电话", field: "registerPhone", sortable: true},
+            {title: "添加时间", field: "addTime", sortable: true},
+            {title: "审核状态", field: "state", sortable: true},
+            {title: "审核时间", field: "auditTime", sortable: true},
+            {title: "审核人", field: "auditor", sortable: true},
+            {title: "是否锁定", field: "isLock",sortable: true}
+        ]],
+        pageSize: 50,
+        pageList: [50,100,200],
+        rownumbers: true
+    }
+
+    $('#datagrid').datagrid(datagrid);
+});
+
+var buttons = $.extend([], $.fn.datetimebox.defaults.buttons);
+buttons.splice(1, 0, {
+	text: '清除',
+	handler: function(target){
+		$(target).datetimebox('setValue', '');
+		$(target).combo("hidePanel");
+	}
+});
+// $('#addTimeMin').datetimebox({buttons: buttons});
+// $('#addTimeMax').datetimebox({buttons: buttons});
+// $('#auditTimeMin').datetimebox({buttons: buttons});
+// $('#auditTimeMax').datetimebox({buttons: buttons});
+
+
+$('#search').click(function () {
+	if($('#addTimeMin').datetimebox('getValue') && $('#auditTimeMin').datetimebox('getValue')){
+		if($('#addTimeMin').datetimebox('getValue')>$('#auditTimeMin').datetimebox('getValue')){
+			$.messager.alert('错误','时间区间不正确','error');
+			return false;
+		}
+	}
+	if($('#auditTimeMin').datetimebox('getValue') && $('#auditTimeMax').datetimebox('getValue')){
+		if($('#auditTimeMin').datetimebox('getValue')>$('#auditTimeMax').datetimebox('getValue')){
+			$.messager.alert('错误','时间区间不正确','error');
+			return false;
+		}
+	}
+	//订单状态
+	var orderStatus = $("#orderStatus").combobox("getValue");
+	if(orderStatus=="-1"){
+		orderStatus="";
+	}
+	//支付状态
+	var paymentStatus = $("#paymentStatus").combobox("getValue");
+	if(paymentStatus=="-1"){
+		paymentStatus="";
+	}
+	//订单来源
+	var source = $("#source").combobox("getValue");
+	if(source=="-1"){
+		source="";
+	}
+	//审核状态
+	var state = $("#state").combobox("getValue");
+	if(state=="-1"){
+		state="";
+	}
+	//发票类型
+	var invoiceType = $("#invoiceType").combobox("getValue");
+	if(invoiceType=="-1"){
+		invoiceType="";
+	}
+	//是否电子发票
+	var electricFlag = $("#electricFlag").combobox("getValue");
+	if(electricFlag=="-1"){
+		electricFlag="";
+	}
+	var id = $("#id").val;
+    
+   	//生成起始时间
+	var addTimeMin = $('#addTimeMin').datetimebox('getValue');
+	//生成截止时间
+	var addTimeMax = $('#addTimeMax').datetimebox('getValue');
+	
+	//审核起始时间
+	var auditTimeMin = $('#auditTimeMin').datetimebox('getValue');
+	//审核截止时间
+	var auditTimeMax = $('#auditTimeMax').datetimebox('getValue');
+	
+	queryParameters = {
+		 id:$("#id").val(),
+		 orderSn:$("#orderSn").val(),
+		 orderStatus:$("#orderStatus").combobox("getValue"),
+		 paymentStatus:$("#paymentStatus").combobox("getValue"),
+		 source:$("#source").combobox("getValue"),
+		 state:$("#state").combobox("getValue"),
+		 invoiceType:$("#invoiceType").combobox("getValue"),
+		 electricFlag:$("#electricFlag").combobox("getValue"),
+	     memberName:$("#memberName").val(),
+	     invoiceTitle:$("#invoiceTitle").val(),
+	     taxPayerNumber:$("#taxPayerNumber").val(),
+	     registerAddress:$("#registerAddress").val(),
+	     registerPhone:$("#registerPhone").val(),
+	     bankName:$("#bankName").val(),
+	     bankCardNumber:$("#bankCardNumber").val(),
+	     addTimeMin:$("#addTimeMin").datetimebox('getValue'),
+	     addTimeMax:$("#addTimeMax").datetimebox('getValue'),
+	     auditTimeMin:$("#auditTimeMin").datetimebox('getValue'),
+	     auditTimeMax:$("#auditTimeMax").datetimebox('getValue')
+    };
+	// if(datagrid){
+	//     //grid加载
+	//     $('#datagrid').datagrid('load',queryParameters);
+	// }else{
+		datagrid = $('#datagrid').datagrid({
+	        url: "/invoice/findMemberInvoiceList",
+	        fit: true,
+            fitColumns:false,
+	        pagination: true,
+	        singleSelect: false,
+	        pageSize: 50,
+	        pageList: [50,100,200],
+	        nowrap: true,
+	        rownumbers: true,
+	        queryParams:queryParameters,
+	        columns: [
+	            [
+					{
+					    field: 'id',
+					    title: '序号',
+					    width: 10,
+					    align: 'center',
+					    hidden:true
+					},
+                    {
+                        field: 'checked',
+                        width: 10,
+                        align: 'center',
+                        checkbox:true
+                    },
+					 {
+	                    field: 'caozuo',
+	                    title: '操作',
+	                    width: 200,
+                         sortable:true,
+	                    align: 'center',
+	                    formatter:function(value,rowData,rowIndex){
+	                    	return "<a href='javascript:void(0);' onclick='modifyMemberInvoices(" + '"' + 1 + '", "' + rowData.id + '", "' + rowData.orderSn + '"' + ");return false;'>修改发票</a> "
+	                    		 + "<a href='javascript:void(0);' onclick='modifyMemberInvoices(" + '"' + 2 + '", "' + rowData.id + '", "' + rowData.orderSn + '"' + ");return false;'>状态审核</a>";  
+	                    }
+	                },
+	                {
+	                    field: 'orderSn',
+	                    title: '订单号',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'memberName',
+	                    title: '会员名称',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'invoiceType',
+	                    title: '发票类型',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center',
+	                    formatter:function(value,rowData,rowIndex){
+					        if(value=='1') return '增值税发票';
+	     					if(value=='2') return '普通发票';
+	     					if(value=='3') return '增值税发票（普）';
+	     					return '';
+	            		}
+	                },
+	                {
+	                    field: 'invoiceTitle',
+	                    title: '发票抬头',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'bankName',
+	                    title: '开户行',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'bankCardNumber',
+	                    title: '银行卡号',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'taxPayerNumber',
+	                    title: '纳税人识别号',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'registerAddress',
+	                    title: '注册地址',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'registerPhone',
+	                    title: '注册电话',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'addTime',
+	                    title: '添加时间',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'state',
+	                    title: '审核状态',
+	                    width: 200,
+                        sortable:true,
+	                    align: 'center',
+	                    formatter:function(value,rowData,rowIndex){
+					        if(value=='0') return '待审核';
+	     					if(value=='1') return '审核通过';
+	     					if(value=='2') return '拒绝';
+	     					return '';
+	            		}
+	                    
+	                },
+	                {
+	                    field: 'auditTime',
+	                    title: '审核时间',
+                        sortable:true,
+	                    width: 200,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'auditor',
+	                    title: '审核人',
+                        sortable:true,
+	                    width: 200,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'isLock',
+	                    title: '是否锁定',
+                        sortable:true,
+	                    width: 200,
+	                    align: 'center',
+	                    formatter:function(value,rowData,rowIndex){
+					        if(value=='0') return '未锁定';
+	     					if(value=='1') return '锁定';
+	     					return '';
+	            		}
+	                }
+				]
+			]
+		});	
+	//}
+}); 
+//点击导出
+$('#export').click(function(){
+	if(!datagrid){
+		$.messager.alert('提示','请查询！','info');
+		return;	
+	}
+
+    //获得选中行
+    var checkedItems = $('#datagrid').datagrid('getChecked');
+    var syncData = new Array();
+    //判断是否存在满足条件的行
+    $.each(checkedItems, function(index, item){
+        syncData.push(item.id);
+    });
+
+
+	$.messager.confirm('确认','确定要导出吗？', function(r){
+		if (r){
+			$('#exportData').val(JSON.stringify(queryParameters));
+            $('#ids').val(JSON.stringify(syncData));
+			$('#paramForm_dmmtlPbcsMtlMeasure').attr("action", '/invoice/exportAllMemberInvoiceList');
+			$('#paramForm_dmmtlPbcsMtlMeasure').submit();
+		}
+	});
+});
+
+//修改/审核发票信息
+function modifyMemberInvoices(modifyFlg, id, orderSn){
+	$("#memberInvoiceDetail").attr("style", "display:none;padding:5px;width:800px;height:400px;");
+	if (orderSn == undefined){
+		orderSn = "";
+	}
+	jQuery.ajax({
+	             url: "/invoice/modifyMemberInvoices",  
+	             data:{
+	             	"modifyFlg": modifyFlg,
+	             	"id": id,
+	             	"orderSn": orderSn
+	             },
+	             type: "GET",
+	             success: function (data) {
+	             	$("#memberInvoiceDetail").html(data);
+	             	$("#memberInvoiceDetail").show();
+	             	$("#memberInvoiceDetail").dialog({
+						collapsible: true, 
+						minimizable: false, 
+						maximizable: false
+					});
+				}
+			});
+				
+}
+//切换订单类型
+$("#orderType").combobox({
+	onChange: function (n,o) {
+		if(n == 1){
+			$('#paymentStatus').combobox({    
+				disabled:false  
+			});
+		}else{
+			$('#paymentStatus').combobox({    
+				disabled:true  
+			});
+		}
+	}
+});
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+
+</body>

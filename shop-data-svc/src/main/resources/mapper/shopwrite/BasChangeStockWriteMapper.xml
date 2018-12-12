@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.BasChangeStockWriteDao">
+
+    <insert id="insert" parameterType="com.haier.shop.model.BasChangeStock">
+        insert into
+        `bas_change_stock`(`city_id`,`sku`,`has_stock`,`update_time`)
+        values
+        <foreach collection="changeList" item="entity" index="index" separator=",">
+            (#{entity.cityId},#{entity.sku},#{entity.hasStock},now())
+        </foreach>
+    </insert>
+    <insert id="insert2" parameterType="com.haier.shop.model.BasChangeStock">
+        insert into
+        `bas_change_stock`(`sku`,`city_id`,`has_stock`,`update_time`)
+        values
+        <foreach collection="changeList" item="entity" index="index" separator=",">
+            (#{entity.sku},#{entity.cityId},#{entity.hasStock},#{entity.updateTime})
+        </foreach>
+    </insert>
+    <update id="update" parameterType="com.haier.shop.model.BasChangeStock">
+        update `bas_change_stock` set `has_stock`=#{hasStock},`update_time`=now()
+        where `sku`=#{sku} and `city_id`=#{cityId}
+    </update>
+    <update id="update2" parameterType="com.haier.shop.model.BasChangeStock">
+        update `bas_change_stock` set `has_stock`=#{hasStock},`update_time`=#{updateTime}
+        where `sku`=#{sku} and `city_id`=#{cityId}
+    </update>
+    
+    <delete id="deleteB2CInfoBySku" parameterType="String">
+    	delete from bas_change_stock where `sku`=#{sku} and `city_id`=0
+    </delete>
+</mapper>

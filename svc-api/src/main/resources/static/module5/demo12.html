@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;" title="电子发票批量重推开票"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <input name="Fruit" type="radio" checked/>
+                <label>电子发票批量重推开票(invoices)</label>
+            </div>
+            <div class="clearfix"></div>
+            <div class="search-row" style="width: 100%">
+			<span class="search-row-label" style="float:left;font-weight:bold;font-size:16px;">
+			  网单号<br/><span style="color: red">多条用“,”分割）</span>
+			</span>
+                <textarea rows="18" name="info" id="info" style="resize: none;width:600px;"></textarea>
+                <div style="margin-left:150px">
+                    <span style="color: red">【注意】发票必须是电子发票，开票失败，二次开票不要录入原网单号（执行完5分钟后，方可查看结果）</span><br/>
+                    <div class="clearfix"></div>
+                    <div>
+                        <a href="#" class="easyui-linkbutton" iconCls="icon-ok">提交</a>
+                        <a href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="addDlg_dmmtlPbcsMtlMeasure" data-options="title:'注意',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_dmmtlPbcsMtlMeasure">
+    <div class="ftitle">指定渠道</div>
+    <div id="dlg-buttons_dmmtlPbcsMtlMeasure">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_dmmtlPbcsMtlMeasure" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_dmmtlPbcsMtlMeasure').dialog('close')">关闭</a>
+    </div>
+</div>
+<script type="application/javascript">
+    var tableHead = '凭证号 \n' +
+        '单据号 \n' +
+        '交易时间 \n' +
+        '交易类型 \n' +
+        '借贷标识 \n' +
+        '库位 \n' +
+        '物料 \n' +
+        '数量 \n' +
+        '批次 \n' +
+        '渠道 \n' +
+        '指定人 \n' +
+        '指定时间 \n' +
+        '处理时间 \n' +
+        '处理信息'
+
+    var detailTh = 'WP订单号 \n' +
+        'PO编号 \n' +
+        '销售单号 \n' +
+        '提单时间 \n' +
+        'SO \n' +
+        'DN \n' +
+        '渠道 \n' +
+        '品类 \n' +
+        '产品组 \n' +
+        '物料编号 \n' +
+        '型号 \n' +
+        '数量 \n' +
+        '样表单价 \n' +
+        '样表金额 \n' +
+        '采购价格 \n' +
+        '采购金额 \n' +
+        'WA库位码 \n' +
+        'WA库位名称 \n' +
+        '状态 \n' +
+        '出日日顺库时间 \n' +
+        '入库时间 '
+
+    var detail = {
+        fit: true,
+        fitColumns: false,
+        singleSelect: true,
+        columns: covertColumns(detailTh),
+        rownumbers: true
+    };
+
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>

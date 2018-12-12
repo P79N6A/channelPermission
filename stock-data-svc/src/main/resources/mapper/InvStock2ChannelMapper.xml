@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStock2ChannelDao">
+	<resultMap id="invStock2ChannelResult" type="com.haier.stock.model.InvStock2Channel">
+		<result property="stoId" column="sto_id" />
+		<result property="sku" column="sku" />
+		<result property="secCode" column="sec_code" />
+		<result property="channelCode" column="channel_code" />
+		<result property="stockQty" column="stock_qty" />
+		<result property="frozenQty" column="frozen_qty" />
+		<result property="virtualQty" column="virtual_qty" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="invStock2ChannelResult">
+		select `sto_id`,`sku`,`sec_code`,`channel_code`,`stock_qty`,`frozen_qty`,`virtual_qty`,`create_time`,`update_time`
+		from `inv_stock_2_channel`
+		where `sku` = #{sku} and sec_code = #{sec_code} and channel_code=#{channel_code}
+	</select>
+	<insert id="insert" parameterType="com.haier.stock.model.InvStock2Channel">
+		insert into `inv_stock_2_channel`(`sku`,`sec_code`,`channel_code`,`stock_qty`,`frozen_qty`,`virtual_qty`,`create_time`,`update_time`)
+		values(#{sku},#{secCode},#{channelCode},#{stockQty},#{frozenQty},#{virtualQty},#{createTime},#{updateTime})
+	</insert>
+	<update id="update" parameterType="com.haier.stock.model.InvStock2Channel">
+		update `inv_stock_2_channel` set `sku`=#{sku},`sec_code`=#{secCode},`channel_code`=#{channelCode},`stock_qty`=#{stockQty},`frozen_qty`=#{frozenQty},`virtual_qty`=#{virtualQty},`create_time`=#{createTime},`update_time`=#{updateTime}
+		where `sto_id` = #{stoId}
+	</update>
+	<select id="getInvStockChannelLst" resultMap="invStock2ChannelResult">
+		select `sto_id`,`sku`,`sec_code`,`channel_code`,`stock_qty`,`frozen_qty`,`virtual_qty`,`create_time`,`update_time`
+		from `inv_stock_2_channel`
+	</select>
+	<select id="getInvStockBomLst" resultMap="invStock2ChannelResult">
+		SELECT t.`sku`, t.`sec_code`, t.`channel_code` FROM `inv_stock_2_channel` t 
+		WHERE EXISTS (SELECT 1 FROM inv_machine_set t1 WHERE  t1.`sub_sku` = t.`sku` AND t1.`status`=0)
+	</select>
+</mapper>

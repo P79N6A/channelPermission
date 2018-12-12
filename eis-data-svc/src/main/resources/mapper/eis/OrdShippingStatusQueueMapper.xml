@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.OrdShippingStatusQueueDao">
+    <resultMap id="productActivitiesResult" type="com.haier.eis.model.OrdShippingStatusQueue">
+        <result property="id" column="id" />
+        <result property="addTime" column="add_time" />
+        <result property="orderId" column="order_id" />
+        <result property="orderProductId" column="order_product_id" />
+        <result property="cOrderSn" column="corder_sn" />
+        <result property="orderSource" column="order_source" />
+        <result property="outping" column="outping" />
+        <result property="lesShipTime" column="les_ship_time" />
+        <result property="expressName" column="express_name" />
+        <result property="expressNumber" column="express_number" />
+        <result property="status" column="status" />
+        <result property="count" column="count" />
+    </resultMap>
+    <select id="getByOrderProductId" parameterType="Integer" resultMap="productActivitiesResult">
+        select `id`,`add_time`,`order_id`,`order_product_id`,`corder_sn`,`order_source`,`outping`,`les_ship_time`,`express_name`,`express_number`,`status`,`count`
+        from `ord_shipping_status_queue`
+        where `order_product_id` = #{orderProductId}
+    </select>
+    <insert id="insert" parameterType="com.haier.eis.model.OrdShippingStatusQueue">
+        insert into `ord_shipping_status_queue`(`add_time`,`order_id`,`order_product_id`,`corder_sn`,`order_source`,`outping`,`les_ship_time`,`express_name`,`express_number`,`status`,`count`)
+        select now(),#{orderId},#{orderProductId},#{cOrderSn},#{orderSource},#{outping},#{lesShipTime},#{expressName},#{expressNumber},#{status},#{count} from dual
+        where not exists(select 1 from `ord_shipping_status_queue` where `corder_sn`=#{cOrderSn})
+        <selectKey resultType="Integer" keyProperty="id" order="AFTER"
+                   statementType="STATEMENT">select last_insert_id()</selectKey>
+    </insert>
+</mapper>

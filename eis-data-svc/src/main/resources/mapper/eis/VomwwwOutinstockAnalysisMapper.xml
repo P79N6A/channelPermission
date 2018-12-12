@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.VomwwwOutinstockAnalysisDao">
+	<resultMap id="vomwwwOutinstockAnalysisResult" type="com.haier.eis.model.VomwwwOutinstockAnalysis">
+		<result property="id" column="Id" />
+		<result property="tradeNo" column="trade_no" />
+		<result property="subTradeNo" column="sub_trade_no" />
+		<result property="scOrderNo" column="sc_orderNo" />
+		<result property="itemNo" column="item_no" />
+		<result property="orderStatus" column="order_status" />
+		<result property="certification" column="certification" />
+		<result property="LBXNo" column="lbx_no" />
+		<result property="sku" column="sku" />
+		<result property="type" column="type" />
+		<result property="num" column="num" />
+		<result property="receiptVoucher" column="receipt_voucher" />
+		<result property="outInDate" column="out_in_date" />
+		<result property="TBNo" column="tb_no" />
+		<result property="WWWStock" column="www_stock" />
+		<result property="hpInfo" column="hp_info" />
+		<result property="backNo" column="back_no" />
+		<result property="batch" column="batch" />
+		<result property="expressNum" column="express_num" />
+		<result property="storeCode" column="store_code" />
+		<result property="addTime" column="add_time" />
+		<result property="sapStatus" column="sap_status" />
+		<result property="stockStatus" column="stock_status" />
+		<result property="markMessage" column="mark_message" />
+		<result property="busType" column="bus_type" />
+		<result property="orderType" column="order_type" />
+		<result property="delay" column="delay" />
+		<result property="processTime" column="process_time" />
+		<result property="message" column="message" />
+		<result property="vomwwwLogsId" column="vom_www_logs_id" />
+		<result property="markMessage1" column="mark_message1" />
+		<result property="markMessage2" column="mark_message2" />
+		<result property="markMessage3" column="mark_message3" />
+		<result property="handleStatus" column="handle_status" />
+		<result property="sapCount" column="sap_count" />
+		<result property="eaiDataLogId" column="eai_data_log_id" />
+
+	</resultMap>
+	
+	
+	<select id="getInAnalysisByTradeNo" resultMap="vomwwwOutinstockAnalysisResult">
+		select * from
+			vomwww_outinstock_analysis
+		where 1 = 1
+		and trade_no = #{tradeNo}
+		and sub_trade_no = #{subTradeNo}
+		and bus_type = 1
+	</select>
+	
+	<update id="updateSapStatusById" parameterType="com.haier.eis.model.VomwwwOutinstockAnalysis">
+		update `vomwww_outinstock_analysis` set
+		`sap_count` = #{sapCount},`sap_status` = #{sapStatus},`eai_data_log_id` = #{eaiDataLogId},`message` = #{message},`process_time` = now()
+		where `id` = #{id}
+	</update>
+	
+	<select id="getByCondition" resultMap="vomwwwOutinstockAnalysisResult">
+		select
+		`id`,`trade_no`,`sub_trade_no`,`sc_order_no`,`item_no`,`order_status`,`certification`,`lbx_no`,`sku`,`type`,`num`,`receipt_voucher`,`out_in_date`,`tb_no`,`www_stock`,`hp_info`,`back_no`,`batch`,`express_num`,`store_code`,`add_time`,`sap_status`,`sap_count`,`stock_status`,`mark_message`,`bus_type`,`order_type`,`delay`,`process_time`,`message`,`vom_www_logs_id`,`mark_message1`,`mark_message2`,`mark_message3`,`handle_status`,`eai_data_log_id`
+		from `vomwww_outinstock_analysis`
+		where 1 = 1
+		<if test="queryMap.q_sapStatus != null">
+			and `sap_status` = #{queryMap.q_sapStatus}
+		</if>
+		<if test="queryMap.q_orderType != null">
+			and `order_type` = #{queryMap.q_orderType}
+		</if>
+		<if test="queryMap.q_busType != null">
+			and `bus_type` = #{queryMap.q_busType}
+		</if>
+		<if test="queryMap.q_sapCount != null">
+			and `sap_count` &lt;= #{queryMap.q_sapCount}
+		</if>
+		<if test="queryMap.q_handleStatus != null">
+			and `handle_status` = #{queryMap.q_handleStatus}
+		</if>
+		<if test="size &gt; 0">
+			limit #{size}
+		</if>
+	</select>
+		<select id="quereyVOMthNO"  resultMap="vomwwwOutinstockAnalysisResult" parameterType="java.lang.String">
+		SELECT
+		`id`,
+		`trade_no`,
+		`sub_trade_no`,
+		`sc_order_no`,
+		`item_no`,
+		`order_status`,
+		`certification`,
+		`lbx_no`,
+		`sku`,
+		`type`,
+		`num`,
+		`receipt_voucher`,
+		`out_in_date`,
+		`tb_no`,
+		`www_stock`,
+		`hp_info`,
+		`back_no`,
+		`batch`,
+		`express_num`,
+		`store_code`,
+		`add_time`,
+		`sap_status`,
+		`sap_count`,
+		`stock_status`,
+		`mark_message`,
+		`bus_type`,
+		`order_type`,
+		`delay`,
+		`process_time`,
+		`message`,
+		`vom_www_logs_id`,
+		`mark_message1`,
+		`mark_message2`,
+		`mark_message3`,
+		`handle_status`,
+		`eai_data_log_id`
+	FROM
+		vomwww_outinstock_analysis
+	WHERE
+		bus_type = '2'
+	and tb_no=#{tbNo}
+		</select>
+</mapper>

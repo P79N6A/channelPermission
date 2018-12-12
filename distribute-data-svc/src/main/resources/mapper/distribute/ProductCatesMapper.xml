@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.ProductCatesDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.ProductCates" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="siteId" property="siteId" jdbcType="INTEGER" />
+    <result column="parentId" property="parentId" jdbcType="INTEGER" />
+    <result column="parentPath" property="parentPath" jdbcType="VARCHAR" />
+    <result column="cateName" property="cateName" jdbcType="VARCHAR" />
+    <result column="sortNum" property="sortNum" jdbcType="TINYINT" />
+    <result column="isHidden" property="isHidden" jdbcType="TINYINT" />
+    <result column="lastModifyTime" property="lastModifyTime" jdbcType="INTEGER" />
+    <result column="modified" property="modified" jdbcType="TIMESTAMP" />
+
+  </resultMap>
+  <select id="selectByProducttypesId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+   id,cateName
+    from ProductCates
+  </select>
+  
+  <select id="selectByProducttypesSku" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    id,cateName
+    from ProductCates 
+    where  id = #{id,jdbcType=INTEGER}
+   </select>
+  <resultMap id="productcatesResult" type="com.haier.distribute.data.model.ProductCates">
+    <result property="id" column="id"/>
+    <result property="siteId" column="siteId"/>
+    <result property="parentId" column="parentId"/>
+    <result property="parentPath" column="parentPath"/>
+    <result property="cateName" column="cateName"/>
+    <result property="sortNum" column="sortNum"/>
+    <result property="isHidden" column="isHidden"/>
+    <result property="cateFilters" column="cateFilters"/>
+    <result property="extendCateFilters" column="extendCateFilters"/>
+    <result property="priceRange" column="priceRange"/>
+    <result property="packDesc" column="packDesc"/>
+    <result property="deliveryDesc" column="deliveryDesc"/>
+    <result property="afterService" column="afterService"/>
+    <result property="lastModifyTime" column="lastModifyTime"/>
+  </resultMap>
+  <select id="getAllChildren" resultMap="productcatesResult">
+    SELECT
+    `id`,
+    `siteId`,
+    `parentId`,
+    `parentPath`,
+    `cateName`,
+    `sortNum`,
+    `isHidden`,
+    `cateFilters`,
+    `extendCateFilters`,
+    `priceRange`,
+    `packDesc`,
+    `deliveryDesc`,
+    `afterService`,
+    `lastModifyTime`
+    FROM `ProductCates`
+    WHERE `parentId` = #{parentId}
+  </select>
+
+      <select id="getAllProductCates" resultMap="BaseResultMap">
+        SELECT
+            `id`,
+            `siteId`,
+            `parentId`,
+            `parentPath`,
+            `cateName`,
+            `sortNum`,
+            `isHidden`,
+            `cateFilters`,
+            `extendCateFilters`,
+            `priceRange`,
+            `packDesc`,
+            `deliveryDesc`,
+            `afterService`,
+            `lastModifyTime`
+        FROM `ProductCates`
+    </select>
+ 
+</mapper>

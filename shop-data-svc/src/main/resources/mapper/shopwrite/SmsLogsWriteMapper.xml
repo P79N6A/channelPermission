@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.SmsLogsWriteDao">
+	<resultMap id="smslogsResult" type="com.haier.shop.model.SmsLogs">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="mobile" column="mobile" />
+		<result property="name" column="name" />
+		<result property="addTime" column="addTime" />
+		<result property="isSuccess" column="isSuccess" />
+		<result property="message" column="message" />
+		<result property="priority" column="priority" />
+		<result property="lastTime" column="lastTime" />
+		<result property="tryNum" column="tryNum" />
+	</resultMap>
+	<insert id="insertSmsLogs" parameterType="com.haier.shop.model.SmsLogs">
+		insert into
+		`SmsLogs`(`siteId`,`mobile`,`name`,`addTime`,`isSuccess`,`message`,`priority`,`lastTime`,`tryNum`)
+		values(#{siteId},#{mobile},#{name},#{addTime},#{isSuccess},#{message},#{priority},#{lastTime},#{tryNum})
+	</insert>
+	
+	<insert id="batchInsertSmsLogs" parameterType="com.haier.shop.model.SmsLogs">
+		insert into `SmsLogs`(`siteId`,`mobile`,`name`,`addTime`,`isSuccess`,`message`,`priority`,`lastTime`,`tryNum`) values
+		<foreach collection="smsLogsList" item="item" index="index" separator=",">
+		(#{item.siteId},#{item.mobile},#{item.name},#{item.addTime},#{item.isSuccess},#{item.message},#{item.priority},#{item.lastTime},#{item.tryNum})
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.Order2thsReadDao">
+	<resultMap id="order2thsResult" type="com.haier.shop.model.Order2ths">
+		<result property="id" column="id" />
+		<result property="orderSn" column="orderSn" />
+		<result property="orderSourceSn" column="orderSourceSn" />
+		<result property="addTime" column="addTime" />
+		<result property="orderSource" column="orderSource" />
+		<result property="sCode" column="sCode" />
+		<result property="industryCode" column="industryCode" />
+		<result property="industryName" column="industryName" />
+		<result property="productType" column="productType" />
+		<result property="sku" column="sku" />
+		<result property="productName" column="productName" />
+		<result property="price" column="price" />
+		<result property="number" column="number" />
+		<result property="shippingAmount" column="shippingAmount" />
+		<result property="orderAmount" column="orderAmount" />
+		<result property="consignee" column="consignee" />
+		<result property="mobile1" column="mobile1" />
+		<result property="mobile2" column="mobile2" />
+		<result property="deliverySn" column="deliverySn" />
+		<result property="remark" column="remark" />
+		<result property="status" column="status" />
+		<result property="receiptTitle" column="receiptTitle" />
+		<result property="taxSpotNum" column="taxSpotNum" />
+		<result property="regPhone" column="regPhone" />
+		<result property="regAddress" column="regAddress" />
+		<result property="receiptBank" column="receiptBank" />
+		<result property="bankAccount" column="bankAccount" />
+		<result property="receiptType" column="receiptType" />
+		<result property="receiptNumber" column="receiptNumber" />
+		<result property="createTime" column="createTime" />
+		<result property="jSDate" column="JSDate" />
+		<result property="isReceipted" column="isReceipted" />
+		<result property="memberInvoiceId" column="memberInvoiceId" />
+		<result property="creator" column="creator" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="order2thsResult">
+		select `id`,`orderSn`,`orderSourceSn`,`addTime`,`orderSource`,`sCode`,`industryCode`,`industryName`,`productType`,`sku`,`productName`,`price`,`number`,`shippingAmount`,`orderAmount`,`consignee`,`mobile1`,`mobile2`,`deliverySn`,`remark`,`status`,`receiptTitle`,`taxSpotNum`,`regPhone`,`regAddress`,`receiptBank`,`bankAccount`,`receiptType`,`receiptNumber`,`createTime`,`JSDate`,`isReceipted`,`memberInvoiceId`,`creator`
+		from `Order2ths`
+		where `id` = #{id}
+	</select>
+</mapper>

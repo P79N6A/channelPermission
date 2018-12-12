@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>开票列表</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+        collapsible:false">
+    <table id="datagrid_invoiceMakeOutList"></table>
+</div>
+<div id="datagridToolbar_invoiceMakeOutList">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  网单编号
+			</span>
+                <input class="easyui-textbox" id="corder_sn" name="corder_sn"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  发票抬头
+			</span>
+                <input class="easyui-textbox" id="invoice_title" name="invoice_title"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  纳税人识别号
+			</span>
+                <input class="easyui-textbox" id="tax_payer_number" name="tax_payer_number"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  注册地址和电话
+			</span>
+                <input class="easyui-textbox" id="register_address_and_phone" name="register_address_and_phone"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  开户行和卡号
+			</span>
+                <input class="easyui-textbox" id="bank_name_and_account" name="bank_name_and_account"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  节能补贴
+			</span>
+                <select class="easyui-combobox" id="energy_saving" name="energy_saving" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  重开票
+			</span>
+                <select class="easyui-combobox" id="is_reinvoice" name="is_reinvoice" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  发票类型
+			</span>
+                <select class="easyui-combobox" id="type" name="type" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">增值税发票</option>
+                    <option value="3">增值税发票(普)</option>
+                    <option value="2">普通发票</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  发票状态
+			</span>
+                <select class="easyui-combobox" id="state" name="state" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="0">待开票</option>
+                    <option value="1">开票中</option>
+                    <option value="4">已开票</option>
+                    <option value="5">已取消开票</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+                是否电子发票
+			</span>
+                <select class="easyui-combobox" id="electric_flag" name="electric_flag" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">电子发票</option>
+                    <option value="0">纸制发票</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  推送次数<=
+			</span>
+                <input id="try_num" name="try_num" class="easyui-numberbox"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  开票时间
+			</span>
+                <input class="easyui-datebox" id="billing_time_start" name="billing_time_start" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datebox" id="billing_time_end" name="billing_time_end" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  发票作废时间
+			</span>
+                <input id="invalid_time_start" name="invalid_time_start" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datebox" id="invalid_time_end" name="invalid_time_end" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  推送状态
+			</span>
+                <select class="easyui-combobox" id="status_type" name="status_type" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">首次推送</option>
+                    <option value="2">推送修改</option>
+                    <option value="3">推送取消</option>
+                    <option value="4">推送作废</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  是否成功
+			</span>
+                <select class="easyui-combobox" id="success" name="success" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="0">待推送</option>
+                    <option value="1">成功</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  下单时间
+			</span>
+                <input class="easyui-datebox" id="corder_add_time_start" name="corder_add_time_start" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datebox" id="corder_add_time_end" name="corder_add_time_end" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  未推送时间
+			</span>
+                <select class="easyui-combobox" id="timeA" name="timeA" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="5">超出5分钟</option>
+                    <option value="10">超出10分钟</option>
+                    <option value="30">超出30分钟</option>
+                    <option value="60">超出1小时</option>
+                    <option value="120">超出2小时</option>
+                    <option value="180">超出3小时</option>
+                    <option value="240">超出4小时</option>
+                    <option value="1440">超出1天</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  是否货票同行
+			</span>
+                <select class="easyui-combobox" id="is_together" name="is_together" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">货票同行</option>
+                    <option value="2">非货票同行</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  未开票时间
+			</span>
+                <select class="easyui-combobox" id="timeB" name="timeB" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="5">超出5分钟</option>
+                    <option value="10">超出10分钟</option>
+                    <option value="30">超出30分钟</option>
+                    <option value="60">超出1小时</option>
+                    <option value="120">超出2小时</option>
+                    <option value="180">超出3小时</option>
+                    <option value="240">超出4小时</option>
+                    <option value="1440">超出1天</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  网单类型
+			</span>
+                <select class="easyui-combobox" id="corder_type" name="corder_type" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">普通网单</option>
+                    <option value="2">差异网单</option>
+                    <option value="3">专项开票</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  发票号
+			</span>
+                <input class="easyui-textbox" id="invoice_number" name="invoice_number"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="reSend"
+           data-options="iconCls:'icon-redo',plain:true">重推</a>
+        <a href="#" class="easyui-linkbutton" id="forceCancel"
+           data-options="iconCls:'icon-cancel',plain:true">作废</a>
+        <a href="#" class="easyui-linkbutton" id="syncstatus"
+           data-options="iconCls:'icon-refresh',plain:true">同步发票状态</a>
+        <a href="#" class="easyui-linkbutton" id="export"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+        <input id="exportData" name="exportData" type="hidden"/>
+        <input id="ids" name="ids" type="hidden"/>
+    </form>
+</div>
+<div id="forceCancelDiv" style="display:none;padding-left:5px;width:300px;height:150px;" title="作废理由">
+    作废理由：<br/>
+    <input class="easyui-combobox" id="invalidReason" style="width:80%;" name="invalidReason"  data-options="
+	       								valueField: 'value',textField: 'text',panelHeight:'auto',editable:false,value:'换发票',
+										data: [{value: '换发票',text: '换发票'},
+										         {value: '更换发票抬头',text: '更换发票抬头'},
+										        {value: '发票价格错误',text: '发票价格错误'},
+										        {value: '退换货',text: '退换货'},
+										        {value:'其他',text:'其他'}]" />
+</div>
+<div id="taxRecordInvoiceDiv" style="display:none;padding:5px;width:450px;height:500px;" title="金税实时开票数据(显示的为实时到金税系统中查询的最新开票信息)">
+    金税实时开票信息：<br/>
+    <ul>
+        <li><b>网单号(WDH)：</b><span id="WDH"/></li>
+        <li><b>发票状态(FPZT)：</b><span id="FPZT"/></li>
+        <li><b>发票类型(FPLX)：</b><span id="FPLX"/></li>
+        <li><b>金税开票状态(KPZT)：</b><span id="KPZT"/></li>
+        <li><b>开票日期(KPRQ)：</b><span id="KPRQ"/></li>
+        <li><b>是否为货票同行(HPTX)：</b><span id="HPTX"/></li>
+        <li><b>网单生成时间(WDRQ)：</b><span id="WDRQ"/></li>
+        <li><b>客户编码(KHBM)：</b><span id="KHBM"/></li>
+        <li><b>客户名称(KHMC)：</b><span id="KHMC"/></li>
+        <li><b>客户税号(KHSH)：</b><span id="KHSH"/></li>
+        <li><b>客户地址电话(KHDZ)：</b><span id="KHDZ"/></li>
+        <li><b>客户开户银行账号(KHKHYHZH)：</b><span id="KHKHYHZH"/></li>
+        <li><b>备注(BZ)：</b><span id="BZ"/></li>
+        <li><b>物料编码(CPDM)：</b><span id="CPDM"/></li>
+        <li><b>商品名称(CPMC)：</b><span id="CPMC"/></li>
+        <li><b>商品型号(CPXH)：</b><span id="CPXH"/></li>
+        <li><b>商品单位(CPDW)：</b><span id="CPDW"/></li>
+        <li><b>商品数量(CPSL)：</b><span id="CPSL"/></li>
+        <li><b>含税单价(HSDJ)：</b><span id="HSDJ"/></li>
+        <li><b>含税金额(HSJE)：</b><span id="HSJE"/></li>
+        <li><b>不含税单价(BHSDJ)：</b><span id="BHSDJ"/></li>
+        <li><b>不含税金额(BHSJE)：</b><span id="BHSJE"/></li>
+        <li><b>税额(JSJE)：</b><span id="JSJE"/></li>
+        <li><b>税率(JSSL)：</b><span id="JSSL"/></li>
+        <li><b>积分金额(JFJE)：</b><span id="JFJE"/></li>
+        <li><b>节能补贴金额(JLJE)：</b><span id="JLJE"/></li>
+        <li><b>节能补贴备注(JLBZ)：</b><span id="JLBZ"/></li>
+        <li><b>收款方式(SKFS)：</b><span id="SKFS"/></li>
+        <li><b>内部结算单号(LBJSDH)：</b><span id="LBJSDH"/></li>
+        <li><b>库位编码(KWBM)：</b><span id="KWBM"/></li>
+        <li><b>备用字段1(ADD1)：</b><span id="ADD1"/></li>
+        <li><b>备用字段2(ADD2)：</b><span id="ADD2"/></li>
+        <li><b>电商推送开票时间(RRRQ)：</b><span id="RRRQ"/></li>
+        <li><b>电商最后更新金税时间(GXRQ)：</b><span id="GXRQ"/></li>
+        <li><b>税控号码(FPHM)：</b><span id="FPHM"/></li>
+        <li><b>税控回填日期(SKRQ)：</b><span id="SKRQ"/></li>
+        <li><b>开票人(KPMAN)：</b><span id="KPMAN"/></li>
+        <li><b>作废日期(ZFRQ)：</b><span id="ZFRQ"/></li>
+    </ul>
+</div>
+<div id="electricInvoiceInfoDiv" style="display:none;padding:5px;width:480px;height:260px;" title="电子发票实时开票数据(显示的为实时到电子发票系统中查询的最新开票信息)">
+    电子发票实时开票数据：<br/>
+    <ul>
+        <li><b>发票号：</b><span id="code"/></li>
+        <li><b>发票状态：</b><span id="status"/></li>
+        <li><b>含税金额：</b><span id="totalAmount"/></li>
+        <li><b>不含税金额：</b><span id="noTaxAmount"/></li>
+        <li><b>税额：</b><span id="taxAmount"/></li>
+        <li><b>开票时间：</b><span id="generateTime"/></li>
+        <li><b>作废时间：</b><span id="validTime"/></li>
+        <li><b>查看地址：</b><a id="viewUrl" target="_blank"></a></li>
+        <li><b>税控码：</b><span id="fiscalCode"/></li>
+    </ul>
+</div>
+<script src="../static/js/invoice/invoiceMakeOutList.js"></script>
+</body>
+</html>

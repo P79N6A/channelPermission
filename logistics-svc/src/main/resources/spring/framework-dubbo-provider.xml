@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--广播注册中心暴露服务地址 -->
+    <!--<dubbo:registry id="serviceRegistry" protocol="zookeeper" address="127.0.0.1:2181"/>-->
+    <!--广播注册中心暴露服务地址 -->
+  <!--  <dubbo:registry id="demoRegistry" address="zookeeper://127.0.0.1:2181"/>-->
+    <!--  暴露服务 -->
+    <!--<dubbo:service retries="0" interface="com.haier.logistics.service.LogisticsCenterLogisticsService"
+                   ref="logisticsServiceImpl"/>-->
+    <dubbo:service retries="0" interface="com.haier.logistics.service.EisInterfaceDataLogApiService"
+                   ref="eisInterfaceDataLogApiServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.EISOrderService"
+                   ref="eISOrderServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.EisVOMService"
+                   ref="eisVOMServiceImpl" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.ItemService"
+                   ref="itemServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.OrderInterfaceDataLogService"
+                   ref="orderInterfaceDataLogServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.OrderRebackService"
+                   ref="orderRebackServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.OrderService"
+                   ref="orderServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.PurchaseOrderService"
+                   ref="purchaseOrderServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.StockCommonService"
+                   ref="stockCommonServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.TransferLineService"
+                   ref="transferLineServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.VomOrderService"
+                   ref="vomOrderServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.EisNewVOMService"
+                   ref="eisNewVOMServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.logistics.service.HpDispatchService"
+                   ref="hpDispatchServiceImpl" version="1.0.0" timeout="1200000" />
+
+</beans>

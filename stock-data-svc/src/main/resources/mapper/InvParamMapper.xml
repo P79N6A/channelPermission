@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvParamDao">
+	<resultMap id="invParamResult" type="com.haier.stock.model.InvParam">
+		<result property="id" column="id" />
+		<result property="paramGroup" column="param_group" />
+		<result property="paramKey" column="param_key" />
+		<result property="paramName" column="param_name" />
+		<result property="paramSort" column="param_sort" />
+		<result property="lastTime" column="last_time" />
+		<result property="lastUser" column="last_user" />
+	</resultMap>
+	<select id="queryParams" parameterType="java.lang.String" resultMap="invParamResult">
+		select `id`,`param_group`,`param_key`,`param_name`,`param_sort`,`last_time`,`last_user`
+		from `inv_param`
+		where `param_group` = #{paramGroup} order by param_sort
+	</select>
+	<insert id="insert" parameterType="com.haier.stock.model.InvParam">
+		insert into `inv_param`(`param_group`,`param_key`,`param_name`,`param_sort`,`last_time`,`last_user`)
+		values(#{paramGroup},#{paramKey},#{paramName},#{paramSort},#{lastTime},#{lastUser})
+	</insert>
+	<update id="update" parameterType="com.haier.stock.model.InvParam">
+		update `inv_param` set `param_group`=#{paramGroup},`param_key`=#{paramKey},`param_name`=#{paramName},`param_sort`=#{paramSort},`last_time`=#{lastTime},`last_user`=#{lastUser}
+		where `id` = #{id}
+	</update>
+</mapper>

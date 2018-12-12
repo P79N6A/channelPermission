@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.GroupOrdersReadDao">
+	<resultMap id="groupOrdersResult" type="com.haier.shop.model.GroupOrders">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="type" column="type" />
+		<result property="tailOrderId" column="tailOrderId" />
+		<result property="depositOrderId" column="depositOrderId" />
+		<result property="tailCOrderSn" column="tailCOrderSn" />
+		<result property="depositOrderProductId" column="depositOrderProductId" />
+		<result property="depositCOrderSn" column="depositCOrderSn" />
+		<result property="status" column="status" />
+		<result property="addTime" column="addTime" />
+		<result property="syncHpTime" column="syncHpTime" />
+		<result property="member" column="member" />
+		<result property="groupId" column="groupId" />
+		<result property="errorMessage" column="errorMessage" />
+		<result property="from" column="from" />
+		<result property="extensions" column="extensions" />
+		<result property="params" column="params" />
+		<result property="hpResult" column="hpResult" />
+		<result property="tryCombineNum" column="tryCombineNum" />
+		<result property="lastErrorMsg" column="lastErrorMsg" />
+		<result property="lesStatus" column="lesStatus" />
+		<result property="lesMessage" column="lesMessage" />
+		<result property="lesLastTime" column="lesLastTime" />
+	</resultMap>
+	<select id="getByDepositOrderId" parameterType="Integer" resultMap="groupOrdersResult">
+		select `id`,`siteId`,`type`,`tailOrderId`,`depositOrderId`,`tailCOrderSn`,`depositOrderProductId`,`depositCOrderSn`,`status`,`addTime`,`syncHpTime`,`member`,`groupId`,`errorMessage`,`from`,`extensions`,`params`,`hpResult`,`tryCombineNum`,`lastErrorMsg`
+		from `GroupOrders`
+		where `depositOrderId` = #{depositOrderId} limit 1
+	</select>
+
+	<select id="getGroupOrdersQueues" parameterType="map" resultMap="groupOrdersResult">
+		<![CDATA[
+		select straight_join go.`id`,go.`siteId`,go.`type`,go.`tailOrderId`,go.`depositOrderId`,go.`tailCOrderSn`,go.`depositOrderProductId`,go.`depositCOrderSn`,go.`status`,go.`addTime`,go.`syncHpTime`,go.`member`,go.`groupId`,go.`errorMessage`,go.`from`,go.`extensions`,go.`params`,go.`hpResult`,go.`tryCombineNum`,go.`lastErrorMsg`,go.`lesStatus`,go.`lesMessage`,go.`lesLastTime`
+		from `GroupOrders` go force index (ix_GroupOrders_addTime),order_queues oq
+		where (go.status=30 or go.status=60) and (go.lesStatus!=1 and go.lesStatus!=3) and go.addTime>=unix_timestamp(date_sub(now(), interval 2 month)) and oq.order_product_id=go.depositOrderProductId and oq.send_les_success=1 and oq.is_lock=0 and oq.is_stop=0 and oq.count<=75
+		limit #{topX}
+		]]>
+	</select>
+	<select id="getByTailOrderId" parameterType="Integer" resultMap="groupOrdersResult">
+		select `id`,`siteId`,`type`,`tailOrderId`,`depositOrderId`,`tailCOrderSn`,`depositOrderProductId`,`depositCOrderSn`,`status`,`addTime`,`syncHpTime`,`member`,`groupId`,`errorMessage`,`from`,`extensions`,`params`,`hpResult`,`tryCombineNum`,`lastErrorMsg`
+		from `GroupOrders`
+		where `tailOrderId` = #{tailOrderId} limit 1
+	</select>
+	<select id="getListByDepositOrderProductId" parameterType="Integer" resultMap="groupOrdersResult">
+		select `id`,`siteId`,`type`,`tailOrderId`,`depositOrderId`,`tailCOrderSn`,`depositOrderProductId`,`depositCOrderSn`,`status`,`addTime`,`syncHpTime`,`member`,`groupId`,`errorMessage`,`from`,`extensions`,`params`,`hpResult`,`tryCombineNum`,`lastErrorMsg`
+		from `GroupOrders`
+		where `depositOrderProductId` = #{depositOrderProductId} 
+	</select>
+
+	<select id="getByDepositOrderProductId" parameterType="Integer"
+		resultMap="groupOrdersResult">
+		select
+		`id`,`siteId`,`type`,`tailOrderId`,`depositOrderId`,`tailCOrderSn`,`depositOrderProductId`,`depositCOrderSn`,`status`,`addTime`,`syncHpTime`,`member`,`groupId`,`errorMessage`,`from`,`extensions`,`params`,`hpResult`,`tryCombineNum`,`lastErrorMsg`
+		from `GroupOrders`
+		where `depositOrderProductId` = #{depositOrderProductId}
+		limit 1
+	</select>
+</mapper>

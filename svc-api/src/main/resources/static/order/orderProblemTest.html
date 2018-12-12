@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>智能短信配置</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_areapeoplemanage" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <form id="paramForm_areapeoplemanagel1" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">网单号</span>
+                <input class="easyui-textbox" name="countryName"/>
+            </div>
+
+            <a href="#" class="easyui-linkbutton" id="1searchBtn_orderForecastGoal"
+               data-options="iconCls:'icon-search',plain:true">开始检测</a>
+            <a href="#" class="easyui-linkbutton" id="1resetBtn_orderForecastGoal"
+               data-options="iconCls:'icon-redo',plain:true">重置</a>
+        </div>
+        <!--<a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderForecastGoal"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>-->
+    </form>
+    <!--<table id="datagrid_areapeoplemanage"></table>-->
+    <hr>
+    <div id="orderDetail_div" style="padding-bottom: 20px;padding-left:20px;">
+
+        <div style="border-bottom: 1px dashed #000;margin-right: 400px;"><img src="../static/third/easyui/themes/black/images/pointer.png">&nbsp;网单检测执行步骤：
+        </div>
+        <div style="border-bottom: 1px dashed #000;line-height: 30px;margin-right: 400px;">1、特殊字符异常
+            <span style="float: right;padding-right: 20px;">未检测&nbsp;开提单</span>
+        </div>
+        <div style="border-bottom: 1px dashed #000;line-height: 30px;margin-right: 400px;">2、尾款发货且尾款未付
+            <span style="float: right;padding-right: 20px;">未检测&nbsp;开提单</span>
+        </div>
+        <div style="border-bottom: 1px dashed #000;line-height: 30px;margin-right: 400px;">3、同步LES闸住
+            <span style="float: right;padding-right: 20px;">未检测&nbsp;开提单</span>
+        </div>
+        <div style="border-bottom: 1px dashed #000;line-height: 30px;margin-right: 400px;">4、抢货
+            <span style="float: right;padding-right: 20px;">未检测&nbsp;开提单</span>
+        </div>
+        <div style="border-bottom: 1px dashed #000;line-height: 30px;margin-right: 400px;">4、LES有库存，但未开提单
+            <span style="float: right;padding-right: 20px;">未检测&nbsp;开提单</span>
+        </div>
+        <div style="border-bottom: 1px dashed #000;float: right;height: 400px;background-color: #f0f0f0;width: 350px;margin-top: -190px;z-index: 999;"><img src="../static/third/easyui/themes/black/images/combo_arrow.png">&nbsp;检测执行信息：
+        </div>
+    </div>
+
+    <div id="1orderDetail_div" style="padding-bottom: 20px; margin-right: 400px;">
+        <div id="1paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px ">
+            <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;">订单异常信息</span>
+
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+
+                    <div class="search-row_padd10">
+                        <span style="float: left;padding-left: 20px;">订单异常提示信息：</span>
+                        <span class=""></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../static/js/order/orderProblemTest.js"></script>
+</body>
+</html>

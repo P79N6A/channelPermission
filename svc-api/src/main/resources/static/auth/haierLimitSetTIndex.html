@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <link rel="stylesheet" href="../static/css/staticHtml.css">
+  <title>haierLimitHistoryT</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/easyui-extention.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_haierLimitHistoryT" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+  <table id="datagrid_haierLimitHistoryT"></table>
+</div>
+
+<div id="datagridToolbar_haierLimitHistoryT">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="paramForm_haierLimitHistoryT" class="param-form">
+    <div class="search-panel">
+      <div class="">
+        <span style="margin-left: 40px;">
+          导入额度
+        </span>
+          <input type="text" name="fileName" style="width: 300px; height: 25px" readonly="true"/>
+        <a href="#" class="easyui-linkbutton" id="viewBtn_haierLimitHistoryT" data-options="iconCls:'icon-search',plain:true">浏览</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn_haierLimitHistoryT" data-options="iconCls:'icon-add',plain:true">导入指标文件</a>
+        <a href="#" class="easyui-linkbutton" id="exportBtn_haierLimitHistoryT" data-options="iconCls:'icon-save',plain:true">导出额度文件</a>
+        <a href="#" class="easyui-linkbutton" id="downMbBtn_haierLimitHistoryT" data-options="iconCls:'icon-save',plain:true">下载模板</a>
+      </div>
+      <br/>
+      <div class="">
+        <span style="margin-left: 40px;">
+          额度时间
+        </span>
+          <input class="easyui-datebox" name="yearWeek"/>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_haierLimitHistoryT" data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_haierLimitHistoryT" data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <!--<a href="#" class="easyui-linkbutton" id="addBtn_haierLimitHistoryT" data-options="iconCls:'icon-add',plain:true">增加</a>-->
+        <a href="#" class="easyui-linkbutton" id="editBtn_haierLimitHistoryT" data-options="iconCls:'icon-edit',plain:true">修改</a>
+      </div>
+      <!--<div class="search-row">
+        <span class="search-row-label">
+          渠道
+        </span>
+          <input class="easyui-textbox" name="edChannelId"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          指标
+        </span>
+          <input class="easyui-textbox" name="targetNum"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          额度
+        </span>
+          <input class="easyui-textbox" name="limitNum"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          拆借
+        </span>
+          <input class="easyui-textbox" name="loanNum"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          总库存
+        </span>
+          <input class="easyui-textbox" name="totalNum"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          在途
+        </span>
+          <input class="easyui-textbox" name="onWayNum"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          本周已用
+        </span>
+          <input class="easyui-textbox" name="usedNum"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          可用额度
+        </span>
+          <input class="easyui-textbox" name="availableNum"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          
+        </span>
+          <input class="easyui-datebox" name="createTime"/>
+      </div>-->
+
+    </div>
+  </form>
+</div>
+<div id="importDialog" data-options="title:'',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_import">
+  <form id="importForm" method="post" >
+    <div style="margin-bottom:20px">
+      <div>文件:</div>
+      <input class="easyui-filebox" name="file1" data-options="prompt:'请选择一个文件...'" style="width:100%" required="true">
+    </div>
+  </form>
+  <div id="dlg-buttons_import">
+    <a href="#" class="easyui-linkbutton" id="importSave" iconCls="icon-ok">确认</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#importDialog').dialog('close')">关闭</a>
+  </div>
+</div>
+<div id="addDlg_haierLimitHistoryT" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:700px;height:300px;"
+     closed="true" buttons="#dlg-buttons_haierLimitHistoryT">
+  <form id="addForm_haierLimitHistoryT" method="post">
+    <input name="id" type="text" style="display:none;"/>
+    <input __actType type="hidden"/>
+    <div class="fitem_280">
+      <label>品类<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="categoryId" required="true" readonly="true"/>
+    </div>
+    <div class="fitem_280">
+      <label>渠道<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="edChannelId" required="true" readonly="true"/>
+    </div>
+    <div class="fitem_280">
+      <label>指标<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="targetNum" required="true"/>
+    </div>
+    <div class="fitem_280">
+      <label>额度<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="limitNum" required="true"/>
+    </div>
+    <div class="fitem_280">
+      <label>拆借<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="loanNum" required="true"/>
+    </div>
+    <div class="fitem_280">
+      <label>总库存<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="totalNum" required="true" readonly="true"/>
+    </div>
+    <div class="fitem_280">
+      <label>在途<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="onWayNum" required="true" readonly="true"/>
+    </div>
+    <div class="fitem_280">
+      <label>本周已用<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="usedNum" required="true" readonly="true"/>
+    </div>
+    <div class="fitem_280">
+      <label>可用额度<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="availableNum" required="true" readonly="true"/>
+    </div>
+  </form>
+  <div id="dlg-buttons_haierLimitHistoryT">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_haierLimitHistoryT" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_haierLimitHistoryT').dialog('close')">取消</a>
+  </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_haierLimitHistoryT').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/auth/haierLimitSetTIndex.js"></script>
+</body>
+</html>

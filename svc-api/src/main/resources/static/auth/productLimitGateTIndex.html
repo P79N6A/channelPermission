@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>productLimitGateT</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/easyui-extention.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_productLimitGateT" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+  <table id="datagrid_productLimitGateT"></table>
+</div>
+
+<div id="datagridToolbar_productLimitGateT">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="paramForm_productLimitGateT" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          渠道
+        </span>
+          <select class="easyui-combobox" name="channelCode"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          产品组
+        </span>
+          <input class="easyui-textbox" name="groupType"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          品类
+        </span>
+          <input class="easyui-textbox" name="productType"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          型号
+        </span>
+          <input class="easyui-textbox" name="modelType"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          类别  0 下市 1上单
+        </span>
+          <input class="easyui-textbox" name="type"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          上单数
+        </span>
+          <input class="easyui-textbox" name="orderNum"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          起始时间
+        </span>
+          <input class="easyui-datebox" name="startTime"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          截止时间
+        </span>
+          <input class="easyui-datebox" name="endTime"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          创建人
+        </span>
+          <input class="easyui-textbox" name="createUser"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          创建时间
+        </span>
+          <input class="easyui-datebox" name="createTime"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          更新人
+        </span>
+          <input class="easyui-textbox" name="updateUser"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          更新时间
+        </span>
+          <input class="easyui-datebox" name="updateTime"/>
+      </div>
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn_productLimitGateT" data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_productLimitGateT" data-options="iconCls:'icon-redo',plain:true">重置</a>
+    <a href="#" class="easyui-linkbutton" id="addBtn_productLimitGateT" data-options="iconCls:'icon-add',plain:true">增加</a>
+    <a href="#" class="easyui-linkbutton" id="editBtn_productLimitGateT" data-options="iconCls:'icon-edit',plain:true">修改</a>
+    <a href="#" class="easyui-linkbutton" id="deleteBtn_productLimitGateT" data-options="iconCls:'icon-remove',plain:true">删除</a>
+  </form>
+</div>
+<div id="addDlg_productLimitGateT" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_productLimitGateT">
+  <form id="addForm_productLimitGateT" method="post">
+    <input name="id" type="text" style="display:none;"/>
+    <input __actType type="hidden"/>
+    <div class="fitem">
+      <label>渠道编码<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="channelCode" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>产品组<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="groupType" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>品类<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="productType" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>型号<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="modelType" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>类别  0 下市 1上单<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="type" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>上单数<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="orderNum" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>起始时间<span style="color: red;">*</span></label>
+        <input class="easyui-datebox" name="startTime" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>截止时间<span style="color: red;">*</span></label>
+        <input class="easyui-datebox" name="endTime" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>创建人<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="createUser" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>创建时间<span style="color: red;">*</span></label>
+        <input class="easyui-datebox" name="createTime" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>更新人<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="updateUser" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>更新时间<span style="color: red;">*</span></label>
+        <input class="easyui-datebox" name="updateTime" required="true"/>
+    </div>
+  </form>
+  <div id="dlg-buttons_productLimitGateT">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_productLimitGateT" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_productLimitGateT').dialog('close')">取消</a>
+  </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_productLimitGateT').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/auth/productLimitGateTIndex.js"></script>
+</body>
+</html>

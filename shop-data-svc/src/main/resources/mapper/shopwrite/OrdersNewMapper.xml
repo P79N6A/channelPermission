@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrdersNewDao">
+
+    <!-- 先解决 与 Orders 类似问题 -->
+    <resultMap id="ordersResult" type="com.haier.shop.model.OrdersNew">
+    <result property="id" column="id" jdbcType="VARCHAR"/>
+    <result property="siteId" column="siteId"/>
+    <result property="isTest" column="isTest"/>
+    <result property="hasSync" column="hasSync"/>
+    <result property="isBackend" column="isBackend"/>
+    <result property="isBook" column="isBook"/>
+    <result property="isCod" column="isCod"/>
+    <result property="notAutoConfirm" column="notAutoConfirm"/>
+    <result property="isPackage" column="isPackage"/>
+    <result property="orderSn" column="orderSn"/>
+    <result property="relationOrderSn" column="relationOrderSn"/>
+    <result property="memberId" column="memberId"/>
+    <result property="memberEmail" column="memberEmail"/>
+    <result property="addTime" column="addTime"/>
+    <result property="syncTime" column="syncTime"/>
+    <result property="orderStatus" column="orderStatus"/>
+    <result property="payTime" column="payTime"/>
+    <result property="paymentStatus" column="paymentStatus"/>
+    <result property="receiptConsignee" column="receiptConsignee"/>
+    <result property="receiptAddress" column="receiptAddress"/>
+    <result property="receiptZipcode" column="receiptZipcode"/>
+    <result property="receiptMobile" column="receiptMobile"/>
+    <result property="productAmount" column="productAmount"/>
+    <result property="orderAmount" column="orderAmount"/>
+
+    <result property="paidAmount" column="paidAmount"/>
+    <result property="shippingAmount" column="shippingAmount"/>
+    <result property="totalEsAmount" column="totalEsAmount"/>
+    <result property="paymentCode" column="paymentCode"/>
+    <result property="payBankCode" column="payBankCode"/>
+    <result property="paymentName" column="paymentName"/>
+    <result property="consignee" column="consignee"/>
+    <result property="originRegionName" column="originRegionName"/>
+    <result property="originAddress" column="originAddress"/>
+    <result property="province" column="province"/>
+    <result property="city" column="city"/>
+    <result property="region" column="region"/>
+    <result property="street" column="street"/>
+    <result property="markBuilding" column="markBuilding"/>
+    <result property="poiId" column="poiId"/>
+    <result property="poiName" column="poiName"/>
+    <result property="regionName" column="regionName"/>
+    <result property="address" column="address"/>
+    <result property="zipcode" column="zipcode"/>
+    <result property="mobile" column="mobile"/>
+    <result property="phone" column="phone"/>
+    <result property="receiptInfo" column="receiptInfo"/>
+    <result property="delayShipTime" column="delayShipTime"/>
+    <result property="remark" column="remark"/>
+    <result property="bankCode" column="bankCode"/>
+    <result property="agent" column="agent"/>
+    <result property="confirmTime" column="confirmTime"/>
+    <result property="firstConfirmTime" column="firstConfirmTime"/>
+    <result property="finishTime" column="finishTime"/>
+    <result property="tradeSn" column="tradeSn"/>
+    <result property="signCode" column="signCode"/>
+    <result property="source" column="source"/>
+    <result property="sourceOrderSn" column="sourceOrderSn"/>
+    <result property="onedayLimit" column="onedayLimit"/>
+    <result property="orderType" column="orderType"/>
+    <result property="memberInvoiceId" column="memberInvoiceId"/>
+    <result property="taobaoGroupId" column="taobaoGroupId"/>
+    <result property="tradeType" column="tradeType"/>
+    <result property="stepTradeStatus" column="stepTradeStatus"/>
+    <result property="stepPaidFee" column="stepPaidFee"/>
+    <result property="depositAmount" column="depositAmount"/>
+    <result property="balanceAmount" column="balanceAmount"/>
+    <result property="autoCancelDays" column="autoCancelDays"/>
+    <result property="isNoLimitStockOrder" column="isNoLimitStockOrder"/>
+    <result property="autoConfirmNum" column="autoConfirmNum"/>
+    <result property="smConfirmStatus" column="smConfirmStatus"/>
+    <result property="smConfirmTime" column="smConfirmTime"/>
+    <result property="smManualTime" column="smManualTime"/>
+    <result property="smManualRemark" column="smManualRemark"/>
+    <result property="isTogether" column="isTogether"/>
+    <result property="isNotConfirm" column="isNotConfirm"/>
+    <result property="points" column="points"/>
+    <result property="isProduceDaily" column="isProduceDaily"/>
+    <result property="tailPayTime" column="tailPayTime"/>
+    <result property="couponCode" column="couponCode"/>
+    <result property="couponCodeValue" column="couponCodeValue"/>
+    <result property="ckCode" column="ckCode"/>
+    </resultMap>
+
+
+    <select id="getByIds" resultMap="ordersResult">
+        select
+        `id`,`isTest`,`isBackend`,`isBook`,`isCod`,`notAutoConfirm`,`orderSn`,`relationOrderSn`,`memberId`,`memberEmail`,`addTime`,`syncTime`,`orderStatus`,`payTime`,`paymentStatus`,`receiptConsignee`,`receiptAddress`,`receiptZipcode`,`receiptMobile`,`productAmount`,`orderAmount`,`paidAmount`,`shippingAmount`,`totalEsAmount`,`paymentCode`,`payBankCode`,`paymentName`,`consignee`,`originRegionName`,`originAddress`,`province`,`city`,`region`,`street`,`markBuilding`,`poiId`,`poiName`,`regionName`,`address`,`zipcode`,`mobile`,`phone`,`receiptInfo`,`delayShipTime`,`remark`,`bankCode`,`agent`,`confirmTime`,`firstConfirmTime`,`firstConfirmPerson`,`finishTime`,`tradeSn`,`signCode`,`source`,`sourceOrderSn`,`onedayLimit`,`orderType`,`memberInvoiceId`,`taobaoGroupId`,`tradeType`,`stepTradeStatus`,`stepPaidFee`,`depositAmount`,`balanceAmount`,`autoCancelDays`,`isNoLimitStockOrder`,`autoConfirmNum`,`smConfirmStatus`,`smConfirmTime`,`smManualTime`,`smManualRemark`,`isTogether`,`isNotConfirm`,`points`,`isProduceDaily`,`ckCode`
+        from `Orders`
+        where `id` in
+        <foreach collection="ids" index="index" item="id" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    
+     <update id="completeClose">
+        UPDATE `Orders`
+        SET `orderStatus` = 203, finishTime = #{finishTime}
+        WHERE `id` = #{id} AND `orderStatus` != 202
+    </update>
+    
+     <update id="updateSmConfirmStatus" parameterType="com.haier.shop.model.OrdersNew">
+        UPDATE `Orders`
+        SET `smConfirmStatus` = #{smConfirmStatus}
+        WHERE `id` = #{id} and `smConfirmStatus`=4
+    </update>
+    
+     <update id="updateForConfirm" parameterType="com.haier.shop.model.OrdersNew">
+        UPDATE `Orders`
+        SET `confirmTime`      = #{confirmTime}, `firstConfirmPerson` = #{firstConfirmPerson},
+            `firstConfirmTime` = #{firstConfirmTime}, `orderStatus` = #{orderStatus}
+        WHERE `id` = #{id} AND (`orderStatus` = 200 OR `orderStatus` = 204)
+    </update>
+    
+     <update id="updateOrderStatus">
+        UPDATE `Orders`
+        SET `orderStatus` = #{orderStatus}
+        WHERE `id` = #{id} AND `orderStatus` != 202
+    </update>
+    
+       <select id="getByIdsForConfirm" resultMap="ordersResult">
+        select
+        id,orderStatus,orderSn,source,addTime,isProduceDaily,province,city,region,street,orderType,mobile,memberEmail,memberId,consignee,paymentStatus,isCod,tailPayTime,payTime,firstConfirmPerson,firstConfirmTime
+        from Orders
+        where id in
+        <foreach collection="ids" index="index" item="id" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="get" parameterType="Integer" resultMap="ordersResult">
+        SELECT
+        `id`,
+        `isTest`,
+        `isBackend`,
+        `isBook`,
+        `isCod`,
+        `notAutoConfirm`,
+        `orderSn`,
+        `relationOrderSn`,
+        `memberId`,
+        `memberEmail`,
+        `addTime`,
+        `syncTime`,
+        `orderStatus`,
+        `payTime`,
+        `paymentStatus`,
+        `receiptConsignee`,
+        `receiptAddress`,
+        `receiptZipcode`,
+        `receiptMobile`,
+        `productAmount`,
+        `orderAmount`,
+        `paidAmount`,
+        `shippingAmount`,
+        `totalEsAmount`,
+        `paymentCode`,
+        `payBankCode`,
+        `paymentName`,
+        `consignee`,
+        `originRegionName`,
+        `originAddress`,
+        `province`,
+        `city`,
+        `region`,
+        `street`,
+        `poiId`,
+        `poiName`,
+        `regionName`,
+        `address`,
+        `zipcode`,
+        `mobile`,
+        `phone`,
+        `receiptInfo`,
+        `delayShipTime`,
+        `remark`,
+        `bankCode`,
+        `agent`,
+        `confirmTime`,
+        `firstConfirmTime`,
+        `firstConfirmPerson`,
+        `finishTime`,
+        `tradeSn`,
+        `signCode`,
+        `source`,
+        `sourceOrderSn`,
+        `onedayLimit`,
+        `orderType`,
+        `memberInvoiceId`,
+        `taobaoGroupId`,
+        `tradeType`,
+        `stepTradeStatus`,
+        `stepPaidFee`,
+        `depositAmount`,
+        `balanceAmount`,
+        `autoCancelDays`,
+        `isNoLimitStockOrder`,
+        `autoConfirmNum`,
+        `smConfirmStatus`,
+        `smConfirmTime`,
+        `smManualTime`,
+        `smManualRemark`,
+        `isTogether`,
+        `isNotConfirm`,
+        `points`,
+        `isProduceDaily`,
+        `tailPayTime`,
+        `ckCode`
+        FROM `Orders`
+        WHERE `id` = #{id}
+    </select>
+    <select id="getBySmConfirmStatus" resultMap="ordersResult">
+        <![CDATA[
+		select id,province,city,region,street,regionName,address,remark,orderStatus,orderSn,paymentStatus,source,sourceOrderSn,addTime
+		from Orders
+		where  smConfirmStatus=1 and isTest='0' and syncTime<unix_timestamp()-30
+		order by id limit 4000
+		]]>
+    </select>
+    <update id="updateSmConfirmStatusById" >
+        update Orders set  smConfirmStatus=#{targetStatus}, smManualTime=#{smManualTime}, smManualRemark=#{smManualRemark}
+        where id=#{id} and smConfirmStatus=#{srcStatus}
+    </update>
+    <update id="updateSmConfirmStatusForAllProductsOrder" >
+        update Orders set smConfirmStatus=4,markBuilding=1,
+        firstConfirmTime=unix_timestamp(),firstConfirmPerson='系统'
+        where id=#{id} and smConfirmStatus=1
+    </update>
+    <select id="getNotAutoConfirmOrders" resultMap="ordersResult">
+        <![CDATA[
+        select distinct os.id,os.orderStatus,os.orderSn,os.source,os.isProduceDaily,os.province,os.city,os.region,os.street,os.orderType,os.mobile,os.memberEmail,os.memberId,os.consignee,os.paymentStatus,os.isCod,os.tailPayTime,os.payTime,os.firstConfirmPerson,os.firstConfirmTime,os.confirmTime,os.addTime,os.isBackend ,os.regionName ,os.address ,os.paymentCode
+        from Orders os,OrderProducts op
+        where (((os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or (os.isCod = 0 and os.source='BLPHH')) or (os.isCod = 1)) and os.orderStatus = 200 and
+              os.smConfirmStatus = 4 and os.orderType != 2 and os.isTest = 0 and os.isNotConfirm = 0 and os.notAutoConfirm = 0
+        	  and os.id=op.orderId and op.status=1 limit 2000
+        ]]>
+    </select>
+    <update id="updateNotAutoConfirm" >
+        UPDATE `Orders`
+        SET `notAutoConfirm` = #{setValue}
+        WHERE `id` = #{id} and `notAutoConfirm`= #{whereValue}
+    </update>
+
+    
+     <select id="getByOrderSn" parameterType="String" resultMap="ordersResult">
+        SELECT
+            `id`,
+            `isTest`,
+            `isBackend`,
+            `isBook`,
+            `isCod`,
+            `notAutoConfirm`,
+            `orderSn`,
+            `relationOrderSn`,
+            `memberId`,
+            `memberEmail`,
+            `addTime`,
+            `syncTime`,
+            `orderStatus`,
+            `payTime`,
+            `paymentStatus`,
+            `receiptConsignee`,
+            `receiptAddress`,
+            `receiptZipcode`,
+            `receiptMobile`,
+            `productAmount`,
+            `orderAmount`,
+            `paidAmount`,
+            `shippingAmount`,
+            `totalEsAmount`,
+            `paymentCode`,
+            `payBankCode`,
+            `paymentName`,
+            `consignee`,
+            `originRegionName`,
+            `originAddress`,
+            `province`,
+            `city`,
+            `region`,
+            `street`,
+            `markBuilding`,
+            `poiId`,
+            `poiName`,
+            `regionName`,
+            `address`,
+            `zipcode`,
+            `mobile`,
+            `phone`,
+            `receiptInfo`,
+            `delayShipTime`,
+            `remark`,
+            `bankCode`,
+            `agent`,
+            `confirmTime`,
+            `firstConfirmTime`,
+            `firstConfirmPerson`,
+            `finishTime`,
+            `tradeSn`,
+            `signCode`,
+            `source`,
+            `sourceOrderSn`,
+            `onedayLimit`,
+            `orderType`,
+            `memberInvoiceId`,
+            `taobaoGroupId`,
+            `tradeType`,
+            `stepTradeStatus`,
+            `stepPaidFee`,
+            `depositAmount`,
+            `balanceAmount`,
+            `autoCancelDays`,
+            `isNoLimitStockOrder`,
+            `autoConfirmNum`,
+            `smConfirmStatus`,
+            `smConfirmTime`,
+            `smManualTime`,
+            `smManualRemark`,
+            `isTogether`,
+            `isNotConfirm`,
+            `ckCode`
+        FROM `Orders`
+        WHERE `orderSn` = #{orderSn}
+    </select>
+    <select id="getOneByOrderSn" resultMap="ordersResult">
+        select top.*,o.source,o.consignee,o.sourceOrderSn from
+        OrderProducts top left join Orders o on top.orderId = o.id left
+        join
+        t_channels_info tci on o.source = tci.channelCode
+        where cOrderSn = #{cOrderSn} and tci.channelCode = 'PX'
+    </select>
+</mapper>

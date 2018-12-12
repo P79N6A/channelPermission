@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.StockChangeQueueWriteDao">
+	<insert id="insert" parameterType="com.haier.shop.model.StockChangeQueue">
+		insert into `stock_change_queue`(`scode`,`sku`,`is_arrival_notice`)
+		values(#{scode},#{sku},#{isArrivalNotice})
+		<selectKey resultType="Integer" keyProperty="id" order="AFTER" 
+		statementType="STATEMENT">select last_insert_id()</selectKey>
+	</insert>
+	<update id="delete" parameterType="Integer">
+		delete from `stock_change_queue` 
+		where `id` = #{id}
+	</update>
+</mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStockInOutDao">
+    <resultMap id="invStockInOutResult" type="com.haier.stock.model.InvStockInOut">
+        <result property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="ageType" column="age_type"/>
+        <result property="ageStatus" column="age_status"/>
+        <result property="mark" column="mark"/>
+        <result property="itemId" column="item_id"/>
+        <result property="sku" column="sku"/>
+        <result property="secCode" column="sec_code"/>
+        <result property="virtualSecCode" column="virtual_sec_code"/>
+        <result property="channelCode" column="channel_code"/>
+        <result property="quantity" column="quantity"/>
+        <result property="createTime" column="create_time"/>
+        <result property="billTime" column="bill_time"/>
+        <result property="billNo" column="bill_no"/>
+        <result property="cbsBillNo" column="cbs_bill_no"/>
+        <result property="note" column="note"/>
+    </resultMap>
+    <select id="getInStock" resultType="Integer">
+	     <![CDATA[
+        SELECT
+            SUM(quantity) count
+        FROM
+            inv_stock_in_out
+        WHERE
+            (type = 'ZBCR' OR type = 'ZBCT' OR type = 'ZBCJ' OR type = 'ZGI6')
+            AND sku = #{sku}
+            AND sec_code = #{sCode}
+            AND channel_code = #{channel}
+            AND bill_time >= #{fromDate}
+            AND bill_time < #{toDate};
+        ]]>
+	</select>
+    <select id="getOutStock" resultType="Integer">
+	  <![CDATA[
+        SELECT
+            SUM(quantity) count
+        FROM
+            inv_stock_in_out
+        WHERE
+            (type = 'ZBCC' OR type = 'ZGI6')
+            AND sku = #{sku}
+            AND sec_code = #{sCode}
+            AND channel_code = #{channel}
+            AND bill_time >= #{fromDate}
+            AND bill_time < #{toDate};
+        ]]>
+	</select>
+    <select id="getReference" resultMap="invStockInOutResult">
+	  <![CDATA[
+        SELECT
+            id,
+            type,
+            age_type,
+            age_status,
+            mark,
+            item_id,
+            sku,
+            sec_code,
+            virtual_sec_code,
+            channel_code,
+            quantity,
+            create_time,
+            bill_time,
+            bill_no,
+            cbs_bill_no,
+            note
+        FROM
+            `inv_stock_in_out`
+        WHERE
+            sku = #{sku}
+            AND sec_code = #{sec_code}
+            AND bill_time >= #{from}
+            AND bill_time < #{to}
+        ORDER BY bill_time
+        ]]>
+	</select>
+    <select id="getByAgeStatus" resultMap="invStockInOutResult">
+	  <![CDATA[
+        SELECT
+            id,
+            type,
+            age_type,
+            age_status,
+            mark,
+            item_id,
+            sku,
+            sec_code,
+            virtual_sec_code,
+            channel_code,
+            quantity,
+            create_time,
+            bill_time,
+            bill_no,
+            cbs_bill_no,
+            note
+        FROM
+            `inv_stock_in_out`
+        WHERE
+            age_status = #{status}
+        ]]>
+	</select>
+    <select id="getCountByBillNo" parameterType="String" resultType="Integer">
+        SELECT
+            count(*)
+        FROM
+            `inv_stock_in_out`
+        WHERE
+            bill_no = #{billNo}
+    </select>
+    <insert id="insert" parameterType="com.haier.stock.model.InvStockInOut">
+        INSERT INTO
+            `inv_stock_in_out` (`type`, `age_type`, `age_status`, `mark`, `item_id`, `sku`, `sec_code`,
+                                `virtual_sec_code`, `channel_code`, `quantity`, `create_time`, `bill_time`, `bill_no`, `cbs_bill_no`, `note`)
+        VALUES (#{type}, #{ageType}, #{ageStatus}, #{mark}, #{itemId}, #{sku}, #{secCode}, #{virtualSecCode},
+                #{channelCode}, #{quantity}, now(), #{billTime}, #{billNo}, #{cbsBillNo}, #{note})
+    </insert>
+    <update id="updateAgeStatus">
+        UPDATE `inv_stock_in_out`
+        SET `age_status` = #{status}
+        WHERE id = #{id} AND `age_status` = #{old_status}
+    </update>
+    <!-- <update id="update" parameterType="com.haier.cbs.stock.entity.InvStockInOut">
+        update `inv_stock_in_out` set `type`=#{type},`item_id`=#{itemId},`sku`=#{sku},`sec_code`=#{secCode},`channel_code`=#{channelCode},`quantity`=#{quantity},`create_time`=#{createTime},`bill_time`=#{billTime},`bill_no`=#{billNo},`note`=#{note}
+        where `id` = #{id} </update> -->
+</mapper>

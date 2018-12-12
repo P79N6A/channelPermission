@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>权限管理</title>
+	<link rel="stylesheet" href="../../static/css/jqueryui/base/jquery.ui.all.css"/>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../../static/css/msg.css"></link>
+    <link rel="stylesheet" type="text/css" href="../../static/third/easyui/themes/gray/easyui.css"/>
+    <link rel="stylesheet" href="../../static/css/reset.css"></link>
+	<script src="../../static/third/jquery-1.8.3.min.js"></script>
+    <script src="../../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+
+<body>
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 120px;overflow: auto;" align="left" class="new-form-box">
+		<form id="filterForm" action="#">
+	    	<table>
+	    		<tr>
+	    			<td>权限拥有者</td>
+	    			<td>
+	    				<select id="role" name="role" class="easyui-combobox" style="width:60px">
+	    					<option value="1">用户</option>
+	    					<option value="2">角色</option>
+	    				</select>
+	    			</td>
+	    			<td>角色名称</td>
+	    			<td><input id="name"  name="name" class="easyui-textbox" style="width:160px"/></td>
+	    			<td>状态</td>
+	    			<td>
+	    			<input id="perStatus" name="status" class="easyui-combobox" style="width:173px"></input>
+	    		</tr>
+	    		<tr>
+	    			<td colspan="10">
+		    			<a id='search' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-search">查询</a>
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </form>
+    </div>
+    <div data-options="region:'center',title:'查询结果',border:false">
+		    <table id="dataGrid"></table>
+		    <div id="msgMask"></div>
+			<div id="msg">正在处理，请稍待。。。</div>
+	</div>
+</div>
+
+<div id="permission" class="easyui-dialog" style="display:none;width:350px;height:400px;" title="分配权限" modal="true">
+	<ul id="treeData"></ul>
+    <div>
+        <a id="per_Pre" class="easyui-linkbutton">保存</a>
+        <a id="per_Close" class="easyui-linkbutton">关闭</a>
+    </div>
+</div>
+
+<script type="application/javascript">
+
+var datagrid;
+
+//点击查询
+$('#search').click(function () {
+	if($("#role").val()=="1"){
+		searchUser();
+	}
+	if($("#role").val()=="2"){
+		searchRole();
+	}
+});
+
+function searchRole(){
+	var status;
+	if($("#perStatus").val()=="ALL"){
+		status = "";
+	}else{
+		status = $("#perStatus").val();
+	}
+	//检索列表构筑
+		//生成grid
+	    datagrid = $('#dataGrid').datagrid({
+	        //url: "/sys/permission/find-owner",
+	        url: "/sys/role/find",
+	        fit: true,
+	        pagination: true,
+	        singleSelect: true,
+	        checkOnSelect:true,
+	        //onAfterEdit:onAfterEdit,
+	        pageSize: 100,
+	        pageList: [1,2,100,200,300],
+	        nowrap: false,
+	        rownumbers: true,
+	        queryParams: {
+	        	 //role:$("#role").val(),
+	    	     roleName:$("#name").val(),
+	    	     status:status
+	        },
+	        columns: [
+	            [
+	    	        {field:'operation',title:'操作',width:'100',align:'center',
+	                    formatter : function(value,row, index) {
+	                    	return "<a id='oper' href='#' onclick='operation("+row.roleId+")'>操作</a>";
+	                    }
+	    	        },
+	            	{field:'roleId', title:'角色ID', width:'100', align:'center'},
+			        {field:'roleName', title:'角色名称', width:'100', align:'center'},
+			        {field:'status', title:'状态', width:'100', align:'center',
+	                    formatter : function(value) {
+	                    	if(value == 1){
+	                    		return "有效";
+	                    	}
+	                    	if(value == 0){
+	                    		return "禁用";
+	                    	}
+	                    	if(value == -1){
+	                    		return "删除";
+	                    	}
+	                    }
+			        },
+	            ]
+	        ]
+	    });
+    $('#dataGrid').parent().find("div.datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+}
+
+function searchUser(){
+	var status;
+	if($("#perStatus").val()=="ALL"){
+		status = "";
+	}else{
+		status = $("#perStatus").val();
+	}
+	//检索列表构筑
+		//生成grid
+	    datagrid = $('#dataGrid').datagrid({
+	        //url: "/sys/permission/find-owner",
+	        url: "/sys/user/find",
+	        fit: true,
+	        pagination: true,
+	        singleSelect: true,
+	        checkOnSelect:true,
+	        pageSize: 100,
+	        pageList: [1,2,100,200,300],
+	        nowrap: false,
+	        rownumbers: true,
+	        queryParams: {
+	        	 //role:$("#role").val(),
+	    	     name:$("#name").val(),
+	    	     status:status
+	        },
+	        columns: [
+	            [
+	    	        {field:'operation',title:'操作',width:'100',align:'center',
+	                    formatter : function(value,row, index) {
+	                    	return "<a id='oper' href='#' onclick='operation("+row.userId+")'>操作</a>";
+	                    }
+	    	        },
+	            	{field:'userId', title:'用户ID', width:'100', align:'center'},
+			        {field:'userName', title:'用户名称', width:'100', align:'center'},
+			        {field:'status', title:'状态', width:'100', align:'center',
+	                    formatter : function(value) {
+	                    	if(value == 1){
+	                    		return "有效";
+	                    	}
+	                    	if(value == 0){
+	                    		return "禁用";
+	                    	}
+	                    	if(value == -1){
+	                    		return "删除";
+	                    	}
+	                    }
+			        },
+	            ]
+	        ]
+	    });
+    $('#dataGrid').parent().find("div.datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+}
+
+$(function () {
+	getStatus();
+	$('#permission').dialog('close');
+});
+
+function getStatus(){
+	//取得状态
+	jQuery.getJSON("/sys/user/getStatus", function(result){
+		var count = result.totalCount;
+		var dataList = result.data;
+		//添加全部
+		dataList.unshift( {value:'ALL',value_meaning:'全部'});
+		$("#perStatus").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+	});
+}
+
+$("#per_Close").click(function () {
+	$("#permission").dialog("close");
+});
+
+$("#per_Pre").click(function (){
+	var nodes = $('#treeData').tree('getChecked');
+	var s = '';
+	for(var i=0; i<nodes.length; i++){
+		if (s != '') s += ',';
+		s += nodes[i].id;
+	}
+//	alert(s);
+	jQuery.ajax({
+	    url: "/sys/permission/assign",
+	    type: "POST",
+	    data: {
+	    		"ownerId": id,
+	    		"ownerType": $("#role").val(),
+	    		"ids": s
+	    	},success: function (data) {
+	    		$("#permission").dialog("close");
+	    		tree();
+		        $.messager.alert('提示', '分配权限成功', 'info');
+		    },error: function (data) {
+		    	$.messager.alert('提示', '分配权限失败', 'err');
+		    }
+	});
+});
+var id;
+function operation (index){
+	//var id = null;
+//	var row = $('#dataGrid').datagrid('getSelected');
+	if($("#role").val()=="1"){
+		id = index;
+	}
+	if($("#role").val()=="2"){
+		id = index;
+	}
+	$("#permission").dialog("open");
+	
+	tree();
+}
+
+function tree(){
+	$("#treeData").tree({
+		checkbox:true,
+		url:"/sys/permission/find-resource-tree",
+		lines: true,
+		queryParams:{
+			ownerId: id,
+			ownerType: $("#role").val()
+		},loadFilter: function(data){
+			return data;
+		},onLoadError(arguments){
+			$.messager.alert('提示', '权限列表查询异常', 'err');
+		}
+	});
+}
+
+</script>
+</body>
+</html>

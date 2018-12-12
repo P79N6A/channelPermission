@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.OrderRepairsReadDao">
+    <resultMap id="BaseResultMap2" type="com.haier.shop.model.OrderRepairLogs" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="siteId" property="siteid" jdbcType="INTEGER" />
+        <result column="addTime" property="addTime" jdbcType="INTEGER" />
+        <result column="orderRepairId" property="orderrepairid" jdbcType="INTEGER" />
+        <result column="operator" property="operator" jdbcType="VARCHAR" />
+        <result column="operate" property="operate" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="addTimeTss" property="addTimeTss" jdbcType="VARCHAR" />
+        <result column="cOrderSn" property="cOrderSn" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="orderRepairsResult" type="com.haier.shop.model.OrderRepairs">
+        <result property="id" column="id" />
+        <result property="siteId" column="siteId" />
+        <result property="addTime" column="addTime" />
+        <result property="memberId" column="memberId" />
+        <result property="orderId" column="orderId" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="paymentStatus" column="paymentStatus" />
+        <result property="paymentTime" column="paymentTime" />
+        <result property="paymentName" column="paymentName" />
+        <result property="receiptStatus" column="receiptStatus" />
+        <result property="receiptTime" column="receiptTime" />
+        <result property="storageStatus" column="storageStatus" />
+        <result property="storageTime" column="storageTime" />
+        <result property="typeExpect" column="typeExpect" />
+        <result property="typeActual" column="typeActual" />
+        <result property="reason" column="reason" />
+        <result property="description" column="description" />
+        <result property="contactName" column="contactName" />
+        <result property="contactMobile" column="contactMobile" />
+        <result property="handleStatus" column="handleStatus" />
+        <result property="handleRemark" column="handleRemark" />
+        <result property="repairSn" column="repairSn" />
+        <result property="count" column="count" />
+        <result property="requestServiceRemark" column="requestServiceRemark" />
+        <result property="requestServiceDate" column="requestServiceDate" />
+        <result property="offlineFlag" column="offlineFlag" />
+        <result property="offlineReason" column="offlineReason" />
+        <result property="offlineAmount" column="offlineAmount" />
+        <result property="offlineRemark" column="offlineRemark" />
+        <result property="offlineConfirmFlag" column="offlineConfirmFlag" />
+        <result property="hpFirstAddTime" column="hpFirstAddTime" />
+        <result property="hpSecondAddTime" column="hpSecondAddTime" />
+        <result property="modified" column="modified" />
+        <result property="finishTime" column="finishTime" />
+        <result property="refundAmount" column="refundAmount" />
+        <result property="ybkExchangeType" column="ybkExchangeType" />
+        <result property="typeFlag" column="typeFlag" />
+        <result property="cOrderSnStatus" column="cOrderSnStatus" />
+        <result property="vomRepairSn" column="vomRepairSn" />
+    </resultMap>
+    <resultMap id="BaseResultMap" type="com.haier.shop.model.OrderRepairsVo">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="siteId" property="siteid" jdbcType="INTEGER" />
+        <result column="addtime" property="addtime" jdbcType="INTEGER" />
+        <result column="memberId" property="memberId" jdbcType="INTEGER" />
+        <result column="orderId" property="orderId" jdbcType="INTEGER" />
+        <result column="orderProductId" property="orderProductId" jdbcType="INTEGER" />
+        <result column="paymentStatus" property="paymentStatus" jdbcType="TINYINT" />
+        <result column="paymentTime" property="paymentTime" jdbcType="INTEGER" />
+        <result column="paymentName" property="paymentName" jdbcType="VARCHAR" />
+        <result column="receiptStatus" property="receiptStatus" jdbcType="TINYINT" />
+        <result column="receiptTime" property="receiptTime" jdbcType="INTEGER" />
+        <result column="storageStatus" property="storageStatus" jdbcType="TINYINT" />
+        <result column="storageTime" property="storageTime" jdbcType="INTEGER" />
+        <result column="typeExpect" property="typeExpect" jdbcType="TINYINT" />
+        <result column="typeActual" property="typEactual" jdbcType="TINYINT" />
+        <result column="reason" property="reason" jdbcType="VARCHAR" />
+        <result column="contactName" property="contactName" jdbcType="VARCHAR" />
+        <result column="contactMobile" property="contactMobile" jdbcType="VARCHAR" />
+        <result column="handleStatus" property="handleStatus" jdbcType="INTEGER" />
+        <result column="handleTime" property="handleTime" jdbcType="INTEGER" />
+        <result column="repairSn" property="repairSn" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+        <result column="requestServiceRemark" property="requestServiceRemark" jdbcType="VARCHAR" />
+        <result column="requestServiceDate" property="requestServiceDate" jdbcType="INTEGER" />
+        <result column="offlineFlag" property="offlineFlag" jdbcType="TINYINT" />
+        <result column="offlineReason" property="offlineReason" jdbcType="VARCHAR" />
+        <result column="offlineAmount" property="offlineAmount" jdbcType="DECIMAL" />
+        <result column="offlineRemark" property="offlineRemark" jdbcType="VARCHAR" />
+        <result column="offlineConfirmFlag" property="offlineConfirmFlag" jdbcType="TINYINT" />
+        <result column="hpFirstAddTime" property="hpFirstAddTime" jdbcType="INTEGER" />
+        <result column="hpSecondAddTime" property="hpSecondAddTime" jdbcType="INTEGER" />
+        <result column="modified" property="modified" jdbcType="TIMESTAMP" />
+        <result column="finishTime" property="finishTime" jdbcType="INTEGER" />
+        <result column="refundAmount" property="refundAmount" jdbcType="DECIMAL" />
+        <result column="ybkExchangeType" property="ybkExchangeType" jdbcType="TINYINT" />
+        <result column="typeFlag" property="typeFlag" jdbcType="TINYINT" />
+        <result column="cOrderSnStatus" property="cOrderSnStatus" jdbcType="SMALLINT" />
+        <result column="vomRepairSn" property="vomRepairSn" jdbcType="VARCHAR" />
+        <result column="orderSn" property="orderSn" jdbcType="VARCHAR" />
+        <result column="addTimeTs" property="addTimeTs" jdbcType="VARCHAR" />
+        <result column="cOrderSnId" property="cOrderSnId" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="VARCHAR" />
+        <result column="tb_order_sn" property="tbOrderSn" jdbcType="VARCHAR" />
+        <result column="source" property="source" jdbcType="VARCHAR" />
+        <result column="sourceOrderSn" property="sourceOrderSn" jdbcType="VARCHAR" />
+        <result column="productType" property="productType" jdbcType="VARCHAR" />
+        <result column="requeStservieDateTS" property="requeStservieDateTS" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, siteId, addTime, memberId, orderId, orderProductId, paymentStatus, paymentTime,
+        paymentName, receiptStatus, receiptTime, storageStatus, storageTime, typeExpect,
+        typeActual, reason, contactName, contactMobile, handleStatus, handleTime, repairSn,
+        count, requestServiceRemark, requestServiceDate, offlineFlag, offlineReason, offlineAmount,
+        offlineRemark, offlineConfirmFlag, hpFirstAddTime, hpSecondAddTime, modified, finishTime,
+        refundAmount, ybkExchangeType, typeFlag, cOrderSnStatus, vomRepairSn
+    </sql>
+    <select id="getByOrderProductId" parameterType="Integer" resultMap="orderRepairsResult">
+        select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,
+        `receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,
+        `contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,
+        `requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,
+        hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn
+        from `OrderRepairs`
+        where `orderProductId` = #{orderProductId}
+        order by id desc
+    </select>
+    <select id="getNextValId" resultType="int">
+        SELECT nextval('WPOrderId');
+    </select>
+
+    <select id="queryLogs" parameterType="java.lang.String" resultMap="BaseResultMap2">
+        SELECT
+        p.id,
+        from_unixtime(p.addTime) addTimeTss,
+        p.orderRepairId,
+        p.operator,
+        p.operate,
+        p.remark,
+        s.cOrderSn
+        FROM
+        OrderRepairLogs p,
+        OrderRepairs a,
+        OrderProducts s
+        where
+        p.orderRepairId = a.id
+        and a.orderProductId = s.id
+        AND a.repairSn =#{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from orderrepairs
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <select id="queryOrderProductId" parameterType="java.lang.String" resultType="com.haier.shop.model.OrderRepairsVo">
+        SELECT
+        s.id,
+        p.id orderProductId,
+        p.cOrderSn  cOrderSnId
+        FROM
+        OrderRepairs s,
+        OrderProducts p
+        WHERE
+        s.orderProductId = p.id
+        and	repairSn = #{id}
+        LIMIT 0,1
+    </select>
+    <select  id="queryRepaiSn" parameterType="int" resultType="java.lang.String"> 
+        SELECT
+        repairSn
+        FROM
+        OrderRepairs
+        where
+        orderProductId =#{cOrderId}
+        GROUP BY id desc
+        LIMIT 0,1
+
+    </select>
+
+    <select id="queryPairsId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        o.orderSn,
+        p.cOrderSn cOrderSnId,
+        a.id,
+        from_unixtime(a.addTime) addTimeTs,
+        a.contactName,
+        a.contactMobile,
+        a.typeFlag,
+        p.price,
+        a.offlineAmount,
+        a.reason,
+        a.description,
+        a.repairSn,
+        a.count,
+        a.handleStatus,
+        a.paymentStatus,
+        a.receiptStatus,
+        a.storageStatus
+        FROM
+        OrderRepairs a,
+        Orders o,
+        OrderProducts  p
+        where
+        a.orderId = o.id
+        and a.orderProductId = p.id
+        and a.id =#{id}
+    </select>
+    <select id="selectPairs" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        o.orderSn,
+        o.id orderId,
+        p.cOrderSn cOrderSnId,
+        p.id orderProductId,
+        a.id,
+        from_unixtime(a.addTime) addTimeTs,
+        a.contactName,
+        a.contactMobile,
+        a.typeFlag,
+        p.price,
+        a.offlineAmount,
+        a.reason,
+        a.description,
+        a.repairSn,
+        a.count,
+        a.handleStatus,
+        a.paymentStatus,
+        a.receiptStatus,
+
+        a.storageStatus,
+        w.userAcceptTime,
+        p.stocktype,
+        p.sku,
+        d.tb_order_sn
+        FROM
+        OrderRepairs a,
+        Orders o,
+        OrderProducts  p,
+        OrderWorkflows w,
+        OrderProductsAttributes d
+
+        where
+        a.orderId = o.id
+        and a.orderProductId = p.id
+        and w.orderProductId = p.id
+        and p.id = d.order_product_id
+        and  a.id =#{id}
+
+    </select>
+
+    <select id="queryIsRejectionSign"  parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        userAcceptTime
+        FROM
+        OrderWorkflows
+        WHERE
+        orderProductId = #{id}
+    </select>
+
+    <select id="qureyRepairs" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        a.repairSn,
+        a.count,
+        p.sku,
+        a.requestServiceRemark,
+        a.requestServiceDate,
+        p.stockType,
+        a.offlineFlag,
+        a.offlineReason,
+        a.offlineAmount,
+        a.offlineRemark,
+        a.contactName,
+        a.contactMobile,
+        o.source,
+        o.sourceOrderSn,
+        p.productType,
+        o.province,
+        o.city
+        FROM
+        OrderRepairs a,
+        Orders o,
+        OrderProducts  p
+        where
+        a.orderId = o.id
+        and a.orderProductId = p.id
+        and a.orderSn =#{id,jdbcType=VARCHAR}
+    </select>
+    <select id="selectOrderProductId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        a.id,
+        p.id cOrderSnId
+        FROM
+        OrderRepairs a,
+        Orders o,
+        OrderProducts  p
+        where
+        a.orderId = o.id
+        and a.orderProductId = p.id
+        and a.repairSn =#{id,jdbcType=VARCHAR}
+    </select>
+    <select id="queryTwoIdentification" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        r.id,
+        r.requestServiceRemark,
+        r.requestServiceDate,
+        r.offlineFlag,
+        r.offlineReason,
+        r.offlineAmount,
+        r.offlineRemark,
+        r.count,
+        p.cOrderSn cOrderSnId
+        FROM
+        OrderRepairs r,
+        OrderProducts  p
+        where
+        r.orderProductId = p.id
+        and   r.id = #{id}
+    </select>
+    <select id="queryReturnEdit" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+		r.id,
+		p.id orderProductId,
+		p.cOrderSn cOrderSnId
+	FROM
+		OrderRepairs r,
+		OrderProducts p
+	WHERE
+		r.orderProductId = p.id
+	and r.id=#{id}
+    </select>
+    
+    <select id="selectOrederProductId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+			a.id,
+			p.id cOrderSnId
+		FROM
+			OrderRepairs a,
+			Orders o,
+			OrderProducts  p
+		where 
+			a.orderId = o.id
+		and a.orderProductId = p.id
+		and a.repairSn =#{id,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryRepairsInvoiceId" parameterType="java.lang.String" resultMap="BaseResultMap">
+	SELECT
+		r.id,
+		i.id invoiceId,
+		p.id orderProductId
+	FROM
+		OrderRepairs r,
+		OrderProducts p,
+		Invoices i
+	WHERE
+		r.orderProductId = p.id
+	AND i.orderProductId = p.id
+	and r.repairSn=#{repairSn}
+	</select>
+</mapper>

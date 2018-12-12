@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.GateDao">
+    <resultMap id="GateOfLimit" type="com.haier.purchase.data.model.GateOfLimitItem">
+        <result property="id" column="id"/>
+        <result property="ed_channel_id" column="ed_channel_id"/>
+        <result property="target_num" column="target_num"/>
+        <result property="limit_num" column="limit_num"/>
+        <result property="loan_num" column="loan_num"/>
+        <result property="modify_user" column="modify_user"/>
+        <result property="modify_time" column="modify_time"/>
+    </resultMap>
+    <resultMap id="GateOfTimeResult" type="com.haier.purchase.data.model.GateItem">
+        <result property="setting_id" column="setting_id"/>
+        <result property="ed_channel_id" column="ed_channel_id"/>
+        <result property="product_group_id" column="product_group_id"/>
+        <result property="setting_year" column="setting_year"/>
+        <result property="setting_month" column="setting_month"/>
+        <result property="setting_week" column="setting_week"/>
+        <result property="setting_day" column="setting_day"/>
+        <result property="setting_hour" column="setting_hour"/>
+        <result property="setting_minute" column="setting_minute"/>
+        <result property="setting_second" column="setting_second"/>
+        <result property="default_setting_year" column="default_setting_year"/>
+        <result property="default_setting_month" column="default_setting_month"/>
+        <result property="default_setting_week" column="default_setting_week"/>
+        <result property="default_setting_day" column="default_setting_day"/>
+        <result property="default_setting_hour" column="default_setting_hour"/>
+        <result property="default_setting_minute" column="default_setting_minute"/>
+        <result property="is_enabled" column="is_enabled"/>
+        <result property="modify_user" column="modify_user"/>
+        <result property="modify_time" column="modify_time"/>
+    </resultMap>
+    <resultMap id="GateOfStockExceedResult" type="com.haier.purchase.data.model.GateOfStockExceedItem">
+        <result property="id" column="id"/>
+        <result property="judge_ed_channel_id" column="judge_ed_channel_id"/>
+        <result property="exceed_age" column="exceed_age"/>
+        <result property="limit_ed_channel_id" column="limit_ed_channel_id"/>
+        <result property="brand_type" column="brand_type"/>
+        <result property="category_type" column="category_type"/>
+        <result property="model_type" column="model_type"/>
+        <result property="storage_type" column="storage_type"/>
+        <result property="is_enabled" column="is_enabled"/>
+        <result property="summary" column="summary"/>
+        <result property="modify_user" column="modify_user"/>
+        <result property="modify_time" column="modify_time"/>
+    </resultMap>
+    <resultMap id="GateOfStockExceedCatchResult" type="com.haier.purchase.data.model.GateOfStockExceedCatchItem">
+        <result property="ed_channel_id" column="ed_channel_id"/>
+        <result property="materials_desc" column="materials_desc"/>
+        <result property="category_id" column="category_id"/>
+        <result property="brand_id" column="brand_id"/>
+        <result property="storage_id" column="storage_id"/>
+        <result property="age" column="age"/>
+    </resultMap>
+
+    <select id="selectGateOfLimit" parameterType="Map" resultMap="GateOfLimit">
+        (SELECT
+        '0' orderid,
+        '' id,
+        '�ܼ�' category_id,
+        ed_channel_id,
+        SUM(target_num) target_num,
+        SUM(limit_num) limit_num,
+        SUM(loan_num) loan_num,
+        modify_user,
+        modify_time
+        FROM
+        haier_limit_gate_t
+        where 1=1
+        <if test="needResult !=null and needResult != ''">
+            and 1=0
+        </if>
+        <if test="month !=null and month != ''">
+            AND month = #{month}
+        </if>
+        GROUP BY
+        ed_channel_id)
+        UNION ALL
+        (SELECT
+        '1' orderid,
+        id,
+        category_id,
+        ed_channel_id,
+        target_num,
+        limit_num,
+        loan_num,
+        modify_user,
+        modify_time
+        FROM
+        haier_limit_gate_t
+        WHERE
+        1=1
+        <if test="ed_channel_id !=null and ed_channel_id != ''">
+            AND ed_channel_id = #{ed_channel_id}
+        </if>
+        <if test="category_id !=null and category_id != ''">
+            AND category_id = #{category_id}
+        </if>
+        <if test="month !=null and month != ''">
+            AND month = #{month}
+        </if>
+        )
+        ORDER BY
+        orderid,
+        category_id,
+        ed_channel_id
+    </select>
+    <select id="selectGateItem" parameterType="Map" resultMap="GateOfTimeResult">
+        SELECT
+        setting_id,
+        ed_channel_id,
+        product_group_id,
+        setting_year,
+        setting_month,
+        setting_week,
+        setting_day,
+        setting_hour,
+        setting_minute,
+        setting_second,
+        default_setting_year,
+        default_setting_month,
+        default_setting_week,
+        default_setting_day,
+        default_setting_hour,
+        default_setting_minute,
+        default_setting_second,
+        is_enabled,
+        modify_user,
+        modify_time
+        FROM
+        haier_time_gate_t
+        WHERE
+        1 = 1
+        <if test="is_enabled != null and is_enabled != ''">
+            and `is_enabled`= #{is_enabled}
+        </if>
+        <if test="setting_id != null and setting_id != ''">
+            and `setting_id`= #{setting_id}
+        </if>
+    </select>
+    <select id="selectGateOfStockExceed" parameterType="Map" resultMap="GateOfStockExceedResult">
+        SELECT
+        id,
+        judge_ed_channel_id,
+        exceed_age,
+        limit_ed_channel_id,
+        brand_type,
+        category_type,
+        model_type,
+        storage_type,
+        is_enabled,
+        summary,
+        modify_user,
+        modify_time
+        FROM
+        haier_stock_exceed_gate_t
+        WHERE
+        1 = 1
+        <if test="is_enabled != null and is_enabled != ''">
+            and `is_enabled`= #{is_enabled}
+        </if>
+        <if test="ed_channel_id != null and ed_channel_id != ''">
+            and `limit_ed_channel_id`= #{ed_channel_id}
+        </if>
+    </select>
+    <select id="selectGateOfStockExceedCatch" parameterType="Map" resultMap="GateOfStockExceedCatchResult">
+        SELECT
+        ed_channel_id,
+        materials_desc,
+        category_id,
+        brand_id,
+        storage_id,
+        age
+        FROM
+        haier_stock_exceed_cache_t
+        WHERE
+        1=1
+        <if test="ed_channel_id != null and ed_channel_id != ''">
+            and `ed_channel_id`= #{ed_channel_id}
+        </if>
+        <if test="materials_desc != null and materials_desc != ''">
+            and `materials_desc`= #{materials_desc}
+        </if>
+        <if test="category_id != null and category_id != ''">
+            and `category_id`= #{category_id}
+        </if>
+        <if test="brand_id != null and brand_id != ''">
+            and `brand_id`= #{brand_id}
+        </if>
+        <if test="storage_id != null and storage_id != ''">
+            and `storage_id`= #{storage_id}
+        </if>
+        <if test="age != null and age != ''">
+            <![CDATA[
+				and  `age`>= #{age}
+				]]>
+        </if>
+    </select>
+</mapper>

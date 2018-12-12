@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.system.dao.SysAccessLogDao">
+	<resultMap id="SysAccessLogResult" type="com.haier.system.model.SysAccessLog">
+		<result property="logId" column="log_id" />
+		<result property="userId" column="user_id" />
+		<result property="userName" column="user_name" />
+		<result property="logType" column="log_type" />
+		<result property="logTime" column="log_time" />
+		<result property="clientIp" column="client_ip" />
+		<result property="serverIp" column="server_ip" />
+		<result property="success" column="success" />
+		<result property="visitUrl" column="visit_url" />
+		<result property="refererUrl" column="referer_url" />
+		<result property="clientToken" column="client_token" />
+		<result property="sessionId" column="session_id" />
+		<result property="paramValue" column="param_value" />
+		<result property="cookieValue" column="cookie_value" />
+		<result property="agent" column="agent" />
+		<result property="errorMsg" column="error_msg" />
+	</resultMap>
+	<insert id="create" parameterType="com.haier.system.model.SysAccessLog">
+		insert into `sys_access_log`(`user_id`,`user_name`,`log_type`,`log_time`,`client_ip`,`server_ip`,`success`,`visit_url`,`referer_url`,`client_token`,`session_id`,`param_value`,`cookie_value`,`agent`,`error_msg`)
+		values(#{userId},#{userName},#{logType},#{logTime},#{clientIp},#{serverIp},#{success},#{visitUrl},#{refererUrl},#{clientToken},#{sessionId},#{paramValue},#{cookieValue},#{agent},#{errorMsg})
+	</insert>
+	<select id="find" resultMap="SysAccessLogResult">
+		select `log_id`,`user_id`,`user_name`,`log_type`,`log_time`,`client_ip`,`server_ip`,`success`,`visit_url`,`referer_url`,`client_token`,`session_id`,`param_value`,`cookie_value`,`agent`,`error_msg`
+		from `sys_access_log`
+		where `log_time` &gt;= #{startTime} and `log_time` &lt;= #{endTime}
+			<if test="clientIp!=null">and `client_ip`=#{clientIp}</if>
+			<if test="visitUrl!=null">and `visit_url` like #{visitUrl}</if>
+			<if test="userName!=null">and `user_name`=#{userName}</if>
+			<if test="sessionId!=null">and `session_id`=#{sessionId}</if>
+		order by `log_time` desc
+		<if test="size !=null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	<select id="findCount" resultType="Integer">
+		select count(*)
+		from `sys_access_log`
+		where `log_time` &gt;= #{startTime} and `log_time` &lt;= #{endTime}
+			<if test="clientIp!=null">and `client_ip`=#{clientIp}</if>
+			<if test="visitUrl!=null">and `visit_url` like #{visitUrl}</if>
+			<if test="userName!=null">and `user_name`=#{userName}</if>
+			<if test="sessionId!=null">and `session_id`=#{sessionId}</if>
+	</select>
+	
+<!-- 	<update id="update" parameterType="com.haier.cbs.system.entity.SysAccessLog"> -->
+<!-- 		update `sys_access_log` set `user_id`=#{userId},`log_type`=#{logType},`log_time`=#{logTime},`client_ip`=#{clientIp},`server_ip`=#{serverIp},`success`=#{success},`visit_url`=#{visitUrl},`referer_url`=#{refererUrl},`agent`=#{agent},`error_msg`=#{errorMsg} -->
+<!-- 		where `log_id` = #{logId} -->
+<!-- 	</update> -->
+</mapper>

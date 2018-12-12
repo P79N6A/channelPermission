@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.eop.data.dao.StockSyncLogDao" >
+  <resultMap id="BaseResultMap" type="com.haier.eop.data.model.StockSyncLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="sse" property="sse" jdbcType="CHAR" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="sourceproductId" property="sourceproductId" jdbcType="VARCHAR" />
+    <result column="scode" property="scode" jdbcType="VARCHAR" />
+    <result column="sourceStoreCode" property="sourceStoreCode" jdbcType="VARCHAR" />
+    <result column="channel_stock_num" property="channelStockNum" jdbcType="INTEGER" />
+    <result column="ehaier_stock_num" property="ehaierStockNum" jdbcType="INTEGER" />
+    <result column="unconfirm_stock_num" property="unconfirmStockNum" jdbcType="INTEGER" />
+    <result column="final_stock_num" property="finalStockNum" jdbcType="INTEGER" />
+    <result column="stock_sync_result" property="stockSyncResult" jdbcType="CHAR" />
+    <result column="system_info" property="systemInfo" jdbcType="VARCHAR" />
+    <result column="text_info" property="textInfo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, add_time, sse, sku, scode, channel_stock_num, ehaier_stock_num, unconfirm_stock_num, 
+    final_stock_num, stock_sync_result,  system_info, text_info
+  </sql>
+ <select id="Listf" resultMap="BaseResultMap">
+SELECT id,addTime,sse,sku,sourceproductId,sCode,sourceStoreCode,channelStockNum,ehaierStockNum,
+			   unconfirmStockNum,finalStockNum,stockSyncResult,systemInfo,textInfo 
+		  FROM stocksynclog WHERE 1=1
+		AND addTime &gt;= #{addTimeStart}
+		AND addTime &lt;= #{addTimeEnd}
+		    <if test="sse != '' and sse != null">AND sse = #{sse}</if>
+		   <if test="sku != '' and sku != null">AND sku = #{sku}</if> 
+		   <if test="sourceProductId != '' and sourceProductId != null">AND sourceproductId = #{sourceProductId}</if> 
+		   <if test="sCode != '' and sCode != null">AND sCode = #{sCode}</if>
+		   <if test="sourceStoreCode != '' and sourceStoreCode != null">AND sourceStoreCode = #{sourceStoreCode}</if>
+		   <if test="stockSyncResult != ''and  stockSyncResult != null">AND stockSyncResult = #{stockSyncResult}</if>
+		   
+		   order by id asc
+	<include refid="pagination" />
+  </select>
+<select id="getPagerCountS" resultType="int">
+		SELECT count(id)
+		  FROM stocksynclog WHERE 1=1
+		   AND addTime &gt;= #{addTimeStart}
+		AND addTime &lt;= #{addTimeEnd}
+		    <if test="sse != '' and sse != null">AND sse = #{sse}</if>
+		   <if test="sku != '' and sku != null">AND sku = #{sku}</if> 
+		   <if test="sourceProductId != '' and sourceProductId != null">AND sourceproductId = #{sourceProductId}</if> 
+		   <if test="sCode != '' and sCode != null">AND sCode = #{sCode}</if>
+		   <if test="sourceStoreCode != '' and sourceStoreCode != null">AND sourceStoreCode = #{sourceStoreCode}</if>
+		   <if test="stockSyncResult != ''and  stockSyncResult != null">AND stockSyncResult = #{stockSyncResult}</if>
+		   order by id asc
+	</select>
+	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+</mapper>

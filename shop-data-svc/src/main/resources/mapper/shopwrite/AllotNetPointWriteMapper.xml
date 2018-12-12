@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.AllotNetPointWriteDao">
+
+
+	<insert id="insert" parameterType="com.haier.shop.model.AllotNetPoint">
+		insert into AllotNetPoint(`customerCode`,`orderNo`,`createdDate`,`procRemark`,`enterTime`,`sbDate`,`assignDate`,`status`,`apiLogs_id`,`message`,`create_time`,`update_time`)values(#{CUSTOMER_CODE},#{ORDER_NO},#{CREATED_DATE},#{PROC_REMARK},#{ENTER_TIME},#{SB_DATE},#{ASSIGN_DATE},#{status},#{apiLogsId},#{message},#{createTime},#{updateTime})
+	</insert>
+
+	<insert id="batchInsert" parameterType="Map">
+		insert into AllotNetPoint(`customerCode`,`orderNo`,`createdDate`,`procRemark`,`enterTime`,`sbDate`,`assignDate`,`status`,`apiLogs_id`,`message`,`create_time`,`update_time`)
+		values
+		<foreach collection="allotNetPointList" item="allot" index="index" separator=",">
+			(#{allot.CUSTOMER_CODE},#{allot.ORDER_NO},#{allot.CREATED_DATE},#{allot.PROC_REMARK},#{allot.ENTER_TIME},#{allot.SB_DATE},#{allot.ASSIGN_DATE},#{allot.status},#{apiLogsId},#{allot.message},now(),now())
+		</foreach>
+	</insert>
+	
+	<update id="updateById">
+		update AllotNetPoint set `status`=#{status},`message`=#{message},`update_time`=now()
+		where `id`=#{id}
+	</update>
+</mapper>

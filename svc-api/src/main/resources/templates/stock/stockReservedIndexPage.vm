@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  物料编号
+			</span>
+                <input class="easyui-textbox" name="ssku" id="ssku"/>
+                 <input type="hidden" id="isReserved" name="isReserved" />
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  库位
+			</span>
+                <input class="easyui-textbox" name="ssecCode" id="ssecCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  渠道
+			</span>
+            <select name="channelCode" id="channelCode" style="width:105px">
+												
+                                			</select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  品类
+			</span>
+                <select  id="product_type_name" name="product_type_name" style="width: 174px;">
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure"
+           data-options="iconCls:'icon-search',plain:true" onclick="searchselect();">查询</a>
+             <a href="#" class="easyui-linkbutton" id="cxhongzhi"
+           data-options="iconCls:'icon-redo',plain:true" >重置</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtMeasure"
+           data-options="iconCls:'icon-save',plain:true"  onclick="onExport(1);" >导出</a>
+           
+        <a href="#" class="easyui-linkbutton" id="safd"
+           data-options="iconCls:'icon-lock',plain:true" onclick="getRow('reserved','','','', true);">库存锁定</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMeasure"
+           data-options="iconCls:'icon-unlock',plain:true" onclick="getRow('release','','','', false);">库存解锁</a>
+<input type="hidden" id="canTransferStock" name="canTransferStock" />
+    </form>
+</div>
+<div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:350px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="reservedform" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        
+        <div class="fitem">
+            <label>物料编码<span style="color: red;">*</span></label>
+            <input type="text" id="sku" name="sku" required="true"/>
+            <input type="hidden" id="isReserved" name="isReserved" />
+        </div>
+        <div class="fitem">
+            <label>调出库位<span style="color: red;">*</span></label>
+            <input ctype="text" id="secCode" name="secCode" required="true"/>
+        </div>
+        
+        
+        <div class="fitem">
+            <label>调出渠道<span style="color: red;">*</span></label>
+            <select name="channelFrom" id="channelFrom" style="width:105px">
+			<!-- 	#if($isReserved==true)
+					<option value="WA">全部</option>
+				#end
+				<option value="DKH">大客户渠道</option>
+				    			<option value="SC">商城渠道</option>
+				    			<option value="TB">天猫渠道</option>
+				    			<option value="JD">京东渠道</option>
+				    			<option value="YX">易迅渠道</option> -->
+			</select>
+        </div>
+        <div class="fitem">
+            <label>调入渠道<span style="color: red;">*</span></label>
+           <select name="channelTo" id="channelTo" style="width:105px">
+				<!-- 
+				#if($isReserved==false)
+					<option value="WA">WA共享</option>
+				#else
+					<option value="DKH">大客户渠道</option>
+					<option value="SC">商城渠道</option>
+					<option value="TB">天猫渠道</option>
+					<option value="JD">京东渠道</option>
+					<option value="YX">易迅渠道</option>
+				#end -->
+				
+			</select>
+        </div>
+        <div class="fitem">
+            <label>数量<span style="color: red;">*</span></label>
+            <input type="text" id="qty" name="qty" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>锁定时间(小时)<span style="color: red;">*</span></label>
+            <input type="text" id="lockHours" name="lockHours" required="true"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_invWarehouse">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_invWarehouse" onclick="saveReservedOrRelease($!{isReserved});" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_orderForecastGoal').dialog('close')">取消</a>
+    
+    
+<!--     <a href="#" id="saveBtn" class="btn btn-primary" onclick="saveReservedOrRelease($!{isReserved});">保存</a>
+		<a href="#" style="display:none;" id="showBtn" class="btn btn-primary">保存</a> -->
+  </div>
+</div>
+<script type="application/javascript">
+$("#canTransferStock").val("$!{canTransferStock}")
+</script>
+<script src="/static/js/stock/stockReservedIndexPage.js"></script>
+</body>
+</html>

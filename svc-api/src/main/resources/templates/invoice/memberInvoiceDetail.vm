@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<div>
+	<div>您可以在这里编辑或查看订单的发票信息，或者点击这里返回订单发票列表， 或者点击这里返回订单详情 。</div>
+	<br>
+	<table style="width:80%">
+		#set($tableRowHeight = "height:10px")
+		<tr>
+			<td style="vertical-align:top;width:15%">锁定状态:</td>
+			<td>
+				#if ($!{memberInvoices.getIsLock()} == 0)
+					<span>待锁定</span>
+				#elseif ($!{memberInvoices.getIsLock()} == 1)
+					<span id="lockstatus">已锁定</span><input type="button" id="unlock" name="unlock" value="解锁" onclick="unlockMemberInvoices($!{memberInvoices.getId()})" />
+				#end
+			</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td>订单编号:</td>
+			<td>$!{orderSn}</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td>下单人:</td>
+			<td>$!{memberInvoices.getMemberName()}</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td style="vertical-align:top">发票抬头:</td>
+			<td >
+				<input id="modify_InvoiceTitle" name="modify_InvoiceTitle" value="$!{memberInvoices.getInvoiceTitle()}" style="width:100%;background-color:#dddbdb;" class="easyui-validatebox" required="true" onblur="getMemberInvoiceByInvoiceTitle(this.value)">
+				<br>系统会根据发票抬头查询审核通过的增票历史记录，并自动填充表单。但增票的历史信息不一定与当前用户的增票信息完全一致，请业务人员认真审核后保存确认。
+			</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td>发票类型:</td>
+			<td>
+				#if ($!{typeEditAble})
+					#set($invoiceTypeIndex = 1)
+					#foreach($eachInvoiceType in $!{invoiceTypeOptions})
+						<input type="radio" id="modify_InvoiceType" name="modify_InvoiceType" value="$invoiceTypeIndex" #if($!{memberInvoices.getInvoiceType()} == $invoiceTypeIndex) checked="true" #end/>$eachInvoiceType
+						#set($invoiceTypeIndex = $invoiceTypeIndex + 1)
+					#end
+				#else
+					#set($invoiceTypeIndex = 1)
+					#foreach($eachInvoiceType in $!{invoiceTypeOptions})
+						#if($!{memberInvoices.getInvoiceType()} == $invoiceTypeIndex)
+							$eachInvoiceType
+							#set($invoiceTypeIndex = $invoiceTypeIndex + 1)
+						#end
+					#end
+					<input id="modify_InvoiceType" name="modify_InvoiceType" type="text" value="$!{memberInvoices.getInvoiceType()}" hidden="true"/>
+				#end
+			</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td>是否电子发票:</td>
+			<td>$!{electricFlag}</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td style="vertical-align:top">纳税人识别号:</td>
+			<td>
+				<input id="modify_TaxPayerNumber" name="/js/jquery.easyui.min.js/modify_TaxPayerNumber" value="$!{memberInvoices.getTaxPayerNumber()}" style="width:100%;background-color:#dddbdb;" class="easyui-validatebox" />
+				<br>当发票类型为“增值税发票”时此项必须填写
+			</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td style="vertical-align:top">注册地址:</td>
+			<td>
+				<input id="modify_RegisterAddress" name="modify_RegisterAddress" value="$!{memberInvoices.getRegisterAddress()}" style="width:100%;background-color:#dddbdb;" />
+				<br>当发票类型为“增值税发票”时此项必须填写
+			</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td style="vertical-align:top">注册电话:</td>
+			<td>
+				<input id="modify_RegisterPhone" name="modify_RegisterPhone" value="$!{memberInvoices.getRegisterPhone()}" style="width:100%;background-color:#dddbdb;" />
+				<br>当发票类型为“增值税发票”时此项必须填写
+			</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td style="vertical-align:top">开户银行:</td>
+			<td>
+				<input id="modify_BankName" name="modify_BankName" value="$!{memberInvoices.getBankName()}" style="width:100%;background-color:#dddbdb;" />
+				<br>当发票类型为“增值税发票”时此项必须填写
+			</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td style="vertical-align:top">开户卡号:</td>
+			<td>
+				<input id="modify_BankCardNumber" name="modify_BankCardNumber" value="$!{memberInvoices.getBankCardNumber()}" style="width:100%;background-color:#dddbdb;" />
+				<br>当发票类型为“增值税发票”时此项必须填写
+			</td>
+		</tr>
+		<!-- 审核发票的场合显示审核状态信息 -->
+		#if ($!{modifyFlg} == 2)
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td style="vertical-align:top">审核状态:</td>
+				<td>
+					#set($stateIndex=0)
+					#foreach($eachState in $!{inputAuditOptions})
+						<input type="radio" id="modify_State" name="modify_State" value="$stateIndex" #if($!{memberInvoices.getState()} == $stateIndex) checked="true" #end/>$eachState
+						#set($stateIndex=$stateIndex + 1)
+					#end
+					<br>此设置只针对“增值税发票”，普票无需审核。如果增票信息已存在且审核通过，系统会自动将增票的状态由“待审核”改为“审核通过”。
+				</td>
+			
+		</tr>
+		#end
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td style="vertical-align:top">备注信息:</td>
+			<td>
+				<textarea id="modify_Remark" style="width:100%;font-size:100%;background-color:#dddbdb;" >$!{memberInvoices.getRemark()}</textarea>
+				<br>此设置只针对“增值税发票”，普票无需审核,也无需输入备注信息。
+			</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+		<tr>
+			<td></td>
+			<td>
+				<a id='modify_SaveMemberInvoices' href="#">保存发票信息</a>
+				（如已开出票发票任何信息不会再被修改）
+			</td>
+		</tr>
+		<tr style="$tableRowHeight"></tr>
+	</table>
+	<input type="hidden" name="modifyFlg" value="$!{modifyFlg}"/>
+	<div>
+		<table id="modify_InvoiceChangeLogs" style="display:none">
+			<tr>
+				<th width="20%">操作时间</th>
+                      <th width="20%">操作人</th>
+                      <th width="50%">更改内容</th>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function changeLngToDate(lngDate){
+		var dateStr = lngDate.substring(0, 4);
+		return dateStr;
+	}
+	function validateRadio(){
+		var invoiceTypeChange = $('input[name="modify_InvoiceType"]:checked').val();
+		if(invoiceTypeChange==2||invoiceTypeChange==3){
+			$('#modify_TaxPayerNumber').validatebox({required:false});
+			$('#modify_RegisterAddress').validatebox({required:false});
+			$('#modify_RegisterPhone').validatebox({required:false});
+			$('#modify_BankName').validatebox({required:false});
+			$('#modify_BankCardNumber').validatebox({required:false});
+		}else{
+			$('#modify_TaxPayerNumber').validatebox({required:true});
+			$('#modify_RegisterAddress').validatebox({required:true});
+			$('#modify_RegisterPhone').validatebox({required:true});
+			$('#modify_BankName').validatebox({required:true});
+			$('#modify_BankCardNumber').validatebox({required:true});
+		}
+	}
+	$('input[name="modify_InvoiceType"]').change(function(){
+		validateRadio();
+	});
+	$(document).ready(function(){
+		validateRadio();
+
+		// 动态创建保存按钮
+		$('#modify_SaveMemberInvoices').linkbutton({
+			iconCls: 'icon-save'
+			});
+		$('#modify_SaveMemberInvoices').attr("onclick", "return saveMemberInvoices();");
+		
+		#if (${invoiceChangeLogsList.size()} > 0)
+			#foreach ($eachChangeLogs in ${invoiceChangeLogsList})
+				#set($addTimeStr = $eachChangeLogs.addTime.toString().substring(0, 4) + "-"
+						+ $eachChangeLogs.addTime.toString().substring(4, 6) + "-"
+						+ $eachChangeLogs.addTime.toString().substring(6));
+				$("#modify_InvoiceChangeLogs tr:last").after("<tr><td>$addTimeStr</td>"
+	             										+ "<td>$eachChangeLogs.operator</td>"
+	             										+ "<td>$eachChangeLogs.remark</td></tr>");
+	             
+			#end
+			$("#modify_InvoiceChangeLogs").show();
+		#end
+	})
+	
+	function getMemberInvoiceByInvoiceTitle(invoiceTitle){
+		jQuery.ajax({
+             url: "/invoice/getMemberInvoiceByInvoiceTitle",
+             data:{
+             	"invoiceTitle": invoiceTitle
+             },
+             type: "GET",
+             success: function (data) {
+            	 if (data.memberInvoices != null){
+            		 $("#modify_TaxPayerNumber").val(data.memberInvoices.taxPayerNumber);
+	            	 $("#modify_RegisterAddress").val(data.memberInvoices.registerAddress);
+	            	 $("#modify_RegisterPhone").val(data.memberInvoices.registerPhone);
+	            	 $("#modify_BankName").val(data.memberInvoices.bankName);
+	            	 $("#modify_BankCardNumber").val(data.memberInvoices.bankCardNumber);
+            	 } else{
+            		 $("#modify_TaxPayerNumber").val("");
+	            	 $("#modify_RegisterAddress").val("");
+	            	 $("#modify_RegisterPhone").val("");
+	            	 $("#modify_BankName").val("");
+	            	 $("#modify_BankCardNumber").val("");
+            	 }
+			}
+		});
+	}
+	function saveMemberInvoices(){
+		jQuery.ajax({
+            url: "/invoice/saveMemberInvoices",
+            data:{
+            	"id": $!{memberInvoices.getId()},
+            	"invoiceType":$('input[name="modify_InvoiceType"]:checked').val(),
+            	"invoiceTitle": $("#modify_InvoiceTitle").val(),
+            	"taxPayerNumber": $("#modify_TaxPayerNumber").val(),
+            	"registerAddress": $("#modify_RegisterAddress").val(),
+            	"registerPhone": $("#modify_RegisterPhone").val(),
+            	"bankName": $("#modify_BankName").val(),
+            	"bankCardNumber": $("#modify_BankCardNumber").val(),
+            	#if ($!{modifyFlg} == 2)
+            		//"state": $("#modify_State").combobox("getValue"),
+            		"state": $('input[name="modify_State"]:checked').val(),
+            	#else
+            		"state": $!{memberInvoices.getState()},
+            	#end
+            	"remark": $("#modify_Remark").val()
+            },
+            type: "GET",
+            success: function (data) {
+            	var msgInfo = data.message;
+            	if (data.errorFlg == 1){
+            		$.messager.alert('错误', msgInfo, 'error');
+            	} else {
+            		$.messager.alert('提示', msgInfo, 'info');
+            		$('#dataGrid').datagrid('reload');
+            		$("#memberInvoiceDetail").dialog("close");
+            	}
+			}
+		});
+	}
+	function unlockMemberInvoices(id)
+	{
+		jQuery.ajax({
+             url: "/invoice/unlockMemberInvoices",
+             data:{
+             	"id": id
+             },
+             type: "GET",
+             success: function (data) {
+            	var msgInfo = data.message;
+             	if (data.errorFlg == 1){
+             		$.messager.alert('错误', msgInfo, 'error');
+             	} else {
+             		$.messager.alert('提示', msgInfo, 'info');
+             		$("#lockstatus").text("待锁定")
+             		$("#unlock").hide();
+             	}
+
+             	$("#invoiceChangeLogs tr:gt(0):not(:eq(0))").remove();
+             	$("#invoiceChangeLogs tr:gt(0):eq(0)").remove();
+             	$.each(data.invoiceChangeLogsList, function(index, eachLog){
+             		var newRow = "<tr><td>" + eachLog.addTime + "</td>"
+             											+ "<td>" + eachLog.operator + "</td>"
+             											+ "<td>" + eachLog.remark + "</td></tr>";
+             		$("#invoiceChangeLogs tr:last").after(newRow);
+             	});
+			    $("#invoiceChangeLogs").show();
+			}
+		});
+	}
+</script>

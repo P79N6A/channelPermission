@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.TChanneclsInfoDao">
+    <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.TChannelsInfo">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="channelCode" property="channelCode" jdbcType="VARCHAR" />
+        <result column="channelName" property="channelName" jdbcType="VARCHAR" />
+        <result column="moneyLimit" property="moneyLimit" jdbcType="DECIMAL" />
+        <result column="sort" property="sort" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="moneyAlert" property="moneyAlert" jdbcType="DECIMAL" />
+        <result column="moneyLock" property="moneyLock" jdbcType="DECIMAL" />
+        <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="updateBy" property="updateBy" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, channelCode, channelName, moneyLimit, sort, remark,
+        moneyAlert,
+        moneyLock, createBy,
+        createTime, updateTime, updateBy
+    </sql>
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+    <!-- 查询条件 -->
+    <sql id="where_fragement">
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id = #{entity.id} ]]>
+            </if>
+            <if test="entity.channelName != null and entity.channelName !='' ">
+                <![CDATA[ and channelName LIKE CONCAT('%', #{entity.channelName} ,'%') ]]>
+            </if>
+            <if test="entity.moneyMin != null and entity.moneyMin !='' ">
+                <![CDATA[ and moneyLimit >= #{entity.moneyMin} ]]>
+            </if>
+            <if test="entity.moneyMin ==0 ">
+                <![CDATA[ and moneyLimit >= #{entity.moneyMin} ]]>
+            </if>
+            <if test="entity.moneyMax != null and entity.moneyMax !='' ">
+                <![CDATA[ and moneyLimit <= #{entity.moneyMax} ]]>
+            </if>
+            <if test="entity.moneyMax ==0 ">
+                <![CDATA[ and moneyLimit <= #{entity.moneyMax} ]]>
+            </if>
+        </if>
+    </sql>
+    <select id="selectOneByThisId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_channels_info
+        WHERE id = #{id}
+    </select>
+    <select id="getList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_channels_info
+    </select>
+    <select id="selectOneByCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_channels_info where channelCode = #{channelCode}
+    </select>
+    <select id="selectOneByName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_channels_info where channelName = #{channelName}
+    </select>
+
+    <select id="checkNameForEdit" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_channels_info where channelName = #{channelcname} and id != #{id}
+    </select>
+    <update id="updatePrice">
+        update t_channels_info set moneyLimit = moneyLimit -
+        #{price} where
+        channelCode =
+        (SELECT source from t_orders where id = #{id})
+    </update>
+
+    <update id="addPrice">
+        update t_channels_info set moneyLimit = moneyLimit +
+        #{price} where
+        channelCode =
+        (SELECT source from t_orders where id = #{id})
+    </update>
+
+    <select id="selectPriceByOrderId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        from t_channels_info
+        where channelCode =
+        (SELECT source from t_orders where id = #{id})
+    </select>
+    <select id="getPageByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        from t_channels_info
+        <include refid="where_fragement" />
+        order by createTime desc,updateTime desc
+        <include refid="pagination" />
+    </select>
+    <!--分页count -->
+    <select id="getPagerCount" resultType="long" parameterType="com.haier.distribute.data.model.TChannelsInfo">
+        select count(1) from t_channels_info
+        <include refid="where_fragement" />
+    </select>
+
+    <insert id="insertOne" parameterType="com.haier.distribute.data.model.TChannelsInfo" >
+        insert into t_channels_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="channelCode != null" >
+                channelCode,
+            </if>
+            <if test="channelName != null" >
+                channelName,
+            </if>
+            <if test="moneyLimit != null" >
+                moneyLimit,
+            </if>
+            <if test="sort != null" >
+                sort,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="moneyAlert != null" >
+                moneyAlert,
+            </if>
+            <if test="moneyLock != null" >
+                moneyLock,
+            </if>
+            <if test="createBy != null" >
+                createBy,
+            </if>
+            <if test="createTime != null" >
+                createTime,
+            </if>
+            <if test="updateTime != null" >
+                updateTime,
+            </if>
+            <if test="updateBy != null" >
+                updateBy,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="channelCode != null" >
+                #{channelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="channelName != null" >
+                #{channelName,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyLimit != null" >
+                #{moneyLimit,jdbcType=DECIMAL},
+            </if>
+            <if test="sort != null" >
+                #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyAlert != null" >
+                #{moneyAlert,jdbcType=DECIMAL},
+            </if>
+            <if test="moneyLock != null" >
+                #{moneyLock,jdbcType=DECIMAL},
+            </if>
+            <if test="createBy != null" >
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null" >
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.TChannelsInfo" >
+        update t_channels_info
+        <set >
+            <if test="channelCode != null" >
+                channelCode = #{channelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="channelName != null" >
+                channelName = #{channelName,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyLimit != null" >
+                moneyLimit = #{moneyLimit,jdbcType=DECIMAL},
+            </if>
+            <if test="sort != null" >
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="moneyAlert != null" >
+                moneyAlert = #{moneyAlert,jdbcType=DECIMAL},
+            </if>
+            <if test="moneyLock != null" >
+                moneyLock = #{moneyLock,jdbcType=DECIMAL},
+            </if>
+            <if test="createBy != null" >
+                createBy = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                updateTime = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null" >
+                updateBy = #{updateBy,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete from t_channels_info
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <select id="getOneByCode" resultMap="BaseResultMap">
+        SELECT * from t_channels_info WHERE channelCode = #{channelCode}
+    </select>
+</mapper>

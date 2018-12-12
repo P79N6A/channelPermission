@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Haier EIS - Enterprise Integration System</title>
+##	<link rel="stylesheet" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
+##    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css"/>
+##    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css"/>
+##    <script type="text/javascript" src="../static/third/jquery-1.8.3.min.js"></script>
+##    <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
+##    <script type="text/javascript" src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+##
+##    <script type="text/javascript" src="../static/third/easyui/plugins/jquery.form.js"></script>
+##    <script src="../static/third/jqueryui/jquery.ui.core.js"></script>
+##    <script src="../static/third/jqueryui/jquery.ui.widget.js"></script>
+##    <script src="../static/third/jqueryui/jquery.ui.mouse.js"></script>
+##    <script src="../static/third/jqueryui/jquery.ui.button.js"></script>
+##    <script src="../static/third/jqueryui/jquery.ui.draggable.js"></script>
+##    <script src="../static/third/jqueryui/jquery.ui.position.js"></script>
+##    <script src="../static/third/jqueryui/jquery.ui.resizable.js"></script>
+##    <script src="../static/third/jqueryui/jquery.dialog.js"></script>
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+	<style type="text/css">
+		.content-box{
+		  display:inline-block;
+		  margin-right: 10px;
+		  min-width:98%;
+		  margin-left:10px;
+		}
+	</style>
+
+</head>
+<body>
+<div class="easyui-layout" data-options="fit : true,border : false">
+    <div data-options="region:'north',border:false" style="height: 160px;overflow:auto;" align="left">
+    
+		<div style="line-height: inherit">
+		    <a href="/Job/PageJump" class="easyui-linkbutton" iconCls="icon-th">任务列表</a>
+		    <a href="/Job/JobLog" class="easyui-linkbutton" iconCls="icon-th">运行日志</a>
+            <a href="/vehicle/InterfaceLog" class="easyui-linkbutton" iconCls="icon-th">整车接口日志</a>
+            <a href="/purchase/InterfaceLog" class="easyui-linkbutton" iconCls="icon-th">采购接口日志</a>
+		</div>
+    
+        <form id="filterForm">
+			<table>
+        		<tr>
+        			<h2>Job配置</h2>
+        			<span style="margin-left:5px;">job名称:</span>
+        			<input type="text" name="jobName" id="jobName" style="width:105px" class="easyui-textbox"></input>
+        		
+	                <span style="margin-left:5px;">状态:</span>
+	                <select name="jobStatus" id="jobStatus" style="width:80px" class="easyui-combobox">
+						<option value="1">启用</option>
+						<option value="0">停用 </option>
+					</select>
+				</tr>
+        		<tr>
+        			<td>
+						<a id='btnAdd' href="#" class="easyui-linkbutton">新增</a>
+						<a href="#" class="easyui-linkbutton" onclick="toUpdate()">修改</a>
+                        <a id='btnSearch' href="#" class="easyui-linkbutton">查询</a>
+        			</td>
+        		</tr>
+        	</table>
+        </form>
+	</div>
+    <div data-options="region:'center',border:false">
+        <table id="dataGrid"></table>
+    </div>
+</div>
+
+<div id="dialog-message" class="easyui-dialog" title="添加Job配置">
+	    <table>
+			<tr>
+				<td style="width:20%;padding-left:18px;">
+					<label>job名称：</label>
+					<input type="hidden" id="jobId" name="jobId"/>
+				</td>
+				<td style="width:30%;">
+					<input type="text" id="add-jobName" name="add-jobName" class="easyui-validatebox" required="true" missingMessage="此为必填项"/>
+				</td>
+				<td style="width:20%;padding-left:18px;">
+					<label>job类型：</label>
+				</td>
+				<td style="width:30%;">
+					<input type="text" id="add-jobType" name="add-jobType" class="easyui-validatebox" required="true" missingMessage="此为必填项"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:20%;padding-left:18px;">
+					<label>job状态：</label>
+				</td>
+				<td style="width:30%;">
+					<select id="add-jobStatus" name="add-jobStatus">
+						<option value="1">启用</option>
+						<option value="0">停用 </option>
+					</select>
+				</td>
+				<td style="width:30%;padding-left:18px;">
+					<label>job配置数据：</label>
+				</td>
+				<td style="width:30%;">
+					<input type="text" id="add-cfgDataStr" name="add-cfgDataStr" class="easyui-validatebox" required="true" missingMessage="此为必填项"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:20%;padding-left:18px;">
+					<label>cron表达式：</label>
+				</td>
+				<td style="width:30%;">
+					<input type="text" id="add-cron" name="add-cron" class="easyui-validatebox" required="true" missingMessage="此为必填项"/>
+				</td>
+			</tr>
+	    </table>
+	    <div>
+	        <button id="y" type="button" onclick="save()">保存</button>
+	        <button id="n" type="button">取消</button>
+	    </div>
+</div>
+
+<script type="text/javascript"></script>
+<script src="../static/js/job/job.js"></script>
+</body>
+</html>

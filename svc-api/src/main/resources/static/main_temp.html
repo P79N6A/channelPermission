@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>3W-CBS</title>
+    <link rel="stylesheet" href="static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/third/bootstrap/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="static/third/adminlte/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/third/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="static/css/main.css">
+    <link rel="stylesheet" href="static/css/staticHtml.css">
+</head>
+<body class="skin-blue-light fixed">
+<div class="wrapper">
+    <header class="main-header">
+        <div class="logo">
+            <!-- LOGO -->
+            3W-CBS
+            <span id="currentsystem" class="change-system_zhushi">整车直发</span>
+            <div id="systemlist" class="ehaier-systems" style="">
+                <a href="javascript:void (0);">整车直发</a><br/>
+            </div>
+        </div>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <a href="#" class="sidebar-toggle" role="button" data-toggle="offcanvas"></a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="static/img/touxiang.jpg" class="user-image" alt="User Image">
+                            <span class="hidden-xs">管理员</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="static/img/touxiang.jpg" class="user-image" alt="User Image">
+                                <p>管理员</p>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat" id="profile">个人资料</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a id="logoutBtn_zhushidiao" onclick="javascript:location.href='login.html'"
+                                       class="btn btn-default btn-flat">登出</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="main-sidebar">
+        <!-- Inner sidebar -->
+        <div class="sidebar">
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu">
+                <li class="treeview caigou">
+                    <a href="#" data-title="整车直发" data-anchor=""><i
+                            class="fa fa-list no_background"></i><span>整车直发</span> <i
+                            class="fa fa-angle-left pull-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="fa fa-arrow-down no_background" href="#" menu-link data-title="整车上单"
+                               data-anchor="delivery_order/deliveryOrder.html">整车上单</a></li>
+                    </ul>
+                </li>
+            </ul><!-- /.sidebar-menu -->
+        </div><!-- /.sidebar -->
+    </div><!-- /.main-sidebar -->
+    <div class="content-wrapper">
+        <div id="tab-tools">
+            <a href="javascript:void(0)" class="easyui-linkbutton" title="关闭所有"
+               data-options="plain:true,iconCls:'icon-cancel'" onclick="removeAllTabs()"></a>
+        </div>
+        <div id="tabTitleMenu" class="easyui-menu" style="width:120px;display:none;">
+            <div onclick="menuRefreshTab()" data-options="iconCls:'fa fa-refresh'">刷新</div>
+            <div class="menu-sep"></div>
+            <div onclick="menuCloseTab();" data-options="iconCls:'fa fa-times'">关闭</div>
+            <div onclick="removeAllTabs()">关闭所有</div>
+            <div onclick="removeOtherTabs();">关闭其他</div>
+        </div>
+        <div id="frame-tabs" data-options="tools:'#tab-tools',border:false" class="easyui-tabs"
+             style="width:100%;height:100%;">
+        </div>
+    </div>
+    <aside class="control-sidebar control-sidebar-dark" style="position: fixed; height: auto;">
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <!-- Home tab content -->
+            <div class="tab-pane active">
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="static/img/locale/zh_cn.jpg" class="locale-image" alt="User Image">
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a>
+                                <img src="static/img/locale/zh_cn.jpg" class="locale-image" alt="User Image">
+                                <span>简体中文</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <h4 class="control-sidebar-heading">Skins</h4>
+                <ul class="list-unstyled clearfix skins-container">
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-blue"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px; background: #367fa9;"></span><span
+                                    class="bg-light-blue"
+                                    style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin">Blue</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-black"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div style="box-shadow: 0 0 2px rgba(0,0,0,0.1)" class="clearfix">
+                                <span style="display:block; width: 20%; float: left; height: 7px; background: #fefefe;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 7px; background: #fefefe;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #222;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin">White</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-purple"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px;"
+                                      class="bg-purple-active"></span><span class="bg-purple"
+                                                                            style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin">Purple</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-green"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px;"
+                                      class="bg-green-active"></span><span class="bg-green"
+                                                                           style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin">Green</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-red"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px;"
+                                      class="bg-red-active"></span><span class="bg-red"
+                                                                         style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin">Red</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-yellow"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px;"
+                                      class="bg-yellow-active"></span><span class="bg-yellow"
+                                                                            style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #222d32;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin">Yellow</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-blue-light"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px; background: #367fa9;"></span><span
+                                    class="bg-light-blue"
+                                    style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin" style="font-size: 12px">Blue Light</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-black-light"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div style="box-shadow: 0 0 2px rgba(0,0,0,0.1)" class="clearfix">
+                                <span style="display:block; width: 20%; float: left; height: 7px; background: #fefefe;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 7px; background: #fefefe;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin" style="font-size: 12px">White Light</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-purple-light"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px;"
+                                      class="bg-purple-active"></span><span class="bg-purple"
+                                                                            style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin" style="font-size: 12px">Purple Light</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-green-light"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px;"
+                                      class="bg-green-active"></span><span class="bg-green"
+                                                                           style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin" style="font-size: 12px">Green Light</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-red-light"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px;"
+                                      class="bg-red-active"></span><span class="bg-red"
+                                                                         style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin" style="font-size: 12px">Red Light</p></li>
+                    <li style="float:left; width: 33.33333%; padding: 5px;">
+                        <a href="javascript:void(0);" data-skin="skin-yellow-light"
+                           style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
+                           class="clearfix full-opacity-hover">
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 7px;"
+                                      class="bg-yellow-active"></span><span class="bg-yellow"
+                                                                            style="display:block; width: 80%; float: left; height: 7px;"></span>
+                            </div>
+                            <div>
+                                <span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc;"></span><span
+                                    style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7;"></span>
+                            </div>
+                        </a>
+                        <p class="text-center no-margin" style="font-size: 12px;">Yellow Light</p></li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+</div>
+<script src="static/third/jquery.js"></script>
+<script src="static/third/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/third/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="static/third/adminlte/js/app.js"></script>
+<script src="static/third/easyui/jquery.easyui.min.js"></script>
+<script src="static/js/utils.js"></script>
+<script src="static/js/index.js"></script>
+<script src="static/js/temp_main.js"></script>
+<!--<script src="static/third/echarts/echarts.min.js"></script>-->
+</body>
+</html>

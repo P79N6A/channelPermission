@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.OrderInterfaceDataLogDao">
+    <resultMap id="orderInterfaceDataLogResult" type="com.haier.eis.model.OrderInterfaceDataLog">
+        <result property="id" column="id" />
+        <result property="interfaceCode" column="interface_code" />
+        <result property="requestData" column="request_data" />
+        <result property="responseData" column="response_data" />
+        <result property="requestTime" column="request_time" />
+        <result property="responseTime" column="response_time" />
+        <result property="createTime" column="create_time" />
+        <result property="responseStatus" column="response_status" />
+        <result property="errorMessage" column="error_message" />
+        <result property="foreignKey" column="foreign_key" />
+        <result property="elapsedTime" column="elapsed_time" />
+    </resultMap>
+    <insert id="insert" parameterType="com.haier.eis.model.OrderInterfaceDataLog">
+        insert into `order_interface_data_log`(`interface_code`,`request_data`,`response_data`,`request_time`,`response_time`,`create_time`,`response_status`,`error_message`,`foreign_key`,`elapsed_time`)
+        values(#{interfaceCode},#{requestData},#{responseData},#{requestTime},#{responseTime},now(),#{responseStatus},#{errorMessage},#{foreignKey},#{elapsedTime})
+        <selectKey resultType="Integer" keyProperty="id" order="AFTER"
+                   statementType="STATEMENT">select last_insert_id()</selectKey>
+    </insert>
+</mapper>

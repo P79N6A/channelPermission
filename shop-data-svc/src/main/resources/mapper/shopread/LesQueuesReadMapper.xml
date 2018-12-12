@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.LesQueuesReadDao">
+	<resultMap id="lesQueuesResult" type="com.haier.shop.model.LesQueues">
+		<result property="id" column="id" />
+		<result property="orderProductId" column="orderProductId" />
+		<result property="action" column="action" />
+		<result property="pushData" column="pushData" />
+		<result property="success" column="success" />
+		<result property="count" column="count" />
+		<result property="addTime" column="addTime" />
+		<result property="lastMessage" column="lastMessage" />
+		<result property="isLock" column="isLock" />
+		<result property="isStop" column="isStop" />
+		<result property="successTime" column="successTime" />
+		<result property="lastTryTime" column="lastTryTime" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="lesQueuesResult">
+		select `id`,`orderProductId`,`action`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`isLock`,`isStop`,`successTime`,`lastTryTime`
+		from `LesQueues`
+		where `id` = #{id}
+	</select>
+	<select id="getSendQueues" parameterType="Integer" resultMap="lesQueuesResult">
+		select lq.`id`,lq.`orderProductId`,lq.`action`,lq.`pushData`,lq.`success`,lq.`count`,lq.`addTime`,lq.`lastMessage`,lq.`isLock`,lq.`isStop`,lq.`successTime`,lq.`lastTryTime`
+		from `LesQueues` lq 
+		inner join OrderProducts ops on ops.id=lq.orderProductId and ops.status&lt;8 and ops.shippingOpporunity != 1
+		inner join Orders o on o.id=ops.orderId
+		left join DoNotSyncLesSku dns on dns.sku=ops.sku and dns.OrderSource=o.`source`
+		where lq.`success` = 0 and lq.`isStop` = 0 and lq.`count` &lt;= 75 and dns.sku is null
+		order by ops.pdOrderStatus desc,lq.`count` asc,lq.`id` asc
+		limit #{topX}
+	</select>
+	<select id="getCreateInvoiceQueues" parameterType="map" resultMap="lesQueuesResult">
+		<![CDATA[
+		select lq.`id`,lq.`orderProductId`,lq.`action`,lq.`pushData`,lq.`success`,lq.`count`,lq.`addTime`,lq.`lastMessage`,lq.`isLock`,lq.`isStop`,lq.`successTime`,lq.`lastTryTime`
+		from `LesQueues` lq 
+		inner join (select id,orderid,pdOrderStatus from `OrderProducts` where status < 8 and `shippingOpporunity` != 1) ops on(ops.`id`=lq.`orderProductId`)
+		inner join Orders ors on ops.orderid=ors.id
+		where `success` = 0
+		and `isStop` = 0
+		and `count` <= 75 
+		and ors.`source`!='RRS'
+		and `orderProductid` not in(
+		select op.`id` from `OrderProducts` op
+		inner join `DoNotSyncLesSku` dns
+	    on(op.`sku`=dns.`sku`)
+		inner join `Orders` o
+		on(op.orderid=o.id and o.`source`=dns.OrderSource)
+		where op.status<8
+		)
+		order by ops.pdOrderStatus desc,`count` asc,`id` asc
+		limit #{topX}
+		]]>
+	</select>
+	<select id="getCountByOpId" resultType="int">
+		select count(id) from LesQueues where orderProductId = #{orderProductId}
+	</select>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.StoreInfoDao">
+
+	<resultMap id="storeInfoResult" type="com.haier.stock.model.StoreInfo">
+		<result property="storeId" column="store_id" />
+		<result property="ownerId" column="owner_id" />
+		<result property="storeName" column="store_name" />
+		<result property="storeStatus" column="store_status" />
+		<result property="storeAlias" column="store_alias" />
+		<result property="qrcode" column="qrcode" />
+		<result property="qrcodeUrl" column="qrcode_url" />
+		<result property="createTime" column="create_time" />
+		<result property="approveTime" column="approve_time" />
+		<result property="approveUser" column="approve_user" />
+		<result property="shareUrl" column="share_url" />
+		<result property="shareUrlQrcode" column="share_url_qrcode" />
+		<result property="postfixStoreName" column="postfix_store_name" />
+		<result property="isO2o" column="is_o2o" />
+		<result property="hrCode" column="hr_code" />
+	</resultMap>
+
+	<select id="getByOwerId" parameterType="Integer" resultMap="storeInfoResult">
+		select `store_id`,`owner_id`,`store_name`,`store_status`,`store_alias`,`qrcode`,`qrcode_url`,`create_time`,`approve_time`,`approve_user`,`share_url`,`share_url_qrcode`,`postfix_store_name`,`is_o2o`,`hr_code` 
+		from store_info
+		where owner_id = #{owerId} and hr_code is not null and hr_code != '' limit 1
+	</select>
+
+</mapper>

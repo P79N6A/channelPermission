@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvThTransactionDao">
+    <resultMap id="invThTransactionResult" type="com.haier.stock.model.InvThTransaction">
+        <result property="id" column="id"/>
+        <result property="corderSn" column="corder_sn"/>
+        <result property="vbelnSo" column="vbeln_so"/>
+        <result property="sku" column="sku"/>
+        <result property="secCode" column="sec_code"/>
+        <result property="inAddTime" column="in_add_time"/>
+        <result property="outTime" column="out_time"/>
+        <result property="outAddTime" column="out_add_time"/>
+        <result property="inStatus" column="in_status"/>
+        <result property="outStatus" column="out_status"/>
+        <result property="charg" column="charg"/>
+        <result property="channel" column="channel"/>
+        <result property="productNo" column="product_no"/>
+        <result property="soNum" column="so_num"/>
+        <result property="inwhDate" column="inwh_date"/>
+        <result property="hpLesId" column="hp_les_id"/>
+        <result property="countNum" column="count_num"/>
+        <result property="kw" column="kw"/>
+        <result property="inwhId" column="inwh_id"/>
+        <result property="storePlace" column="store_place"/>
+        <result property="channelSoNum" column="channel_so_num"/>
+        <result property="channelOrderSn" column="channel_order_sn"/>
+        <result property="accountPingNo" column="account_ping_no"/>
+        <result property="accountSoNo" column="account_so_no"/>
+        <result property="outping" column="outping"/>
+        <result property="channelProductCode" column="channel_product_code"/>
+        <result property="lesProductCode" column="les_product_code"/>
+        <result property="tknum" column="tknum"/>
+        <result property="bstkd" column="bstkd"/>
+        <result property="quantity" column="quantity"/>
+        <result property="matkl" column="matkl"/>
+        <result property="bwart" column="bwart"/>
+        <result property="centerCode" column="center_code"/>
+        <!-- 套机必要元素 -->
+        <result property="keyProductNo" column="key_product_no"/>
+        <result property="mainSku" column="main_sku"/>
+        <result property="subCount" column="sub_count"/>
+        <result property="subReady" column="subReady"/>
+        <result property="hp_states" column='hp_status'/>
+        <result property="hpLesDate" column="hp_les_date"/>
+    <!-- 该字段用来存放3W不良品，hp质检批次 hpCheckType-->
+        <result property="hpCheckType" column="hp_check_type"/>
+    </resultMap>
+    <select id="get" parameterType="Integer" resultMap="invThTransactionResult">
+        select
+        `id`,`corder_sn`,`vbeln_so`,`sku`,`main_sku`,`sec_code`,`in_add_time`,`out_time`,`out_add_time`,`in_status`,`out_status`,`charg`,`channel`,`product_no`,`so_num`,`inwh_date`,`hp_les_id`,`count_num`,`kw`,`inwh_id`,`store_place`,`channel_so_num`,`channel_order_sn`,`account_ping_no`,`account_so_no`,`outping`,`channel_product_code`,`les_product_code`,`tknum`,`bstkd`,`quantity`,`matkl`,`bwart`,`center_code`,`sub_count`,`hp_check_type`
+        from `inv_th_transaction`
+        where `id` = #{id}
+    </select>
+    <insert id="insertTrans" parameterType="com.haier.stock.model.InvThTransaction">
+        insert into
+        `inv_th_transaction`(`corder_sn`,`vbeln_so`,`sku`,`sec_code`,`in_add_time`,`out_time`,`out_add_time`,
+        `in_status`,`out_status`,`charg`,`channel`,`product_no`,`so_num`,`inwh_date`,`hp_les_id`,`count_num`,`kw`,`inwh_id`,
+        `store_place`,`channel_so_num`,`channel_order_sn`,`account_ping_no`,`account_so_no`,`outping`,`channel_product_code`,
+        `les_product_code`,`tknum`,`bstkd`,`quantity`,`matkl`,`bwart`,`center_code`,`dep_charge`,
+        `main_sku`,`key_product_no`,`sub_count`,`hp_les_date`,`hp_check_type`)
+        SELECT
+        #{item.corderSn},#{item.vbelnSo},#{item.sku},#{item.secCode},#{item.inAddTime},#{item.outTime},#{item.outAddTime},
+        #{item.inStatus},#{item.outStatus},#{item.charg},
+        #{item.channel},#{item.productNo},#{item.soNum},#{item.inwhDate},#{item.hpLesId},#{item.countNum},
+        #{item.kw},#{item.inwhId},#{item.storePlace},#{item.channelSoNum},
+        #{item.channelOrderSn},#{item.accountPingNo},#{item.accountSoNo},#{item.outping},
+        #{item.channelProductCode},#{item.lesProductCode},#{item.tknum},#{item.bstkd},
+        #{item.quantity},#{item.matkl},#{item.bwart},#{item.centerCode},#{item.depCharge},
+        #{item.mainSku},#{item.keyProductNo},#{item.subCount},#{item.hpLesDate},#{item.hpCheckType}
+        FROM dual WHERE NOT exists
+        (
+        SELECT
+        1
+        FROM `inv_th_transaction` th
+        WHERE
+        <!-- 如果存在相同机器编码或者相同网单的数据不写数据，重新生成网单号 -->
+        th.product_no=#{item.productNo} or th.corder_sn=#{item.corderSn}
+        )
+
+    </insert>
+    <update id="updateTrans" parameterType="com.haier.stock.model.InvThTransaction">
+        update `inv_th_transaction`
+        <trim prefix="set" prefixOverrides=",">
+            <if test="corderSn != null and corderSn !='' ">
+                `corder_sn`=#{corderSn}
+            </if>
+            <if test="vbelnSo != null and vbelnSo !='' ">
+                ,`vbeln_so`=#{vbelnSo}
+            </if>
+            <if test="sku != null and sku !='' ">
+                ,`sku`=#{sku}
+            </if>
+            <if test="secCode != null and secCode !='' ">
+                ,`sec_code`=#{secCode}
+            </if>
+            <if test="inAddTime != null and inAddTime !='' ">
+                ,`in_add_time`=#{inAddTime}
+            </if>
+            <if test="outTime != null and outTime !='' ">
+                ,`out_time`=#{outTime}
+            </if>
+            <if test="outAddTime != null and outAddTime !='' ">
+                ,`out_add_time`=#{outAddTime}
+            </if>
+            <if test="inStatus != null and inStatus !='' ">
+                ,`in_status`=#{inStatus}
+            </if>
+            <if test="outStatus != null and outStatus !='' ">
+                ,`out_status`=#{outStatus}
+            </if>
+            <if test="charg != null and charg !='' ">
+                ,`charg`=#{charg}
+            </if>
+            <if test="channel != null and channel !='' ">
+                ,`channel`=#{channel}
+            </if>
+            <if test="productNo != null and productNo !='' ">
+                ,`product_no`=#{productNo}
+            </if>
+            <if test="soNum != null and soNum !='' ">
+                ,`so_num`=#{soNum}
+            </if>
+            <if test="inwhDate != null and inwhDate !='' ">
+                ,`inwh_date`=#{inwhDate}
+            </if>
+            <if test="hpLesId != null and hpLesId !='' ">
+                ,`hp_les_id`=#{hpLesId}
+            </if>
+            <if test="hpLesDate != null and hpLesDate !=''">
+                ,`hp_les_date`=#{hpLesDate}
+            </if>
+            <if test="countNum != null and countNum !='' ">
+                ,`count_num`=#{countNum}
+            </if>
+            <if test="kw != null and kw !='' ">
+                ,`kw`=#{kw}
+            </if>
+            <if test="inwhId != null and inwhId !='' ">
+                ,`inwh_id`=#{inwhId}
+            </if>
+            <if test="storePlace != null and storePlace !='' ">
+                ,`store_place`=#{storePlace}
+            </if>
+            <if test="channelSoNum != null and channelSoNum !='' ">
+                ,`channel_so_num`=#{channelSoNum}
+            </if>
+            <if test="channelOrderSn != null and channelOrderSn !='' ">
+                ,`channel_order_sn`=#{channelOrderSn}
+            </if>
+            <if test="accountPingNo != null and accountPingNo !='' ">
+                ,`account_ping_no`=#{accountPingNo}
+            </if>
+            <if test="accountSoNo != null and accountSoNo !='' ">
+                ,`account_so_no`=#{accountSoNo}
+            </if>
+            <if test="outping != null and outping !='' ">
+                ,`outping`=#{outping}
+            </if>
+            <if test="channelProductCode != null and channelProductCode !='' ">
+                ,`channel_product_code`=#{channelProductCode}
+            </if>
+            <if test="lesProductCode != null and lesProductCode !='' ">
+                ,`les_product_code`=#{lesProductCode}
+            </if>
+            <if test="tknum != null and tknum !='' ">
+                ,`tknum`=#{tknum}
+            </if>
+            <if test="bstkd != null and bstkd !='' ">
+                ,`bstkd`=#{bstkd}
+            </if>
+            <if test="quantity != null and quantity !='' ">
+                ,`quantity`=#{quantity}
+            </if>
+            <if test="matkl != null and matkl !='' ">
+                ,`matkl`=#{matkl}
+            </if>
+            <if test="bwart != null and bwart !='' ">
+                ,`bwart`=#{bwart}
+            </if>
+            <if test="depCharge !=null and depCharge !='' ">
+                ,`dep_charge`=#{depCharge}
+            </if>
+            <if test="centerCode != null and centerCode !='' ">
+                ,`center_code`=#{centerCode}
+            </if>
+            <if test="mainSku != null and mainSku !=''">
+                ,`main_sku`=#{mainSku}
+            </if>
+            <if test="keyProductNo != null and keyProductNo !=''">
+                ,`key_product_no`=#{keyProductNo}
+            </if>
+            <if test="subCount != null and subCount !=''">
+                ,`sub_count`=#{subCount}
+            </if>
+        <if test="hpCheckType != null and hpCheckType !=''">
+                ,`hp_check_type`=#{hpCheckType}
+            </if>
+        </trim>
+        where `product_no`=#{productNo}
+    </update>
+    <update id="update" parameterType="com.haier.stock.model.InvThTransaction">
+        update `inv_th_transaction` set
+        `corder_sn`=#{corderSn},`vbeln_so`=#{vbelnSo},`sku`=#{sku},`sec_code`=#{secCode},`in_add_time`=#{inAddTime},`out_time`=#{outTime},`out_add_time`=#{outAddTime},`in_status`=#{inStatus},`out_status`=#{outStatus},`charg`=#{charg},`channel`=#{channel},`product_no`=#{productNo},`so_num`=#{soNum},`inwh_date`=#{inwhDate},`hp_les_id`=#{hpLesId},`count_num`=#{countNum},`kw`=#{kw},`inwh_id`=#{inwhId},`store_place`=#{storePlace},`channel_so_num`=#{channelSoNum},`channel_order_sn`=#{channelOrderSn},`account_ping_no`=#{accountPingNo},`account_so_no`=#{accountSoNo},`outping`=#{outping},`channel_product_code`=#{channelProductCode},`les_product_code`=#{lesProductCode},`tknum`=#{tknum},`bstkd`=#{bstkd},`quantity`=#{quantity},`matkl`=#{matkl},`bwart`=#{bwart},`center_code`=#{centerCode},`hp_check_type`=#{hpCheckType}
+        where `id` = #{id}
+    </update>
+    <!-- 查询只有单件的入库记录 -->
+    <select id="getInDataList" resultMap="invThTransactionResult">
+        select
+        `id`,`corder_sn`,t1.`vbeln_so`,`sku`,`main_sku`,`channel`,`sec_code`,`in_add_time`,`in_status`,`product_no`,`so_num`,`inwh_date`,`hp_les_id`,`count_num`,`kw`,`inwh_id`,`bstkd`,`outping`,`out_time`,`quantity`,`matkl`,`bwart`,`center_code`,`tknum`,`charg`,`bstkd`,`channel_order_sn`,`sub_count`
+        from `inv_th_transaction` t1 left join (select vbeln_so from inv_th_transaction
+        where in_status=5 or out_status=5) t2 on t1.`vbeln_so` = t2.`vbeln_so`
+        where (in_status=1 or in_status=3) and out_status=1
+        and sub_count=1 and channel = #{channel}
+        and t2.`vbeln_so` is null
+        order by `in_add_time`
+    </select>
+    <select id="getInDataMachineSetList" resultMap="invThTransactionResult">
+        select key_product_no, count(*)=sub_count as subReady,sub_count,
+        main_sku,`id`,`corder_sn`,t1.`vbeln_so`,`sku`,`channel`,`sec_code`,`in_add_time`,`in_status`,`product_no`,`so_num`,`inwh_date`,`hp_les_id`,`count_num`,`kw`,`inwh_id`,`bstkd`,`outping`,`out_time`,`quantity`,`matkl`,`bwart`,`center_code`,`tknum`,`charg`,`bstkd`,`channel_order_sn`
+        from `inv_th_transaction` t1 left join (select vbeln_so from inv_th_transaction
+        where in_status=5 or out_status=5) t2 on t1.`vbeln_so` = t2.`vbeln_so`
+        where (in_status=1 or in_status=3) and out_status=1
+        and sub_count>1 and channel = #{channel}
+        and t2.`vbeln_so` is null
+        group by key_product_no order by `in_add_time`
+    </select>
+    <!-- 先查所有, 查询商城数据 -->
+    <select id="getRepairIncompleteList" resultMap="invThTransactionResult">
+        select channel_order_sn from `inv_th_transaction` where repair_status=#{repairStatus} and channel='SHANGCHENG'
+        and in_status >= 1 order by id asc
+    </select>
+    <select id="getOutDataList" resultType="java.util.Map">
+        SELECT t1.vbeln_so , inwh_id, so_num, GROUP_CONCAT(sec_code order by id) sec_code,sum(quantity) quantity,count(id)
+        total,
+        sum(case in_status when 4 then 1 else 0 end) 'sendin', sum(case out_status when 1 or 3 then 1 else 0 end)
+        'sendoutwait',sku,`channel_order_sn`,`id`
+        from inv_th_transaction t1 left join (select vbeln_so from inv_th_transaction
+        where in_status=5 or out_status=5) t2 on t1.`vbeln_so` = t2.`vbeln_so`
+        where
+        out_status!=2 and
+        in_status=4 and
+        channel = #{channel}
+        group by vbeln_so,sku
+    </select>
+    <update id="updateRepairStatus">
+        update `inv_th_transaction` set repair_status=#{repairStatus}, repair_update_time = now(),
+        repair_message=#{message} where channel_order_sn=#{channelOrderSn} and channel='SHANGCHENG'
+    </update>
+    <update id="updateJlRepairStatus">
+        update `inv_th_transaction` set repair_status=#{repairStatus}, repair_update_time = now(),
+        repair_message=#{message} where channel_order_sn=#{channelOrderSn} and channel=#{channel}
+    </update>
+    <update id="updateInStatusByOrderSns" parameterType="java.util.Map">
+        update `inv_th_transaction` set `in_status`=#{params.inStatus}
+        where 1=1 and (sub_count =1 or sub_count is null)
+        <if test="params.corder_sn != null and params.corder_sn.size() &gt; 0">and corder_sn in
+            <foreach collection="params.corder_sn" index="index" item="os" open="(" separator="," close=")">
+                #{os}
+            </foreach>
+        </if>
+        <if test="params.where_in_status != null and params.where_in_status !='' ">
+            and `in_status`=#{params.where_in_status}
+        </if>
+    </update>
+    <update id="updateInStatusByKeyProductNo" parameterType="java.util.Map">
+        update `inv_th_transaction` set `in_status`=#{params.inStatus}
+        where 1=1
+        <if test="params.key_product_no != null and params.key_product_no.size() &gt; 0">and key_product_no in
+            <foreach collection="params.key_product_no" index="index" item="os" open="(" separator="," close=")">
+                #{os}
+            </foreach>
+        </if>
+        <if test="params.where_in_status != null and params.where_in_status !='' ">
+            and `in_status`=#{params.where_in_status}
+        </if>
+    </update>
+    <select id="querySubList" parameterType="java.util.Map" resultMap="invThTransactionResult">
+        select `corder_sn`,`key_product_no` from `inv_th_transaction` where sub_count >1 and sub_count is not null
+        <choose>
+            <when test="params.corder_sn != null and params.corder_sn.size() &gt; 0">
+                and corder_sn in
+                <foreach collection="params.corder_sn" index="index" item="os" open="(" separator="," close=")">
+                    #{os}
+                </foreach>
+            </when>
+            <otherwise>
+                1=0
+            </otherwise>
+        </choose>
+    </select>
+    <update id="updateOutStatusByVbelnSos" parameterType="java.util.Map">
+        update `inv_th_transaction` set `out_status`=#{params.outStatus}
+        where 1=1
+        <if test="params.vbeln_so != null and params.vbeln_so !='' ">
+            and vbeln_so=#{params.vbeln_so}
+        </if>
+        <if test="params.sku != null and params.sku !='' ">
+            and sku=#{params.sku}
+        </if>
+    </update>
+
+    <select id="getMaxTransId" resultMap="invThTransactionResult">
+        select
+        `id`,`corder_sn`,`vbeln_so`,`sku`,`sec_code`,`in_add_time`,`out_time`,`out_add_time`,`in_status`,`out_status`,`charg`,`channel`,`product_no`,`so_num`,`inwh_date`,`hp_les_id`,`count_num`,`kw`,`inwh_id`,`store_place`,`channel_so_num`,`channel_order_sn`,`account_ping_no`,`account_so_no`,`outping`,`channel_product_code`,`les_product_code`,`tknum`,`bstkd`,`quantity`,`matkl`,`bwart`,`center_code`,`hp_check_type`
+        from `inv_th_transaction` order by id desc limit 1
+    </select>
+    <select id="getTrans" parameterType="com.haier.stock.model.InvThTransaction"
+            resultMap="invThTransactionResult">
+        select
+        `id`,`corder_sn`,`vbeln_so`,`sku`,`sec_code`,`in_add_time`,`out_time`,`out_add_time`,`in_status`,`out_status`,`charg`,`channel`,`product_no`,`so_num`,`inwh_date`,`hp_les_id`,`count_num`,`kw`,`inwh_id`,`store_place`,`channel_so_num`,`channel_order_sn`,`account_ping_no`,`account_so_no`,`outping`,`channel_product_code`,`les_product_code`,`tknum`,`bstkd`,`quantity`,`matkl`,`bwart`,`center_code`,`hp_check_type`
+        from `inv_th_transaction`
+        where 1=1
+        <choose>
+            <when test="vbelnSo!=null and vbelnSo !=''">
+                and `vbeln_so`=#{vbelnSo}
+            </when>
+            <when test="productNo !=null and productNo !=''">
+                and `product_no` = #{productNo}
+            </when>
+            <otherwise>
+                and 1=0
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getHpNodesList" parameterType="com.haier.stock.model.InvThTransaction"
+            resultMap="invThTransactionResult">
+        select `id`,`corder_sn`,`vbeln_so`,`sku`,`sec_code`,`in_add_time`,`out_time`,`out_add_time`,`in_status`,
+        `out_status`,`charg`,`channel`,`product_no`,`so_num`,`hp_les_id`,`hp_les_date`,`count_num`,`kw`,`inwh_id`,
+        `inwh_date`,`store_place`,`channel_so_num`,`channel_order_sn`,`account_ping_no`,`account_so_no`,`outping`,
+        `channel_product_code`,`les_product_code`,`tknum`,`bstkd`,`quantity`,`matkl`,`bwart`,`center_code`,`hp_status`
+        ,`hp_check_type`
+        from `inv_th_transaction`
+        where 1=1 and ((hp_status=0 and hp_les_id is not null and hp_les_id !='')
+        or (hp_status=1 and inwh_id is not null and inwh_id !=''))
+        and channel='SHANGCHENG' order by id desc limit 500
+    </select>
+    <update id="updateById" parameterType="com.haier.stock.model.InvThTransaction">
+        update `inv_th_transaction`
+        <trim prefix="set" prefixOverrides=",">
+            <if test="corderSn != null and corderSn !='' ">
+                `corder_sn`=#{corderSn}
+            </if>
+            <if test="vbelnSo != null and vbelnSo !='' ">
+                ,`vbeln_so`=#{vbelnSo}
+            </if>
+            <if test="sku != null and sku !='' ">
+                ,`sku`=#{sku}
+            </if>
+            <if test="secCode != null and secCode !='' ">
+                ,`sec_code`=#{secCode}
+            </if>
+            <if test="inAddTime != null and inAddTime !='' ">
+                ,`in_add_time`=#{inAddTime}
+            </if>
+            <if test="outTime != null and outTime !='' ">
+                ,`out_time`=#{outTime}
+            </if>
+            <if test="outAddTime != null and outAddTime !='' ">
+                ,`out_add_time`=#{outAddTime}
+            </if>
+            <if test="inStatus != null ">
+                ,`in_status`=#{inStatus}
+            </if>
+            <if test="outStatus != null ">
+                ,`out_status`=#{outStatus}
+            </if>
+            <if test="hp_states != null">
+                ,`hp_status`=#{hp_states}
+            </if>
+            <if test="charg != null ">
+                ,`charg`=#{charg}
+            </if>
+            <if test="channel != null and channel !='' ">
+                ,`channel`=#{channel}
+            </if>
+            <if test="productNo != null and productNo !='' ">
+                ,`product_no`=#{productNo}
+            </if>
+            <if test="soNum != null and soNum !='' ">
+                ,`so_num`=#{soNum}
+            </if>
+            <if test="inwhDate != null and inwhDate !='' ">
+                ,`inwh_date`=#{inwhDate}
+            </if>
+            <if test="hpLesId != null and hpLesId !='' ">
+                ,`hp_les_id`=#{hpLesId}
+            </if>
+            <if test="countNum != null ">
+                ,`count_num`=#{countNum}
+            </if>
+            <if test="kw != null and kw !='' ">
+                ,`kw`=#{kw}
+            </if>
+            <if test="inwhId != null and inwhId !='' ">
+                ,`inwh_id`=#{inwhId}
+            </if>
+            <if test="storePlace != null and storePlace !='' ">
+                ,`store_place`=#{storePlace}
+            </if>
+            <if test="channelSoNum != null and channelSoNum !='' ">
+                ,`channel_so_num`=#{channelSoNum}
+            </if>
+            <if test="channelOrderSn != null and channelOrderSn !='' ">
+                ,`channel_order_sn`=#{channelOrderSn}
+            </if>
+            <if test="accountPingNo != null and accountPingNo !='' ">
+                ,`account_ping_no`=#{accountPingNo}
+            </if>
+            <if test="accountSoNo != null and accountSoNo !='' ">
+                ,`account_so_no`=#{accountSoNo}
+            </if>
+            <if test="outping != null and outping !='' ">
+                ,`outping`=#{outping}
+            </if>
+            <if test="channelProductCode != null and channelProductCode !='' ">
+                ,`channel_product_code`=#{channelProductCode}
+            </if>
+            <if test="lesProductCode != null and lesProductCode !='' ">
+                ,`les_product_code`=#{lesProductCode}
+            </if>
+            <if test="tknum != null and tknum !='' ">
+                ,`tknum`=#{tknum}
+            </if>
+            <if test="bstkd != null and bstkd !='' ">
+                ,`bstkd`=#{bstkd}
+            </if>
+            <if test="quantity != null ">
+                ,`quantity`=#{quantity}
+            </if>
+            <if test="matkl != null and matkl !='' ">
+                ,`matkl`=#{matkl}
+            </if>
+            <if test="bwart != null and bwart !='' ">
+                ,`bwart`=#{bwart}
+            </if>
+            <if test="centerCode != null and centerCode !='' ">
+                ,`center_code`=#{centerCode}
+            </if>
+            <if test="mainSku != null and mainSku !=''">
+                ,`main_sku`=#{mainSku}
+            </if>
+            <if test="keyProductNo != null and keyProductNo !=''">
+                ,`key_product_no`=#{keyProductNo}
+            </if>
+            <if test="subCount != null ">
+                ,`sub_count`=#{subCount}
+            </if>
+        	<if test="hpCheckType != null ">
+                ,`hp_check_type`=#{hpCheckType}
+            </if>
+        </trim>
+        where `id`=#{id}
+    </update>
+    
+    <select id="getInvThOrderInDataList" resultMap="invThTransactionResult">
+        select
+        `id`,`corder_sn`,`vbeln_so`,`sku`,`channel`,`sec_code`,`product_no`,`inwh_date`,`hp_les_id`,`inwh_id`,`quantity`,`channel_order_sn`,`hp_check_type`
+        from `inv_th_transaction` 
+        where in_status=1  and out_status=1
+        and channel = #{channel}
+        order by `in_add_time`
+    </select>
+    <select id="getInvThOrderOutDataList" resultMap="invThTransactionResult">
+        select
+        `id`,`corder_sn`,`vbeln_so`,`sku`,`channel`,`sec_code`,`product_no`,`inwh_date`,`hp_les_id`,`inwh_id`,`quantity`,`channel_order_sn`,`hp_check_type`
+        from `inv_th_transaction` 
+        where
+        out_status!=2 and
+        in_status=4 and
+        channel = #{channel}
+        order by `in_add_time`
+    </select>
+    <select id="queryInvThOrderRepairCloseData" resultMap="invThTransactionResult">
+        select channel_order_sn,`hp_les_id`,`inwh_id`,`inwh_date` from `inv_th_transaction` where repair_status=#{repairStatus} and channel=#{channel}
+        and in_status >= 1 order by id asc
+    </select>
+    <select id="getInvThTransactionByProductNoAndChannelSn" parameterType="Integer" resultMap="invThTransactionResult">
+        select
+        `id`,`corder_sn`,`vbeln_so`,`sku`,`main_sku`,`sec_code`,`in_add_time`,`out_time`,`out_add_time`,`in_status`,`out_status`,`charg`,`channel`,`product_no`,`so_num`,`inwh_date`,`hp_les_id`,`count_num`,`kw`,`inwh_id`,`store_place`,`channel_so_num`,`channel_order_sn`,`account_ping_no`,`account_so_no`,`outping`,`channel_product_code`,`les_product_code`,`tknum`,`bstkd`,`quantity`,`matkl`,`bwart`,`center_code`,`sub_count`,`hp_check_type`
+        from `inv_th_transaction`
+        where product_no = #{productNo} and channel_order_sn = #{channelOrderSn}
+    </select>
+</mapper>

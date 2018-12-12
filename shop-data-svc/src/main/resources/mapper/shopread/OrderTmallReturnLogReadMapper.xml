@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.OrderTmallReturnLogsReadDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.OrderTmallReturnLogs" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="source_Order_Sn" property="sourceOrderSn" jdbcType="VARCHAR" />
+    <result column="SKU" property="sku" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="VARCHAR" />
+    <result column="refund_Fee" property="refundFee" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="add_Time" property="addTime" jdbcType="INTEGER" />
+    <result column="Handle_count" property="handleCount" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, source_Order_Sn, SKU, reason, description, count, refund_Fee, source, status, 
+    add_Time, Handle_count
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from OrderTmallReturnLogs
+    WHERE
+	STATUS = '1'
+  </select>
+</mapper>

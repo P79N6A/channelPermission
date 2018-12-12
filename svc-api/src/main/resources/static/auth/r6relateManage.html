@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <link rel="stylesheet" href="../static/css/staticHtml.css">
+    <title>R码6码对照管理</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_dataDictionary" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_r6relateManage"></table>
+</div>
+
+<div id="datagridToolbar_r6relateManage">
+    <form id="paramForm_dataDictionary" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">
+                  商城SKU(6码)
+                </span>
+                <input class="easyui-textbox" name="shopSku"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  外部SKU(R码)
+                </span>
+                <input class="easyui-textbox" name="externalSku"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_r6relateManage"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_r6relateManage"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_r6relateManage"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="export-r6relateManage"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+        <!--<a href="#" class="easyui-linkbutton" id="export-r6relateManage"
+           data-options="iconCls:'icon-export',plain:true">导出</a>-->
+        <!--<a href="#" class="easyui-linkbutton" id="editBtny_dataDictionar" data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_r6relateManage"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>-->
+    </form>
+</div>
+<div id="addDlg_r6relateManage" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:300px;"
+         closed="true" buttons="#dlg-buttons_dataDictionary">
+    <form id="addForm_r6relateManage" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>商城SKU:</label>
+            <input class="easyui-textbox" name="shopSku" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>外部SKU:</label>
+            <input class="easyui-textbox" name="externalSku" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>状态:</label>
+            <input class="easyui-textbox" name="status" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>外部系统:</label>
+            <input class="easyui-textbox" name="externalSystem" required="true"/>
+        </div>
+
+
+    </form>
+    <div id="dlg-buttons_dataDictionary">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_r6relateManage" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_r6relateManage').dialog('close')">取消</a>
+    </div>
+</div>
+
+<script src="../static/js/auth/r6relateManage.js"></script>
+</body>
+</html>

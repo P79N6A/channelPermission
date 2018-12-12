@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.purchase.data.dao.purchase.ProductLimitGateDao">
+	<resultMap id="productLimitGateResultMap"
+		type="com.haier.purchase.data.model.ProductLimitGate">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="channel_code" property="channel_code" jdbcType="VARCHAR" />
+		<result column="group_type" property="group_type" jdbcType="VARCHAR" />
+		<result column="product_type" property="product_type" jdbcType="VARCHAR" />
+		<result column="model_type" property="model_type" jdbcType="VARCHAR" />
+		<result column="type" property="type" />
+		<result column="order_num" property="order_num" jdbcType="INTEGER" />
+		<result column="start_time" property="start_time" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="create_user" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="update_user" property="update_user" jdbcType="VARCHAR" />
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="findProductLimitGate">
+		channel_code in
+		<foreach collection="channel_codeList" item="channel_code"
+			index="cindex" open="(" separator="," close=")">
+			#{channel_code}
+		</foreach>
+		<if test="model_type == null or model_type ==''">
+			<if test="group_type == null or group_type ==''">
+				<if test="product_type == null or product_type ==''">
+					AND( 1=1
+					AND model_type is not null
+					<if test="product_groupList !=null and product_groupList !=''">
+						OR group_type in
+						<foreach collection="product_groupList" item="product_group"
+							index="gindex" open="(" separator="," close=")">
+							#{product_group}
+						</foreach>
+					</if>
+					<if test="cbs_catgoryList !=null and cbs_catgoryList !=''">
+						OR product_type in
+						<foreach collection="cbs_catgoryList" item="cbs_catgory"
+							index="pndex" open="(" separator="," close=")">
+							#{cbs_catgory}
+						</foreach>
+					</if>
+					)
+				</if>
+			</if>
+		</if>
+		<if test="group_type != null and group_type !=''">
+			AND group_type = #{group_type,jdbcType=VARCHAR}
+		</if>
+		<if test="product_type != null and product_type !=''">
+			AND product_type = #{product_type,jdbcType=VARCHAR}
+		</if>
+		<if test="model_type != null and model_type !=''">
+			AND model_type like '%${model_type}%'
+		</if>
+		<if test="type != null and type !=''">
+			AND type = #{type}
+		</if>
+		AND delete_flag=0
+	</sql>
+	
+	<select id="getProductLimitGateList" resultMap="productLimitGateResultMap"
+		parameterType="java.util.Map">
+		select
+		id, channel_code, group_type, product_type, model_type,
+		type,
+		order_num,
+		start_time,
+		end_time, create_user, create_time,
+		update_user,
+		update_time
+		from product_limit_gate_t
+		where
+		<include refid="findProductLimitGate" />
+		<if test="currentDate !=null">
+		<![CDATA[and #{currentDate} >  start_time  ]]>
+		<![CDATA[and #{currentDate} <  end_time  ]]>
+		</if>
+	</select>
+	
+</mapper>

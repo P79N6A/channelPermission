@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.OrderProductsDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.PopOrderProducts" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="siteId" property="siteId" jdbcType="INTEGER" />
+    <result column="isTest" property="isTest" jdbcType="BIT" />
+    <result column="hasRead" property="hasRead" jdbcType="BIT" />
+    <result column="supportOneDayLimit" property="supportOneDayLimit" jdbcType="BIT" />
+    <result column="orderId" property="orderId" jdbcType="INTEGER" />
+    <result column="cOrderSn" property="cOrderSn" jdbcType="VARCHAR" />
+    <result column="isBook" property="isBook" jdbcType="BIT" />
+    <result column="cPaymentStatus" property="cPaymentStatus" jdbcType="SMALLINT" />
+    <result column="cPayTime" property="cPayTime" jdbcType="INTEGER" />
+    <result column="productType" property="productType" jdbcType="INTEGER" />
+    <result column="productId" property="productId" jdbcType="INTEGER" />
+    <result column="productName" property="productName" jdbcType="VARCHAR" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="number" property="number" jdbcType="SMALLINT" />
+    <result column="lockedNumber" property="lockedNumber" jdbcType="INTEGER" />
+    <result column="unlockedNumber" property="unlockedNumber" jdbcType="INTEGER" />
+    <result column="productAmount" property="productAmount" jdbcType="DECIMAL" />
+    <result column="balanceAmount" property="balanceAmount" jdbcType="DECIMAL" />
+    <result column="couponAmount" property="couponAmount" jdbcType="DECIMAL" />
+    <result column="esAmount" property="esAmount" jdbcType="DECIMAL" />
+    <result column="giftCardNumberId" property="giftCardNumberId" jdbcType="INTEGER" />
+    <result column="usedGiftCardAmount" property="usedGiftCardAmount" jdbcType="DECIMAL" />
+    <result column="couponLogId" property="couponLogId" jdbcType="INTEGER" />
+    <result column="activityPrice" property="activityPrice" jdbcType="DECIMAL" />
+    <result column="activityId" property="activityId" jdbcType="INTEGER" />
+    <result column="cateId" property="cateId" jdbcType="INTEGER" />
+    <result column="brandId" property="brandId" jdbcType="INTEGER" />
+    <result column="netPointId" property="netPointId" jdbcType="INTEGER" />
+    <result column="shippingFee" property="shippingFee" jdbcType="DECIMAL" />
+    <result column="settlementStatus" property="settlementStatus" jdbcType="BIT" />
+    <result column="receiptOrRejectTime" property="receiptOrRejectTime" jdbcType="INTEGER" />
+    <result column="isWmsSku" property="isWmsSku" jdbcType="BIT" />
+    <result column="sCode" property="sCode" jdbcType="VARCHAR" />
+    <result column="tsCode" property="tsCode" jdbcType="VARCHAR" />
+    <result column="tsShippingTime" property="tsShippingTime" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="productSn" property="productSn" jdbcType="VARCHAR" />
+    <result column="invoiceNumber" property="invoiceNumber" jdbcType="VARCHAR" />
+    <result column="expressName" property="expressName" jdbcType="VARCHAR" />
+    <result column="invoiceExpressNumber" property="invoiceExpressNumber" jdbcType="VARCHAR" />
+    <result column="postMan" property="postMan" jdbcType="VARCHAR" />
+    <result column="postManPhone" property="postManPhone" jdbcType="VARCHAR" />
+    <result column="isNotice" property="isNotice" jdbcType="SMALLINT" />
+    <result column="noticeType" property="noticeType" jdbcType="SMALLINT" />
+    <result column="noticeRemark" property="noticeRemark" jdbcType="VARCHAR" />
+    <result column="noticeTime" property="noticeTime" jdbcType="VARCHAR" />
+    <result column="shippingTime" property="shippingTime" jdbcType="INTEGER" />
+    <result column="lessOrderSn" property="lessOrderSn" jdbcType="VARCHAR" />
+    <result column="waitGetLesShippingInfo" property="waitGetLesShippingInfo" jdbcType="BIT" />
+    <result column="getLesShippingCount" property="getLesShippingCount" jdbcType="INTEGER" />
+    <result column="outping" property="outping" jdbcType="VARCHAR" />
+    <result column="lessShipTime" property="lessShipTime" jdbcType="INTEGER" />
+    <result column="closeTime" property="closeTime" jdbcType="INTEGER" />
+    <result column="isReceipt" property="isReceipt" jdbcType="INTEGER" />
+    <result column="isMakeReceipt" property="isMakeReceipt" jdbcType="INTEGER" />
+    <result column="receiptAddTime" property="receiptAddTime" jdbcType="VARCHAR" />
+    <result column="makeReceiptType" property="makeReceiptType" jdbcType="TINYINT" />
+    <result column="shippingMode" property="shippingMode" jdbcType="VARCHAR" />
+    <result column="lastTimeForShippingMode" property="lastTimeForShippingMode" jdbcType="INTEGER" />
+    <result column="lastEditorForShippingMode" property="lastEditorForShippingMode" jdbcType="VARCHAR" />
+    <result column="tongshuaiWorkId" property="tongshuaiWorkId" jdbcType="INTEGER" />
+    <result column="orderPromotionId" property="orderPromotionId" jdbcType="INTEGER" />
+    <result column="orderPromotionAmount" property="orderPromotionAmount" jdbcType="DECIMAL" />
+    <result column="externalSaleSettingId" property="externalSaleSettingId" jdbcType="INTEGER" />
+    <result column="recommendationId" property="recommendationId" jdbcType="INTEGER" />
+    <result column="hasSendAlertNum" property="hasSendAlertNum" jdbcType="BIT" />
+    <result column="isNoLimitStockProduct" property="isNoLimitStockProduct" jdbcType="BIT" />
+    <result column="hpRegisterDate" property="hpRegisterDate" jdbcType="INTEGER" />
+    <result column="hpFailDate" property="hpFailDate" jdbcType="INTEGER" />
+    <result column="hpFinishDate" property="hpFinishDate" jdbcType="INTEGER" />
+    <result column="hpReservationDate" property="hpReservationDate" jdbcType="INTEGER" />
+    <result column="shippingOpporunity" property="shippingOpporunity" jdbcType="TINYINT" />
+    <result column="isTimeoutFree" property="isTimeoutFree" jdbcType="TINYINT" />
+    <result column="itemShareAmount" property="itemShareAmount" jdbcType="DECIMAL" />
+    <result column="lessShipTInTime" property="lessShipTInTime" jdbcType="INTEGER" />
+    <result column="lessShipTOutTime" property="lessShipTOutTime" jdbcType="INTEGER" />
+    <result column="cbsSecCode" property="cbsSecCode" jdbcType="VARCHAR" />
+    <result column="points" property="points" jdbcType="INTEGER" />
+    <result column="modified" property="modified" jdbcType="TIMESTAMP" />
+    <result column="splitFlag" property="splitFlag" jdbcType="TINYINT" />
+    <result column="splitRelateCOrderSn" property="splitRelateCOrderSn" jdbcType="VARCHAR" />
+    <result column="channelId" property="channelId" jdbcType="TINYINT" />
+    <result column="activityId2" property="activityId2" jdbcType="INTEGER" />
+    <result column="pdOrderStatus" property="pdOrderStatus" jdbcType="INTEGER" />
+    <result column="omsOrderSn" property="omsOrderSn" jdbcType="VARCHAR" />
+    <result column="couponCode" property="couponCode" jdbcType="VARCHAR" />
+    <result column="couponCodeValue" property="couponCodeValue" jdbcType="DECIMAL" />
+    <result column="jfbAmoun" property="jfbAmoun" jdbcType="DECIMAL" />
+    <result column="djAmount" property="djAmount" jdbcType="DECIMAL" />
+    <result column="hbAmount" property="hbAmount" jdbcType="DECIMAL" />
+    <result column="storeId" property="storeId" jdbcType="INTEGER" />
+    <result column="storeType" property="storeType" jdbcType="TINYINT" />
+    <result column="stockType" property="stockType" jdbcType="VARCHAR" />
+    <result column="o2oType" property="o2oType" jdbcType="TINYINT" />
+    <result column="brokerageType" property="brokerageType" jdbcType="VARCHAR" />
+    <result column="oid" property="oid" jdbcType="VARCHAR" />
+  	<result column="receiptNum" property="receiptNum" jdbcType="LONGVARCHAR" />
+    <result column="systemRemark" property="systemRemark" jdbcType="LONGVARCHAR" /> 
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, siteId, isTest, hasRead, supportOneDayLimit, orderId, cOrderSn, isBook, cPaymentStatus, 
+    cPayTime, productType, productId, productName, sku, price, number, lockedNumber, 
+    unlockedNumber, productAmount, balanceAmount, couponAmount, esAmount, giftCardNumberId, 
+    usedGiftCardAmount, couponLogId, activityPrice, activityId, cateId, brandId, netPointId, 
+    shippingFee, settlementStatus, receiptOrRejectTime, isWmsSku, sCode, tsCode, tsShippingTime, 
+    status, productSn, invoiceNumber, expressName, invoiceExpressNumber, postMan, postManPhone, 
+    isNotice, noticeType, noticeRemark, noticeTime, shippingTime, lessOrderSn, waitGetLesShippingInfo, 
+    getLesShippingCount, outping, lessShipTime, closeTime, isReceipt, isMakeReceipt, 
+    receiptAddTime, makeReceiptType, shippingMode, lastTimeForShippingMode, lastEditorForShippingMode, 
+    tongshuaiWorkId, orderPromotionId, orderPromotionAmount, externalSaleSettingId, recommendationId, 
+    hasSendAlertNum, isNoLimitStockProduct, hpRegisterDate, hpFailDate, hpFinishDate, 
+    hpReservationDate, shippingOpporunity, isTimeoutFree, itemShareAmount, lessShipTInTime, 
+    lessShipTOutTime, cbsSecCode, points, modified, splitFlag, splitRelateCOrderSn, channelId, 
+    activityId2, pdOrderStatus, omsOrderSn, couponCode, couponCodeValue, jfbAmoun, djAmount, 
+    hbAmount, storeId, storeType, stockType, o2oType, brokerageType, oid
+  </sql>
+
+  <sql id="Blob_Column_List" >
+    receiptNum, systemRemark
+  </sql>
+  <!-- 查询条件 -->
+	<sql id="where_fragement">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id = #{entity.id} ]]>
+			</if>
+			<if test="entity.cOrderSn != null and entity.cOrderSn !='' ">
+                <![CDATA[ and op.cOrderSn LIKE CONCAT('%', #{entity.cOrderSn} ,'%') ]]>
+			</if>
+			<if test="entity.orderSn != null and entity.orderSn !='' ">
+                <![CDATA[ and o.orderSn LIKE CONCAT('%', #{entity.orderSn} ,'%') ]]>
+			</if>
+			<if test="entity.productName != null and entity.productName !='' ">
+                <![CDATA[ and op.productName LIKE CONCAT('%', #{entity.productName} ,'%') ]]>
+			</if>
+			<if test="entity.sku != null and entity.sku !='' ">
+                <![CDATA[ and op.sku LIKE CONCAT('%', #{entity.sku} ,'%') ]]>
+			</if>	
+			<if test="entity.cPayTimeAdd != null and entity.cPayTimeAdd !='' ">
+                <![CDATA[ and op.cPayTime >= #{entity.cPayTimeAdd} ]]>
+			</if>
+			<if test="entity.cPayTimeEnd != null and entity.cPayTimeEnd !='' ">
+                <![CDATA[ and op.cPayTime <= #{entity.cPayTimeEnd} ]]>
+			</if>
+			<if test="entity.orderStatus != null and entity.orderStatus !='' ">
+                <![CDATA[ and o.orderStatus = #{entity.orderStatus} ]]>
+			</if>
+		</if>
+	</sql>
+	<!-- 查询page -->
+	<select id="getPageByCondition" resultMap="BaseResultMap">
+		select
+		op.*,o.*,pc.cateName as typeName,t.channelName,b.brandName
+		from t_order_products op LEFT JOIN t_orders o on op.orderId = o.id left join
+		ProductCates pc on op.cateId = pc.id
+		LEFT JOIN t_channels_info t on o.source = t.channelCode
+		LEFT JOIN Brands b on op.brandId = b.id 
+		<include refid="where_fragement" />order by op.cPayTime desc
+		<include refid="pagination" />
+	</select>
+	<select id="exportOrderProductsList" resultMap="BaseResultMap">
+		select
+		op.*,o.*,pc.cateName as typeName,t.channelName,b.brandName
+		from t_order_products op LEFT JOIN t_orders o on op.orderId = o.id left join
+		ProductCates pc on op.cateId = pc.id
+		LEFT JOIN t_channels_info t on o.source = t.channelCode
+		LEFT JOIN Brands b on op.brandId = b.id 
+		<include refid="where_fragement" />
+	</select>
+	<!--分页count -->
+	<select id="getPagerCount" resultType="long" parameterType="com.haier.distribute.data.model.PopOrderProducts">
+		select count(1) from t_order_products op LEFT JOIN t_orders o on op.orderId = o.id
+		<include refid="where_fragement" />
+	</select>
+ 
+  <select id="commodityList" resultMap="BaseResultMap">
+	SELECT op.*,pc.cateName as typeName,b.brandName from t_order_products op 
+	left join ProductCates pc on op.cateId = pc.id 
+	LEFT JOIN Brands b on op.brandId = b.id 
+	
+	WHERE op.orderId = #{orderId}
+	</select>
+	<!-- 修改订单状态 -->
+	<update id="orderOpertion">
+	UPDATE t_order_products SET status=#{orderStatus} where id=#{Id};
+	</update>
+	<update id="orderOpertionToSure">
+	UPDATE t_order_products SET status=#{orderStatus},oid=#{oId} where id=#{Id};
+	</update>
+	<select id="checkStatus" resultMap="BaseResultMap">
+	select DISTINCT(status) from t_order_products WHERE
+	orderId = (SELECT orderId FROM t_order_products where id = #{id})
+</select>
+<!-- 查询list -->
+<sql id="where_fragement_op">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.cOrderSn != null and entity.cOrderSn !='' ">
+               and cOrderSn = #{entity.cOrderSn}
+			</if>			
+		</if>
+	</sql>
+	<select id="listByCondition" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_order_products
+		<include refid="where_fragement_op" />
+	</select>
+	<select id="getOneByOrderSn" resultMap="BaseResultMap">
+	select top.*,o.source,o.sellPeople,o.consignee,o.sourceOrderSn from
+	t_order_products top left join t_orders o on top.orderId = o.id left
+	join
+	t_channels_info tci on o.source = tci.channelCode
+	where cOrderSn = #{cOrderSn} and tci.channelCode = 'PX'
+	</select>
+	
+	<!-- 查询 季度结算 -->
+	<select id="commission_product_invoice" resultMap="BaseResultMap">
+	select t.ordersn as col01,p.cOrderSn,pc.departmentName as col04,p.cateId,
+	 from_unixtime(t.firstConfirmTime, '%Y-%m-%d %H:%i:%s') as col02 ,
+	p.sku,p.productName,pc.productTypeId as col14,b.brandName as col05 ,
+	 <if test="channelType == '1'.toString()">
+        <![CDATA[ d.distributionName as col06,]]>
+      </if>
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ c.channelName as col06,]]>
+      </if>
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-03-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col07,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-04-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-06-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col08,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-07-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-09-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col09,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-10-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-12-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col10,
+
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-12-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col11,
+	p.brandId,c.id as col12,
+	p.productType as col13
+	from t_order_products p 
+	left  join t_department_product_type pc on p.productType = pc.productTypeId 
+	left  JOIN t_orders t on p.orderId=t.id 
+	left  JOIN Brands b on b.id=p.brandId
+	left JOIN t_sale_product t1 ON p.sku=t1.sku
+	left JOIN t_sale_product_price t2 on t1.id=t2.saleId
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ LEFT JOIN t_channels_info c ON   t.source=c.channelCode ]]>
+      </if>
+	<if test="channelType == '1'.toString() ">
+	LEFT JOIN t_channels_info c ON   t.source=c.channelCode
+	LEFT JOIN t_distribution_info d  on 
+	d.id  in(select distributionId from t_distribution_channel  where channelId=c.id)
+	RIGHT JOIN (select i.channelCode from t_distribution_channel d
+	 RIGHT JOIN t_channels_info i on d.channelId= i.id and d.id=d.distributionId
+	<if test=" channelId != 0">
+	and d.distributionId=#{channelId,jdbcType=INTEGER}
+	</if>
+	 ) new 
+    on t.source = new.channelCode
+    </if>
+	where t.orderStatus='203' 
+	and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00')
+	<if test="channelType == 2  and channelId != 0">
+	 and c.id =#{channelId,jdbcType=INTEGER} 
+	 </if>
+	  
+
+	 <if test="brandId  != 0">
+	 and p.brandId =#{brandId,jdbcType=INTEGER} 
+	 </if>
+			<if test="categoryId != ''">
+              and pc.productTypeId in(select productTypeId from t_department_product_type where departmentCode=#{categoryId,jdbcType=VARCHAR})
+			</if>			
+		
+	
+	<if test="channelType == '2'.toString() ">
+	GROUP BY pc.departmentName,b.brandName, c.channelName
+	</if>
+	</select>
+	<!-- 查询 月度单票体现 网单结算佣金 -->
+	<select id="commission_product_invoice2" resultMap="BaseResultMap">
+	select t.ordersn as col01,p.cOrderSn,pc.departmentName as col04,p.cateId,
+	 from_unixtime(t.firstConfirmTime, '%Y-%m-%d %H:%i:%s') as col02 ,
+	p.sku,p.productName,pc.productTypeId as col14,b.brandName as col05 ,
+	 <if test="channelType == '1'.toString()">
+        <![CDATA[ d.distributionName as col06,]]>
+      </if>
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ c.channelName as col06,]]>
+      </if>
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-01-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col07,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-02-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-02-28 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col08,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-03-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-03-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col09,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-04-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-04-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col10,
+    
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-12-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col11,
+    
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-05-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-05-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col14,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-06-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-06-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col15,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-07-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-07-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col16,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-08-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-08-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col17,
+
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-09-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-09-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col18,
+    
+    ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-10-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-10-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col19,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-11-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-11-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col20,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-12-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-12-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col21,
+	
+	p.brandId,c.id as col12,
+	p.productType as col13
+	from t_order_products p 
+	left  join t_department_product_type pc on p.productType = pc.productTypeId 
+	left  JOIN t_orders t on p.orderId=t.id 
+	left  JOIN Brands b on b.id=p.brandId
+	left JOIN t_sale_product t1 ON p.sku=t1.sku
+	left JOIN t_sale_product_price t2 on t1.id=t2.saleId
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ LEFT JOIN t_channels_info c ON   t.source=c.channelCode ]]>
+      </if>
+	<if test="channelType == '1'.toString() ">
+	LEFT JOIN t_channels_info c ON   t.source=c.channelCode
+	LEFT JOIN t_distribution_info d  on 
+	d.id  in(select distributionId from t_distribution_channel  where channelId=c.id)
+	RIGHT JOIN (select i.channelCode from t_distribution_channel d
+	 RIGHT JOIN t_channels_info i on d.channelId= i.id and d.id=d.distributionId
+	<if test=" channelId != 0">
+	and d.distributionId=#{channelId,jdbcType=INTEGER}
+	</if>
+	 ) new 
+    on t.source = new.channelCode
+    </if>
+	where t.orderStatus='203' 
+	and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00')
+	<if test="channelType == 2  and channelId != 0">
+	 and c.id =#{channelId,jdbcType=INTEGER} 
+	 </if>
+	  
+
+	 <if test="brandId  != 0">
+	 and p.brandId =#{brandId,jdbcType=INTEGER} 
+	 </if>
+			<if test="categoryId != ''">
+              and pc.productTypeId in(select productTypeId from t_department_product_type where departmentCode=#{categoryId,jdbcType=VARCHAR})
+			</if>			
+		
+	
+	<if test="channelType == '2'.toString() ">
+	GROUP BY pc.departmentName,b.brandName, c.channelName
+	</if>
+	<if test="channelType == '1'.toString() ">
+	GROUP BY col06
+	</if>
+	
+	</select>
+	<!-- 月度导出 -->
+	<select id="commission_product_invoice3" resultMap="BaseResultMap">
+	select t.ordersn as col01,p.cOrderSn,pc.departmentName as col04,p.cateId,
+	 from_unixtime(t.firstConfirmTime, '%Y-%m-%d %H:%i:%s') as col02 ,
+	p.sku,p.productName,pc.productTypeId as col14,b.brandName as col05 ,
+	 <if test="channelType == '1'.toString()">
+        <![CDATA[ d.distributionName as col06,]]>
+      </if>
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ c.channelName as col06,]]>
+      </if>
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-01-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col07,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-02-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-02-28 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col08,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-03-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-03-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col09,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-04-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-04-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col10,
+    
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-12-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col11,
+    
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-05-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-05-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col14,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-06-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-06-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col15,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-07-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-07-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col16,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-08-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-08-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col17,
+
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-09-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-09-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col18,
+    
+    ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-10-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-10-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col19,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-11-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-11-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col20,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-12-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-12-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col21,
+	
+	p.brandId,c.id as col12,
+	p.productType as col13
+	from t_order_products p 
+	left  join t_department_product_type pc on p.productType = pc.productTypeId 
+	left  JOIN t_orders t on p.orderId=t.id 
+	left  JOIN Brands b on b.id=p.brandId
+	left JOIN t_sale_product t1 ON p.sku=t1.sku
+	left JOIN t_sale_product_price t2 on t1.id=t2.saleId
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ LEFT JOIN t_channels_info c ON   t.source=c.channelCode ]]>
+      </if>
+	<if test="channelType == '1'.toString() ">
+	LEFT JOIN t_channels_info c ON   t.source=c.channelCode
+	LEFT JOIN t_distribution_info d  on 
+	d.id  in(select distributionId from t_distribution_channel  where channelId=c.id)
+	RIGHT JOIN (select i.channelCode from t_distribution_channel d
+	 RIGHT JOIN t_channels_info i on d.channelId= i.id and d.id=d.distributionId
+	<if test=" channelId != 0">
+	and d.distributionId=#{channelId,jdbcType=INTEGER}
+	</if>
+	 ) new 
+    on t.source = new.channelCode
+    </if>
+	where t.orderStatus='203' 
+	and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00')
+	<if test="channelType == 2  and channelId != 0">
+	 and c.id =#{channelId,jdbcType=INTEGER} 
+	 </if>
+	  
+
+	 <if test="brandId  != 0">
+	 and p.brandId =#{brandId,jdbcType=INTEGER} 
+	 </if>
+			<if test="categoryId != ''">
+              and pc.productTypeId in(select productTypeId from t_department_product_type where departmentCode=#{categoryId,jdbcType=VARCHAR})
+			</if>			
+		
+	
+	<if test="channelType == '2'.toString() ">
+	GROUP BY pc.departmentName,b.brandName, c.channelName
+	</if>
+	<if test="channelType == '1'.toString() ">
+	GROUP BY col06
+	</if>
+	
+	</select>
+	
+	 <select id="checkOid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_orders where oid=#{oid}
+        <if test="orderSn != null and orderSn !='' ">
+            and orderSn != #{orderSn}
+        </if>
+    </select>
+	<!-- 结算导出 -->
+	<select id="commission_product_invoice1" resultMap="BaseResultMap">
+	select t.ordersn as col01,p.cOrderSn,pc.departmentName as col04,p.cateId,
+	 from_unixtime(t.firstConfirmTime, '%Y-%m-%d %H:%i:%s') as col02 ,
+	p.sku,p.productName,pc.productTypeId as col14,b.brandName as col05 ,
+	 <if test="channelType == '1'.toString()">
+        <![CDATA[ d.distributionName as col06,]]>
+      </if>
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ c.channelName as col06,]]>
+      </if>
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-03-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col07,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-04-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-06-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col08,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-07-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-09-30 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col09,
+	
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-10-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-12-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col10,
+
+	ifnull(sum((select tt.supplyprice from t_sale_product_price tt where FROM_UNIXTIME(t.firstConfirmTime) BETWEEN str_to_date(
+        t2.priceStartTime,'%Y-%m-%d%H:%i:%s')AND str_to_date( t2.priceEndTime,'%Y-%m-%d%H:%i:%s') and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00') and t.firstConfirmTime &lt;= unix_timestamp('${policyYear}-12-31 23:59:59')
+    and tt.saleId=t1.id  and p.sku=t1.sku GROUP BY p.sku)* p.number),0)as col11,
+	p.brandId,c.id as col12,
+	p.productType as col13
+	from t_order_products p 
+	left  join t_department_product_type pc on p.productType = pc.productTypeId 
+	left  JOIN t_orders t on p.orderId=t.id 
+	left  JOIN Brands b on b.id=p.brandId
+	left JOIN t_sale_product t1 ON p.sku=t1.sku
+	left JOIN t_sale_product_price t2 on t1.id=t2.saleId
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ LEFT JOIN t_channels_info c ON   t.source=c.channelCode ]]>
+      </if>
+	<if test="channelType == '1'.toString() ">
+	LEFT JOIN t_channels_info c ON   t.source=c.channelCode
+	LEFT JOIN t_distribution_info d  on 
+	d.id  in(select distributionId from t_distribution_channel  where channelId=c.id)
+	RIGHT JOIN (select i.channelCode from t_distribution_channel d
+	 RIGHT JOIN t_channels_info i on d.channelId= i.id and d.id=d.distributionId
+	<if test=" channelId != 0">
+	and d.distributionId=#{channelId,jdbcType=INTEGER}
+	</if>
+	 ) new 
+    on t.source = new.channelCode
+    </if>
+	where t.orderStatus='203' 
+	and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00')
+	<if test="channelType == 2  and channelId != 0">
+	 and c.id =#{channelId,jdbcType=INTEGER} 
+	 </if>
+	  
+
+	 <if test="brandId  != 0">
+	 and p.brandId =#{brandId,jdbcType=INTEGER} 
+	 </if>
+			<if test="categoryId != ''">
+              and pc.productTypeId in(select productTypeId from t_department_product_type where departmentCode=#{categoryId,jdbcType=VARCHAR})
+			</if>			
+		
+	
+	<if test="channelType == '2'.toString() ">
+	GROUP BY pc.departmentName,b.brandName, c.channelName
+	</if>
+	<if test="channelType == '1'.toString() ">
+	GROUP BY col06
+	</if>
+	</select>
+	<select id="getPagerCountS" resultType="int">
+		select count(1) from (select count(t.id)
+	
+	from t_order_products p 
+	left  join t_department_product_type pc on p.productType = pc.productTypeId 
+	left  JOIN t_orders t on p.orderId=t.id 
+	left  JOIN Brands b on b.id=p.brandId
+	
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ LEFT JOIN t_channels_info c ON   t.source=c.channelCode ]]>
+      </if>
+	<if test="channelType == '1'.toString() ">
+	LEFT JOIN t_channels_info c ON   t.source=c.channelCode
+	LEFT JOIN t_distribution_info d  on 
+	d.id  in(select distributionId from t_distribution_channel  where channelId=c.id)
+	RIGHT JOIN (select i.channelCode from t_distribution_channel d 
+	RIGHT JOIN t_channels_info i on d.channelId= i.id 
+	<if test=" channelId != 0">
+	and d.distributionId=#{channelId,jdbcType=INTEGER}
+	</if>
+	 ) new 
+    on t.source = new.channelCode
+    </if>
+	where t.orderStatus='203' 
+	and t.firstConfirmTime >= unix_timestamp('${policyYear}-01-01 00:00:00')
+	<if test="channelType == 2  and channelId != 0">
+	 and c.id =#{channelId,jdbcType=INTEGER} 
+	 </if>
+	  
+
+	 <if test="brandId  != 0">
+	 and p.brandId =#{brandId,jdbcType=INTEGER} 
+	 </if>
+			<if test="categoryId != ''">
+              and pc.productTypeId in(select productTypeId from t_department_product_type where departmentCode=#{categoryId,jdbcType=VARCHAR})
+			</if>			
+	
+<if test="channelType == '2'.toString() ">
+	GROUP BY pc.departmentName,b.brandName, c.channelName
+	</if>
+	<if test="channelType == '1'.toString() ">
+	GROUP BY col06
+	</if>
+	</select>
+  <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+    <update id="updateHPAllotNetPoint" parameterType="com.haier.distribute.data.model.PopOrderProducts">
+        update `t_order_products`
+        <set>
+            <if test="netPointId != null">
+                `netPointId`=#{netPointId},
+            </if>
+            <if test="status != null">
+                `status`=#{status},
+            </if>
+            <if test="hpRegisterDate != null">
+                `hpRegisterDate` = #{hpRegisterDate},
+            </if>
+            <if test="hpFailDate != null">
+                `hpFailDate` = #{hpFailDate},
+            </if>
+            <if test="hpFinishDate != null">
+                `hpFinishDate` = #{hpFinishDate},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+</mapper>

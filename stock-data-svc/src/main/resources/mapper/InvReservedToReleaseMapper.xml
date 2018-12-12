@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvReservedToReleaseDao">
+	<resultMap id="result" type="com.haier.stock.model.QueryTotalData">
+		<result property="id" column="id" />
+		<result property="channelCode" column="channel_code" />
+		<result property="lockHours" column="lock_hours" />
+		<result property="status" column="status" />
+		<result property="updateTime" column="update_time" />
+		<result property="allowUpdate" column="allow_update" />
+		<result property="ref" column="ref" />
+	</resultMap>
+	<select id="getReservedConfig" parameterType="com.haier.stock.model.InvReservedConfig" resultType="com.haier.stock.model.InvReservedConfig">
+			select id, channel_code channelCode, lock_hours lockHours, status, update_time updateTime,ref,allow_update allowUpdate from inv_reserved_config where 1=1
+			<if test="status != null">
+				and status = #{status}
+			</if>
+			<if test="id!=null and id!=''">
+				and id=#{id}
+			</if>
+			<if test="channelCode!=null and channelCode!=''">
+				and channel_code=#{channelCode}
+			</if>
+			<if test="ref!=null and ref!=''">
+				and ref=#{ref}
+			</if>
+		</select>
+		
+		<insert id="insertReserved">
+			insert into inv_reserved_to_release(batch_id, create_time, release_time, status) values(#{batchId}, now(), #{releaseTime}, 0)
+		</insert>
+		
+		<update id="updateReserved" parameterType="com.haier.stock.model.InvReservedConfig">
+			update inv_reserved_to_release set status = #{status}, remark=#{remark}, update_time=now() where batch_id = #{batchId}
+		</update>
+		
+		<update id="updateReservedConfigById" parameterType="com.haier.stock.model.InvReservedConfig">
+			update inv_reserved_config set update_time= now()
+			<if test="channelCode != null and channelCode !=''">
+				,channel_code=#{channelCode}
+			</if>
+			<if test="status != null">
+				,status = #{status}
+			</if>
+			<if test="lockHours != null and lockHours != ''">
+				,lock_hours =#{lockHours}
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				,update_user =#{updateUser}
+			</if>
+			<if test="allowUpdate != null">
+				,allow_update =${allowUpdate}
+			</if>
+			<if test="ref != null">
+				,ref =#{ref}
+			</if>
+			where id=#{id}
+		</update>
+		
+		<insert id="insertReservedConfig" parameterType="com.haier.stock.model.InvReservedConfig">
+			insert into inv_reserved_config(channel_code, status, lock_hours, create_time, create_user, update_time, update_user,ref)
+			values (#{channelCode}, #{status}, #{lockHours}, now(), #{createUser}, now(), #{updateUser}, #{ref})
+		</insert>
+
+	<select id="queryTotalPage" parameterType="java.util.Map" resultType="java.util.Map">
+		select id, channel_code channelCode, lock_hours lockHours, status, update_time updateTime,ref,allow_update allowUpdate from inv_reserved_config where 1=1
+		<if test="sstatus != null">
+			and status = #{sstatus}
+		</if>
+		<if test="schannelCode!=null and schannelCode!=''">
+			and channel_code=#{schannelCode}
+		</if>
+		<if test="sref!=null and sref!=''">
+			and ref=#{sref}
+		</if>
+	</select>
+
+	<select id="queryTotalData"   resultMap="result">
+		select SQL_CALC_FOUND_ROWS id, channel_code , lock_hours , status, update_time ,ref,allow_update  from inv_reserved_config where 1=1
+		<if test="map.sstatus != null">
+			and status = #{map.sstatus}
+		</if>
+		<if test="map.schannelCode!=null and map.schannelCode!=''">
+			and channel_code=#{map.schannelCode}
+		</if>
+		<if test="map.sref!=null and map.sref!=''">
+			and ref=#{map.sref}
+		</if>
+		limit #{start},#{rows}
+	</select>
+</mapper>

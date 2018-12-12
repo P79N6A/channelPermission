@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>可售商品列表</title>
+    <script src="/static/third/easyui/jquery.min2.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body style="font-size:11px">
+<div class="easyui-layout" style="width:100%;height:100%;">
+    <div id="toolbar_list" data-options="region:'north'" style="height:90px">
+        <div style="height: 15px"></div>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">品类</span>
+            <input id="productTypeId" name="dept" value="全部" name="productType"/>
+        </div>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">渠道</span>
+            <input id="channelId" name="dept" value="全部" name="productType"/>
+        </div>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">物料编码</span>
+            <input id="sku" class="easyui-textbox" data-options="prompt:'全部'" name="productType"/>
+        </div>
+        <div>
+            <a href="#" class="easyui-linkbutton" onclick="SearchUnit()"
+               data-options="iconCls:'icon-search',plain:true">查询</a>
+            <a href="../product/productListEdit" class="easyui-linkbutton" id="odd"
+               data-options="iconCls:'icon-add',plain:true">增加</a>
+            <a href="#" class="easyui-linkbutton" onclick="list()"
+               data-options="iconCls:'icon-save',plain:true">修改</a>
+        </div>
+    </div>
+    <div data-options="region:'west'" style="width:55%">
+        <table id="datagrid_orderForecastGoal"></table>
+    </div>
+    <div data-options="region:'center'">
+        <table id="gridView1" class="easyui-datagrid" style="width:450%;height:auto" toolbar="toolbar_list" fit="true"
+               data-options="singleSelect:true,region:'center',remoteSort:false,showFooter: true">
+            <thead>
+            <tr>
+                <th data-options="field:'province',width:90,sortable:true">省</th>
+                <th data-options="field:'city',width:90,sortable:true">市</th>
+                <th data-options="field:'county',width:90,sortable:true">县</th>
+                <th data-options="field:'supplyprice',width:80,sortable:true">供货价</th>
+                <th data-options="field:'saleprice',width:80,sortable:true">销售价</th>
+                <th data-options="field:'limitprice',width:80,sortable:true">限制价</th>
+                <th data-options="field:'pricestarttime',width:200,sortable:true">价格适用开始时间</th>
+                <th data-options="field:'priceendtime',width:200,sortable:true">价格适用结束时间</th>
+            </tr>
+            </thead>
+        </table>
+
+    </div>
+</div>
+<script src="/static/js/pop/product/ProductList.js"></script>
+</body>
+</html>

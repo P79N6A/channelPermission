@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.ProductDetailDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.ProductDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="saleId" property="saleId" jdbcType="INTEGER" />
+    <result column="regionId" property="regionId" jdbcType="INTEGER" />
+    <result column="supplyPrice" property="supplyPrice" jdbcType="DECIMAL" />
+    <result column="salePrice" property="salePrice" jdbcType="DECIMAL" />
+    <result column="limitPrice" property="limitPrice" jdbcType="DECIMAL" />
+    <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <!-- <result column="updateBy" property="updateBy" jdbcType="VARCHAR" /> -->
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />     
+    <result column="county" property="county" jdbcType="VARCHAR" />
+    <result column="priceStartTime" property="priceStartTime" jdbcType="VARCHAR" />
+    <result column="priceEndTime" property="priceEndTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, saleId, regionId, supplyPrice, salePrice, limitPrice, createBy, createTime, updateBy, 
+    updateTime, remark, province, city, county,priceStartTime,priceEndTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sale_product_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selecttime" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    priceStartTime,priceEndTime
+    from t_sale_product_detail
+    where saleId = #{saleId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据saleId查询字表数据 -->
+  <select id="selectBySaleId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sale_product_detail
+    where saleId = #{saleId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据saleId，区域查询字表数据 -->
+  <select id="selectBycounty" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from t_sale_product_detail
+    where
+    saleId=#{saleId,jdbcType=INTEGER}
+    and
+    county like #{county,jdbcType=INTEGER}
+    <if test="startDateTime != null and startDateTime !='' ">
+      AND str_to_date(`t_sale_product_detail`.`priceStartTime`,'%Y-%m-%d%H:%i:%s')
+      >=
+      str_to_date(#{startDateTime,jdbcType=INTEGER},'%Y-%m-%d%H:%i:%s')
+    </if>
+    <if test="endDateTime != null and endDateTime !='' ">
+      AND str_to_date(`t_sale_product_detail`.`priceEndTime`,'%Y-%m-%d%H:%i:%s')
+      &lt;=
+      str_to_date(#{endDateTime,jdbcType=INTEGER},'%Y-%m-%d%H:%i:%s')
+    </if>
+  </select>
+  <select id="selectBypriceTime" resultMap="BaseResultMap" >
+    select 
+    priceStartTime,priceEndTime
+    from t_sale_product_detail
+    where
+     saleId=#{saleId,jdbcType=INTEGER} 
+    and 
+    regionId=#{regionId,jdbcType=INTEGER}
+  </select>
+  
+   <select id="selectstartTime" resultMap="BaseResultMap"  >
+   select * from t_sale_product_detail 
+   where 
+   (str_to_date(`t_sale_product_detail`.`priceStartTime`,'%Y-%m-%d%H:%i:%s') 
+	> 
+	str_to_date(#{priceEndTime,jdbcType=INTEGER},'%Y-%m-%d%H:%i:%s') or
+	str_to_date(#{priceStartTime,jdbcType=INTEGER},'%Y-%m-%d%H:%i:%s')
+	
+ 	>  
+	str_to_date(`t_sale_product_detail`.`priceEndTime`,'%Y-%m-%d%H:%i:%s') )
+	and
+	saleId = #{saleId,jdbcType=INTEGER}
+	and
+	regionId= #{regionId,jdbcType=INTEGER}
+	<if test="id != 0" >
+         and 
+         id != #{id,jdbcType=INTEGER} 
+      </if>
+  </select>
+  
+  <select id="selectmax" resultMap="BaseResultMap" >
+   select * from t_sale_product_detail 
+   where 
+   regionId =#{regionId,jdbcType=INTEGER}
+   and
+   saleId = #{saleId,jdbcType=INTEGER} 
+	<if test="id != 0" >
+        and id != #{id,jdbcType=INTEGER}
+      </if>
+      
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sale_product_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteAuto" parameterType="java.lang.Integer" >
+    delete from t_sale_product_detail
+    where saleId = #{saleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.haier.distribute.data.model.ProductDetail" >
+    insert into t_sale_product_detail (id, saleId, regionId, 
+      supplyPrice, salePrice, limitPrice, 
+      createBy, createTime, updateBy, 
+      updateTime, remark, province, 
+      city, county,priceStartTime,priceEndTime)
+    values (#{id,jdbcType=INTEGER}, #{saleId,jdbcType=INTEGER}, #{regionId,jdbcType=INTEGER}, 
+      #{supplyPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, #{limitPrice,jdbcType=DECIMAL}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{priceStartTime,jdbcType=VARCHAR}, #{priceEndTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.haier.distribute.data.model.ProductDetail" >
+    insert into t_sale_product_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="saleId != null" >
+        saleId,
+      </if>
+      <if test="regionId != null" >
+        regionId,
+      </if>
+      <if test="supplyPrice != null" >
+        supplyPrice,
+      </if>
+      <if test="salePrice != null" >
+        salePrice,
+      </if>
+      <if test="limitPrice != null" >
+        limitPrice,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="county != null" >
+        county,
+      </if>
+      <if test="priceStartTime != null" >
+        priceStartTime,
+      </if>
+      <if test="priceEndTime != null" >
+        priceEndTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="saleId != null" >
+        #{saleId,jdbcType=INTEGER},
+      </if>
+      <if test="regionId != null" >
+        #{regionId,jdbcType=INTEGER},
+      </if>
+      <if test="supplyPrice != null" >
+        #{supplyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null" >
+        #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="limitPrice != null" >
+        #{limitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null" >
+        #{county,jdbcType=VARCHAR},
+      </if>
+      <if test="priceStartTime != null" >
+        #{priceStartTime,jdbcType=VARCHAR},
+      </if>
+      <if test="priceEndTime != null" >
+        #{priceEndTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.ProductDetail" >
+    update t_sale_product_detail
+    <set >
+    
+      <if test="saleId != null" >
+        saleId = #{saleId,jdbcType=INTEGER},
+      </if>
+      <if test="regionId != null" >
+        regionId = #{regionId,jdbcType=INTEGER},
+      </if>
+      <if test="supplyPrice != null" >
+        supplyPrice = #{supplyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null" >
+        salePrice = #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="limitPrice != null" >
+        limitPrice = #{limitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null" >
+        county = #{county,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null" >
+        priceStartTime = #{priceStartTime,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null" >
+        priceEndTime = #{priceEndTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.ProductDetail" >
+    update t_sale_product_detail
+    set saleId = #{saleId,jdbcType=INTEGER},
+      regionId = #{regionId,jdbcType=INTEGER},
+      supplyPrice = #{supplyPrice,jdbcType=DECIMAL},
+      salePrice = #{salePrice,jdbcType=DECIMAL},
+      limitPrice = #{limitPrice,jdbcType=DECIMAL},
+      createBy = #{createBy,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateBy = #{updateBy,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      county = #{county,jdbcType=VARCHAR},
+      priceStartTime = #{priceStartTime,jdbcType=VARCHAR},
+      priceEndTime = #{priceEndTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

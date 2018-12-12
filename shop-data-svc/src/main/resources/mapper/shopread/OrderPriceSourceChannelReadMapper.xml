@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderPriceSourceChannelReadDao">
+
+	<resultMap id="orderPriceSourceChannelResult" type="com.haier.shop.model.OrderPriceSourceChannel">
+		<result property="id" column="id" />
+		<result property="channelCode" column="channel_code" />
+		<result property="channelName" column="channel_name" />
+		<result property="orderSource" column="order_source" />
+		<result property="orderSourceName" column="order_source_name" />
+		<result property="status" column="status" />
+		<result property="gateType" column="gate_type" />
+		<result property="person" column="person" />
+		<result property="mobile" column="mobile" />
+		<result property="email" column="email" />
+		<result property="sendType" column="send_type" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<select id="getOrderPriceSourceChannelList" resultMap="orderPriceSourceChannelResult">
+		select `id`,`channel_code`,`channel_name`,`order_source`,`order_source_name`,`status`,`gate_type`,`person`,`mobile`,`email`,`send_type`,`create_time`,`update_time` 
+		from order_price_source_channel
+		where status = 1
+	</select>
+
+</mapper>

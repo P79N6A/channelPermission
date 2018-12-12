@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>智能短信配置</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_orderForecastGoal"></table>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">节点</span>
+                <select id="u438_input" class="easyui-combobox">
+                    <option value="请选择">请选择</option>
+                    <option value="送网点">送网点</option>
+                    <option value="送用户">送用户</option>
+                    <option value="工单">工单</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">工贸或中心</span>
+                <input class="easyui-textbox" id="marketOrCenter" name="marketOrCenter"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">姓名</span>
+                <input class="easyui-textbox" id="name" name="name"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">是否发送</span>
+                <select id="u441_input" class="easyui-combobox">
+                    <option value="是">是</option>
+                    <option value="否">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">发送级别</span>
+                <select id="u442_input" class="easyui-combobox">
+                    <option value="请选择">请选择</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderForecastGoal"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderForecastGoal"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <a href="#" class="easyui-linkbutton" id="reuseBtn_orderForecastGoal"
+           data-options="iconCls:'icon-ok',plain:true">全部启用</a>
+        <a href="#" class="easyui-linkbutton" id="unuseBtn_orderForecastGoal"
+           data-options="iconCls:'icon-no',plain:true">全部禁用</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出联系人</a>
+    </form>
+</div>
+<div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:350px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>物料编码<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="sku" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>型号<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="materialdescription" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>渠道<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="channelcode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单周<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderweek" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单年<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderyear" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>目标销售<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="goalqty" required="true"/>
+        </div>
+        <!--<div class="fitem">
+            <label>状态 <span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="status" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-datebox" name="createtime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="createuser" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-datebox" name="updatetime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="updateuser" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>删除标志<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="deleteflag" required="true"/>
+        </div>-->
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_orderForecastGoal').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastGoal').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/order/intelligentNoteSet.js"></script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderhpRejectionLogsWriteDao" >
+  <insert id="insert" parameterType="com.haier.shop.model.OrderhpRejectionLogs" >
+    insert into OrderHPRejectionLogs (id, so_num, vbelnso, 
+      product_type_id, product_no, count_num, 
+      inwh_id, inwh_date, key_product_no, 
+      main_sku, sub_count, channel_order_sn, 
+      channel, sec_code, hp_les_date, 
+      resp_division, hp_les_id)
+    values (#{id,jdbcType=INTEGER}, #{soNum,jdbcType=VARCHAR}, #{vbelnso,jdbcType=VARCHAR}, 
+      #{productTypeId,jdbcType=VARCHAR}, #{productNo,jdbcType=VARCHAR}, #{countNum,jdbcType=INTEGER}, 
+      #{inwhId,jdbcType=VARCHAR}, #{inwhDate,jdbcType=VARCHAR}, #{keyProductNo,jdbcType=VARCHAR}, 
+      #{mainSku,jdbcType=VARCHAR}, #{subCount,jdbcType=INTEGER}, #{channelOrderSn,jdbcType=VARCHAR}, 
+      #{channel,jdbcType=VARCHAR}, #{secCode,jdbcType=VARCHAR}, #{hpLesDate,jdbcType=DATE}, 
+      #{respDivision,jdbcType=VARCHAR}, #{hpLesId,jdbcType=VARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.shop.model.OrderhpRejectionLogs" >
+    insert into OrderHPRejectionLogs
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="soNum != null" >
+        so_num,
+      </if>
+      <if test="vbelnso != null" >
+        vbelnso,
+      </if>
+      <if test="productTypeId != null" >
+        product_type_id,
+      </if>
+      <if test="productNo != null" >
+        product_no,
+      </if>
+      <if test="countNum != null" >
+        count_num,
+      </if>
+      <if test="inwhId != null" >
+        inwh_id,
+      </if>
+      <if test="inwhDate != null" >
+        inwh_date,
+      </if>
+      <if test="keyProductNo != null" >
+        key_product_no,
+      </if>
+      <if test="mainSku != null" >
+        main_sku,
+      </if>
+      <if test="subCount != null" >
+        sub_count,
+      </if>
+      <if test="channelOrderSn != null" >
+        channel_order_sn,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="secCode != null" >
+        sec_code,
+      </if>
+      <if test="hpLesDate != null" >
+        hp_les_date,
+      </if>
+      <if test="respDivision != null" >
+        resp_division,
+      </if>
+      <if test="hpLesId != null" >
+        hp_les_id,
+      </if>
+      addTime
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="soNum != null" >
+        #{soNum,jdbcType=VARCHAR},
+      </if>
+      <if test="vbelnso != null" >
+        #{vbelnso,jdbcType=VARCHAR},
+      </if>
+      <if test="productTypeId != null" >
+        #{productTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="productNo != null" >
+        #{productNo,jdbcType=VARCHAR},
+      </if>
+      <if test="countNum != null" >
+        #{countNum,jdbcType=INTEGER},
+      </if>
+      <if test="inwhId != null" >
+        #{inwhId,jdbcType=VARCHAR},
+      </if>
+      <if test="inwhDate != null" >
+        #{inwhDate,jdbcType=VARCHAR},
+      </if>
+      <if test="keyProductNo != null" >
+        #{keyProductNo,jdbcType=VARCHAR},
+      </if>
+      <if test="mainSku != null" >
+        #{mainSku,jdbcType=VARCHAR},
+      </if>
+      <if test="subCount != null" >
+        #{subCount,jdbcType=INTEGER},
+      </if>
+      <if test="channelOrderSn != null" >
+        #{channelOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="secCode != null" >
+        #{secCode,jdbcType=VARCHAR},
+      </if>
+      <if test="hpLesDate != null" >
+        #{hpLesDate,jdbcType=DATE},
+      </if>
+      <if test="respDivision != null" >
+        #{respDivision,jdbcType=VARCHAR},
+      </if>
+      <if test="hpLesId != null" >
+        #{hpLesId,jdbcType=VARBINARY},
+      </if>
+      unix_timestamp(now()) 
+    </trim>
+  </insert>
+
+<update id="updateHpRejectionLogs" parameterType="com.haier.shop.model.OrderhpRejectionLogs"  >
+ UPDATE  OrderHPRejectionLogs
+ set 
+      <if test="soNum != null" >
+        so_num =#{soNum},
+      </if>
+      <if test="vbelnso != null" >
+        vbelnso =#{vbelnso},
+      </if>
+      <if test="productTypeId != null" >
+        product_type_id =#{productTypeId},
+      </if>
+      <if test="productNo != null" >
+        product_no =#{productNo},
+      </if>
+      <if test="countNum != null" >
+        count_num = #{countNum},
+      </if>
+      <if test="inwhId != null" >
+        inwh_id =#{inwhId},
+      </if>
+      <if test="inwhDate != null" >
+        inwh_date =#{inwhDate},
+      </if>
+      <if test="keyProductNo != null" >
+        key_product_no =#{keyProductNo},
+      </if>
+      <if test="mainSku != null" >
+        main_sku= #{mainSku},
+      </if>
+      <if test="subCount != null" >
+        sub_count =#{subCount},
+      </if>
+      <if test="channel != null" >
+        channel =#{channel},
+      </if>
+      <if test="secCode != null" >
+        sec_code =#{secCode},
+      </if>
+      <if test="hpLesDate != null" >
+        hp_les_date = #{hpLesDate},
+      </if>
+      <if test="respDivision != null" >
+        resp_division =#{respDivision},
+      </if>
+      <if test="hpLesId != null" >
+        hp_les_id = #{hpLesId},
+      </if>
+      updateTime =unix_timestamp(now()) 
+      where id=#{id}
+</update>
+
+<update id="updataEmptyOut" parameterType="java.lang.String">
+	UPDATE OrderHPRejectionLogs
+	SET EmptyOut =#{emptyOut,jdbcType=VARCHAR},
+	 EmptyOutTime = unix_timestamp(now())
+	WHERE
+		id=#{id}
+</update>
+</mapper>

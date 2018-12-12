@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>到货周配置管理</title>
+	<link rel="stylesheet" href="../../static/css/jqueryui/base/jquery.ui.all.css"/>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../../static/css/msg.css"></link>
+    <link rel="stylesheet" type="text/css" href="../../static/third/easyui/themes/gray/easyui.css"/>
+    <link rel="stylesheet" href="../../static/css/reset.css"></link>
+	<script src="../../static/third/jquery-1.8.3.min.js"></script>
+    <script src="../../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+
+    <style type="text/css">
+        .centent
+        {
+            width: 260px;
+        }
+        .cententl
+        {
+            float: left;
+        }
+        
+        .btnAdd
+        {
+            float: left;
+            padding:30px 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="panel" class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 120px;overflow: auto;" align="left" class="new-form-box">
+		<form id="filterForm" action="#">
+	    	<table>
+	    		<!-- <tr>
+	    			<td>状态</td>
+	    			<td>
+	    			<input id="status" name="status" class="easyui-combobox" style="width:173px"></input>
+	    		</tr> -->
+	    		<tr>
+	    			<td colspan="10">
+		    			<a id='search' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-search">查询</a>
+		    			<a id='import' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-edit">保存</a>
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </form>
+    </div>
+    <div data-options="region:'center',title:'查询结果',border:false">
+		    <table id="dataGrid"></table>
+		    <div id="msgMask"></div>
+			<div id="msg">正在处理，请稍待。。。</div>
+	</div>
+</div>
+
+
+<script type="application/javascript">
+
+var dataList;
+jQuery.getJSON("/sys/planInDate/getName",function(result){
+    dataList = result.data;
+});
+
+//点击查询
+$('#search').click(function () {
+	//检索列表构筑
+	if(datagrid){
+		//grid刷新
+	    $('#dataGrid').datagrid('load',
+	    		{
+	    	     
+	   	 });
+	}else{
+		//生成grid
+	    datagrid = $('#dataGrid').datagrid({
+	       url: "/sys/planInDate/find",
+	        fit: true,
+	        pagination: true,
+	        singleSelect: true,
+	        checkOnSelect:true,
+	        onDblClickCell:onDblClickCell,
+	        pageSize: 100,
+	        pageList: [1,2,100,200,300],
+	        nowrap: false,
+	        rownumbers: true,
+	        columns: [
+	            [
+        	        {
+        	        	field:'id', 
+        	        	title:'id', 
+        	        	width:'200', 
+        	        	align:'center',
+        	        	hidden:'true'
+        	        },
+        	        {
+        	        	field:'type', 
+        	        	title:'业务id', 
+        	        	width:'200', 
+        	        	align:'center',
+        	        	hidden:'true'
+        	        },
+        	        {
+        	        	field:'typeName', 
+        	        	title:'业务名称', 
+        	        	width:'200', 
+        	        	align:'center'
+        	        },
+			        {
+			        	field:'name', 
+			        	title:'名称', 
+			        	width:'200', 
+			        	align:'center',
+			        	editor:{type:'combobox',
+			        		options:{
+			        		valueField:'value',
+			        		textField:'value_meaning',
+			        		data:dataList,
+			        		required:true
+			        		}
+			        	},
+	                    formatter : function(value) {
+	                    	if(value == 2){
+	                    		return "T+2";
+	                    	}
+	                    	if(value == 3){
+	                    		return "T+3";
+	                    	}
+	                    	if(value == 4){
+	                    		return "T+4";
+	                    	}
+	                    	if(value == 5){
+	                    		return "T+5";
+	                    	}
+	                    	if(value == 6){
+	                    		return "T+6";
+	                    	}
+	                    }
+			        }
+	            ]
+	        ]
+	    });
+	}
+    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+});
+
+var editIndex = undefined;
+function onDblClickCell(index,field,value){
+	//启用单元格编辑
+	//$("#dataGrid").datagrid('beginEdit', index);
+	//var ed = $("#dataGrid").datagrid('getEditor', {index:index,field:field});
+	
+    if(endEdit()){
+    	//给editIndex对象赋值，index为当前行的索引
+        editIndex = index;  
+        var selectRow = $('#dataGrid').datagrid('selectRow', editIndex);
+        //启用单元格编辑  
+        selectRow.datagrid('beginEdit', editIndex);  
+    }
+}
+
+function endEdit() {
+	//对editIndex进行判断单元格是否可以编辑
+    if(editIndex == undefined) {
+    	return true;
+    }
+      
+    if($('#dataGrid').datagrid('validateRow',editIndex)) {
+    	//结束当前行编辑
+        $('#dataGrid').datagrid('endEdit',editIndex);
+        editIndex = undefined;   
+        return true;//重置编辑行索引对象，返回true，允许编辑  
+     }  
+    else {  
+        return false;  
+    }
+}
+
+$("#panel").click(function () {
+    $('#dataGrid').datagrid('endEdit',editIndex);
+    editIndex = undefined;   
+    return true;//重置编辑行索引对象，返回true，允许编辑 
+});
+
+$("#import").click(function(){
+	var row = $('#dataGrid').datagrid('getSelected');
+	jQuery.ajax({
+	    url: "/sys/planInDate/update",
+	    type: "POST",
+	    data: {
+	    		"id": row.id,
+	    		"type": row.type,
+	    		"name": row.name
+	    	},
+		    success: function (data) {
+		        $.messager.alert('提示', '修改成功', 'info');
+			    $('#dataGrid').datagrid('load',{
+		    	     
+			   	});
+		    },
+		    error: function (data) {
+		    	$.messager.alert('提示', '修改失败', 'err');
+		    }
+	});
+});
+
+var datagrid;
+$(function () {
+$('#name').change(function(n,o){
+                alert("value changed!"); //could not arrive!
+            });
+});
+$(function () {
+    //双击选项
+    //$('#select1').dblclick(function () { 
+        //获取双击的选项,删除自己并追加给对方
+        //$("option:selected", this).appendTo('#select2'); 
+    //});
+    //双击选项
+    //$('#select2').dblclick(function () {
+        //获取双击的选项,删除自己并追加给对方
+        //$("option:selected", this).appendTo('#select1');
+    //});
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+     <title>LESS库存交易分渠道异常列表</title>
+        <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+</head>
+<body class="easyui-layout">
+<table id="dataGrid" title="采购入库记录（ZBCR），未关联上渠道时，可以手工指定渠道，手工指定渠道后，系统将不再自动获取关联的渠道，请谨慎使用"></table>
+
+<div id="tb" style="padding:5px;height:auto">
+    <form id="filterForm">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true" onclick="loaddata()">刷新</a>
+        <a id='setChannel' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="onEdit()">指定渠道</a>
+    </form>
+</div>
+
+<div id="dlg" class="easyui-dialog" style="width:500px;height:280px;padding:10px 20px"
+     closed="true" buttons="#dlg-buttons" title="注意">
+    <div class="ftitle">指定渠道</div>
+    <form id="fm" method="post" novalidate>
+        <div class="fitem">
+            <label>凭证号:</label>
+            <input name="outping" class="easyui-textbox" readonly="true">
+        </div>
+        <div class="fitem">
+            <label>单据号:</label>
+            <input name="corderSn" class="easyui-textbox" readonly="true">
+        </div>
+        <div class="fitem">
+            <label>渠道:</label>
+            <input name="channel" id="channel" class="easyui-combobox" required="true" editable="false"
+                   data-options="valueField:'channelCode',textField:'name',url:'/stockTrans/lessStockTransChannels.html'">
+        </div>
+        <div>
+            <label id="lb" style="color:red"></label>
+        </div>
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="onSave()"
+       style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
+</div>
+
+<script type="text/javascript">
+
+    $(window).resize(function () {
+        $('#dataGrid').datagrid('resize');
+    });
+
+    var saveUrl;
+
+    function loaddata() {
+        $('#dataGrid').datagrid('reload');
+    }
+
+    function onEdit() {
+        var row = $('#dataGrid').datagrid('getSelected');
+        if (row) {
+            $('#channel').combobox('setValue', row.channelRevised);
+            if (row.channelRevised) {
+                $('#lb').html('注意：此交易已经由 <strong>' + row.reviser + " </strong>于 " + row.reviseTime + " 指定渠道");
+            } else {
+                $('#lb').html('');
+            }
+            $('#dlg').dialog('open');
+            $('#fm').form('load', row);
+            saveUrl = '/stockTrans/saveLessTransChannel.html?id=' + row.id;
+        }
+    }
+
+    function onSave() {
+        $('#fm').form('submit', {
+                    url: saveUrl,
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        var result = eval('(' + result + ')');
+                        if (result.flag == "F") {
+                            $.messager.alert('失败', result.errMsg);
+                        } else {
+                            $.messager.alert("成功", "指定渠道成功！");
+                            $('#dlg').dialog('close'); // close the dialog
+                            $('#dataGrid').datagrid('reload'); // reload the user data
+                        }
+                    }
+                }
+        )
+    }
+
+
+    var dataGrid;
+    $(function () {
+
+        dataGrid = $('#dataGrid').datagrid({
+            url: '/stockTrans/lesStockTransDelayList.html',
+            fit: true,
+            fitColumns: false,
+            pagination: true,
+            toolbar: $('#tb'),
+            nowrap: true,
+            pageSize: 50,
+            pageList: [50,100,200],
+            rownumbers: true,
+            singleSelect: true,
+            onSelect: function (index, row) {
+                if (row.isManualSetChannel == 1) {
+                    $('#setChannel').linkbutton('enable');
+                } else {
+                    $('#setChannel').linkbutton('disable');
+                }
+            },
+            columns: [[
+                {
+                    field: "outping",
+                    title: '凭证号',
+                    align: 'center',
+                },
+                {
+                    field: "corderSn",
+                    title: '单据号',
+                    align: 'center',
+                },
+                {
+                    field: "billTime",
+                    title: '交易时间',
+                    align: 'center',
+                },
+                {
+                    field: "billType",
+                    title: '交易类型',
+                    align: 'center',
+                },
+                {
+                    field: "mark",
+                    title: '借贷标识',
+                    align: 'center',
+                },
+                {
+                    field: "secCode",
+                    title: '库位',
+                    align: 'center',
+                },
+                {
+                    field: "sku",
+                    title: '物料',
+                    align: 'center',
+                },
+                {
+                    field: "quantity",
+                    title: '数量',
+                    align: 'right',
+                },
+                {
+                    field: "charg",
+                    title: '批次',
+                    align: 'center',
+                },
+                {
+                    field: "channelRevised",
+                    title: '渠道',
+                    align: 'center',
+                },
+                {
+                    field: "reviser",
+                    title: '指定人',
+                    align: 'center',
+                },
+                {
+                    field: "reviseTime",
+                    title: '指定时间',
+                    align: 'center',
+                },
+                {
+                    field: "processTime",
+                    title: '处理时间',
+                    align: 'center',
+                        	formatter : function(value) {
+            	if(value){
+                var date = new Date(value);
+                var year = date.getFullYear().toString();
+                var month = (date.getMonth() + 1);
+                var day = date.getDate().toString();
+                var hour = date.getHours().toString();
+                var minutes = date.getMinutes().toString();
+                var seconds = date.getSeconds().toString();
+                if (month < 10) {
+                    month = "0" + month;
+                }
+                if (day < 10) {
+                    day = "0" + day;
+                }
+                if (hour < 10) {
+                    hour = "0" + hour;
+                }
+                if (minutes < 10) {
+                    minutes = "0" + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = "0" + seconds;
+                }
+                return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+            	}
+            	}
+                },
+                {
+                    field: "errorMessage",
+                    title: '处理信息',
+                    align: 'left',
+                }
+            ]]
+        });
+    });
+</script>
+<style type="text/css">
+    #fm {
+        margin: 0;
+        padding: 10px 30px;
+    }
+
+    .ftitle {
+        font-size: 14px;
+        font-weight: bold;
+        padding: 5px 0;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .fitem {
+        margin-bottom: 5px;
+    }
+
+    .fitem label {
+        display: inline-block;
+        width: 80px;
+    }
+
+    .fitem input {
+        width: 160px;
+    }
+</style>
+</body>
+</html>

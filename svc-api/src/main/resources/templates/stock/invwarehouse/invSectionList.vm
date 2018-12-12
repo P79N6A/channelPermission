@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+     <style type="text/css">
+   .dlg{
+     width:400px;
+     height:100px;
+     padding:10px;	
+     margin-top:20px;	
+    },
+    easyui-panel.{
+    overflow-x: show;
+    }
+  </style>
+    
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_warehouseListGoal"></table>
+</div>
+<div id="export">
+    <form id="exportForm" action="#">
+        <input id="e_sec_code" name="e_sec_code" type="text">
+        <input id="e_les_sec_code" name="e_les_sec_code" type="hidden">
+        <input id="e_sec_name" name="e_sec_name" type="hidden">
+        <input id="code" name="code" type="hidden">
+    </form>
+</div>
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+        
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">库位编码</span>
+                <input id="sec_code" class="easyui-textbox" data-options="prompt:'请输入库位编码'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">LES库位</span>
+                <input id="les_sec_code" class="easyui-textbox" data-options="prompt:'请输入LES库位'">
+            </div>   
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">库位名称</span>
+                <input id="sec_name" class="easyui-textbox" data-options="prompt:'请输入库位名称'">
+            </div>  
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderForecastGoal"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn"
+           data-options="iconCls:'icon-back',plain:true">导入</a>
+        <a href="#" class="easyui-linkbutton" id="exportBtn"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+<div id="addDlg_invSection" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:562px;height:363px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_invSection" method="post">
+        <input id="id" name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>库位编码<span style="color: red;">*</span></label>
+            <input id="secCode" class="input" name="secCode" maxlength="10" style="height:30px;"/>
+        </div>
+        <div class="fitem">
+            <label>LES库位<span style="color: red;">*</span></label>
+            <input id="lesSecCode" class="easyui-textbox" name="lesSecCode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>库位名称<span style="color: red;">*</span></label>
+            <input id="secName" class="easyui-textbox" name="secName" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>状态<span style="color: red;">*</span></label>
+            <select id="status" name="status" style="height: 29px; width: 134px;">
+            	<option value="0">未启用</option>
+            	<option value="1">已启用</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>仓库TC代码<span style="color: red;">*</span></label>
+            <input id="whCode" class="easyui-textbox" name="whCode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>库位属性<span style="color: red;">*</span></label>
+            <input id="sectionProperty" class="easyui-textbox" name="sectionProperty" required="true"/>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>渠道编码<span style="color: red;">*</span></label>
+            <input id="channelCode" class="easyui-textbox" name="channelCode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>销售组织编码<span style="color: red;">*</span></label>
+            <input id="corpCode" class="easyui-textbox" name="corpCode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>付款方编码 <span style="color: red;">*</span></label>
+            <input id="custCode" class="easyui-textbox" name="custCode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>地区编码<span style="color: red;">*</span></label>
+            <input id="regionCode" class="easyui-textbox" name="regionCode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>分渠道送达方<span style="color: red;">*</span></label>
+            <input id="ehaierDeliverCode" class="easyui-textbox" name="ehaierDeliverCode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>物流OE码<span style="color: red;">*</span></label>
+            <input id="les0eCode" class="easyui-textbox" name="les0eCode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>批次</label>
+            <input id="itemProperty" class="easyui-textbox" name="itemProperty"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_invSection" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_invSection').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_warehouseListGoal').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="/static/js/stock/invwarehouse/invSectionList.js"></script>
+</body>
+</html>

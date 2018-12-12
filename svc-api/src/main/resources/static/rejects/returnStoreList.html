@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>智能短信配置</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_areapeoplemanage" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_areapeoplemanage">
+    </table>
+</div>
+<div id="datagridToolbar_areapeoplemanage">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_areapeoplemanagel" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">单据ID</span>
+                <input class="easyui-textbox" name="orderid"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">货品编码</span>
+                <input class="easyui-textbox" name="orderid1"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">菜鸟退仓单创建</span>
+                <select name="caiNiaoTcHandle" class="easyui-combobox">
+                    <option value="-1">全部</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">选择退出仓库</span>
+                <select title="stor" class="easyui-combobox" multiple="multiple" name="stor" size="5" id="stor">
+                    <option value="JHO1" aria-selected="true">金华-0050</option>
+                    <option value="MMO1" aria-selected="true">物流宝茂名B61</option>
+                    <option value="CNO1" aria-selected="true">物流宝内江B105</option>
+                    <option value="无" aria-selected="true">物流宝延安B93</option>
+                    <option value="CYO2" aria-selected="true">物流宝宜昌B03</option>
+                    <option value="LXO1" aria-selected="true">物流宝泸州B81</option>
+                    <option value="XYO2" aria-selected="true">物流宝信阳B12</option>
+                    <option value="DCO1" aria-selected="true">物流宝常德B76</option>
+                    <option value="无" aria-selected="true">物流宝辽源B87</option>
+                    <option value="无" aria-selected="true">物流宝延安B93</option>
+                    <option value="WXO1" aria-selected="true">无锡-0012</option>
+                    <option value="无" aria-selected="true">物流宝长治B103</option>
+                    <option value="WYO1" aria-selected="true">物流宝衡水B67</option>
+                    <option value="JZO1" aria-selected="true">物流宝锦州B48</option>
+                    <option value="XXO1" aria-selected="true">深圳-0035</option>
+                    <option value="SHO2" aria-selected="true">上海-0082</option>
+                    <option value="TZO1" aria-selected="true">台州-0049</option>
+                    <option value="YLO1" aria-selected="true">玉林-0038</option>
+                    <option value="HAO1" aria-selected="true">淮安-0053</option>
+                    <option value="SRO1" aria-selected="true">物流宝上饶B75</option>
+                    <option value="无" aria-selected="true">物流宝张掖B106</option>
+                    <option value="LDO1" aria-selected="true">物流宝大理B79</option>
+                    <option value="ZBO2" aria-selected="true">物流宝淄博B08</option>
+                    <option value="WFO2" aria-selected="true">物流宝潍坊B17</option>
+                    <option value="WNO1" aria-selected="true">芜湖-0099</option>
+                    <option value="HKO1" aria-selected="true">海口-0034</option>
+                    <option value="JMO1" aria-selected="true">物流宝佳木斯B85</option>
+                    <option value="ZYO1" aria-selected="true">物流宝遵义B78</option>
+                    <option value="DGO1" aria-selected="true">东莞-0087</option>
+                    <option value="QZO1" aria-selected="true">物流宝泉州B15</option>
+                    <option value="ASO1" aria-selected="true">阿克苏-001</option>
+                    <option value="HZO1" aria-selected="true">杭州-0002</option>
+                    <option value="FSO1" aria-selected="true">佛山-0009</option>
+                    <option value="CDO1" aria-selected="true">成都-0011</option>
+                    <option value="BJO2" aria-selected="true">北京-0007</option>
+                    <option value="WHO2" aria-selected="true">武汉-0036</option>
+                    <option value="CQO1" aria-selected="true">重庆-0022</option>
+                    <option value="ZZO2" aria-selected="true">郑州-0081</option>
+                    <option value="CSO1" aria-selected="true">长沙-0010</option>
+                    <option value="CCO1" aria-selected="true">长春-0027</option>
+                    <option value="XJO1" aria-selected="true">乌鲁木齐-0030</option>
+                    <option value="XAO1" aria-selected="true">西安-0001</option>
+                    <option value="TYO1" aria-selected="true">太原-0014</option>
+                    <option value="HBO1" aria-selected="true">石家庄-0016</option>
+                    <option value="SYO1" aria-selected="true">沈阳-0008</option>
+                    <option value="NBO2" aria-selected="true">宁波-0019</option>
+                    <option value="NNO1" aria-selected="true">南宁-0021</option>
+                    <option value="NJO1" aria-selected="true">南京-0004</option>
+                    <option value="NCO1" aria-selected="true">南昌-0020</option>
+                    <option value="LZO1" aria-selected="true">兰州-0029</option>
+                    <option value="KMO1" aria-selected="true">昆明-0023</option>
+                    <option value="SDO2" aria-selected="true">济南-0080</option>
+                    <option value="JOO2" aria-selected="true">即墨-0088</option>
+                    <option value="HFO1" aria-selected="true">合肥-0003</option>
+                    <option value="DBO1" aria-selected="true">哈尔滨-0025</option>
+                    <option value="GYO1" aria-selected="true">贵阳-0024</option>
+                    <option value="LGO1" aria-selected="true">白云-0094</option>
+                    <option value="FZO1" aria-selected="true">福州-0006</option>
+                    <option value="XMO1" aria-selected="true">厦门-0033</option>
+                    <option value="STO1" aria-selected="true">汕头-0074</option>
+                    <option value="BBO1" aria-selected="true">蚌埠-0051</option>
+                    <option value="XZO1" aria-selected="true">徐州-0013</option>
+                    <option value="GXO1" aria-selected="true">柳州-0039</option>
+                    <option value="DLO1" aria-selected="true">物流宝大连B46</option>
+                    <option value="JXO1" aria-selected="true">物流宝赣州B74</option>
+                    <option value="HYO1" aria-selected="true">物流宝衡阳B77</option>
+                    <option value="JNO2" aria-selected="true">物流宝济宁B01</option>
+                    <option value="LMO2" aria-selected="true">物流宝洛阳B05</option>
+                    <option value="LHO2" aria-selected="true">物流宝漯河B06</option>
+                    <option value="TJO1" aria-selected="true">物流宝天津B35</option>
+                    <option value="XNO1" aria-selected="true">物流宝西宁B52</option>
+                    <option value="XFO2" aria-selected="true">物流宝襄樊B04</option>
+                    <option value="YTO2" aria-selected="true">物流宝烟台B09</option>
+                    <option value="YCO1" aria-selected="true">物流宝银川B51</option>
+                    <option value="AKO1" aria-selected="true">安康-001</option>
+                    <option value="BTO1" aria-selected="true">大家电包头B68</option>
+                    <option value="BDO1" aria-selected="true">物流宝保定B66</option>
+                    <option value="CZO1" aria-selected="true">大家电沧州B64</option>
+                    <option value="GAO1" aria-selected="true">物流宝广安B82</option>
+                    <option value="DQO1" aria-selected="true">物流宝大庆B84</option>
+                    <option value="DTO1" aria-selected="true">物流宝大同B62</option>
+                    <option value="FYO1" aria-selected="true">物流宝阜阳B72</option>
+                    <option value="HDO1" aria-selected="true">物流宝邯郸B65</option>
+                    <option value="HNO2" aria-selected="true">物流宝鹤壁B13</option>
+                    <option value="HSO1" aria-selected="true">物流宝呼和浩特B38</option>
+                    <option value="HMO1" aria-selected="true">物流宝侯马B63</option>
+                    <option value="LYO2" aria-selected="true">物流宝临沂B07</option>
+                    <option value="DWO1" aria-selected="true">物流宝龙岩B90</option>
+                    <option value="MYO1" aria-selected="true">物流宝绵阳B80</option>
+                    <option value="SCO1" aria-selected="true">大家电南充B83</option>
+                    <option value="NPO1" aria-selected="true">物流宝南平B91</option>
+                    <option value="NYO2" aria-selected="true">物流宝南阳B11</option>
+                    <option value="SQO2" aria-selected="true">物流宝商丘B100</option>
+                    <option value="SOO1" aria-selected="true">物流宝松原B86</option>
+                    <option value="TSO1" aria-selected="true">物流宝唐山B37</option>
+                    <option value="GSO1" aria-selected="true">物流宝天水B88</option>
+                    <option value="NWO2" aria-selected="true">物流宝渭南B101</option>
+                    <option value="ZJO1" aria-selected="true">物流宝张家口B92</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">退仓类型</span>
+                <select name="isLiang" class="easyui-combobox">
+                    <option value="-1">全部</option>
+                    <option value="1">良品</option>
+                    <option value="2">非良品</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">hp质检结果</span>
+                <select name="hpCheckResultOption" id="hpCheckResultOption" class="easyui-combobox">
+                    <option value="-1">全部</option>
+                    <option value="0">正品</option>
+                    <option value="1">不良品换机</option>
+                    <option value="2">不良品退机</option>
+                    <option value="3">箱损包装箱不可换</option>
+                    <option value="4">箱损包装箱可换</option>
+                    <option value="5">已开箱正品(菜鸟Z3)</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">hp质检责任</span>
+                <select name="hpCheckTypeOption" id="hpCheckTypeOption" class="easyui-combobox">
+                    <option value="-1">全部</option>
+                    <option value="1">物流责任</option>
+                    <option value="2">一次网点责任</option>
+                    <option value="3">产业责任</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">菜鸟库存类型</span>
+                <select name="cwType" id="cwType" class="easyui-combobox">
+                    <option value="-1">全部</option>
+                    <option value="1">可销售库存</option>
+                    <option value="2">机损物流责任</option>
+                    <option value="3">机损商家责任</option>
+                    <option value="4">箱损物流责任</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">出库单状态</span>
+                <select name="caiNiaoTcExtStatus" id="caiNiaoTcExtStatus" class="easyui-combobox">
+                    <option value="-1">全部</option>
+                    <option value="1">已接单</option>
+                    <option value="2">已出库</option>
+                    <option value="3">订单已取消</option>
+                    <option value="4">部分发货完成</option>
+                    <option value="5">异常</option>
+                    <option value="6">关闭</option>
+                    <option value="7">拒单</option>
+                    <option value="8">取消失败</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">出库单状态</span>
+                <input class="easyui-textbox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">退仓单号</span>
+                <input class="easyui-textbox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">关联单号</span>
+                <input class="easyui-datebox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">退仓创建时间</span>
+                <input class="easyui-datebox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">至</span>
+                <input class="easyui-textbox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">退仓出库时间</span>
+                <input class="easyui-datebox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">至</span>
+                <input class="easyui-textbox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">开提单成功时间</span>
+                <input class="easyui-datebox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">至</span>
+                <input class="easyui-textbox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">菜鸟退仓单创建时间</span>
+                <input class="easyui-datebox" name="outStoreStatus"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_100">至</span>
+                <input class="easyui-textbox" name="outStoreStatus"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderForecastGoal"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="import"
+           data-options="iconCls:'icon-save',plain:true">不良品数据导入</a>
+        <a href="#" class="easyui-linkbutton" id="import1"
+           data-options="iconCls:'icon-save',plain:true">正品数据导入</a>
+        <a href="#" class="easyui-linkbutton" id="exportBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出退仓详情报表</a>
+        <a href="#" class="easyui-linkbutton" id="1exportBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出待下退仓单报表</a>
+    </form>
+</div>
+<div id="importDialog" data-options="title:'',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_import">
+    <form id="importForm" method="post">
+        <div style="margin-bottom:20px">
+            <div>文件:</div>
+            <input class="easyui-filebox" name="file1" data-options="prompt:'请选择一个文件...'" style="width:100%"
+                   required="true">
+        </div>
+    </form>
+    <div id="dlg-buttons_import">
+        <a href="#" class="easyui-linkbutton" id="importSave" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#importDialog').dialog('close')">关闭</a>
+    </div>
+</div>
+<div id="addDlg_areapeoplemanage" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:700px;height:380px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>仓库名称<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field1" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>省<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field2" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>市<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field3" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>区<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field4" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>详细地址<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field5" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>联系人<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field6" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>手机号码<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field7" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>固定电话<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field8" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>邮箱<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field9" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>备注<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field10" required="true"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_areapeoplemanage').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_areapeoplemanage').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/rejects/returnStoreList.js"></script>
+</body>
+</html>

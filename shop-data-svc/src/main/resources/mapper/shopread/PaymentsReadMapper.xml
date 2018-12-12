@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.PaymentsReadDao">
+	<resultMap id="paymentsResult" type="com.haier.shop.model.Payments">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="paymentCode" column="paymentCode" />
+		<result property="paymentName" column="paymentName" />
+		<result property="paymentDesc" column="paymentDesc" />
+		<result property="paymentConfig" column="paymentConfig" />
+		<result property="sortNum" column="sortNum" />
+		<result property="enabled" column="enabled" />
+		<result property="onlyBackend" column="onlyBackend" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="paymentsResult">
+		select `id`,`siteId`,`paymentCode`,`paymentName`,`paymentDesc`,`paymentConfig`,`sortNum`,`enabled`,`onlyBackend`
+		from `Payments`
+		where `id` = #{id}
+	</select>
+	<select id="getByCode" parameterType="String" resultMap="paymentsResult">
+		select `id`,`siteId`,`paymentCode`,`paymentName`,`paymentDesc`,`paymentConfig`,`sortNum`,`enabled`,`onlyBackend`
+		from `Payments`
+		where `paymentCode` = #{paymentCode} limit 1
+	</select>
+</mapper>

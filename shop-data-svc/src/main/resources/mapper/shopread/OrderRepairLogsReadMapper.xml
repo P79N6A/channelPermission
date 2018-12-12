@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.OrderRepairLogsReadDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.OrderRepairLogs" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="siteId" property="siteId" jdbcType="INTEGER" />
+    <result column="addTime" property="addTime" jdbcType="INTEGER" />
+    <result column="orderRepairId" property="orderRepairId" jdbcType="INTEGER" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operate" property="operate" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="addTimeTss" property="addTimeTss" jdbcType="VARCHAR" />
+    <result column="cOrderSn" property="cOrderSn" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, siteId, addTime, orderRepairId, operator, operate, remark
+  </sql>
+  <insert id="insert" parameterType="com.haier.shop.model.OrderRepairLogs" >
+    insert into orderrepairlogs (id, siteId, addTime, 
+      orderRepairId, operator, operate, 
+      remark)
+    values (#{id}, #{siteId,jdbcType=INTEGER},unix_timestamp(now()) , 
+      #{orderrepairid,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, #{operate,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  
+  
+   <select id="getNextValId" resultType="int">
+        SELECT nextval('WPOrderId');
+    </select>
+    
+    <select id="queryLogs" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+		p.id,
+		from_unixtime(p.addTime) addTimeTss,
+		p.orderRepairId,
+		p.operator,
+		p.operate,
+		p.remark,
+		s.cOrderSn
+	FROM
+		OrderRepairLogs p,
+		OrderRepairs a,
+		OrderProducts s
+	where 
+		p.orderRepairId = a.id
+	and a.orderProductId = s.id
+	AND a.repairSn =#{id}
+    </select>
+
+</mapper>

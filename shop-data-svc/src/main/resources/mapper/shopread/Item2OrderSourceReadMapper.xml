@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.Item2OrderSourceReadDao">
+	<resultMap id="item2OrderSourceResult" type="com.haier.shop.model.Item2OrderSource">
+		<result property="id" column="id" />
+		<result property="itemProperty" column="item_property" />
+		<result property="orderSource" column="order_source" />
+		<result property="sourceName" column="source_name" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+	<select id="getByOrderSource" parameterType="String" resultMap="item2OrderSourceResult">
+		select
+		`id`,`item_property`,`order_source`,`source_name`,`create_time`
+		from `item_2_order_source`
+		where
+		`order_source` = #{order_source}
+	</select>
+</mapper>

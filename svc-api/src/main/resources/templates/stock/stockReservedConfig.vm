@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+
+
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    </meta>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_WwwHpRecords"></table>
+</div>
+
+<div id="export">
+    <form id="exportForm" action="#">
+        <input id="order_sn" name="order_sn" type="text">
+        <input id="source_order_sn" name="source_order_sn" type="hidden">
+        <input id="order_Status" name="order_Status" type="hidden">
+        <input id="source_e" name="source_e" type="hidden">
+        <input id="o_id" name="o_id" type="hidden">
+        <input id="express_no" name="express_no" type="hidden">
+        <input id="addTime_start" name="addTime_start" type="hidden">
+        <input id="addTime_end" name="addTime_end" type="hidden">
+        <input id="code" name="code" type="hidden">
+    </form>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <div class="search-row_nowidth">
+                <label>渠道编码:</label>
+                <input id="channelCode" name="channelCode" class="easyui-textbox" ></input>
+            </div>
+            <div class="search-row_nowidth">
+                <label>状态:</label>
+                <select name="statusValue" id="statusValue" class="easyui-combobox"data-options="required:true,editable:false,panelHeight:'auto'">
+                    <option value="-1" >全部</option>
+                    <option value="0" >停用</option>
+                    <option value="1">启用</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <label>单号:</label>
+                <input id="ref" name="ref" class="easyui-textbox" style="width: 150px"></input>
+            </div>
+            <br>
+
+        </div>
+        <div class="search-row_nowidth">
+        #*<a href="#" class="easyui-linkbutton" iconCls="icon-search" id="search">查询</a>*#
+        #*<a href="#" class="easyui-linkbutton" iconCls="icon-add"  id="export_Excel" onclick="getConfig('')">新增</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-clear"  id="export_Excel" onclick="getConfig('')">重置</a>*#
+            <a href="#" class="easyui-linkbutton" onclick="xxx()"
+               data-options="iconCls:'icon-search',plain:true">查询</a>
+            <a href="#" class="easyui-linkbutton" onclick="getConfig('')"
+               data-options="iconCls:'icon-add',plain:true">增加</a>
+            <a href="#" class="easyui-linkbutton" id="redo"
+               data-options="iconCls:'icon-redo',plain:true">重置</a>
+
+        </div>
+    </form>
+</div>
+
+<div id="addDlg_dmmtlPbcsMtlMeasure" data-options="title:'',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:250px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="configform" method="post">
+        <input type="hidden"  id="id" name="id" value="$!{row.id}"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>渠道<span style="color: red;">*</span></label>
+            <input id="channelCode1" TYPE="text" name="channelCode1"/>
+        </div>
+        <div class="fitem">
+            <label>预留时间<span style="color: red;">*</span></label>
+            <input id="lockHours" TYPE="text" name="lockHours"/>
+        </div>
+        <div class="fitem">
+            <label>单号</label>
+            <input id="ref1" TYPE="text" name="ref1" />
+        </div>
+        <div class="fitem">
+            <label>是否启用<span style="color: red;">*</span></label>
+            <select id="status1" name="status1" style="width: 120px" >
+                <option value="0"  width="20px"      >停用</option>
+                <option value="1"  width="20px"    >启用</option>
+            </select>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_warehouse" iconCls="icon-ok" onclick="saveConfig();" >保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_dmmtlPbcsMtlMeasure').dialog('close')">取消</a>
+    </div>
+</div>
+<script src="../static/js/pop/common/pop.js"></script>
+<script src="../static/js/stock/stockReservedConfig1.js"></script>
+</body>
+</html>

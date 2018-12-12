@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvRrsWarehouseDao">
+	<resultMap id="invRrsWarehouseResult" type="com.haier.stock.model.InvRrsWarehouse">
+		<result property="rrs_wh_code" column="rrs_wh_code" />
+		<result property="rrs_wh_name" column="rrs_wh_name" />
+		<result property="estorge_id" column="estorge_id" />
+		<result property="t2_default" column="t2_default" />
+		<result property="transport_prescription" column="transport_prescription" />
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_time" column="update_time" />
+		<result property="is_enabled" column="is_enabled" />
+	</resultMap>
+	
+	<select id="getRrsWhByEstorgeId" resultMap="invRrsWarehouseResult">
+        SELECT
+            `rrs_wh_code`,
+            `rrs_wh_name`,
+            `estorge_id`,
+            `t2_default`,
+            `transport_prescription`,
+            `create_user`,
+            `create_time`,
+            `update_user`,
+            `update_time`
+        FROM `inv_rrs_warehouse`
+        WHERE `estorge_id` = #{estorge_id}
+        <if test="t2_default !=null and t2_default != ''">
+            and t2_default = #{t2_default}
+        </if>
+        <if test="rrs_wh_code !=null and rrs_wh_code != ''">
+            and rrs_wh_code = #{rrs_wh_code}
+        </if>
+    </select>
+	<select id="getRrsWhByEstorgeOriginal" resultMap="invRrsWarehouseResult">
+		SELECT
+		`rrs_wh_code`,
+		`rrs_wh_name`,
+		`estorge_id`,
+		`t2_default`,
+		`transport_prescription`,
+		`create_user`,
+		`create_time`,
+		`update_user`,
+		`update_time`
+		FROM `inv_rrs_warehouse`
+		WHERE is_enabled=0
+		<if test="estorge_id !=null and estorge_id != ''">
+			and estorge_id = #{estorge_id}
+		</if>
+		<if test="t2_default !=null and t2_default != ''">
+			and t2_default = #{t2_default}
+		</if>
+		<if test="rrs_wh_code !=null and rrs_wh_code != ''">
+			and rrs_wh_code = #{rrs_wh_code}
+		</if>
+	</select>
+
+	<select id="getAllRrsWhByEstorgeOriginal" resultMap="invRrsWarehouseResult">
+		SELECT
+		`rrs_wh_code`,
+		`rrs_wh_name`,
+		`estorge_id`,
+		`t2_default`,
+		`transport_prescription`,
+		`create_user`,
+		`create_time`,
+		`update_user`,
+		`update_time`
+		FROM `inv_rrs_warehouse`
+		WHERE `estorge_id` =
+		#{estorge_id}
+		<if test="t2_default !=null and t2_default != ''">
+			and t2_default = #{t2_default}
+		</if>
+		<if test="rrs_wh_code !=null and rrs_wh_code != ''">
+			and rrs_wh_code = #{rrs_wh_code}
+		</if>
+	</select>
+</mapper>

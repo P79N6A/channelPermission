@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvWarehouseInfoDao">
+
+	<resultMap id="invWarehouseInfoResult" type="com.haier.stock.model.InvWarehouseInfo">
+		<result property="secCode" column="sec_code" />
+		<result property="centerName" column="center_name" />
+		<result property="centerCode" column="center_code" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="region" column="region" />
+		<result property="lesProvinceCode" column="les_province_code" />
+		<result property="secAddress" column="sec_address" />
+		<result property="zipcode" column="zipcode" />
+		<result property="cgodbmZpthPerson" column="cgodbm_zpth_person" />
+		<result property="crmZpthPerson" column="crm_zpth_person" />
+		<result property="mobile" column="mobile" />
+		<result property="phone" column="phone" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<select id="getBySecCode" parameterType="map" resultMap="invWarehouseInfoResult">
+		select `sec_code`,`center_name`,`center_code`,`province`,`city`,`region`,`les_province_code`,`sec_address`,`zipcode`,`cgodbm_zpth_person`,`crm_zpth_person`,`mobile`,`phone`,`status` 
+		from inv_warehouse_info 
+		where `sec_code`=#{secCode}
+	</select>
+	
+
+	<insert id="insert" parameterType="com.haier.stock.model.InvWarehouseInfo">
+		insert into inv_warehouse_info(`sec_code`,`center_name`,`center_code`,`province`,`city`,`region`,`les_province_code`,`sec_address`,`zipcode`,`cgodbm_zpth_person`,`crm_zpth_person`,`mobile`,`phone`,`status`)values(#{secCode},#{centerName},#{centerCode},#{province},#{city},#{region},#{lesProvinceCode},#{secAddress},#{zipcode},#{cgodbmZpthPerson},#{crmZpthPerson},#{mobile},#{phone},#{status})
+	</insert>
+
+	<update id="update" parameterType="com.haier.stock.model.InvWarehouseInfo">
+		update inv_warehouse_info set `sec_code`=#{secCode},`center_name`=#{centerName},`center_code`=#{centerCode},`province`=#{province},`city`=#{city},`region`=#{region},`les_province_code`=#{lesProvinceCode},`sec_address`=#{secAddress},`zipcode`=#{zipcode},`cgodbm_zpth_person`=#{cgodbmZpthPerson},`crm_zpth_person`=#{crmZpthPerson},`mobile`=#{mobile},`phone`=#{phone},`status`=#{status}
+	</update>
+
+</mapper>

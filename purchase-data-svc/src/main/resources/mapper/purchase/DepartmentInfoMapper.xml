@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.vehcile.DepartmentInfoDao">
+
+  <!-- =========================================================== -->
+  <!-- 定义resultMap -->
+  <!-- =========================================================== -->
+  <resultMap id="departmentInfoMap" type="com.haier.purchase.data.model.vehcile.DepartmentInfoDTO">
+    <result column="id" property="id" jdbcType="DECIMAL"/>
+    <result column="delivery_to_code" property="deliveryToCode" jdbcType="VARCHAR"/>
+    <result column="department_code" property="departmentCode" jdbcType="VARCHAR"/>
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR"/>
+    <result column="organization_code" property="organizationCode" jdbcType="VARCHAR"/>
+    <result column="organization_name" property="organizationName" jdbcType="VARCHAR"/>
+    <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
+    <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+    <result column="create_time" property="createTime" jdbcType="DATE"/>
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR"/>
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
+  </resultMap>
+
+  <!-- =========================================================== -->
+  <!-- 公共变量定义 -->
+  <!-- =========================================================== -->
+  <!-- oracle 分页头部 -->
+  <sql id="pagination_Head">
+    <![CDATA[select * from ( select row_.*, rownum rownum_ from ( ]]>
+  </sql>
+  <!-- oracle 分页尾部 -->
+  <sql id="pagination_Tail">
+    <![CDATA[) row_ where rownum < (#{pager.page} * #{pager.rows} +1) ) where rownum_ >= ((#{pager.page} -1) * #{pager.rows} +1)]]>
+  </sql>
+  <!-- count * from -->
+  <sql id="count_Start_Head">
+    <![CDATA[select count(1) from ( ]]>
+  </sql>
+  <sql id="count_Start_Tail">
+    <![CDATA[)]]>
+  </sql>
+  <sql id="pagination_OrderBy">
+    <if test="pager.sort != null and pager.sort !=''">
+  	  ORDER BY ${pager.sort} ${pager.order}
+    </if>
+  </sql>
+
+  <!-- 通用查询结果列 -->
+  <sql id="Base_Column_List">
+  id
+  ,delivery_to_code
+  ,department_code
+  ,department_name
+  ,organization_code
+  ,organization_name
+  ,active_flag
+  ,create_by
+  ,create_time
+  ,last_update_by
+  ,last_update_time
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="where_fragement">
+  where 1=1
+  <if test="entity!=null">
+      <if test="entity.id != null and entity.id !='' ">
+        <![CDATA[ and id  = #{entity.id} ]]>
+      </if>
+      <if test="entity.deliveryToCode != null and entity.deliveryToCode !='' ">
+        <![CDATA[ and delivery_to_code  LIKE '%' || #{entity.deliveryToCode} ||'%']]>
+      </if>
+      <if test="entity.departmentCode != null and entity.departmentCode !='' ">
+        <![CDATA[ and department_code  LIKE '%' || #{entity.departmentCode} ||'%']]>
+      </if>
+      <if test="entity.departmentName != null and entity.departmentName !='' ">
+        <![CDATA[ and department_name  LIKE '%' || #{entity.departmentName} ||'%']]>
+      </if>
+      <if test="entity.organizationCode != null and entity.organizationCode !='' ">
+        <![CDATA[ and organization_code  LIKE '%' || #{entity.organizationCode} ||'%']]>
+      </if>
+      <if test="entity.organizationName != null and entity.organizationName !='' ">
+        <![CDATA[ and organization_name  LIKE '%' || #{entity.organizationName} ||'%']]>
+      </if>
+      <if test="entity.activeFlag != null and entity.activeFlag !='' ">
+        <![CDATA[ and active_flag  = #{entity.activeFlag} ]]>
+      </if>
+      <if test="entity.createBy != null and entity.createBy !='' ">
+        <![CDATA[ and create_by  LIKE '%' || #{entity.createBy} ||'%']]>
+      </if>
+      <if test="entity.createTime != null ">
+        <![CDATA[ and create_time  = #{entity.createTime} ]]>
+      </if>
+      <if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+        <![CDATA[ and last_update_by  LIKE '%' || #{entity.lastUpdateBy} ||'%']]>
+      </if>
+      <if test="entity.lastUpdateTime != null ">
+        <![CDATA[ and last_update_time  = #{entity.lastUpdateTime} ]]>
+      </if>
+  </if>
+  </sql>
+
+  <!-- 相等查询条件 -->
+  <sql id="where_fragement_equals">
+  where 1=1
+  <if test="entity!=null">
+    <if test="entity.id != null and entity.id !='' ">
+      <![CDATA[ and id  = #{entity.id} ]]>
+    </if>
+    <if test="entity.deliveryToCode != null and entity.deliveryToCode !='' ">
+      <![CDATA[ and delivery_to_code  = #{entity.deliveryToCode} ]]>
+    </if>
+    <if test="entity.departmentCode != null and entity.departmentCode !='' ">
+      <![CDATA[ and department_code  = #{entity.departmentCode} ]]>
+    </if>
+    <if test="entity.departmentName != null and entity.departmentName !='' ">
+      <![CDATA[ and department_name  = #{entity.departmentName} ]]>
+    </if>
+    <if test="entity.organizationCode != null and entity.organizationCode !='' ">
+      <![CDATA[ and organization_code  = #{entity.organizationCode} ]]>
+    </if>
+    <if test="entity.organizationName != null and entity.organizationName !='' ">
+      <![CDATA[ and organization_name  = #{entity.organizationName} ]]>
+    </if>
+    <if test="entity.activeFlag != null and entity.activeFlag !='' ">
+      <![CDATA[ and active_flag  = #{entity.activeFlag} ]]>
+    </if>
+    <if test="entity.createBy != null and entity.createBy !='' ">
+      <![CDATA[ and create_by  = #{entity.createBy} ]]>
+    </if>
+    <if test="entity.createTime != null ">
+      <![CDATA[ and create_time  = #{entity.createTime} ]]>
+    </if>
+    <if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+      <![CDATA[ and last_update_by  = #{entity.lastUpdateBy} ]]>
+    </if>
+    <if test="entity.lastUpdateTime != null ">
+      <![CDATA[ and last_update_time  = #{entity.lastUpdateTime} ]]>
+    </if>
+  </if>
+  </sql>
+
+  <!-- =========================================================== -->
+  <!-- Mapper中的基本增删改查方法                                                                                                                                                       -->
+  <!-- =========================================================== -->
+
+  <!-- 根据id查询 -->
+  <select id="getOneById" resultMap="departmentInfoMap" parameterType="Long">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM department_info
+    WHERE ID = #{id}
+  </select>
+
+  <!-- 根据Condition查询 -->
+  <select id="getOneByCondition" resultMap="departmentInfoMap">
+  SELECT
+  <include refid="Base_Column_List" />
+  FROM department_info
+  <include refid="where_fragement_equals" />
+  </select>
+
+    <!-- 根据送达方查询 -->
+    <select id="getOneByDeliveryToCode" resultMap="departmentInfoMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM department_info
+        where delivery_to_code = #{deliveryToCode}
+    </select>
+
+  <!-- 查询page -->
+  <select id="getPageByCondition" resultMap="departmentInfoMap">
+  <include refid="pagination_Head" />
+  SELECT
+  <include refid="Base_Column_List" />
+  FROM department_info
+  <include refid="where_fragement" />
+  <include refid="pagination_OrderBy" />
+  <include refid="pagination_Tail" />
+  </select>
+
+  <!--查询总条数 -->
+  <select id="countByCondition" parameterType="com.haier.purchase.data.model.vehcile.DepartmentInfoDTO" resultType="long">
+  <include refid="count_Start_Head" />
+  SELECT
+  <include refid="Base_Column_List" />
+  FROM department_info
+  <include refid="where_fragement" />
+  <include refid="count_Start_Tail" />
+  </select>
+
+  <!-- 查询list -->
+  <select id="listByCondition" resultMap="departmentInfoMap">
+  SELECT
+  <include refid="Base_Column_List" />
+  FROM department_info
+  <include refid="where_fragement" />
+  </select>
+
+  <!-- 插入全字段 -->
+  <insert id="insertAllColumn" parameterType="com.haier.purchase.data.model.vehcile.DepartmentInfoDTO">
+    INSERT INTO department_info (
+        <include refid="Base_Column_List" />
+       )VALUES(
+          #{id,jdbcType=DECIMAL}
+          ,#{deliveryToCode,jdbcType=VARCHAR}
+          ,#{departmentCode,jdbcType=VARCHAR}
+          ,#{departmentName,jdbcType=VARCHAR}
+          ,#{organizationCode,jdbcType=VARCHAR}
+          ,#{organizationName,jdbcType=VARCHAR}
+          ,#{activeFlag,jdbcType=DECIMAL}
+          ,#{createBy,jdbcType=VARCHAR}
+          ,#{createTime,jdbcType=DATE}
+          ,#{lastUpdateBy,jdbcType=VARCHAR}
+          ,#{lastUpdateTime,jdbcType=DATE}
+       )
+  </insert>
+
+  <!-- 插入非空字段 -->
+  <insert id="insertSelective" parameterType="com.haier.purchase.data.model.vehcile.DepartmentInfoDTO">
+  INSERT INTO department_info
+  <trim prefix="(" suffix=")" suffixOverrides="," >
+        <if test="id != null and id !='' ">
+          <![CDATA[ id, ]]>
+        </if>
+        <if test="deliveryToCode != null and deliveryToCode !='' ">
+          <![CDATA[ delivery_to_code, ]]>
+        </if>
+        <if test="departmentCode != null and departmentCode !='' ">
+          <![CDATA[ department_code, ]]>
+        </if>
+        <if test="departmentName != null and departmentName !='' ">
+          <![CDATA[ department_name, ]]>
+        </if>
+        <if test="organizationCode != null and organizationCode !='' ">
+          <![CDATA[ organization_code, ]]>
+        </if>
+        <if test="organizationName != null and organizationName !='' ">
+          <![CDATA[ organization_name, ]]>
+        </if>
+        <if test="activeFlag != null and activeFlag !='' ">
+          <![CDATA[ active_flag, ]]>
+        </if>
+        <if test="createBy != null and createBy !='' ">
+          <![CDATA[ create_by, ]]>
+        </if>
+        <if test="createTime != null ">
+          <![CDATA[ create_time, ]]>
+        </if>
+        <if test="lastUpdateBy != null and lastUpdateBy !='' ">
+          <![CDATA[ last_update_by, ]]>
+        </if>
+        <if test="lastUpdateTime != null ">
+          <![CDATA[ last_update_time, ]]>
+        </if>
+  </trim>
+  <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+      <if test="id != null and id !='' ">
+        <![CDATA[ #{id,jdbcType=DECIMAL}, ]]>
+      </if>
+      <if test="deliveryToCode != null and deliveryToCode !='' ">
+        <![CDATA[ #{deliveryToCode,jdbcType=VARCHAR}, ]]>
+      </if>
+      <if test="departmentCode != null and departmentCode !='' ">
+        <![CDATA[ #{departmentCode,jdbcType=VARCHAR}, ]]>
+      </if>
+      <if test="departmentName != null and departmentName !='' ">
+        <![CDATA[ #{departmentName,jdbcType=VARCHAR}, ]]>
+      </if>
+      <if test="organizationCode != null and organizationCode !='' ">
+        <![CDATA[ #{organizationCode,jdbcType=VARCHAR}, ]]>
+      </if>
+      <if test="organizationName != null and organizationName !='' ">
+        <![CDATA[ #{organizationName,jdbcType=VARCHAR}, ]]>
+      </if>
+      <if test="activeFlag != null and activeFlag !='' ">
+        <![CDATA[ #{activeFlag,jdbcType=DECIMAL}, ]]>
+      </if>
+      <if test="createBy != null and createBy !='' ">
+        <![CDATA[ #{createBy,jdbcType=VARCHAR}, ]]>
+      </if>
+      <if test="createTime != null ">
+        <![CDATA[ #{createTime,jdbcType=DATE}, ]]>
+      </if>
+      <if test="lastUpdateBy != null and lastUpdateBy !='' ">
+        <![CDATA[ #{lastUpdateBy,jdbcType=VARCHAR}, ]]>
+      </if>
+      <if test="lastUpdateTime != null ">
+        <![CDATA[ #{lastUpdateTime,jdbcType=DATE}, ]]>
+      </if>
+  </trim>
+  </insert>
+
+  <!-- 逻辑删除,根据主键设置active_flag ='0' -->
+  <update id="deleteLogicalById" parameterType="com.haier.purchase.data.model.vehcile.DepartmentInfoDTO">
+    UPDATE department_info
+    SET ACTIVE_FLAG = '0'
+    ,LAST_UPD_BY = #{entity.lastUpdBy,jdbcType=VARCHAR}
+    ,LAST_UPD_DATE = #{entity.lastUpdDate,jdbcType=DATE}
+    ,REMARK = #{entity.remark,jdbcType=VARCHAR}
+    WHERE ID = #{entity.id}
+  </update>
+
+  <!-- 逻辑删除,根据主键batch设置active_flag ='0' -->
+  <update id="deleteLogicalBatchByIds">
+    UPDATE department_info
+    SET ACTIVE_FLAG = '0'
+    ,LAST_UPD_BY = #{entity.lastUpdBy,jdbcType=VARCHAR}
+    ,LAST_UPD_DATE = #{entity.lastUpdDate,jdbcType=DATE}
+    ,REMARK = #{entity.remark,jdbcType=VARCHAR}
+    WHERE ID IN
+    <foreach collection="ids" item="id" open="(" separator=","
+      close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <!--  修改有值列  -->
+  <update id="updateSelectiveById" parameterType="com.haier.purchase.data.model.vehcile.DepartmentInfoDTO">
+    UPDATE department_info
+    <set>
+      <if test="entity!=null">
+          <if test="entity.id != null and entity.id !='' ">
+            <![CDATA[ id = #{entity.id}, ]]>
+          </if>
+          <if test="entity.deliveryToCode != null and entity.deliveryToCode !='' ">
+            <![CDATA[ delivery_to_code = #{entity.deliveryToCode}, ]]>
+          </if>
+          <if test="entity.departmentCode != null and entity.departmentCode !='' ">
+            <![CDATA[ department_code = #{entity.departmentCode}, ]]>
+          </if>
+          <if test="entity.departmentName != null and entity.departmentName !='' ">
+            <![CDATA[ department_name = #{entity.departmentName}, ]]>
+          </if>
+          <if test="entity.organizationCode != null and entity.organizationCode !='' ">
+            <![CDATA[ organization_code = #{entity.organizationCode}, ]]>
+          </if>
+          <if test="entity.organizationName != null and entity.organizationName !='' ">
+            <![CDATA[ organization_name = #{entity.organizationName}, ]]>
+          </if>
+          <if test="entity.activeFlag != null and entity.activeFlag !='' ">
+            <![CDATA[ active_flag = #{entity.activeFlag}, ]]>
+          </if>
+          <if test="entity.createBy != null and entity.createBy !='' ">
+            <![CDATA[ create_by = #{entity.createBy}, ]]>
+          </if>
+          <if test="entity.createTime != null ">
+            <![CDATA[ create_time = #{entity.createTime}, ]]>
+          </if>
+          <if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+            <![CDATA[ last_update_by = #{entity.lastUpdateBy}, ]]>
+          </if>
+          <if test="entity.lastUpdateTime != null ">
+            <![CDATA[ last_update_time = #{entity.lastUpdateTime}, ]]>
+          </if>
+      </if>
+    </set>
+    WHERE ID = #{entity.id}
+  </update>
+
+  <!--  修改所有列  -->
+  <update id="updateAllColumnById" parameterType="com.haier.purchase.data.model.vehcile.DepartmentInfoDTO">
+    UPDATE department_info
+    <set>
+      <if test="entity!=null">
+          delivery_to_code = #{entity.deliveryToCode,jdbcType=VARCHAR}
+          ,department_code = #{entity.departmentCode,jdbcType=VARCHAR}
+          ,department_name = #{entity.departmentName,jdbcType=VARCHAR}
+          ,organization_code = #{entity.organizationCode,jdbcType=VARCHAR}
+          ,organization_name = #{entity.organizationName,jdbcType=VARCHAR}
+          ,active_flag = #{entity.activeFlag,jdbcType=DECIMAL}
+          ,create_by = #{entity.createBy,jdbcType=VARCHAR}
+          ,create_time = #{entity.createTime,jdbcType=DATE}
+          ,last_update_by = #{entity.lastUpdateBy,jdbcType=VARCHAR}
+          ,last_update_time = #{entity.lastUpdateTime,jdbcType=DATE}
+      </if>
+    </set>
+    WHERE ID = #{entity.id}
+  </update>
+
+</mapper>

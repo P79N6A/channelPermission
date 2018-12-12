@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+
+
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    </meta>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_orderForecastGoal"></table>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">网单号</span>
+                <input id="cOrderSn" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">订单号</span>
+                <input id="orderSn" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">来源订单号</span>
+                <input id="sourceOrderSn" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">手机号</span>
+                <input id="mobile" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">收货人</span>
+                <input id="consignee" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">商品名称</span>
+                <input id="productName" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">商品SKU</span>
+                <input id="sku" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">商品单价</span>
+                <input id="price" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">购买数量</span>
+                <input id="numberMin" class="easyui-textbox" style="width: 59px;"></input>
+                —
+                <input id="numberMax" class="easyui-textbox" style="width: 59px;"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">库位编码</span>
+                <input id="sCode" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">下单时间</span>
+                <input id="addTimeMin" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label_80">至</span>
+                <input id="addTimeMax" class="easyui-datebox"></input>
+            </div>
+
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">订单来源</span>
+                <select name="source" id="source" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">商城PC</option>
+                    <option value="DXS">商城PC_O2O</option>
+                    <option value="TBSC">淘宝海尔官方旗舰店</option>
+                    <option value="TOPDHSC">海尔生活家电旗舰店</option>
+                    <option value="TOPFENXIAO">淘宝海尔官方旗舰店分销平台</option>
+                    <option value="TOPFENXIAODHSC">淘宝海尔生活家电旗舰店分销平台</option>
+                    <option value="TOPBUYBANG">淘宝海尔买帮专卖店</option>
+                    <option value="TOPBOILER">淘宝海尔热水器专卖店</option>
+                    <option value="TOPSHJD">淘宝海尔生活电器专卖店</option>
+                    <option value="TOPMOBILE">淘宝海尔手机专卖店</option>
+                    <option value="TONGSHUAI">统帅日日顺乐家专卖店</option>
+                    <option value="CCBSC">企业订单_建行龙卡商城订单</option>
+                    <option value="CCBSR">企业订单_建行善融商城订单</option>
+                    <option value="95533">企业内购-建行</option>
+                    <option value="CORPORATE">企业订单</option>
+                    <option value="CORPORATE_SJMG">企业订单_四季沐歌</option>
+                    <option value="YIHAODIAN">企业订单_1号店订单</option>
+                    <option value="DALOU">商城PC_文化展体验店</option>
+                    <option value="113">企业订单_内购</option>
+                    <option value="114">企业订单_集采</option>
+                    <option value="115">企业订单_B2B</option>
+                    <option value="ZPTH">正品退货</option>
+                    <option value="TOPPAD">淘宝海尔PAD专卖店</option>
+                    <option value="HPB2B">海朋转TC订单</option>
+                    <option value="TOPXB">海尔新宝旗舰店</option>
+                    <option value="TOPFENXIAOXB">淘宝海尔新宝旗舰店分销平台</option>
+                    <option value="C2BWASHER">C2B滚筒洗衣机订单</option>
+                    <option value="MOBILE">商城移动</option>
+                    <option value="ICBC">平台大客户-工商银行</option>
+                    <option value="YHD">平台大客户-1号店</option>
+                    <option value="TONGSHUAIFX">统帅分销</option>
+                    <option value="COS">商城PC_样品机</option>
+                    <option value="RRS">日日顺</option>
+                    <option value="CK">顺逛PC</option>
+                    <option value="CK_MOBILE">顺逛wap</option>
+                    <option value="GMZX">国美在线</option>
+                    <option value="DBJ">商城PC_夺宝机</option>
+                    <option value="TMMK">mooka模卡官方旗舰店</option>
+                    <option value="JDMK">京东模卡</option>
+                    <option value="SQXW">商圈小微</option>
+                    <option value="YMX">亚马逊</option>
+                    <option value="ZSH">平台大客户-中石化</option>
+                    <option value="TSMOBILE">统帅商城移动</option>
+                    <option value="TSPC">统帅商城PC</option>
+                    <option value="YHDZY">电商平台-1号店自营</option>
+                    <option value="SNYG">电商平台-苏宁易购旗舰店</option>
+                    <option value="DDW">电商平台-当当网</option>
+                    <option value="BLPHH">商城PC_不良品换货</option>
+                    <option value="YLW">电商平台-邮乐网</option>
+                    <option value="DCYH">电商平台-地产用户</option>
+                    <option value="PCNEW">商城PC_新品</option>
+                    <option value="WASHER">海尔洗衣机官方旗舰店</option>
+                    <option value="FRIDGE">海尔冰冷官方旗舰店</option>
+                    <option value="MSTORE">顺逛app</option>
+                    <option value="HBSC">商城PC_海贝</option>
+                    <option value="S_MOBILE">商城移动_app</option>
+                    <option value="YJYD">商城移动_优家</option>
+                    <option value="AIR">淘宝空调旗舰店</option>
+                    <option value="YHDTS">一号店统帅官方旗舰店</option>
+                    <option value="TMMKFX">天猫模卡分销店铺</option>
+                    <option value="GMTSZYCW">国美统帅自营_厨卫电器</option>
+                    <option value="GMTSZYKT">国美统帅自营_空调</option>
+                    <option value="GMTSZYBX">国美统帅自营_冰箱</option>
+                    <option value="GMTSZYXYJ">国美统帅自营_洗衣机</option>
+                    <option value="GMTSZYYY">国美统帅自营_电视家庭影音</option>
+                    <option value="SCHD">商城PC_恒大</option>
+                    <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
+                    <option value="GQGYS">生态授权店</option>
+                    <option value="TBCT">淘宝村淘</option>
+                    <option value="TBQYG">天猫企业购</option>
+                    <option value="TMST">天猫生态</option>
+                    <option value="FLW">商城PC_返利网</option>
+                    <option value="YHDQWZY">电商平台-1号店全网自营</option>
+                    <option value="TMKSD">卡萨帝官方旗舰店</option>
+                    <option value="TMTV">天猫海尔电视</option>
+                    <option value="TBCFDD">淘宝海尔厨房大电旗舰店</option>
+                    <option value="TBXCR">天猫小超人旗舰店</option>
+                    <option value="GMZXTS">国美统帅官方旗舰店</option>
+                </select>
+            </div>
+
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">支付方式</span>
+                <select name="paymentCode" id="paymentCode" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="chinapay">银联支付</option>
+                    <option value="alipay">支付宝</option>
+                    <option value="wxpay">微信支付</option>
+                    <option value="tenpay">财付通</option>
+                    <option value="cod">货到付款</option>
+                    <option value="insidestatement">内部结算单</option>
+                    <option value="lejia">电子钱包</option>
+                    <option value="giftCard">礼品卡支付</option>
+                    <option value="offline">线下付款</option>
+                    <option value="prepaid">客户预付货款</option>
+                    <option value="ccb">建行网银支付</option>
+                    <option value="balance">余额支付</option>
+                    <option value="alipaymobile">支付宝移动商城</option>
+                    <option value="chinaecpay">联行支付</option>
+                    <option value="kjtpay">快捷通</option>
+                    <option value="HUABEI">花呗分期</option>
+                    <option value="ccbfenqi">建行信用卡分期</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">支付状态</span>
+                <select name="paymentStatus" id="paymentStatus" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="200">未付款</option>
+                    <option value="201">已付款</option>
+                    <option value="206">待退款</option>
+                    <option value="207">已退款</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">订单状态</span>
+                <select name="orderStatus" id="orderStatus" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="200">未确认</option>
+                    <option value="204">部分缺货</option>
+                    <option value="201">已确认</option>
+                    <option value="203">已完成</option>
+                    <option value="202">已取消</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">从未确认过</span>
+                <select name="firstConfirmTime" id="firstConfirmTime" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">确认过</option>
+                    <option value="0">从未确认过</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">网单状态</span>
+                <select name="status" id="status" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="0">处理中</option>
+                    <option value="1">已占用库存</option>
+                    <option value="2">同步到HP</option>
+                    <option value="3">同步到EC</option>
+                    <option value="4">分配网点</option>
+                    <option value="8">待出库</option>
+                    <option value="10">待审核</option>
+                    <option value="11">待转运入库</option>
+                    <option value="12">待转运出库</option>
+                    <option value="40">待发货</option>
+                    <option value="150">网点拒绝</option>
+                    <option value="70">待交付</option>
+                    <option value="140">用户签收</option>
+                    <option value="130">完成关闭</option>
+                    <option value="160">用户拒收</option>
+                    <option value="110">取消关闭</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">需确认订单</span>
+                <select name="isNotConfirm" id="isNotConfirm" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">转运发货</span>
+                <select name="isTsCode" id="isTsCode" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">派工异常</span>
+                <select name="isHpTimeout" id="isHpTimeout" class="easyui-combobox">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">24小时限时达</span>
+                <select name="supportOneDayLimit" id="supportOneDayLimit" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">节能补贴</span>
+                <select name="isEs"  id="isEs" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">预定网单</span>
+                <select name="isBook" id="isBook" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">团购网单</span>
+                <select name="isActivity" id="isActivity" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">淘宝套装网单</span>
+                <select name="isExternal" id="isExternal" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">预警</span>
+                <select name="isNotice" id="isNotice" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">预警时间</span>
+                <select name="noticeTime" id="noticeTime" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="12H">12H</option>
+                    <option value="24H">24H</option>
+                    <option value="36H">36H</option>
+                    <option value="48H">48H</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">订单地区分配</span>
+                <select name="regionAssign" id="regionAssign" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="north">北区</option>
+                    <option value="east">东区</option>
+                    <option value="south">南区</option>
+                    <option value="west">西区</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">需要开具发票</span>
+                <select name="isReceipt" id="isReceipt" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">需要</option>
+                    <option value="0">不需要</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">物流模式</span>
+                <select name="shippingMode" id="shippingMode" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">B2B2C</option>
+                    <option value="2">B2C</option>
+                    <option value="3">B2B</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">开票类型</span>
+                <select name="makeReceiptType" id="makeReceiptType" class="easyui-combobox">
+                    <option value="0">全部</option>
+                    <option value="1">库房开票</option>
+                    <option value="2">共享开票</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">开票状态</span>
+                <select name="isMakeReceipt" id="isMakeReceipt" class="easyui-combobox">
+                    <option value="0">全部</option>
+                    <option value="1">未开票</option>
+                    <option value="9">待开票</option>
+                    <option value="5">开票中</option>
+                    <option value="6">开票失败</option>
+                    <option value="2">已开票</option>
+                    <option value="3">作废发票</option>
+                    <option value="4">冲红发票</option>
+                    <option value="10">取消开票</option>
+                    <option value="20">期初数据封存</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">会员等级</span>
+                <select name="memberRankId" id="memberRankId" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="2">特许店用户(TXDYH)</option>
+                    <option value="3">企业会员</option>
+                    <option value="5">俱乐部会员</option>
+                    <option value="7">快钱会员</option>
+                    <option value="9">支付宝会员</option>
+                    <option value="11">财付通会员</option>
+                    <option value="12">海尔内部员工(16465120000000)</option>
+                    <option value="13">村单联络人</option>
+                    <option value="14">农行会员</option>
+                    <option value="15">国网会员</option>
+                    <option value="16">热水器网站活动会员组(hotwater)</option>
+                    <option value="18">微博用户</option>
+                    <option value="20">life会员</option>
+                    <option value="21">普通会员</option>
+                    <option value="22">奇瑞会员</option>
+                    <option value="23">彩电会员</option>
+                    <option value="28">内部员工组(nbyg)</option>
+                    <option value="35">建行内部员工(ccb)</option>
+                    <option value="37">热水器活动组-2(RAI985)</option>
+                    <option value="38">热水器活动组-3(YUE830)</option>
+                    <option value="39">热水器活动组-4(DIS973)</option>
+                    <option value="40">热水器活动组-5(TYP094)</option>
+                    <option value="41">热水器活动组-6(ONY932)</option>
+                    <option value="42">热水器活动组—7(NUHE456)</option>
+                    <option value="43">热水器活动组-8(ERI826)</option>
+                    <option value="45">热水器活动组 0(HYE093)</option>
+                    <option value="48">交行内部员工(BCM)</option>
+                    <option value="51">阿里会员(alibaba)</option>
+                    <option value="53">企业员工内购(qyygng)</option>
+                    <option value="54">增值卡组(ZZK)</option>
+                    <option value="55">母婴家电会员组(MYJD)</option>
+                    <option value="58">11月CRM营销第三方EDM(novcrm)</option>
+                    <option value="60">无尾家电下单组（商城）(WWJDSC)</option>
+                    <option value="64">超时免单赔付会员组(chaoshimiandan)</option>
+                    <option value="66">华润企业员工内购(HR)</option>
+                    <option value="69">泡泡网3月注册(PCPOP)</option>
+                    <option value="71">商城分销渠道组(coffee)</option>
+                    <option value="73">商城分销渠道1组(coffee1)</option>
+                    <option value="79">商城分销渠道2组(coffee2)</option>
+                    <option value="81">商城分销渠道3组(coffee3)</option>
+                    <option value="83">商城分销渠道4组(coffee4)</option>
+                    <option value="85">人人创客会员组(CK)</option>
+                    <option value="87">智能微波炉内测组(nc)</option>
+                    <option value="95">海尔商城B2C业务2组(coffee6)</option>
+                    <option value="99">海尔商城B2C业务4组(coffee8)</option>
+                    <option value="101">海尔商城B2C业务5组(coffee9)</option>
+                    <option value="105">海尔商城B2C业务7组(coffee11)</option>
+                    <option value="107">海尔商城B2C业务1组(coffee5)</option>
+                    <option value="109">邮政会员组(YZ)</option>
+                    <option value="111">中石化用户组(ZSH0127)</option>
+                    <option value="119">网点会员(HSTORE)</option>
+                    <option value="137">O2O(O2O)</option>
+                    <option value="139">顺逛创客组(shunguang)</option>
+                    <option value="143">商城生态店1组(scstd1)</option>
+                    <option value="145">商城生态店2组(scstd2)</option>
+                    <option value="147">商城生态店3组(scstd3)</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">省份</span>
+                <select name="provinceId" id="provinceId" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="13">A-安徽</option>
+                    <option value="2">B-北京</option>
+                    <option value="23">C-重庆</option>
+                    <option value="14">F-福建</option>
+                    <option value="25">G-贵州</option>
+                    <option value="20">G-广东</option>
+                    <option value="29">G-甘肃</option>
+                    <option value="21">G-广西</option>
+                    <option value="18">H-湖北</option>
+                    <option value="17">H-河南</option>
+                    <option value="22">H-海南</option>
+                    <option value="19">H-湖南</option>
+                    <option value="9">H-黑龙江</option>
+                    <option value="4">H-河北</option>
+                    <option value="15">J-江西</option>
+                    <option value="8">J-吉林</option>
+                    <option value="11">J-江苏</option>
+                    <option value="7">L-辽宁</option>
+                    <option value="6">N-内蒙古</option>
+                    <option value="31">N-宁夏</option>
+                    <option value="30">Q-青海</option>
+                    <option value="24">S-四川</option>
+                    <option value="5">S-山西</option>
+                    <option value="10">S-上海</option>
+                    <option value="16">S-山东</option>
+                    <option value="28">S-陕西</option>
+                    <option value="3">T-天津</option>
+                    <option value="27">X-西藏</option>
+                    <option value="32">X-新疆</option>
+                    <option value="26">Y-云南</option>
+                    <option value="12">Z-浙江</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">订单类型</span>
+                <select name="orderType" id="orderType" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="0">普通订单</option>
+                    <option value="1">团购预付款订单</option>
+                    <option value="3">团购订单</option>
+                    <option value="2">团购尾款订单</option>
+                    <option value="4">单订单模式的定金-尾款订单</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">品牌</span>
+                <select name="brandId" id="brandId" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="297">海尔</option>
+                    <option value="298">卡萨帝</option>
+                    <option value="299">统帅</option>
+                    <option value="301">海尔施特劳斯</option>
+                    <option value="302">Zettom</option>
+                    <option value="303">新宝</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">商品分类</span>
+                <select name="cateId"  id="cateId" class="easyui-combobox">
+                    <option value="" class="easyui-combobox">全部</option>
+                    <option value="2723">冰箱</option>
+                    <option value="2725">洗衣机</option>
+                    <option value="2727">----滚筒洗衣机</option>
+                    <option value="2809">--------干衣机</option>
+                    <option value="3011">--------洗烘一体</option>
+                    <option value="2728">----波轮洗衣机</option>
+                    <option value="2933">--------免清洗洗衣机</option>
+                    <option value="3013">--------双动力</option>
+                    <option value="2756">----洗碗机</option>
+                    <option value="2893">----mini洗衣机</option>
+                    <option value="3005">----双缸</option>
+                    <option value="2726">冷柜</option>
+                    <option value="2724">----冷柜</option>
+                    <option value="2862">----冰吧</option>
+                    <option value="2863">----酒柜</option>
+                    <option value="3087">----展示柜</option>
+                    <option value="2729">空调</option>
+                    <option value="2730">----壁挂式空调</option>
+                    <option value="2731">--------高效定频壁挂式空调</option>
+                    <option value="2732">--------无氟变频壁挂式空调</option>
+                    <option value="2733">----柜式空调</option>
+                    <option value="2734">--------高效定频柜式空调</option>
+                    <option value="2735">--------无氟变频柜式空调</option>
+                    <option value="2864">----空调附件</option>
+                    <option value="2865">--------空调面板</option>
+                    <option value="2895">--------空调模块</option>
+                    <option value="2903">----空气盒子</option>
+                    <option value="2931">----空气类产品</option>
+                    <option value="2736">家庭保健产品</option>
+                    <option value="2792">----制氧机</option>
+                    <option value="2793">----血糖仪</option>
+                    <option value="2794">----电子体温计</option>
+                    <option value="2795">----电子血压计</option>
+                    <option value="2868">----血氧仪</option>
+                    <option value="2869">----胎心仪</option>
+                    <option value="2959">----按摩器</option>
+                    <option value="2969">----雾化器</option>
+                    <option value="3003">----口罩</option>
+                    <option value="3029">----耳温计</option>
+                    <option value="3119">----医疗小管家</option>
+                    <option value="2737">生活家电</option>
+                    <option value="2773">----个人护理</option>
+                    <option value="2789">--------剃须刀</option>
+                    <option value="2831">--------电吹风</option>
+                    <option value="2775">----生活小家电</option>
+                    <option value="2787">--------吸尘器</option>
+                    <option value="2790">--------挂烫机</option>
+                    <option value="2791">--------电熨斗</option>
+                    <option value="2839">--------空气净化器</option>
+                    <option value="2851">--------电暖器</option>
+                    <option value="2899">--------甲醛监测仪</option>
+                    <option value="2913">--------除螨仪</option>
+                    <option value="2919">--------蒸汽拖把</option>
+                    <option value="2953">--------米桶</option>
+                    <option value="2957">--------智能扫地机</option>
+                    <option value="3001">--------菜多多</option>
+                    <option value="2776">----厨用小家电</option>
+                    <option value="2777">--------搅拌机</option>
+                    <option value="2778">--------原汁机</option>
+                    <option value="2779">--------咖啡机</option>
+                    <option value="2780">--------精品套系</option>
+                    <option value="2781">--------豆浆机</option>
+                    <option value="2782">--------电水壶</option>
+                    <option value="2783">--------微波炉</option>
+                    <option value="2784">--------电压力锅</option>
+                    <option value="2785">--------电饭煲</option>
+                    <option value="2786">--------电磁炉</option>
+                    <option value="2860">--------煮蛋器</option>
+                    <option value="2911">--------榨油机</option>
+                    <option value="2971">--------家用小烤箱</option>
+                    <option value="3023">--------多功能料理机</option>
+                    <option value="3025">--------破壁机</option>
+                    <option value="3061">--------榨汁机</option>
+                    <option value="3063">--------多士炉</option>
+                    <option value="3065">--------奶泡机</option>
+                    <option value="3095">--------电压力煲</option>
+                    <option value="2832">----家居</option>
+                    <option value="2833">--------LED台灯</option>
+                    <option value="2834">--------电风扇</option>
+                    <option value="2852">--------其他台灯</option>
+                    <option value="2921">--------整体厨房</option>
+                    <option value="2927">--------智能插座</option>
+                    <option value="2845">----无尾家电</option>
+                    <option value="2838">--------无尾厨电</option>
+                    <option value="2846">----母婴家电</option>
+                    <option value="2847">--------多维辅食搅拌机</option>
+                    <option value="2848">--------恒温调奶器</option>
+                    <option value="2849">--------多组合蒸汽消毒锅</option>
+                    <option value="2850">--------母婴优养套系</option>
+                    <option value="2937">--------母婴煲</option>
+                    <option value="2941">--------奶瓶消毒器</option>
+                    <option value="2943">--------恒温暖奶器</option>
+                    <option value="2945">--------营养辅食煲</option>
+                    <option value="3071">--------消毒锅</option>
+                    <option value="3073">--------BB煲</option>
+                    <option value="3075">--------理发器</option>
+                    <option value="3077">--------料理机</option>
+                    <option value="2858">----厨房用品</option>
+                    <option value="2859">--------保鲜盒</option>
+                    <option value="3215">----衣物消毒器</option>
+                    <option value="2738">电脑</option>
+                    <option value="2740">手机</option>
+                    <option value="2762">----3G手机</option>
+                    <option value="2763">----2G手机</option>
+                    <option value="2925">----4G手机</option>
+                    <option value="2741">热水器</option>
+                    <option value="2759">----太阳能热水器</option>
+                    <option value="3217">--------太阳能太空能2代</option>
+                    <option value="2760">----燃气热水器</option>
+                    <option value="2761">----电热水器</option>
+                    <option value="2836">--------热水器配件</option>
+                    <option value="2905">--------浴椅</option>
+                    <option value="3089">--------小厨宝</option>
+                    <option value="3121">----魔镜</option>
+                    <option value="3127">--------智慧浴室</option>
+                    <option value="3123">----采暖炉</option>
+                    <option value="3125">----软水机</option>
+                    <option value="3129">----空气能热水器</option>
+                    <option value="3131">----净水器</option>
+                    <option value="2742">厨房电器</option>
+                    <option value="2754">----烟灶套系</option>
+                    <option value="2755">----消毒柜</option>
+                    <option value="2757">----燃气灶</option>
+                    <option value="2758">----吸油烟机</option>
+                    <option value="3103">----厨净宝</option>
+                    <option value="3205">----嵌入式厨电</option>
+                    <option value="2822">--------烤箱</option>
+                    <option value="3207">--------蒸箱</option>
+                    <option value="3211">--------空气炸锅</option>
+                    <option value="3213">----厨房套系</option>
+                    <option value="2743">彩电</option>
+                    <option value="2744">----电视附件</option>
+                    <option value="2751">--------3D眼镜</option>
+                    <option value="2752">--------模卡</option>
+                    <option value="2753">--------底座</option>
+                    <option value="2764">--------智能模盒</option>
+                    <option value="2840">--------UBOX</option>
+                    <option value="2856">--------显像管</option>
+                    <option value="2857">--------CAM卡</option>
+                    <option value="2871">--------星影院</option>
+                    <option value="2915">--------电视盒子</option>
+                    <option value="2935">--------音箱</option>
+                    <option value="2955">--------遥控器</option>
+                    <option value="2967">--------充电背壳</option>
+                    <option value="2745">----彩电</option>
+                    <option value="2748">--------液晶电视</option>
+                    <option value="2749">--------LED电视</option>
+                    <option value="2750">--------3D电视</option>
+                    <option value="2854">--------CRT电视</option>
+                    <option value="2855">--------等离子电视</option>
+                    <option value="2866">--------教育一体机</option>
+                    <option value="2897">--------智能电视</option>
+                    <option value="2909">--------模块化电视</option>
+                    <option value="2929">--------4K电视</option>
+                    <option value="2963">--------充电宝</option>
+                    <option value="2965">--------无线接收环</option>
+                    <option value="2774">水家电</option>
+                    <option value="2788">----饮水机</option>
+                    <option value="2807">----智饮机</option>
+                    <option value="2808">----MAZE 滤芯</option>
+                    <option value="2835">----净水机</option>
+                    <option value="2997">----养生壶</option>
+                    <option value="3007">----纳滤机</option>
+                    <option value="3059">----氢氧造水器</option>
+                    <option value="3079">----滤芯</option>
+                    <option value="3233">----净水龙头</option>
+                    <option value="3235">----前置过滤器</option>
+                    <option value="3237">----沐浴净化器</option>
+                    <option value="3239">----净水杯</option>
+                    <option value="3241">----净水壶</option>
+                    <option value="2811">家用中央空调</option>
+                    <option value="2813">----单元机已不用</option>
+                    <option value="2867">--------控制器</option>
+                    <option value="2814">----嵌入机</option>
+                    <option value="3053">--------2匹嵌入机</option>
+                    <option value="3055">--------3匹嵌入机</option>
+                    <option value="3057">--------5匹嵌入机</option>
+                    <option value="2815">----商用柜机【已不用】</option>
+                    <option value="2875">----多联式家用中央空调【已不用】</option>
+                    <option value="2877">--------外机</option>
+                    <option value="2879">--------内机</option>
+                    <option value="2881">--------控制器</option>
+                    <option value="2951">--------面板</option>
+                    <option value="2887">----家用中央空调【已不用】</option>
+                    <option value="2816">--------套机</option>
+                    <option value="2891">--------控制器</option>
+                    <option value="2907">--------WIFI模块</option>
+                    <option value="3031">----风管机/一拖一</option>
+                    <option value="3033">--------定频风管机</option>
+                    <option value="3035">--------变频风管机</option>
+                    <option value="3037">--------新风机</option>
+                    <option value="3039">--------配件</option>
+                    <option value="3041">----家中机/一拖多</option>
+                    <option value="3043">--------家中机套餐</option>
+                    <option value="3045">--------家中机外机</option>
+                    <option value="3047">--------家中机内机</option>
+                    <option value="3049">----柜机</option>
+                    <option value="3051">--------商用柜机</option>
+                    <option value="2823">医疗冷柜</option>
+                    <option value="2824">----专业低温冷链设备</option>
+                    <option value="2825">--------4℃血液保存箱</option>
+                    <option value="2826">--------2-8℃药品保存箱</option>
+                    <option value="2827">--------冷藏冷冻箱</option>
+                    <option value="2828">---------25℃超低温保存箱</option>
+                    <option value="2829">---------40℃超低温保存箱</option>
+                    <option value="2830">---------86℃超低温保存箱</option>
+                    <option value="2841">电子礼品卡</option>
+                    <option value="2842">增值卡</option>
+                    <option value="2843">延保服务</option>
+                    <option value="2844">----延保卡</option>
+                    <option value="2873">套餐</option>
+                    <option value="2973">智能产品</option>
+                    <option value="2961">----智能称</option>
+                    <option value="2975">----智能扫地机</option>
+                    <option value="2977">----智能私人影院</option>
+                    <option value="2979">----智能摄像头</option>
+                    <option value="2983">----智能插座</option>
+                    <option value="2985">----空气盒子</option>
+                    <option value="2987">----手持mini洗衣机</option>
+                    <option value="2991">----甲醛监测仪</option>
+                    <option value="2993">----智能水杯</option>
+                    <option value="2995">----回水宝</option>
+                    <option value="3015">----智能洁身器</option>
+                    <option value="3017">----插线板</option>
+                    <option value="3019">----菜多多</option>
+                    <option value="3021">----无线智能充电</option>
+                    <option value="3067">----智能烤箱</option>
+                    <option value="3069">----智能洗碗机</option>
+                    <option value="3115">----家庭控制中心</option>
+                    <option value="3133">----车载空气净化器</option>
+                    <option value="3137">----电动牙刷</option>
+                    <option value="3139">----智能浴霸</option>
+                    <option value="3141">----破壁机</option>
+                    <option value="3153">----无人机配件</option>
+                    <option value="3099">百货超市</option>
+                    <option value="2739">----数码/电脑办公</option>
+                    <option value="2765">--------网络摄像机</option>
+                    <option value="2766">--------数码相框</option>
+                    <option value="2767">--------数码相机</option>
+                    <option value="2768">--------数码摄像机</option>
+                    <option value="2769">--------电脑外设</option>
+                    <option value="2853">--------行车记录仪</option>
+                    <option value="2917">--------娱乐一体机</option>
+                    <option value="3395">--------电脑整机</option>
+                    <option value="2770">------------台式机</option>
+                    <option value="2771">------------一体机</option>
+                    <option value="2772">------------笔记本</option>
+                    <option value="2821">------------平板电脑</option>
+                    <option value="3397">--------电脑配件</option>
+                    <option value="3219">------------DIY电脑</option>
+                    <option value="3223">------------显示器</option>
+                    <option value="3401">--------外设产品</option>
+                    <option value="3155">------------机械键盘</option>
+                    <option value="3157">------------鼠标</option>
+                    <option value="3245">------------耳机</option>
+                    <option value="3411">--------影音娱乐</option>
+                    <option value="2901">------------投影仪</option>
+                    <option value="3413">--------网络设备</option>
+                    <option value="2923">------------路由器</option>
+                    <option value="2981">------------智能音箱</option>
+                    <option value="3415">--------办公文教</option>
+                    <option value="3243">------------电子阅读器</option>
+                    <option value="3423">------------手写板</option>
+                    <option value="2949">----净洗配方</option>
+                    <option value="3093">----农产品</option>
+                    <option value="3091">--------大米</option>
+                    <option value="3097">----学习系统</option>
+                    <option value="3101">----机器人</option>
+                    <option value="3159">----母婴用品</option>
+                    <option value="3191">--------纸尿裤</option>
+                    <option value="3195">------------拉拉裤</option>
+                    <option value="3197">------------卫生巾</option>
+                    <option value="3425">------------纸尿裤</option>
+                    <option value="3265">--------车床用品</option>
+                    <option value="3285">------------婴儿手推车</option>
+                    <option value="3287">------------学步车</option>
+                    <option value="3289">------------安全座椅</option>
+                    <option value="3291">------------儿童动物枕</option>
+                    <option value="3267">--------喂养</option>
+                    <option value="3269">--------洗护</option>
+                    <option value="3193">------------柔纸巾</option>
+                    <option value="3199">------------湿巾</option>
+                    <option value="3203">------------洗衣液</option>
+                    <option value="3427">------------沐浴乳</option>
+                    <option value="3429">------------面霜</option>
+                    <option value="3431">------------护臀霜</option>
+                    <option value="3433">------------洗衣皂</option>
+                    <option value="3271">--------早教机</option>
+                    <option value="3273">--------孕产</option>
+                    <option value="3167">----馨厨周边产品</option>
+                    <option value="3169">----艾灸</option>
+                    <option value="3173">----USB智能插座</option>
+                    <option value="3175">----插线板</option>
+                    <option value="3177">----荔枝</option>
+                    <option value="3179">----灯</option>
+                    <option value="3181">----插座</option>
+                    <option value="3185">----地方特产</option>
+                    <option value="3225">----腕表</option>
+                    <option value="3403">--------腕表</option>
+                    <option value="3405">------------机械表</option>
+                    <option value="3407">------------石英表</option>
+                    <option value="3409">------------电子表</option>
+                    <option value="3227">----香水</option>
+                    <option value="3229">----背包</option>
+                    <option value="3331">--------背包</option>
+                    <option value="3247">----测试仪</option>
+                    <option value="3249">----大象洗鞋</option>
+                    <option value="3251">----智能酒柜</option>
+                    <option value="3275">----食品</option>
+                    <option value="3277">--------零食</option>
+                    <option value="3293">------------蓝莓干</option>
+                    <option value="3295">------------果糕</option>
+                    <option value="3297">------------蜂蜜</option>
+                    <option value="3299">------------蓝莓汁</option>
+                    <option value="3279">--------酒水</option>
+                    <option value="3301">------------白酒</option>
+                    <option value="3303">------------红酒</option>
+                    <option value="3305">------------啤酒</option>
+                    <option value="3281">--------南北干货</option>
+                    <option value="3307">------------蘑菇</option>
+                    <option value="3283">--------新鲜蔬果</option>
+                    <option value="3309">------------荔枝</option>
+                    <option value="3319">--------精选肉类</option>
+                    <option value="3321">------------牛排</option>
+                    <option value="3323">----户外装备</option>
+                    <option value="3145">--------无人机</option>
+                    <option value="3325">----家用保健器材</option>
+                    <option value="3151">--------智能哑铃</option>
+                    <option value="3329">----跑步机</option>
+                    <option value="3147">--------跑步机</option>
+                    <option value="3441">--------动感单车</option>
+                    <option value="3333">----厨具</option>
+                    <option value="3347">--------厨房烹饪</option>
+                    <option value="3189">------------炒锅</option>
+                    <option value="3335">------------锅组套装</option>
+                    <option value="3337">------------不粘锅</option>
+                    <option value="3339">------------平底锅</option>
+                    <option value="3341">------------奶锅</option>
+                    <option value="3343">------------蒸锅烧</option>
+                    <option value="3345">------------刀具</option>
+                    <option value="3349">--------餐饮具</option>
+                    <option value="3231">------------水杯</option>
+                    <option value="3351">------------保温杯</option>
+                    <option value="3353">----医药保健</option>
+                    <option value="3355">--------医疗器械</option>
+                    <option value="3359">------------血压计</option>
+                    <option value="3365">------------按摩器</option>
+                    <option value="3367">------------制氧机</option>
+                    <option value="3391">------------艾灸仪</option>
+                    <option value="3357">--------医药</option>
+                    <option value="3361">------------精油</option>
+                    <option value="3363">------------艾饼</option>
+                    <option value="3369">----汽配</option>
+                    <option value="3371">--------车载电器</option>
+                    <option value="3373">------------空气净化器</option>
+                    <option value="3375">--------汽车杯</option>
+                    <option value="3377">------------汽车杯</option>
+                    <option value="3379">----家纺</option>
+                    <option value="3201">--------床上用品</option>
+                    <option value="3161">------------四件套</option>
+                    <option value="3163">------------乳胶枕</option>
+                    <option value="3165">------------U型枕</option>
+                    <option value="3393">------------夏凉被</option>
+                    <option value="3417">----智能门锁</option>
+                    <option value="3149">健康器材</option>
+                    <option value="3315">生活服务</option>
+                    <option value="3317">----家电服务</option>
+                    <option value="3421">----家政服务</option>
+                    <option value="3435">众筹夺宝</option>
+                    <option value="3437">----众筹抽奖档</option>
+                    <option value="3439">----我要夺宝</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">后台订单</span>
+                <select name="isBackend" id="isBackend" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="0">非后台添加</option>
+                    <option value="1">后台添加</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">已确认次数</span>
+                <input id="autoConfirmNumMin" class="easyui-textbox" style="width: 59px;"></input>
+                —
+                <input id="autoConfirmNumMax" class="easyui-textbox" style="width: 59px;"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">是否O2O网单</span>
+                <select name="o2o" id="o2o" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="0">是</option>
+                    <option value="1">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">网单库存类型</span>
+                <select name="optype" id="optype" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="WA">自有库存网单</option>
+                    <option value="STORE">店铺网单</option>
+                    <option value="3W">3W网单</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">开票时间</span>
+                <input id="receiptAddTimeMin" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">至</span>
+                <input id="receiptAddTimeMax" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">付款时间</span>
+                <input id="payTimeMin" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">至</span>
+                <input id="payTimeMax" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">使用优惠券</span>
+                <select name="isUseCoupon" id="isUseCoupon" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">使用积分</span>
+                <select name="isUsePoint" id="isUsePoint" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">自营</span>
+                <select name="isSelfSell" id="isSelfSell" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="2">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">订单确认时间</span>
+                <input id="confirmTimeMin" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">至</span>
+                <input id="confirmTimeMax" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">销售代表</span>
+                <input id="sellPeople" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">是否日日单</span>
+                <select name="isProduceDaily" id="isProduceDaily" class="easyui-combobox">
+                    <option value="">全部</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">推广码</span>
+                <input id="couponCode" class="easyui-textbox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">LES出库时间</span>
+                <input id="lessShipTimeMin" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">至</span>
+                <input id="lessShipTimeMax" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">签收时间</span>
+                <input id="userAcceptTimeMin" class="easyui-datebox"></input>
+            </div>
+            <div class="search-row_nowidth morehide">
+                <span class="search-row-label_80">至</span>
+                <input id="userAcceptTimeMax" class="easyui-datebox"></input>
+            </div>
+            <div style="width: 70px;float: right;display: inline-block;font-size: 14px;padding-right: 8px;
+            cursor: pointer;color: #00a7d0" onclick="showhideoptions(this)" class="shouqi">
+                <span id="moreSpan">更多</span>&nbsp;&nbsp;<img id="moreImag" style="padding-top: 5px;position: absolute;"
+                                                              src="../static/img/down_icon.png"></img>
+            </div>
+            <hr style="margin-top: 10px; margin-bottom: 10px; border-top: 2px solid #eee;"/>
+        </div>
+        <a href="#"  class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true" >查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <!--<a href="#"  class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>-->
+        <a href="#" class="easyui-linkbutton" id="importBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出报表</a>
+        <a href="#"  class="easyui-linkbutton" id="importSaleBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出销售报表</a>
+        <a href="#"  class="easyui-linkbutton" id="importExeBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出执行报表</a>
+        <a href="#"  class="easyui-linkbutton" id="importDifferBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出差异报表</a>
+    </form>
+</div>
+<div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:350px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+
+        <div class="fitem">
+            <label>物料编码<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="sku" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>型号<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="materialdescription" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>渠道<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="channelcode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单周<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderweek" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单年<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderyear" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>目标销售<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="goalqty" required="true"/>
+        </div>
+        <!--<div class="fitem">
+            <label>状态 <span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="status" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-datebox" name="createtime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="createuser" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-datebox" name="updatetime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="updateuser" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>删除标志<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="deleteflag" required="true"/>
+        </div>-->
+    </form>
+    <div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+         style="width:100%;height:60%;"
+         data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+        <table id="dataGrid">
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <!--     <div id="dlg-buttons_orderForecastGoal">
+            <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+               onclick="javascript:$('#addDlg_orderForecastGoal').dialog('close')">取消</a>
+        </div> -->
+</div>
+<script type="text/javascript">
+
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastGoal').datagrid('resize');
+        }, 500);
+    }
+    /*   $('#search').click(function () {
+     $.messager.progress({
+     text : '<spring:message code="I0004"/>'
+     });
+     var options = dataGrid.datagrid('getPager').data("pagination").options;
+     $.ajax({
+     url      : "/operationArea/search",
+     type     : 'POST',
+     dataType : 'json',
+     data     : {
+     page            : options.pageNumber,
+     rows            : options.pageSize
+     },
+     success  : function(result) {
+     dataGrid.datagrid('clearSelections');
+     $("dataGrid").datagrid('loadData', result);
+     $.messager.progress('close');
+     }
+     });
+     }); */
+
+</script>
+<script src="../static/js/order/netOrderList.js"></script>
+</body>
+</html>

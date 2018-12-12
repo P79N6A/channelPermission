@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStockChannelDao">
+	<resultMap id="invStockChannelResult" type="com.haier.stock.model.InvStockChannel">
+		<result property="channelCode" column="channel_code" />
+		<result property="name" column="name" />
+		<result property="stockChannelCodes" column="stock_channel_codes" />
+		<result property="isMultilevelSection" column="is_multilevel_section" />
+		<result property="createTime" column="create_time" />
+		<result property="createUser" column="create_user" />
+		<result property="updateTime" column="update_time" />
+		<result property="updateUser" column="update_user" />
+		<result property="note" column="note" />
+	</resultMap>
+	<select id="getAll" resultMap="invStockChannelResult">
+		select `channel_code`,
+		`name`,stock_channel_codes,`is_multilevel_section`,`create_time`,`create_user`,`update_time`,`update_user`,`note`
+		from `inv_stock_channel`
+	</select>
+	<select id="getByCode" parameterType="String" resultMap="invStockChannelResult">
+		select
+		`channel_code`,
+		`name`,`stock_channel_codes`,`is_multilevel_section`,`create_time`,`create_user`,`update_time`,`update_user`,`note`
+		from `inv_stock_channel`
+		where `channel_code` = #{channel_code}
+	</select>
+	<!-- <insert id="insert" parameterType="com.haier.cbs.stock.entity.InvStockChannel"> 
+		insert into `inv_stock_channel`(`channel_code`,`name`,`create_time`,`create_user`,`update_time`,`update_user`,`note`) 
+		values(#{channelCode},#{name},#{createTime},#{createUser},#{updateTime},#{updateUser},#{note}) 
+		</insert> <update id="update" parameterType="com.haier.cbs.stock.entity.InvStockChannel"> 
+		update `inv_stock_channel` set `name`=#{name},`create_time`=#{createTime},`create_user`=#{createUser},`update_time`=#{updateTime},`update_user`=#{updateUser},`note`=#{note} 
+		where `channel_code` = #{channelCode} </update> -->
+</mapper>

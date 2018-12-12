@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.InvoiceSAPLogsWriteDao">
+
+    <insert id="insert" parameterType="com.haier.shop.model.InvoiceSAPLogs">
+        insert into `InvoiceSAPLogs`(`addTime`,`invoiceId`,`cOrderType`,`orderProductId`,`diffId`,`pushType`,`pushData`,`returnData`,`success`,`count`,`lastTime`,`lastMessage`)
+        values(#{addTime},#{invoiceId},#{cOrderType},#{orderProductId},#{diffId},#{pushType},#{pushData},#{returnData},#{success},#{count},#{lastTime},#{lastMessage})
+    </insert>
+
+    <update id="updateInvoiceSAPLogs" parameterType="com.haier.shop.model.InvoiceSAPLogs">
+        update `InvoiceSAPLogs`
+        set
+        pushType=#{pushType},count=#{count},lastTime=#{lastTime},lastMessage=#{lastMessage},success=#{success},pushData=#{pushData},returnData=#{returnData}
+        WHERE id=#{id}
+    </update>
+
+    <update id="resetCount" parameterType="java.lang.Integer">
+        update `InvoiceSAPLogs` set `count`=0
+        where
+        `id`= #{id}
+    </update>
+
+</mapper>

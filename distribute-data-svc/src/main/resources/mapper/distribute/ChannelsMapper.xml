@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.ChannelsDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.Channels" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="channelCode" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channelName" property="channelName" jdbcType="VARCHAR" />
+    <result column="moneyLimit" property="moneyLimit" jdbcType="DECIMAL" />
+    <result column="moneyLock" property="moneyLock" jdbcType="DECIMAL" />
+    <result column="moneyAlert" property="moneyAlert" jdbcType="DECIMAL" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, channelCode, channelName, moneyLimit, moneyLock, moneyAlert, sort, createBy, 
+    createTime, updateBy, remark, updateTime
+  </sql>
+  
+  <select id="selectChannels" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_channels_info
+    where 1=1
+  </select>
+ 
+   <select id="selectId" resultType="java.lang.Integer" >
+    select 
+    id
+    from t_channels_info
+    where channelCode=#{distributionCode,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/staticHtml.css">
+    <title>可售商品价格</title>
+    <!--<script src="/static/third/jquery.js"></script>-->
+    <script src="/static/third/easyui/jquery.min2.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/pop/common/pop.js"></script>
+    <script src="/static/third/easyui/jQuery.Form.js"></script>
+</head>
+<body style="font-size:11px">
+
+
+<div id="dDialog" class="easyui-dialog" title="日期选择"
+     style="width: 270px; height: 350px; padding: 0px 0px; center:true"
+     closed="true" center="true" modal="true">
+    <table style="width: 100%">
+        <tr>
+            <td colspan="2">
+                <div id="dateControl" class="easyui-calendar" style="width:250px;height:250px;"></div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                &nbsp;
+            </td>
+        </tr>
+
+        <tr align="right">
+            <td><a href="javascript:void(0)" class="easyui-linkbutton"
+                   onclick="javascript:SetDateValue()" iconcls="icon-ok">确定</a></td>
+            <td align="left"><a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+                                onclick="javascript:$('#dDialog').dialog('close')"
+                                iconcls="icon-cancel">关闭</a></td>
+        </tr>
+    </table>
+</div>
+
+<!-- 表格内按钮div -->
+
+<div id="oDialog" class="easyui-dialog" title="选择"
+     style="width: 500px; height: 440px; padding: 0px 0px; center:true"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+        <div data-options="region:'north'" style="height:80px">
+            <table style="width: 100%" onkeydown='onEnterGrid();'>
+                <tr>
+                    <td width="120px">编码/中文名称：</td>
+                    <td><input id="filter_code1" value="%" width="100%"></td>
+                </tr>
+                <tr>
+                    <td width="220px">名称：</td>
+                    <td><input id="filter_name1" value="%" width="100%"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="button" onclick="codeTableloaddata()" value="查找">
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div data-options="region:'center'">
+            <table class="easyui-datagrid" id="codegrid" style="width:700px;height:auto" fit="true"
+                   data-options="singleSelect:true,region:'center'">
+                <thead>
+                <tr>
+                    <th data-options="field:'ck',checkbox:true ,width:50,
+                        checkOnSelect: true,
+                        selectOnCheck :true">选择
+                    </th>
+                    <th data-options="field:'col1',width:100">编码/中文名称</th>
+                    <th data-options="field:'col2',width:200">名称</th>
+                    <th data-options="field:'col3',width:200" hidden="true">名称</th>
+                    <th data-options="field:'col4',width:200" hidden="true">名称</th>
+                    <th data-options="field:'col5',width:200" hidden="true">名称</th>
+
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="dlg-buttons" data-options="region:'south'" style="height:30px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetCodeValue()" iconcls="icon-ok">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript:$('#oDialog').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+    </div>
+</div>
+<script>
+    $("#dDialog").css('display', 'none');
+    $("#oDialog").css('display', 'none');
+</script>
+
+<div class="easyui-layout" style="width:100%;height:100%;">
+
+    <div id="toolbar_list" data-options="region:'north'" style="height:90px">
+   <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+     <div class="search-panel" style="font-size: 11px;">
+     <div style="height: 15px"></div>
+	    <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">品类</span>
+
+            <input id="productTypeId" name="dept" value="全部" name="productType">
+        </div>
+
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">渠道</span>
+            <input id="channelId" name="dept" value="全部" name="productType">
+
+        </div>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">物料编码</span>
+            <input id="sku" class="easyui-textbox" data-options="prompt:'全部'" name="productType"/>
+        </div>
+        </div>
+        <div style="font-size:13px">
+    
+            <a href="#" class="easyui-linkbutton" onclick="SearchUnit()"
+               data-options="iconCls:'icon-search',plain:true">查询</a>
+            <a href="../product/priceListEdit" class="easyui-linkbutton" id="odd"
+               data-options="iconCls:'icon-add',plain:true">增加</a>
+            <a href="#" class="easyui-linkbutton" onclick="list()"
+               data-options="iconCls:'icon-save',plain:true">修改</a>
+            <a href="#" class="easyui-linkbutton" onclick="SearchClear()"
+               data-options="iconCls:'icon-redo',plain:true">重置</a>
+            <a href="#" class="easyui-linkbutton" id="importdemo"
+               data-options="iconCls:'icon-back',plain:true">导出模板</a>
+            <form id="fileForm" method="post" enctype="multipart/form-data" style="display: inline-block">
+                <input type="file" id="file" name="file"
+                       style="width: 150px;"/>
+                <a href="#" class="easyui-linkbutton" onClick="importSP()"
+                   data-options="iconCls:'icon-save',plain:true">导入</a>
+            </form>
+        </div>
+    </div>
+
+    <div id="searchPanel_orderForecastGoal" data-options="region:'west'" style="width:47%;font-size:13px">
+        <table id="datagrid_orderForecastGoal"></table>
+
+    </div>
+    <div data-options="region:'center'" style="font-size:13px">
+        <table id="gridView1" class="easyui-datagrid" style="width:450%;height:auto" toolbar="toolbar_list" fit="true"
+               data-options="singleSelect:true,region:'center',remoteSort:false,showFooter: true">
+            <thead>
+            <tr>
+                <th data-options="field:'supplyprice',width:106,sortable:true">结算价格（元）</th>
+                <th data-options="field:'saleprice',width:106,sortable:true">销售价格（元）</th>
+                <th data-options="field:'limitprice',width:106,sortable:true">限制价格（元）</th>
+                <th data-options="field:'pricestarttime',width:155,sortable:true">价格适用开始时间</th>
+                <th data-options="field:'priceendtime',width:155,sortable:true">价格适用结束时间</th>
+            </tr>
+            </thead>
+        </table>
+
+    </div>
+</div>
+<!--c ombox加载 -->
+<script>
+    //品类
+    $("#productTypeId").combobox({
+        url: '/pop/product/producttypesList',
+        valueField: "id",
+        textField: "typeName",
+        required: false,
+        editable: true,
+        hasDownArrow: true,
+        filter: function (q, row) {
+            var opts = $(this).combobox('options');
+            return row[opts.textField].indexOf(q) >= 0;
+        },
+        onSelect: function (record) {
+        },
+        onUnselect: function () {
+        }
+    });
+    //渠道
+    $("#channelId").combobox({
+        url: '/pop/product/channelsList',
+        valueField: "id",
+        textField: "channelcode",
+        required: false,
+        editable: true,
+        hasDownArrow: true,
+        filter: function (q, row) {
+            var opts = $(this).combobox('options');
+            return row[opts.textField].indexOf(q) >= 0;
+        },
+        onSelect: function (record) {
+        },
+        onUnselect: function () {
+        }
+    });
+    //物料编码
+    //    $("#sku").combobox({
+    //        url: '/pop/product/productsList',
+    //        valueField: "id",
+    //        textField: "productname",
+    //        required: false,
+    //        editable: true,
+    //        hasDownArrow: true,
+    //        filter: function (q, row) {
+    //            var opts = $(this).combobox('options');
+    //            return row[opts.textField].indexOf(q) >= 0;
+    //        },
+    //        onSelect: function (record) {
+    //        },
+    //        onUnselect: function () {
+    //        }
+    //    });
+</script>
+<script>
+
+    var gloid;
+    function list() {
+        if (gloid == undefined) {
+            $.messager.alert("提示：", "请选择要修改的单据");
+            return;
+        } else {
+            self.location.href = "/pop/product/priceListEdit?gloid='" + gloid + "'";
+        }
+    }
+
+    //触发主表单击行获取子表信息
+    //    $("#datagrid_orderForecastGoal").datagrid({
+    //        onClickRow: function (index, row) {
+    //            GetOptionDetail(row.id);
+    //            gloid = row.id;
+    //        }
+    //    });
+
+    //根据主表sku物料编码来查询子表信息
+    function GetOptionDetail(id) {
+        //$.messager.alert(id);
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '/pop/product/priceDetailList',
+            data: {
+                'saleid': id
+            },
+//            beforeSend: function () {
+//                ajaxLoading();
+//            },
+//            complete: function () {
+//                ajaxLoadEnd();
+//            },
+            success: function (data, textStatus) {
+                //$.messager.alert(data);
+                $('#gridView1').datagrid("loadData", data);
+            },
+            error: function (e) {
+                $.messager.alert(e);
+            }
+        });
+
+    }
+    function SearchClear() {
+        $('#productTypeId').combobox('setValue', "全部");
+        $('#channelId').combobox('setValue', "全部");
+        $('#sku').textbox('setValue', "");
+    }
+    var newdata1;
+    //主表查询
+    function SearchUnit() {
+        var productTypeId1 = $('#productTypeId').combobox('getValue');
+        var productTypeId2 = $('#productTypeId').combobox('getText');
+        var channelid1 = $('#channelId').combobox('getValue');
+
+        var sku1 = $('#sku').val();
+
+        if (productTypeId1 == "全部") {
+            productTypeId1 = "";
+        }
+        if (channelid1 == "全部") {
+            channelid1 = "";
+        }
+        if (sku1 == "全部") {
+            sku1 = "";
+        } else {
+            sku1 = "%" + sku1 + "%";
+        }
+
+        var options = $('#datagrid_orderForecastGoal').datagrid('getPager').data("pagination").options;
+        options.pageNumber = 1;
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '/pop/product/productListF',
+            data: {
+
+                page: options.pageNumber,
+                rows: options.pageSize,
+
+                'productTypeId': productTypeId1,
+                'channelId': channelid1,
+                'sku': sku1
+
+
+            },
+//            beforeSend: function () {
+//                ajaxLoading();
+//            },
+//            complete: function () {
+//                ajaxLoadEnd();
+//            },
+            success: function (data, textStatus) {
+//           /*     var datagridData_orderForecastGoal = {
+//                    'data': {
+//                        'records':
+//                        data
+//
+//                    }
+//
+//                }*/
+                /* console.log(datagridData_orderForecastGoal);*/
+                $('#datagrid_orderForecastGoal').datagrid('loadData', data);
+
+                //$('#gridView').datagrid("loadData", jiashuju);
+            },
+            error: function (e) {
+                $.messager.alert(e);
+            }
+        });
+
+        //分页插件
+        $('#datagrid_orderForecastGoal').datagrid('getPager').pagination({
+            total: 0,
+            pageSize: 50,
+            pageList: [50, 100, 200],
+            showRefresh: false,
+            displayMsg: '显示 {from} - {to} 条记录   共 {total} 条记录',
+            onSelectPage: function (pageNo, pageSize) {
+                var start = (pageNo - 1) * pageSize;
+                var end = start + pageSize;
+                var productTypeId1 = $('#productTypeId').combobox('getValue');
+                var productTypeId2 = $('#productTypeId').combobox('getText');
+                var channelid1 = $('#channelId').combobox('getValue');
+
+                var sku1 = $('#sku').val();
+
+                if (productTypeId1 == "全部") {
+                    productTypeId1 = "";
+                }
+                if (channelid1 == "全部") {
+                    channelid1 = "";
+                }
+                if (sku1 == "全部") {
+                    sku1 = "";
+                } else {
+                    sku1 = "%" + sku1 + "%";
+                }
+
+                var options = $('#datagrid_orderForecastGoal').datagrid('getPager').data("pagination").options;
+
+                $.ajax({
+                    type: 'POST',
+                    async: true,
+                    url: '/pop/product/productListF',
+                    data: {
+
+                        page: options.pageNumber,
+                        rows: options.pageSize,
+
+                        'productTypeId': productTypeId1,
+                        'channelId': channelid1,
+                        'sku': sku1
+                    },
+                    success: function (data, textStatus) {
+
+                        $('#datagrid_orderForecastGoal').datagrid('loadData', data);
+                        var rowNumbers = $('.datagrid-cell-rownumber');
+                        $(rowNumbers).each(function (index) {
+                            var row = parseInt($(rowNumbers[index]).html()) + parseInt(start);
+                            $(rowNumbers[index]).html("");
+                            $(rowNumbers[index]).html(row);
+                        });
+                        pager.pagination('refresh', {
+                            total: data.length,
+                            pageNumber: pageNo
+                        });
+
+                    },
+                    error: function (e) {
+                        $.messager.alert(e);
+                    }
+                });
+            }
+        });
+    }
+
+</script>
+<script>
+    $('#datagrid_orderForecastGoal').datagrid({
+        striped: true, // 隔行变色
+        rownumbers: true,
+        fit: true,
+        pagination: true,
+        singleSelect: true,
+        fitColunms: true,
+        idField: 'id',
+        remoteSort: false,
+        showFooter: true,
+
+        columns: [[
+
+            {
+                title: 'id',
+                width: 0,
+                field: 'id',
+                align: 'left',
+                hidden: true
+                , sortable: true
+
+            }, {
+                title: '渠道',
+                width: 60,
+                field: 'channelName',
+                align: 'left'
+                , sortable: true
+            }, {
+                title: '品类',
+                width: 50,
+                field: 'productTypeName',
+                align: 'left'
+                , sortable: true
+            },
+            {
+                title: '物料编码',
+                width: 100,
+                field: 'sku',
+                align: 'left'
+                , sortable: true
+            },
+            {
+                title: '商品编码',
+                width: 100,
+                field: 'productCode',
+                align: 'left'
+                , sortable: true
+            },
+            {
+                title: '产品组',
+                width: 90,
+                field: 'departmentName',
+                align: 'left'
+                , sortable: true
+            }
+        ]],
+        toolbar: '#datagridToolbar_orderForecastGoal',
+        autoRowHeight: true,
+        nowrap: true,
+        pageSize: 50,
+        pageList: [50,100,200],
+        onClickRow: function (rowIndex, row) {
+            GetOptionDetail(row.id);
+            gloid = row.id;
+        }
+    });
+
+    //导入
+    function importSP() {
+        if ($("#file").val() == null || $("#file").val() == "") {
+            $.messager.alert('提示', "导入文件不能为空");
+        } else {
+            $.messager.progress({title: '导入中...', msg: '导入中...'});
+            $("#fileForm").ajaxSubmit({
+                type: 'post',
+                url: '/pop/product/importSaleProductsPrice',
+                success: function (data) {
+                    $.messager.progress('close');
+                    $("#file").val("");
+                    $.messager.alert('提示', data.msg);
+                    SearchUnit();
+                },
+                error: function (result) {
+                    $.messager.progress('close');
+                }
+            });
+        }
+    }
+    $("#importdemo").click(function () {
+        window.location.href = "/pop/product/exportSaleProductPriceDemo"
+    });
+</script>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+  
+        var $this =$(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastGoal').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+</body>
+</html>

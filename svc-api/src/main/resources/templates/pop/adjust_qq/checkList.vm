@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false,showFooter: true">
+    <table id="datagrid_orderForecastGoal"></table>
+</div>
+<div id="export">
+    <form id="exportForm" action="#">
+        <input id="att_YearMonth" name="att_YearMonth" type="text">
+        <input id="c_PayTimeStart" name="c_PayTimeStart" type="hidden">
+        <input id="c_PayTimeEnd" name="c_PayTimeEnd" type="hidden">
+        <input id="settle_Type" name="settle_Type" type="hidden">
+        <input id="sell_People" name="sell_People" type="hidden">
+        <input id="data_Status" name="data_Status" type="hidden">
+        <input id="invoice_TimeStart " name="invoice_TimeStart" type="hidden">
+        <input id="invoice_TimeEnd" name="invoice_TimeEnd" type="hidden">
+        <input id="code" name="code" type="hidden">
+    </form>
+</div>
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">核算月份</span>
+                <input id="attYearMonth" class="easyui-datebox" data-options="prompt:'核算月份'">
+            </div>
+
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">订单付款时间</span>
+                <input id="memberLevels" class="easyui-datebox" data-options="prompt:'付款时间开始'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">至</span>
+                <input id="memberLevele" class="easyui-datebox" data-options="prompt:'付款时间结束'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">核算方式</span>
+                <select id="jsfs" class="easyui-combobox">
+                    <option value="" style="color: #aaa;">全部</option>
+                    <option value="2">人工</option>
+                    <option value="1">系统</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">销售代表</span>   
+                <input id="sourceOrder" class="easyui-textbox" data-options="prompt:'销售代表'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">状态</span>
+                <select id="field2" class="easyui-combobox">  
+                    <option value="" style="color: #aaa;">全部</option>
+                    <option value="1">已开票</option>
+                    <option value="2">冲红/作废</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">发票时间</span>
+                <input id="field0s" class="easyui-datebox" data-options="prompt:'发票时间开始'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">至</span>
+                <input id="field0e" class="easyui-datebox" data-options="prompt:'发票时间结束'">
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderForecastGoal"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <!--<a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+           
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderForecastGoal"
+           data-options="iconCls:'icon-ok',plain:true">审核</a>-->
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-ok',plain:true">审核</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn_checkList"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+<div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:350px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>物料编码<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="sku" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>型号<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="materialdescription" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>渠道<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="channelcode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单周<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderweek" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单年<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderyear" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>目标销售<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="goalqty" required="true"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_orderForecastGoal').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastGoal').datagrid('resize');
+        }, 500);
+    };
+    $(function() {
+
+        $('#attYearMonth').datebox({
+            //显示日趋选择对象后再触发弹出月份层的事件，初始化时没有生成月份层
+            onShowPanel: function () {
+                //触发click事件弹出月份层
+                span.trigger('click');
+                if (!tds)
+                //延时触发获取月份对象，因为上面的事件触发和对象生成有时间间隔
+                    setTimeout(function() {
+                        tds = p.find('div.calendar-menu-month-inner td');
+                        tds.click(function(e) {
+                            //禁止冒泡执行easyui给月份绑定的事件
+                            e.stopPropagation();
+                            //得到年份
+                            var year = /\d{4}/.exec(span.html())[0] ,
+                                //月份
+                                //之前是这样的month = parseInt($(this).attr('abbr'), 10) + 1;
+                                month = parseInt($(this).attr('abbr'), 10);
+
+                            //隐藏日期对象
+                            $('#attYearMonth').datebox('hidePanel')
+                            //设置日期的值
+                                .datebox('setValue', year + '-' + month);
+                        });
+                    }, 0);
+            },
+            //配置parser，返回选择的日期
+            parser: function (s) {
+                if (!s) return new Date();
+                var arr = s.split('-');
+                return new Date(parseInt(arr[0], 10), parseInt(arr[1], 10) - 1, 1);
+            },
+            //配置formatter，只返回年月 之前是这样的d.getFullYear() + '-' +(d.getMonth());
+            formatter: function (d) {
+                var currentMonth = (d.getMonth()+1);
+                var currentMonthStr = currentMonth < 10 ? ('0' + currentMonth) : (currentMonth + '');
+                return d.getFullYear() + '-' + currentMonthStr;
+            }
+        });
+
+        //日期选择对象
+        var p = $('#attYearMonth').datebox('panel'),
+            //日期选择对象中月份
+            tds = false,
+            //显示月份层的触发控件
+            span = p.find('span.calendar-text');
+        var curr_time = new Date();
+
+        //设置前当月
+//        $("#attYearMonth").datebox("setValue", myformatter(curr_time));
+    });
+    //格式化日期
+    function myformatter(date) {
+        //获取年份
+        var y = date.getFullYear();
+        //获取月份
+        var m = date.getMonth() + 1;
+        return y + '-' + m;
+    }
+</script>
+<script src="/static/js/pop/adjust_qq/checkList.js"></script>
+</body>
+</html>

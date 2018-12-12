@@ -1,0 +1,81 @@
+	<br/>
+	 <table  class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="simpleList" >
+		 <thead>
+			<tr  role="row">
+                <th class="sorting" style=" text-align:center;" rowspan="2">物料</th>
+    			<th class="sorting" style="text-align:center;" rowspan="2">库位</th>
+				<th class="sorting" style="text-align:center;" rowspan="2">渠道</th>
+    			<th class="sorting" style=" text-align:center;" rowspan="2">品类</th>
+    			<th class="sorting" style="text-align:center;" rowspan="2">型号</th>
+				<th class="sorting" style=" text-align:center;" colspan="4">渠道锁定</th>
+			    <th class="sorting" style=" text-align:center;" rowspan="2">锁定占用</th>
+				<th class="sorting" style=" text-align:center;" colspan="4">渠道共享</th>
+				<th class="sorting" style="text-align:center;" rowspan="2">渠道共享占用</th>
+            </tr>
+    		<tr role="row">
+				
+				<th class="sorting" style=" text-align:center;">1-7天</th>
+				<th class="sorting" style=" text-align:center;">7-15天</th>
+				<th class="sorting" style="text-align:center;">15-30天</th>
+				<th class="sorting" style=" text-align:center;">30天以上</th>
+    			
+				<th class="sorting" style=" text-align:center;">1-7天</th>
+				<th class="sorting" style=" text-align:center;">7-15天</th>
+				<th class="sorting" style="text-align:center;">15-30天</th>
+				<th class="sorting" style="text-align:center;">30天以上</th>
+				
+    		</tr>
+         </thead>
+		  <tbody role="alert" aria-live="polite" aria-relevant="all">
+		 #set($count=0)
+		#foreach($row in $!rowList)
+			 #if($count%2==0)
+        		<tr>
+    		#else
+        		<tr class="tr-bg">
+			#end
+			 #set($count=$count+1)
+				    
+				    <td style="text-align:center;">$!{row.sku}</td>
+                    <td style="text-align:center;">$!{row.sec_code}</td>
+				    <td style="text-align:center;min-width:30px;">$!utils.getChannelName($!{row.channel_code})</td>
+					<td style="text-align:center;">$!{row.product_type_name}</td>
+					<td style="text-align:center;">$!{row.product_name}</td>
+					<script type="text/javascript">
+						 try{
+						 explainAgeRow('$!{row.age_data}','$!{row.wa_stock_qty}','cd$!{row.id}','wa$!{row.id}');
+						 } catch(e){
+						 }
+						
+                    </script>
+					<td style="text-align:center;" id="cd$!{row.id}_c1">0</td>
+					<td style="text-align:center;" id="cd$!{row.id}_c2">0</td>
+					<td style="text-align:center;" id="cd$!{row.id}_c3">0</td>
+					<td style="text-align:center;" id="cd$!{row.id}_c4">0</td>
+					<td style="text-align:center;">
+						#if($row.channelLockQty==0)
+							0
+						#else
+							<a href="javascript:void(0);" onclick="showDetail('$!{row.sec_code}','$!{row.sku}','$!{row.channel_code}','0')">
+								$!{row.channelLockQty}
+							</a>
+        			    #end		
+					</td> 
+					<td style="text-align:center;" id="wa$!{row.id}_c1">0</td>
+					<td style="text-align:center;" id="wa$!{row.id}_c2">0</td>
+					<td style="text-align:center;" id="wa$!{row.id}_c3">0</td>
+					<td style="text-align:center;" id="wa$!{row.id}_c4">0</td>
+					<td style="text-align:center;">
+						#if($row.waLockQty==0)
+							0
+						#else
+							<a href="javascript:void(0);" onclick="showDetail('$!{row.sec_code}','$!{row.sku}','$!{row.channel_code}','1')">
+								$!{row.waLockQty}
+							</a>
+        			    #end
+				    </td>
+				</tr>
+			#end
+		</tbody>
+	</table>
+	 #parse("/stock/pageNav.vm")

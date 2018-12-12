@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvMachineSetDao">
+    <resultMap id="invMachineSetResult" type="com.haier.stock.model.InvMachineSet">
+        <result property="id" column="id"/>
+        <result property="mainSku" column="main_sku"/>
+        <result property="subSku" column="sub_sku"/>
+        <result property="factoryCode" column="factory_code"/>
+        <result property="stlnr" column="stlnr"/>
+        <result property="posnr" column="posnr"/>
+        <result property="menge" column="menge"/>
+        <result property="createTime" column="create_time"/>
+        <result property="maktx1" column="maktx1"/>
+        <result property="maktx2" column="maktx2"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="status" column="status"/>
+        <result property="isSaleSub" column="is_sale_sub"/>
+        <result property="optUser" column="opt_user"/>
+    </resultMap>
+
+    <select id="getByMainSku" resultMap="invMachineSetResult">
+		select
+		`id`,`main_sku`,`sub_sku`,`factory_code`,`stlnr`,`posnr`,`menge`,`create_time`,`maktx1`,`maktx2`,`update_time`,`status`
+		from `inv_machine_set`
+		where
+		`main_sku` = #{main_sku}
+		and `status` = 0
+		order by id
+	</select>
+
+    <resultMap id="skuMap" type="java.util.Map">
+        <result column="sub_sku" property="sub_sku"/><!--子物料号-->
+        <result column="main_sku" property="main_sku"/><!--主物料号-->
+    </resultMap>
+    <!--
+    检查inv_machine_set表里面的主sku
+    -->
+    <select id="select_sku" parameterType="java.util.List" resultMap="skuMap">
+        <foreach collection="list" index="index" item="item" separator="union">
+            SELECT sub_sku,main_sku FROM inv_machine_set WHERE sub_sku=#{item.input_sku}
+        </foreach>
+    </select>
+    <select id="getByMainSkuAndBomNum" parameterType="Integer"
+            resultMap="invMachineSetResult">
+		select
+		`id`,`main_sku`,`sub_sku`,`factory_code`,`stlnr`,`posnr`,`menge`,`create_time`,`maktx1`,`maktx2`,`update_time`,`status`
+		from `inv_machine_set`
+		where
+		`main_sku` = #{main_sku}
+		and `posnr` = #{posnr}
+		limit 1;
+	</select>
+
+    <insert id="insert" parameterType="com.haier.stock.model.InvMachineSet">
+		insert into
+		`inv_machine_set`(`main_sku`,`sub_sku`,`factory_code`,`stlnr`,`posnr`,`menge`,`create_time`,`maktx1`,`maktx2`,`update_time`,`status`)
+		values(#{mainSku},#{subSku},#{factoryCode},#{stlnr},#{posnr},#{menge},#{createTime},#{maktx1},#{maktx2},#{updateTime},0)
+	</insert>
+
+    <update id="update" parameterType="com.haier.stock.model.InvMachineSet">
+		update `inv_machine_set` set 
+		`main_sku`=#{mainSku},`sub_sku`=#{subSku},`factory_code`=#{factoryCode},`stlnr`=#{stlnr},`posnr`=#{posnr},`menge`=#{menge},`create_time`=#{createTime},`maktx1`=#{maktx1},`maktx2`=#{maktx2},`update_time`=#{updateTime}
+		where `id` = #{id}
+	</update>
+
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+    <sql id="where_fragement">
+        WHERE
+        1=1
+        <if test="machineSet!=null">
+            <if test="machineSet.mainSku !=null and machineSet.mainSku !=''">
+                AND `main_sku` = #{machineSet.mainSku}
+            </if>
+            <if test="machineSet.subSku !=null and machineSet.subSku !=''">
+                AND `sub_sku` = #{machineSet.subSku}
+            </if>
+            <if test="machineSet.status !=null">
+                <if test="machineSet.status == 1 ">
+                    AND `status` &gt;= #{machineSet.status}
+                </if>
+                <if test="machineSet.status == 0 ">
+                    AND `status` = #{machineSet.status}
+                </if>
+            </if>
+        </if>
+    </sql>
+    <select id="getPageByCondition" resultMap="invMachineSetResult">
+        select
+        `id`,`main_sku`,`sub_sku`,`factory_code`,`stlnr`,`posnr`,`menge`,`create_time`,`maktx1`,`maktx2`,`update_time`,`status`,is_sale_sub
+        from `inv_machine_set`
+        <include refid="where_fragement"/>
+        <include refid="pagination"/>
+    </select>
+    <select id="getPagerCount" resultType="long" parameterType="com.haier.stock.model.InvMachineSet">
+        select count(1) FROM
+        inv_machine_set
+        <include refid="where_fragement"/>
+    </select>
+    <update id="updateSubSku">
+        UPDATE  `inv_machine_set` SET is_sale_sub=#{status}, opt_user=#{optUser}, update_time=now() WHERE sub_sku=#{subSku}
+    </update>
+
+	<select id="getBySubSku" parameterType="java.lang.String" resultMap="invMachineSetResult">
+		select
+		`id`,`main_sku`,`sub_sku`,`factory_code`,`stlnr`,`posnr`,`menge`,`create_time`,`maktx1`,`maktx2`,`update_time`,`status`,`is_sale_sub`
+		from `inv_machine_set`
+		where
+		`sub_sku` = #{sub_sku}
+		and `status` = 0
+	</select>
+</mapper>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>lesqueues</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_lesqueues" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_lesqueues"></table>
+</div>
+
+<div id="datagridToolbar_lesqueues">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_lesqueues">
+        <div class="search-panel">
+            <div style="margin-left: 20px;">
+                <p style="color:blue;">注意：</p>
+                <p style="color:blue;">系统会每10分钟会往LES推送200条推送失败锁定状态为：“锁定”且推送状态为：“推送失败”的且推送次数不超过20次的网单。
+                </p>
+                <p style="color:blue;">系统会每2分钟会往LES推送200条锁定状态为：“未锁定”且推送状态为：“待推送”的网单。
+                </p>
+                <p style="color:blue;">目前往LES推送超过20次还未成功，则定时任务停止重新推，此时应手动到“订单管理”-“LES手动同步”菜单中去手动同步
+                </p>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">网单号</span>
+                <input class="easyui-textbox" name="cOrderSn"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">物料编码</span>
+                <input class="easyui-textbox" name="sku"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">库位编码</span>
+                <input class="easyui-textbox" name="sCode"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">推送次数≤</span>
+                <input class="easyui-textbox" name="tryNum"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">网单状态</span>
+                <select name="status" class="easyui-combobox">
+                    <option value="-1">全部</option>
+                    <option value="0">处理中</option>
+                    <option value="1">已占用库存</option>
+                    <option value="2">同步到HP</option>
+                    <option value="4">分配网点</option>
+                    <option value="8">待出库</option>
+                    <option value="10">待审核</option>
+                    <option value="11">待转运入库</option>
+                    <option value="12">待转运出库</option>
+                    <option value="40">待发货</option>
+                    <option value="150">网点拒绝</option>
+                    <option value="70">待交付</option>
+                    <option value="140">用户签收</option>
+                    <option value="130">完成关闭</option>
+                    <option value="160">用户拒收</option>
+                    <option value="110">取消关闭</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">推送状态</span>
+                <select name="deliveryStatus" class="easyui-combobox">
+                    <option value="-1">全部</option>
+                    <option value="1">推送成功</option>
+                    <option value="0" selected="true">推送失败</option>
+                    <option value="2">待推送</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">锁定状态</span>
+                <select name="isLock" class="easyui-combobox">
+                    <option value="-1">全部</option>
+                    <option value="1">已锁定</option>
+                    <option value="0">未锁定</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_lesqueues" data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_lesqueues"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_lesqueues" data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_lesqueues"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_lesqueues" data-options="iconCls:'icon-remove',plain:true">删除</a>
+    </form>
+</div>
+<div id="addDlg_lesqueues" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_lesqueues">
+    <form id="addForm_lesqueues" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>子订单id<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderproductid" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>动作 createOrder syncStatus等<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="action" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>推送数据<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="pushdata" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>是否成功<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="success" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>总共传递的次数<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="count" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>加入时间<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="addtime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>最后返回信息<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="lastmessage" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>0:正常 1:锁定，重试时获取 2:闸住，暂停传LES<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="islock" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>是否为暂停传LES状态<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="isstop" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="successtime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上次推送时间<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="lasttrytime" required="true"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_lesqueues">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_lesqueues" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_lesqueues').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_lesqueues').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/order/lesqueuesIndex.js"></script>
+</body>
+</html>

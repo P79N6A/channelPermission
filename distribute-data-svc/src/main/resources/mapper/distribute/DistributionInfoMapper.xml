@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.DistributionInfoDao">
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.DistributionInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="distributionCode" property="distributionCode" jdbcType="VARCHAR" />
+    <result column="distributionName" property="distributionName" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, distributionCode, distributionName, sort, createBy, createTime, updateBy, updateTime, 
+    remark
+  </sql>
+  <select id="selectChannelsInfo" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_distribution_info
+  </select>
+  
+  <select id="selectId"  resultType="java.lang.Integer" >
+    select 
+    id
+    from t_distribution_info
+    where distributionCode=  #{distributionCode,jdbcType=VARCHAR}
+  </select>
+</mapper>

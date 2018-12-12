@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvSection2OmsDao">
+	<resultMap id="invSection2OmsResult" type="com.haier.stock.model.InvSection2Oms">
+		<result property="id" column="id" />
+		<result property="omsSec" column="oms_sec" />
+		<result property="waSec" column="wa_sec" />
+		<result property="province" column="province" />
+	</resultMap>
+	<select id="getAllOMSSectionInfo" resultMap="invSection2OmsResult">
+		select `id`,`oms_sec`,`wa_sec`,`province`
+		from `inv_section_2_oms`
+	</select>
+</mapper>

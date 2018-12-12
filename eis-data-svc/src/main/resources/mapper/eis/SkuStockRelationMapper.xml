@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.SkuStockRelationDao">
+
+    <resultMap id="skuStockRelation" type="com.haier.eis.model.SkuStockRelation">
+        <result property="id" column="id"/>
+        <result property="sku" column="itemCode"/>
+        <result property="stockCode" column="warehouseCode"/>
+        <result property="channelCode" column="channelCode"/>
+        <result property="quantity" column="quantity"/>
+        <result property="lockQuantity" column="lockQuantity"/>
+        <result property="createDate" column="createDate"/>
+        <result property="createTime" column="createTime"/>
+    </resultMap>
+    <resultMap id="skuToNum" type="com.haier.eis.model.SkuStockRelation">
+        <result property="sku" column="itemCode"/>
+        <result property="skuNum" column="skuNum"/>
+    </resultMap>
+    <select id="get3WskuToNum" parameterType="String" resultMap="skuToNum">
+      select itemCode ,sum(quantity) as skuNum
+      from SkuStockRelation
+      where createTime=#{getTime}  GROUP BY itemCode
+    </select>
+    <select id="getStockRelationByCreateDate" parameterType="String" resultMap="skuStockRelation">
+	   select  *
+	     from SkuStockRelation  
+	    where  createDate = #{createDate}
+	</select>
+
+    <select id="getStockRelationById" parameterType="Integer" resultMap="skuStockRelation">
+	    select  *
+	     from SkuStockRelation
+	    where  id = #{id}
+	</select>
+
+    <select id="queryStockSyncLogCount" resultType="Integer">
+        SELECT count(1) FROM SkuStockRelation WHERE 1=1
+        <if test="sku != null">AND itemCode = #{sku}</if>
+        <if test="addTimeStart != null">AND createDate &gt;= #{addTimeStart}</if>
+        <if test="addTimeEnd != null">AND createDate &lt;= #{addTimeEnd}</if>
+    </select>
+
+
+    <!--select t2.itemCode,t2.warehouseCode,t2.quantity,t2.lockQuantity from-->
+    <!--(select a.sku sku,b.tmallScode scode from GQGYSStock a,`GQGYSStockScode` b-->
+    <!--where a.sku in ('AB8XA8007','BB0431090')-->
+    <!--and b.`tmallScode` in ('QDHEWL-0068','QDHEWL-0066')-->
+    <!--) t1 left join skuStockRelation t2 on t1.sku = t2.`itemCode` and t1.scode = t2.`warehouseCode`-->
+
+    <!--<select id="queryStockSyncLogList" resultMap="skuStockRelation">-->
+        <!--SELECT itemCode,warehouseCode,quantity,lockQuantity-->
+        <!--FROM skuStockRelation WHERE 1=1-->
+        <!--<if test="skuList != null">-->
+         <!--AND itemCode IN-->
+        <!--<foreach collection="skuList" item="item" index="index"  open="(" separator="," close=")">-->
+            <!--#{item}-->
+        <!--</foreach>-->
+        <!--</if>-->
+        <!--<if test="scodeList != null"> AND warehouseCode in-->
+        <!--<foreach collection="scodeList" item="item" index="index"  open="(" separator="," close=")">-->
+            <!--#{item}-->
+        <!--</foreach>-->
+        <!--</if>-->
+        <!--<if test="addTimeStart != null"> AND DATE_FORMAT(`createDate`, '%Y-%m-%d') = #{addTimeStart}</if>-->
+        <!--order by id asc-->
+    <!--</select>-->
+
+    <select id="queryStockSyncLogList" resultMap="skuStockRelation">
+        SELECT t1.sku itemCode,t1.scode warehouseCode,t2.quantity quantity,t2.lockQuantity lockQuantity
+        FROM (
+        select a.sku sku,b.tmallScode scode from GQGYSStock a,`GQGYSStockScode` b
+        where  1 = 1
+        <if test="skuList != null">
+            AND a.sku IN
+            <foreach collection="skuList" item="item" index="index"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="scodeList != null">
+            AND b.`tmallScode` in
+            <foreach collection="scodeList" item="item" index="index"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ) t1 left join SkuStockRelation t2 on t1.sku = t2.`itemCode` and t1.scode = t2.`warehouseCode`
+        <if test="addTimeStart != null"> where createTime = #{addTimeStart}</if>
+    </select>
+
+    <insert id="saveSkuStockRelation" parameterType="com.haier.eis.model.SkuStockRelation">
+        insert into `SkuStockRelation` (`sku`,`stockCode`,`channelCode`,`quantity`,`lockQuantity`,`createDate`,`createTime`)
+        values(#{sku},#{stockCode},#{channelCode},#{quantity},#{lockQuantity},#{createDate},#{createTime})
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER" statementType="STATEMENT">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="updateSkuStockRelation" parameterType="com.haier.eis.model.SkuStockRelation">
+        update `SkuStockRelation` set
+        `sku` = #{sku},
+        `stockCode` = #{stockCode},
+        `channelCode` = #{channelCode},
+        `quantity` = #{quantity},
+        `lockQuantity` = #{lockQuantity},
+        `createDate` = #{createDate},
+        `createTime` = #{createTime}
+        where `id` = #{id}
+    </update>
+
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO SkuStockRelation(`itemCode`,`warehouseCode`,`channelCode`,`quantity`,`lockQuantity`,`createDate`,`createTime`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.sku},#{item.stockCode},#{item.channelCode},#{item.quantity},#{item.lockQuantity},#{item.createDate},#{item.createTime})
+        </foreach>
+    </insert>
+
+</mapper>

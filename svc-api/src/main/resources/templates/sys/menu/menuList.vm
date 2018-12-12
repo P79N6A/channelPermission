@@ -1,0 +1,756 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>菜单管理</title>
+	<link rel="stylesheet" href="../../static/css/jqueryui/base/jquery.ui.all.css"/>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../../static/css/msg.css"></link>
+    <link rel="stylesheet" type="text/css" href="../../static/third/easyui/themes/gray/easyui.css"/>
+    <link rel="stylesheet" href="../../static/css/reset.css"></link>
+	<script src="../../static/third/jquery-1.8.3.min.js"></script>
+    <script src="../../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+
+<body>
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'north',border:false" align="left" style="display:none;">
+        <a id='addMg' href="#" class="easyui-linkbutton">创建业务模块</a>
+		<a id='addModel' href="#" class="easyui-linkbutton">创建模块</a>
+		<a id='addMenu' href="#" class="easyui-linkbutton">创建菜单项</a>
+	</div>
+    <div data-options="region:'center',border:false" >
+		<table id="dataGrid"></table>
+	</div>
+</div>
+
+<div id="add_Mg" class="easyui-dialog" style="display:none;width:300px;height:200px;" title="创建业务模块" modal="true">
+    <table>
+        <tr>
+            <td>业务模块名称:</td>
+            <td><input id="mg_name" class="easyui-textbox" style="width:160px" required="true"></input></td>
+        </tr>
+
+        <tr>
+            <td>状态:</td>
+            <td>
+                <select id="mg_status" class="easyui-combobox" style="width:160px">
+                    <option value="ALL">全部</option>
+                    <option value="1">有效</option>
+                    <option value="0">禁用</option>
+                    <option value="-1">删除</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>排序:</td>
+            <td><input id="mg_order" class="easyui-numberbox" data-options="min:0" style="width:160px" required="true"></input></td>
+        </tr>
+        <tr>
+            <td>创建人:</td>
+            <td><input id="createMgUser" readonly  unselectable="on" class="easyui-textbox" style="width:160px"></input></td>
+        </tr>
+        <tr>
+            <td>创建时间:</td>
+            <td><input id="updateMgTime" readonly  unselectable="on" class="easyui-textbox" style="width:160px"></input></td>
+        </tr>
+        <tr>
+            <td><button id="mg_pre" type="button">保存</button></td>
+            <td><button id="mg_close" type="button">关闭</button></td>
+        </tr>
+    </table>
+</div>
+
+<div id="add_Model" class="easyui-dialog" style="display:none;width:300px;height:200px;" title="创建模块" modal="true">   
+	<table>
+		<tr>
+			<td>模块名称:</td>
+			<td><input id="model_name" class="easyui-textbox" style="width:160px" required="true"></input></td>
+		</tr>
+        <tr>
+            <td>业务模块:</td>
+            <td>
+                <input id="obtainMg" name="obtainMg" class="easyui-combobox" style="width:160px" required="true"/>
+            </td>
+        </tr>
+		<tr>
+			<td>状态:</td>
+			<td>
+                <select id="model_status" class="easyui-combobox" style="width:160px">
+					<option value="ALL">全部</option>
+                    <option value="1">有效</option>
+                    <option value="0">禁用</option>
+                    <option value="-1">删除</option>
+                </select>
+			</td>
+		</tr>
+		<tr>
+			<td>排序:</td>
+            <td><input id="model_order" class="easyui-numberbox" data-options="min:0" style="width:160px" required="true"></input></td>
+		</tr>
+		<tr>
+			<td>创建人:</td>
+			<td><input id="createModelUser" readonly  unselectable="on" class="easyui-textbox" style="width:160px"></input></td>
+		</tr>
+		<tr>
+			<td>创建时间:</td>
+			<td><input id="updateModelTime" readonly  unselectable="on" class="easyui-textbox" style="width:160px"></input></td>
+		</tr>
+		<tr>
+			<td><button id="model_pre" type="button">保存</button></td>
+			<td><button id="model_close" type="button">关闭</button></td>
+		</tr>
+	</table>
+</div>
+
+
+<div id="add_Menu" class="easyui-dialog" style="display:none;width:450px;height:200px;" title="创建菜单项" modal="true">
+	<table>
+		<tr>
+			<td>菜单名称:</td>
+			<td><input id="menu_name" class="easyui-textbox" style="width:160px" required="true"></input></td>
+			<td>状态:</td>
+			<td>
+                <select id="menu_status" class="easyui-combobox" style="width:160px">
+					<option value="ALL">全部</option>
+                    <option value="1">有效</option>
+                    <option value="0">禁用</option>
+                    <option value="-1">删除</option>
+                </select>
+			</td>
+		</tr>
+		<tr>
+			<td>菜单类型:</td>
+			<td>
+				<select id="menu_type" class="easyui-combobox" style="width:160px">
+					<option value="1">ExtJS菜单</option>
+					<option value="0">普通菜单</option>
+				</select>
+			</td>
+			<td>排序:</td>
+			<td><input id="menu_order" class="easyui-numberbox" data-options="min:0" style="width:160px" required="true"></input></td>
+		</tr>
+		<tr>
+			<td>菜单地址:</td>
+			<td><input id="menu_data" class="easyui-textbox" style="width:160px" required="true"></input></td>
+		</tr>
+		<tr>
+			<td>创建人:</td>
+			<td><input id="createMenuUser" readonly  unselectable="on" class="easyui-textbox" style="width:160px"></input></td>
+			<td>创建时间:</td>
+			<td><input id="updateMenuTime" readonly  unselectable="on" class="easyui-textbox" style="width:160px"></input></td>
+		</tr>
+		<tr>
+			<td><button id="menu_pre" type="button">保存</button></td>
+			<td><button id="menu_close" type="button">关闭</button></td>
+		</tr>
+	</table>
+</div>
+
+<div id="edit_Model" class="easyui-dialog" style="display:none;width:300px;height:200px;" title="编辑模块" modal="true">
+	<table>
+		<tr>
+			<td>模块名称:</td>
+			<td><input id="edit_modelName" class="easyui-textbox" style="width:160px" required="true"></input></td>
+		</tr>
+		<tr>
+			<td>状态:</td>
+			<td>
+                <select id="edit_modelStatus" class="easyui-combobox" style="width:160px">
+					<option value="ALL">全部</option>
+                    <option value="1">有效</option>
+                    <option value="0">禁用</option>
+                    <option value="-1">删除</option>
+                </select>
+			</td>
+		</tr>
+		<tr>
+			<td>排序:</td>
+			<td><input id="edit_modelOrder" class="easyui-numberbox" data-options="min:0" style="width:160px" required="true"></input></td>
+		</tr>
+		<tr>
+			<td>最后更新人:</td>
+			<td><input id="edit_modelUser" class="easyui-textbox" style="width:160px" readonly  unselectable="on"></input></td>
+		</tr>
+		<tr>
+			<td>最后更新时间:</td>
+			<td><input id="edit_modelTime" class="easyui-textbox" style="width:160px" readonly  unselectable="on"></input></td>
+		</tr>
+		<tr>
+			<td><button id="edit_modelPre" type="button">保存</button></td>
+			<td><button id="edit_modelClose" type="button">关闭</button></td>
+		</tr>
+	</table>
+</div>
+
+<div id="edit_Menu" class="easyui-dialog" style="display:none;width:450px;height:200px;" title="编辑菜单项" modal="true">
+	<table>
+		<tr>
+			<td>菜单名称:</td>
+			<td><input id="edit_menuName" class="easyui-textbox" style="width:160px" required="true"></input></td>
+			<td>状态:</td>
+			<td>
+                <select id="edit_menuStatus" class="easyui-combobox" style="width:160px">
+					<option value="ALL">全部</option>
+                    <option value="1">有效</option>
+                    <option value="0">禁用</option>
+                    <option value="-1">删除</option>
+                </select>
+			</td>
+		</tr>
+		<tr>
+			<td>菜单类型:</td>
+			<td>
+				<select id="edit_menuType" class="easyui-combobox" style="width:160px">
+                    <option value="0">普通菜单</option>
+					<option value="1">ExtJS菜单</option>
+				</select>
+			</td>
+			<td>排序:</td>
+			<td><input id="edit_menuOrder" class="easyui-numberbox" data-options="min:0" style="width:160px" required="true"></input></td>
+		</tr>
+		<tr>
+			<td>菜单地址:</td>
+			<td><input id="edit_menuData" class="easyui-textbox" style="width:160px" required="true"></input></td>
+		</tr>
+		<tr>
+			<td>最后更新人</td>
+			<td><input id="edit_menuUser" class="easyui-textbox" style="width:160px" readonly  unselectable="on"></input></td>
+			<td>最后更新时间</td>
+			<td><input id="edit_menuTime" class="easyui-textbox" style="width:160px" readonly  unselectable="on"></input></td>
+		</tr>
+		<tr>
+			<td><button id="edit_menuPre" type="button">保存</button></td>
+			<td><button id="edit_menuClose" type="button">关闭</button></td>
+		</tr>
+	</table>
+</div>
+
+<script type="application/javascript">
+
+//创建业务模块面板
+$("#addMg").click(function () {
+	$("#add_Mg").dialog('open');
+});
+
+//创建模块面板
+$("#addModel").click(function () {
+	$("#add_Model").dialog('open');
+	$("#obtainMg").combobox({
+		url:"/menu/getMgMenu",
+		valueField:'id',
+		textField:'text'
+	});
+});
+
+//创建菜单项面板
+$('#addMenu').click(function(){
+	//获取选中行
+	var checkedItems = $('#dataGrid').datagrid('getChecked');
+    var menuData = new Array();
+
+    $.each(checkedItems, function (index, item) {
+        if (item.menuItemType == "mdl") {
+        	menuData.push(item);
+        }
+    });
+    
+    if (menuData == null || menuData.length == 0) {
+    	$.messager.alert('错误', '请在列表中单击鼠标选择一个模块,然后在执行此操作!', 'error');
+        return;
+    }
+    $("#add_Menu").dialog('open');
+});
+
+$("#mg_close").click(function () {
+    $("#add_Mg").panel('close');
+});
+
+$("#model_close").click(function () {
+	$('#add_Model').panel('close');
+});
+
+$("#menu_close").click(function () {
+	$('#add_Menu').panel('close');
+});
+
+//创建业务模块提交
+$("#mg_pre").click(function () {
+    if ($("#mg_name").val() == null || $("#mg_name").val() == ""){
+        $.messager.alert("提示","请输入业务模块名称","err");
+    } else if ($("#mg_status").val() == "ALL"){
+        $.messager.alert("提示","请选择有效状态","err")
+    } else if ($("#mg_order").val() == null || $("#mg_order").val() == ""){
+        $.messager.alert("提示","请输入业务模块排序","err")
+    } else {
+        mgSubmit();
+    }
+});
+
+function mgSubmit() {
+    jQuery.ajax({
+        url: "/menu/create",
+        type: "POST",
+        data: {
+            "mType": "mg",
+            "name": $("#mg_name").val(),
+            "orderBy": $("#mg_order").val(),
+            "status": $("#mg_status").val()
+        },
+        success: function (data) {
+            $('#add_Mg').panel('close');
+            $.messager.alert('提示', '业务模块创建成功', 'info');
+        },
+        error: function (data) {
+            $('#add_Mg').panel('close');
+            $.messager.alert('提示', '业务模块创建失败', 'err');
+        }
+    });
+}
+
+
+//创建模块提交
+var mId;
+var userId;
+$('#model_pre').click(function(){
+
+    if($("#model_name").val() == null || $("#model_name").val() == ""){
+        $.messager.alert('提示', '请输入模块名称', 'err');
+    } else 	if($("#model_order").val() == null || $("#model_order").val() == ""){
+        $.messager.alert('提示', '请输入模块排序', 'err');
+    } else 	if($("#model_status").val() == "ALL"){
+        $.messager.alert('提示', '请选择有效状态', 'err');
+    } else if ($("#obtainMg").combobox('getValue') == null || $("#obtainMg").combobox('getValue') == ""){
+        $.messager.alert('提示', '请选择业务模块', 'err');
+    } else {
+        modelSubmit();
+    }
+
+});
+
+function modelSubmit() {
+    jQuery.ajax({
+        url: "/menu/create",
+        type: "POST",
+        data: {
+            "mType": "mdl",
+			"pId":$("#obtainMg").combobox('getValue'),
+            "name": $("#model_name").val(),
+            "orderBy": $("#model_order").val(),
+            "status": $("#model_status").val()
+        },
+        success: function (data) {
+            $.messager.alert('提示', '创建模块之后请立即创建对应下属菜单项，否则模块将会被系统移除', 'error');
+            $('#add_Model').panel('close');
+
+            var jsonObj = JSON.parse(data);
+            //mId = jsonObj.rows.menuId;
+            //userId = jsonObj.sessionId;
+            modelAssign(jsonObj.rows);
+
+            //load();
+            $.messager.alert('提示', '模块创建成功', 'info');
+        },
+        error: function (data) {
+            $('#add_Model').panel('close');
+            $.messager.alert('提示', '模块创建失败', 'err');
+        }
+    });
+}
+
+function modelAssign(data){
+	$('#dataGrid').treegrid('append',{
+		parent: 0,
+		data: [{
+			menuId : data.menuId,
+			parentId : data.parentId,
+			menuName : data.menuName,
+			status : data.status,
+			orderBy : data.orderBy,
+			menuItemType : data.menuItemType,
+			menuItemData : data.menuItemData,
+			updateUser : data.updateUser,
+			updateTime : data.updateTime
+		}]
+	});
+}
+
+//创建菜单项提交
+$('#menu_pre').click(function(){
+
+    if($("#menu_name").val() == null || $("#menu_name").val() == ""){
+        $.messager.alert('提示', '请输入菜单项名称', 'err');
+    } else 	if($("#menu_order").val() == null || $("#menu_order").val() == ""){
+        $.messager.alert('提示', '请输入模块排序', 'err');
+    } else 	if($("#menu_status").val() == "ALL"){
+        $.messager.alert('提示', '请选择有效状态', 'err');
+    } else if ($("#menu_data").val() == null || $("#menu_data").val() == ""){
+        $.messager.alert('提示', '请输入菜单地址', 'err');
+	} else {
+        menuSubmit();
+	}
+	
+});
+
+function menuSubmit() {
+    var row = $('#dataGrid').datagrid('getSelected');
+    var type;
+    if($("#menu_type").val() == '1'){
+        type = "app";
+    }else{
+        type = "url";
+    }
+    jQuery.ajax({
+        url: "/menu/create",
+        type: "POST",
+        data: {
+            "pId": row.menuId,
+            "mType": type,
+            "mData": $("#menu_data").val(),
+            "name": $("#menu_name").val(),
+            "orderBy": $("#menu_order").val(),
+            "status": $("#menu_status").val()
+        },
+        success: function (data) {
+            $('#add_Menu').panel('close');
+
+//            var jsonObj = JSON.parse(data);
+//            mId = jsonObj.rows.menuId;
+//            userId = jsonObj.sessionId;
+//            menuAssign(userId,mId);
+
+            load();
+            $.messager.alert('提示', '菜单项创建成功', 'info');
+        },
+        error: function (data) {
+            $('#add_Menu').panel('close');
+            $.messager.alert('提示', '菜单项创建失败', 'err');
+        }
+    });
+}
+
+//function menuAssign(uId,mId){
+//	jQuery.ajax({
+//		url:"/sys/permission/assign",
+//		type: "POST",
+//		data: {
+//    		"ownerId": uId,//当前用户id
+//    		"ownerType": 1,//用户1、角色2
+//    		"ids": "itm-"+mId//权限id、创建菜单id、模块+mdl-,菜单项+itm-
+//		},success: function(){
+//			load();
+//		}
+//	});
+//}
+
+$(function(){
+	//$('#dataGrid').datagrid('hideColumn','menuId');
+    $("#add_Mg").panel('close');
+	$('#add_Model').panel('close');
+	$('#add_Menu').panel('close');
+	$('#edit_Model').panel('close');
+	$('#edit_Menu').panel('close');
+});
+
+/*function getStatus(){
+	//取得状态
+	jQuery.getJSON("/sys/user/getStatus", function(result){
+		//var count = result.totalCount;
+		var dataList = result.data;
+		//添加全部
+		dataList.unshift( {value:'ALL',value_meaning:'全部'});
+		$("#model_status").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+		$("#menu_status").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+		$("#edit_modelStatus").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+		$("#edit_menuStatus").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+	});
+}*/
+
+//页面加载
+$(function(){
+	load();
+});
+
+function load(){
+	$('#dataGrid').treegrid({
+		url:"/menu/find",
+	    fit: true,
+	    lines: true,
+	    singleSelect: true,
+	    checkOnSelect:true,
+	    nowrap: false,
+	    idField:'menuId',
+		treeField:'menuName', 
+	    columns: [
+	        [
+    	        {
+    	        	field:'operation', 
+    	        	title:'操作', 
+    	        	width:'100', 
+    	        	align:'center',
+                    formatter : function(value,row, index) {
+//    	        	    console.log(row);
+                    	return "<a id='oper' href='#' onclick='operation("+JSON.stringify(row)+")'>操作</a>";
+                    }
+    	        },
+    	        {
+    	        	field:'menuId', 
+    	        	title:'菜单ID', 
+    	        	width:'100', 
+    	        	align:'center',
+    	        	hidden:true
+    	        },
+    	        {
+    	        	field:'parentId', 
+    	        	title:'父菜单ID', 
+    	        	width:'100', 
+    	        	align:'center',
+    	        	hidden:true
+    	        },
+    	        {
+    	        	field:'menuName', 
+    	        	title:'菜单名称', 
+    	        	width:'160', 
+    	        	align:'center',
+
+    	        },
+    	        {
+    	        	field:'status', 
+    	        	title:'状态', 
+    	        	width:'100', 
+    	        	align:'center',
+                    formatter : function(value) {
+                    	if(value == 1){
+                    		return "有效";
+                    	}
+                    	if(value == 0){
+                    		return "禁用";
+                    	}
+                    	if(value == -1){
+                    		return "删除";
+                    	}
+                    }
+    	        },
+    	        {
+    	        	field:'orderBy', 
+    	        	title:'排序', 
+    	        	width:'100', 
+    	        	align:'center'
+    	        },
+    	        {
+    	        	field:'menuItemType', 
+    	        	title:'菜单类型', 
+    	        	width:'100', 
+    	        	align:'center',
+                    formatter : function(value) {
+                    	if(value == "mdl"){
+                    		return "模块";
+                    	}
+                    	if(value == "url"){
+                    		return "普通菜单";
+                    	}
+                    	if(value == "app"){
+                    		return "ExtJs菜单";
+                    	}
+                    }
+    	        },
+    	        {
+    	        	field:'menuItemData', 
+    	        	title:'菜单地址', 
+    	        	width:'100', 
+    	        	align:'center'
+    	        },
+    	        {
+    	        	field:'updateUser', 
+    	        	title:'最后更新人', 
+    	        	width:'100', 
+    	        	align:'center'
+    	        },
+    	        {
+    	        	field:'updateTime', 
+    	        	title:'最后更新时间', 
+    	        	width:'100', 
+    	        	align:'center',
+                    formatter : function(value) {
+                        var date = new Date(value);
+                        var year = date.getFullYear().toString();
+                        var month = (date.getMonth() + 1);
+                        var day = date.getDate().toString();
+                        var hour = date.getHours().toString();
+                        var minutes = date.getMinutes().toString();
+                        var seconds = date.getSeconds().toString();
+                        if (month < 10) {
+                            month = "0" + month;
+                        }
+                        if (day < 10) {
+                            day = "0" + day;
+                        }
+                        if (hour < 10) {
+                            hour = "0" + hour;
+                        }
+                        if (minutes < 10) {
+                            minutes = "0" + minutes;
+                        }
+                        if (seconds < 10) {
+                            seconds = "0" + seconds;
+                        }
+                        return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+                    }
+    	        }
+	        ]
+	    ]
+	});
+}
+
+function operation(index){
+	//获取选中行   
+//	var row = $('#dataGrid').datagrid('getSelected');
+//	console.log(index.menuName);
+	if(index.menuItemType == "mdl"){
+//		$("#edit_Model input").val("");
+		$("#edit_Model").dialog('open');
+		$("#edit_modelName").textbox('setValue',index.menuName);
+		$("#edit_modelStatus").combobox('setValue',index.status);
+		$("#edit_modelOrder").textbox('setValue',index.orderBy);
+		$("#edit_modelUser").textbox('setValue',index.updateUser);
+		$("#edit_modelTime").textbox('setValue',index.updateTime);
+		return;
+	}
+//	$("#edit_Menu input").val("");
+	$("#edit_Menu").dialog('open');
+	$("#edit_menuName").textbox('setValue',index.menuName);
+	$("#edit_menuStatus").combobox('setValue',index.status);
+	$("#edit_menuType").textbox('setValue',index.menuItemType);
+	$("#edit_menuOrder").textbox('setValue',index.orderBy);
+	$("#edit_menuData").textbox('setValue',index.menuItemData);
+	$("#edit_menuUser").textbox('setValue',index.updateUser);
+	$("#edit_menuTime").textbox('setValue',index.updateTime);
+}
+
+//编辑模块提交
+$('#edit_modelPre').click(function(){
+    if($("#edit_modelName").val() == null || $("#edit_modelName").val() == ""){
+        $.messager.alert('提示', '请输入模块名称', 'err');
+    } else 	if($("#edit_modelOrder").val() == null || $("#edit_modelOrder").val() == ""){
+        $.messager.alert('提示', '请输入模块排序', 'err');
+    } else 	if($("#edit_modelStatus").val() == "ALL"){
+        $.messager.alert('提示', '请选择有效状态', 'err');
+    } else {
+        editModelSubmit();
+    }
+});
+
+function editModelSubmit() {
+    var row = $('#dataGrid').datagrid('getSelected');
+    jQuery.ajax({
+        url: "/menu/update",
+        type: "POST",
+        data: {
+            "mId": row.menuId,
+            "mType": row.menuItemType,
+            "pId": row.parentId,
+            "name": $("#edit_modelName").val(),
+            "orderBy": $("#edit_modelOrder").val(),
+            "status": $("#edit_modelStatus").val()
+        },
+        success: function () {
+            $('#edit_Model').panel('close');
+            load();
+            $.messager.alert('提示', '模块编辑成功', 'info');
+        },
+        error: function () {
+            $('#edit_Model').panel('close');
+            $.messager.alert('提示', '模块编辑失败', 'err');
+        }
+    });
+}
+
+//编辑菜单项提交
+$('#edit_menuPre').click(function(){
+    if($("#edit_menuName").val() == null || $("#edit_menuName").val() == ""){
+        $.messager.alert('提示', '请输入菜单项名称', 'err');
+    } else 	if($("#edit_menuOrder").val() == null || $("#edit_menuOrder").val() == ""){
+        $.messager.alert('提示', '请输入模块排序', 'err');
+    } else 	if($("#edit_menuStatus").val() == "ALL"){
+        $.messager.alert('提示', '请选择有效状态', 'err');
+    } else if ($("#edit_menuData").val() == null || $("#edit_menuData").val() == ""){
+        $.messager.alert('提示', '请输入菜单地址', 'err');
+    } else {
+        editMenuSubmit();
+    }
+});
+
+function editMenuSubmit() {
+    var row = $('#dataGrid').datagrid('getSelected');
+    var type;
+    if($("#edit_menuType").val() == '1'){
+        type = "app";
+    }else{
+        type = "url";
+    }
+    jQuery.ajax({
+        url: "/menu/update",
+        type: "POST",
+        data: {
+            "mId": row.menuId,
+            "mType": type,
+            "pId": row.parentId,
+            "mData": $("#edit_menuData").val(),
+            "name": $("#edit_menuName").val(),
+            "orderBy": $("#edit_menuOrder").val(),
+            "status": $("#edit_menuStatus").val()
+        },
+        success: function () {
+            $('#edit_Menu').panel('close');
+            load();
+            $.messager.alert('提示', '菜单项编辑成功', 'info');
+        },
+        error: function () {
+            $('#edit_Menu').panel('close');
+            $.messager.alert('提示', '菜单项编辑失败', 'err');
+        }
+    });
+}
+
+$("#edit_modelClose").click(function () {
+	$('#edit_Model').panel('close');
+});
+
+$("#edit_menuClose").click(function () {
+	$('#edit_Menu').panel('close');
+});
+
+</script>
+</body>
+</html>

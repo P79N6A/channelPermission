@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.RegionsWriteDao">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from Regions
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.haier.shop.model.Regions">
+    insert into Regions (id, parentId, regionName, 
+      parentPath, firstLetter, regionType, 
+      shippingTime, visible, rowId, 
+      testNum, standardRegionId, code, 
+      activeFlag, hasRead, isSupportCod, 
+      addTime, modified, zipCode, 
+      receivingTime, shippingDistance, isOto
+      )
+    values (#{id,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{regionName,jdbcType=VARCHAR}, 
+      #{parentPath,jdbcType=VARCHAR}, #{firstLetter,jdbcType=CHAR}, #{regionType,jdbcType=BIT}, 
+      #{shippingTime,jdbcType=VARCHAR}, #{visible,jdbcType=TINYINT}, #{rowId,jdbcType=VARCHAR}, 
+      #{testNum,jdbcType=TINYINT}, #{standardRegionId,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, 
+      #{activeFlag,jdbcType=TINYINT}, #{hasRead,jdbcType=TINYINT}, #{isSupportCod,jdbcType=BIT}, 
+      #{addTime,jdbcType=VARCHAR}, #{modified,jdbcType=TIMESTAMP}, #{zipCode,jdbcType=VARCHAR}, 
+      #{receivingTime,jdbcType=INTEGER}, #{shippingDistance,jdbcType=VARCHAR}, #{isOto,jdbcType=INTEGER}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.haier.shop.model.Regions">
+        insert into Regions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="parentId != null">
+                parentId,
+            </if>
+            <if test="regionName != null">
+                regionName,
+            </if>
+            <if test="parentPath != null">
+                parentPath,
+            </if>
+            <if test="firstLetter != null">
+                firstLetter,
+            </if>
+            <if test="regionType != null">
+                regionType,
+            </if>
+            <if test="shippingTime != null">
+                shippingTime,
+            </if>
+            <if test="visible != null">
+                visible,
+            </if>
+            <if test="rowId != null">
+                rowId,
+            </if>
+            <if test="testNum != null">
+                testNum,
+            </if>
+            <if test="standardRegionId != null">
+                standardRegionId,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="activeFlag != null">
+                activeFlag,
+            </if>
+            <if test="hasRead != null">
+                hasRead,
+            </if>
+            <if test="isSupportCod != null">
+                isSupportCod,
+            </if>
+            <if test="addTime != null">
+                addTime,
+            </if>
+            <if test="modified != null">
+                modified,
+            </if>
+            <if test="zipCode != null">
+                zipCode,
+            </if>
+            <if test="receivingTime != null">
+                receivingTime,
+            </if>
+            <if test="shippingDistance != null">
+                shippingDistance,
+            </if>
+            <if test="isOto != null">
+                isOto,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="regionName != null">
+                #{regionName,jdbcType=VARCHAR},
+            </if>
+            <if test="parentPath != null">
+                #{parentPath,jdbcType=VARCHAR},
+            </if>
+            <if test="firstLetter != null">
+                #{firstLetter,jdbcType=CHAR},
+            </if>
+            <if test="regionType != null">
+                #{regionType,jdbcType=BIT},
+            </if>
+            <if test="shippingTime != null">
+                #{shippingTime,jdbcType=VARCHAR},
+            </if>
+            <if test="visible != null">
+                #{visible,jdbcType=TINYINT},
+            </if>
+            <if test="rowId != null">
+                #{rowId,jdbcType=VARCHAR},
+            </if>
+            <if test="testNum != null">
+                #{testNum,jdbcType=TINYINT},
+            </if>
+            <if test="standardRegionId != null">
+                #{standardRegionId,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="activeFlag != null">
+                #{activeFlag,jdbcType=TINYINT},
+            </if>
+            <if test="hasRead != null">
+                #{hasRead,jdbcType=TINYINT},
+            </if>
+            <if test="isSupportCod != null">
+                #{isSupportCod,jdbcType=BIT},
+            </if>
+            <if test="addTime != null">
+                #{addTime,jdbcType=VARCHAR},
+            </if>
+            <if test="modified != null">
+                #{modified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="zipCode != null">
+                #{zipCode,jdbcType=VARCHAR},
+            </if>
+            <if test="receivingTime != null">
+                #{receivingTime,jdbcType=INTEGER},
+            </if>
+            <if test="shippingDistance != null">
+                #{shippingDistance,jdbcType=VARCHAR},
+            </if>
+            <if test="isOto != null">
+                #{isOto,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.haier.shop.model.Regions">
+        update Regions
+        <set>
+            <if test="parentId != null">
+                parentId = #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="regionName != null">
+                regionName = #{regionName,jdbcType=VARCHAR},
+            </if>
+            <if test="parentPath != null">
+                parentPath = #{parentPath,jdbcType=VARCHAR},
+            </if>
+            <if test="firstLetter != null">
+                firstLetter = #{firstLetter,jdbcType=CHAR},
+            </if>
+            <if test="regionType != null">
+                regionType = #{regionType,jdbcType=BIT},
+            </if>
+            <if test="shippingTime != null">
+                shippingTime = #{shippingTime,jdbcType=VARCHAR},
+            </if>
+            <if test="visible != null">
+                visible = #{visible,jdbcType=TINYINT},
+            </if>
+            <if test="rowId != null">
+                rowId = #{rowId,jdbcType=VARCHAR},
+            </if>
+            <if test="testNum != null">
+                testNum = #{testNum,jdbcType=TINYINT},
+            </if>
+            <if test="standardRegionId != null">
+                standardRegionId = #{standardRegionId,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="activeFlag != null">
+                activeFlag = #{activeFlag,jdbcType=TINYINT},
+            </if>
+            <if test="hasRead != null">
+                hasRead = #{hasRead,jdbcType=TINYINT},
+            </if>
+            <if test="isSupportCod != null">
+                isSupportCod = #{isSupportCod,jdbcType=BIT},
+            </if>
+            <if test="addTime != null">
+                addTime = #{addTime,jdbcType=VARCHAR},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="zipCode != null">
+                zipCode = #{zipCode,jdbcType=VARCHAR},
+            </if>
+            <if test="receivingTime != null">
+                receivingTime = #{receivingTime,jdbcType=INTEGER},
+            </if>
+            <if test="shippingDistance != null">
+                shippingDistance = #{shippingDistance,jdbcType=VARCHAR},
+            </if>
+            <if test="isOto != null">
+                isOto = #{isOto,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.haier.shop.model.Regions">
+    update Regions
+    set parentId = #{parentId,jdbcType=INTEGER},
+      regionName = #{regionName,jdbcType=VARCHAR},
+      parentPath = #{parentPath,jdbcType=VARCHAR},
+      firstLetter = #{firstLetter,jdbcType=CHAR},
+      regionType = #{regionType,jdbcType=BIT},
+      shippingTime = #{shippingTime,jdbcType=VARCHAR},
+      visible = #{visible,jdbcType=TINYINT},
+      rowId = #{rowId,jdbcType=VARCHAR},
+      testNum = #{testNum,jdbcType=TINYINT},
+      standardRegionId = #{standardRegionId,jdbcType=INTEGER},
+      code = #{code,jdbcType=VARCHAR},
+      activeFlag = #{activeFlag,jdbcType=TINYINT},
+      hasRead = #{hasRead,jdbcType=TINYINT},
+      isSupportCod = #{isSupportCod,jdbcType=BIT},
+      addTime = #{addTime,jdbcType=VARCHAR},
+      modified = #{modified,jdbcType=TIMESTAMP},
+      zipCode = #{zipCode,jdbcType=VARCHAR},
+      receivingTime = #{receivingTime,jdbcType=INTEGER},
+      shippingDistance = #{shippingDistance,jdbcType=VARCHAR},
+      isOto = #{isOto,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

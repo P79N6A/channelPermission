@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.stock.dao.stock.OrderMsgQueueDao" >
+  <insert id="insert" parameterType="com.haier.stock.model.OrderMsgQueue" >
+    insert into order_msg_queue (msg_queue_id, c_order_sn, 
+      order_amount, is_cod, receiver_name, 
+      receiver_mobile, receiver_address, store_name, 
+      member_mobile, member_id, sku, 
+      num, product_name, order_product_id
+      )
+    values (#{msgQueueId,jdbcType=INTEGER}, #{corderSn,jdbcType=VARCHAR}, 
+      #{orderAmount,jdbcType=DECIMAL}, #{isCod,jdbcType=BIT}, #{receiverName,jdbcType=VARCHAR}, 
+      #{receiverMobile,jdbcType=CHAR}, #{receiverAddress,jdbcType=VARCHAR}, #{storeName,jdbcType=VARCHAR}, 
+      #{memberMobile,jdbcType=CHAR},  #{memberId,jdbcType=INTEGER}, #{sku,jdbcType=VARCHAR}, 
+      #{num,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{orderProductId,jdbcType=INTEGER}
+      )
+  </insert>
+</mapper>

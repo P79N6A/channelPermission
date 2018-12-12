@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.DepartmentProductTypeDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.DepartmentProductType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="departmentCode" property="departmentCode" jdbcType="VARCHAR" />
+    <result column="departmentName" property="departmentName" jdbcType="VARCHAR" />
+    <result column="productTypeId" property="productTypeId" jdbcType="INTEGER" />
+    <result column="productTypeName" property="productTypeName" jdbcType="VARCHAR" />
+    <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, departmentCode, departmentName, productTypeId, productTypeName, createBy, createTime, 
+    updateBy, updateTime, remark
+  </sql>
+  <select id="selectproduct" resultMap="BaseResultMap" >
+   select * from t_department_product_type GROUP BY departmentName
+  </select>
+ <select id="selectcode" resultType="string" >
+   select departmentCode from t_department_product_type where productTypeId=#{productTypeId,jdbcType=INTEGER}
+  </select>
+  <select id="selectname" resultMap="BaseResultMap" >
+   select departmentName from t_department_product_type where productTypeId=#{productTypeId,jdbcType=INTEGER}
+  </select>
+    <select id="getDepartment" resultMap="BaseResultMap">
+        SELECT * FROM t_department_product_type WHERE productTypeId=#{productTypeId,jdbcType=INTEGER}
+    </select>
+</mapper>

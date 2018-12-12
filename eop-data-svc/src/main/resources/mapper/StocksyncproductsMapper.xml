@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.eop.data.dao.StocksyncproductsDao" >
+  <resultMap id="BaseResultMap" type="com.haier.eop.data.model.Stocksyncproducts" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="productId" property="productId" jdbcType="INTEGER" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="sourceProductId" jdbcType="VARCHAR" />
+    <result column="tzSku" property="tzSku" jdbcType="VARCHAR" />
+    <result column="stype" property="stype" jdbcType="INTEGER" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, source, productId, sku, sourceProductId, tzSku, stype, addTime, updateTime
+  </sql>
+  
+    <select id="Listf" resultMap="BaseResultMap">
+SELECT *
+	FROM stocksyncproducts
+	where 1=1
+	<if test="entity!=null">
+		<if test="entity.source != null and entity.source !='' ">
+        <![CDATA[ and source = #{entity.source} ]]>
+      </if>
+	  <if test="entity.sku!= null and entity.sku!='' ">
+        <![CDATA[ and sku like #{entity.sku}]]>
+      </if>
+ 	<if test="entity.tzSku != null and entity.tzSku !='' ">
+        <![CDATA[ and tzSku like #{entity.tzSku}]]>
+      </if>
+	</if>
+	<include refid="pagination" />
+  </select>
+   <select id="getId" resultMap="BaseResultMap">
+		SELECT id
+	FROM stocksyncproducts
+	where
+       sku = #{sku,jdbcType=VARCHAR} 
+       and
+       source =#{source,jdbcType=VARCHAR} 
+        </select>
+   <select id="getPagerCountS" resultType="int">
+		SELECT count(id)
+	FROM stocksyncproducts
+		where 1=1
+	<if test="entity!=null">
+		<if test="entity.source != null and entity.source !='' ">
+        <![CDATA[ and source = #{entity.source} ]]>
+      </if>
+	  <if test="entity.sku!= null and entity.sku!='' ">
+        <![CDATA[ and sku like #{entity.sku}]]>
+      </if>
+ 	<if test="entity.tzSku != null and entity.tzSku !='' ">
+        <![CDATA[ and tzSku = #{entity.tzSku}]]>
+      </if>
+	</if>
+	</select>
+  <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stocksyncproducts
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.haier.eop.data.model.Stocksyncproducts" >
+    insert into stocksyncproducts (id, source, productId, 
+      sku, sourceProductId, tzSku, 
+      stype, addTime, updateTime
+      )
+    values (#{id,jdbcType=INTEGER}, #{source,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER}, 
+      #{sku,jdbcType=VARCHAR}, #{sourceProductId,jdbcType=VARCHAR}, #{tzSku,jdbcType=VARCHAR}, 
+      #{stype,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.haier.eop.data.model.Stocksyncproducts" >
+    update stocksyncproducts
+     <set >
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+     source = #{source,jdbcType=VARCHAR},
+      productId = #{productId,jdbcType=INTEGER},
+      sku = #{sku,jdbcType=VARCHAR},
+      sourceProductId = #{sourceProductId,jdbcType=VARCHAR},
+      tzSku = #{tzSku,jdbcType=VARCHAR},
+      stype = #{stype,jdbcType=INTEGER},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

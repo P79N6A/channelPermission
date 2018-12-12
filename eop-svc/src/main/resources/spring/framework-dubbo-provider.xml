@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--广播注册中心暴露服务地址 -->
+  <!--  <dubbo:registry id="demoRegistry" address="zookeeper://127.0.0.1:2181"/>-->
+    <!--  暴露服务 -->
+    <dubbo:service retries="0" interface="com.haier.eop.service.EopService"
+                   ref="eopServiceImpl" version="1.0.0"  timeout="1200000" />
+  <dubbo:service retries="0" interface="com.haier.eop.service.EopCenterStocksyncproductsService"
+                   ref="eopCenterStocksyncproductsServiceImpl" version="1.0.0" timeout="1200000" />
+   <dubbo:service retries="0" interface="com.haier.eop.service.EopCenterStocksyncProstorageService"
+                   ref="eopCenterStocksyncProstorageServiceImpl" version="1.0.0" timeout="1200000" />                
+	<dubbo:service retries="0" interface="com.haier.eop.service.EopCenterStocksynCstorageService"
+                   ref="eopCenterStocksynCstorageServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.eop.service.EopCenterStockSyncLogService"
+                   ref="eopCenterStockSyncLogServiceImpl" version="1.0.0" timeout="1200000" />               
+	 <dubbo:service retries="0" interface="com.haier.eop.service.EopCenterSalesettingsService"
+                   ref="eopCenterSalesettingsServiceImpl" version="1.0.0" timeout="1200000" />               
+</beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.SgRealtimeStockReadDao">
+	<resultMap id="BaseResultMap" type="com.haier.shop.model.SgRealtimeStock">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="sku" property="sku" jdbcType="VARCHAR" />
+		<result column="store_id" property="storeId" jdbcType="INTEGER" />
+		<result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+		<result column="scode" property="scode" jdbcType="VARCHAR" />
+		<result column="stock_qty" property="stockQty" jdbcType="INTEGER" />
+		<result column="store_ts" property="storeTs" jdbcType="TIMESTAMP" />
+		<result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, sku, store_id, store_code, scode, stock_qty, store_ts,add_time,
+		modify_time
+	</sql>
+	<select id="selectByParams" resultMap="BaseResultMap"
+		parameterType="com.haier.shop.model.SgRealtimeStock">
+		select
+		<include refid="Base_Column_List" />
+		from sg_realtime_stock
+		where
+		sku = #{sku,jdbcType=VARCHAR} and 
+		store_id = #{storeId,jdbcType=INTEGER} and 
+		store_code = #{storeCode,jdbcType=VARCHAR} and 
+		scode = #{scode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findStoreCodeByStoreId" resultType="java.lang.String">
+		select store_code from store_member
+		where member_id = #{id}
+	</select>
+	
+</mapper>

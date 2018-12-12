@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.WAAddressDao">
+	<resultMap id="waAddressResult" type="com.haier.purchase.data.model.WAAddress">
+		<result property="sCode" column="sCode" />
+		<result property="centerName" column="centerName" />
+		<result property="cCode" column="cCode" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="county" column="county" />
+		<result property="lesCode" column="lesCode" />
+		<result property="address" column="address" />
+		<result property="zipCode" column="zipCode" />
+		<result property="contact" column="contact" />
+		<result property="mobilePhone" column="mobilePhone" />
+		<result property="phone" column="phone" />
+		<result property="is_enabled" column="is_enabled" />
+	</resultMap>
+	<select id="getWAAddressInfo" parameterType="String" resultMap="waAddressResult">
+		select
+		`sCode`,`centerName`,`cCode`,`province`,`city`,`county`,`lesCode`,`address`,`city`,`zipCode`,`contact_cgodbm`,`contact_crm`,`mobilePhone`,`phone`
+		from `wa_address_t`
+		where `sCode` = #{sCode}
+		and is_enabled=0
+	</select>
+	<select id="getALlWAAddressInfo" parameterType="String"
+		resultMap="waAddressResult">
+		select
+		`sCode`,`centerName`,`cCode`,`province`,`city`,`county`,`lesCode`,`address`,`city`,`zipCode`,`contact_cgodbm`,`contact_crm`,`mobilePhone`,`phone`
+		from `wa_address_t`
+		where `sCode` = #{sCode}
+	</select>
+	<select id="getWAAddress" parameterType="Map" resultMap="waAddressResult">
+		select
+		`sCode`,`centerName`,`cCode`,`province`,`city`,`county`,`lesCode`,`address`,`city`,`zipCode`,`contact_cgodbm`,`contact_crm`,`mobilePhone`,`phone`,`is_enabled`
+		from `wa_address_t`
+		where
+		1=1
+		<if test="waAddress.sCode != null and waAddress.sCode != ''">
+			AND sCode = #{waAddress.sCode}
+		</if>
+		<if test="waAddress.centerName !=null and waAddress.centerName!=''">
+			and centerName=#{waAddress.centerName}
+		</if>
+		<![CDATA[ AND is_enabled <> 4 ]]>
+		<if test="rows != null and rows !='' and index != null and index != ''">
+			LIMIT #{index},#{rows}
+		</if>
+	</select>
+	<select id="getwaAddressCount" resultType="java.lang.Integer">
+		SELECT
+		count(0)
+		FROM
+		wa_address_t
+		WHERE
+		1=1
+		<if test="waAddress.sCode != null and waAddress.sCode != ''">
+			AND sCode = #{waAddress.sCode}
+		</if>
+		<if test="waAddress.centerName !=null and waAddress.centerName!=''">
+			AND centerName=#{waAddress.centerName}
+		</if>
+		<![CDATA[ AND is_enabled <> 4 ]]>
+	</select>
+	<insert id="createWaAddress" parameterType="com.haier.purchase.data.model.WAAddress">
+		INSERT INTO
+		wa_address_t (
+		sCode,
+		centerName,
+		cCode,
+		province,
+		city,
+		county,
+		lesCode,
+		address,
+		zipCode,
+		contact_cgodbm,
+		contact_crm,
+		mobilePhone,
+		phone,
+		is_enabled
+		)
+		VALUES(
+		#{waAddress.sCode},
+		#{waAddress.centerName},
+		#{waAddress.cCode},
+		#{waAddress.province},
+		#{waAddress.city},
+		#{waAddress.county},
+		#{waAddress.lesCode},
+		#{waAddress.address},
+		#{waAddress.zipCode},
+		#{waAddress.contact_cgodbm},
+		#{waAddress.contact_crm},
+		#{waAddress.mobilePhone},
+		#{waAddress.phone},
+		0
+		);
+	</insert>
+
+	<update id="updateWaAddress" parameterType="Map">
+		UPDATE wa_address_t
+		<set>
+			centerName = #{waAddress.centerName},
+			cCode = #{waAddress.cCode},
+			province = #{waAddress.province},
+			city = #{waAddress.city},
+			county =
+			#{waAddress.county},
+			lesCode = #{waAddress.lesCode},
+			address =
+			#{waAddress.address},
+			zipCode = #{waAddress.zipCode},
+			contact_cgodbm =
+			#{waAddress.contact_cgodbm},
+			contact_crm = #{waAddress.contact_crm},
+			mobilePhone = #{waAddress.mobilePhone},
+			phone = #{waAddress.phone}
+		</set>
+		WHERE
+		sCode = #{waAddress.sCode}
+	</update>
+
+	<update id="deleteWaAddress" parameterType="Map">
+		UPDATE wa_address_t SET is_enabled=4
+		WHERE sCode in
+		<foreach collection="deleteList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="openStatusWaAddress" parameterType="Map">
+		UPDATE wa_address_t SET is_enabled=0 WHERE sCode IN
+		<foreach collection="openList" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="closeStatusWaAddress" parameterType="Map">
+		UPDATE wa_address_t SET is_enabled=1 WHERE sCode IN
+		<foreach collection="closeList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<select id="getWAAddressExport" parameterType="Map" resultMap="waAddressResult">
+		select
+		`sCode`,`centerName`,`cCode`,`province`,`city`,`county`,`lesCode`,`address`,`city`,`zipCode`,`contact_cgodbm`,`contact_crm`,`mobilePhone`,`phone`,`is_enabled`
+		from `wa_address_t`
+		<![CDATA[ WHERE is_enabled <> 4 ]]>
+		<if test="sCode != null and sCode != ''">
+			AND sCode IN
+			<foreach collection="sCode" item="item" index="index" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="checkMainKey" parameterType="Map" resultType="java.lang.Integer">
+		SELECT
+		count(1) from wa_address_t
+		WHERE
+		sCode = #{waAddress.sCode}
+	</select>
+</mapper>

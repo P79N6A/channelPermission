@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="InsertOrderBill_ZKToOMS" targetNamespace="http://xmlns.oracle.com/Application/InsertOrderBill_ZKToOMS/InsertOrderBill_ZKToOMS" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:WL5G3N2="http://xmlns.oracle.com/Application/InsertOrderBill_ZKToOMS/InsertOrderBill_ZKToOMS" xmlns:WL5G3N3="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:documentation>
+        http://10.138.40.168:7779/soa-infra/services/IHS/InsertOrderBill_ZKToOMS!1.0/InsertOrderBill_ZKToOMS.wsdl
+    </WL5G3N0:documentation>
+  <WL5G3N1:partnerLinkType name="InsertOrderBill_ZKToOMS">
+    <WL5G3N1:role name="InsertOrderBill_ZKToOMSProvider">
+      <WL5G3N1:portType name="WL5G3N2:InsertOrderBill_ZKToOMS"/>
+    </WL5G3N1:role>
+  </WL5G3N1:partnerLinkType>
+  <WL5G3N0:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:client="http://xmlns.oracle.com/Application/InsertOrderBill_ZKToOMS/InsertOrderBill_ZKToOMS" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+      <import namespace="http://xmlns.oracle.com/Application/InsertOrderBill_ZKToOMS/InsertOrderBill_ZKToOMS" schemaLocation="http://10.138.40.168:8001/EAI/service/IHS/InsertOrderBill_ZKToOMS/InsertOrderBill_ZKToOMS?SCHEMA%2FSaleOrders%2FIHS%2FInsertOrderBill_ZKToOMS%2FXMLSchema_1779121015"/>
+    </schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="InsertOrderBill_ZKToOMSRequestMessage">
+    <WL5G3N0:part element="WL5G3N2:InsertOrderBill_OMS2ProcessRequest" name="payload"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="InsertOrderBill_ZKToOMSResponseMessage">
+    <WL5G3N0:part element="WL5G3N2:InsertOrderBill_OMS2ProcessResponse" name="payload"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="RemoteExceptionMessage">
+    <WL5G3N0:part element="WL5G3N2:InsertOrderBill_OMS2ProcessResponse" name="Fault"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="InsertOrderBill_ZKToOMS">
+    <WL5G3N0:operation name="process">
+      <WL5G3N0:input message="WL5G3N2:InsertOrderBill_ZKToOMSRequestMessage"/>
+      <WL5G3N0:output message="WL5G3N2:InsertOrderBill_ZKToOMSResponseMessage"/>
+      <WL5G3N0:fault message="WL5G3N2:RemoteExceptionMessage" name="ThrowException"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="InsertOrderBill_ZKToOMSBinding" type="WL5G3N2:InsertOrderBill_ZKToOMS">
+    <WL5G3N3:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="process">
+      <WL5G3N3:operation soapAction="process" style="document"/>
+      <WL5G3N0:input>
+        <WL5G3N3:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N3:body use="literal"/>
+      </WL5G3N0:output>
+      <WL5G3N0:fault name="ThrowException">
+        <WL5G3N3:fault name="ThrowException" use="literal"/>
+      </WL5G3N0:fault>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="insertorderbill_zktooms_client_ep">
+    <WL5G3N0:documentation>OSB Service</WL5G3N0:documentation>
+    <WL5G3N0:port binding="WL5G3N2:InsertOrderBill_ZKToOMSBinding" name="InsertOrderBill_ZKToOMS_pt">
+      <WL5G3N3:address location="http://10.135.1.110:7001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=HNM_INT_ECODE_2"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

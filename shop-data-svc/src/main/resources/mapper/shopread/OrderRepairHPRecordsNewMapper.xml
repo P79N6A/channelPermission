@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderRepairHPRecordsnNewDao">
+    <!--作者:张波  2017/12/19-->
+    <resultMap id="orderRepairHPRecordsResult" type="com.haier.shop.model.OrderRepairHPRecordsNew">
+        <result property="id" column="id" />
+        <result property="siteId" column="siteId" />
+        <result property="addTime" column="addTime" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="orderRepairId" column="orderRepairId" />
+        <result property="netPointCode" column="netPointCode" />
+        <result property="checkResult" column="checkResult" />
+        <result property="quality" column="quality" />
+        <result property="machineNum" column="machineNum" />
+        <result property="inspector" column="inspector" />
+        <result property="inspectTime" column="inspectTime" />
+        <result property="success" column="success" />
+        <result property="checkType" column="checkType" />
+        <result property="packResult" column="packResult" />
+        <result property="response" column="response" />
+        <result property="hpOrderFail" column="hpOrderFail" />
+        <result property="hpOrderRemark" column="hpOrderRemark" />
+        <result property="source" column="source" />
+        <result property="woId" column="woId" />
+    </resultMap>
+    <select id="getByRepairIdAndCheckType" parameterType="map" resultMap="orderRepairHPRecordsResult">
+        select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`netPointCode`,`checkResult`,`quality`,`machineNum`,`inspector`,`inspectTime`,`success`,`checkType`,`packResult`,`response`,`hpOrderFail`,`hpOrderRemark`,source,woId
+        from `OrderRepairHPRecords`
+        where `orderRepairId` = #{orderRepairId}
+        and `checkType` = #{checkType}
+        order by id desc
+        limit 1
+    </select>
+    	<!-- 根据repairId查询HP记录表 -->
+	<select id="getByRepairId" parameterType="map" resultMap="orderRepairHPRecordsResult">
+		select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`netPointCode`,`checkResult`,`quality`,`machineNum`,`inspector`,`inspectTime`,`success`,`checkType`,`packResult`,`response`,`hpOrderFail`,`hpOrderRemark`,source,woId
+		from `OrderRepairHPRecords`
+		where `orderRepairId` = #{orderRepairId}
+	</select>
+</mapper>

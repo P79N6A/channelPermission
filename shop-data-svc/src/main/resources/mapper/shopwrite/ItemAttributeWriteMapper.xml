@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.ItemAttributeWriteDao">
+	<update id="update" parameterType="com.haier.shop.model.ItemAttribute">
+		update `item_attribute` set 
+			`id`= #{id},
+			`cbs_category`= #{cbsCategory},
+			`value_id`= #{valueId},
+			`value_set_id`= #{valueSetId},
+			`description`= #{description},
+			`value`= #{value},
+			`value_meaning`= #{valueMeaning},
+			`value_meaning_en`= #{valueMeaningEn},
+			`parent_value_low`= #{parentValueLow},
+			`parent_value_set_id`= #{parentValueSetId},
+			`active_flag`= #{activeFlag},
+			`created`= #{created},
+			`last_upd`= #{lastUpd},
+			`delete_flag`= #{deleteFlag}
+		where `id` = #{id}
+	</update>
+	
+	<update id="updateNotNull" parameterType="com.haier.shop.model.ItemAttribute">
+        update `item_attribute` 
+    	<set>
+				<if test="id != null">`id`= #{id},</if>
+				<if test="cbsCategory != null">`cbs_category`= #{cbsCategory},</if>
+				<if test="valueId != null">`value_id`= #{valueId},</if>
+				<if test="valueSetId != null">`value_set_id`= #{valueSetId},</if>
+				<if test="description != null">`description`= #{description},</if>
+				<if test="value != null">`value`= #{value},</if>
+				<if test="valueMeaning != null">`value_meaning`= #{valueMeaning},</if>
+				<if test="valueMeaningEn != null">`value_meaning_en`= #{valueMeaningEn},</if>
+				<if test="parentValueLow != null">`parent_value_low`= #{parentValueLow},</if>
+				<if test="parentValueSetId != null">`parent_value_set_id`= #{parentValueSetId},</if>
+				<if test="activeFlag != null">`active_flag`= #{activeFlag},</if>
+				<if test="created != null">`created`= #{created},</if>
+				<if test="lastUpd != null">`last_upd`= #{lastUpd},</if>
+				<if test="deleteFlag != null">`delete_flag`= #{deleteFlag}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.haier.shop.model.ItemAttribute" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `item_attribute`(
+				`cbs_category`,
+				`value_id`,
+				`value_set_id`,
+				`description`,
+				`value`,
+				`value_meaning`,
+				`value_meaning_en`,
+				`parent_value_low`,
+				`parent_value_set_id`,
+				`active_flag`,
+				`created`,
+				`last_upd`,
+				`delete_flag`
+		)
+		values(
+				#{cbsCategory},
+				#{valueId},
+				#{valueSetId},
+				#{description},
+				#{value},
+				#{valueMeaning},
+				#{valueMeaningEn},
+				#{parentValueLow},
+				#{parentValueSetId},
+				#{activeFlag},
+				#{created},
+				#{lastUpd},
+				#{deleteFlag}
+		)
+	</insert>
+	
+	<select id="getProductTypesTo2" resultType="String">
+		SELECT distinct cbs_category FROM `item_attribute` where value_set_id='ProductGroup' and cbs_category !=''
+	</select>
+</mapper>

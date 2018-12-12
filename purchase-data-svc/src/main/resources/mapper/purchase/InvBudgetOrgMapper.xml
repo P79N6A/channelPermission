@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.InvBudgetOrgDao">
+	<resultMap id="invBudgetOrgResult" type="com.haier.purchase.data.model.InvBudgetOrg">
+		<result property="id" column="id" />
+		<result property="budgetorg_id" column="budgetorg_id" />
+		<result property="budgetorg_name" column="budgetorg_name" />
+		<result property="business_dep" column="business_dep" />
+		<result property="area_id" column="area_id" />
+		<result property="area_name" column="area_name" />
+		<result property="product_group_id" column="product_group_id" />
+		<result property="product_group_name" column="product_group_name" />
+		<result property="is_enabled" column="is_enabled" />
+	</resultMap>
+<!-- 	<select id="getBudgetOrg" parameterType="Map" resultMap="invBudgetOrgResult">
+		select `id`,`budgetorg_id`,`budgetorg_name`,`business_dep`,`area_id`,`area_name`,`product_group_id`,`product_group_name`
+		from `inv_budgetorg`
+		where `area_id` = #{area_id} and `product_group_id` = #{product_group_id}
+	</select> -->
+	<!-- 对外预算体查询 -->
+	<select id="selectBudgetOrg" parameterType="Map" resultMap="invBudgetOrgResult">
+		select
+		id,
+		budgetorg_id,
+		budgetorg_name,
+		business_dep,
+		area_id,
+		area_name,
+		product_group_id,
+		product_group_name
+		from inv_budgetorg
+		WHERE
+		1=1
+		<if test="area_id != null and area_id != ''">
+			AND area_id = #{area_id}
+		</if>
+		<if test="product_group_id != null and product_group_id != ''">
+			AND product_group_id = #{product_group_id}
+		</if>
+		AND is_enabled=0
+	</select>
+	<!-- 对外预算体查询 -->
+	<select id="getAllBudgetOrg" parameterType="Map" resultMap="invBudgetOrgResult">
+		select
+		id,
+		budgetorg_id,
+		budgetorg_name,
+		business_dep,
+		area_id,
+		area_name,
+		product_group_id,
+		product_group_name
+		from inv_budgetorg
+		WHERE
+		1=1
+		<if test="area_id != null">
+			AND area_id = #{area_id}
+		</if>
+		<if test="product_group_id != null and product_group_id != ''">
+			AND product_group_id = #{product_group_id}
+		</if>
+	</select>
+	<!-- 预算体查询 -->
+	<select id="getBudgetOrg" parameterType="Map" resultMap="invBudgetOrgResult">
+		select
+		id,
+		budgetorg_id,
+		budgetorg_name,
+		business_dep,
+		area_id,
+		area_name,
+		product_group_id,
+		product_group_name,
+		is_enabled
+		from inv_budgetorg
+		WHERE
+		1=1
+		<if test="invBudgetOrg.id != null">
+			AND id = #{invBudgetOrg.id}
+		</if>
+		<if test="invBudgetOrg.area_name != null and invBudgetOrg.area_name != ''">
+			AND area_name = #{invBudgetOrg.area_name}
+		</if>
+		<if
+			test="invBudgetOrg.product_group_name != null and invBudgetOrg.product_group_name != ''">
+			AND product_group_name = #{invBudgetOrg.product_group_name}
+		</if>
+		<if
+			test="invBudgetOrg.budgetorg_id != null and invBudgetOrg.budgetorg_id != ''">
+			AND budgetorg_id = #{invBudgetOrg.budgetorg_id}
+		</if>
+		<if
+			test="invBudgetOrg.budgetorg_name != null and invBudgetOrg.budgetorg_name != ''">
+			AND budgetorg_name like '%${invBudgetOrg.budgetorg_name}%'
+		</if>
+		<if
+			test="invBudgetOrg.business_dep != null and invBudgetOrg.business_dep != ''">
+			AND business_dep = #{invBudgetOrg.business_dep}
+		</if>
+		<if test="invBudgetOrg.area_id != null and invBudgetOrg.area_id != ''">
+			AND area_id = #{invBudgetOrg.area_id}
+		</if>
+		<if
+			test="invBudgetOrg.product_group_id != null and invBudgetOrg.product_group_id != ''">
+			AND product_group_id = #{invBudgetOrg.product_group_id}
+		</if>
+		<![CDATA[ AND is_enabled <> 4 ]]>
+		<if test="index != null and rows != null">
+		LIMIT #{index},#{rows}
+		</if>
+	</select>
+	<!-- 预算体总数 -->
+	<select id="getTotalNum" resultType="java.lang.Integer">
+		select
+		count(0)
+		from inv_budgetorg
+		WHERE
+		1=1
+		<if test="invBudgetOrg.id != null">
+			AND id = #{invBudgetOrg.id}
+		</if>
+		<if test="invBudgetOrg.area_name != null and invBudgetOrg.area_name != ''">
+			AND area_name = #{invBudgetOrg.area_name}
+		</if>
+		<if
+			test="invBudgetOrg.product_group_name != null and invBudgetOrg.product_group_name != ''">
+			AND product_group_name = #{invBudgetOrg.product_group_name}
+		</if>
+		<if
+			test="invBudgetOrg.budgetorg_id != null and invBudgetOrg.budgetorg_id != ''">
+			AND budgetorg_id = #{invBudgetOrg.budgetorg_id}
+		</if>
+		<if
+			test="invBudgetOrg.budgetorg_name != null and invBudgetOrg.budgetorg_name != ''">
+			AND budgetorg_name like '%${invBudgetOrg.budgetorg_name}%'
+		</if>
+		<if
+			test="invBudgetOrg.business_dep != null and invBudgetOrg.business_dep != ''">
+			AND business_dep = #{invBudgetOrg.business_dep}
+		</if>
+		<if test="invBudgetOrg.area_id != null and invBudgetOrg.area_id != ''">
+			AND area_id = #{invBudgetOrg.area_id}
+		</if>
+		<if
+			test="invBudgetOrg.product_group_id != null and invBudgetOrg.product_group_id != ''">
+			AND product_group_id = #{invBudgetOrg.product_group_id}
+		</if>
+		<![CDATA[ AND is_enabled <> 4 ]]>
+	</select>
+	<!-- 删除预算体 -->
+	<update id="deleteBudgetOrg" parameterType="Map">
+		UPDATE inv_budgetorg SET is_enabled = 4
+		WHERE id in
+		<foreach collection="deleteList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- 创建预算体 -->
+	<insert id="createBudgetOrg" parameterType="com.haier.purchase.data.model.InvBudgetOrg">
+		INSERT INTO
+		inv_budgetorg (
+		budgetorg_id,
+		budgetorg_name,
+		business_dep,
+		area_id,
+		area_name,
+		product_group_id,
+		product_group_name,
+		is_enabled
+		)
+		VALUES(
+		#{invBudgetOrg.budgetorg_id},
+		#{invBudgetOrg.budgetorg_name},
+		#{invBudgetOrg.business_dep},
+		#{invBudgetOrg.area_id},
+		#{invBudgetOrg.area_name},
+		#{invBudgetOrg.product_group_id},
+		#{invBudgetOrg.product_group_name},
+		0
+		);
+	</insert>
+	<!-- 更新预算体 -->
+	<update id="updateBudgetOrg" parameterType="Map">
+		UPDATE inv_budgetorg
+		<set>
+			<if
+				test="invBudgetOrg.budgetorg_id != null">
+				budgetorg_id = #{invBudgetOrg.budgetorg_id},
+			</if>
+			<if
+				test="invBudgetOrg.budgetorg_name != null and invBudgetOrg.budgetorg_name != ''">
+				budgetorg_name = #{invBudgetOrg.budgetorg_name},
+			</if>
+			<if
+				test="invBudgetOrg.business_dep != null and invBudgetOrg.business_dep != ''">
+				business_dep = #{invBudgetOrg.business_dep},
+			</if>
+			<if test="invBudgetOrg.area_id != null and invBudgetOrg.area_id != ''">
+				area_id = #{invBudgetOrg.area_id},
+			</if>
+			<if test="invBudgetOrg.area_name != null and invBudgetOrg.area_name != ''">
+				area_name = #{invBudgetOrg.area_name},
+			</if>
+			<if
+				test="invBudgetOrg.product_group_id != null and invBudgetOrg.product_group_id != ''">
+				product_group_id = #{invBudgetOrg.product_group_id},
+			</if>
+			<if
+				test="invBudgetOrg.product_group_name != null and invBudgetOrg.product_group_name != ''">
+				product_group_name = #{invBudgetOrg.product_group_name}
+			</if>
+		</set>
+		WHERE
+		id = #{invBudgetOrg.id}
+	</update>
+	<!-- 启用预算体 -->
+	<update id="isEnableBudgetOrg" parameterType="Map">
+		UPDATE inv_budgetorg SET is_enabled=0
+		WHERE is_enabled =1 AND id in
+		<foreach collection="enableList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- 禁用预算体 -->
+	<update id="notEnableBudgetOrg" parameterType="Map">
+		UPDATE inv_budgetorg SET is_enabled=1
+		WHERE is_enabled =0 AND id in
+		<foreach collection="enableList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- 预算体导出 -->
+	<select id="exportInvBudgetOrg" parameterType="Map"
+		resultMap="invBudgetOrgResult">
+		select
+		id,
+		budgetorg_id,
+		budgetorg_name,
+		business_dep,
+		area_id,
+		area_name,
+		product_group_id,
+		product_group_name,
+		is_enabled
+		from inv_budgetorg
+		<![CDATA[ WHERE is_enabled <> 4 ]]>
+		<if test="idList != null and idList != ''">
+			AND id in
+			<foreach collection="idList" item="item" index="index" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+</mapper>
+ 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStockQtyDifLogDao">
+	<resultMap id="invStockQtyDifLogResult" type="com.haier.stock.model.InvStockQtyDifLog">
+		<result property="id" column="id" />
+		<result property="secCode" column="sec_code" />
+		<result property="sku" column="sku" />
+		<result property="lesStockQty" column="les_stock_qty" />
+		<result property="stockQty" column="stock_qty" />
+		<result property="createTime" column="create_time" />
+		<result property="createUser" column="create_user" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="invStockQtyDifLogResult">
+		select `id`,`sec_code`,`sku`,`les_stock_qty`,`stock_qty`,`create_time`,`create_user`
+		from `inv_stock_qty_dif_log`
+		where `id` = #{id}
+	</select>
+	<insert id="insert" parameterType="com.haier.stock.model.InvStockQtyDifLog">
+		insert into `inv_stock_qty_dif_log`(`sec_code`,`sku`,`les_stock_qty`,`stock_qty`,`create_user`)
+		values(#{secCode},#{sku},#{lesStockQty},#{stockQty},#{createUser})
+	</insert>
+	<update id="update" parameterType="com.haier.stock.model.InvStockQtyDifLog">
+		update `inv_stock_qty_dif_log` set `sec_code`=#{secCode},`sku`=#{sku},`les_stock_qty`=#{lesStockQty},`stock_qty`=#{stockQty},`create_time`=#{createTime},`create_user`=#{createUser}
+		where `id` = #{id}
+	</update>
+	<select id="queryDifStockQty" resultMap="invStockQtyDifLogResult">
+			select les.sku, les.sec_code, sum(les.stock_qty) les_stock_qty, IFNULL((select sum(stock_qty) from inv_base_stock a 
+			where a.sku=les.sku and les_sec_code=les.sec_code group by les_sec_code, sku),0) as stock_qty  from 
+  				inv_les_stock les where sec_code like '%WA'
+				group by les.sku, les.sec_code having stock_qty &lt;&gt; les_stock_qty
+	</select>
+</mapper>

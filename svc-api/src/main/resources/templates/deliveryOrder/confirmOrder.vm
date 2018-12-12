@@ -1,0 +1,96 @@
+<div class="easyui-panel" title="订单信息"
+     style="width:100%;height:auto;border: solid;border-color: #e1e1e1;border-width: 10px;padding-top: 1%;padding-left: 3%;margin-bottom:20px "
+     data-options="iconCls:'icon-position',collapsed:false,
+    collapsible:false">
+    <div class="search-panel">
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>系统单号:</h5>
+			</span>
+            <span>${order.orderNo}</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>客户仓库:</h5>
+			</span>
+            <span></span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>配送中心:</h5>
+			</span>
+            <span>${order.distributionCentre}</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>生产基地:</h5>
+			</span>
+            <span>${order.jdName}</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>开单日期:</h5>
+			</span>
+            <span>${order.orderTime}</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>到货日期:</h5>
+			</span>
+            <span></span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>总体积:</h5>
+			</span>
+            <span capacity></span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>车型:</h5>
+			</span>
+            <span>${order.carType}</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>已添加:</h5>
+			</span>
+            <span>$order.rows条商品信息</span>
+        </div>
+    </div>
+</div>
+<div class="easyui-panel" style="width:100%;height:260px;overflow: hidden">
+    <div class="easyui-tabs" style="width:100%;height: 60%">
+        <div title="已选产品" style="padding:10px">
+            <table id="tabDg1">
+                <tbody>
+                    #foreach($item in $details)
+                    <tr>
+                        <td>$item.materielName</td>
+                        <td>$item.itemNo</td>
+                        <td>￥0.18</td>
+                        <td>￥573.18</td>
+                        <td>￥0.00</td>
+                        <td>30</td>
+                        <td>￥17195.40</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="easyui-panel"
+         style="width: 100%;background-color: #fffdeb;border-color:#e3d68a;border-width:2px;">
+        <div class="search-row" style="float:right;width:100%">
+            <span style="margin: 20px 15px;float: right">返利总计：<span
+                    style="margin-right:30px;color:red;font-size:24px">￥0.00</span>订单总计：<span
+                    style="color:red;font-size:24px">￥17195.40</span></span>
+        </div>
+    </div>
+</div>
+<div id="confirm_button">
+    <a href="javascript:void(0);" class="easyui-linkbutton" iconCls="icon-ok"
+       id="orderCommit">提交订单</a>
+    <a href="javascript:void(0);" id="return" iconCls="icon-cancel"
+       class="easyui-linkbutton">返回</a>
+</div>

@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStockDao">
+    <resultMap id="invStockResult" type="com.haier.stock.model.InvStock">
+        <result property="stoId" column="sto_id"/>
+        <result property="sku" column="sku"/>
+        <result property="secCode" column="sec_code"/>
+        <result property="stockQty" column="stock_qty"/>
+        <result property="frozenQty" column="frozen_qty"/>
+        <result property="crmFrozenQty" column="crm_frozen_qty"/>
+        <result property="virtualQty" column="virtual_qty"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="whCode" column="wh_code"/>
+        <result property="channelCode" column="channel_code"/>
+    </resultMap>
+    <!-- 新增销售库存 -->
+    <insert id="insert" parameterType="com.haier.stock.model.InvStock">
+        insert into
+        `inv_stock`(`sku`,`sec_code`,`stock_qty`,`frozen_qty`,`crm_frozen_qty`,`virtual_qty`,`create_time`,`update_time`,
+        `product_name`,`product_type_name`,`product_group_name`,`sec_name`,`item_property`)
+        values(#{sku},#{secCode},#{stockQty},0,0,0,now(),now(),#{productName},#{productTypeName},#{productGroupName},#{secName},#{itemProperty})
+    </insert>
+    <!-- 更新销售库存 -->
+    <update id="updateQty" parameterType="com.haier.stock.model.InvStock">
+        <![CDATA[
+			update `inv_stock` set `stock_qty`=#{stockQty},`virtual_qty`=#{virtualQty},`update_time`=now(),
+			`frozen_qty`=
+			case when convert(`frozen_qty`,SIGNED) - #{frozenQty} <= 0 then 0
+			when convert(`frozen_qty`,SIGNED) - #{frozenQty} > 0 then convert(`frozen_qty`,SIGNED) - #{frozenQty}
+			end,
+			`crm_frozen_qty`=
+			case when convert(`crm_frozen_qty`,SIGNED) - #{crmFrozenQty} <= 0 then 0
+			when convert(`crm_frozen_qty`,SIGNED) - #{crmFrozenQty} > 0 then convert(`crm_frozen_qty`,SIGNED) - #{crmFrozenQty}
+			end
+			where `sto_id` = #{stoId}
+		]]>
+    </update>
+    <update id="addSaleSubMachines" parameterType="String">
+        INSERT INTO inv_stock(sku, sec_code, stock_qty, create_time, update_time, crm_frozen_qty)
+        SELECT sku, sec_code, stock_qty-frozen_qty,now(), now(),0 FROM inv_base_stock
+        WHERE not exists ( SELECT 1 FROM inv_stock s WHERE s.sku=#{sku}) and sku=#{sku}
+    </update>
+    <update id="deleteSaleSubMachines" parameterType="String">
+        DELETE FROM inv_stock WHERE sku=#{sku}
+    </update>
+    <!--  查询给定时间到现在的变化库存-->
+    <select id="getChangedListBySkuWhcode" parameterType="Map" resultMap="invStockResult">
+        <![CDATA[
+		select CONCAT(wh_code,'WA') as sec_code ,sku, update_time,
+			IF(wa_qty IS NULL or wa_qty <=0 , 
+ 				  IF(rrs_qty IS NULL or rrs_qty <=0 , 0, rrs_qty),  
+   				  IF(wa_qty IS NULL or wa_qty <=0 , 0, wa_qty)
+			)  as stock_qty
+		 from (
+		 select wh_code, sku, temp.update_time,
+		 (select SUM(a.stock_qty)  from inv_stock a,
+				inv_section b
+				where a.sec_code = b.sec_code and b.channel_code != 'RRS' and b.channel_code in (${stockChannel}) and b.item_property=10 
+				and a.sku=temp.sku and b.wh_code=temp.wh_code group by  a.sku,b.wh_code limit 1) as wa_qty,
+				(select max(a.stock_qty) from inv_stock a,
+				inv_section b
+				where a.sec_code = b.sec_code and b.channel_code = 'RRS' and b.channel_code in (${stockChannel}) and b.item_property=10 
+				and a.sku=temp.sku and b.wh_code=temp.wh_code group by a.sku,a.sec_code limit 1 ) as rrs_qty
+		 from (
+		select wh_code ,sku, a.update_time
+				 from inv_stock a inner join
+				inv_section b
+				on a.sec_code = b.sec_code where b.channel_code in
+				(${stockChannel}) and a.update_time
+				>=#{beginTime} and b.item_property=10 
+				group by sku,wh_code ) as temp
+		) t   order by update_time
+		]]>
+    </select>
+    <!-- 根据更新时间和渠道查询海鹏变化库存 -->
+    <select id="getHAIPStockQty" parameterType="map" resultMap="invStockResult">
+        SELECT
+        a.sec_code,
+        a.sku,
+        a.update_time,
+        a.stock_qty
+        FROM
+        inv_stock a
+        INNER JOIN inv_section b ON a.sec_code = b.sec_code
+        WHERE b.item_property=10
+        AND a.sec_code='CT01'
+        <if test="stockChannel != null and stockChannel !=''">
+            AND b.channel_code IN (${stockChannel})
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            AND a.update_time <![CDATA[>=]]>#{beginTime}
+        </if>
+    </select>
+    <!-- 根据仓库和物料查询可用库存 -->
+    <select id="getChangedStockQty" parameterType="map" resultMap="invStockResult">
+        SELECT
+        a.sec_code,
+        a.sku,
+        a.update_time,
+        a.stock_qty
+        FROM
+        inv_stock a
+        INNER JOIN inv_section b ON a.sec_code = b.sec_code
+        WHERE b.item_property=10
+        <if test="stockChannel != null and stockChannel !=''">
+            AND b.channel_code IN (${stockChannel})
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            AND a.update_time <![CDATA[>=]]>#{beginTime}
+        </if>
+    </select>
+    <select id="getStockQtyByWhCodesAndSkus" parameterType="map" resultMap="invStockResult">
+        SELECT
+        sku,
+        b.sec_code,
+        les_sec_code,
+        b.wh_code,
+        case when b.channel_code !='RRS' AND b.channel_code !='GD' AND b.channel_code !='HAIP' AND b.channel_code !='JINS' then 'WA'
+        else b.channel_code end as channel_code ,
+        a.update_time,
+        sum(stock_qty) as stock_qty
+        FROM
+        inv_stock a
+        INNER JOIN inv_section b ON a.sec_code = b.sec_code
+        WHERE 1=1 AND b.item_property=10
+        <if test="skus != null and skus !=''">
+            AND a.sku IN (${skus})
+        </if>
+        <if test="whCodes != null and whCodes !=''">
+            AND b.wh_code IN (${whCodes})
+        </if>
+        <if test="channelCodes != null and channelCodes !=''">
+            AND b.channel_code IN (${channelCodes})
+        </if>
+        <!-- order by部分需要把WA和RRS在排序上分开，把相同les_sec_code放一起， stock_qty取日日顺的最大库存 -->
+        group by sku,les_sec_code
+    </select>
+
+    <!-- 根据仓库和物料查询可用库存  按批次 -->
+    <select id="getStockQtyByItemProperty" parameterType="map" resultMap="invStockResult">
+        SELECT
+        sku,
+        b.sec_code,
+        les_sec_code,
+        b.wh_code,
+        case when b.channel_code !='RRS' then 'WA'
+        else b.channel_code end as channel_code ,
+        a.update_time,
+        sum(stock_qty) as stock_qty
+        FROM
+        inv_stock a
+        INNER JOIN inv_section b ON a.sec_code = b.sec_code
+        WHERE 1=1
+        <if test="skus != null and skus !=''">
+            AND a.sku IN (${skus})
+        </if>
+        <if test="whCodes != null and whCodes !=''">
+            AND b.wh_code IN (${whCodes})
+        </if>
+        <if test="channelCodes != null and channelCodes !=''">
+            AND b.channel_code IN (${channelCodes})
+        </if>
+        <if test="itemProperty != null">
+            AND b.item_property=${itemProperty}
+        </if>
+        <!-- order by部分需要把WA和RRS在排序上分开，把相同les_sec_code放一起， stock_qty取日日顺的最大库存 -->
+        group by sku,les_sec_code
+    </select>
+
+    <select id="getReliableStockQtyByWhCodesAndSkus" parameterType="map" resultMap="invStockResult">
+        SELECT
+        sku,
+        b.sec_code,
+        les_sec_code,
+        b.wh_code,
+        case when b.channel_code !='RRS' AND b.channel_code !='GD' AND b.channel_code !='HAIP' AND b.channel_code !='JINS' then 'WA'
+        else b.channel_code end as channel_code ,
+        a.update_time,
+        sum(stock_qty) as stock_qty
+        FROM
+        inv_stock a
+        INNER JOIN inv_section b ON a.sec_code = b.sec_code
+        WHERE 1=1 AND b.item_property=10
+        <if test="skus != null and skus !=''">
+            AND a.sku IN (${skus})
+        </if>
+        <if test="whCodes != null and whCodes !=''">
+            AND b.wh_code IN (${whCodes})
+        </if>
+        <if test="channelCodes != null and channelCodes !=''">
+            AND b.channel_code IN (${channelCodes})
+        </if>
+        <!-- order by部分需要把WA和RRS在排序上分开，把相同les_sec_code放一起， stock_qty取日日顺的最大库存 -->
+        group by sku,les_sec_code
+    </select>
+    <select id="getReliableStockQtyByItemProperty" parameterType="map" resultMap="invStockResult">
+        SELECT
+        sku,
+        b.sec_code,
+        les_sec_code,
+        b.wh_code,
+        case when b.channel_code !='RRS' AND b.channel_code !='GD' AND b.channel_code !='HAIP' AND b.channel_code !='JINS' then 'WA'
+        else b.channel_code end as channel_code ,
+        a.update_time,
+        sum(stock_qty) as stock_qty
+        FROM
+        inv_stock a
+        INNER JOIN inv_section b ON a.sec_code = b.sec_code
+        WHERE 1=1
+        <if test="skus != null and skus !=''">
+            AND a.sku IN (${skus})
+        </if>
+        <if test="whCodes != null and whCodes !=''">
+            AND b.wh_code IN (${whCodes})
+        </if>
+        <if test="channelCodes != null and channelCodes !=''">
+            AND b.channel_code IN (${channelCodes})
+        </if>
+        <if test="itemProperty != null">
+            AND b.item_property=${itemProperty}
+        </if>
+        <!-- order by部分需要把WA和RRS在排序上分开，把相同les_sec_code放一起， stock_qty取日日顺的最大库存 -->
+        group by sku,les_sec_code
+    </select>
+    <!-- 根据仓库和物料查询可用库存大于0的库存信息 -->
+    <select id="getValidStockQtyByWhCodesAndSkus" parameterType="map" resultMap="invStockResult">
+        SELECT
+        a.sku,
+        a.sec_code,
+        stock_qty
+        FROM
+        inv_stock a
+        INNER JOIN inv_section b ON a.sec_code = b.sec_code
+        WHERE b.item_property=10 and a.stock_qty>0
+        <if test="skus != null and skus !=''">
+            AND a.sku IN (${skus})
+        </if>
+        <if test="whCodes != null and whCodes !=''">
+            AND b.wh_code IN (${whCodes})
+        </if>
+        <if test="channelCodes != null and channelCodes !=''">
+            AND b.channel_code IN (${channelCodes})
+        </if>
+    </select>
+    <!-- 根据仓库和物料查询不同批次可用库存大于0的库存信息  -可选择批次   -->
+    <select id="getValidStockQtyByItemProperty" parameterType="map" resultMap="invStockResult">
+        SELECT
+        a.sku,
+        a.sec_code,
+        stock_qty
+        FROM
+        inv_stock a
+        INNER JOIN inv_section b ON a.sec_code = b.sec_code
+        WHERE b.item_property=10 and a.stock_qty>0
+        <if test="skus != null and skus !=''">
+            AND a.sku IN (${skus})
+        </if>
+        <if test="whCodes != null and whCodes !=''">
+            AND b.wh_code IN (${whCodes})
+        </if>
+        <if test="channelCodes != null and channelCodes !=''">
+            AND b.channel_code IN (${channelCodes})
+        </if>
+        <if test="itemProperty != null">
+            AND b.item_property=${itemProperty}
+        </if>
+    </select>
+    <select id="get" parameterType="Integer" resultMap="invStockResult">
+        select
+        `sto_id`,`sku`,`sec_code`,`stock_qty`,`frozen_qty`,`crm_frozen_qty`,`virtual_qty`,`create_time`,`update_time`
+        from `inv_stock`
+        where `sto_id` = #{stoId}
+    </select>
+    <select id="getBySecCodeAndSku" parameterType="Map" resultMap="invStockResult">
+        select
+        `sto_id`,`sku`,`sec_code`,`stock_qty`,`frozen_qty`,`crm_frozen_qty`,`virtual_qty`,`create_time`,`update_time`
+        from `inv_stock`
+        where `sku` = #{sku} and `sec_code`=#{secCode}
+    </select>
+    <select id="getBySecCodeAndSkuForLock" parameterType="Map"
+            resultMap="invStockResult">
+        select
+        `sto_id`,`sku`,`sec_code`,`stock_qty`,`frozen_qty`,`crm_frozen_qty`,`virtual_qty`,`create_time`,`update_time`
+        from `inv_stock`
+        where `sku` = #{sku} and `sec_code`=#{secCode}
+        for
+        update
+    </select>
+    <select id="getBySku" parameterType="Map" resultMap="invStockResult">
+        select
+        `sto_id`,`sku`,`sec_code`,`stock_qty`,`frozen_qty`,`crm_frozen_qty`,`virtual_qty`,`create_time`,`update_time`
+        from `inv_stock`
+        where `sku` = #{sku}
+    </select>
+    <select id="getBySkuAndWhCode" parameterType="Map" resultMap="invStockResult">
+        select
+        `sto_id`,`sku`,`sec_code`,`stock_qty`,`frozen_qty`,`crm_frozen_qty`,`virtual_qty`,`create_time`,`update_time`
+        from `inv_stock`
+        where `sku` = #{sku} and `sec_code` like
+        concat(#{whCode},'%')
+    </select>
+    <select id="getChanngedStockList" resultMap="invStockResult">
+        <![CDATA[
+            select sku,sec_code,update_time from inv_stock where update_time >= #{updateTime} order by update_time limit ${topX}
+         ]]>
+    </select>
+    <select id="getMaxStock" resultMap="invStockResult">
+        SELECT stock.sku,max(stock.stock_qty) AS stock_qty,max(stock.update_time) AS update_time
+        FROM inv_stock stock
+        INNER JOIN inv_section sec ON stock.sec_code = sec.sec_code
+        WHERE
+            sku = #{sku}
+        and sec.wh_code in
+            <foreach collection="whCodes" index="index" item="whCode" open="("
+                     separator="," close=")">
+                #{whCode}
+            </foreach>
+        and sec.channel_code in
+            <foreach collection="stockChannels" index="index" item="channel" open="(" separator="," close=")">
+                #{channel}
+            </foreach>
+        and sec.item_property = 10
+        group by sku
+    </select>
+    <update id="releaseFrozenQty" parameterType="map">
+        <![CDATA[
+		update `inv_stock`
+		set `update_time`= now(),
+		`frozen_qty` = convert(`frozen_qty`,SIGNED) - #{frozenQty},
+		`crm_frozen_qty`= convert(`crm_frozen_qty`,SIGNED) - #{frozenQty}
+		where `sto_id` =
+		#{stoId} and convert(`frozen_qty`,SIGNED) - #{frozenQty} >= 0
+		]]>
+    </update>
+    <update id="releaseCbsFrozenQty" parameterType="map">
+        update
+        `inv_stock` set `update_time`=now(),
+        `stock_qty`=
+        case when
+        convert(`stock_qty`,SIGNED) - #{releaseQty} &lt;= 0 then 0
+        when
+        convert(`stock_qty`,SIGNED) - #{releaseQty} &gt; 0 then
+        convert(`stock_qty`,SIGNED) - #{releaseQty}
+        end,
+        `frozen_qty`=
+        case when
+        convert(`frozen_qty`,SIGNED) - #{releaseQty} &lt;= 0 then 0
+        when
+        convert(`frozen_qty`,SIGNED) - #{releaseQty} &gt; 0 then
+        convert(`frozen_qty`,SIGNED) - #{releaseQty}
+        end,
+        `crm_frozen_qty`=
+        case
+        when convert(`crm_frozen_qty`,SIGNED) - #{releaseQty} &lt;= 0 then 0
+        when convert(`crm_frozen_qty`,SIGNED) - #{releaseQty} &gt; 0 then
+        convert(`crm_frozen_qty`,SIGNED) - #{releaseQty}
+        end
+        where `sto_id` =
+        #{stoId}
+    </update>
+    <update id="frozenCrmFrozenQty" parameterType="map">
+        update `inv_stock`
+        set `update_time`=now(),
+        `frozen_qty`=`frozen_qty`+#{frozenQty},
+        `crm_frozen_qty`=`crm_frozen_qty`+ #{crmFrozenQty}
+        where `sto_id` =
+        #{stoId}
+    </update>
+    <update id="frozenStockQty" parameterType="map">
+        <![CDATA[
+		update inv_stock set
+		update_time = now(),
+		frozen_qty = frozen_qty + ${frozenQty} ,
+		crm_frozen_qty = crm_frozen_qty + ${frozenQty} 
+		where `sto_id` = #{stoId} and convert(stock_qty,SIGNED) - frozen_qty - ${frozenQty} >= 0
+		]]>
+    </update>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderProductsWriteDao">
+
+    <update id="updateForsyncInvoice" parameterType="com.haier.shop.model.OrderProducts">
+        update `OrderProducts`
+        set
+        `isMakeReceipt`=#{isMakeReceipt},`receiptNum`=#{receiptNum},`receiptAddTime`=#{receiptAddTime},`systemRemark`=#{systemRemark}
+        where `id` = #{id}
+    </update>
+
+    <update id="updateMakeReceiptType" parameterType="com.haier.shop.model.OrderProducts">
+        UPDATE `OrderProducts`
+        SET `makeReceiptType` = #{makeReceiptType}
+        WHERE `id` = #{id}
+    </update>
+</mapper>

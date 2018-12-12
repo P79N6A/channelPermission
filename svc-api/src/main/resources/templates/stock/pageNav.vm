@@ -1,0 +1,96 @@
+<div class="row-fluid ">
+	   <div class="span12">
+			<div class="dataTables_info" id="DataTables_Table_0_info">第 ${pager.pageIndex} 页，共 ${totalPageNum} 页，总计 $!{pager.rowsCount} 条</div>
+       </div>
+       <div class="span12 center">
+        <div class="dataTables_paginate paging_bootstrap pagination">
+            <ul>
+			    #if ($pager.pageIndex <= 1 || $totalPageNum <= 0)
+					 <li class="disabled">
+							<a>首页</a>    
+					 </li>
+				#else  					
+					<li>
+						<a href = "#" onclick = "onQuery(1,'next')">首页</a>
+					</li>
+				#end
+               
+					    #if ($pager.pageIndex <= 1 || $totalPageNum <= 0)
+							 <li class="prev disabled">
+									<a>上一页</a>    
+							 </li>
+						#else  					
+							<li class="prev">
+								<a href="#"  onclick = "onQuery(	$pager.pageIndex - 1)">← 上一页</a>
+							</li>
+						#end	
+                        #if( $totalPageNum > 0 ) 
+       				 	 #set($psize=4)  ###psize乘2加1等于分页中间显示的数
+       				 	 #set($pcount=$psize * 2 + 1)   ###每页中间显示的分页数的个数，可以通过改变$psize的值来改变分页数的个数，最终结果是奇数
+       				 	 #set($maxpage=1)
+       				 	 #set($mixpage=1) 
+       				 	
+       				 	 #if (($pager.pageIndex + $psize) > $totalPageNum)
+       				 		#set($maxpage=$totalPageNum)
+       				 	 #else
+       				 		#set($maxpage=$pager.pageIndex + $psize)
+       				 	 #end
+       				 	
+       				 	 #if (($pager.pageIndex - $psize) < 1)
+       				 		#set($mixpage=1)
+       				 	 #else
+       				 		#set($mixpage=$pager.pageIndex - $psize)
+       				 	 #end
+       				 	 
+       				 	 #if ($pager.pageIndex - $psize > 1)
+	        				 #if ($pager.pageIndex + $psize < $totalPageNum)
+        				 	 	<li class="active"><a href ="#" class="default" style="background:none;cursor:pointer; color: #006CD9;"  onclick = "onQuery($pager.pageIndex - $psize - 1);">···</a></li>
+        				 	 #else
+	        				 	<li class="active"><a href ="#" class="default" style="background:none;cursor:pointer; color: #006CD9;"  onclick = "onQuery($totalPageNum - $pcount);">···</a></li>
+	        				 #end  
+        				 #end 
+        				 #foreach( $index in [$pager.nav.startIndex .. $pager.nav.endIndex] ) 
+        				 	
+        				    #if (($index <= $maxpage && $index >= $mixpage) || (($maxpage - $index) < $pcount && ($index - $mixpage) < $pcount) )
+	        					#if ($index == $pager.pageIndex)  
+	        						<li class="disabled">
+	        							<a>$index</a>
+	        						</li>
+	        					#else 
+	        						  <li class="active">
+	        							<a href ="#" class="default" style="background:none;cursor:pointer; color: #006CD9;"  onclick = "onQuery($index);">$index</a>    
+	        						  </li>
+	        					#end 
+        					#end 
+        				 #end
+        				 #if ($pager.pageIndex + $psize < $totalPageNum )
+	        				 #if ($pager.pageIndex - $psize > 1)
+	        				 	<li class="active"><a href ="#" class="default" style="background:none;cursor:pointer; color: #006CD9;"  onclick = "onQuery($pager.pageIndex + $psize + 1);">···</a></li>
+	        				 #else
+	        				 	<li class="active"><a href ="#" class="default" style="background:none;cursor:pointer; color: #006CD9;"  onclick = "onQuery($pcount + 1);">···</a></li>
+	        				 #end  
+        				 #end 
+				      #end
+    				  #if ($pager.pageIndex >= $totalPageNum  || $totalPageNum  <= 0)
+						 <li class="next disabled">
+							<a>下一页</a>   
+                         </li>
+    				  #else    
+						 <li class="next">
+							<a href ="#" onclick = "onQuery($pager.pageIndex + 1)">下一页 →</a>    
+                         </li>
+    				  #end
+				  </li>
+   				  #if ($pager.pageIndex >= $totalPageNum  || $totalPageNum  <= 0)
+					 <li class="disabled">
+						<a >最后一页</a>   
+                     </li>
+   				  #else    
+					 <li>
+						<a href ="#" onclick = "onQuery($totalPageNum )">最后一页</a>   
+                     </li>
+   				  #end
+            </ul>
+         </div>
+    </div>
+</div>

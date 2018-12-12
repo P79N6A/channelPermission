@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.TOrderLogisticsDao">
+    <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.TOrderLogistics">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="orderSn" property="ordersn" jdbcType="VARCHAR"/>
+        <result column="expressNo" property="expressno" jdbcType="VARCHAR"/>
+        <result column="expressId" property="expressid" jdbcType="INTEGER"/>
+        <result column="expressName" property="expressname" jdbcType="VARCHAR"/>
+        <result column="createBy" property="createby" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="updateBy" property="updateby" jdbcType="VARCHAR"/>
+        <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, orderSn, expressNo, expressId, expressName, createBy, createTime, 
+    updateBy, updateTime, remark
+  </sql>
+    <select id="checkExpressNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_order_logistics
+        where expressNo = #{expressNo}
+        <if test="orderSn != null and orderSn !='' ">
+            and orderSn != #{orderSn}
+        </if>
+
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_order_logistics
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_order_logistics
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.haier.distribute.data.model.TOrderLogistics">
+    insert into t_order_logistics (id, orderSn, expressNo, 
+      expressId, expressName, 
+      createBy, createTime, updateBy, 
+      updateTime, remark)
+    values (#{id,jdbcType=INTEGER}, #{ordersn,jdbcType=VARCHAR}, #{expressNo,jdbcType=VARCHAR}, 
+      #{expressId,jdbcType=INTEGER}, #{expressName,jdbcType=VARCHAR}, 
+      #{createby,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{updateby,jdbcType=VARCHAR}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.haier.distribute.data.model.TOrderLogistics">
+        insert into t_order_logistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="ordersn != null">
+                orderSn,
+            </if>
+            <if test="expressno != null">
+                expressNo,
+            </if>
+            <if test="expressid != null">
+                expressId,
+            </if>
+            <if test="expressname != null">
+                expressName,
+            </if>
+            <if test="createby != null">
+                createBy,
+            </if>
+            <if test="createtime != null">
+                createTime,
+            </if>
+            <if test="updateby != null">
+                updateBy,
+            </if>
+            <if test="updatetime != null">
+                updateTime,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="ordersn != null">
+                (SELECT orderSn from t_orders WHERE id = #{ordersn,jdbcType=VARCHAR}),
+            </if>
+            <if test="expressno != null">
+                #{expressno,jdbcType=VARCHAR},
+            </if>
+            <if test="expressid != null">
+                #{expressid,jdbcType=INTEGER},
+            </if>
+            <if test="expressname != null">
+                #{expressname,jdbcType=VARCHAR},
+            </if>
+            <if test="createby != null">
+                #{createby,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateby != null">
+                #{updateby,jdbcType=VARCHAR},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.TOrderLogistics">
+        update t_order_logistics
+        <set>
+            <if test="ordersn != null">
+                orderSn = #{ordersn,jdbcType=VARCHAR},
+            </if>
+            <if test="expressno != null">
+                expressNo = #{expressno,jdbcType=VARCHAR},
+            </if>
+            <if test="expressid != null">
+                expressId = #{expressid,jdbcType=INTEGER},
+            </if>
+            <if test="expressname != null">
+                expressName = #{expressname,jdbcType=VARCHAR},
+            </if>
+            <if test="createby != null">
+                createBy = #{createby,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateby != null">
+                updateBy = #{updateby,jdbcType=VARCHAR},
+            </if>
+            <if test="updatetime != null">
+                updateTime = #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.TOrderLogistics">
+    update t_order_logistics
+    set orderSn = #{ordersn,jdbcType=VARCHAR},
+      expressNo = #{expressno,jdbcType=VARCHAR},
+      expressId = #{expressid,jdbcType=INTEGER},
+      expressName = #{expressname,jdbcType=VARCHAR},
+      createBy = #{createby,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateBy = #{updateby,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="editExpressNo" parameterType="com.haier.distribute.data.model.TOrderLogistics">
+    update t_order_logistics set
+    expressNo = #{expressNo,jdbcType=VARCHAR}
+    where orderSn = #{orderSn,jdbcType=VARCHAR}
+
+  </update>
+</mapper>

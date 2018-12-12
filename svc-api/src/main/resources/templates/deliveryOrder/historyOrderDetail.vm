@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/quickLink.css"/>
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/staticHtml.css">
+    <style type="text/css">
+        div .search-row {
+            width: 30%
+        }
+    </style>
+    <title>R码6码对照管理</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div class="easyui-panel" title="订单信息"
+     style="width:100%;height:auto;border: solid;border-color: #e1e1e1;border-width: 10px;padding-top: 1%;padding-left: 3%;margin-bottom:20px "
+     data-options="iconCls:'icon-position',collapsed:false,
+    collapsible:false">
+    <div class="search-panel">
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>系统单号:</h5>
+			</span>
+            <span orderNo></span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>客户仓库:</h5>
+			</span>
+            <span>高密市顺河家电经营部</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>配送中心:</h5>
+			</span>
+            <span>(C12809)即墨海尔物流配送中心</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>生产基地:</h5>
+			</span>
+            <span base>黄岛(HD10)</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>开单日期:</h5>
+			</span>
+            <span orderDate></span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>到货日期:</h5>
+			</span>
+            <span endDate>2017-07-21</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>总体积:</h5>
+			</span>
+            <span capacity></span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>车型:</h5>
+			</span>
+            <span>X8.7K</span>
+        </div>
+        <div class="search-row">
+			<span class="search-row-label">
+                <h5>已添加:</h5>
+			</span>
+            <span>1条商品信息</span>
+        </div>
+    </div>
+</div>
+<div class="easyui-panel" style="width:100%;height:260px;overflow: hidden">
+    <div class="easyui-tabs" style="width:100%;height: 60%">
+        <div title="商品明细" style="padding:10px">
+            <table id="tabDg1">
+                <tbody>
+                <tr>
+                    <td></td>
+                    <td>ZK200059135501</td>
+                    <td>BC-50EN</td>
+                    <td>￥0.18</td>
+                    <td>￥573.18</td>
+                    <td>￥0.00</td>
+                    <td>30</td>
+                    <td>￥17195.40</td>
+                    <td>提交成功</td>
+                    <td>未开始扣款</td>
+                    <td>提交成功</td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div title="物流详情" style="padding:10px">
+            <table id="tabDg2">
+                <tbody>
+                <tr>
+                    <td>ZK200059135501</td>
+                    <td>BC-50EN</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="easyui-panel"
+         style="width: 100%;background-color: #fffdeb;border-color:#e3d68a;border-width:2px;">
+        <div class="search-row" style="float:right;width:100%">
+            <span style="margin: 20px 15px;float: right">返利总计：<span
+                    style="margin-right:30px;color:red;font-size:24px">￥0.00</span>订单总计：<span
+                    style="color:red;font-size:24px">￥17195.40</span></span>
+        </div>
+    </div>
+</div>
+<a id="return"
+   style="   margin-top: 20px; margin-right: 50px;     display: block;cursor: pointer;
+    width: 110px;
+    float: right;
+    font: bold 16px Tahoma;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    background-color: gray;
+    color: #ffffff;">关闭</a>
+<script src="/static/third/quicklink/common.js"></script>
+<script src="/static/third/quicklink/quick_links.js"></script>
+<!--[if lte IE 8]>
+<![endif]-->
+<script type="text/javascript">
+    var showWhat = function (val, row, index) {
+        return '<button class="zcCart-btn" href="javascript:void(0)" detail style="margin-right:15px">查看详情</button>' +
+            '<button class="zcCart-btn" href="javascript:void(0)">去评价</button>'
+    }
+    var opt = function () {
+        return '<button class="zcCart-btn" href="javascript:void(0)">撤销</button>'
+    }
+
+    var look = function () {
+        return '<button class="zcCart-btn" style="background: grey" href="javascript:void(0)">查看</button>'
+    }
+
+    var datagridOptions = {
+        fit: true,
+        fitColumns: false,
+        singleSelect: true,
+        columns: [[
+            {title: '单号', field: 'field0', sortable: true, align: 'center'},
+            {title: '开单日期', field: 'field1', sortable: true, align: 'center'},
+            {title: '基地', field: 'field2', sortable: true, align: 'center'},
+            {title: '总体积', field: 'field3', sortable: true, align: 'center'},
+            {title: '是否拼车', field: 'field4', sortable: true, align: 'center'},
+            {title: '整车状态', field: 'field5', sortable: true, align: 'center'},
+            {title: '操作', field: 'field6', sortable: true, align: 'center', formatter: showWhat}
+        ]],
+        toolbar: '#datagridToolbar',
+        striped: true,
+        pagination: true,
+        rownumbers: true,
+    };
+
+    $(function () {
+        var obj = $.parseJSON($.cookie("obj"))
+        for (var key in obj) {
+            $("[" + key + "]").text(obj[key])
+        }
+
+        $("#return").on('click', function () {
+            window.location = "historyOrder.html";
+            removeTab("历史订单详情")
+        })
+
+        $("#tabDg1").datagrid({
+            fit: true,
+            fitColumns: true,
+            columns: [[
+                {title: '操作', field: 'field0', sortable: true, align: 'center', width: 200, formatter: opt},
+                {title: '采购单号', field: 'field1', sortable: true, align: 'center', width: 200},
+                {title: '型号', field: 'field2', sortable: true, align: 'center', width: 200},
+                {title: '扣点', field: 'field3', sortable: true, align: 'center', width: 200},
+                {title: '开票价', field: 'field4', sortable: true, align: 'center', width: 200},
+                {title: '台返', field: 'field5', sortable: true, align: 'center', width: 200},
+                {title: '数量', field: 'field6', sortable: true, align: 'center', width: 200},
+                {title: '价税合计', field: 'field7', sortable: true, align: 'center', width: 200},
+                {title: '提交状态', field: 'field8', sortable: true, align: 'center', width: 200},
+                {title: '扣款状态', field: 'field9', sortable: true, align: 'center', width: 200},
+                {title: '信息', field: 'field10', sortable: true, align: 'center', width: 200},
+                {title: '查看物流', field: 'field11', sortable: true, align: 'center', width: 200, formatter: look}
+            ]],
+            striped: true
+        })
+        $("#tabDg2").datagrid({
+            fit: false,
+            fitColumns: true,
+            columns: [[
+                {title: '采购单单号', field: 'field0', sortable: true, align: 'center', width: 200},
+                {title: '型号', field: 'field2', sortable: true, align: 'center', width: 200},
+                {title: '计划发货日期', field: 'field3', sortable: true, align: 'center', width: 200},
+                {title: '车辆到位时间', field: 'field4', sortable: true, align: 'center', width: 200},
+                {title: '事业部实际发货日期', field: 'field5', sortable: true, align: 'center', width: 200},
+                {title: '客户实际签收日期', field: 'field6', sortable: true, align: 'center', width: 200},
+                {title: '自主签收日期', field: 'field7', sortable: true, align: 'center', width: 200},
+                {title: '车队', field: 'field8', sortable: true, align: 'center', width: 200},
+                {title: '车牌', field: 'field9', sortable: true, align: 'center', width: 200},
+                {title: '电话', field: 'field10', sortable: true, align: 'center', width: 200},
+                {title: '车交号', field: 'field11', sortable: true, align: 'center', width: 200}
+            ]],
+            striped: true
+        })
+    })
+
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid').datagrid('resize');
+        }, 500);
+    }
+</script>
+<script src="/static/js/delivery_order/historyOrder.js"></script>
+</body>
+</html>

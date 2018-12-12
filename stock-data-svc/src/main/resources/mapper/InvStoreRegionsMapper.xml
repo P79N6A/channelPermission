@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStoreRegionsDao">
+	<resultMap id="invStoreRegionsResult" type="com.haier.stock.model.InvStoreRegions">
+		<result property="id" column="id" />
+		<result property="storeCode" column="store_code" />
+		<result property="cityId" column="city_id" />
+		<result property="regionsId" column="regions_id" />
+		<result property="status" column="status" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="hpRemark" column="hp_remark"/>
+	</resultMap>
+	<select id="getByStoreCode" parameterType="Integer" resultMap="invStoreRegionsResult">
+		select `id`,`store_code`,`city_id`,`regions_id`,`status`,`create_time`,`update_time`
+		from `inv_store_regions`
+		where `store_code` = #{storeCode} 
+		<if test="status != null ">
+			AND  status=#{status}
+		</if>
+		limit 1
+	</select>
+	<select id="getByRegionId" parameterType="map" resultMap="invStoreRegionsResult">
+		select `id`,`store_code`,`city_id`,`regions_id`,`status`,`create_time`,`update_time`,`hp_remark`
+		from `inv_store_regions`
+		where `regions_id` = #{regionId} 
+		<if test="status != null ">
+			AND  status=#{status}
+		</if>
+		<if test="hpRemark != null">
+			AND  hp_remark=#{hpRemark}
+		</if>
+	</select>
+	<select id="getByCityId" parameterType="map" resultMap="invStoreRegionsResult">
+		select `id`,`store_code`,`city_id`,`regions_id`,`status`,`create_time`,`update_time`
+		from `inv_store_regions`
+		where `city_id` = #{cityId} 
+		<if test="status != null ">
+			AND  status=#{status}
+		</if>
+	</select>
+	<select id="get" parameterType="Integer" resultMap="invStoreRegionsResult">
+		select `id`,`store_code`,`city_id`,`regions_id`,`status`,`create_time`,`update_time`
+		from `inv_store_regions`
+		where `id` = #{id}
+	</select>
+	<insert id="insert" parameterType="com.haier.stock.model.InvStoreRegions">
+		insert into `inv_store_regions`(`store_code`,`city_id`,`regions_id`,`status`,`create_time`,`update_time`)
+		values(#{storeCode},#{cityId},#{regionsId},#{status},#{createTime},#{updateTime})
+	</insert>
+	<update id="update" parameterType="com.haier.stock.model.InvStoreRegions">
+		update `inv_store_regions` set `store_code`=#{storeCode},`city_id`=#{cityId},`regions_id`=#{regionsId},`status`=#{status},`create_time`=#{createTime},`update_time`=#{updateTime}
+		where `id` = #{id}
+	</update>
+</mapper>

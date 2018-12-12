@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderGuaranteePriceInfoWriteDao">
+
+	<insert id="insertNew" parameterType="com.haier.shop.model.OrderGuaranteePriceInfo">
+        insert into order_guarantee_price_info(`channel_code`,`shipping_mode`,`brand_id`,`brand_name`,`cate_id`,`cate_name`,`sku`,`product_name`,`guarantee_price`,`supply_price`,`direct_deduction_price`,`after_back_price`,`value_chain_ratio`,`activity_guarantee_price`,`activity_guarantee_price_start_time`,`activity_guarantee_price_end_time`,`create_time`,`update_time`)
+        values(#{channelCode},#{shippingMode},#{brandId},#{brandName},#{cateId},#{cateName},#{sku},#{productName},#{guaranteePrice},#{supplyPrice},#{directDeductionPrice},#{afterBackPrice},#{valueChainRatio},#{activityGuaranteePrice},#{activityGuaranteePriceStartTime},#{activityGuaranteePriceEndTime},now(),now())
+	</insert>
+
+	<insert id="insert" parameterType="com.haier.shop.model.OrderGuaranteePriceInfo">
+        insert into order_guarantee_price_info (
+        <if test="channelCode != null and channelCode !=''">
+			`channel_code`,
+		</if>
+        <if test="shippingMode != null and shippingMode !=''">
+			`shipping_mode`,
+		</if>
+		<if test="brandId != null">
+			`brand_id`,
+		</if>
+		<if test="brandName != null and brandName != ''">
+			`brand_name`,
+		</if>
+		<if test="cateId != null">
+			`cate_id`,
+		</if>
+		<if test="cateName != null and cateName != ''">
+			`cate_name`,
+		</if>
+		<if test="sku != null and sku != ''">
+			`sku`,
+		</if>
+		<if test="productName != null and productName != ''">
+			`product_name`,
+		</if>
+		<if test="guaranteePrice != null ">
+			`guarantee_price`,
+		</if>
+		<if test="supplyPrice != null ">
+			`supply_price`,
+		</if>
+		<if test="directDeductionPrice != null ">
+			`direct_deduction_price`,
+		</if>
+		<if test="afterBackPrice != null ">
+			`after_back_price`,
+		</if>
+		<if test="valueChainRatio != null ">
+			`value_chain_ratio`,
+		</if>
+		<if test="activityGuaranteePrice != null ">
+			`activity_guarantee_price`,
+		</if>
+		<if test="activityGuaranteePriceStartTime != null ">
+			`activity_guarantee_price_start_time`,
+		</if>
+		<if test="activityGuaranteePriceEndTime != null ">
+			`activity_guarantee_price_end_time`,
+		</if>
+			`create_time`,
+			`update_time`	
+        )
+           SELECT
+           	<if test="channelCode != null and channelCode !=''">
+				#{channelCode},
+			</if>
+            <if test="shippingMode != null and shippingMode !=''">
+				#{shippingMode},
+			</if>
+			<if test="brandId != null">
+				#{brandId},
+			</if>
+			<if test="brandName != null and brandName != ''">
+				#{brandName},
+			</if>
+			<if test="cateId != null">
+				#{cateId},
+			</if>	
+			<if test="cateName != null and cateName != ''">
+				#{cateName},
+			</if>
+			<if test="sku != null and sku != ''">
+				#{sku},
+			</if>
+			<if test="productName != null and productName != ''">
+				#{productName},
+			</if>
+			<if test="guaranteePrice != null ">
+				#{guaranteePrice},
+			</if>
+			<if test="supplyPrice != null ">
+				#{supplyPrice},
+			</if>
+			<if test="directDeductionPrice != null ">
+				#{directDeductionPrice},
+			</if>
+			<if test="afterBackPrice != null ">
+				#{afterBackPrice},
+			</if>
+			<if test="valueChainRatio != null ">
+				#{valueChainRatio},
+			</if>
+			<if test="activityGuaranteePrice != null ">
+				#{activityGuaranteePrice},
+			</if>
+			<if test="activityGuaranteePriceStartTime != null ">
+				#{activityGuaranteePriceStartTime},
+			</if>
+			<if test="activityGuaranteePriceEndTime != null ">
+				#{activityGuaranteePriceEndTime},
+			</if>
+			now(),
+			now()
+           FROM dual
+           WHERE NOT exists
+           (
+              SELECT
+                  1
+              FROM order_guarantee_price_info o
+              WHERE
+                  o.channel_code = #{channelCode} 
+              AND o.shipping_mode = #{shippingMode} 
+              AND o.sku = #{sku} 
+           )
+	</insert>
+
+	<update id="update" parameterType="com.haier.shop.model.OrderGuaranteePriceInfo">
+        update order_guarantee_price_info
+        <trim prefix="set" prefixOverrides=",">
+            <if test="brandId != null">
+                ,`brand_id`=#{brandId}
+            </if>
+            <if test="brandName != null and brandName !='' ">
+                ,`brand_name`=#{brandName}
+            </if>
+            <if test="cateName != null and cateName !='' ">
+                ,`cate_name`=#{cateName}
+            </if>
+            <if test="productName != null and productName !='' ">
+                ,`product_name`=#{productName}
+            </if>
+            <if test="guaranteePrice != null ">
+                ,`guarantee_price`=#{guaranteePrice}
+            </if>
+            <if test="supplyPrice != null ">
+                ,`supply_price`=#{supplyPrice}
+            </if>
+            <if test="directDeductionPrice != null ">
+                ,`direct_deduction_price`=#{directDeductionPrice}
+            </if>
+            <if test="afterBackPrice != null ">
+                ,`after_back_price`=#{afterBackPrice}
+            </if>
+            <if test="valueChainRatio != null ">
+                ,`value_chain_ratio`=#{valueChainRatio}
+            </if>
+            <if test="activityGuaranteePrice != null ">
+                ,`activity_guarantee_price`=#{activityGuaranteePrice}
+            </if>
+            <if test="activityGuaranteePriceStartTime != null ">
+                ,`activity_guarantee_price_start_time`=#{activityGuaranteePriceStartTime}
+            </if>
+            <if test="activityGuaranteePriceEndTime != null ">
+                ,`activity_guarantee_price_end_time`=#{activityGuaranteePriceEndTime}
+            </if>
+                ,`update_time`= now()
+        </trim>
+        WHERE id = #{id} 
+    </update>
+</mapper>

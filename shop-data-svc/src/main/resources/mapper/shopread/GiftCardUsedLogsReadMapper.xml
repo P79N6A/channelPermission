@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.GiftCardUsedLogsReadDao">
+	<resultMap id="giftCardUsedLogsResult" type="com.haier.shop.model.GiftCardUsedLogs">
+		<id column="id"  property="id" />
+		<result column="siteId"  property="siteId" />
+		<result column="giftCardId"  property="giftCardId" />
+		<result column="giftCardNumberId"  property="giftCardNumberId" />
+		<result column="memberId"  property="memberId" />
+		<result column="memberName"  property="memberName" />
+		<result column="memberEmail"  property="memberEmail" />
+		<result column="usedType"  property="usedType" />
+		<result column="beforeBalanceAmount" property="beforeBalanceAmount" />
+		<result column="amount"  property="amount" />
+		<result column="afterBalanceAmount" property="afterBalanceAmount" />
+		<result column="systemRemark"  property="systemRemark" />
+		<result column="addTime"  property="addTime" />
+		<result column="orderProductId"  property="orderProductId" />
+		<result column="orderSn"  property="orderSn" />
+		<result column="giftCardStoreId"  property="giftCardStoreId" />
+		<result column="giftCardStoreCode"  property="giftCardStoreCode" />
+	</resultMap>
+	
+	<select id="get" parameterType="java.lang.Integer" resultMap="giftCardUsedLogsResult">
+		select
+		id, siteId, giftCardId, giftCardNumberId, memberId, memberName,
+		memberEmail, usedType,
+		beforeBalanceAmount, amount, afterBalanceAmount, systemRemark, addTime, orderProductId,
+		orderSn, giftCardStoreId, giftCardStoreCode
+		from giftcardusedlogs
+		where id = #{id}
+	</select>
+	<select id="getByGiftCardNumberIdAndOrderProductId" parameterType="map" resultMap="giftCardUsedLogsResult">
+		select
+		id, siteId, giftCardId, giftCardNumberId, memberId, memberName,
+		memberEmail, usedType,
+		beforeBalanceAmount, amount, afterBalanceAmount, systemRemark, addTime, orderProductId,
+		orderSn, giftCardStoreId, giftCardStoreCode
+		from giftcardusedlogs
+		where giftCardNumberId = #{giftCardNumberId} and orderProductId = #{orderProductId} and usedType = #{usedType}
+	</select>
+
+</mapper>

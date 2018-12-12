@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.system.dao.SysActionDao">
+	<resultMap id="SysActionResult" type="com.haier.system.model.SysAction">
+		<result property="actId" column="act_id" />
+		<result property="actKey" column="act_key" />
+		<result property="actName" column="act_name" />
+		<result property="fnId" column="fn_id" />
+		<result property="fnName" column="fn_name" />
+		<result property="status" column="status" />
+		<result property="url" column="url" />
+		<result property="remark" column="remark" />
+	</resultMap>
+	<select id="find" parameterType="Integer" resultMap="SysActionResult">
+		select a.`act_id`,a.`act_key`,a.`act_name`,a.`fn_id`,m.menu_name as fn_name,a.`status`,a.`url`,a.`remark`
+		from `sys_action` a
+		inner join `sys_menu` m on a.fn_id=m.menu_id
+		<where>
+			<if test="actKey != null">and a.`act_key` like #{actKey}</if>
+			<if test="actName != null">and a.`act_name` like #{actName}</if>
+			<if test="remark != null">and a.`remark` like #{remark}</if>
+			<if test="status != null ">and a.`status`=#{status}</if>
+			<if test="menuName != null ">and m.`menu_name` like #{menuName}</if>
+		</where>
+		order by m.`menu_name`, a.`act_name` asc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	<select id="findCount" parameterType="Integer" resultType="Integer">
+		select count(1)
+		from `sys_action` a
+		inner join `sys_menu` m on a.fn_id=m.menu_id
+		<where>
+			<if test="actKey != null">and a.`act_key` like #{actKey}</if>
+			<if test="actName != null">and a.`act_name` like #{actName}</if>
+			<if test="remark != null">and a.`remark` like #{remark}</if>
+			<if test="status != null ">and a.`status`=#{status}</if>
+			<if test="menuName != null ">and m.`menu_name` like #{menuName}</if>
+		</where>
+	</select>
+	<select id="findByUrl" parameterType="String" resultMap="SysActionResult">
+		select `act_id`,`act_key`,`act_name`,`fn_id`,'' as fn_name,`status`,`url`,`remark`
+		from `sys_action`
+		where `url` like #{url} and `status`=1
+		order by `url`
+	</select>
+	<select id="findByActKey" parameterType="String" resultMap="SysActionResult">
+		select `act_id`,`act_key`,`act_name`,`fn_id`,'' as fn_name,`status`,`url`,`remark`
+		from `sys_action`
+		where `act_key` = #{actKey} and `status`=1
+		limit 1
+	</select>
+	<select id="get" parameterType="Integer" resultMap="SysActionResult">
+		select a.`act_id`,a.`act_key`,a.`act_name`,a.`fn_id`,m.menu_name as fn_name,a.`status`,a.`url`,a.`remark`
+		from `sys_action` a
+		inner join `sys_menu` m on a.fn_id=m.menu_id
+		where `act_id`=#{actId}
+	</select>
+	<insert id="create" parameterType="com.haier.system.model.SysAction">
+		insert into `sys_action`(`act_key`,`act_name`,`fn_id`,`status`,`url`,`remark`)
+		values(#{actKey},#{actName},#{fnId},#{status},#{url},#{remark})
+		<selectKey keyProperty="actId" resultType="java.lang.Integer" order="AFTER" statementType="STATEMENT">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.haier.system.model.SysAction">
+		update `sys_action` set `act_key`=#{actKey},`act_name`=#{actName},`fn_id`=#{fnId},`status`=#{status},`url`=#{url},`remark`=#{remark}
+		where `act_id` = #{actId}
+	</update>
+</mapper>

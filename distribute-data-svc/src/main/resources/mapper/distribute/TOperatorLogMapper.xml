@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.TOperatorLogDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.TOperatorLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="module" property="module" jdbcType="VARCHAR" />
+    <result column="recordId" property="recordid" jdbcType="INTEGER" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="changeItem" property="changeitem" jdbcType="VARCHAR" />
+    <result column="changeContent" property="changecontent" jdbcType="VARCHAR" />
+    <result column="logTime" property="logtime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, module, recordId, operator, changeItem, changeContent, logTime, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_operator_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_operator_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.haier.distribute.data.model.TOperatorLog" >
+    insert into t_operator_log (id, module, recordId, 
+      operator, changeItem, changeContent, 
+      logTime, remark)
+    values (#{id,jdbcType=INTEGER}, #{module,jdbcType=VARCHAR}, #{recordid,jdbcType=INTEGER}, 
+      #{operator,jdbcType=VARCHAR}, #{changeitem,jdbcType=VARCHAR}, #{changecontent,jdbcType=VARCHAR}, 
+      #{logtime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.distribute.data.model.TOperatorLog" >
+    insert into t_operator_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="module != null" >
+        module,
+      </if>
+      <if test="recordid != null" >
+        recordId,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="changeitem != null" >
+        changeItem,
+      </if>
+      <if test="changecontent != null" >
+        changeContent,
+      </if>
+      <if test="logtime != null" >
+        logTime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="module != null" >
+        #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="recordid != null" >
+        #{recordid,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="changeitem != null" >
+        #{changeitem,jdbcType=VARCHAR},
+      </if>
+      <if test="changecontent != null" >
+        #{changecontent,jdbcType=VARCHAR},
+      </if>
+      <if test="logtime != null" >
+        #{logtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.TOperatorLog" >
+    update t_operator_log
+    <set >
+      <if test="module != null" >
+        module = #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="recordid != null" >
+        recordId = #{recordid,jdbcType=INTEGER},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="changeitem != null" >
+        changeItem = #{changeitem,jdbcType=VARCHAR},
+      </if>
+      <if test="changecontent != null" >
+        changeContent = #{changecontent,jdbcType=VARCHAR},
+      </if>
+      <if test="logtime != null" >
+        logTime = #{logtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.TOperatorLog" >
+    update t_operator_log
+    set module = #{module,jdbcType=VARCHAR},
+      recordId = #{recordid,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=VARCHAR},
+      changeItem = #{changeitem,jdbcType=VARCHAR},
+      changeContent = #{changecontent,jdbcType=VARCHAR},
+      logTime = #{logtime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

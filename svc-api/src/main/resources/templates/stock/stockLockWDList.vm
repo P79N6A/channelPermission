@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+       <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+
+
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    </meta>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_orderForecastGoal"></table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  库位编码
+			</span>
+                <input class="easyui-textbox" id="secCode" name="secCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  物料编码
+			</span>
+                <input class="easyui-textbox" name="sku" id="sku"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	网单号
+			</span>
+                <input class="easyui-textbox" name="refNo" id="refNo"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  锁定数
+			</span>
+                <input class="easyui-textbox" name="lockQty" id="lockQty"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  开始日期
+			</span>
+                <input class="easyui-datebox" name="startTime" id="startTime"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  结束日期
+			</span>
+                <input class="easyui-datebox" name="endTime" id="endTime"/>
+                <input id="start" name="start" type="hidden"/>
+                <input name="operate" id="operate" type="hidden" value="$!request.getParameter('operate')"/>
+                <input id="size" name="size" type="hidden" />
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" onclick="onQuery(1);"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+            <a href="#" class="easyui-linkbutton" id="cxhongzhi"
+           data-options="iconCls:'icon-redo',plain:true" >重置</a>
+    </form>
+</div>
+<script type="application/javascript">
+    var tableHead = '单据号\n' +
+        '物料编号\n' +
+        '库位编码\n' +
+        '库位名称\n' +
+        '占用数量\n' +
+        '释放数量\n' +
+        '操作人\n' +
+        '占用时间\n' +
+        '操作'
+
+    var detailTh = ''
+
+    var detail = {
+        fit: true,
+        fitColumns: true,
+        singleSelect: true,
+        rownumbers: true
+    };
+    $(function () {
+        $("[wdCheck]").on("change", function () {
+            var wd = $(this)
+            if (wd.is(':checked')) {
+                $("[wdh]").textbox("enable")
+                $("[wdhwarn]").show()
+            } else {
+                $("[wdh]").textbox("disable")
+                $("[wdhwarn]").hide()
+            }
+        })
+    })
+</script>
+<script src="../static/js/stock/stockLockWDList.js"></script>
+</body>
+</html>

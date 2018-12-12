@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvDbmBaseSendAddressDao">
+	<resultMap id="invDbmBaseSendAddressResult" type="com.haier.stock.model.InvDbmBaseSendAddress">
+		<result property="id" column="id" />
+		<result property="CORPORATION_ID" column="CORPORATION_ID" />
+		<result property="UNIT_CODE" column="UNIT_CODE" />
+		<result property="UNIT_NAME" column="UNIT_NAME" />
+		<result property="CUST_UNIT_CODE" column="CUST_UNIT_CODE" />
+		<result property="CUST_UNIT_NAME" column="CUST_UNIT_NAME" />
+		<result property="ADDRESS_ID" column="ADDRESS_ID" />
+		<result property="ZIP_CODE" column="ZIP_CODE" />
+		<result property="ADDRESS_NAME" column="ADDRESS_NAME" />
+		<result property="storage_id" column="storage_id" />
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_time" column="update_time" />
+	</resultMap>
+	<select id="selectInvDbmBaseSendAddressItem"  parameterType="Map"  resultMap="invDbmBaseSendAddressResult">
+		SELECT
+			id,
+			CORPORATION_ID,
+			UNIT_CODE,
+			UNIT_NAME,
+			CUST_UNIT_CODE,
+			CUST_UNIT_NAME,
+			ADDRESS_ID,
+			ZIP_CODE,
+			ADDRESS_NAME,
+			storage_id,
+			create_user,
+			create_time,
+			update_user,
+			update_time
+		FROM
+			inv_dbmsendaddress
+		WHERE 1=1
+			<if test="UNIT_CODE != null and UNIT_CODE != ''">
+				AND UNIT_CODE = #{UNIT_CODE}
+			</if>
+			<if test="ADDRESS_ID != null and ADDRESS_ID != ''">
+				AND ADDRESS_ID = #{ADDRESS_ID}
+			</if>
+			<if test="storage_id != null and storage_id != ''">
+				AND storage_id = #{storage_id}
+			</if>
+	</select>
+</mapper>

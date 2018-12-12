@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.RefundBillSyncRecordDao">
+	<resultMap id="returnMap" type="com.haier.shop.model.RefundBillSyncRecord">
+		<result property="id" column="id" />
+		<result property="refund_id" column="refundId" />
+		<result property="tid" column="tid" />
+		<result property="oid" column="oid" />
+		<result property="sku" column="sku" />
+		<result property="source" column="source" />
+		<result property="syncState" column="sync_state" />
+		<result property="syncCount" column="sync_count" />
+		<result property="created" column="created" />
+		<result property="lastTime" column="lasttime"/>
+        <result property="jdpModified" column="jdp_modified" />
+		<result property="jdpResponse" column="jdp_response" />
+		<result property="sysLog" column="sys_log" />
+	</resultMap>
+	
+	<select id="selectByPrimaryKey" resultMap="returnMap">
+	SELECT
+		id,
+		refund_id,
+		oid,
+		tid,
+		sku,
+		source,
+		sync_state,
+		sync_count,
+		created,
+		lasttime,
+		jdp_modified,
+		jdp_response
+	FROM
+		refundbill_sync_record
+	where sync_state !='SyncSuccess'
+	</select>
+
+</mapper>

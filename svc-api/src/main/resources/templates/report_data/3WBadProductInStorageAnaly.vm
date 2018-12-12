@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <link rel="stylesheet" href="../static/css/staticHtml.css">
+    <title>支付宝流水</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+
+    <style>
+        a{
+            cursor: pointer;
+        }
+        .tableX{
+            border: 1px #d2d2d2 solid;
+            border-width: 1px 0 0 1px;
+            width: 100%;
+            border-spacing: 0;
+            display: table;
+            border-collapse: separate;
+        }
+        .tableX th{
+            width: 20%;
+            /* padding: 3px 5px; */
+            border: 1px #d2d2d2 solid;
+            border-width: 0 1px 1px 0;
+            text-align: center;
+        }
+        
+        .tableY td{
+            padding: 0;
+            border: 1px #d2d2d2 solid;
+            border-width: 0 1px 1px 0;
+        }
+
+        .tableY{
+            width: 100%;
+        }
+        .tableY td{
+            width: 33.3%;
+        }
+        .analysisDiv{
+            margin: 40px 20px;
+        }
+    </style>
+    
+</head>
+<body class="iframe-body">
+    <div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel" style="width:100%;height:100%;overflow:auto;" data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,collapsible:false">
+        <table id="datagridIndustry">
+            
+        </table>
+
+        <div class="analysisDiv">
+            <p>分析:</p>
+            <p>&nbsp;&nbsp;1、目标为80%，本周实际达成（ 47% ）；</p>
+            <p>&nbsp;&nbsp;2、达成/未达成目标的原因分析：售后责任9673台，物流责任1421台</p>
+        </div>
+        
+        <table id="datagridChannel" style="background-color:rgb(240, 142, 22);height:30%;margin-top:20px;">
+            
+        </table>
+    </div>
+
+   
+
+    <div id="datagridToolbar">
+        <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_circle fa fa-map-marker"></div>
+        </div>
+        <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+            <div class="search-panel">
+                <div class="search-row">
+                    <span class="search-row-label">开始时间</span>
+                    <input value="value="${loan.contractBegintime}"" class="easyui-datebox" id="contractBegintime" name="periodCode" data-options="required:true,editable:false"/>
+                </div>
+                <div class="search-row">
+                <span class="search-row-label">结束时间</span>
+                    <input value="value="${loan.contractEndtime}"" class="easyui-datebox" id="contractEndtime" name="periodCode" data-options="required:true,editable:false"/>
+                </div>
+            </div>
+            <a href="#" class="easyui-linkbutton" id="searchBtn"
+               data-options="iconCls:'icon-search',plain:true">查询</a>
+            <a href="#" class="easyui-linkbutton" id="export"
+               data-options="iconCls:'icon-save',plain:true">导出</a>
+        </form>
+    </div>
+
+
+<script type="text/javascript">
+
+</script>
+<script src="../static/js/report_data/3WBadProductInStorageAnaly.js"></script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <style>
+        #loading {
+            width:250px;
+            height:100px;
+            border:3px solid #C3DAF9;
+            position:absolute;
+            top:200px;
+            left:600px;
+            z-index:10000;
+            background-color:#F7F9FC;
+            line-height:25px;
+            vertical-align:middle;
+            font-size:11pt;
+            display:none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_orderForecastGoal"></table>
+</div>
+<div id="loading">正在加载数据,请稍候...</div>
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <h3>退换货列表</h3>
+            <h5>您可以在这里查看所有退换货，或者点击这里	添加退换货申请，或者批量导入。<a href="/operationArea/select_WwwHpRecords"> HP拒收监控日志</a></h5>
+            <h5 style="color: red;margin-right: 26px;margin-top: 10px;margin-bottom: 10px;">温馨提示:系统默认每三分钟匹配一次HP回传的拒信息。由于天猫退货信息未接入,菜鸟,售后,物流等系统数据差异导致的首次匹配失败,系统每隔十分钟重新匹配20次,仍然失败的需要人工处理。</h5>
+            <div class="search-row_nowidth">
+                <input id="orderSn" class="easyui-textbox" prompt="订单号"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <input id="cOrderSn" class="easyui-textbox" prompt="网单号"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <select name="handleStatus" id="handleStatus" class="easyui-combobox">
+                    <option value="-1">受理状态</option>
+                    <option value="1" >审核中</option>
+                    <option value="2">进行中</option>
+                    <option value="3">受理完成</option>
+                    <option value="4">已完结</option>
+                    <option value="5">已驳回</option>
+                    <option value="6">已终止</option>
+                    <option value="7">线下已退款</option>
+                    <option value="8">等待确认终止</option>
+                    <option value="9">等待HP确认拒收</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <select name="paymentStatus" id="paymentStatus" class="easyui-combobox">
+                    <option value="-1">付款状态</option>
+                    <option value="1" >已付款</option>
+                    <option value="2">待退款</option>
+                    <option value="3">已退款</option>
+                    <option value="4">线下已退款</option>
+                    <option value="5">无需退款</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <select name="receiptStatus" id="receiptStatus" class="easyui-combobox">
+                    <option value="-1">发票状态</option>
+                    <option value="1" >已开票</option>
+                    <option value="2">未开票</option>
+                    <option value="10">待召回</option>
+                    <option value="3">已召回</option>
+                    <option value="4">已冲票</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <select name="storageStatus" id="storageStatus" class="easyui-combobox">
+                    <option value="-1">货物状态</option>
+                    <option value="1" >已出库</option>
+                    <option value="2">未出库</option>
+                    <option value="10">待召回</option>
+                    <option value="3">已召回</option>
+                    <option value="4">已入库</option>
+                    <option value="122">已入22库</option>
+                    <option value="121">已入21库</option>
+                    <option value="110">已入10库</option>
+                    <option value="140">已入40库</option>
+                    <option value="141">已入41库</option>
+                    <option value="121">已入日日顺21库</option>
+                    <option value="21">已入金立库</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <select name="typeActual" id="typeActual" class="easyui-combobox">
+                    <option value="-1">退换货类型</option>
+                    <option value="1" >退货退款</option>
+                    <option value="2">退货不退款</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <input id="repairSn" class="easyui-textbox" prompt="退换货单号"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <input id="contactName" class="easyui-textbox" prompt="联系人姓名"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <input id="contactMobile" class="easyui-textbox" prompt="联系人电话"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <input id="addTimeMin" class="easyui-datebox" prompt="退换货单提交时间"></input>--
+                <input id="addTimeMax" class="easyui-datebox" prompt="退换货单提交时间"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <input id="paymentTimeMin" class="easyui-datebox" prompt="退款完成时间"></input>--
+                <input id="paymentTimeMax" class="easyui-datebox" prompt="退款完成时间"></input>
+            </div>
+           
+        </div>
+         <div class="search-row_nowidth">
+                <a href="#" class="easyui-linkbutton" id="search">搜索</a>
+                <a href="#" class="easyui-linkbutton" id="export_Excel">导出报表</a>
+                <a href="#" class="easyui-linkbutton" id="export_Excel1">导出待退款报表</a>
+            </div>
+    </form>
+</div>
+<div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:350px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>物料编码<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="sku" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>型号<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="materialdescription" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>渠道<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="channelcode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单周<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderweek" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单年<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderyear" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>目标销售<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="goalqty" required="true"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_orderForecastGoal').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastGoal').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/order/returnChangeGoodsList.js"></script>
+</body>
+</html>

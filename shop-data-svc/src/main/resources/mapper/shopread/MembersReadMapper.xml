@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.MembersReadDao">
+	<resultMap id="membersResult" type="com.haier.shop.model.Members">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="avatarImageFileId" column="avatarImageFileId" />
+		<result property="email" column="email" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="salt" column="salt" />
+		<result property="registerTime" column="registerTime" />
+		<result property="lastLoginTime" column="lastLoginTime" />
+		<result property="lastLoginIp" column="lastLoginIp" />
+		<result property="memberRankId" column="memberRankId" />
+		<result property="bigCustomerId" column="bigCustomerId" />
+		<result property="lastAddressId" column="lastAddressId" />
+		<result property="lastPaymentCode" column="lastPaymentCode" />
+		<result property="gender" column="gender" />
+		<result property="birthday" column="birthday" />
+		<result property="qq" column="qq" />
+		<result property="msn" column="msn" />
+		<result property="mobile" column="mobile" />
+		<result property="canReceiveSms" column="canReceiveSms" />
+		<result property="phone" column="phone" />
+		<result property="validateCode" column="validateCode" />
+		<result property="pwdErrCount" column="pwdErrCount" />
+		<result property="source" column="source" />
+		<result property="sign" column="sign" />
+		<result property="money" column="money" />
+		<result property="moneyPwd" column="moneyPwd" />
+		<result property="isEmailVerify" column="isEmailVerify" />
+		<result property="isSmsVerify" column="isSmsVerify" />
+		<result property="smsVerifyCode" column="smsVerifyCode" />
+		<result property="emailVerifyCode" column="emailVerifyCode" />
+		<result property="verifySendCoupon" column="verifySendCoupon" />
+		<result property="canReceiveEmail" column="canReceiveEmail" />
+		<result property="modified" column="modified" />
+		<result property="channelId" column="channelId" />
+		<result property="gradeId" column="grade_id" />
+		<result property="nickName" column="nick_name" />
+		<result property="isBlackList" column="is_blackList" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="membersResult">
+		select `id`,`siteId`,`avatarImageFileId`,`email`,`username`,`password`,`salt`,`registerTime`,
+		`lastLoginTime`,`lastLoginIp`,`memberRankId`,`bigCustomerId`,`lastAddressId`,`lastPaymentCode`,
+		`gender`,`birthday`,`qq`,`msn`,`mobile`,`canReceiveSms`,`phone`,`validateCode`,`pwdErrCount`,`source`,
+		`sign`,`money`,`moneyPwd`,`isEmailVerify`,`isSmsVerify`,`smsVerifyCode`,`emailVerifyCode`,`verifySendCoupon`,`canReceiveEmail`,`nick_name`
+		from `Members`
+		where `id` = #{id}
+	</select>
+	<select id="getMemberMobile" parameterType="Integer" resultType="String">
+		select mobile from Members where id = #{id}
+	</select>
+</mapper>

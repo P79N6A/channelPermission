@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderRepairLESQueuesWriteDao">
+    <update id="updateVomResult">
+        UPDATE OrderRepairLESQueues
+        SET
+        vomLastMessage = #{vomLastMessage},
+        vomSuccess     = #{vomSuccess},
+        vomSuccessTime = #{vomSuccessTime},
+        vomReturnData  = #{vomReturnData}
+        WHERE id = #{id}
+    </update>
+    <update id="updateResult">
+        UPDATE OrderRepairLESQueues
+        SET
+        lastMessage = #{lastMessage},
+        success     = #{success},
+        successTime = #{successTime},
+        returnData  = #{returnData}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insert" parameterType="com.haier.shop.model.OrderRepairLESQueues">
+        INSERT INTO OrderRepairLESQueues(
+        <if test="siteId != null">
+            siteId,
+        </if>
+        <if test="orderProductId != null">
+            orderProductId,
+        </if>
+        <if test="orderRepairId != null">
+            orderRepairId,
+        </if>
+        <if test="recordId != null">
+            recordId,
+        </if>
+        <if test="pushData != null">
+            pushData,
+        </if>
+        <if test="returnData != null">
+            returnData,
+        </if>
+        <if test="success != null">
+            success,
+        </if>
+        <if test="count != null">
+            `count`,
+        </if>
+        <if test="lastMessage != null">
+            lastMessage,
+        </if>
+        <if test="successTime != null">
+            successTime,
+        </if>
+        <if test="vomLastMessage != null">
+            vomLastMessage,
+        </if>
+        <if test="vomSuccess != null">
+            vomSuccess,
+        </if>
+        <if test="vomSuccessTime != null">
+            vomSuccessTime,
+        </if>
+        <if test="vomReturnData != null">
+            vomReturnData,
+        </if>
+        <if test="vomPushData != null">
+            vomPushData,
+        </if>
+        addTime
+        ) VALUES(
+        <if test="siteId != null">
+            #{siteId},
+        </if>
+        <if test="orderProductId != null">
+            #{orderProductId},
+        </if>
+        <if test="orderRepairId != null">
+            #{orderRepairId},
+        </if>
+        <if test="recordId != null">
+            #{recordId},
+        </if>
+        <if test="pushData != null">
+            #{pushData},
+        </if>
+        <if test="returnData != null">
+            #{returnData},
+        </if>
+        <if test="success != null">
+            #{success},
+        </if>
+        <if test="count != null">
+            #{count},
+        </if>
+        <if test="lastMessage != null">
+            #{lastMessage},
+        </if>
+        <if test="successTime != null">
+            #{successTime},
+        </if>
+        <if test="vomLastMessage != null">
+            #{vomLastMessage},
+        </if>
+        <if test="vomSuccess != null">
+            #{vomSuccess},
+        </if>
+        <if test="vomSuccessTime != null">
+            #{vomSuccessTime},
+        </if>
+        <if test="vomReturnData != null">
+            #{vomReturnData},
+        </if>
+        <if test="vomPushData != null">
+            #{vomPushData},
+        </if>
+        #{addTime}
+        )
+    </insert>
+
+    <insert id="insertLesShippingInfo">
+        INSERT INTO LesShippingInfos (orderId,orderProductId,cOrderSn, nodeTime, deliveryType, nodeCode, nodeDesc, addTime, logId, syncTBStatus)
+        VALUES (#{orderId},#{orderProductId},#{cOrderSn}, #{nodeTime}, #{deliveryType}, #{nodeCode}, #{nodeDesc},
+        UNIX_TIMESTAMP(), #{logId}, #{syncTBStatus})
+    </insert>
+    
+</mapper>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.TSaleProductStockDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.TSaleProductStock" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="channelId" property="channelId" jdbcType="INTEGER" />
+    <result column="productCode" property="productCode" jdbcType="VARCHAR" />
+    <result column="warehouseCode" property="warehouseCode" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="lockQuantity" property="lockQuantity" jdbcType="INTEGER" />
+    <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, channelId, productCode, warehouseCode, quantity, lockQuantity, createBy, createTime, 
+    updateBy, updateTime, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sale_product_stock
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sale_product_stock
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.haier.distribute.data.model.TSaleProductStock" >
+    insert into t_sale_product_stock (id, channelId, productCode, 
+      warehouseCode, quantity, lockQuantity, 
+      createBy, createTime, updateBy, 
+      updateTime, remark)
+    values (#{id,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{productCode,jdbcType=VARCHAR}, 
+      #{warehouseCode,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{lockQuantity,jdbcType=INTEGER}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.distribute.data.model.TSaleProductStock" >
+    insert into t_sale_product_stock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="channelId != null" >
+        channelId,
+      </if>
+      <if test="productCode != null" >
+        productCode,
+      </if>
+      <if test="warehouseCode != null" >
+        warehouseCode,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="lockQuantity != null" >
+        lockQuantity,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="warehouseCode != null" >
+        #{warehouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="lockQuantity != null" >
+        #{lockQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.TSaleProductStock" >
+    update t_sale_product_stock
+    <set >
+      <if test="channelId != null" >
+        channelId = #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="productCode != null" >
+        productCode = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="warehouseCode != null" >
+        warehouseCode = #{warehouseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="lockQuantity != null" >
+        lockQuantity = #{lockQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.TSaleProductStock" >
+    update t_sale_product_stock
+    set channelId = #{channelId,jdbcType=INTEGER},
+      productCode = #{productCode,jdbcType=VARCHAR},
+      warehouseCode = #{warehouseCode,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=INTEGER},
+      lockQuantity = #{lockQuantity,jdbcType=INTEGER},
+      createBy = #{createBy,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateBy = #{updateBy,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询条件 -->
+	<sql id="where_fragement_count">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id = #{entity.id} ]]>
+			</if>
+			<if test="entity.channelId != null and entity.channelId !='' ">
+                <![CDATA[ and channelId = #{entity.channelId} ]]>
+			</if>
+			<if test="entity.productCode != null and entity.productCode !='' ">
+                <![CDATA[ and productCode LIKE CONCAT('%', #{entity.productCode} ,'%') ]]>
+			</if>
+			<if test="entity.warehouseCode != null and entity.warehouseCode !='' ">
+                <![CDATA[ and warehouseCode = #{entity.warehouseCode} ]]>
+			</if>
+		</if>
+	</sql>
+	<sql id="where_fragement">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and tsps.id = #{entity.id} ]]>
+			</if>
+			<if test="entity.channelId != null and entity.channelId !='' ">
+                <![CDATA[ and tsps.channelId = #{entity.channelId} ]]>
+			</if>
+			<if test="entity.productCode != null and entity.productCode !='' ">
+                <![CDATA[ and tsps.productCode LIKE CONCAT('%', #{entity.productCode} ,'%') ]]>
+			</if>
+			<if test="entity.warehouseCode != null and entity.warehouseCode !='' ">
+                <![CDATA[ and tsps.warehouseCode = #{entity.warehouseCode} ]]>
+			</if>
+		</if>
+	</sql>
+	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+  <!-- 查询page -->
+	<select id="getPageByCondition" resultMap="BaseResultMap">
+		SELECT tci.channelName,tw.warehouseName,tsps.* from
+		t_sale_product_stock tsps LEFT JOIN t_channels_info tci ON
+		tsps.channelId = tci.id
+		LEFT JOIN t_warehouse tw ON tsps.warehouseCode = tw.warehouseCode
+		<include refid="where_fragement" /> order by tsps.createTime desc
+		<include refid="pagination" /> 
+	</select>
+	<!--分页count -->
+	<select id="getPagerCount" resultType="long" parameterType="com.haier.distribute.data.model.TSaleProductStock">
+		select count(1) from t_sale_product_stock
+		<include refid="where_fragement_count" />
+	</select>
+	
+	<select id="checkCode" resultMap="BaseResultMap"> 
+  		select 
+  		<include refid="Base_Column_List"/>
+  		from t_sale_product_stock 
+  		where 1=1
+		<if test="entity!=null">
+			<if test="entity.channelId != null and entity.channelId !='' ">
+                <![CDATA[ and channelId = #{entity.channelId} ]]>
+			</if>
+			<if test="entity.warehouseCode != null and entity.warehouseCode !='' ">
+                <![CDATA[ and warehouseCode = #{entity.warehouseCode} ]]>
+			</if>
+			<if test="entity.productCode != null and entity.productCode !='' ">
+                <![CDATA[ and productCode = #{entity.productCode} ]]>
+			</if>
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id != #{entity.id} ]]>
+			</if>
+		</if>
+  	</select>
+</mapper>

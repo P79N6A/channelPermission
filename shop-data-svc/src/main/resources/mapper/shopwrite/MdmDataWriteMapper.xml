@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.MdmDataWriteDao">
+    <insert id="insert" parameterType="java.util.List">
+        insert into sys_mdm
+                    (row_id,material_code,material_descrition,material_type,primary_uom,mtl_group_code,department,weight_uom_code,
+                    weight,volume_uom_code,volume,net_weight,mtl_class,basic_mtl,delete_flag,product_department,is_village_product,
+                     prod_life_state,kind_one,kind_add,pro_type,pro_mid,pro_flag,pro_band,length_number,width_number,
+                    high_number,gross_weight_number,weight_unit,measure_unit,send_unit,spec,con_code,type_set,product_char1,product_char4,
+        product_char5,sale_ser1,sale_ser2,sale_ser3,product_list,sale_flag,default_plant_code,product_attribute,last_upd,is_crust_flag,
+        product_land,test_sales_flag,test_sales_qty,rebate_rate,categories_first,categories_mid,platform,series,item,product_type,
+        demonstrator,HIGH_END_PRODUCTS,dp_date_plan,dp_date_actual,pa_date_plan,pa_date_actual,pe_date_plan,pe_date_actual,em_date_plan,
+        em_date_actual,es_date_plan,es_date_actual)
+                  values
+                    <foreach collection ="list" item="reddemCode" index= "index" separator =",">
+                        (
+                        #{reddemCode.row_id},
+                        #{reddemCode.material_code},
+                        #{reddemCode.material_descrition},
+                        #{reddemCode.material_type},
+                        #{reddemCode.primary_uom},
+                        #{reddemCode.mtl_group_code},
+                        #{reddemCode.department},
+                        #{reddemCode.weight_uom_code},
+                        #{reddemCode.weight},
+                        #{reddemCode.volume_uom_code},
+                        #{reddemCode.volume},
+                        #{reddemCode.net_weight},
+                        #{reddemCode.mtl_class},
+                        #{reddemCode.basic_mtl},
+                        #{reddemCode.delete_flag},
+                        #{reddemCode.product_department},
+                        #{reddemCode.is_village_product},
+                        #{reddemCode.prod_life_state},
+                        #{reddemCode.kind_one},
+                        #{reddemCode.kind_add},
+                        #{reddemCode.pro_type},
+                        #{reddemCode.pro_mid},
+                        #{reddemCode.pro_flag},
+                        #{reddemCode.pro_band},
+                        #{reddemCode.length_number},
+                        #{reddemCode.width_number},
+                        #{reddemCode.high_number},
+                        #{reddemCode.gross_weight_number},
+                        #{reddemCode.weight_unit},
+                        #{reddemCode.measure_unit},
+                        #{reddemCode.send_unit},
+                        #{reddemCode.spec},
+                        #{reddemCode.con_code},
+                        #{reddemCode.type_set},
+                        #{reddemCode.product_char1},
+                        #{reddemCode.product_char4},
+                        #{reddemCode.product_char5},
+                        #{reddemCode.sale_ser1},
+                        #{reddemCode.sale_ser2},
+                        #{reddemCode.sale_ser3},
+                        #{reddemCode.product_list},
+                        #{reddemCode.sale_flag},
+                        #{reddemCode.default_plant_code},
+                        #{reddemCode.product_attribute},
+                        #{reddemCode.last_upd},
+                        #{reddemCode.is_crust_flag},
+                        #{reddemCode.product_land},
+                        #{reddemCode.test_sales_flag},
+                        #{reddemCode.test_sales_qty},
+                        #{reddemCode.rebate_rate},
+                        #{reddemCode.categories_first},
+                        #{reddemCode.categories_mid},
+                        #{reddemCode.platform},
+                        #{reddemCode.series},
+                        #{reddemCode.item},
+                        #{reddemCode.product_type},
+                        #{reddemCode.demonstrator},
+                        #{reddemCode.HIGH_END_PRODUCTS},
+                        #{reddemCode.dp_date_plan},
+                        #{reddemCode.dp_date_actual},
+                        #{reddemCode.pa_date_plan},
+                        #{reddemCode.pa_date_actual},
+                        #{reddemCode.pe_date_plan},
+                        #{reddemCode.pe_date_actual},
+                        #{reddemCode.em_date_plan},
+                        #{reddemCode.em_date_actual},
+                        #{reddemCode.es_date_plan},
+                        #{reddemCode.es_date_actual}
+                        )
+                     </foreach >
+    </insert>
+    <delete id="delete" >
+       DELETE FROM sys_mdm;
+    </delete>
+</mapper>

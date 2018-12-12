@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <!--<script src="../static/js/utils.js"></script>-->
+    <!--<script src="../static/js/customConfig.js"></script>-->
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid2">
+
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  店铺
+			</span>
+                <select class="easyui-combobox" name="productCode" style="width: 174px;" id="source">
+                    <option selected="" value="">店铺</option>
+                    <option value="TBSC">海尔官方淘宝旗舰店</option>
+                    <option value="TOPFENXIAO">官旗供应商</option>
+                    <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
+                    <option value="FRIDGE">海尔冰冷旗舰店</option>
+                    <option value="TOPBOILER">海尔热水器专卖店</option>
+                    <option value="WASHER">海尔洗衣机旗舰店</option>
+                    <option value="MOOKA">淘宝模卡旗舰店</option>
+                    <option value="AIR">海尔空调旗舰店</option>
+                    <option value="TMTV">海尔电视旗舰店</option>
+                    <option value="TMKSD">天猫卡萨帝旗舰店</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  外部订单号
+			</span>
+                <input class="easyui-textbox" name="tyMtd" id="sourceOrderSn"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  是否评分
+			</span>
+                <select class="easyui-combobox" name="xwCode" style="width: 174px;" id="isGiveMark">
+                    <option value="0">全部</option>
+                    <option value="1">已评分</option>
+                    <option value="2">未评分</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  评论创建时间
+			</span>
+                <input class="easyui-datebox" name="periodCode" id="commentCreateTime"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label" style="width:15px">
+			  至
+			</span>
+                <input class="easyui-datebox" name="measureName" id="commentEndTime"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  评价结果
+			</span>
+                <select class="easyui-combobox" name="xwCode" style="width: 174px;" id="markResult">
+                    <option value="">全部</option>
+                    <option value="good">好评</option>
+                    <option value="middle">中评</option>
+                    <option value="bad">差评</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  商品类型名称
+			</span>
+                <select class="easyui-combobox" name="xwCode" style="width: 174px;" id="productType">
+                    <option value=''>全部</option>
+                    <option value='4 '>手机</option>
+                    <option value='10'>台式机</option>
+                    <option value='13'>彩电</option>
+                    <option value='22'>吸尘器</option>
+                    <option value='24'>数码摄像机</option>
+                    <option value='25'>电饭煲</option>
+                    <option value='27'>冷柜</option>
+                    <option value='28'>冰箱</option>
+                    <option value='30'>数码相机</option>
+                    <option value='31'>波轮洗衣机</option>
+                    <option value='36'>燃气灶</option>
+                    <option value='37'>消毒柜</option>
+                    <option value='39'>电热水器</option>
+                    <option value='40'>燃气热水器</option>
+                    <option value='42'>整体厨房</option>
+                    <option value='43'>电磁炉</option>
+                    <option value='44'>电压力锅</option>
+                    <option value='46'>电熨斗</option>
+                    <option value='53'>数码相框</option>
+                    <option value='55'>搅拌机</option>
+                    <option value='59'>微波炉</option>
+                    <option value='63'>饮水机</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure" onclick="reloadgrid()"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMeasure"
+           data-options="iconCls:'icon-save',plain:true">重置</a>
+    </form>
+</div>
+<!--<script type="application/javascript">-->
+<!--var tableHead = '订单来源\n' +-->
+<!--'外部订单号\n' +-->
+<!--'LBX单号\n' +-->
+<!--'网单号\n' +-->
+<!--'宝贝信息\n' +-->
+<!--'型号\n' +-->
+<!--'数量\n' +-->
+<!--'物料编码\n' +-->
+<!--'商品类型名称\n' +-->
+<!--'旺旺ID\n' +-->
+<!--'收货人\n' +-->
+<!--'电话\n' +-->
+<!--'手机\n' +-->
+<!--'所属区域\n' +-->
+<!--'所属库位\n' +-->
+<!--'下单时间\n' +-->
+<!--'付款时间\n' +-->
+<!--'评价创建时间\n' +-->
+<!--'是否评分\n' +-->
+<!--'评价结果 \n' +-->
+<!--'评价信息'-->
+
+<!--var detailTh = 'WP订单号 \n' +-->
+<!--'PO编号 \n' +-->
+<!--'销售单号 \n' +-->
+<!--'提单时间 \n' +-->
+<!--'SO \n' +-->
+<!--'DN \n' +-->
+<!--'渠道 \n' +-->
+<!--'品类 \n' +-->
+<!--'产品组 \n' +-->
+<!--'物料编号 \n' +-->
+<!--'型号 \n' +-->
+<!--'数量 \n' +-->
+<!--'样表单价 \n' +-->
+<!--'样表金额 \n' +-->
+<!--'采购价格 \n' +-->
+<!--'采购金额 \n' +-->
+<!--'WA库位码 \n' +-->
+<!--'WA库位名称 \n' +-->
+<!--'状态 \n' +-->
+<!--'出日日顺库时间 \n' +-->
+<!--'入库时间 '-->
+
+<!--var detail = {-->
+<!--fit: true,-->
+<!--fitColumns: false,-->
+<!--singleSelect: true,-->
+<!--columns: covertColumns(detailTh),-->
+<!--rownumbers: true-->
+<!--};-->
+
+
+<!--</script>-->
+<!--<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>-->
+<script src="../static/js/references/toptraderate.js"></script>
+<!--<script>-->
+<!--$(function () {-->
+
+<!--var datagrid1 = {-->
+<!--fit: true,-->
+<!--fitColumns: true,-->
+<!--toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure',-->
+<!--striped: true,-->
+<!--singleSelect: true,-->
+<!--pagination: true,-->
+<!--columns: [[-->
+<!--{title: "操作", field: "field0", sortable: true,formatter:go_detail},-->
+<!--{title: "订单来源", field: "field1", sortable: true},-->
+<!--{title: "外部订单号", field: "field2", sortable: true},-->
+<!--{title: "LBX单号", field: "field3", sortable: true},-->
+<!--{title: "网单号", field: "field34", sortable: true},-->
+<!--{title: "宝贝信息", field: "field5", sortable: true},-->
+<!--{title: "型号", field: "field6", sortable: true},-->
+<!--{title: "数量", field: "field7", sortable: true},-->
+<!--{title: "物料编码", field: "field8 ", sortable: true},-->
+<!--{title: "商品类型名称", field: "field9", sortable: true},-->
+<!--{title: "旺旺ID", field: "field10", sortable: true},-->
+<!--{title: "收货人", field: "field11", sortable: true},-->
+<!--{title: "电话", field: "field12", sortable: true},-->
+<!--{title: "手机", field: "field13", sortable: true},-->
+<!--{title: "所属区域", field: "field14", sortable: true},-->
+<!--{title: "所属库位", field: "field15", sortable: true},-->
+<!--{title: "下单时间", field: "field16", sortable: true},-->
+<!--{title: "付款时间", field: "field17", sortable: true},-->
+<!--{title: "评价创建时间", field: "field18", sortable: true},-->
+<!--{title: "是否评分", field: "field19", sortable: true},-->
+<!--{title: "评价结果", field: "field20", sortable: true},-->
+<!--{title: "评价信息", field: "field21", sortable: true, width: 150, formatter: be_pointer}]],-->
+<!--pageSize: 10,-->
+<!--pageList: [10, 20, 30, 40, 50],-->
+<!--rownumbers: true-->
+<!--}-->
+
+<!--function be_pointer(val, row) {-->
+
+<!--return '<a style="color: black;" href="#" title="'+val+'">'+val+'</a>';-->
+<!--};-->
+<!--function  go_detail() {-->
+<!--return '<a href="acceptBadReview.html">详情</a>'-->
+<!--}-->
+
+<!--var datagrid = $('#datagrid2').datagrid(datagrid1);-->
+<!--})-->
+<!--</script>-->
+</body>
+</html>

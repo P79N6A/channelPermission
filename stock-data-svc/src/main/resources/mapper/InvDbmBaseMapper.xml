@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvDbmBaseDao">
+	<resultMap id="invDbmBaseResult" type="com.haier.stock.model.InvDbmBase">
+		<result property="estorge_id" column="estorge_id" />
+		<result property="base_code" column="base_code" />
+		<result property="base_name" column="base_name" />
+		<result property="transport_prescription" column="transport_prescription" />
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_time" column="update_time" />
+	</resultMap>
+	<select id="selectInvDbmBaseItem" parameterType="Map"
+		resultMap="invDbmBaseResult">
+		SELECT
+		estorge_id,
+		base_code,
+		base_name,
+		transport_prescription,
+		create_user,
+		create_time,
+		update_user,
+		update_time
+		FROM
+		inv_dbmbase
+		WHERE 1=1
+		<if test="estorge_id != null and estorge_id != ''">
+			AND estorge_id = #{estorge_id}
+		</if>
+		<if test="base_code != null and base_code != ''">
+			AND base_code = #{base_code}
+		</if>
+	</select>
+
+	<select id="findAllBaseStorage" parameterType="Map" resultType="java.lang.String">
+		SELECT
+		base_code
+		FROM
+		inv_dbmbase
+		WHERE 1=1
+		<if test="base_code != null and base_code != ''">
+			base_code = #{base_code}
+		</if>
+		group by base_code
+	</select>
+</mapper>

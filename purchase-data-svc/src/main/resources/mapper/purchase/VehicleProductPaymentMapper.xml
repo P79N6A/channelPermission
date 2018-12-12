@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.vehcile.VehicleProductPaymentDao">
+
+    <!-- =========================================================== -->
+    <!-- 定义resultMap -->
+    <!-- =========================================================== -->
+    <resultMap id="productPaymentMap" type="com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO">
+        <result column="id" property="id" jdbcType="DECIMAL"/>
+        <result column="product_group" property="productGroup" jdbcType="VARCHAR"/>
+        <result column="product_group_name" property="productGroupName" jdbcType="VARCHAR"/>
+        <result column="payment_code" property="paymentCode" jdbcType="VARCHAR"/>
+        <result column="payment_name" property="paymentName" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+        <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR"/>
+        <result column="last_update_time" property="lastUpdateTime" jdbcType="DATE"/>
+    </resultMap>
+
+    <!-- =========================================================== -->
+    <!-- 公共变量定义 -->
+    <!-- =========================================================== -->
+    <!-- oracle 分页头部 -->
+    <sql id="pagination_Head">
+    <![CDATA[
+        select * from ( select row_.*, rownum rownum_ from (
+        ]]>
+  </sql>
+    <!-- oracle 分页尾部 -->
+    <sql id="pagination_Tail">
+    <![CDATA[
+        ) row_ where rownum < (#{pager.page} * #{pager.rows} +1) ) where rownum_ >= ((#{pager.page} -1) * #{pager.rows} +1)
+        ]]>
+  </sql>
+    <!-- count * from -->
+    <sql id="count_Start_Head">
+    <![CDATA[
+        select count(1) from (
+        ]]>
+  </sql>
+    <sql id="count_Start_Tail">
+    <![CDATA[
+        )
+        ]]>
+  </sql>
+    <sql id="pagination_OrderBy">
+        <if test="pager.sort != null and pager.sort !=''">
+            ORDER BY ${pager.sort} ${pager.order}
+        </if>
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+  id
+  ,product_group
+  ,product_group_name
+  ,payment_code
+  ,payment_name
+  ,create_by
+  ,create_time
+  ,last_update_by
+  ,last_update_time
+  </sql>
+
+    <!-- 查询条件 -->
+    <sql id="where_fragement">
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id  = #{entity.id} ]]>
+            </if>
+            <if test="entity.productGroup != null and entity.productGroup !='' ">
+                <![CDATA[ and product_group  LIKE '%' || #{entity.productGroup} ||'%']]>
+            </if>
+            <if test="entity.productGroupName != null and entity.productGroupName !='' ">
+                <![CDATA[ and product_group_name  LIKE '%' || #{entity.productGroupName} ||'%']]>
+            </if>
+            <if test="entity.paymentCode != null and entity.paymentCode !='' ">
+                <![CDATA[ and payment_code  LIKE '%' || #{entity.paymentCode} ||'%']]>
+            </if>
+            <if test="entity.paymentName != null and entity.paymentName !='' ">
+                <![CDATA[ and payment_name  LIKE '%' || #{entity.paymentName} ||'%']]>
+            </if>
+            <if test="entity.createBy != null and entity.createBy !='' ">
+                <![CDATA[ and create_by  LIKE '%' || #{entity.createBy} ||'%']]>
+            </if>
+            <if test="entity.createTime != null ">
+                <![CDATA[ and create_time  = #{entity.createTime} ]]>
+            </if>
+            <if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+                <![CDATA[ and last_update_by  LIKE '%' || #{entity.lastUpdateBy} ||'%']]>
+            </if>
+            <if test="entity.lastUpdateTime != null ">
+                <![CDATA[ and last_update_time  = #{entity.lastUpdateTime} ]]>
+            </if>
+        </if>
+    </sql>
+
+    <!-- 相等查询条件 -->
+    <sql id="where_fragement_equals">
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id  = #{entity.id} ]]>
+            </if>
+            <if test="entity.productGroup != null and entity.productGroup !='' ">
+                <![CDATA[ and product_group  = #{entity.productGroup} ]]>
+            </if>
+            <if test="entity.productGroupName != null and entity.productGroupName !='' ">
+                <![CDATA[ and product_group_name  = #{entity.productGroupName} ]]>
+            </if>
+            <if test="entity.paymentCode != null and entity.paymentCode !='' ">
+                <![CDATA[ and payment_code  = #{entity.paymentCode} ]]>
+            </if>
+            <if test="entity.paymentName != null and entity.paymentName !='' ">
+                <![CDATA[ and payment_name  = #{entity.paymentName} ]]>
+            </if>
+            <if test="entity.createBy != null and entity.createBy !='' ">
+                <![CDATA[ and create_by  = #{entity.createBy} ]]>
+            </if>
+            <if test="entity.createTime != null ">
+                <![CDATA[ and create_time  = #{entity.createTime} ]]>
+            </if>
+            <if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+                <![CDATA[ and last_update_by  = #{entity.lastUpdateBy} ]]>
+            </if>
+            <if test="entity.lastUpdateTime != null ">
+                <![CDATA[ and last_update_time  = #{entity.lastUpdateTime} ]]>
+            </if>
+        </if>
+    </sql>
+
+    <!-- =========================================================== -->
+    <!-- Mapper中的基本增删改查方法                                                                                                                                                       -->
+    <!-- =========================================================== -->
+
+    <!-- 根据id查询 -->
+    <select id="getOneById" resultMap="productPaymentMap" parameterType="Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_payment
+        WHERE ID = #{id}
+    </select>
+
+    <!-- 根据Condition查询 -->
+    <select id="getOneByCondition" resultMap="productPaymentMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_payment
+        <include refid="where_fragement_equals"/>
+    </select>
+
+    <!-- 获取LIST -->
+    <select id="getList" resultMap="productPaymentMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_payment
+    </select>
+
+
+    <!-- 查询page -->
+    <select id="getPageByCondition" resultMap="productPaymentMap">
+        <include refid="pagination_Head"/>
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_payment
+        <include refid="where_fragement"/>
+        <include refid="pagination_OrderBy"/>
+        <include refid="pagination_Tail"/>
+    </select>
+
+    <!--查询总条数 -->
+    <select id="countByCondition" parameterType="com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO" resultType="long">
+        <include refid="count_Start_Head"/>
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_payment
+        <include refid="where_fragement"/>
+        <include refid="count_Start_Tail"/>
+    </select>
+
+    <!-- 查询list -->
+    <select id="listByCondition" resultMap="productPaymentMap" parameterType="com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_payment
+        <include refid="where_fragement"/>
+    </select>
+
+    <!-- 插入全字段 -->
+    <insert id="insertAllColumn" parameterType="com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO">
+        INSERT INTO product_payment (
+        <include refid="Base_Column_List"/>
+        )VALUES(
+        #{id,jdbcType=DECIMAL}
+        ,#{productGroup,jdbcType=VARCHAR}
+        ,#{productGroupName,jdbcType=VARCHAR}
+        ,#{paymentCode,jdbcType=VARCHAR}
+        ,#{paymentName,jdbcType=VARCHAR}
+        ,#{createBy,jdbcType=VARCHAR}
+        ,#{createTime,jdbcType=DATE}
+        ,#{lastUpdateBy,jdbcType=VARCHAR}
+        ,#{lastUpdateTime,jdbcType=DATE}
+        )
+    </insert>
+
+    <!-- 插入非空字段 -->
+    <insert id="insertSelective" parameterType="com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO">
+        INSERT INTO product_payment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !='' ">
+                <![CDATA[ id, ]]>
+            </if>
+            <if test="productGroup != null and productGroup !='' ">
+                <![CDATA[ product_group, ]]>
+            </if>
+            <if test="productGroupName != null and productGroupName !='' ">
+                <![CDATA[ product_group_name, ]]>
+            </if>
+            <if test="paymentCode != null and paymentCode !='' ">
+                <![CDATA[ payment_code, ]]>
+            </if>
+            <if test="paymentName != null and paymentName !='' ">
+                <![CDATA[ payment_name, ]]>
+            </if>
+            <if test="createBy != null and createBy !='' ">
+                <![CDATA[ create_by, ]]>
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[ create_time, ]]>
+            </if>
+            <if test="lastUpdateBy != null and lastUpdateBy !='' ">
+                <![CDATA[ last_update_by, ]]>
+            </if>
+            <if test="lastUpdateTime != null ">
+                <![CDATA[ last_update_time, ]]>
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !='' ">
+                <![CDATA[ #{id,jdbcType=DECIMAL}, ]]>
+            </if>
+            <if test="productGroup != null and productGroup !='' ">
+                <![CDATA[ #{productGroup,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="productGroupName != null and productGroupName !='' ">
+                <![CDATA[ #{productGroupName,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="paymentCode != null and paymentCode !='' ">
+                <![CDATA[ #{paymentCode,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="paymentName != null and paymentName !='' ">
+                <![CDATA[ #{paymentName,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="createBy != null and createBy !='' ">
+                <![CDATA[ #{createBy,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[ #{createTime,jdbcType=DATE}, ]]>
+            </if>
+            <if test="lastUpdateBy != null and lastUpdateBy !='' ">
+                <![CDATA[ #{lastUpdateBy,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="lastUpdateTime != null ">
+                <![CDATA[ #{lastUpdateTime,jdbcType=DATE}, ]]>
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 逻辑删除,根据主键设置active_flag ='0' -->
+    <update id="deleteLogicalById" parameterType="com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO">
+    UPDATE product_payment
+    SET ACTIVE_FLAG = '0'
+    ,LAST_UPD_BY = #{entity.lastUpdBy,jdbcType=VARCHAR}
+    ,LAST_UPD_DATE = #{entity.lastUpdDate,jdbcType=DATE}
+    ,REMARK = #{entity.remark,jdbcType=VARCHAR}
+    WHERE ID = #{entity.id}
+  </update>
+
+    <!-- 逻辑删除,根据主键batch设置active_flag ='0' -->
+    <update id="deleteLogicalBatchByIds">
+        UPDATE product_payment
+        SET ACTIVE_FLAG = '0'
+        ,LAST_UPD_BY = #{entity.lastUpdBy,jdbcType=VARCHAR}
+        ,LAST_UPD_DATE = #{entity.lastUpdDate,jdbcType=DATE}
+        ,REMARK = #{entity.remark,jdbcType=VARCHAR}
+        WHERE ID IN
+        <foreach collection="ids" item="id" open="(" separator=","
+                 close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--  修改有值列  -->
+    <update id="updateSelectiveById" parameterType="com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO">
+        UPDATE product_payment
+        <set>
+            <if test="entity!=null">
+                <if test="entity.id != null and entity.id !='' ">
+                    <![CDATA[ id = #{entity.id}, ]]>
+                </if>
+                <if test="entity.productGroup != null and entity.productGroup !='' ">
+                    <![CDATA[ product_group = #{entity.productGroup}, ]]>
+                </if>
+                <if test="entity.productGroupName != null and entity.productGroupName !='' ">
+                    <![CDATA[ product_group_name = #{entity.productGroupName}, ]]>
+                </if>
+                <if test="entity.paymentCode != null and entity.paymentCode !='' ">
+                    <![CDATA[ payment_code = #{entity.paymentCode}, ]]>
+                </if>
+                <if test="entity.paymentName != null and entity.paymentName !='' ">
+                    <![CDATA[ payment_name = #{entity.paymentName}, ]]>
+                </if>
+                <if test="entity.createBy != null and entity.createBy !='' ">
+                    <![CDATA[ create_by = #{entity.createBy}, ]]>
+                </if>
+                <if test="entity.createTime != null ">
+                    <![CDATA[ create_time = #{entity.createTime}, ]]>
+                </if>
+                <if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+                    <![CDATA[ last_update_by = #{entity.lastUpdateBy}, ]]>
+                </if>
+                <if test="entity.lastUpdateTime != null ">
+                    <![CDATA[ last_update_time = #{entity.lastUpdateTime}, ]]>
+                </if>
+            </if>
+        </set>
+        WHERE ID = #{entity.id}
+    </update>
+
+    <!--  修改所有列  -->
+    <update id="updateAllColumnById" parameterType="com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO">
+        UPDATE product_payment
+        <set>
+            <if test="entity!=null">
+
+                product_group = #{entity.productGroup,jdbcType=VARCHAR}
+                ,product_group_name = #{entity.productGroupName,jdbcType=VARCHAR}
+                ,payment_code = #{entity.paymentCode,jdbcType=VARCHAR}
+                ,payment_name = #{entity.paymentName,jdbcType=VARCHAR}
+                ,create_by = #{entity.createBy,jdbcType=VARCHAR}
+                ,create_time = #{entity.createTime,jdbcType=DATE}
+                ,last_update_by = #{entity.lastUpdateBy,jdbcType=VARCHAR}
+                ,last_update_time = #{entity.lastUpdateTime,jdbcType=DATE}
+            </if>
+        </set>
+        WHERE ID = #{entity.id}
+    </update>
+
+</mapper>

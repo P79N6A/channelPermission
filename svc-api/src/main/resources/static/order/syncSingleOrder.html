@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>tbOrderSyncSet</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body" style="background-color: #f0f0f0">
+
+
+<div id="datagridToolbar_tbOrderSyncSet">
+    <div id="autosyncTBorder" class="param-form"
+         style="background-color:#d2e0f0;padding-top: 15px;padding-bottom: 5px; ">
+        <span style="padding-left: 15px;">手动同步淘宝订单</span>
+    </div>
+    <form id="paramForm_tbOrderSyncSet" class="param-form" style="background-color: white;padding-bottom: 10px;">
+        <p style="color:red;margin-left: 15px">注意：此功能暂时不能同步淘宝分销平台的订单。</p>
+        <p style="color:red;margin-left: 15px">您输入的淘宝订单编号务必保证是淘宝上订单的状态为“等待发货”状态的订单，否则不仅不会同步，还会影响正常订单的同步。</p>
+        <div class="search-panel" style="margin-top: 30px;">
+
+            <div class="search-row" style="width: 370px;margin-left: 60px;">
+                <span class="search-row-label">订单来源</span>
+                <select name="configId" id="configId" class="easyui-combobox" style="width: 200px;">
+                    <option value="1">海尔官方淘宝旗舰店</option>
+                    <option value="3">海尔生活电器专卖店</option>
+                    <option value="4">海尔热水器专卖店</option>
+                    <option value="6">淘宝手机淘宝店</option>
+                    <option value="7">淘宝网统帅日日顺乐家专卖店</option>
+                    <option value="8">海尔官方旗舰店:营销02(分销平台)</option>
+                    <option value="9">海尔PAD专卖店</option>
+                    <option value="10">海尔生活家电旗舰店</option>
+                    <option value="11">海尔生活家电旗舰店分销平台</option>
+                    <option value="12">海尔新宝旗舰店</option>
+                    <option value="13">海尔新宝旗舰店分销平台</option>
+                    <option value="15">统帅日日顺分销平台</option>
+                    <option value="16">mooka模卡官方旗舰店</option>
+                    <option value="17">海尔洗衣机官方旗舰店</option>
+                    <option value="18">海尔冰冷官方旗舰店</option>
+                    <option value="21">海尔空调官方旗舰店</option>
+                    <option value="22">村淘海尔商家</option>
+                    <option value="23">海尔官方旗舰店供应商</option>
+                    <option value="26">模卡淘宝官方旗舰店分销店铺</option>
+                    <option value="27">海尔卡萨帝旗舰店</option>
+                    <option value="28">海尔电视旗舰店</option>
+                    <option value="29">海尔厨房大电旗舰店
+                    </option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">淘宝订单编号</span>
+                <input class="easyui-textbox" name="orderSn"/>
+            </div>
+        </div>
+        <div style="padding-top: 50px;text-align: center;">
+            <a href="#" class="easyui-linkbutton" id="syncBtn_tbOrderSyncSet"
+               data-options="iconCls:'icon-reload',plain:false">确定同步</a>
+        </div>
+    </form>
+    <div class="action-footer" style="padding-top: 15px;text-align: center;">
+        Powered by PEC<br>
+     </div>
+</div>
+</body>
+</html>

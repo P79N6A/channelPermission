@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.vehcile.MaterielInfoDao">
+
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="materielInfoMap"
+		type="com.haier.purchase.data.model.vehcile.MaterielInfoDTO">
+		<result column="materiel_id" property="materielId" jdbcType="DECIMAL" />
+		<result column="materiel_code" property="materielCode"
+			jdbcType="VARCHAR" />
+		<result column="materiel_name" property="materielName"
+			jdbcType="VARCHAR" />
+		<result column="product_group_code" property="productGroupCode"
+			jdbcType="VARCHAR" />
+		<result column="product_group_name" property="productGroupName"
+			jdbcType="VARCHAR" />
+		<result column="brand_code" property="brandCode" jdbcType="VARCHAR" />
+		<result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+		<result column="volume" property="volume" jdbcType="DECIMAL" />
+		<result column="base_code" property="baseCode" jdbcType="VARCHAR" />
+		<result column="base_name" property="baseName" jdbcType="VARCHAR" />
+		<result column="delivery_to_code" property="deliveryToCode"
+			jdbcType="VARCHAR" />
+		<result column="status" property="status" />
+		<result column="maxqty" property="maxqty" />
+		<result column="minqty" property="minqty" />
+	</resultMap>
+
+	<!-- =========================================================== -->
+	<!-- 公共变量定义 -->
+	<!-- =========================================================== -->
+	<!-- oracle 分页头部 -->
+	<sql id="pagination_Head">
+    <![CDATA[
+
+
+        select * from ( select row_.*, rownum rownum_ from (
+
+
+        ]]>
+	</sql>
+	<!-- oracle 分页尾部 -->
+	<sql id="pagination_Tail">
+    <![CDATA[
+
+
+        ) row_ where rownum < (#{pager.page} * #{pager.rows} +1) ) where rownum_ >= ((#{pager.page} -1) * #{pager.rows} +1)
+
+
+        ]]>
+	</sql>
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+    <![CDATA[
+
+
+        select count(1) from (
+
+
+        ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+    <![CDATA[
+
+
+        )
+
+
+        ]]>
+	</sql>
+	<sql id="pagination_OrderBy">
+		<if test="pager.sort != null and pager.sort !=''">
+			ORDER BY ${pager.sort} ${pager.order}
+		</if>
+	</sql>
+
+	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		materiel_id
+		,materiel_code
+		,materiel_name
+		,product_group_code
+		,product_group_name
+		,brand_code
+		,brand_name
+		,volume
+		,base_code
+		,base_name
+		,delivery_to_code
+		,maxqty
+		,minqty
+	</sql>
+
+	<!-- 查询条件 -->
+	<sql id="where_fragement">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.materielId != null and entity.materielId !='' ">
+                <![CDATA[ and materiel_id  = #{entity.materielId} ]]>
+			</if>
+			<if test="entity.materielCode != null and entity.materielCode !='' ">
+                <![CDATA[ and materiel_code  LIKE '%' || #{entity.materielCode} ||'%']]>
+			</if>
+			<if test="entity.materielName != null and entity.materielName !='' ">
+                <![CDATA[ and materiel_name  LIKE '%' || #{entity.materielName} ||'%']]>
+			</if>
+			<if
+				test="entity.productGroupCode != null and entity.productGroupCode !='' ">
+                <![CDATA[ and product_group_code  LIKE '%' || #{entity.productGroupCode} ||'%']]>
+			</if>
+			<if
+				test="entity.productGroupName != null and entity.productGroupName !='' ">
+                <![CDATA[ and product_group_name  LIKE '%' || #{entity.productGroupName} ||'%']]>
+			</if>
+			<if test="entity.brandCode != null and entity.brandCode !='' ">
+                <![CDATA[ and brand_code  LIKE '%' || #{entity.brandCode} ||'%']]>
+			</if>
+			<if test="entity.brandName != null and entity.brandName !='' ">
+                <![CDATA[ and brand_name  LIKE '%' || #{entity.brandName} ||'%']]>
+			</if>
+			<if test="entity.volume != null and entity.volume !='' ">
+                <![CDATA[ and volume  = #{entity.volume} ]]>
+			</if>
+			<if test="entity.baseCode != null and entity.baseCode !='' ">
+                <![CDATA[ and base_code  LIKE '%' || #{entity.baseCode} ||'%']]>
+			</if>
+			<if test="entity.baseName != null and entity.baseName !='' ">
+                <![CDATA[ and base_name  LIKE '%' || #{entity.baseName} ||'%']]>
+			</if>
+			<if test="entity.deliveryToCode != null and entity.deliveryToCode !='' ">
+                <![CDATA[ and delivery_to_code  LIKE '%' || #{entity.deliveryToCode} ||'%']]>
+			</if>
+		</if>
+	</sql>
+
+	<!-- 相等查询条件 -->
+	<sql id="where_fragement_equals">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.materielId != null and entity.materielId !='' ">
+                <![CDATA[ and materiel_id  = #{entity.materielId} ]]>
+			</if>
+			<if
+				test="entity.materielCode != null and entity.materielCode !='' and entity.materielName != null and entity.materielName !='' ">
+                <![CDATA[ and (materiel_code like CONCAT('%', #{entity.materielCode}, '%') or materiel_name like CONCAT('%', #{entity.materielName}, '%')) ]]>
+			</if>
+			<if
+				test="entity.productGroupCode != null and entity.productGroupCode !='' ">
+                <![CDATA[ and product_group_code  = #{entity.productGroupCode} ]]>
+			</if>
+			<if
+				test="entity.productGroupName != null and entity.productGroupName !='' ">
+                <![CDATA[ and product_group_name  = #{entity.productGroupName} ]]>
+			</if>
+			<if test="entity.brandCode != null and entity.brandCode !='' ">
+                <![CDATA[ and brand_code  = #{entity.brandCode} ]]>
+			</if>
+			<if test="entity.brandName != null and entity.brandName !='' ">
+                <![CDATA[ and brand_name  = #{entity.brandName} ]]>
+			</if>
+			<if test="entity.volume != null and entity.volume !='' ">
+                <![CDATA[ and volume  = #{entity.volume} ]]>
+			</if>
+			<if test="entity.baseCode != null and entity.baseCode !='' ">
+                <![CDATA[ and base_code  = #{entity.baseCode} ]]>
+			</if>
+			<if test="entity.baseName != null and entity.baseName !='' ">
+                <![CDATA[ and base_name  = #{entity.baseName} ]]>
+			</if>
+			<if test="entity.deliveryToCode != null and entity.deliveryToCode !='' ">
+                <![CDATA[ and delivery_to_code  = #{entity.deliveryToCode} ]]>
+			</if>
+		</if>
+	</sql>
+
+	<!-- =========================================================== -->
+	<!-- Mapper中的基本增删改查方法 -->
+	<!-- =========================================================== -->
+
+	<!-- 根据id查询 -->
+	<select id="getOneById" resultMap="materielInfoMap"
+		parameterType="Long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM materiel_info
+		WHERE ID = #{id}
+	</select>
+
+	<!-- 根据Condition查询 -->
+	<select id="getOneByCondition" resultMap="materielInfoMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM materiel_info
+		<include refid="where_fragement_equals" />
+	</select>
+
+	<select id="selectByKeys" resultMap="materielInfoMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM materiel_info where materiel_id in
+		<foreach collection="keys" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</select>
+
+	<!-- 查询page -->
+	<select id="getPageByCondition" resultMap="materielInfoMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM materiel_info
+		<include refid="where_fragement_equals" />
+		<include refid="pagination" />
+	</select>
+
+	<!--分页count -->
+	<select id="getPagerCount" resultType="long"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		select count(1) from materiel_info
+		<include refid="where_fragement_equals" />
+	</select>
+
+	<!--查询总条数 -->
+	<select id="countByCondition"
+		parameterType="com.haier.purchase.data.model.vehcile.MaterielInfoDTO"
+		resultType="long">
+		<include refid="count_Start_Head" />
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM materiel_info
+		<include refid="where_fragement" />
+		<include refid="count_Start_Tail" />
+	</select>
+
+	<!-- 查询list -->
+	<select id="getListByCondition" resultMap="materielInfoMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM materiel_info
+		<include refid="where_fragement" />
+	</select>
+	<!-- 根据物料编码、基地编码、送达方编码获取 -->
+	<select id="getListByParams" resultMap="materielInfoMap" parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM materiel_info
+		where materiel_code = #{materielCode}
+		and base_code = #{baseCode}
+		and delivery_to_code = #{deliveryToCode}
+	</select>
+	<!-- 插入全字段 -->
+	<insert id="insertAllColumn"
+		parameterType="com.haier.purchase.data.model.vehcile.MaterielInfoDTO">
+		INSERT INTO materiel_info (
+		<include refid="Base_Column_List" />
+		)VALUES(
+		#{materielId,jdbcType=DECIMAL}
+		,#{materielCode,jdbcType=VARCHAR}
+		,#{materielName,jdbcType=VARCHAR}
+		,#{productGroupCode,jdbcType=VARCHAR}
+		,#{productGroupName,jdbcType=VARCHAR}
+		,#{brandCode,jdbcType=VARCHAR}
+		,#{brandName,jdbcType=VARCHAR}
+		,#{volume,jdbcType=DECIMAL}
+		,#{baseCode,jdbcType=VARCHAR}
+		,#{baseName,jdbcType=VARCHAR}
+		,#{deliveryToCode,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 批量插入 -->
+	<insert id="batchAdd">
+		INSERT INTO materiel_info(
+		materiel_code,materiel_name,status,
+		product_group_code,product_group_name,brand_code,
+		brand_name,volume,base_code,base_name,delivery_to_code,
+		active_flag,create_by,create_time,last_update_by,
+		last_update_time,maxqty,minqty
+		)
+		VALUES
+		<foreach collection="infoList" item="item" separator=",">
+			(#{item.materielCode},#{item.materielName},#{item.status},#{item.productGroupCode},#{item.productGroupName},
+			#{item.brandCode},#{item.brandName},#{item.volume},#{item.baseCode},#{item.baseName},#{item.deliveryToCode},
+			#{item.activeFlag},#{item.createdBy},now(),#{item.lastUpdBy},now(),#{item.maxqty},#{item.minqty}
+			)
+		</foreach>
+	</insert>
+
+	<!-- 插入非空字段 -->
+	<insert id="insertSelective"
+		parameterType="com.haier.purchase.data.model.vehcile.MaterielInfoDTO">
+		INSERT INTO materiel_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="materielId != null and materielId !='' ">
+                <![CDATA[ materiel_id, ]]>
+			</if>
+			<if test="materielCode != null and materielCode !='' ">
+                <![CDATA[ materiel_code, ]]>
+			</if>
+			<if test="materielName != null and materielName !='' ">
+                <![CDATA[ materiel_name, ]]>
+			</if>
+			<if test="productGroupCode != null and productGroupCode !='' ">
+                <![CDATA[ product_group_code, ]]>
+			</if>
+			<if test="productGroupName != null and productGroupName !='' ">
+                <![CDATA[ product_group_name, ]]>
+			</if>
+			<if test="brandCode != null and brandCode !='' ">
+                <![CDATA[ brand_code, ]]>
+			</if>
+			<if test="brandName != null and brandName !='' ">
+                <![CDATA[ brand_name, ]]>
+			</if>
+			<if test="volume != null and volume !='' ">
+                <![CDATA[ volume, ]]>
+			</if>
+			<if test="baseCode != null and baseCode !='' ">
+                <![CDATA[ base_code, ]]>
+			</if>
+			<if test="baseName != null and baseName !='' ">
+                <![CDATA[ base_name, ]]>
+			</if>
+			<if test="deliveryToCode != null and deliveryToCode !='' ">
+                <![CDATA[ delivery_to_code, ]]>
+			</if>
+			<if test="status != null">
+                <![CDATA[ status, ]]>
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="materielId != null and materielId !='' ">
+                <![CDATA[ #{materielId,jdbcType=DECIMAL}, ]]>
+			</if>
+			<if test="materielCode != null and materielCode !='' ">
+                <![CDATA[ #{materielCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="materielName != null and materielName !='' ">
+                <![CDATA[ #{materielName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="productGroupCode != null and productGroupCode !='' ">
+                <![CDATA[ #{productGroupCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="productGroupName != null and productGroupName !='' ">
+                <![CDATA[ #{productGroupName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="brandCode != null and brandCode !='' ">
+                <![CDATA[ #{brandCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="brandName != null and brandName !='' ">
+                <![CDATA[ #{brandName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="volume != null and volume !='' ">
+                <![CDATA[ #{volume,jdbcType=DECIMAL}, ]]>
+			</if>
+			<if test="baseCode != null and baseCode !='' ">
+                <![CDATA[ #{baseCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="baseName != null and baseName !='' ">
+                <![CDATA[ #{baseName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="deliveryToCode != null and deliveryToCode !='' ">
+                <![CDATA[ #{deliveryToCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="status != null">
+                <![CDATA[ #{status}]]>
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 逻辑删除,根据主键设置active_flag ='0' -->
+	<update id="deleteLogicalById"
+		parameterType="com.haier.purchase.data.model.vehcile.MaterielInfoDTO">
+		UPDATE materiel_info
+		SET ACTIVE_FLAG = '0'
+		,LAST_UPD_BY =
+		#{entity.lastUpdBy,jdbcType=VARCHAR}
+		,LAST_UPD_DATE =
+		#{entity.lastUpdDate,jdbcType=DATE}
+		,REMARK =
+		#{entity.remark,jdbcType=VARCHAR}
+		WHERE ID = #{entity.id}
+	</update>
+
+	<!-- 逻辑删除,根据主键batch设置active_flag ='0' -->
+	<update id="deleteLogicalBatchByIds">
+		UPDATE materiel_info
+		SET ACTIVE_FLAG = '0'
+		,LAST_UPD_BY =
+		#{entity.lastUpdBy,jdbcType=VARCHAR}
+		,LAST_UPD_DATE =
+		#{entity.lastUpdDate,jdbcType=DATE}
+		,REMARK =
+		#{entity.remark,jdbcType=VARCHAR}
+		WHERE ID IN
+		<foreach collection="ids" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<!-- 修改有值列 -->
+	<update id="updateSelectiveById"
+		parameterType="com.haier.purchase.data.model.vehcile.MaterielInfoDTO">
+		UPDATE materiel_info
+		<set>
+			<if test="entity!=null">
+				<if test="entity.materielId != null and entity.materielId !='' ">
+                    <![CDATA[ materiel_id = #{entity.materielId}, ]]>
+				</if>
+				<if test="entity.materielCode != null and entity.materielCode !='' ">
+                    <![CDATA[ materiel_code = #{entity.materielCode}, ]]>
+				</if>
+				<if test="entity.materielName != null and entity.materielName !='' ">
+                    <![CDATA[ materiel_name = #{entity.materielName}, ]]>
+				</if>
+				<if
+					test="entity.productGroupCode != null and entity.productGroupCode !='' ">
+                    <![CDATA[ product_group_code = #{entity.productGroupCode}, ]]>
+				</if>
+				<if
+					test="entity.productGroupName != null and entity.productGroupName !='' ">
+                    <![CDATA[ product_group_name = #{entity.productGroupName}, ]]>
+				</if>
+				<if test="entity.brandCode != null and entity.brandCode !='' ">
+                    <![CDATA[ brand_code = #{entity.brandCode}, ]]>
+				</if>
+				<if test="entity.brandName != null and entity.brandName !='' ">
+                    <![CDATA[ brand_name = #{entity.brandName}, ]]>
+				</if>
+				<if test="entity.volume != null and entity.volume !='' ">
+                    <![CDATA[ volume = #{entity.volume}, ]]>
+				</if>
+				<if test="entity.baseCode != null and entity.baseCode !='' ">
+                    <![CDATA[ base_code = #{entity.baseCode}, ]]>
+				</if>
+				<if test="entity.baseName != null and entity.baseName !='' ">
+                    <![CDATA[ base_name = #{entity.baseName}, ]]>
+				</if>
+				<if test="entity.deliveryToCode != null and entity.deliveryToCode !='' ">
+                    <![CDATA[ delivery_to_code = #{entity.deliveryToCode}, ]]>
+				</if>
+			</if>
+		</set>
+		WHERE ID = #{entity.id}
+	</update>
+
+	<!-- 修改所有列 -->
+	<update id="updateAllColumnById"
+		parameterType="com.haier.purchase.data.model.vehcile.MaterielInfoDTO">
+		UPDATE materiel_info
+		<set>
+			<if test="entity!=null">
+
+				materiel_code = #{entity.materielCode,jdbcType=VARCHAR}
+				,materiel_name = #{entity.materielName,jdbcType=VARCHAR}
+				,product_group_code = #{entity.productGroupCode,jdbcType=VARCHAR}
+				,product_group_name = #{entity.productGroupName,jdbcType=VARCHAR}
+				,brand_code = #{entity.brandCode,jdbcType=VARCHAR}
+				,brand_name =
+				#{entity.brandName,jdbcType=VARCHAR}
+				,volume =
+				#{entity.volume,jdbcType=DECIMAL}
+				,base_code =
+				#{entity.baseCode,jdbcType=VARCHAR}
+				,base_name =
+				#{entity.baseName,jdbcType=VARCHAR}
+				,delivery_to_code =
+				#{entity.deliveryToCode,jdbcType=VARCHAR}
+			</if>
+		</set>
+		WHERE ID = #{entity.id}
+	</update>
+	<!-- 定时查询 -->
+	<select id="getVehicleInfo" resultMap="materielInfoMap"
+		parameterType="Integer">
+		SELECT DISTINCT
+		materiel_code
+		FROM
+		materiel_info
+		WHERE
+		STATUS = #{status}
+	</select>
+
+	<!-- 通过物料号修改对应的体积 -->
+	<!-- <update id="updateMaterielInfo" parameterType="java.util.List"> <foreach 
+		collection="materielInfoList" item="item" index="index" open="" close="" 
+		separator=";"> update materiel_info <set> volume=${item.name}, </set> <set> 
+		status=1 </set> where id = ${item.id} </foreach> </update> -->
+
+	<update id="updateMaterielInfo">
+		update materiel_info set VOLUME = #{volume}, status =
+		1 where materiel_code = #{materielCode}
+	</update>
+	<delete id="deleteMateriel">
+		truncate table materiel_code
+	</delete>
+	
+	<delete id="truncateMaterielInfo">
+		truncate table materiel_info
+	</delete>
+</mapper>

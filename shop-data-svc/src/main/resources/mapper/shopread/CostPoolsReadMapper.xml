@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.CostPoolsReadDao">
+	<resultMap id="costPoolsResult" type="com.haier.shop.model.CostPools">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="addTime" column="addTime" />
+		<result property="masterName" column="masterName" />
+		<result property="type" column="type" />
+		<result property="yearMonth" column="yearMonth" />
+		<result property="batch" column="batch" />
+		<result property="channel" column="channel" />
+		<result property="chanYe" column="chanYe" />
+		<result property="amount" column="amount" />
+		<result property="balanceAmount" column="balanceAmount" />
+		<result property="editTime" column="editTime" />
+		<result property="remark" column="remark" />
+	</resultMap>
+
+	<select id="getCouponCostPoolByChannelAndChanYeAndYearMonth" parameterType="java.lang.String" resultMap="costPoolsResult">
+		select `id`,`siteId`,`addTime`,`masterName`,`type`,`yearMonth`,`batch`,`channel`,chanYe,`amount`,`balanceAmount`,`editTime`,`remark` 
+		from CostPools
+		where channel = #{channel} and chanYe = #{chanYe} and yearMonth = #{yearMonth} and type = 1 and amount != balanceAmount
+		order by batch
+	</select>
+	
+	<select id="getProductCate" resultType="java.util.Map">
+		select id,parentId,cateName from ProductCates
+	</select>
+	
+	<select id="getBrand" resultType="java.util.Map">
+		select id,brandName from Brands
+	</select>
+
+</mapper>

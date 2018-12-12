@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.RuntimeParametersDAO">
+	<select id="getRuntimeParameterByKey" parameterType="java.lang.String"  resultType="com.haier.purchase.data.model.RuntimeParametersVO">
+		select `key`,`value`
+		from runtime_parameters_t
+		where `key`=#{key}
+	</select>
+	
+	<select id="getRuntimeParameters" resultType="com.haier.purchase.data.model.RuntimeParametersVO">
+		select `key`,`value`
+		from runtime_parameters_t
+	</select>
+    
+    <insert id="insertRuntimeParameters" parameterType="com.haier.purchase.data.model.RuntimeParametersVO">
+    	insert into runtime_parameters_t(`key`,`value`) values(#{key},#{value});
+    </insert>
+    <update id="updateRuntimeParameters" parameterType="com.haier.purchase.data.model.RuntimeParametersVO">
+		UPDATE runtime_parameters_t
+		SET	
+			`value` = #{value}
+		WHERE 
+			`key` = #{key}
+    </update>
+</mapper>

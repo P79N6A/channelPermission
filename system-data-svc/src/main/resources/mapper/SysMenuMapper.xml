@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.system.dao.SysMenuDao">
+	<resultMap id="SysMenuResult" type="com.haier.system.model.SysMenu">
+		<result property="menuId" column="menu_id" />
+		<result property="parentId" column="parent_id" />
+		<result property="menuName" column="menu_name" />
+		<result property="status" column="status" />
+		<result property="orderBy" column="order_by" />
+		<result property="menuItemType" column="menu_item_type" />
+		<result property="menuItemData" column="menu_item_data" />
+		<result property="createUser" column="create_user" />
+		<result property="createTime" column="create_time" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	<select id="loadMenus" parameterType="Integer" resultMap="SysMenuResult">
+		select `menu_id`,`parent_id`,`menu_name`,`status`,`order_by`,`menu_item_type`,`menu_item_data`,`create_user`,`create_time`,`update_user`,`update_time`
+		from `sys_menu`
+		where `menu_id` in
+		<foreach item="id" index="index" collection="ids" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+		order by order_by desc, menu_id
+	</select>
+	<select id="findAllMenus" parameterType="Integer" resultMap="SysMenuResult">
+		select `menu_id`,`parent_id`,`menu_name`,`status`,`order_by`,`menu_item_type`,`menu_item_data`,`create_user`,`create_time`,`update_user`,`update_time`
+		from `sys_menu` WHERE 1 = 1
+		order by `parent_id`,`order_by` desc, menu_id
+	</select>
+
+	<insert id="create" parameterType="com.haier.system.model.SysMenu">
+		insert into `sys_menu`(`parent_id`,`menu_name`,`status`,`order_by`,`menu_item_type`,`menu_item_data`,`create_user`,`create_time`,`update_user`)
+		values(#{parentId},#{menuName},#{status},#{orderBy},#{menuItemType},#{menuItemData},#{createUser},current_timestamp,#{updateUser})
+		<selectKey keyProperty="menuId" resultType="java.lang.Integer" order="AFTER" statementType="STATEMENT">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="com.haier.system.model.SysMenu">
+		update `sys_menu` set `menu_name`=#{menuName},`status`=#{status},`order_by`=#{orderBy}
+			<if test="menuItemType!=null">,`menu_item_type`=#{menuItemType}</if>
+			<if test="menuItemData!=null">,`menu_item_data`=#{menuItemData}</if>
+			,`update_user`=#{updateUser},`update_time`=current_timestamp
+		where `menu_id` = #{menuId}
+	</update>
+	
+	<select id="get" parameterType="Integer" resultMap="SysMenuResult">
+		select `menu_id`,`parent_id`,`menu_name`,`status`,`order_by`,`menu_item_type`,`menu_item_data`,`create_user`,`create_time`,`update_user`,`update_time`
+		from `sys_menu`
+		where `menu_id` = #{menuId}
+	</select>
+
+	<select id="getMenuById" parameterType="Integer" resultMap="SysMenuResult">
+		select
+		`menu_id`,`parent_id`,`menu_name`,`status`,`order_by`,`menu_item_type`,`menu_item_data`,`create_user`,`create_time`,`update_user`,`update_time`
+		from sys_menu  WHERE parent_id = #{Id} AND status = 1 order by order_by desc
+	</select>
+
+	<select id="getMgMenu" parameterType="String" resultMap="SysMenuResult">
+		select
+		`menu_id`,`parent_id`,`menu_name`,`status`,`order_by`,`menu_item_type`,`menu_item_data`,`create_user`,`create_time`,`update_user`,`update_time`
+		from sys_menu  WHERE menu_item_type = #{type} AND status = 1 order by order_by desc
+	</select>
+</mapper>

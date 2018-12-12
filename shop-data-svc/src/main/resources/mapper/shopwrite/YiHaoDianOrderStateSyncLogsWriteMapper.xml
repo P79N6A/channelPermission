@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.YiHaoDianOrderStateSyncLogsWriteDao">
+    <insert id="insert" parameterType="com.haier.shop.model.YiHaoDianOrderStateSyncLogs">
+        insert into `YiHaoDianOrderStateSyncLogs`(`siteId`,`addTime`,`count`,`pushData`,`orderSn`,`outping`,`success`,`returnData`,`errMsg`,`lastTryTime`)
+        values(1,unix_timestamp(),0,'',#{orderSn},#{outping},0,'','',0)
+        <selectKey resultType="Integer" keyProperty="id" order="AFTER"
+                   statementType="STATEMENT">select last_insert_id()</selectKey>
+    </insert>
+    <!--
+    <update id="update" parameterType="com.haier.cbs.eis.entity.YiHaoDianOrderStateSyncLogs">
+        update `YiHaoDianOrderStateSyncLogs` set `siteId`=#{siteId},`addTime`=#{addTime},`count`=#{count},`pushData`=#{pushData},`orderSn`=#{orderSn},`outping`=#{outping},`success`=#{success},`returnData`=#{returnData},`errMsg`=#{errMsg},`lastTryTime`=#{lastTryTime}
+        where `id` = #{id}
+    </update> -->
+</mapper>

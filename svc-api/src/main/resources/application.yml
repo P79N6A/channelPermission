@@ -1,0 +1,52 @@
+server:
+  port: 8081
+ 
+interconn:
+  project: 3W-CBS
+  app: svc-api
+  monitor:
+   url: http://collector.c.haier.net
+   enable: true
+
+spring:
+  mvc:
+    view:
+      suffix: .vm
+  velocity:
+    cache: true
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    enabled: true
+    resource-loader-path: /templates
+    prefix: /
+    suffix: .vm
+
+dubbo:
+  name: svc-api
+  registry: zookeeper://127.0.0.1:2181
+
+spring.dubbo:
+  application.name: consumer
+  registry.address: zookeeper://127.0.0.1:2181
+  timeout: 10000
+  threads: 100
+  heartBeats: 10000
+  scan: com.haier.svc
+
+
+jsondoc:
+  version: 1.0
+  basePath: http://localhost:8081
+  packages: com.haier.svc.api.controller
+  playgroundEnabled: true
+  displayMethodAs: SUMMARY
+
+idm:
+  ldapHost: 10.135.7.142
+  loginDN: cn=hbdmuser,ou=user,o=services
+  loginPassword: hbdm@20170705
+
+secretKey: KeLy8g7qjmnbgWP1
+
+ketValue: RRS,123

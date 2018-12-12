@@ -1,0 +1,47 @@
+<table border="0" cellpadding="0" cellspacing="0" width="70%" >
+		 <thead>
+    		<tr role="row">
+	    		<th class="sorting" style="min-width:70px; text-align:center;">库存地点</th>
+	    		<th class="sorting" style="min-width:70px; text-align:center;">库存地点</th>
+				<th class="sorting" style="min-width:70px; text-align:center;">物料号码</th>
+				<th class="sorting" style="min-width:70px; text-align:center;">物料号码(新)</th>
+				<th class="sorting" style="min-width:70px; text-align:center;">批次编号</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">实物库存</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">在运库存</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">基本计量单位</th>
+				<th class="sorting" style="min-width:50px; text-align:center;">数量</th>
+				<th class="sorting" style="min-width:50px; text-align:center;">单位</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">开票未提</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">可用库存数</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">物料组</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">实物库存体积</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">单位</th>
+    		</tr>
+         </thead>
+		  <tbody role="alert" aria-live="polite" aria-relevant="all">
+		 #set($count=0)
+		#foreach($row in $!rowList)
+			 #if($count%2==0)
+        		<tr>
+    		#else
+        		<tr class="tr-bg">
+			#end
+				    <td style="text-align:center;">$!{row.LGORT1}</td>
+					<td style="text-align:center;">$!{row.LGORT}</td>
+                    <td style="text-align:center;">$!{row.MATNR}</td>
+                    <td style="text-align:center;">$!{row.MATNR_NEW}</td>
+				    <td style="text-align:center;">$!{row.ATWART}</td>
+					<td style="text-align:center;">$!{row.CLABS}</td>
+					<td style="text-align:center;">$!{row.CUMLM}</td>
+					<td style="text-align:center;">$!{row.MEINS}</td>
+					<td style="text-align:center;">$!{row.ZMENGE1}</td>
+					<td style="text-align:center;">$!{row.VRKME}</td>
+					<td style="text-align:center;">$!{row.MENGE1}</td>
+					<td style="text-align:center;">$!{row.MENGE2}</td>
+					<td style="text-align:center;">$!{row.MATKL}</td>
+					<td style="text-align:center;">$!{row.VOLUM}</td>
+					<td style="text-align:center;">$!{row.ZVOLEH}</td>
+				</tr>
+			#end
+		</tbody>
+	</table>

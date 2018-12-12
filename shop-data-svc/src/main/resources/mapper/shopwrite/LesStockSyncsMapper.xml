@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.LesStockSyncsDao">
+	<resultMap id="lesStockSyncsResult" type="com.haier.shop.model.LesStockSyncs">
+		<result property="id" column="id" />
+		<result property="receivedData" column="receivedData" />
+		<result property="addTime" column="addTime" />
+		<result property="isDone" column="isDone" />
+		<result property="doneTime" column="doneTime" />
+		<result property="errorMsg" column="errorMsg" />
+		<result property="isRedone" column="isRedone" />
+		<result property="reDoneSns" column="reDoneSns" />
+	</resultMap>
+	<select id="getUnDoneLesStockSyncs" resultMap="lesStockSyncsResult">
+		select
+		`id`,`receivedData`,`addTime`,`isDone`,`doneTime`,`errorMsg`,`isRedone`,`reDoneSns`
+		from `LesStockSyncs`
+		where `isDone` = 0
+	</select>
+	<insert id="insert" parameterType="com.haier.shop.model.LesStockSyncs">
+		<selectKey resultType="Integer" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID() 
+		</selectKey>
+		insert into
+		`LesStockSyncs`(`receivedData`,`addTime`,`isDone`,`doneTime`,`errorMsg`,`isRedone`,`reDoneSns`)
+		values(#{receivedData},#{addTime},#{isDone},#{doneTime},#{errorMsg},#{isRedone},#{reDoneSns})
+	</insert>
+	<update id="setLesStockSyncsDone" >
+		update `LesStockSyncs` set
+		`isDone` = 1,
+		`doneTime` =
+		date_format(now(),'%Y-%m-%d %H:%i:%S')
+		where `id` = #{id}
+	</update>
+	<update id="update">
+		update `LesStockSyncs` set
+		`isDone` = #{isDone} ,
+		`errorMsg` = #{errMsg} , `doneTime` = #{doneTime}
+		where `id` =
+		#{id}
+	</update>
+	<update id="setErrMsg">
+		update `LesStockSyncs` set
+		`errorMsg`=#{errorMsg}
+		where `id` = #{id}
+	</update>
+	<select id="getIdbyDonetime"  resultType="java.lang.Integer" >
+		select `id`
+		from `LesStockSyncs`
+		where `doneTime`=#{doneTime}
+	</select>
+</mapper>

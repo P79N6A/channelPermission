@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>orderMonitorSet</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderMonitorSet" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_orderMonitorSet"></table>
+</div>
+
+<div id="datagridToolbar_orderMonitorSet">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderMonitorSet" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth">
+                <span class="search-row-label">监控名称</span>
+                <input class="easyui-textbox" name="monitorName"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">阈值</span>
+                <input class="easyui-textbox" name="gateValue"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">监控类型</span>
+                <select id="monitorType" class="easyui-combobox">
+                    <option value="请选择">请选择</option>
+                    <option value="订单">订单</option>
+                    <option value="库存">库存</option>
+                </select>
+            </div>
+
+            <div class="search-row_nowidth">
+                <span class="search-row-label">预警级别</span>
+                <select id="warnLevel" class="easyui-combobox">
+                    <option value="请选择">请选择</option>
+                    <option value="信息">信息</option>
+                    <option value="警告">警告</option>
+                    <option value="严重">严重</option>
+                    <option value="重大">重大</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">是否发送邮件</span>
+                <select id="isSendEmail" class="easyui-combobox">
+                    <option value="请选择">请选择</option>
+                    <option value="是">是</option>
+                    <option value="否">否</option>
+                </select>
+            </div>
+
+            <div class="search-row_nowidth">
+                <span class="search-row-label">状态</span>
+                <select id="satus" class="easyui-combobox">
+                    <option value="请选择">请选择</option>
+                    <option value="是">是</option>
+                    <option value="否">否</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderMonitorSet"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderMonitorSet"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_orderMonitorSet" data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderMonitorSet"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderMonitorSet"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+    </form>
+</div>
+<div id="addDlg_orderMonitorSet" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:600px;height:400px;"
+     closed="true" buttons="#dlg-buttons_orderMonitorSet">
+    <form id="addForm_orderMonitorSet" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>监控名称<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="monitorName" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>监控项描述<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="monitorDesc" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>数据源<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="dataSource" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>sql语句<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="sql" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>阈值<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="gateValue" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>监控类型<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="monitorType" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>预警级别<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="warnLevel" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>是否发送邮件<span style="color: red;">*</span></label>
+            <select class="easyui-combobox" name="isSendEmail" required="true"/>
+            <option value="请选择"></option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>是否发送短信<span style="color: red;">*</span></label>
+            <select class="easyui-combobox" name="isSendMsg" required="true"/>
+            <option value="请选择"></option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>邮件地址<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="emailAddress" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>手机号码<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="moblieNo" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>状态<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="satus" required="true"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderMonitorSet">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderMonitorSet" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_orderMonitorSet').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderMonitorSet').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/order/orderMonitorSetIndex.js"></script>
+</body>
+</html>

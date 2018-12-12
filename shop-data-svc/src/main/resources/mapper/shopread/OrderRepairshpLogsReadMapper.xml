@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.OrderRepairshpLogsReadDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.OrderRepairshpLogs" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ORDERREJECTSN" property="orderRejectSn" jdbcType="VARCHAR" />
+    <result column="NETPOINTCODE" property="netPointCode" jdbcType="VARCHAR" />
+    <result column="CHECKRESULT" property="checkResult" jdbcType="VARCHAR" />
+    <result column="QUALITY" property="quality" jdbcType="VARCHAR" />
+    <result column="MACHINENUM" property="macHineNum" jdbcType="VARCHAR" />
+    <result column="INSPECTOR" property="inSpector" jdbcType="VARCHAR" />
+    <result column="INSPECT_TIME" property="inSpectTime" jdbcType="VARCHAR" />
+    <result column="ADD1" property="add1" jdbcType="VARCHAR" />
+    <result column="ADD2" property="add2" jdbcType="VARCHAR" />
+    <result column="ADD3" property="add3" jdbcType="VARCHAR" />
+    <result column="ADD4" property="add4" jdbcType="VARCHAR" />
+    <result column="ADD5" property="add5" jdbcType="VARCHAR" />
+    <result column="PROC_TYPE" property="procType" jdbcType="VARCHAR" />
+    <result column="WO_ID" property="woId" jdbcType="VARCHAR" />
+    <result column="CREATED_DATE" property="createdDate" jdbcType="DATE" />
+    <result column="Establish_DATE" property="establishDate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ORDERREJECTSN, NETPOINTCODE, CHECKRESULT, QUALITY, MACHINENUM, INSPECTOR, INSPECT_TIME, 
+    ADD1, ADD2, ADD3, ADD4, ADD5, PROC_TYPE, WO_ID, CREATED_DATE, Establish_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from OrderRepairshpLogs
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+</mapper>

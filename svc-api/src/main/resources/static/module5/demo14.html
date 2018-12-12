@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+        <thead>
+        <tr>
+            <th field="field0">订单号</th>
+            <th field="field1">处理状态</th>
+            <th field="field2">订单来源</th>
+            <th field="field3">添加时间</th>
+            <th field="field4">处理时间</th>
+            <th field="field5">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><a href="orderDetails.html">top_50378505492630364</a></td>
+            <td>待处理</td>
+            <td>淘宝海尔官方旗舰店</td>
+            <td>2017-08-23 14:08:01</td>
+            <td></td>
+            <td><a>开增票</a>&nbsp;&nbsp;<a>开电子票</a>&nbsp;&nbsp;<a>不开票</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  来源订单号
+			</span>
+                <input class="easyui-textbox" name="tet"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  处理状态
+			</span>
+                <select class="easyui-combobox" name="platformCode" style="width: 174px;">
+                    <option value="">处理状态</option>
+                    <option value="TBSC">已处理</option>
+                    <option value="TOPDHSC">待处理</option>
+                    <option value="TOPFENXIAO">无需处理</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  订单来源
+			</span>
+                <select class="easyui-combobox" name="platformCode" style="width: 174px;">
+                    <option value="">订单来源</option>
+                    <option value="TBSC">淘宝海尔官方旗舰店</option>
+                    <option value="TOPDHSC">海尔生活家电旗舰店</option>
+                    <option value="TOPFENXIAO">淘宝海尔官方旗舰店分销平台</option>
+                    <option value="TOPFENXIAODHSC">淘宝海尔生活家电旗舰店分销平台</option>
+                    <option value="TOPBUYBANG">淘宝海尔买帮专卖店</option>
+                    <option value="TOPBOILER">淘宝海尔热水器专卖店</option>
+                    <option value="TOPSHJD">淘宝海尔生活电器专卖店</option>
+                    <option value="TOPMOBILE">淘宝海尔手机专卖店</option>
+                    <option value="TONGSHUAI">统帅日日顺乐家专卖店</option>
+                    <option value="TONGSHUAIFX">统帅日日顺分销平台</option>
+                    <option value="TOPXB">海尔新宝旗舰店</option>
+                    <option value="TOPFENXIAOXB">淘宝海尔新宝旗舰店分销平台</option>
+                    <option value="WASHER">海尔洗衣机官方旗舰店</option>
+                    <option value="FRIDGE">海尔冰冷官方旗舰店</option>
+                    <option value="AIR">淘宝空调旗舰店</option>
+                    <option value="TMMKFX">天猫模卡分销</option>
+                    <option value="GQGYS">天猫分销</option>
+                    <option value="TBCT">淘宝村淘</option>
+                    <option value="TBQYG">天猫企业购</option>
+                    <option value="TMST">天猫生态</option>
+                    <option value="FLW">商城PC-返利网</option>
+                    <option value="YHDQWZY">电商平台-1号店全网自营</option>
+                    <option value="TMKSD">卡萨帝官方旗舰店</option>
+                    <option value="TMTV">天猫海尔电视</option>
+                    <option value="TBCFDD">淘宝海尔厨房大电旗舰店</option>
+                    <option value="TBXCR">天猫小超人旗舰店</option>
+                    <option value="TMMK">mooka模卡官方旗舰店</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  开始时间
+			</span>
+                <input class="easyui-datebox" name="periodCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  结束时间
+			</span>
+                <input class="easyui-datebox" name="measureName"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure" onclick="createData()"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMeasure"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+<div id="detailDialog" data-options="title:'',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:1200px;height:300px;"
+     closed="true" buttons="#dlg-buttons_detail">
+    <div id="detailDiv" class="easyui-panel"
+         style="width:100%;height:100%;"
+         data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+        <table id="detailgrid">
+            <tbody>
+            <tr>
+                <td>WP0117073014465</td>
+                <td>PO7019657424</td>
+                <td>W091710009353</td>
+                <td>2017-08-09 09:51:55</td>
+                <td>7019657424</td>
+                <td>8564795808</td>
+                <td>天猫渠道</td>
+                <td>热水器</td>
+                <td>电热水器</td>
+                <td>GA0SF3000</td>
+                <td>LEC5001-20X1</td>
+                <td>10</td>
+                <td>482.82</td>
+                <td>4828.2</td>
+                <td>552</td>
+                <td>5520</td>
+                <td>LGWA</td>
+                <td>萝岗</td>
+                <td>已入WA库</td>
+                <td>2017-08-09 18:15:19</td>
+                <td>2017-08-09 18:26:24</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="dlg-buttons_detail">
+        <!--<a href="#" class="easyui-linkbutton" onclick="createData()" iconCls="icon-ok">确认</a>-->
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#detailDialog').dialog('close')">关闭</a>
+    </div>
+</div>
+<div id="importDialog" data-options="title:'',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_import">
+    <form id="importForm" method="post">
+        <div style="margin-bottom:20px">
+            <div>文件:</div>
+            <input class="easyui-filebox" name="file1" data-options="prompt:'请选择一个文件...'" style="width:100%"
+                   required="true">
+        </div>
+    </form>
+    <div id="dlg-buttons_import">
+        <a href="#" class="easyui-linkbutton" id="importSave" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#importDialog').dialog('close')">关闭</a>
+    </div>
+</div>
+<div id="addDlg_dmmtlPbcsMtlMeasure" data-options="title:'',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:1200px;height:300px;"
+     closed="true" buttons="#dlg-buttons_dmmtlPbcsMtlMeasure">
+    <form id="addForm_dmmtlPbcsMtlMeasure" method="post">
+        <input name="id" type="text" style="display:none;">
+        <input __acttype="" type="hidden" value="add">
+
+        <div class="fitem">
+            <label>提报周</label>
+            <input class="easyui-textbox" name="field0" required="true">
+        </div>
+        <div class="fitem">
+            <label>产品组</label>
+            <input class="easyui-textbox" name="field1" required="true">
+        </div>
+        <div class="fitem">
+            <label>未提交</label>
+            <input class="easyui-textbox" name="field2" required="true">
+        </div>
+        <div class="fitem">
+            <label>已提交</label>
+            <input class="easyui-textbox" name="field3" required="true">
+        </div>
+        <div class="fitem">
+            <label>提交失败</label>
+            <input class="easyui-textbox" name="field4" required="true">
+        </div>
+    </form>
+    <div id="dlg-buttons_dmmtlPbcsMtlMeasure">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_dmmtlPbcsMtlMeasure" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_dmmtlPbcsMtlMeasure').dialog('close')">关闭</a>
+    </div>
+</div>
+<script type="application/javascript">
+    var tableHead = ''
+
+    var detailTh = 'WP订单号 \n' +
+        'PO编号 \n' +
+        '销售单号 \n' +
+        '提单时间 \n' +
+        'SO \n' +
+        'DN \n' +
+        '渠道 \n' +
+        '品类 \n' +
+        '产品组 \n' +
+        '物料编号 \n' +
+        '型号 \n' +
+        '数量 \n' +
+        '样表单价 \n' +
+        '样表金额 \n' +
+        '采购价格 \n' +
+        '采购金额 \n' +
+        'WA库位码 \n' +
+        'WA库位名称 \n' +
+        '状态 \n' +
+        '出日日顺库时间 \n' +
+        '入库时间 '
+
+    var detail = {
+        fit: true,
+        fitColumns: false,
+        singleSelect: true,
+        columns: covertColumns(detailTh),
+        rownumbers: true
+    };
+
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>

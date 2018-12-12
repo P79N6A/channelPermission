@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>库龄统计报表</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+#*<script src="../static/js/easyui-extention.js"></script>*#
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="easyui-layout">
+<table id="dataGrid" title="库龄统计-库存到产品                              金额单位：（人民币）万元 数据类型：正品)"></table>
+
+<div id="tb" style="padding:5px;height:auto">
+    <form id="filterForm">
+        报表日期
+        <input id="date" name="date" class="easyui-datebox" required="required"
+               data-options="formatter:myformatter,parser:myparser"/>
+        <a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="">查询</a>
+        <a id='export' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
+    </form>
+</div>
+
+<script type="text/javascript">
+
+
+function onExport() {
+    $('#filterForm').attr("action", '/stock/exportStockAgeForProductsList.html');
+    $('#filterForm').submit();
+}
+
+function onShowDetail(param, param_name) {
+
+
+    var win = window.open('about:blank');
+
+    var url;
+    var date = $('#date').val();
+    url = '/stock/countStockAgesWithSkuByChannels.html' + '?date=' + $('#date').datebox('getValue') + '&param=' + param + '&title=' + param_name;
+
+
+    jQuery.ajax({
+        url: url,   // 提交的页面
+        type: "GET",                   // 设置请求类型为"POST"，默认为"GET"
+        success: function (data) {
+            win.document.open();
+            win.document.write(data);
+            win.document.close();
+        }
+    });
+
+    return false;
+}
+
+
+$('#search').click(function () {
+    $('#dataGrid').datagrid('load', {date: $('#date').datebox("getValue")});
+});
+
+$('#export').click(function () {
+    onExport();
+});
+
+
+function myformatter(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+}
+
+function myparser(s) {
+    if (!s) return new Date();
+    var ss = (s.split('-'));
+    var y = parseInt(ss[0], 10);
+    var m = parseInt(ss[1], 10);
+    var d = parseInt(ss[2], 10);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+        return new Date(y, m - 1, d);
+    } else {
+        return new Date();
+    }
+}
+
+var ageRanges = [ 'a7', 'a14', 'a21', 'a30', 'a44', 'a60', 'a75', 'a90', 'a120', 'a180', 'a365', 'a-1', 'a-1001', 'a-1002', 'a-1003', 'a-1004' ];
+
+function getData(s, n) {
+    var data = new Array();
+    for (var i = 0; i < n; i++) {
+        var idx = i + s;
+        data[2 * i] =
+        {
+            field: ageRanges[idx],
+            title: '数量',
+            align: 'right',
+            width: 50,
+            formatter: function (value, row, index) {
+                var age = value.age;
+                if (age == -1 || age == -1002 || age > 60)
+                    return '<span style="color:red;">' + value.stockQuantity + '</span>';
+                else if (age == -1004)
+                    return value.stockQuantity + '%';
+                else
+                    return value.stockQuantity;
+            }
+        };
+        data[2 * i + 1] =
+        {
+            field: 'a' + ageRanges[idx],
+            title: '金额',
+            align: 'right',
+            formatter: function (value, row, index) {
+                var age = value.age;
+                if (age == -1 || age == -1002 || age > 60)
+                    return '<span style="color:red;">' + value.value + '</span>';
+                else if (age == -1004)
+                    return value.value + '%';
+                else return value.value;
+            }
+        };
+    }
+    return data;
+}
+
+
+var dataGrid;
+$(function () {
+    var now = new Date();
+    $('#date').datebox('setValue', myformatter(now));
+    $('#date').datebox('calendar').calendar({
+        validator: function (date) {
+            var d2 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            return  date <= d2;
+        }
+    });
+
+
+    dataGrid = $('#dataGrid').datagrid({
+        url: '/stock/findStockAgeGroupByProductNew.html',
+        fit: true,
+        fitColumns: false,
+        pagination: false,
+        toolbar: $('#tb'),
+        nowrap: true,
+        rownumbers: true,
+        singleSelect: true,
+        queryParams: {
+            date: $('#date').val()
+        },
+        frozenColumns: [
+            [
+                {
+                    field: 'productType',
+                    title: '品类',
+                    width: 100,
+                    align: 'center',
+                    rowspan: 2,
+                    formatter: function (value, row, index) {
+                        if (index == 0)
+                            return '总计';
+                        else
+                            return value;
+                    }
+                } ,
+                {
+                    field: 'productGroup',
+                    title: '产品组',
+                    width: 100,
+                    align: 'center',
+                    rowspan: 2,
+                    formatter: function (value, row, index) {
+                        if (index == 0)
+                            return '';
+                        else
+                            return "<a href='javascript:void(0)' onClick='onShowDetail(" + '"' + value + '","' + value + '");return false' + "'>" + value + "</a>";
+                    }
+                } ,
+                {
+                    title: '1-7天',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '8-14天',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '15-21天',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '22-30天',
+                    align: 'center',
+                    colspan: 2,
+                },
+            ],
+            getData(0, 4)
+        ],
+        columns: [
+            [
+                {
+                    title: '31-44天',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '45-60天',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '61-75天',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '75-90天',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '3-4月',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '4-6月',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '6-12月',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '一年以上',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '正常小计',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '超期小计',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '合计',
+                    align: 'center',
+                    colspan: 2,
+                },
+                {
+                    title: '超期占比',
+                    align: 'center',
+                    colspan: 2,
+                }
+            ],
+            getData(4, 12)
+        ]
+    })
+    ;
+})
+;
+</script>
+</body>
+</html>

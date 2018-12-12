@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.HaierInRrsItemDao">
+
+    <!-- 取crm订单或自动采购订单的数量 -->
+    <select id="getOrderNum" parameterType="Map" resultType="java.lang.Integer">
+        SELECT (
+        (SELECT T2_delivery_prediction FROM haier_t2_order_t WHERE
+        order_id=
+        #{source_order_id}) -
+        ( SELECT
+        ( CASE WHEN
+        (select IfNULL((SELECT SUM(IFNULL(qty,0)) FROM crm_order_t
+        WHERE source_order_id =
+        #{source_order_id} AND `status` = 0),0)) >0
+        THEN
+        (select IfNULL((SELECT SUM(IFNULL(qty,0)) FROM crm_order_t
+        WHERE source_order_id =
+        #{source_order_id} AND `status` = 0),0))
+        ELSE
+        (select IfNULL((SELECT
+        SUM(IFNULL(warehouse_in_num,0)) FROM haier_in_rrs_t WHERE wp_order_id
+        = #{source_order_id}),0)) END ))) as qty
+    </select>
+
+</mapper>

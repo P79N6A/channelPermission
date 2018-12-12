@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>操作管理</title>
+	<link rel="stylesheet" href="../../static/css/jqueryui/base/jquery.ui.all.css"/>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../../static/css/msg.css"></link>
+    <link rel="stylesheet" type="text/css" href="../../static/third/easyui/themes/gray/easyui.css"/>
+    <link rel="stylesheet" href="../../static/css/reset.css"></link>
+	<script src="../../static/third/jquery-1.8.3.min.js"></script>
+    <script src="../../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+
+<body>
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'north',title:'查询条件',border:false" style="height: 120px;overflow: auto;" align="left" class="new-form-box">
+		<form id="filterForm" action="#">
+	    	<table>
+	    		<tr>
+	    			<td>菜单名称</td>
+	    			<td><input id="menuName"  name="menuName" class="txt"/></td>
+	    			<td>操作代码</td>
+	    			<td><input id="actKey"  name="actKey" class="txt"/></td>
+	    			<td>操作名称</td>
+	    			<td><input id="actName"  name="actName" class="txt"/></td>
+	    			<td>备注</td>
+	    			<td><input id="remark"  name="remark" class="txt"/></td>
+	    			<td>状态</td>
+	    			<td>
+	    			<input id="status" name="status" class="easyui-combobox"></input>
+	    		</tr>
+	    		<tr>
+	    			<td colspan="10">
+		    			<a id='search' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-search">查询</a>
+##		    			<a id='' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-edit">创建</a>
+##		    			<a id='import' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-edit">保存</a>
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </form>
+    </div>
+    <div data-options="region:'center',title:'操作查询结果',border:false">
+		    <table id="dataGrid"></table>
+		    <div id="msgMask"></div>
+			<div id="msg">正在处理，请稍待。。。</div>
+	</div>
+</div>
+<script type="application/javascript">
+//点击查询
+$('#search').click(function () {
+	var status;
+	if($("#status").val()=="ALL"){
+		status = "";
+	}
+	//检索列表构筑
+	if(datagrid){
+		//grid刷新
+	    $('#dataGrid').datagrid('load',
+	    		{
+		    	 menuName:$("#menuName").val(),
+	    	     actKey:$("#actKey").val(),
+	    	     actName:$("#actName").val(),
+	    	     remark:$("#remark").val(),
+	    	     status:status
+	   	 });
+	}else{
+		//生成grid
+	    datagrid = $('#dataGrid').datagrid({
+	       url: "/sys/action/find",
+	        fit: true,
+	        pagination: true,
+	        singleSelect: false,
+	        checkOnSelect:true,
+	        pageSize: 100,
+	        pageList: [1,2,100,200,300],
+	        nowrap: false,
+	        rownumbers: true,
+	        queryParams: {
+	        	 menuName:$("#menuName").val(),
+	    	     actKey:$("#actKey").val(),
+	    	     actName:$("#actName").val(),
+	    	     remark:$("#remark").val(),
+	    	     status:status
+	        },
+	        columns: [
+	            [
+	            		{field:'actId', title:'操作ID', width:'100', align:'center',hidden:true},
+				        {field:'actKey', title:'操作代码', width:'150', align:'center'},
+				        {field:'actName', title:'操作名称', width:'150', align:'center'},
+				        {field:'status', title:'状态', width:'100', align:'center'},
+				        {field:'fnId', title:'菜单ID', width:'100', align:'center',hidden:true},
+				        {field:'fnName', title:'菜单名称', width:'150', align:'center'},
+				        {field:'url', title:'URL地址', width:'150', align:'center'},
+				        {field:'remark', title:'备注', width:'150', align:'center'}
+	            ]
+	        ]
+	    });
+	}
+    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+});
+var datagrid;
+$(function () {
+	
+	//取得状态
+	jQuery.getJSON("/sys/user/getStatus", function(result){
+		var count = result.totalCount;
+		var dataList = result.data;
+		//添加全部
+		dataList.unshift( {value:'ALL',value_meaning:'全部'});
+		$("#status").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+	});
+	
+			
+	
+});
+</script>
+</body>
+</html>

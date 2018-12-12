@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.ApiLogsWriteDao">
+    <insert id="insert" parameterType="com.haier.shop.model.ApiLogs" useGeneratedKeys="true" keyProperty="id">
+        insert into ApiLogs(`flag`,`resultCode`,`pushData`,`pullData`,`returnData`,`cOrderSn`,`type`,`addTime`,`addDateTime`,`message`) values(#{flag},#{resultCode},#{pushData},#{pullData},#{returnData},#{cOrderSn},#{type},#{addTime},#{addDateTime},#{message})
+    </insert>
+
+    <update id="update" parameterType="com.haier.shop.model.ApiLogs">
+        update ApiLogs set `id`=#{id},`flag`=#{flag},`resultCode`=#{resultCode},`pushData`=#{pushData},`pullData`=#{pullData},`returnData`=#{returnData},`cOrderSn`=#{cOrderSn},`type`=#{type},`addTime`=#{addTime},`addDateTime`=#{addDateTime},`message`=#{message}
+    </update>
+
+    <update id="updateReturnDataById">
+        update ApiLogs set `returnData`=#{returnData}
+        where `id`=#{id}
+    </update>
+</mapper>

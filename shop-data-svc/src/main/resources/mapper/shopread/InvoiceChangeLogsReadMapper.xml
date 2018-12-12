@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.InvoiceChangeLogsReadDao">
+
+    <resultMap id="invoiceChangeLogsResult" type="com.haier.shop.model.InvoiceChangeLogs">
+        <result property="id" column="id" />
+        <result property="invoiceId" column="invoiceId" />
+        <result property="remark" column="remark" />
+        <result property="addTime" column="addTime" />
+        <result property="operator" column="operator" />
+    </resultMap>
+
+    <select id="getInvoiceChangeLogs" parameterType="Integer" resultType="com.haier.shop.model.InvoiceChangeLogs">
+        SELECT
+        *
+        FROM
+        InvoiceChangeLogs
+        WHERE
+        invoiceId = #{invoiceId}
+        ORDER BY id DESC
+    </select>
+
+    <select id="get" resultMap="invoiceChangeLogsResult">
+        select `id`,`invoiceId`,`remark`,`addTime`,`operator` from InvoiceChangeLogs where `id`=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.HpDispatchWriteDao">
+
+	<update id="updateHPQueue" parameterType="java.util.Map">
+		update 
+			`HPQueues` 
+		set 
+			`count`=#{count}
+		<if test="vomCount != null and vomCount != '' ">
+			,vomCount=#{vomCount}
+		</if>
+		<if test="success != null and success != '' ">
+			,`success`=#{success}
+		</if>
+		<if test="successTime != null and successTime != '' ">
+			,`successTime`=#{successTime}
+		</if>
+		<if test="lastMessage != null and lastMessage != '' ">
+			,`lastMessage`=#{lastMessage}
+		</if>	
+		where 
+			`id` = #{id}
+	</update>
+	
+	<update id="updateOrderProductStatus" parameterType="java.util.Map">
+		update 
+			`OrderProducts`
+		set 
+			`status`=#{status}
+		where 
+			`id` = #{id} 
+			and status &lt; 2
+	</update>
+	
+	<update id="updateSyncHpTime" parameterType="java.util.Map">
+		update 
+			`OrderWorkflows` 
+		set 
+			`sendHpTime`=#{sendHpTime}
+		where 
+			`orderProductId` = #{orderProductId}
+	</update>
+
+	<update id="update" parameterType="com.haier.shop.model.HPQueues">
+		update `HPQueues` 
+		set `count`=#{count},vomCount=#{vomCount},`success`=#{success},`successTime`=#{successTime},`lastMessage`=#{lastMessage}
+		where `id` = #{id}
+	</update>
+	
+	<update id="updateHPQueueBatch" parameterType="java.util.Map">
+		update `HPQueues` 
+		set `count`=count+1,`lastMessage`=#{lastMessage}
+		where `id` in (${ids})
+	</update>
+</mapper>

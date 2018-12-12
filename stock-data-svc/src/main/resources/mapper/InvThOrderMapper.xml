@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvThOrderDao">
+
+	<resultMap id="invThOrderResult" type="com.haier.stock.model.InvThOrder">
+		<result property="id" column="id" />
+		<result property="channelSn" column="channel_sn" />
+		<result property="orderRepairSn" column="order_repair_sn" />
+		<result property="lesSn" column="les_sn" />
+		<result property="lesTime" column="les_time" />
+		<result property="returnTime" column="return_time" />
+		<result property="sku" column="sku" />
+		<result property="number" column="number" />
+		<result property="price" column="price" />
+		<result property="channel" column="channel" />
+		<result property="secCode" column="sec_code" />
+		<result property="success" column="success" />
+		<result property="count" column="count" />
+		<result property="message" column="message" />
+		<result property="successTime" column="success_time" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="getInvThOrderByChannelSnAndRepairSn" resultMap="invThOrderResult">
+		select `id`,`channel_sn`,`order_repair_sn`,`les_sn`,`les_time`,`return_time`,`sku`,`number`,`price`,`channel`,`sec_code`,`success`,`count`,`message`,`success_time`,`create_time`,`update_time` 
+		from inv_th_order
+		where channel_sn =#{channelSn} and order_repair_sn =#{orderRepairSn}
+		limit 1
+	</select>
+
+	<select id="queryInvThOrderData" resultMap="invThOrderResult">
+		select `id`,`channel_sn`,`order_repair_sn`,`les_sn`,`les_time`,`return_time`,`sku`,`number`,`price`,`channel`,`sec_code`,`success`,`count`,`message`,`success_time`,`create_time`,`update_time` 
+		from inv_th_order
+		where success=0 and count &lt;=30
+		order by id 
+		limit 1000;
+	</select>
+
+	<update id="updateInvThOrder" parameterType="com.haier.stock.model.InvThOrder">
+		update inv_th_order 
+		set `success`=#{success},
+		<if test="successTime != null">
+            `success_time`=#{successTime},
+        </if>
+		`count`=#{count},`message`=#{message}
+		where `id`=#{id}
+	</update>
+
+</mapper>

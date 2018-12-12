@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.TWarehouseDao">
+    <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.TWarehouse">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="channelId" property="channelId" jdbcType="INTEGER"/>
+        <result column="warehouseCode" property="warehouseCode" jdbcType="VARCHAR"/>
+        <result column="warehouseName" property="warehouseName" jdbcType="VARCHAR"/>
+        <result column="warehouseCodeHaier" property="warehouseCodeHaier" jdbcType="VARCHAR"/>
+        <result column="warehouseNameHaier" property="warehouseNameHaier" jdbcType="VARCHAR"/>
+        <result column="warehouseType" property="warehouseType" jdbcType="CHAR"/>
+        <result column="pid" property="pid" jdbcType="INTEGER"/>
+        <result column="transmitCode" property="transmitCode" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="createBy" property="createBy" jdbcType="VARCHAR"/>
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="updateBy" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, channelId, warehouseCode, warehouseName, warehouseCodeHaier, warehouseNameHaier, 
+    warehouseType, pid, transmitCode, city, createTime, createBy, updateTime, updateBy, 
+    remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_warehouse
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_warehouse
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.haier.distribute.data.model.TWarehouse">
+    insert into t_warehouse (id, channelId, warehouseCode, 
+      warehouseName, warehouseCodeHaier, warehouseNameHaier, 
+      warehouseType, pid, transmitCode, 
+      city, createTime, createBy, 
+      updateTime, updateBy, remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{warehouseCode,jdbcType=VARCHAR}, 
+      #{warehouseName,jdbcType=VARCHAR}, #{warehouseCodeHaier,jdbcType=VARCHAR}, #{warehouseNameHaier,jdbcType=VARCHAR}, 
+      #{warehouseType,jdbcType=CHAR}, #{pid,jdbcType=INTEGER}, #{transmitCode,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.haier.distribute.data.model.TWarehouse">
+        insert into t_warehouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="channelId != null">
+                channelId,
+            </if>
+            <if test="warehouseCode != null">
+                warehouseCode,
+            </if>
+            <if test="warehouseName != null">
+                warehouseName,
+            </if>
+            <if test="warehouseCodeHaier != null">
+                warehouseCodeHaier,
+            </if>
+            <if test="warehouseNameHaier != null">
+                warehouseNameHaier,
+            </if>
+            <if test="warehouseType != null">
+                warehouseType,
+            </if>
+            <if test="pid != null">
+                pid,
+            </if>
+            <if test="transmitCode != null">
+                transmitCode,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="createBy != null">
+                createBy,
+            </if>
+            <if test="updateTime != null">
+                updateTime,
+            </if>
+            <if test="updateBy != null">
+                updateBy,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="channelId != null">
+                #{channelId,jdbcType=INTEGER},
+            </if>
+            <if test="warehouseCode != null">
+                #{warehouseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseName != null">
+                #{warehouseName,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseCodeHaier != null">
+                #{warehouseCodeHaier,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseNameHaier != null">
+                #{warehouseNameHaier,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseType != null">
+                #{warehouseType,jdbcType=CHAR},
+            </if>
+            <if test="pid != null">
+                #{pid,jdbcType=INTEGER},
+            </if>
+            <if test="transmitCode != null">
+                #{transmitCode,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.TWarehouse">
+        update t_warehouse
+        <set>
+            <if test="channelId != null">
+                channelId = #{channelId,jdbcType=INTEGER},
+            </if>
+            <if test="warehouseCode != null">
+                warehouseCode = #{warehouseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseName != null">
+                warehouseName = #{warehouseName,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseCodeHaier != null">
+                warehouseCodeHaier = #{warehouseCodeHaier,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseNameHaier != null">
+                warehouseNameHaier = #{warehouseNameHaier,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseType != null">
+                warehouseType = #{warehouseType,jdbcType=CHAR},
+            </if>
+            <if test="pid != null">
+                pid = #{pid,jdbcType=INTEGER},
+            </if>
+            <if test="transmitCode != null">
+                transmitCode = #{transmitCode,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                createBy = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                updateBy = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.TWarehouse">
+    update t_warehouse
+    set channelId = #{channelId,jdbcType=INTEGER},
+      warehouseCode = #{warehouseCode,jdbcType=VARCHAR},
+      warehouseName = #{warehouseName,jdbcType=VARCHAR},
+      warehouseCodeHaier = #{warehouseCodeHaier,jdbcType=VARCHAR},
+      warehouseNameHaier = #{warehouseNameHaier,jdbcType=VARCHAR},
+      warehouseType = #{warehouseType,jdbcType=CHAR},
+      pid = #{pid,jdbcType=INTEGER},
+      transmitCode = #{transmitCode,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      updateBy = #{updateBy,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+    order by updateTime desc
+  </update>
+    <!-- 查询条件 -->
+    <sql id="where_fragement">
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and tw.id = #{entity.id} ]]>
+            </if>
+            <if test="entity.channelId != null and entity.channelId !='' ">
+                <![CDATA[ and tw.channelId = #{entity.channelId} ]]>
+            </if>
+            <if test="entity.warehouseCode != null and entity.warehouseCode !='' ">
+                <![CDATA[ and tw.warehouseCode LIKE CONCAT('%', #{entity.warehouseCode} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseName != null and entity.warehouseName !='' ">
+                <![CDATA[ and tw.warehouseName LIKE CONCAT('%', #{entity.warehouseName} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseCodeHaier != null and entity.warehouseCodeHaier !='' ">
+                <![CDATA[ and tw.warehouseCodeHaier LIKE CONCAT('%', #{entity.warehouseCodeHaier} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseNameHaier != null and entity.warehouseNameHaier !='' ">
+                <![CDATA[ and tw.warehouseNameHaier LIKE CONCAT('%', #{entity.warehouseNameHaier} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseType != null and entity.warehouseType !='' ">
+                <![CDATA[ and tw.warehouseType = #{entity.warehouseType} ]]>
+            </if>
+            <if test="entity.transmitCode != null and entity.transmitCode !='' ">
+                <![CDATA[ and tw.transmitCode LIKE CONCAT('%', #{entity.transmitCode} ,'%') ]]>
+            </if>
+        </if>
+    </sql>
+    <sql id="where_fragement_tw">
+        and 1=1
+        <if test="entity!=null">
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and tw.id = #{entity.id} ]]>
+            </if>
+            <if test="entity.channelId != null and entity.channelId !='' ">
+                <![CDATA[ and tw.channelId = #{entity.channelId} ]]>
+            </if>
+            <if test="entity.warehouseCode != null and entity.warehouseCode !='' ">
+                <![CDATA[ and tw.warehouseCode LIKE CONCAT('%', #{entity.warehouseCode} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseName != null and entity.warehouseName !='' ">
+                <![CDATA[ and tw.warehouseName LIKE CONCAT('%', #{entity.warehouseName} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseCodeHaier != null and entity.warehouseCodeHaier !='' ">
+                <![CDATA[ and tw.warehouseCodeHaier LIKE CONCAT('%', #{entity.warehouseCodeHaier} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseNameHaier != null and entity.warehouseNameHaier !='' ">
+                <![CDATA[ and tw.warehouseNameHaier LIKE CONCAT('%', #{entity.warehouseNameHaier} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseType != null and entity.warehouseType !='' ">
+                <![CDATA[ and tw.warehouseType = #{entity.warehouseType} ]]>
+            </if>
+            <if test="entity.transmitCode != null and entity.transmitCode !='' ">
+                <![CDATA[ and tw.transmitCode LIKE CONCAT('%', #{entity.transmitCode} ,'%') ]]>
+            </if>
+        </if>
+    </sql>
+    <sql id="where_fragement_count">
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id = #{entity.id} ]]>
+            </if>
+            <if test="entity.channelId != null and entity.channelId !='' ">
+                <![CDATA[ and channelId = #{entity.channelId} ]]>
+            </if>
+            <if test="entity.warehouseCode != null and entity.warehouseCode !='' ">
+                <![CDATA[ and warehouseCode LIKE CONCAT('%', #{entity.warehouseCode} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseName != null and entity.warehouseName !='' ">
+                <![CDATA[ and warehouseName LIKE CONCAT('%', #{entity.warehouseName} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseCodeHaier != null and entity.warehouseCodeHaier !='' ">
+                <![CDATA[ and warehouseCodeHaier LIKE CONCAT('%', #{entity.warehouseCodeHaier} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseNameHaier != null and entity.warehouseNameHaier !='' ">
+                <![CDATA[ and warehouseNameHaier LIKE CONCAT('%', #{entity.warehouseNameHaier} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseType != null and entity.warehouseType !='' ">
+                <![CDATA[ and warehouseType = #{entity.warehouseType} ]]>
+            </if>
+            <if test="entity.transmitCode != null and entity.transmitCode !='' ">
+                <![CDATA[ and transmitCode LIKE CONCAT('%', #{entity.transmitCode} ,'%') ]]>
+            </if>
+        </if>
+    </sql>
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+    <!-- 查询page -->
+    <select id="getPageByCondition" resultMap="BaseResultMap">
+        SELECT null as pname,tw.*,tci.channelName,tci.channelCode
+        from t_warehouse tw left join t_channels_info tci on tw.channelId = tci.id where tw.warehouseType = 1
+        <include refid="where_fragement_tw"/>
+        UNION
+        SELECT tw1.warehouseName as pname,tw.*,tci.channelName,tci.channelCode
+        from t_warehouse tw1 JOIN (SELECT * from t_warehouse) tw on
+        tw1.id = tw.pid left join t_channels_info tci on tw1.channelId = tci.id
+        <include refid="where_fragement"/>
+		order by createTime desc ,updateTime desc
+        <include refid="pagination"/>
+        
+    </select>
+    <!--分页count -->
+    <select id="getPagerCount" resultType="long" parameterType="com.haier.distribute.data.model.TWarehouse">
+        select count(1) from t_warehouse
+        <include refid="where_fragement_count"/>
+    </select>
+    <select id="getAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_warehouse
+    </select>
+    <select id="getWareHouseServiceStart" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_warehouse where warehouseType = 1
+    </select>
+    <select id="checkCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_warehouse
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.warehouseCode != null and entity.warehouseCode !='' ">
+                <![CDATA[ and warehouseCode = #{entity.warehouseCode} ]]>
+            </if>
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id != #{entity.id} ]]>
+            </if>
+        </if>
+    </select>
+    <select id="autoLoadPid" resultType="map">
+        select id,warehouseCode,warehouseName from t_warehouse where 1=1
+        <if test="channelId != null and channelId !='' ">
+            <![CDATA[ and channelId = #{channelId} ]]>
+        </if>
+        <if test="id != null and id !='' ">
+            <![CDATA[ and id != #{id} ]]>
+        </if>
+    </select>
+</mapper>

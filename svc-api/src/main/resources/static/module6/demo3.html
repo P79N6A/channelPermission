@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;" title="电子发票批量重推开票"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row" style="width: 100%">
+			<span class="search-row-label" style="font-size: 18px;font-weight: bold;width:120px;">
+			  淘宝店铺
+			</span>
+                <select class="easyui-combobox" name="productCode" style="width: 174px;">
+                    <option value="">全部</option>
+                    <option value="0">大客户</option>
+                    <option value="1">京东渠道</option>
+                    <option value="2">模卡渠道</option>
+                    <option value="3">微店渠道</option>
+                    <option value="4">商城渠道</option>
+                    <option value="5">天猫渠道</option>
+                    <option value="6">统帅渠道</option>
+                    <option value="7">690电商渠道</option>
+                </select>请您先选择要同步的淘宝店铺
+            </div>
+            <div class="clearfix"></div>
+            <div class="search-row" style="width: 100%">
+            <span class="search-row-label" style="font-size: 18px;font-weight: bold;width:120px;">
+			  商品类型
+			</span>
+                <input type="radio" value="大家电" name="type">大家电
+                <input type="radio" value="套装" name="type">套装
+                <input type="radio" value="小家电" name="type">小家电
+                <div class="clearfix"></div>
+                <span style="margin-left: 135px">对应于淘宝的商品类型：大小电和套餐</span>
+            </div>
+            <div class="clearfix"></div>
+            <div class="search-row" style="width: 100%">
+            <span class="search-row-label" style="font-size: 18px;font-weight: bold;width:120px;">
+			  商品类型
+			</span>
+                <input type="radio" value="大家电" name="type" checked>所有库位
+                <input type="radio" value="小家电" name="type" zdkw>指定库位
+                <input class="easyui-textbox" zdkwinput disabled>
+                <div class="clearfix"></div>
+                <span style="margin-left: 135px">如选择指定库位，则请填入WA库位编码，库位编码只针对商品类型为大家电、套装有效</span>
+            </div>
+            <div class="search-row" style="width: 100%">
+			<span class="search-row-label" style="font-size: 18px;font-weight: bold;width:120px;float:left">
+			  商品物料编号
+			</span>
+                <textarea rows="18" name="info" id="info" style="resize: none;width:600px;"></textarea>
+                <div style="margin-left:150px">
+                    <span>可手动触发指定的物料编号的库存同步到淘宝，每行一条子物料编号，多条用回车分割</span><br/>
+                    <div class="clearfix"></div>
+                    <div>
+                        <a href="#" class="easyui-linkbutton" iconCls="icon-ok">确定同步</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="addDlg_dmmtlPbcsMtlMeasure" data-options="title:'注意',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_dmmtlPbcsMtlMeasure">
+    <div class="ftitle">指定渠道</div>
+    <div id="dlg-buttons_dmmtlPbcsMtlMeasure">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_dmmtlPbcsMtlMeasure" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_dmmtlPbcsMtlMeasure').dialog('close')">关闭</a>
+    </div>
+</div>
+<script type="application/javascript">
+    var tableHead = '凭证号 \n' +
+        '单据号 \n' +
+        '交易时间 \n' +
+        '交易类型 \n' +
+        '借贷标识 \n' +
+        '库位 \n' +
+        '物料 \n' +
+        '数量 \n' +
+        '批次 \n' +
+        '渠道 \n' +
+        '指定人 \n' +
+        '指定时间 \n' +
+        '处理时间 \n' +
+        '处理信息'
+
+    var detailTh = 'WP订单号 \n' +
+        'PO编号 \n' +
+        '销售单号 \n' +
+        '提单时间 \n' +
+        'SO \n' +
+        'DN \n' +
+        '渠道 \n' +
+        '品类 \n' +
+        '产品组 \n' +
+        '物料编号 \n' +
+        '型号 \n' +
+        '数量 \n' +
+        '样表单价 \n' +
+        '样表金额 \n' +
+        '采购价格 \n' +
+        '采购金额 \n' +
+        'WA库位码 \n' +
+        'WA库位名称 \n' +
+        '状态 \n' +
+        '出日日顺库时间 \n' +
+        '入库时间 '
+
+    var detail = {
+        fit: true,
+        fitColumns: false,
+        singleSelect: true,
+        columns: covertColumns(detailTh),
+        rownumbers: true
+    };
+    $(function () {
+        $("[zdkw]").on("change", function () {
+            if ($(this).is(":checked")) {
+                $("[zdkwinput]").textbox("enable")
+            } else {
+                $("[zdkwinput]").textbox("disable")
+            }
+        })
+    })
+
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderRepairLESQueuesReadDao">
+    <resultMap id="lesShippingInfosResult" type="com.haier.shop.model.OrderRepairLESQueues">
+        <result property="id" column="id"/>
+        <result property="orderId" column="orderId"/>
+        <result property="orderProductId" column="orderProductId"/>
+        <result property="cOrderSn" column="cOrderSn"/>
+        <result property="nodeTime" column="nodeTime"/>
+        <result property="deliveryType" column="deliveryType"/>
+        <result property="nodeCode" column="nodeCode"/>
+        <result property="nodeDesc" column="nodeDesc"/>
+        <result property="addTime" column="addTime"/>
+        <result property="logId" column="logId"/>
+        <result property="syncTBStatus" column="syncTBStatus"/>
+    </resultMap>
+    <select id="getByOrderProductId" resultMap="lesShippingInfosResult">
+        SELECT
+        id,
+        siteId,
+        addTime,
+        orderProductId,
+        orderRepairId,
+        recordId,
+        pushData,
+        returnData,
+        success,
+        `count`,
+        lastMessage,
+        successTime,
+        vomLastMessage,
+        vomSuccess,
+        vomSuccessTime,
+        vomReturnData
+        FROM OrderRepairLESQueues
+        WHERE orderProductId = #{orderProductId}
+        LIMIT 1
+    </select>
+
+    <select id="existLesShippingInfosByOrderSn" resultType="java.lang.Integer">
+        select count(1) from LesShippingInfos where cOrderSn = #{orderSn}
+        and nodeCode = "YY"
+    </select>
+</mapper>

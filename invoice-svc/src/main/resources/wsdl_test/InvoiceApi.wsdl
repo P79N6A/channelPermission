@@ -1,0 +1,226 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://v20.api.igs.einv.ruihong.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="V20FacadeImplService" targetNamespace="http://v20.api.igs.einv.ruihong.com/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://v20.api.igs.einv.ruihong.com/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://v20.api.igs.einv.ruihong.com/">
+  <xs:element name="ch" type="tns:ch"/>
+  <xs:element name="chResponse" type="tns:chResponse"/>
+  <xs:element name="ch_async" type="tns:ch_async"/>
+  <xs:element name="ch_asyncResponse" type="tns:ch_asyncResponse"/>
+  <xs:element name="cx" type="tns:cx"/>
+  <xs:element name="cxResponse" type="tns:cxResponse"/>
+  <xs:element name="kp" type="tns:kp"/>
+  <xs:element name="kpResponse" type="tns:kpResponse"/>
+  <xs:element name="kp_async" type="tns:kp_async"/>
+  <xs:element name="kp_asyncResponse" type="tns:kp_asyncResponse"/>
+  <xs:complexType name="kp_async">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="kp_asyncResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ch">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="chResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cx">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cxResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="kp">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="kpResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ch_async">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ch_asyncResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Exception" type="tns:Exception"/>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="cxResponse">
+    <wsdl:part element="tns:cxResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ch_asyncResponse">
+    <wsdl:part element="tns:ch_asyncResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="Exception">
+    <wsdl:part element="tns:Exception" name="Exception">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="kp_async">
+    <wsdl:part element="tns:kp_async" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="chResponse">
+    <wsdl:part element="tns:chResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="kpResponse">
+    <wsdl:part element="tns:kpResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="kp_asyncResponse">
+    <wsdl:part element="tns:kp_asyncResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ch">
+    <wsdl:part element="tns:ch" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cx">
+    <wsdl:part element="tns:cx" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="kp">
+    <wsdl:part element="tns:kp" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ch_async">
+    <wsdl:part element="tns:ch_async" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="V20Facade">
+    <wsdl:operation name="kp_async">
+      <wsdl:input message="tns:kp_async" name="kp_async">
+    </wsdl:input>
+      <wsdl:output message="tns:kp_asyncResponse" name="kp_asyncResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ch">
+      <wsdl:input message="tns:ch" name="ch">
+    </wsdl:input>
+      <wsdl:output message="tns:chResponse" name="chResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="cx">
+      <wsdl:input message="tns:cx" name="cx">
+    </wsdl:input>
+      <wsdl:output message="tns:cxResponse" name="cxResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="kp">
+      <wsdl:input message="tns:kp" name="kp">
+    </wsdl:input>
+      <wsdl:output message="tns:kpResponse" name="kpResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ch_async">
+      <wsdl:input message="tns:ch_async" name="ch_async">
+    </wsdl:input>
+      <wsdl:output message="tns:ch_asyncResponse" name="ch_asyncResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="V20FacadeImplServiceSoapBinding" type="tns:V20Facade">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="kp_async">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="kp_async">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="kp_asyncResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ch">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ch">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="chResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="cx">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="cx">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="cxResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="kp">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="kp">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="kpResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ch_async">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="ch_async">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ch_asyncResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="V20FacadeImplService">
+    <wsdl:port binding="tns:V20FacadeImplServiceSoapBinding" name="inbound.webServices.ticket.saServiceSoap">
+      <soap:address location="http://www.chinaeinv.com:980/igs/ws/invoiceApi"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

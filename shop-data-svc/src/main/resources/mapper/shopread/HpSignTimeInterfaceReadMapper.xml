@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.HpSignTimeInterfaceReadDao" >
+    <resultMap id="BaseResultMap" type="com.haier.shop.model.HpSignTimeInterface" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+        <result column="status_time" property="statusTime" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="row_id" property="rowId" jdbcType="VARCHAR" />
+        <result column="tb_no" property="tbNo" jdbcType="VARCHAR" />
+        <result column="www_mark" property="wwwMark" jdbcType="VARCHAR" />
+        <result column="lbx_no" property="lbxNo" jdbcType="VARCHAR" />
+        <result column="sku" property="sku" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+        <result column="last_time" property="lastTime" jdbcType="VARCHAR" />
+        <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+        <result column="vom_count" jdbcType="INTEGER" property="vomCount" />
+        <result column="accept_count" jdbcType="INTEGER" property="acceptCount" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, order_sn, status_time, status, row_id, tb_no, www_mark, lbx_no, sku, count, last_time,data_status, vom_count, accept_count
+    </sql>
+    <select id="selectByTbNoAndLbx" resultMap="BaseResultMap" parameterType="com.haier.shop.model.HpSignTimeInterface" >
+        select
+        <include refid="Base_Column_List" />
+        from hp_sign_time_interface
+        where tb_no = #{tbNo} and lbx_no = #{lbxNo}
+        and sku = #{sku}
+    </select>
+
+</mapper>

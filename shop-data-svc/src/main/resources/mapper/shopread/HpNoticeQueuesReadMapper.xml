@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.HpNoticeQueuesReadDao">
+	<resultMap id="hpNoticeQueuesResult" type="com.haier.shop.model.HpNoticeQueues">
+		<id column="id" property="id"/>
+		<result column="orderProductId" property="orderProductId"/>
+		<result column="success" property="success"/>
+		<result column="count" property="count"/>
+		<result column="addTime" property="addTime"/>
+		<result column="successTime" property="successTime"/>
+		<result column="lastTryTime" property="lastTryTime"/>
+		<result column="modifyTime" property="modifyTime"/>
+		<result column="pushData" property="pushData"/>
+		<result column="returnData" property="returnData"/>
+		<result column="lastMessage" property="lastMessage"/>
+	</resultMap>
+	<select id="getNoticeQueuesList" parameterType="Integer" resultMap="hpNoticeQueuesResult">
+     <![CDATA[
+        select * from HPNoticeQueues where success = 0  and count < 30 limit #{max}
+     ]]>
+	</select>
+  
+</mapper>

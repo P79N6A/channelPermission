@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    ~ Copyright (c) 2017 interconn@Haier
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--注册中心发现服务地址-->
+    <!--<dubbo:registry address="zookeeper://127.0.0.1:2181"/>-->
+    <!-- 生成远程服务代理，可以和本地bean一样使用-->
+    <!-- <dubbo:reference retries="0" interface="com.haier.system.service.DemoService"
+                      id="demoService" check="false" timeout="10000"/>-->
+    <dubbo:reference retries="0" interface="com.haier.system.service.SysAccessLogService"
+                     id="sysAccessLogService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SysActionService"
+                     id="sysActionService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SysMenuService"
+                     id="sysMenuService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SysPermissionService"
+                     id="sysPermissionService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SysRoleService"
+                     id="sysRoleService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SysSessionService"
+                     id="sysSessionService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SysUserRoleService"
+                     id="sysUserRoleService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SysUserService"
+                     id="sysUserService" version="1.0.0" timeout="1200000" check="false"/>
+                     
+    <dubbo:reference retries="0" interface="com.haier.system.service.BaseErrService"
+                     id="baseErrService" version="1.0.0" timeout="1200000" check="false"/>
+                     
+    <dubbo:reference retries="0" interface="com.haier.system.service.PlanInDateService"
+                   	id="planInDateService" version="1.0.0" timeout="1200000" check="false"/>
+
+</beans>

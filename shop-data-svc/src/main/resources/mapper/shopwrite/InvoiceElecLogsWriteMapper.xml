@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.InvoiceElectricLogsWriteDao">
+
+    <update id="updateByInvoiceIdAndType" parameterType="com.haier.shop.model.InvoiceElectricLogs">
+        update `InvoiceElectricLogs` set `addTime`=#{addTime},`orderProductId`=#{orderProductId},`cOrderSn`=#{cOrderSn},`pushData`=#{pushData},`returnData`=#{returnData},`analysisResult`=#{analysisResult},`verifyResult`=#{verifyResult},`success`=#{success},`lastTime`=#{lastTime},`lastMessage`=#{lastMessage},`smsFlag`=#{smsFlag}
+        <if test="count != null and count !=''">
+            ,`count`=#{count}
+        </if>
+        where `invoiceId`=#{invoiceId} and `type`=#{type} order by id desc limit 1
+    </update>
+
+    <insert id="insertLog" parameterType="com.haier.shop.model.InvoiceElectricLogs">
+        insert into `InvoiceElectricLogs`(`addTime`,`orderProductId`,`cOrderSn`,`invoiceId`,`type`,`pushData`,`returnData`,`analysisResult`,`verifyResult`,`success`,`count`,`lastTime`,`lastMessage`,`smsFlag`)
+        values(#{addTime},#{orderProductId},#{cOrderSn},#{invoiceId},#{type},#{pushData},#{returnData},#{analysisResult},#{verifyResult},#{success},#{count},#{lastTime},#{lastMessage},#{smsFlag})
+    </insert>
+
+    <update id="update" parameterType="com.haier.shop.model.InvoiceElectricLogs">
+        update `InvoiceElectricLogs` set `addTime`=#{addTime},`orderProductId`=#{orderProductId},`cOrderSn`=#{cOrderSn},`invoiceId`=#{invoiceId},`type`=#{type},`pushData`=#{pushData},`returnData`=#{returnData},`analysisResult`=#{analysisResult},`verifyResult`=#{verifyResult},`success`=#{success},`lastTime`=#{lastTime},`lastMessage`=#{lastMessage},`smsFlag`=#{smsFlag}
+        <if test="count != null and count !=''">
+            ,`count`=#{count}
+        </if>
+        where `id` = #{id}
+    </update>
+</mapper>

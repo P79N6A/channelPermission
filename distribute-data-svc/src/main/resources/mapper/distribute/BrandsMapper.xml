@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.BrandsDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.Brands" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="siteId" property="siteId" jdbcType="INTEGER" />
+    <result column="brandName" property="brandName" jdbcType="VARCHAR" />
+    <result column="brandCode" property="brandCode" jdbcType="VARCHAR" />
+    <result column="brandLogo" property="brandLogo" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="brandUrl" property="brandUrl" jdbcType="VARCHAR" />
+    <result column="isBest" property="isBest" jdbcType="TINYINT" />
+    <result column="sortNum" property="sortNum" jdbcType="INTEGER" />
+    <result column="channel" property="channel" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, siteId, brandName, brandCode, brandLogo, description, brandUrl, isBest, sortNum, 
+    channel
+  </sql>
+  <select id="selectBrandsList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from Brands
+  </select>
+    <select id="selectBrandsIdList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from Brands
+    where id= #{id,jdbcType=INTEGER}
+  </select>
+  <select id="get" parameterType="Integer" resultMap="BaseResultMap">
+    select `id`,`siteId`,`brandName`,`brandCode`,`brandLogo`,`brandUrl`,`isBest`
+    from `Brands`
+    where `id` = #{id}
+  </select>
+  <select id="getAllBrands" resultMap="BaseResultMap">
+		select `id`,`siteId`,`brandName`,`brandCode`,`brandLogo`,`brandUrl`,`isBest`
+		from `Brands`
+	</select>
+</mapper>

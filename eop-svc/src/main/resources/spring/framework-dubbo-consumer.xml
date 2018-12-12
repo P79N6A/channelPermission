@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    ~ Copyright (c) 2017 interconn@Haier
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--注册中心发现服务地址-->
+    <!--<dubbo:registry address="zookeeper://127.0.0.1:2181"/>-->
+    <!-- 生成远程服务代理，可以和本地bean一样使用-->
+    <!-- <dubbo:reference retries="0" interface="com.haier.eop.service.DemoService"
+                      id="demoService" check="false" timeout="10000"/>-->
+            <dubbo:reference retries="0" interface="com.haier.eop.data.service.StocksyncproductsService"
+                      id="stocksyncproductsService"  version="1.0.0" timeout="1200000"  check="false"/>
+            <dubbo:reference retries="0" interface="com.haier.shop.service.ProductsService"
+                      id="productsService"   version="1.0.0"  timeout="1200000"  check="false"/>
+             <dubbo:reference retries="0" interface="com.haier.eop.data.service.StocksyncProstorageService"
+                      id="stocksyncProstorageService"   version="1.0.0"  timeout="1200000"  check="false"/>         
+			 <dubbo:reference retries="0" interface="com.haier.eop.data.service.StocksynCstorageService"
+                      id="stocksynCstorageService"   version="1.0.0"  timeout="1200000"  check="false"/>
+              <dubbo:reference retries="0" interface="com.haier.shop.service.StoragesService"
+                      id="storagesService"   version="1.0.0"  timeout="1200000"  check="false"/>     
+              <dubbo:reference retries="0" interface="com.haier.eop.data.service.StockSyncLogService"
+                      id="stockSyncLogService"   version="1.0.0"  timeout="1200000"  check="false"/>                   
+			<dubbo:reference retries="0" interface="com.haier.eop.data.service.SalesettingsService"
+                      id="salesettingsService"   version="1.0.0"  timeout="1200000"  check="false"/>                   
+			
+
+</beans>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStoreLockDao">
+	<resultMap id="invStoreLockResult" type="com.haier.stock.model.InvStoreLock">
+		<result property="id" column="id" />
+		<result property="sku" column="sku" />
+		<result property="itemProperty" column="item_property" />
+		<result property="storeCode" column="store_code" />
+		<result property="refNo" column="ref_no" />
+		<result property="source" column="source" />
+		<result property="lockQty" column="lock_qty" />
+		<result property="releaseQty" column="release_qty" />
+		<result property="lockTime" column="lock_time" />
+		<result property="releaseTime" column="release_time" />
+		<result property="optUser" column="opt_user" />
+	</resultMap>
+    <select id="getNotReleased" resultMap="invStoreLockResult">
+    	<![CDATA[
+        select `id`,`sku`,`item_property`,`store_code`,`ref_no`,`source`,`lock_qty`,`release_qty`,`lock_time`,`release_time`,`opt_user`
+		from `inv_store_lock`
+        WHERE `ref_no` = #{refNo} AND `sku` = #{sku} AND `store_code` = #{storeCode} AND `item_property`=#{itemProperty} AND `lock_qty` > `release_qty`
+        ]]>
+    </select>
+    <select id="getNotReleasedForUpdate" resultMap="invStoreLockResult">
+    	<![CDATA[
+        select `id`,`sku`,`item_property`,`store_code`,`ref_no`,`source`,`lock_qty`,`release_qty`,`lock_time`,`release_time`,`opt_user`
+		from `inv_store_lock`
+        WHERE `ref_no` = #{refNo} AND `sku` = #{sku} AND `store_code` = #{storeCode} AND `item_property`=#{itemProperty} AND `lock_qty` > `release_qty`
+        LIMIT 1
+        ]]>
+    </select>
+	<select id="get" parameterType="Integer" resultMap="invStoreLockResult">
+		select `id`,`sku`,`item_property`,`store_code`,`ref_no`,`source`,`lock_qty`,`release_qty`,`lock_time`,`release_time`,`opt_user`
+		from `inv_store_lock`
+		where `id` = #{id}
+	</select>
+	<insert id="insert" parameterType="com.haier.stock.model.InvStoreLock">
+    	<![CDATA[
+        INSERT INTO `inv_store_lock` (`sku`, `store_code`, `ref_no`, `source`,`lock_qty`, `release_qty`, `lock_time`, `release_time`,  `opt_user`, `item_property`)
+            SELECT
+                #{sku},
+                #{storeCode},
+                #{refNo},
+                #{source},
+                #{lockQty},
+                #{releaseQty},
+                #{lockTime},
+                null,
+                #{optUser},
+                #{itemProperty}
+            FROM dual
+            WHERE NOT exists
+            (
+                    SELECT 1
+                    FROM `inv_store_lock` l
+                    WHERE
+                        l.sku = #{sku} AND l.ref_no = #{refNo} AND l.store_code = #{storeCode} AND l.item_property=#{itemProperty} AND `lock_qty` > `release_qty`
+            )
+        ]]>
+    </insert>
+	<update id="update" parameterType="com.haier.stock.model.InvStoreLock">
+		update `inv_store_lock` set `sku`=#{sku},`item_property`=#{itemProperty},`store_code`=#{storeCode},`ref_no`=#{refNo},`source`=#{source},`lock_qty`=#{lockQty},`release_qty`=#{releaseQty},`lock_time`=#{lockTime},`release_time`=#{releaseTime},`opt_user`=#{optUser}
+		where `id` = #{id}
+	</update>
+	<update id="updateReleaseQty" parameterType="Map">
+		<![CDATA[
+        UPDATE `inv_store_lock`
+        SET `release_qty` = `release_qty` + #{releaseQty}, `release_time` = now(), opt_user = #{optUser}
+        WHERE `id` = #{id} 
+        AND `lock_qty` >= (`release_qty` + #{releaseQty})
+        AND `item_property`=#{itemProperty}
+        ]]>
+	</update>
+	
+	<select id="getNoReleaseByLockTime" resultMap="invStoreLockResult">
+        SELECT `id`,`sku`,`item_property`,`store_code`,`ref_no`,`source`,`lock_qty`,`release_qty`,`lock_time`,`release_time`,`opt_user` 
+        FROM inv_store_lock k 
+        WHERE k.lock_qty > k.release_qty 
+        AND lock_time <![CDATA[<=]]> #{lockTime}
+        ORDER BY k.id 
+        <if test="topx != null ">
+        LIMIT #{topx}
+        </if>
+	</select>
+	
+</mapper>

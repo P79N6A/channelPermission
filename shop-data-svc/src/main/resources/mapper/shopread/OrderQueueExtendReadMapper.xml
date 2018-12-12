@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderQueueExtendReadDao">
+	<resultMap id="orderQueueExtendResult" type="com.haier.shop.model.OrderQueueExtend">
+		<result property="id" column="id" />
+		<result property="cordersn" column="cordersn" />
+		<result property="sku" column="sku" />
+		<result property="secCode" column="secCode" />
+		<result property="source" column="source" />
+		<result property="qty" column="qty" />
+		<result property="status" column="status" />
+		<result property="cancelStatus" column="cancel_status" />
+		<result property="syncOrderStatus" column="sync_order_status" />
+		<result property="financeStatus" column="finance_status" />
+		<result property="errorMessage" column="error_message" />
+		<result property="addTime" column="add_time" />
+		<result property="deliveryTime" column="delivery_time" />
+		<result property="expressCompany" column="express_company" />
+		<result property="expressNumber" column="express_number" />
+		<result property="outJson" column="out_json"/>
+		<result property="sapMessage" column="sap_message"/>
+		<result property="invoiceStatus" column="invoice_status"/>
+		<result property="invoiceJson" column="invoice_json"/>
+		<result property="invoiceMessage" column="invoice_message"/>
+		<result property="outping" column="outping"/>
+		<result property="netpointCode" column="netpoint_code"/>
+		<result property="netpointName" column="netpoint_name"/>
+		<result property="netpointTel" column="netpoint_tel"/>
+		<result property="dnNumber" column="dn_number"/>
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="orderQueueExtendResult">
+		SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,`cancel_status`,`sync_order_status`,
+		`finance_status`,`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
+		`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
+		FROM `OrderQueueExtend`
+		WHERE  1=1 and `sync_order_status`=0 ORDER BY id DESC
+	</select>
+	<!-- 同步网单状态 -->
+	<select id="queryOrderQueueExtList" resultMap="orderQueueExtendResult">
+		SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,`cancel_status`,`sync_order_status`,
+		`finance_status`,`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
+		`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
+		FROM `OrderQueueExtend`
+		WHERE  1=1 and `sync_order_status`=#{syncOrderStatus} and `source`=#{source} and `cancel_status`=0
+	</select>
+	<!-- 查询未传财务 -->
+	<select id="queryOrderOutList" resultMap="orderQueueExtendResult">
+		SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,
+	    	   `cancel_status`,`sync_order_status`,`finance_status`,
+	    	   `error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
+	    	   `out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
+	    	   `outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
+		FROM `OrderQueueExtend`
+		WHERE  1=1 
+		<!-- 只查询海朋 -->
+		and `source`='HAIP'
+		<!-- 出库状态的 -->
+		and `status` &gt;=2 
+		<!-- 未取消的 -->
+		and `cancel_status`=0
+		<!-- 传财务状态的 --> 
+		and `finance_status`=#{financeStatus}
+		<!-- 同步网单状态的 -->
+		and sync_order_status=1 ORDER BY id asc limit 200
+	</select>
+	<!-- 第三方查询未传财务 -->
+	<select id="queryThirdPartyOrderOutList" resultMap="orderQueueExtendResult">
+		SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,
+	    	   `cancel_status`,`sync_order_status`,`finance_status`,
+	    	   `error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
+	    	   `out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
+	    	   `outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
+		FROM `OrderQueueExtend`
+		WHERE  1=1 
+		<!-- 查询对应渠道 -->
+		and `source`=#{source}
+		<!-- 出库状态的 -->
+		and `status` &gt;=#{status} 
+		<!-- 未取消的 -->
+		and `cancel_status`=0
+		<!-- 传财务状态的 --> 
+		and `finance_status`=#{financeStatus}
+		<!-- 同步网单状态的 -->
+		and sync_order_status=1 ORDER BY id asc limit 200
+	</select>
+	<!-- 发票传财务 -->
+	<select id="queryInvoiceList" resultMap="orderQueueExtendResult">
+	    SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,
+	    	`cancel_status`,`sync_order_status`,`finance_status`,
+	    	`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
+	    	`out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
+	    	`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
+		FROM `OrderQueueExtend`
+		WHERE  1=1 
+		AND `source`='HAIP'
+		AND `status` &gt;=2
+		AND `cancel_status`=0
+		AND `invoice_json` is not null
+		AND `invoice_status` =#{invoiceStatus} ORDER BY id asc limit 1000
+	</select>
+	<select id="getLastOrderSnByOrderSource" resultMap="orderQueueExtendResult">
+		 SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,
+	    	`cancel_status`,`sync_order_status`,`finance_status`,
+	    	`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
+	    	`out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
+	    	`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
+		FROM `OrderQueueExtend` WHERE `source`=#{source} order by id desc limit 1
+	</select>
+	<select id="getByCOrderSnAndOrderSource" resultMap="orderQueueExtendResult">
+		 SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,
+	    	`cancel_status`,`sync_order_status`,`finance_status`,
+	    	`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
+	    	`out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
+	    	`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
+		FROM `OrderQueueExtend` WHERE `cordersn`=#{cordersn} and `source`=#{source}
+	</select>
+
+	<resultMap id="ordersResult" type="com.haier.shop.model.OrdersNew">
+		<result property="id" column="id"/>
+		<result property="siteId" column="siteId"/>
+		<result property="isTest" column="isTest"/>
+		<result property="hasSync" column="hasSync"/>
+		<result property="isBackend" column="isBackend"/>
+		<result property="isBook" column="isBook"/>
+		<result property="isCod" column="isCod"/>
+		<result property="notAutoConfirm" column="notAutoConfirm"/>
+		<result property="isPackage" column="isPackage"/>
+		<result property="packageId" column="packageId"/>
+		<result property="orderSn" column="orderSn"/>
+		<result property="relationOrderSn" column="relationOrderSn"/>
+		<result property="memberId" column="memberId"/>
+		<result property="predictId" column="predictId"/>
+		<result property="memberEmail" column="memberEmail"/>
+		<result property="addTime" column="addTime"/>
+		<result property="syncTime" column="syncTime"/>
+		<result property="orderStatus" column="orderStatus"/>
+		<result property="payTime" column="payTime"/>
+		<result property="paymentStatus" column="paymentStatus"/>
+		<result property="receiptConsignee" column="receiptConsignee"/>
+		<result property="receiptAddress" column="receiptAddress"/>
+		<result property="receiptZipcode" column="receiptZipcode"/>
+		<result property="receiptMobile" column="receiptMobile"/>
+		<result property="productAmount" column="productAmount"/>
+		<result property="orderAmount" column="orderAmount"/>
+		<result property="paidBalance" column="paidBalance"/>
+		<result property="giftCardAmount" column="giftCardAmount"/>
+		<result property="paidAmount" column="paidAmount"/>
+		<result property="shippingAmount" column="shippingAmount"/>
+		<result property="totalEsAmount" column="totalEsAmount"/>
+		<result property="usedCustomerBalanceAmount" column="usedCustomerBalanceAmount"/>
+		<result property="customerId" column="customerId"/>
+		<result property="bestShippingTime" column="bestShippingTime"/>
+		<result property="paymentCode" column="paymentCode"/>
+		<result property="payBankCode" column="payBankCode"/>
+		<result property="paymentName" column="paymentName"/>
+		<result property="consignee" column="consignee"/>
+		<result property="originRegionName" column="originRegionName"/>
+		<result property="originAddress" column="originAddress"/>
+		<result property="province" column="province"/>
+		<result property="city" column="city"/>
+		<result property="region" column="region"/>
+		<result property="street" column="street"/>
+		<result property="markBuilding" column="markBuilding"/>
+		<result property="poiId" column="poiId"/>
+		<result property="poiName" column="poiName"/>
+		<result property="regionName" column="regionName"/>
+		<result property="address" column="address"/>
+		<result property="zipcode" column="zipcode"/>
+		<result property="mobile" column="mobile"/>
+		<result property="phone" column="phone"/>
+		<result property="receiptInfo" column="receiptInfo"/>
+		<result property="delayShipTime" column="delayShipTime"/>
+		<result property="remark" column="remark"/>
+		<result property="bankCode" column="bankCode"/>
+		<result property="agent" column="agent"/>
+		<result property="confirmTime" column="confirmTime"/>
+		<result property="firstConfirmTime" column="firstConfirmTime"/>
+		<result property="firstConfirmPerson" column="firstConfirmPerson"/>
+		<result property="finishTime" column="finishTime"/>
+		<result property="tradeSn" column="tradeSn"/>
+		<result property="signCode" column="signCode"/>
+		<result property="source" column="source"/>
+		<result property="sourceOrderSn" column="sourceOrderSn"/>
+		<result property="onedayLimit" column="onedayLimit"/>
+		<result property="logisticsManner" column="logisticsManner"/>
+		<result property="afterSaleManner" column="afterSaleManner"/>
+		<result property="personManner" column="personManner"/>
+		<result property="visitRemark" column="visitRemark"/>
+		<result property="visitTime" column="visitTime"/>
+		<result property="visitPerson" column="visitPerson"/>
+		<result property="sellPeople" column="sellPeople"/>
+		<result property="sellPeopleManner" column="sellPeopleManner"/>
+		<result property="orderType" column="orderType"/>
+		<result property="hasReadTaobaoOrderComment" column="hasReadTaobaoOrderComment"/>
+		<result property="memberInvoiceId" column="memberInvoiceId"/>
+		<result property="taobaoGroupId" column="taobaoGroupId"/>
+		<result property="tradeType" column="tradeType"/>
+		<result property="stepTradeStatus" column="stepTradeStatus"/>
+		<result property="stepPaidFee" column="stepPaidFee"/>
+		<result property="depositAmount" column="depositAmount"/>
+		<result property="balanceAmount" column="balanceAmount"/>
+		<result property="autoCancelDays" column="autoCancelDays"/>
+		<result property="isNoLimitStockOrder" column="isNoLimitStockOrder"/>
+		<result property="ccbOrderReceivedLogId" column="ccbOrderReceivedLogId"/>
+		<result property="ip" column="ip"/>
+		<result property="isGiftCardOrder" column="isGiftCardOrder"/>
+		<result property="giftCardDownloadPassword" column="giftCardDownloadPassword"/>
+		<result property="giftCardFindMobile" column="giftCardFindMobile"/>
+		<result property="autoConfirmNum" column="autoConfirmNum"/>
+		<result property="codConfirmPerson" column="codConfirmPerson"/>
+		<result property="codConfirmTime" column="codConfirmTime"/>
+		<result property="codConfirmRemark" column="codConfirmRemark"/>
+		<result property="codConfirmState" column="codConfirmState"/>
+		<result property="paymentNoticeUrl" column="paymentNoticeUrl"/>
+		<result property="addressLon" column="addressLon"/>
+		<result property="addressLat" column="addressLat"/>
+		<result property="smConfirmStatus" column="smConfirmStatus"/>
+		<result property="smConfirmTime" column="smConfirmTime"/>
+		<result property="smManualTime" column="smManualTime"/>
+		<result property="smManualRemark" column="smManualRemark"/>
+		<result property="isTogether" column="isTogether"/>
+		<result property="isNotConfirm" column="isNotConfirm"/>
+		<result property="points" column="points"/>
+		<result property="isProduceDaily" column="isProduceDaily"/>
+		<result property="tailPayTime" column="tailPayTime"/>
+		<result property="couponCode" column="couponCode"/>
+		<result property="couponCodeValue" column="couponCodeValue"/>
+		<result property="ckCode" column="ckCode"/>
+	</resultMap>
+	<select id="getOrderById" parameterType="Integer" resultMap="ordersResult">
+		SELECT
+		`id`,
+		`siteId`,
+		`isTest`,
+		`hasSync`,
+		`isBackend`,
+		`isBook`,
+		`isCod`,
+		`notAutoConfirm`,
+		`isPackage`,
+		`packageId`,
+		`orderSn`,
+		`relationOrderSn`,
+		`memberId`,
+		`predictId`,
+		`memberEmail`,
+		`addTime`,
+		`syncTime`,
+		`orderStatus`,
+		`payTime`,
+		`paymentStatus`,
+		`receiptConsignee`,
+		`receiptAddress`,
+		`receiptZipcode`,
+		`receiptMobile`,
+		`productAmount`,
+		`orderAmount`,
+		`paidBalance`,
+		`giftCardAmount`,
+		`paidAmount`,
+		`shippingAmount`,
+		`totalEsAmount`,
+		`usedCustomerBalanceAmount`,
+		`customerId`,
+		`bestShippingTime`,
+		`paymentCode`,
+		`payBankCode`,
+		`paymentName`,
+		`consignee`,
+		`originRegionName`,
+		`originAddress`,
+		`province`,
+		`city`,
+		`region`,
+		`street`,
+		`markBuilding`,
+		`poiId`,
+		`poiName`,
+		`regionName`,
+		`address`,
+		`zipcode`,
+		`mobile`,
+		`phone`,
+		`receiptInfo`,
+		`delayShipTime`,
+		`remark`,
+		`bankCode`,
+		`agent`,
+		`confirmTime`,
+		`firstConfirmTime`,
+		`firstConfirmPerson`,
+		`finishTime`,
+		`tradeSn`,
+		`signCode`,
+		`source`,
+		`sourceOrderSn`,
+		`onedayLimit`,
+		`logisticsManner`,
+		`afterSaleManner`,
+		`personManner`,
+		`visitRemark`,
+		`visitTime`,
+		`visitPerson`,
+		`sellPeople`,
+		`sellPeopleManner`,
+		`orderType`,
+		`hasReadTaobaoOrderComment`,
+		`memberInvoiceId`,
+		`taobaoGroupId`,
+		`tradeType`,
+		`stepTradeStatus`,
+		`stepPaidFee`,
+		`depositAmount`,
+		`balanceAmount`,
+		`autoCancelDays`,
+		`isNoLimitStockOrder`,
+		`ccbOrderReceivedLogId`,
+		`ip`,
+		`isGiftCardOrder`,
+		`giftCardDownloadPassword`,
+		`giftCardFindMobile`,
+		`autoConfirmNum`,
+		`codConfirmPerson`,
+		`codConfirmTime`,
+		`codConfirmRemark`,
+		`codConfirmState`,
+		`paymentNoticeUrl`,
+		`addressLon`,
+		`addressLat`,
+		`smConfirmStatus`,
+		`smConfirmTime`,
+		`smManualTime`,
+		`smManualRemark`,
+		`isTogether`,
+		`isNotConfirm`,
+		`points`,
+		`isProduceDaily`,
+		`tailPayTime`,
+		`ckCode`
+		FROM `Orders`
+		WHERE `id` = #{id}
+	</select>
+	<select id="getMemberMobile" parameterType="Integer" resultType="String">
+		select mobile from Members where id = #{id}
+	</select>
+</mapper>

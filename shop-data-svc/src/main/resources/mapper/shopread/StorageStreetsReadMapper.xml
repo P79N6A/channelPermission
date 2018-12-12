@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.StorageStreetsReadDao">
+    <resultMap id="storageStreetsResult" type="com.haier.shop.model.StorageStreets">
+        <result property="id" column="id"/>
+        <result property="provinceId" column="provinceId"/>
+        <result property="cityId" column="cityId"/>
+        <result property="regionId" column="regionId"/>
+        <result property="cityId" column="city_id"/>
+        <result property="streetId" column="streetId"/>
+        <result property="provinceName" column="provinceName"/>
+        <result property="cityName" column="cityName"/>
+        <result property="regionName" column="regionName"/>
+        <result property="streetName" column="streetName"/>
+        <result property="sCodeA" column="sCodeA"/>
+        <result property="sCodeB" column="sCodeB"/>
+        <result property="onedayLimit" column="onedayLimit"/>
+        <result property="tcCover" column="tcCover"/>
+        <result property="tcLimit" column="tcLimit"/>
+        <result property="pointCover" column="pointCover"/>
+        <result property="pointLimit" column="pointLimit"/>
+        <result property="timeOutFree" column="timeOutFree"/>
+    </resultMap>
+    <select id="getSCodeByStreet"  resultType="String">
+        select distinct `sCodeA`
+        from `StorageStreets`
+        where `streetId` = #{streetId}
+    </select>
+
+</mapper>

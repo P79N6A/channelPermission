@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.HPFailedsWriteDao">
+
+	<update id="updateHpFailed" parameterType="com.haier.shop.model.HPFaileds">
+		update `HPFaileds` set `pushData`=#{pushData},`success`=#{success},`count`=`count`+1,`lastMessage`=#{lastMessage},`successTime`=#{successTime}
+		where `orderProductId` = #{orderProductId} limit 1
+	</update>
+	<update id="update" parameterType="com.haier.shop.model.HPFaileds">
+		update `HPFaileds` set `orderProductId`=#{orderProductId},`pushData`=#{pushData},`success`=#{success},`count`=#{count},`addTime`=#{addTime},`lastMessage`=#{lastMessage},`successTime`=#{successTime},`createType`=#{createType},`operator`=#{operator}
+		where `id` = #{id}
+	</update>
+</mapper>

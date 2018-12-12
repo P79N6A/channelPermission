@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.CommissionProductDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.CommissionProduct" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="brandId" property="brandId" jdbcType="INTEGER" />
+    <result column="brandName" property="brandName" jdbcType="VARCHAR" />
+    <result column="categoryId" property="categoryId" jdbcType="INTEGER" />
+    <result column="categoryName" property="categoryName" jdbcType="VARCHAR" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="productName" property="productName" jdbcType="VARCHAR" />
+    <result column="monthPolicy" property="monthPolicy" jdbcType="DECIMAL" />
+    <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+     <result column="channelId" property="channelId" jdbcType="INTEGER" />
+    <result column="channelType" property="channelType" jdbcType="CHAR" />
+    <result column="policyYear" property="policyYear" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, brandId, brandName, categoryId, categoryName, sku, productName, monthPolicy, 
+    createBy, createTime, updateBy, updateTime, remark,channelId,channelType,policyYear
+  </sql>
+   <select id="selectCommission_productListf" resultMap="BaseResultMap">
+	SELECT
+	t.*
+	<if test="entity.channelType == '1'.toString()">
+        <![CDATA[ ,c.distributionName ]]>
+      </if>
+      <if test="entity.channelType == '2'.toString() ">
+        <![CDATA[ ,c.channelName ]]>
+      </if>
+	FROM t_commission_policy_product t
+	<if test="entity.channelType == '1'.toString() ">
+        <![CDATA[ LEFT JOIN t_distribution_info c ON    t.channelId = c.id ]]>
+      </if>
+      <if test="entity.channelType == '2'.toString() ">
+        <![CDATA[ LEFT JOIN t_channels_info c ON    t.channelId = c.id ]]>
+      </if>
+	where 1=1 
+	and channelType=#{entity.channelType}
+	and t.policyYear=#{entity.policyYear}
+	<if test="entity!=null">
+		<if test="entity.id != null and entity.id !='' ">
+        <![CDATA[ and id = #{entity.id} ]]>
+      </if>
+	  <if test="entity.sku!= null and entity.sku!='' ">
+        <![CDATA[ and sku like #{entity.sku}]]>
+      </if>
+ 	<if test="entity.brandId != null and entity.brandId !='' ">
+        <![CDATA[ and brandId = #{entity.brandId}]]>
+      </if>
+      <if test="entity.remark != null and entity.remark!='' ">
+        <![CDATA[ and categoryId in(select productTypeId from t_department_product_type where departmentCode=#{entity.remark})]]>
+      </if>
+      <if test="entity.channelId != null and entity.channelId!='' ">
+        <![CDATA[ and channelId = #{entity.channelId}]]>
+      </if>
+	</if>
+	
+	<include refid="pagination" />
+  </select>
+  
+     <select id="selectexportCommission_productListf" resultMap="BaseResultMap">
+	SELECT
+	t.*
+	<if test="entity.channelType == '1'.toString()">
+        <![CDATA[ ,c.distributionName ]]>
+      </if>
+      <if test="entity.channelType == '2'.toString() ">
+        <![CDATA[ ,c.channelName ]]>
+      </if>
+	FROM t_commission_policy_product t
+	<if test="entity.channelType == '1'.toString() ">
+        <![CDATA[ LEFT JOIN t_distribution_info c ON    t.channelId = c.id ]]>
+      </if>
+      <if test="entity.channelType == '2'.toString() ">
+        <![CDATA[ LEFT JOIN t_channels_info c ON    t.channelId = c.id ]]>
+      </if>
+	where 1=1 
+	and channelType=#{entity.channelType}
+	and t.policyYear=#{entity.policyYear}
+	<if test="entity!=null">
+	<if test="entity.channelId != null and entity.channelId !='' ">
+        <![CDATA[ and channelId = #{entity.channelId} ]]>
+      </if>
+		<if test="entity.id != null and entity.id !='' ">
+        <![CDATA[ and id = #{entity.id} ]]>
+      </if>
+	  <if test="entity.sku!= null and entity.sku!='' ">
+        <![CDATA[ and sku like #{entity.sku}]]>
+      </if>
+ 	<if test="entity.brandId != null and entity.brandId !='' ">
+        <![CDATA[ and brandId = #{entity.brandId}]]>
+      </if>
+       <if test="entity.remark != null and entity.remark!='' ">
+        <![CDATA[ and categoryId in(select productTypeId from t_department_product_type where departmentCode=#{entity.remark})]]>
+      </if>
+	</if>
+  </select>
+  <select id="getPagerCountS" resultType="int">
+		select count(id) from t_commission_policy_product
+			where 1=1 
+	and channelType=#{entity.channelType}
+	and policyYear=#{entity.policyYear}
+	<if test="entity!=null">
+	<if test="entity.channelId != null and entity.channelId !='' ">
+        <![CDATA[ and channelId = #{entity.channelId} ]]>
+      </if>
+		<if test="entity.id != null and entity.id !='' ">
+        <![CDATA[ and id = #{entity.id} ]]>
+      </if>
+	  <if test="entity.sku!= null and entity.sku!='' ">
+        <![CDATA[ and sku like #{entity.sku}]]>
+      </if>
+ 	<if test="entity.brandId != null and entity.brandId !='' ">
+        <![CDATA[ and brandId = #{entity.brandId}]]>
+      </if>
+       <if test="entity.remark != null and entity.remark!='' ">
+        <![CDATA[ and categoryId in(select productTypeId from t_department_product_type where departmentCode=#{entity.remark})]]>
+      </if>
+	</if>
+	</select>
+  <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+  <select id="skuAll" resultMap="BaseResultMap">
+  select * from t_commission_policy_product
+  where sku=#{sku,jdbcType=VARCHAR}
+  and  channelType=#{channtype,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_commission_policy_product
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+    <!--  校验 -->
+  <select id="jiaoyan" resultMap="BaseResultMap">
+  select * 
+  from t_commission_policy_product
+  where 
+  		sku  = #{entity.sku}
+  and	channelId	= #{entity.channelId}
+  and	channelType = #{entity.channelType}
+  and   policyYear  = #{entity.policyYear}
+   <if test="entity.id != null and entity.id!='' ">
+        <![CDATA[ and   id  != #{entity.id} ]]>
+      </if>
+  
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_commission_policy_product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.haier.distribute.data.model.CommissionProduct" >
+    insert into t_commission_policy_product (id, brandId, brandName, 
+      categoryId, categoryName, sku, 
+      productName, monthPolicy, createBy, 
+      createTime, updateBy, updateTime, 
+      remark,channelId,channelType,policyYear)
+    values (#{id,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, #{brandName,jdbcType=VARCHAR}, 
+      #{categoryId,jdbcType=INTEGER}, #{categoryName,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, 
+      #{productName,jdbcType=VARCHAR}, #{monthPolicy,jdbcType=DECIMAL}, #{createBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR},#{channelId,jdbcType=INTEGER},#{channelType,jdbcType=VARCHAR},#{policyYear,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.distribute.data.model.CommissionProduct" >
+    insert into t_commission_policy_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="brandId != null" >
+        brandId,
+      </if>
+      <if test="brandName != null" >
+        brandName,
+      </if>
+      <if test="categoryId != null" >
+        categoryId,
+      </if>
+      <if test="categoryName != null" >
+        categoryName,
+      </if>
+      <if test="sku != null" >
+        sku,
+      </if>
+      <if test="productName != null" >
+        productName,
+      </if>
+      <if test="monthPolicy != null" >
+        monthPolicy,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="brandId != null" >
+        #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="brandName != null" >
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryName != null" >
+        #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null" >
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="monthPolicy != null" >
+        #{monthPolicy,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.CommissionProduct" >
+    update t_commission_policy_product
+    <set >
+      <if test="brandId != null" >
+        brandId = #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="brandName != null" >
+        brandName = #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        categoryId = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryName != null" >
+        categoryName = #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null" >
+        sku = #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        productName = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="monthPolicy != null" >
+        monthPolicy = #{monthPolicy,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.CommissionProduct" >
+    update t_commission_policy_product
+    set brandId = #{brandId,jdbcType=INTEGER},
+      brandName = #{brandName,jdbcType=VARCHAR},
+      categoryId = #{categoryId,jdbcType=INTEGER},
+      categoryName = #{categoryName,jdbcType=VARCHAR},
+      sku = #{sku,jdbcType=VARCHAR},
+      productName = #{productName,jdbcType=VARCHAR},
+      monthPolicy = #{monthPolicy,jdbcType=DECIMAL},
+      createBy = #{createBy,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateBy = #{updateBy,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+        channelId = #{channelId,jdbcType=INTEGER},
+      channelType = #{channelType,jdbcType=VARCHAR},
+      policyYear = #{policyYear,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

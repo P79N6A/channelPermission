@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>库存日志</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false,showFooter:true">
+    <table id="invBaseStockLogTable"></table>
+</div>
+
+<div id="exportProduct">
+    <form id="exportForm" action="#">
+        <input id="secCodeData" name="secCodeData" type="hidden">
+        <input id="skuData" name="skuData" type="hidden">
+        <input id="refNoData" name="refNoData" type="hidden">
+        <input id="startCreateTimeData" name="startCreateTimeData" type="hidden">
+        <input id="endCreateTimeData" name="endCreateTimeData" type="hidden">
+        <input id="markData" name="markData" type="hidden">
+        <input id="billTypeData" name="billTypeData" type="hidden">
+        <input id="code" name="code" type="hidden">
+    </form>
+</div>
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+        
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  	单据号
+			</span>
+                <input class="easyui-textbox" id="refNo" name="refNo"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	库位编码
+			</span>
+                <input class="easyui-textbox" id="secCode" name="secCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	物料编码
+			</span>
+                <input class="easyui-textbox" id="sku" name="sku"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  开始日期
+			</span>
+                <input class="easyui-datebox" id="startCreateTime" name="startCreateTime"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  结束日期
+			</span>
+                <input class="easyui-datebox" id="endCreateTime" name="endCreateTime"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  借贷标志
+			</span>
+                <select class="easyui-combobox" id="mark" name="mark" style="width: 174px;" onchange="auto()">
+                    <option value="">全部</option>
+                    <option value="H">出库</option>
+                    <option value="S">入库</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  交易类型
+			</span>
+                <select id="bill_type" name="bill_type" style="width: 174px;height: 26px" >
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn_productList"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this =
+        $(t);
+        if ($this.hasClass('open')) {
+				$this.removeClass('open');
+            setTimeout(function () {
+					$this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+				$this.removeClass('close');
+            setTimeout(function () {
+					$this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#invBaseStockLogTable').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="/static/js/stock/stock/baseStockLogList.js"></script>
+</body>
+</html>

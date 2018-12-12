@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.CommissionTargetDao" >
+  <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.CommissionTarget" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="channelId" property="channelId" jdbcType="INTEGER" />
+    <result column="channelName" property="channelName" jdbcType="VARCHAR" />
+    <result column="brandId" property="brandId" jdbcType="INTEGER" />
+    <result column="brandName" property="brandName" jdbcType="VARCHAR" />
+    <result column="categoryId" property="categoryId" jdbcType="VARCHAR" />
+    <result column="categoryName" property="categoryName" jdbcType="VARCHAR" />
+    <result column="policyYear" property="policyYear" jdbcType="INTEGER" />
+    <result column="targetValue1" property="targetValue1" jdbcType="DECIMAL" />
+    <result column="targetValue2" property="targetValue2" jdbcType="DECIMAL" />
+    <result column="targetValue3" property="targetValue3" jdbcType="DECIMAL" />
+    <result column="targetValue4" property="targetValue4" jdbcType="DECIMAL" />
+    <result column="targetValue5" property="targetValue5" jdbcType="DECIMAL" />
+    <result column="targetValue6" property="targetValue6" jdbcType="DECIMAL" />
+    <result column="targetValue7" property="targetValue7" jdbcType="DECIMAL" />
+    <result column="targetValue8" property="targetValue8" jdbcType="DECIMAL" />
+    <result column="targetValue9" property="targetValue9" jdbcType="DECIMAL" />
+    <result column="targetValue10" property="targetValue10" jdbcType="DECIMAL" />
+    <result column="targetValue11" property="targetValue11" jdbcType="DECIMAL" />
+    <result column="targetValue12" property="targetValue12" jdbcType="DECIMAL" />
+    <result column="targetValueSum" property="targetValueSum" jdbcType="DECIMAL" />
+    <result column="createBy" property="createBy" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="channelType" property="channelType" jdbcType="CHAR" />
+    <result column="quarterStandardReward" property="quarterStandardReward" jdbcType="DECIMAL" />
+    <result column="yearStandardReward" property="yearStandardReward" jdbcType="DECIMAL" />
+  	<result column="targetPolicy1" property="targetPolicy1" jdbcType="DECIMAL" />
+  	<result column="targetPolicy2" property="targetPolicy2" jdbcType="DECIMAL" />
+	<result column="targetPolicy3" property="targetPolicy3" jdbcType="DECIMAL" />
+	<result column="targetPolicy4" property="targetPolicy4" jdbcType="DECIMAL" />
+	<result column="targetPolicy5" property="targetPolicy5" jdbcType="DECIMAL" />
+	<result column="targetPolicy6" property="targetPolicy6" jdbcType="DECIMAL" />
+	<result column="targetPolicy7" property="targetPolicy7" jdbcType="DECIMAL" />
+	<result column="targetPolicy8" property="targetPolicy8" jdbcType="DECIMAL" />
+	<result column="targetPolicy9" property="targetPolicy9" jdbcType="DECIMAL" />
+	<result column="targetPolicy10" property="targetPolicy10" jdbcType="DECIMAL" />
+	<result column="targetPolicy11" property="targetPolicy11" jdbcType="DECIMAL" />
+	<result column="targetPolicy12" property="targetPolicy12" jdbcType="DECIMAL" />
+										  		
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, channelId,brandId,categoryId, policyYear, targetValue1, targetValue2, targetValue3, 
+    targetValue4, targetValue5, targetValue6, targetValue7, targetValue8, targetValue9, 
+    targetValue10, targetValue11, targetValue12, targetValueSum, createBy, createTime, 
+    updateBy, updateTime, remark,channelType,quarterStandardReward,yearStandardReward
+  </sql>
+  <select id="selectCommission_productListf" resultMap="BaseResultMap">
+SELECT
+	t.*,brandName,
+	(select departmentName from t_department_product_type where   t.categoryId = departmentCode   GROUP BY departmentCode  ) as cateName
+	<if test="entity.channelType == '1'.toString()">
+        <![CDATA[ ,c.distributionName ]]>
+      </if>
+      <if test="entity.channelType == '2'.toString() ">
+        <![CDATA[ ,c.channelName ]]>
+      </if>
+	
+	FROM t_commission_target t
+	<if test="entity.channelType == '1'.toString() ">
+        <![CDATA[ LEFT JOIN t_distribution_info c ON    t.channelId = c.id ]]>
+      </if>
+      <if test="entity.channelType == '2'.toString() ">
+        <![CDATA[ LEFT JOIN t_channels_info c ON    t.channelId = c.id ]]>
+      </if>
+	
+	LEFT JOIN Brands b ON  t.brandId = b.id
+	where 1=1 
+	and channelType=#{entity.channelType}
+	<if test="entity!=null">
+	
+		<if test="entity.channelId != null and entity.channelId !='' ">
+        <![CDATA[ and channelId = #{entity.channelId} ]]>
+      </if>
+	  <if test="entity.brandId!= null and entity.brandId!='' ">
+        <![CDATA[ and brandId like #{entity.brandId}]]>
+      </if>
+ 	<if test="entity.categoryId != null and entity.categoryId !='' ">
+        <![CDATA[ and categoryId = #{entity.categoryId}]]>
+      </if>
+      <if test="entity.policyYear != null and entity.policyYear!='' ">
+        <![CDATA[ and policyYear = #{entity.policyYear}]]>
+      </if>
+	</if>
+	<include refid="pagination" />
+  </select>
+  <!--  校验 -->
+  <select id="jiaoyan" resultMap="BaseResultMap">
+  select * 
+  from t_commission_target
+  where 
+     	brandId     = #{entity.brandId}
+  and	categoryId  = #{entity.categoryId}
+  and	channelId	= #{entity.channelId}
+  and	channelType = #{entity.channelType}
+  and   policyYear  = #{entity.policyYear}
+  <if test="entity.id != null and entity.id!='' ">
+        <![CDATA[ and   id  != #{entity.id} ]]>
+      </if>
+  </select>
+<!-- 季度结算 -->
+<select id="selectCommission_target_invoice" resultMap="BaseResultMap">
+ select 
+	  f.* 
+	  ,(f.targetValue1 +f.targetValue2+f.targetValue3) col06 
+	  ,(f.targetValue4 +f.targetValue5+f.targetValue6) col07 
+	  ,(f.targetValue7 +f.targetValue8+f.targetValue9) col08 
+	  ,(f.targetValue10 +f.targetValue11+f.targetValue12) col09
+  	  ,f.categoryId as col10,pc.departmentName as col04 ,
+  	  b.brandName as col05,
+  	  <if test="channelType == '1'.toString()">
+        <![CDATA[ di.distributionName as col03]]>
+      </if>
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ c.channelName as col03]]>
+      </if>
+	  from 
+	  t_commission_target f 
+	  left join t_department_product_type pc on f.categoryId = pc.departmentCode 
+	  left JOIN Brands b on b.id=f.brandId 
+	  LEFT JOIN t_channels_info c ON f.channelId=c.id 
+	    <if test="channelType == '1'.toString()">
+	  left join t_distribution_channel dc on f.channelId=dc.channelId
+	  left join t_distribution_info di on f.channelId=di.id
+	  </if>
+	  where 
+	   f.channelType = #{channelType,jdbcType=INTEGER} 
+	   and f.policyYear=#{policyYear,jdbcType=VARCHAR} 
+   <if test="categoryId !='' ">
+   and f.categoryId = #{categoryId,jdbcType=VARCHAR} 
+  </if>
+  <if test="channelId !=0 ">
+   and f.channelId = #{channelId,jdbcType=INTEGER} 
+  </if>
+  <if test="brandId !=0 ">
+   and f.brandId = #{brandId,jdbcType=INTEGER} 
+  </if>
+  
+   GROUP BY f.id
+	<include refid="pagination" />
+  </select>
+  <!-- 月度导出 -->
+  <select id="selectCommission_target_invoice3" resultMap="BaseResultMap">
+ select 
+	  f.* 
+  	  ,f.categoryId as col10,pc.departmentName as col04 ,
+  	  b.brandName as col05,
+  	  <if test="channelType == '1'.toString()">
+        <![CDATA[ di.distributionName as col03]]>
+      </if>
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ c.channelName as col03]]>
+      </if>
+	  from 
+	  t_commission_target f 
+	  left join t_department_product_type pc on f.categoryId = pc.departmentCode 
+	  left JOIN Brands b on b.id=f.brandId 
+	  LEFT JOIN t_channels_info c ON f.channelId=c.id 
+	    <if test="channelType == '1'.toString()">
+	  left join t_distribution_channel dc on f.channelId=dc.channelId
+	  left join t_distribution_info di on f.channelId=di.id
+	  </if>
+	  where 
+	   f.channelType = #{channelType,jdbcType=INTEGER} 
+	   and f.policyYear=#{policyYear,jdbcType=VARCHAR} 
+   <if test="categoryId !='' ">
+   and f.categoryId = #{categoryId,jdbcType=VARCHAR} 
+  </if>
+  <if test="channelId !=0 ">
+   and f.channelId = #{channelId,jdbcType=INTEGER} 
+  </if>
+  <if test="brandId !=0 ">
+   and f.brandId = #{brandId,jdbcType=INTEGER} 
+  </if>
+  
+   GROUP BY f.id
+  </select>
+  
+  <!--  月度结算 -->
+  <select id="selectCommission_target_invoice1" resultMap="BaseResultMap">
+ select 
+	  f.* 
+  	  ,f.categoryId as col10,pc.departmentName as col04 ,
+  	  b.brandName as col05,
+  	  <if test="channelType == '1'.toString()">
+        <![CDATA[ di.distributionName as col03]]>
+      </if>
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ c.channelName as col03]]>
+      </if>
+	  from 
+	  t_commission_target f 
+	  left join t_department_product_type pc on f.categoryId = pc.departmentCode 
+	  left JOIN Brands b on b.id=f.brandId 
+	  LEFT JOIN t_channels_info c ON f.channelId=c.id 
+	    <if test="channelType == '1'.toString()">
+	  left join t_distribution_channel dc on f.channelId=dc.channelId
+	  left join t_distribution_info di on f.channelId=di.id
+	  </if>
+	  where 
+	   f.channelType = #{channelType,jdbcType=INTEGER} 
+	   and f.policyYear=#{policyYear,jdbcType=VARCHAR} 
+   <if test="categoryId !='' ">
+   and f.categoryId = #{categoryId,jdbcType=VARCHAR} 
+  </if>
+  <if test="channelId !=0 ">
+   and f.channelId = #{channelId,jdbcType=INTEGER} 
+  </if>
+  <if test="brandId !=0 ">
+   and f.brandId = #{brandId,jdbcType=INTEGER} 
+  </if>
+  
+   GROUP BY f.id
+   <include refid="pagination" />
+  </select>
+   <!--  季度导出结算 -->
+  <select id="selectCommission_target_invoice2" resultMap="BaseResultMap">
+ select 
+	  f.* 
+	  ,(f.targetValue1 +f.targetValue2+f.targetValue3) col06 
+	  ,(f.targetValue4 +f.targetValue5+f.targetValue6) col07 
+	  ,(f.targetValue7 +f.targetValue8+f.targetValue9) col08 
+	  ,(f.targetValue10 +f.targetValue11+f.targetValue12) col09
+  	  ,f.categoryId as col10,pc.departmentName as col04 ,
+  	  b.brandName as col05,
+  	  <if test="channelType == '1'.toString()">
+        <![CDATA[ di.distributionName as col03]]>
+      </if>
+      <if test="channelType == '2'.toString() ">
+        <![CDATA[ c.channelName as col03]]>
+      </if>
+	  from 
+	  t_commission_target f 
+	  left join t_department_product_type pc on f.categoryId = pc.departmentCode 
+	  left JOIN Brands b on b.id=f.brandId 
+	  LEFT JOIN t_channels_info c ON f.channelId=c.id 
+	    <if test="channelType == '1'.toString()">
+	  left join t_distribution_channel dc on f.channelId=dc.channelId
+	  left join t_distribution_info di on f.channelId=di.id
+	  </if>
+	  where 
+	   f.channelType = #{channelType,jdbcType=INTEGER} 
+	   and f.policyYear=#{policyYear,jdbcType=VARCHAR} 
+   <if test="categoryId !='' ">
+   and f.categoryId = #{categoryId,jdbcType=VARCHAR} 
+  </if>
+  <if test="channelId !=0 ">
+   and f.channelId = #{channelId,jdbcType=INTEGER} 
+  </if>
+  <if test="brandId !=0 ">
+   and f.brandId = #{brandId,jdbcType=INTEGER} 
+  </if>
+  
+   GROUP BY f.id
+  </select>
+  <select id="getPagerCountInvoice" resultType="int">
+ select count(1) from (
+  select 
+	  count(f.id)
+	  
+	  from 
+	  t_commission_target f 
+	  left join t_department_product_type pc on f.categoryId = pc.departmentCode 
+	  left JOIN Brands b on b.id=f.brandId 
+	  LEFT JOIN t_channels_info c ON f.channelId=c.id 
+	    <if test="channelType == '1'.toString()">
+	  left join t_distribution_channel dc on f.channelId=dc.channelId
+	  left join t_distribution_info di on dc.distributionId= di.id
+	  </if>
+	  where 
+	   f.channelType = #{channelType,jdbcType=INTEGER} 
+	   and f.policyYear=#{policyYear,jdbcType=VARCHAR} 
+   <if test="categoryId !='' ">
+   and f.categoryId = #{categoryId,jdbcType=VARCHAR} 
+  </if>
+  <if test="channelId !=0 ">
+   and f.channelId = #{channelId,jdbcType=INTEGER} 
+  </if>
+  <if test="brandId !=0 ">
+   and f.brandId = #{brandId,jdbcType=INTEGER} 
+  </if>
+  
+   GROUP BY f.id
+   ) col01
+  </select>
+  <select id="getPagerCountInvoice1" resultType="int">
+ select count(1) from (
+  select 
+	  count(f.id)
+	  
+	  from 
+	  t_commission_target f 
+	  left join t_department_product_type pc on f.categoryId = pc.departmentCode 
+	  left JOIN Brands b on b.id=f.brandId 
+	  LEFT JOIN t_channels_info c ON f.channelId=c.id 
+	    <if test="channelType == '1'.toString()">
+	  left join t_distribution_channel dc on f.channelId=dc.channelId
+	  left join t_distribution_info di on dc.distributionId= di.id
+	  </if>
+	  where 
+	   f.channelType = #{channelType,jdbcType=INTEGER} 
+	   and f.policyYear=#{policyYear,jdbcType=VARCHAR} 
+   <if test="categoryId !='' ">
+   and f.categoryId = #{categoryId,jdbcType=VARCHAR} 
+  </if>
+  <if test="channelId !=0 ">
+   and f.channelId = #{channelId,jdbcType=INTEGER} 
+  </if>
+  <if test="brandId !=0 ">
+   and f.brandId = #{brandId,jdbcType=INTEGER} 
+  </if>
+  
+   GROUP BY f.id
+   ) col01
+  </select>
+  <select id="getPagerCountS" resultType="int">
+		select count(id) from t_commission_target
+			where 1=1 
+	and channelType=#{entity.channelType}
+	
+	<if test="entity!=null">
+	
+		<if test="entity.channelId != null and entity.channelId !='' ">
+        <![CDATA[ and channelId = #{entity.channelId} ]]>
+      </if>
+	  <if test="entity.brandId!= null and entity.brandId!='' ">
+        <![CDATA[ and brandId like #{entity.brandId}]]>
+      </if>
+ 	<if test="entity.categoryId != null and entity.categoryId !='' ">
+        <![CDATA[ and categoryId = #{entity.categoryId}]]>
+      </if>
+      <if test="entity.policyYear != null and entity.policyYear!='' ">
+        <![CDATA[ and policyYear = #{entity.policyYear}]]>
+      </if>
+	</if>
+	</select>
+  <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_commission_target
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.haier.distribute.data.model.CommissionTarget" >
+    insert into t_commission_target (id, channelId, brandId, 
+      categoryId, policyYear, targetValue1, 
+      targetValue2, targetValue3, targetValue4, 
+      targetValue5, targetValue6, targetValue7, 
+      targetValue8, targetValue9, targetValue10, 
+      targetValue11, targetValue12, targetValueSum, 
+      createBy, createTime, updateBy, 
+      updateTime, remark,channelType,quarterStandardReward,yearStandardReward
+      ,targetPolicy1,targetPolicy2,targetPolicy3,targetPolicy4,targetPolicy5,targetPolicy6,targetPolicy7
+      ,targetPolicy8,targetPolicy9,targetPolicy10,targetPolicy11,targetPolicy12)
+    values (#{id,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{brandId,jdbcType=INTEGER}, 
+      #{categoryId,jdbcType=VARCHAR}, #{policyYear,jdbcType=INTEGER}, #{targetValue1,jdbcType=DECIMAL}, 
+      #{targetValue2,jdbcType=DECIMAL}, #{targetValue3,jdbcType=DECIMAL}, #{targetValue4,jdbcType=DECIMAL}, 
+      #{targetValue5,jdbcType=DECIMAL}, #{targetValue6,jdbcType=DECIMAL}, #{targetValue7,jdbcType=DECIMAL}, 
+      #{targetValue8,jdbcType=DECIMAL}, #{targetValue9,jdbcType=DECIMAL}, #{targetValue10,jdbcType=DECIMAL}, 
+      #{targetValue11,jdbcType=DECIMAL}, #{targetValue12,jdbcType=DECIMAL}, #{targetValueSum,jdbcType=DECIMAL}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},#{channelType,jdbcType=VARCHAR}, #{quarterStandardReward,jdbcType=DECIMAL}
+      , #{yearStandardReward,jdbcType=DECIMAL}, #{targetPolicy1,jdbcType=DECIMAL}, #{targetPolicy2,jdbcType=DECIMAL}, #{targetPolicy3,jdbcType=DECIMAL}
+      , #{targetPolicy4,jdbcType=DECIMAL}, #{targetPolicy5,jdbcType=DECIMAL}, #{targetPolicy6,jdbcType=DECIMAL}, #{targetPolicy7,jdbcType=DECIMAL}
+      , #{targetPolicy8,jdbcType=DECIMAL}, #{targetPolicy9,jdbcType=DECIMAL}, #{targetPolicy10,jdbcType=DECIMAL}, #{targetPolicy11,jdbcType=DECIMAL}
+      , #{targetPolicy12,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.distribute.data.model.CommissionTarget" >
+    insert into t_commission_target
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="channelId != null" >
+        channelId,
+      </if>
+      <if test="brandId != null" >
+        brandId,
+      </if>
+      <if test="categoryId != null" >
+        categoryId,
+      </if>
+      <if test="policyYear != null" >
+        policyYear,
+      </if>
+      <if test="targetValue1 != null" >
+        targetValue1,
+      </if>
+      <if test="targetValue2 != null" >
+        targetValue2,
+      </if>
+      <if test="targetValue3 != null" >
+        targetValue3,
+      </if>
+      <if test="targetValue4 != null" >
+        targetValue4,
+      </if>
+      <if test="targetValue5 != null" >
+        targetValue5,
+      </if>
+      <if test="targetValue6 != null" >
+        targetValue6,
+      </if>
+      <if test="targetValue7 != null" >
+        targetValue7,
+      </if>
+      <if test="targetValue8 != null" >
+        targetValue8,
+      </if>
+      <if test="targetValue9 != null" >
+        targetValue9,
+      </if>
+      <if test="targetValue10 != null" >
+        targetValue10,
+      </if>
+      <if test="targetValue11 != null" >
+        targetValue11,
+      </if>
+      <if test="targetValue12 != null" >
+        targetValue12,
+      </if>
+      <if test="targetValueSum != null" >
+        targetValueSum,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="brandId != null" >
+        #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="policyYear != null" >
+        #{policyYear,jdbcType=INTEGER},
+      </if>
+      <if test="targetValue1 != null" >
+        #{targetValue1,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue2 != null" >
+        #{targetValue2,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue3 != null" >
+        #{targetValue3,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue4 != null" >
+        #{targetValue4,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue5 != null" >
+        #{targetValue5,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue6 != null" >
+        #{targetValue6,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue7 != null" >
+        #{targetValue7,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue8 != null" >
+        #{targetValue8,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue9 != null" >
+        #{targetValue9,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue10 != null" >
+        #{targetValue10,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue11 != null" >
+        #{targetValue11,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue12 != null" >
+        #{targetValue12,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValueSum != null" >
+        #{targetValueSum,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.CommissionTarget" >
+    update t_commission_target
+    <set >
+      <if test="channelId != null" >
+        channelId = #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="brandId != null" >
+        brandId = #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null" >
+        categoryId = #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="policyYear != null" >
+        policyYear = #{policyYear,jdbcType=INTEGER},
+      </if>
+      <if test="targetValue1 != null" >
+        targetValue1 = #{targetValue1,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue2 != null" >
+        targetValue2 = #{targetValue2,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue3 != null" >
+        targetValue3 = #{targetValue3,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue4 != null" >
+        targetValue4 = #{targetValue4,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue5 != null" >
+        targetValue5 = #{targetValue5,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue6 != null" >
+        targetValue6 = #{targetValue6,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue7 != null" >
+        targetValue7 = #{targetValue7,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue8 != null" >
+        targetValue8 = #{targetValue8,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue9 != null" >
+        targetValue9 = #{targetValue9,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue10 != null" >
+        targetValue10 = #{targetValue10,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue11 != null" >
+        targetValue11 = #{targetValue11,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue12 != null" >
+        targetValue12 = #{targetValue12,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValueSum != null" >
+        targetValueSum = #{targetValueSum,jdbcType=DECIMAL},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.CommissionTarget" >
+    update t_commission_target
+    set channelId = #{channelId,jdbcType=INTEGER},
+      brandId = #{brandId,jdbcType=INTEGER},
+      categoryId = #{categoryId,jdbcType=VARCHAR},
+      policyYear = #{policyYear,jdbcType=INTEGER},
+      targetValue1 = #{targetValue1,jdbcType=DECIMAL},
+      targetValue2 = #{targetValue2,jdbcType=DECIMAL},
+      targetValue3 = #{targetValue3,jdbcType=DECIMAL},
+      targetValue4 = #{targetValue4,jdbcType=DECIMAL},
+      targetValue5 = #{targetValue5,jdbcType=DECIMAL},
+      targetValue6 = #{targetValue6,jdbcType=DECIMAL},
+      targetValue7 = #{targetValue7,jdbcType=DECIMAL},
+      targetValue8 = #{targetValue8,jdbcType=DECIMAL},
+      targetValue9 = #{targetValue9,jdbcType=DECIMAL},
+      targetValue10 = #{targetValue10,jdbcType=DECIMAL},
+      targetValue11 = #{targetValue11,jdbcType=DECIMAL},
+      targetValue12 = #{targetValue12,jdbcType=DECIMAL},
+      targetValueSum = #{targetValueSum,jdbcType=DECIMAL},
+      updateBy = #{updateBy,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+       channelType = #{channelType,jdbcType=VARCHAR},
+        quarterStandardReward = #{quarterStandardReward,jdbcType=DECIMAL},
+      yearStandardReward = #{yearStandardReward,jdbcType=DECIMAL},
+      targetPolicy1 = #{targetPolicy1,jdbcType=DECIMAL},
+      targetPolicy2 = #{targetPolicy2,jdbcType=DECIMAL},
+      targetPolicy3 = #{targetPolicy3,jdbcType=DECIMAL},
+      targetPolicy4 = #{targetPolicy4,jdbcType=DECIMAL},
+      targetPolicy5 = #{targetPolicy5,jdbcType=DECIMAL},
+      targetPolicy6 = #{targetPolicy6,jdbcType=DECIMAL},
+      targetPolicy7 = #{targetPolicy7,jdbcType=DECIMAL},
+      targetPolicy8 = #{targetPolicy8,jdbcType=DECIMAL},
+      targetPolicy9 = #{targetPolicy9,jdbcType=DECIMAL},
+      targetPolicy10 = #{targetPolicy10,jdbcType=DECIMAL},
+      targetPolicy11 = #{targetPolicy11,jdbcType=DECIMAL},
+      targetPolicy12 = #{targetPolicy12,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

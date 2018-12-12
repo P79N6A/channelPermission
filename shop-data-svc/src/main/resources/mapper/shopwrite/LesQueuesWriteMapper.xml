@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.LesQueuesWriteDao">
+	<update id="updateAfterSyncLes" parameterType="com.haier.shop.model.LesQueues">
+		update `LesQueues` 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="count != null">
+				 `count`=#{count},
+			</if>
+			<if test="isLock != null">
+				 `isLock`=#{isLock},
+			</if>
+			<if test="isStop != null">
+				 `isStop`=#{isStop},
+			</if>
+			<if test="lastMessage != null and lastMessage != '' ">
+				 `lastMessage`=#{lastMessage},
+			</if>
+			<if test="success != null">
+				 `success`=#{success},
+			</if>
+			<if test="successTime != null and successTime &gt; 0 ">
+				 `successTime`=#{successTime},
+			</if>
+			<if test="lastTryTime != null and lastTryTime &gt; 0 ">
+				 `lastTryTime`=#{lastTryTime},
+			</if>
+		</trim>
+		where `id`=#{id}
+	</update>
+	<insert id="insert">
+		insert into `LesQueues`(`orderProductId`,`action`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`isLock`,`isStop`,`successTime`,`lastTryTime`) values 
+		<foreach collection="list" item="item" index="index"  separator=",">
+		(#{item.orderProductId},#{item.action},#{item.pushData},#{item.success},#{item.count},#{item.addTime},#{item.lastMessage},#{item.isLock},#{item.isStop},#{item.successTime},#{item.lastTryTime})
+		</foreach>
+	</insert>
+	<update id="updateByOpId" parameterType="com.haier.shop.model.LesQueues">
+		update `LesQueues` 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="count != null">
+				 `count`=#{count},
+			</if>
+			<if test="isLock != null">
+				 `isLock`=#{isLock},
+			</if>
+			<if test="isStop != null">
+				 `isStop`=#{isStop},
+			</if>
+			<if test="lastMessage != null and lastMessage != '' ">
+				 `lastMessage`=#{lastMessage},
+			</if>
+			<if test="success != null">
+				 `success`=#{success},
+			</if>
+			<if test="successTime != null and successTime &gt; 0 ">
+				 `successTime`=#{successTime},
+			</if>
+			<if test="lastTryTime != null and lastTryTime &gt; 0 ">
+				 `lastTryTime`=#{lastTryTime},
+			</if>
+		</trim>
+		where orderProductId = #{orderProductId}
+	</update>
+</mapper>

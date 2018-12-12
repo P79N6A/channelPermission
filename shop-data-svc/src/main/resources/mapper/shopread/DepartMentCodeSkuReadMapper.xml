@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.DepartMentCodeSkuReadDao">
+	<resultMap id="BaseResultMap" type="com.haier.shop.model.DepartMentCodeSku">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="department_code" property="departmentCode"
+			jdbcType="VARCHAR" />
+		<result column="sku" property="sku" jdbcType="VARCHAR" />
+		<result column="department_name" property="departmentName"
+			jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, department_code, sku, department_name, state, update_time
+	</sql>
+
+	<select id="selectKt" parameterType="java.lang.String"
+		resultType="Integer">
+		SELECT
+		1
+		FROM
+		shop.departmentcode_sku
+		WHERE
+		department_name LIKE '%空调%'
+		AND sku = #{sku,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectdepartmentcodesku" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from departmentcode_sku
+		where sku = #{sku,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_orderForecastGoal"></table>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <div class="search-row_nowidth mar_r6px">
+                <select id="smConfirmStatus" name="smConfirmStatus" class="easyui-combobox">
+                    <option value="0">是否转人工处理</option>
+                    <option value="3">是</option>
+                    <option value="-1">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="isCod" name="isCod" class="easyui-combobox">
+                    <option value="-1" style="color: #aaa;">货到付款订单</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="orderSn" name="orderSn" class="easyui-textbox" data-options="prompt:'请输入订单号'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="sourceOrderNo" name="sourceOrderNo" class="easyui-textbox" data-options="prompt:'来源订单号'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="mobile" name="mobile" class="easyui-textbox" data-options="prompt:'手机号码'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="consignee" name="consignee" class="easyui-textbox" data-options="prompt:'收货人'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="productName" name="productName" class="easyui-textbox" data-options="prompt:'商品名称'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="source" name="source" class="easyui-combobox">
+                    <option value="" selected="">订单来源</option>
+                    <option value="TBSC">海尔官方淘宝旗舰店</option>
+                    <option value="TOPBOILER">海尔热水器专卖店</option>
+                    <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
+                    <option value="TONGSHUAIFX">统帅品牌商</option>
+                    <option value="TOPXB">海尔新宝旗舰店</option>
+                    <option value="MOOKA">mooka模卡官方旗舰店</option>
+                    <option value="WASHER">海尔洗衣机旗舰店</option>
+                    <option value="FRIDGE">海尔冰冷旗舰店</option>
+                    <option value="AIR">海尔空调旗舰店</option>
+                    <option value="TBCT">村淘海尔商家</option>
+                    <option value="GQGYS">海尔官方旗舰店供应商</option>
+                    <option value="TMKSD">天猫卡萨帝旗舰店</option>
+                    <option value="TMTV">海尔电视旗舰店</option>
+                    <option value="TBCFDD">海尔厨房大电旗舰店</option>
+                    <option value="TBXCR">天猫小超人旗舰店</option>
+                    <option value="TOPSHJD">海尔生活电器专卖店</option>
+                    <option value="TOPDHSC">海尔生活家电旗舰店</option>
+                    <option value="GMZX">统帅国美旗舰店</option>
+                    <option value="GMZXTS">统帅国美官方旗舰店</option>
+                    <option value="GMTSZYCW">统帅国美旗舰店(厨卫)</option>
+                    <option value="GMTSZYKT">统帅国美旗舰店(空调)</option>
+                    <option value="GMTSZYBX">统帅国美旗舰店(冰箱)</option>
+                    <option value="GMTSZYXYJ">统帅国美旗舰店(洗衣机)</option>
+                    <option value="yihaodian">一号店</option>
+                    <option value="yihaodiants">一号店统帅</option>
+                    <option value="YHDZY">一号店自营</option>
+                    <option value="YHDQWZY">一号店全网自营</option>
+                    <option value="jianhang">建行</option>
+                    <option value="ICBC">工商</option>
+                    <option value="YMX">亚马逊</option>
+                    <option value="SNYG">苏宁</option>
+                    <option value="SNHEGQ">苏宁海尔集团官方旗舰店</option>
+                    <option value="SNQDZX">苏宁渠道中心</option>
+                    <option value="DDW">当当</option>
+                    <option value="YLW">邮乐</option>
+                    <option value="YDYZ">有赞微商城</option>
+                    <option value="KDGW">微店</option>
+                    <option value="MD">萌店</option>
+                    <option value="JDXYJ">京东</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="orderStatus" name="orderStatus" class="easyui-combobox">
+                    <option value="-1" selected="">订单状态</option>
+                    <option value="200">未确认</option>
+                    <option value="201">已确认</option>
+                    <option value="203">已完成</option>
+                    <option value="202">已取消</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="paymentCode" name="paymentCode" class="easyui-combobox">
+                    <option value="" selected="">支付方式</option>
+                    <option value="chinapay">银联支付</option>
+                    <option value="lejia">电子钱包</option>
+                    <option value="alipay">支付宝</option>
+                    <option value="tenpay">财付通</option>
+                    <option value="wxpay">微信支付</option>
+                    <option value="cod">货到付款</option>
+                    <option value="HUABEI">花呗分期</option>
+                    <option value="ccb">建行网银</option>
+                    <option value="prepaid">客户预付贷款</option>
+                    <option value="offline">线下付款</option>
+                    <option value="giftCard">礼品卡支付</option>
+                    <option value="balance">余额支付</option>
+                    <option value="insidestatement">内部结算单</option>
+                    <option value="alipaymobile">支付宝移动商城</option>
+                    <option value="chinaecpay">联行支付</option>
+                    <option value="kjtpay">快捷通</option>
+                    <option value="weixinpc">商城微信</option>
+                    <option value="ccbfenqi">建行信用卡分期</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="paymentStatus" name="paymentStatus" class="easyui-combobox">
+                    <option value="-1" selected="">支付状态</option>
+                    <option value="100">未付款</option>
+                    <option value="101">已付款</option>
+                    <option value="102">待退款</option>
+                    <option value="103">已退款</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="orderType" name="orderType" class="easyui-combobox">
+                    <option value="-1">订单类型</option>
+                    <option value="0">普通订单</option>
+                    <option value="2">定金-尾款订单</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="invoiceType" name="invoiceType" class="easyui-combobox">
+                    <option value="-1">发票类型</option>
+                    <option value="1">增值税发票</option>
+                    <option value="2">普通发票</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="provinceId" name="provinceId" class="easyui-combobox">
+                    <option value="-1">省份</option>
+                    <option value="13">A-安徽</option>
+                    <option value="2">B-北京</option>
+                    <option value="23">C-重庆</option>
+                    <option value="14">F-福建</option>
+                    <option value="25">G-贵州</option>
+                    <option value="20">G-广东</option>
+                    <option value="29">G-甘肃</option>
+                    <option value="21">G-广西</option>
+                    <option value="18">H-湖北</option>
+                    <option value="17">H-河南</option>
+                    <option value="22">H-海南</option>
+                    <option value="19">H-湖南</option>
+                    <option value="9">H-黑龙江</option>
+                    <option value="4">H-河北</option>
+                    <option value="15">J-江西</option>
+                    <option value="8">J-吉林</option>
+                    <option value="11">J-江苏</option>
+                    <option value="7">L-辽宁</option>
+                    <option value="6">N-内蒙古</option>
+                    <option value="31">N-宁夏</option>
+                    <option value="30">Q-青海</option>
+                    <option value="24">S-四川</option>
+                    <option value="5">S-山西</option>
+                    <option value="10">S-上海</option>
+                    <option value="16">S-山东</option>
+                    <option value="28">S-陕西</option>
+                    <option value="3">T-天津</option>
+                    <option value="27">X-西藏</option>
+                    <option value="32">X-新疆</option>
+                    <option value="26">Y-云南</option>
+                    <option value="12">Z-浙江</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="isUsePoint" name="isUsePoint" class="easyui-combobox">
+                    <option value="-1">是否使用积分</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="addTimeBegine" name="addTimeBegine" class="easyui-datebox" data-options="prompt:'订单生成时间'">
+                <span>-</span>
+                <input id="addTimeEnd" name="addTimeEnd" class="easyui-datebox" data-options="prompt:'订单生成时间'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="modifiedBegine" name="modifiedBegine" class="easyui-datebox" data-options="prompt:'订单更新时间'">
+                <span>-</span>
+                <input id="modifiedEnd" name="modifiedEnd" class="easyui-datebox" data-options="prompt:'订单更新时间'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="payTimeSort" name="payTimeSort" class="easyui-combobox">
+                    <option value="asc">按付款时间升序显示</option>
+                    <option value="desc" selected="true">按付款时间降序显示</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="isProduceDaily" name="isProduceDaily" class="easyui-combobox">
+                    <option value="-1">是否日日单</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderForecastGoal"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <!--<a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderForecastGoal"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>-->
+        <a href="#" class="easyui-linkbutton" id="importBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+        <input id="exportData" name="exportData" type="hidden"/>
+    </form>
+</div>
+<div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:350px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>物料编码<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="sku" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>型号<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="materialdescription" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>渠道<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="channelcode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单周<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderweek" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>上单年<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="orderyear" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>目标销售<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="goalqty" required="true"/>
+        </div>
+        <!--<div class="fitem">
+            <label>状态 <span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="status" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-datebox" name="createtime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="createuser" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-datebox" name="updatetime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="updateuser" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>删除标志<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="deleteflag" required="true"/>
+        </div>-->
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_orderForecastGoal').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastGoal').datagrid('resize');
+        }, 500);
+    }
+</script>
+<script src="../static/js/order/orderList.js"></script>
+</body>
+</html>

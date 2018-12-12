@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--广播注册中心暴露服务地址 -->
+  <!--  <dubbo:registry id="demoRegistry" address="zookeeper://127.0.0.1:2181"/>-->
+    <!--  暴露服务 -->
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvBaseStockService"
+                   ref="stockInvBaseStockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvChannel2OrderSourceService"
+                   ref="stockInvChannel2OrderSourceServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvMachineSetService"
+                   ref="stockInvMachineSetServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvRrsWarehouseService"
+                   ref="stockInvRrsWarehouseServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvSectionService"
+                   ref="stockInvSectionServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvStockAgeService"
+                   ref="stockInvStockAgeServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvStockBatchService"
+                   ref="stockInvStockBatchServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvStockChannelService"
+                   ref="stockInvStockChannelServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvStockLockService"
+                   ref="stockInvStockLockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvStockTransactionService"
+                   ref="stockInvStockTransactionServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockInvWarehouseService"
+                   ref="stockInvWarehouseServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockPopInvWarehouseService"
+                   ref="stockPopInvWarehouseServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockStockTransactionExistService"
+                   ref="stockStockTransactionExistServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvReservedToReleaseService"
+                   ref="invReservedToReleaseServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvSection2OmsService"
+                   ref="invSection2OmsServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvBaseStockDiffLogService"
+                   ref="invBaseStockDiffLogServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvBaseStockDiffService"
+                   ref="invBaseStockDiffServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvBaseStockLogService"
+                   ref="invBaseStockLogServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvBaseStoreService"
+                   ref="invBaseStoreServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvBaseSupplierService"
+                   ref="invBaseSupplierServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvChannel2ReceiverService"
+                   ref="invChannel2ReceiverServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvDbmBaseSendAddressService"
+                   ref="invDbmBaseSendAddressServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvDbmBaseService"
+                   ref="invDbmBaseServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvGdFactoryService"
+                   ref="invGdFactoryServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvLesStockService"
+                   ref="invLesStockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvSgStockLockService"
+                   ref="invSgStockLockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvSgStockLogService"
+                   ref="invSgStockLogServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvSgStockService"
+                   ref="invSgStockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStock2ChannelService"
+                   ref="invStock2ChannelServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStockChangeService"
+                   ref="invStockChangeServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStockOrderLockService"
+                   ref="invStockOrderLockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStockQtyDifLogService"
+                   ref="invStockQtyDifLogServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStockService"
+                   ref="invStockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStoreLockService"
+                   ref="invStoreLockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStoreRegionsService"
+                   ref="invStoreRegionsServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStoreService"
+                   ref="invStoreServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStoreSynchService"
+                   ref="invStoreSynchServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvThOrderService"
+                   ref="invThOrderServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvThTransactionService"
+                   ref="invThTransactionServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvTransferLineCancelQueuesService"
+                   ref="invTransferLineCancelQueuesServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvWarehouseInfoService"
+                   ref="invWarehouseInfoServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvWaStreetRefService"
+                   ref="invWaStreetRefServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.ReturnReasonService"
+                   ref="returnReasonServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.OrderMsgQueueService"
+                   ref="orderMsgQueueServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.SgFlagShipStoreAuthorizationService"
+                   ref="sgFlagShipStoreAuthorizationServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.SgStoreService"
+                   ref="sgStoreServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StoreInfoService"
+                   ref="storeInfoServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.MemStockLockService"
+                   ref="memStockLockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvTransferLineService"
+                   ref="invTransferLineServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStockAgeLogService"
+                   ref="invStockAgeLogServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockReservedConfigService"
+                   ref="stockReservedConfigServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStockLockDesService"
+                   ref="invStockLockDesServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvParamService"
+                   ref="invParamServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockTransferLineService"
+                   ref="transferLineServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStockInOutService"
+                   ref="invStockInOutServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.StockTransactionWriteService"
+                   ref="stockTransactionWriteServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStockChannelService"
+                   ref="invStockChannelServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvBaseStockService"
+                   ref="invBaseStockServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.TransferLogService"
+                   ref="transferLogServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.stock.service.InvStockAgeService"
+                   ref="invStockAgeServiceImpl" version="1.0.0" timeout="1200000"/>               
+</beans>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.EcQueuesWriteDao">
+
+
+	<insert id="insert" parameterType="com.haier.shop.model.EcQueues">
+		insert into ec_queues(`order_id`,`order_product_id`,`add_time`,`push_data`,`return_data`,`success`,`count`,`success_time`,`last_try_time`)values(#{orderId},#{orderProductId},#{addTime},#{pushData},#{returnData},#{success},#{count},#{successTime},#{lastTryTime})
+	</insert>
+
+	<update id="update" parameterType="com.haier.shop.model.EcQueues">
+		update ec_queues 
+		set `push_data`=#{pushData},`return_data`=#{returnData},`success`=#{success},`count`=#{count},`success_time`=#{successTime},`last_try_time`=#{lastTryTime}
+		where `id`=#{id}
+	</update>
+
+</mapper>

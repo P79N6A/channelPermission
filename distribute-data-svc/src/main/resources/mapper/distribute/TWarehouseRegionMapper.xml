@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.TWarehouseRegionDao">
+    <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.TWarehouseRegion">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="channelId" property="channelId" jdbcType="INTEGER"/>
+        <result column="regionId" property="regionId" jdbcType="INTEGER"/>
+        <result column="regionParentPath" property="regionParentPath" jdbcType="VARCHAR"/>
+        <result column="warehouseId" property="warehouseId" jdbcType="INTEGER"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="createBy" property="createBy" jdbcType="VARCHAR"/>
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="updateBy" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, channelId, regionId, regionParentPath, warehouseId, province, city, county, createTime, 
+    createBy, updateTime, updateBy, remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_warehouse_region
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_warehouse_region
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.haier.distribute.data.model.TWarehouseRegion">
+    insert into t_warehouse_region (id, channelId, regionId, 
+      regionParentPath, warehouseId, province, 
+      city, county, createTime, 
+      createBy, updateTime, updateBy, 
+      remark)
+    values (#{id,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{regionId,jdbcType=INTEGER}, 
+      #{regionParentPath,jdbcType=VARCHAR}, #{warehouseId,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.haier.distribute.data.model.TWarehouseRegion">
+        insert into t_warehouse_region
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="channelId != null">
+                channelId,
+            </if>
+            <if test="regionId != null">
+                regionId,
+            </if>
+            <if test="regionParentPath != null">
+                regionParentPath,
+            </if>
+            <if test="warehouseId != null">
+                warehouseId,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="county != null">
+                county,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="createBy != null">
+                createBy,
+            </if>
+            <if test="updateTime != null">
+                updateTime,
+            </if>
+            <if test="updateBy != null">
+                updateBy,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="channelId != null">
+                #{channelId,jdbcType=INTEGER},
+            </if>
+            <if test="regionId != null">
+                #{regionId,jdbcType=INTEGER},
+            </if>
+            <if test="regionParentPath != null">
+                #{regionParentPath,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId,jdbcType=INTEGER},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                #{county,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.TWarehouseRegion">
+        update t_warehouse_region
+        <set>
+            <if test="channelId != null">
+                channelId = #{channelId,jdbcType=INTEGER},
+            </if>
+            <if test="regionId != null">
+                regionId = #{regionId,jdbcType=INTEGER},
+            </if>
+            <if test="regionParentPath != null">
+                regionParentPath = #{regionParentPath,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseId != null">
+                warehouseId = #{warehouseId,jdbcType=INTEGER},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="county != null">
+                county = #{county,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                createBy = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                updateBy = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.TWarehouseRegion">
+    update t_warehouse_region
+    set channelId = #{channelId,jdbcType=INTEGER},
+      regionId = #{regionId,jdbcType=INTEGER},
+      regionParentPath = #{regionParentPath,jdbcType=VARCHAR},
+      warehouseId = #{warehouseId,jdbcType=INTEGER},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      county = #{county,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      createBy = #{createBy,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      updateBy = #{updateBy,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!-- 查询条件 -->
+    <sql id="where_fragement">
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and twr.id = #{entity.id} ]]>
+            </if>
+            <if test="entity.channelId != null and entity.channelId !='' ">
+                <![CDATA[ and twr.channelId = #{entity.channelId} ]]>
+            </if>
+            <if test="entity.county != null and entity.county !='' ">
+                <![CDATA[ and twr.county LIKE CONCAT('%', #{entity.county} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId !='' ">
+                <![CDATA[ and twr.warehouseId = #{entity.warehouseId} ]]>
+            </if>
+        </if>
+    </sql>
+    <sql id="where_fragement_count">
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id = #{entity.id} ]]>
+            </if>
+            <if test="entity.channelId != null and entity.channelId !='' ">
+                <![CDATA[ and channelId = #{entity.channelId} ]]>
+            </if>
+            <if test="entity.county != null and entity.county !='' ">
+                <![CDATA[ and county LIKE CONCAT('%', #{entity.county} ,'%') ]]>
+            </if>
+            <if test="entity.warehouseId != null and entity.warehouseId !='' ">
+                <![CDATA[ and warehouseId = #{entity.warehouseId} ]]>
+            </if>
+        </if>
+    </sql>
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+    <!-- 查询page -->
+    <select id="getPageByCondition" resultMap="BaseResultMap">
+        select twr.*,tci.channelCode,tci.channelName,
+        r.regionName,tw.warehouseName,tw.warehouseCode from t_warehouse_region twr LEFT JOIN t_channels_info tci ON
+        twr.channelId = tci.id LEFT JOIN Regions r ON twr.regionId = r.id LEFT JOIN
+        t_warehouse tw on twr.warehouseId = tw.id
+        <include refid="where_fragement"/> 
+        ORDER BY twr.createTime DESC, twr.updateTime DESC,twr.channelId DESC ,twr.warehouseId DESC ,
+        twr.province DESC ,twr.city DESC ,twr.county DESC
+        <include refid="pagination"/>
+    </select>
+    <!--分页count -->
+    <select id="getPagerCount" resultType="long" parameterType="com.haier.distribute.data.model.TWarehouseRegion">
+        select count(1) from t_warehouse_region
+        <include refid="where_fragement_count"/>
+    </select>
+    <select id="checkRegion" resultType="Integer">
+	select count(1) from t_warehouse_region where channelId = #{channelId}
+	and regionId = #{regionId}
+	<if test="id != null and id !='' ">
+	    <![CDATA[ and id != #{id} ]]>
+	</if>
+</select>
+</mapper>

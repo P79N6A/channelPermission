@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.ItemAttributeReadDao">
+	<resultMap id="ItemAttributeResult" type="com.haier.shop.model.ItemAttribute">
+			<result property="id" column="id" />
+			<result property="cbsCategory" column="cbs_category" />
+			<result property="valueId" column="value_id" />
+			<result property="valueSetId" column="value_set_id" />
+			<result property="description" column="description" />
+			<result property="value" column="value" />
+			<result property="valueMeaning" column="value_meaning" />
+			<result property="valueMeaningEn" column="value_meaning_en" />
+			<result property="parentValueLow" column="parent_value_low" />
+			<result property="parentValueSetId" column="parent_value_set_id" />
+			<result property="activeFlag" column="active_flag" />
+			<result property="created" column="created" />
+			<result property="lastUpd" column="last_upd" />
+			<result property="deleteFlag" column="delete_flag" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="ItemAttributeResult">
+		select
+			`id`,
+			`cbs_category`,
+			`value_id`,
+			`value_set_id`,
+			`description`,
+			`value`,
+			`value_meaning`,
+			`value_meaning_en`,
+			`parent_value_low`,
+			`parent_value_set_id`,
+			`active_flag`,
+			`created`,
+			`last_upd`,
+			`delete_flag`
+		from `item_attribute`
+			
+		where `id` = #{id}
+	</select>
+	
+	<select id="getByValueAndValueSetId" parameterType="com.haier.shop.model.ItemAttribute" resultMap="ItemAttributeResult">
+		select
+			`id`,
+			`cbs_category`,
+			`value_id`,
+			`value_set_id`,
+			`description`,
+			`value`,
+			`value_meaning`,
+			`value_meaning_en`,
+			`parent_value_low`,
+			`parent_value_set_id`,
+			`active_flag`,
+			`created`,
+			`last_upd`,
+			`delete_flag`
+		from `item_attribute`
+		where `value` = #{value} and `value_set_id`= #{valueSetId} and `delete_flag`= #{deleteFlag}
+	</select>
+
+	<select id="list" parameterType="com.haier.shop.model.ItemAttribute" resultMap="ItemAttributeResult">
+		select
+			`id`,
+			`cbs_category`,
+			`value_id`,
+			`value_set_id`,
+			`description`,
+			`value`,
+			`value_meaning`,
+			`value_meaning_en`,
+			`parent_value_low`,
+			`parent_value_set_id`,
+			`active_flag`,
+			`created`,
+			`last_upd`,
+			`delete_flag`
+		from `item_attribute`
+		<where>
+				<if test="deleteFlag != null"> `delete_flag`= #{deleteFlag}</if>
+				<if test="deleteFlag == null"> `delete_flag`= 0</if>
+				<if test="id != null">and `id`= #{id}</if>
+				<if test="cbsCategory != null">and `cbs_category`= #{cbsCategory}</if>
+				<if test="valueId != null">and `value_id`= #{valueId}</if>
+				<if test="valueSetId != null">and `value_set_id`= #{valueSetId}</if>
+				<if test="description != null">and `description`= #{description}</if>
+				<if test="value != null">and `value`= #{value}</if>
+				<if test="valueMeaning != null">and `value_meaning`= #{valueMeaning}</if>
+				<if test="valueMeaningEn != null">and `value_meaning_en`= #{valueMeaningEn}</if>
+				<if test="parentValueLow != null">and `parent_value_low`= #{parentValueLow}</if>
+				<if test="parentValueSetId != null">and `parent_value_set_id`= #{parentValueSetId}</if>
+				<if test="activeFlag != null">and `active_flag`= #{activeFlag}</if>
+				<if test="created != null">and `created`= #{created}</if>
+				<if test="lastUpd != null">and `last_upd`= #{lastUpd}</if>
+		</where>
+	</select>
+	<select id="getAllCbsCategory" resultType="String">
+		select distinct cbs_category from `item_attribute` where value_set_id='ProductGroup' and cbs_category !='' and delete_flag = 0
+	</select>
+	<select id="countItemAttributeWithLike" parameterType="com.haier.shop.model.ItemAttribute" resultType="Integer">
+		select count(`id`) 
+		from `item_attribute`
+		<where>
+				<if test="deleteFlag != null"> `delete_flag`= #{deleteFlag}</if>
+				<if test="deleteFlag == null"> `delete_flag`= 0</if>
+				<if test="activeFlag != null">and `active_flag`= #{activeFlag}</if>
+				<if test="activeFlag == null">and `active_flag`= 1</if>
+				<if test="id != null">and `id`= #{id}</if>
+				<if test="cbsCategory != null and cbsCategory != ''">and `cbs_category`= #{cbsCategory}</if>
+				<if test="valueId != null and valueId != ''">and `value_id`= #{valueId}</if>
+				<if test="valueSetId != null and valueSetId != ''">
+				and lcase(`value_set_id`) like CONCAT(CONCAT('%', #{valueSetId}),'%')
+				</if>
+				<if test="description != null and description != ''">and `description`= #{description}</if>
+				<if test="value != null and value != ''">and `value`= #{value}</if>
+				<if test="valueMeaning != null and valueMeaning != ''">
+				and `value_meaning` like CONCAT(CONCAT('%', #{valueMeaning}),'%')
+				</if>
+				<if test="valueMeaningEn != null and valueMeaningEn != ''">and `value_meaning_en`= #{valueMeaningEn}</if>
+				<if test="parentValueLow != null and parentValueLow != ''">and `parent_value_low`= #{parentValueLow}</if>
+				<if test="parentValueSetId != null and parentValueSetId != ''">and `parent_value_set_id`= #{parentValueSetId}</if>
+				<if test="created != null">and `created`= #{created}</if>
+				<if test="lastUpd != null">and `last_upd`= #{lastUpd}</if>
+		</where>
+	</select>
+	<select id="queryItemAttributeWithLike" parameterType="com.haier.shop.model.ItemAttribute" resultMap="ItemAttributeResult">
+		select
+			`id`,
+			`cbs_category`,
+			`value_id`,
+			`value_set_id`,
+			`description`,
+			`value`,
+			`value_meaning`,
+			`value_meaning_en`,
+			`parent_value_low`,
+			`parent_value_set_id`,
+			`active_flag`,
+			`created`,
+			`last_upd`,
+			`delete_flag`
+		from `item_attribute`
+		<where>
+				<if test="deleteFlag != null"> `delete_flag`= #{deleteFlag}</if>
+				<if test="deleteFlag == null"> `delete_flag`= 0</if>
+				<if test="activeFlag != null">and `active_flag`= #{activeFlag}</if>
+				<if test="activeFlag == null">and `active_flag`= 1</if>
+				<if test="id != null">and `id`= #{id}</if>
+				<if test="cbsCategory != null and cbsCategory != ''">and `cbs_category`= #{cbsCategory}</if>
+				<if test="valueId != null and valueId != ''">and `value_id`= #{valueId}</if>
+				<if test="valueSetId != null and valueSetId != ''">
+				and lcase(`value_set_id`) like CONCAT(CONCAT('%', #{valueSetId}),'%')
+				</if>
+				<if test="description != null and description != ''">and `description`= #{description}</if>
+				<if test="value != null and value != ''">and `value`= #{value}</if>
+				<if test="valueMeaning != null and valueMeaning != ''">
+				and `value_meaning` like CONCAT(CONCAT('%', #{valueMeaning}),'%')
+				</if>
+				<if test="valueMeaningEn != null and valueMeaningEn != ''">and `value_meaning_en`= #{valueMeaningEn}</if>
+				<if test="parentValueLow != null and parentValueLow != ''">and `parent_value_low`= #{parentValueLow}</if>
+				<if test="parentValueSetId != null and parentValueSetId != ''">and `parent_value_set_id`= #{parentValueSetId}</if>
+				<if test="created != null">and `created`= #{created}</if>
+				<if test="lastUpd != null">and `last_upd`= #{lastUpd}</if>
+		</where>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select> 
+	<select id="queryProductGroupByCbsCategory"  resultMap="ItemAttributeResult">
+		select 
+			`cbs_category`,
+			`value`,
+			`value_meaning`
+		from `item_attribute` where 
+		`value_set_id` = 'ProductGroup' and `delete_flag` = 0 
+		<if test="cbsCategory != null and cbsCategory != ''">
+			and `cbs_category` = #{cbsCategory}
+		</if>
+	</select>
+	
+	<select id="getByValueSetId"   resultMap="ItemAttributeResult">
+		select
+			`id`,
+			`cbs_category`,
+			`value_id`,
+			`value_set_id`,
+			`description`,
+			`value`,
+			`value_meaning`,
+			`value_meaning_en`,
+			`parent_value_low`,
+			`parent_value_set_id`,
+			`active_flag`,
+			`created`,
+			`last_upd`,
+			`delete_flag`
+		from `item_attribute`
+		where `delete_flag` = 0
+		<if test="valueSetId != null">
+			and  `value_set_id`= #{valueSetId}
+		</if>
+	</select>
+	
+	<select id="getCbsCategoryByProductGroup" parameterType="Map"  resultType="String">
+		SELECT DISTINCT cbs_category 
+		FROM `item_attribute` 
+		WHERE value_set_id='ProductGroup' 
+		AND cbs_category !='' 
+		AND delete_flag = 0
+		<if test="productGroup !=null and productGroup != ''and productGroup !='ALL' ">
+			AND value IN
+			<foreach item="item" index="index" collection="productGroup"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="getProductTypes" resultMap="ItemAttributeResult">
+		SELECT distinct cbs_category FROM `item_attribute` where value_set_id='ProductGroup' and cbs_category !=''
+	</select>
+</mapper>

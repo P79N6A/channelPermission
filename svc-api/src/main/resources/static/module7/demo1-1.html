@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dgt">
+        <thead>
+        <tr>
+            <th field="field0" data-options="formatter:showWhat">区、县</th>
+            <th field="field1">市</th>
+            <th field="field2">省</th>
+            <th field="field3">支持24小时限时达</th>
+            <th field="field4">支持超时名单</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td></td>
+            <td class="middleWide">
+                恩平市
+            </td>
+            <td>江门</td>
+            <td>广东</td>
+            <td>否</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="middleWide">
+                鹤山市
+            </td>
+            <td>江门</td>
+            <td>广东</td>
+            <td>否</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="middleWide">
+                江海区
+            </td>
+            <td>江门</td>
+            <td>广东</td>
+            <td>否</td>
+            <td>否</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row" style="width:100%;">
+                <a href="demo1.html">点这里返回库位列表</a>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	库位名称
+			</span>
+                <input class="easyui-textbox" name="raiseM"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	库位码
+			</span>
+                <input class="easyui-textbox" name="raiseM"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	库位类型
+			</span>
+                <select class="easyui-combobox" name="productCode" style="width: 174px;">
+                    <option value="">全部</option>
+                    <option value="0">大库</option>
+                    <option value="1">小库</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  货票同行
+			</span>
+                <select class="easyui-combobox" name="productCode" style="width: 174px;">
+                    <option value="">全部</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  支持货到付款
+			</span>
+                <select class="easyui-combobox" name="platformCode" style="width: 174px;">
+                    <option>全部</option>
+                    <option value="AA">否</option>
+                    <option value="AB">是</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  省份
+			</span>
+                <select class="easyui-combobox" name="xwCode" style="width: 174px;">
+                    <option value="0">选择省份</option>
+                    <option value="2">北京</option>
+                    <option value="3">天津</option>
+                    <option value="4">河北</option>
+                    <option value="5">山西</option>
+                    <option value="6">内蒙古</option>
+                    <option value="7">辽宁</option>
+                    <option value="8">吉林</option>
+                    <option value="9">黑龙江</option>
+                    <option value="10">上海</option>
+                    <option value="11">江苏</option>
+                    <option value="12">浙江</option>
+                    <option value="13">安徽</option>
+                    <option value="14">福建</option>
+                    <option value="15">江西</option>
+                    <option value="16">山东</option>
+                    <option value="17">河南</option>
+                    <option value="18">湖北</option>
+                    <option value="19">湖南</option>
+                    <option value="20">广东</option>
+                    <option value="21">广西</option>
+                    <option value="22">海南</option>
+                    <option value="23">重庆</option>
+                    <option value="24">四川</option>
+                    <option value="25">贵州</option>
+                    <option value="26">云南</option>
+                    <option value="27">西藏</option>
+                    <option value="28">陕西</option>
+                    <option value="29">甘肃</option>
+                    <option value="30">青海</option>
+                    <option value="31">宁夏</option>
+                    <option value="32">新疆</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  城市
+			</span>
+                <select class="easyui-combobox" name="province_code" style="width: 174px;">
+                    <option value="0">--请选择--</option>
+                    <option value="2">北京</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  区县
+			</span>
+                <select class="easyui-combobox" name="province_code" town style="width: 174px;">
+                    <option value="0">--请选择--</option>
+                    <option value="937">昌平区</option>
+                    <option value="938">朝阳区</option>
+                    <option value="939">崇文区</option>
+                    <option value="940">大兴区</option>
+                    <option value="941">东城区</option>
+                    <option value="942">房山区</option>
+                    <option value="943">丰台区</option>
+                    <option value="944">海淀区</option>
+                    <option value="945">怀柔区</option>
+                    <option value="946">门头沟区</option>
+                    <option value="947">密云县</option>
+                    <option value="948">平谷区</option>
+                    <option value="949">石景山区</option>
+                    <option value="950">顺义区</option>
+                    <option value="951">通州区</option>
+                    <option value="952">西城区</option>
+                    <option value="953">宣武区</option>
+                    <option value="954">延庆县</option>
+                </select>
+            </div>
+
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure" onclick="createData()"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMeasure"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+    </form>
+</div>
+<div id="addDlg_dmmtlPbcsMtlMeasure" data-options="title:'',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:200px;"
+     closed="true" buttons="#dlg-buttons_dmmtlPbcsMtlMeasure">
+    <form id="addForm_dmmtlPbcsMtlMeasure" method="post">
+        <input name="id" type="text" style="display:none;">
+        <input __acttype="" type="hidden" value="add">
+        <div class="fitem" style="width: 100%">
+            <label style="width:150px;">支持24小时限时达</label>
+            <input type="checkbox" name="field3">
+        </div>
+        <div class="fitem" style="width: 100%">
+            <label style="width:150px;">支持超时名单</label>
+            <input type="checkbox" name="field4">
+        </div>
+
+    </form>
+    <div id="dlg-buttons_dmmtlPbcsMtlMeasure">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_dmmtlPbcsMtlMeasure" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_dmmtlPbcsMtlMeasure').dialog('close')">关闭</a>
+    </div>
+</div>
+<script type="application/javascript">
+    var tableHead = '区、县\n' +
+        '市\n' +
+        '省\n' +
+        '支持24小时限时达\n' +
+        '支持超时名单'
+
+    var detailTh = 'WP订单号 \n' +
+        'PO编号 \n' +
+        '销售单号 \n' +
+        '提单时间 \n' +
+        'SO \n' +
+        'DN \n' +
+        '渠道 \n' +
+        '品类 \n' +
+        '产品组 \n' +
+        '物料编号 \n' +
+        '型号 \n' +
+        '数量 \n' +
+        '样表单价 \n' +
+        '样表金额 \n' +
+        '采购价格 \n' +
+        '采购金额 \n' +
+        'WA库位码 \n' +
+        'WA库位名称 \n' +
+        '状态 \n' +
+        '出日日顺库时间 \n' +
+        '入库时间 '
+
+    var detail = {
+        fit: true,
+        fitColumns: false,
+        singleSelect: true,
+        columns: covertColumns(detailTh),
+        rownumbers: true
+    };
+
+    function showWhat(val, row, index) {
+        var text = "['编辑','删除']"
+        return val +
+            '<p style="width: 220px;height: 30px;padding-top: 10px" onmouseenter="showThisDiv(this,' + text + ')" onmouseleave="hideThisDiv(this)">' +
+            '</p>'
+    }
+
+    function showThisDiv(obj, text) {
+        if ($(obj).find(div).length == 0) {
+            var div = '<div>' +
+                '<span><a href="#" onclick="funcText(\'' + text[0] + '\',this)">' + text[0] + '</a></span>&nbsp;&nbsp;&nbsp;&nbsp;' +
+                '<span><a href="#" onclick="funcText(\'' + text[1] + '\')" >' + text[1] + '</a></span>' +
+                '</div>'
+            $(obj).html(div)
+        } else {
+            $(obj).find("div").show()
+        }
+    }
+
+    function funcText(text, obj) {
+        if ('删除' == text) {
+            confirm("确认删除吗？")
+        }
+        if ('编辑' == text) {
+            getConfig(obj)
+        }
+    }
+
+    function getConfig(obj) {
+        var tds = $(obj).parent().parent().parent().parent().parent().parent().children();
+        var selected = {};
+        for (var i = 0; i < tds.length; i++) {
+            var td = $(tds[i])[0];
+            selected[$(td).attr("field")] = td.innerText
+        }
+        $('#addForm_dmmtlPbcsMtlMeasure').form('reset');
+        $('#addForm_dmmtlPbcsMtlMeasure').find('[__actType]').val('edit');
+        $('#addForm_dmmtlPbcsMtlMeasure').form('load', selected);
+        $('#addDlg_dmmtlPbcsMtlMeasure').dialog({'title': i18n['message.act.add']});
+        $('#addDlg_dmmtlPbcsMtlMeasure').dialog('open');
+    }
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>

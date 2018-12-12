@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+     <style type="text/css">
+   .dlg{
+     width:400px;
+     height:100px;
+     padding:10px;	
+     margin-top:20px;	
+    },
+    easyui-panel.{
+    overflow-x: show;
+    }
+  </style>
+    
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_saleStockListGoal"></table>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+       
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">渠道编码</span>
+                <select id="source" name="source" style="height: 26px; width: 134px;"  onchange="auto1()" >
+                	<option value="">请输入渠道名称</option>
+            		#foreach($cid in $cidList)
+            		<option value="$cid.id">$cid.channelName</option>
+     				#end  
+            	</select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">商品编码</span>
+                <input id="productcode" name="productcode" class="easyui-textbox" data-options="prompt:'请输入商品编码'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">配送仓库</span>
+				<select id="warehousecode" name="warehousecode" style="height: 26px; width: 134px;" >
+                	<option value="">请输入配送仓库</option>
+            		#foreach($twh in $twhList)
+            		<option value="$twh.warehouseCode">$twh.warehouseName</option>
+     				#end  
+            	</select>       
+    	     </div>   
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderForecastGoal"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <!--<a href="#" class="easyui-linkbutton" id="importBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出</a>-->
+    </form>
+</div>
+<div id="addDlg_saleStock" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:332px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_saleStock" method="post">
+        <input id="id" name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>渠道编码<span style="color: red;">*</span></label>
+            <select id="channelId" name="channelId" class="easyui-combobox" data-options="editable:false" onchange="getValTwo()">
+            <option value=""></option>
+            	#foreach($cid in $cidList)
+            		<option value="$cid.id">$cid.channelName</option>
+     			#end  
+            </select>
+        </div>
+        <div class="fitem">
+            <label>商品编码<span style="color: red;">*</span></label>
+            <input id="productCode" class="easyui-textbox" name="productCode" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>配送仓库<span style="color: red;">*</span></label>
+            <select id="warehouseCode" name="warehouseCode" class="" data-options="editable:false" style="height: 29px; width: 134px;">
+            	</select> 
+        </div>
+        <div class="fitem">
+            <label>商品数量<span style="color: red;">*</span></label>
+            <input id="quantity" class="easyui-numberbox" max="99999999" maxlength="10" name="quantity" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>锁库存数量<span style="color: red;">*</span></label>
+            <input id="lockQuantity" class="easyui-numberbox" max="99999999" maxlength="10" name="lockQuantity" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>备注</label>
+            <input id="remark" class="easyui-textbox" name="remark" />
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_warehouse" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_saleStock').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_saleStockListGoal').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="/static/js/pop/warehouse/saleStock.js"></script>
+</body>
+</html>

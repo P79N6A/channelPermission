@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.TAdjustDataDao">
+    <resultMap id="BaseResultMap" type="com.haier.distribute.data.model.TAdjustData">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="cOrderSn" property="cOrderSn" jdbcType="VARCHAR"/>
+        <result column="cOrderSnOld" property="cOrderSnOld" jdbcType="VARCHAR"/>
+        <result column="sourceOrderSn" property="sourceOrderSn" jdbcType="VARCHAR"/>
+        <result column="source" property="source" jdbcType="VARCHAR"/>
+        <result column="sellPeople" property="sellPeople" jdbcType="VARCHAR"/>
+        <result column="category" property="category" jdbcType="VARCHAR"/>
+        <result column="brand" property="brand" jdbcType="VARCHAR"/>
+        <result column="sku" property="sku" jdbcType="VARCHAR"/>
+        <result column="productName" property="productName" jdbcType="VARCHAR"/>
+        <result column="consignee" property="consignee" jdbcType="VARCHAR"/>
+        <result column="cPayTime" property="cPayTime" jdbcType="VARCHAR"/>
+        <result column="number" property="number" jdbcType="SMALLINT"/>
+        <result column="productAmount" property="productAmount" jdbcType="DECIMAL"/>
+        <result column="cOrderStatus" property="cOrderStatus" jdbcType="VARCHAR"/>
+        <result column="period" property="period" jdbcType="VARCHAR"/>
+        <result column="year" property="year" jdbcType="VARCHAR"/>
+        <result column="invoiceStatus" property="invoiceStatus" jdbcType="VARCHAR"/>
+        <result column="settleType" property="settleType" jdbcType="CHAR"/>
+        <result column="sendStatus" property="sendStatus" jdbcType="CHAR"/>
+        <result column="dataStatus" property="dataStatus" jdbcType="CHAR"/>
+        <result column="invoiceTime" property="invoiceTime" jdbcType="VARCHAR"/>
+        <result column="auditStatus" property="auditStatus" jdbcType="CHAR"/>
+        <result column="sendTime" property="sendTime" jdbcType="VARCHAR"/>
+        <result column="businessAuditPeople" property="businessAuditPeople" jdbcType="VARCHAR"/>
+        <result column="businessAuditTime" property="businessAuditTime" jdbcType="VARCHAR"/>
+        <result column="financeAuditPeople" property="financeAuditPeople" jdbcType="VARCHAR"/>
+        <result column="financeAuditTime" property="financeAuditTime" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, cOrderSn, cOrderSnOld, sourceOrderSn, source, sellPeople, category, brand, sku, 
+    productName, consignee, cPayTime, number, productAmount, cOrderStatus, period, year, 
+    invoiceStatus, settleType, sendStatus, dataStatus, invoiceTime, auditStatus, sendTime, 
+    businessAuditPeople, businessAuditTime, financeAuditPeople, financeAuditTime
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_adjust_data
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_adjust_data
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.haier.distribute.data.model.TAdjustData">
+    insert into t_adjust_data (id, cOrderSn, cOrderSnOld, 
+      sourceOrderSn, source, sellPeople, 
+      category, brand, sku, 
+      productName, consignee, cPayTime, 
+      number, productAmount, cOrderStatus, 
+      period, year, invoiceStatus, 
+      settleType, sendStatus, dataStatus, 
+      invoiceTime, auditStatus, sendTime, 
+      businessAuditPeople, businessAuditTime, 
+      financeAuditPeople, financeAuditTime)
+    values (#{id,jdbcType=INTEGER}, #{cOrderSn,jdbcType=VARCHAR}, #{cOrderSnOld,jdbcType=VARCHAR}, 
+      #{sourceOrderSn,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{sellPeople,jdbcType=VARCHAR}, 
+      #{category,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, 
+      #{productName,jdbcType=VARCHAR}, #{consignee,jdbcType=VARCHAR}, #{cPayTime,jdbcType=VARCHAR}, 
+      #{number,jdbcType=SMALLINT}, #{productAmount,jdbcType=DECIMAL}, #{cOrderStatus,jdbcType=VARCHAR}, 
+      #{period,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, #{invoiceStatus,jdbcType=VARCHAR}, 
+      #{settleType,jdbcType=CHAR}, #{sendStatus,jdbcType=CHAR}, #{dataStatus,jdbcType=CHAR}, 
+      #{invoiceTime,jdbcType=VARCHAR}, #{auditStatus,jdbcType=CHAR}, #{sendTime,jdbcType=VARCHAR}, 
+      #{businessAuditPeople,jdbcType=VARCHAR}, #{businessAuditTime,jdbcType=VARCHAR}, 
+      #{financeAuditPeople,jdbcType=VARCHAR}, #{financeAuditTime,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.haier.distribute.data.model.TAdjustData">
+        insert into t_adjust_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cOrderSn != null">
+                cOrderSn,
+            </if>
+            <if test="cOrderSnOld != null">
+                cOrderSnOld,
+            </if>
+            <if test="sourceOrderSn != null">
+                sourceOrderSn,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="sellPeople != null">
+                sellPeople,
+            </if>
+            <if test="category != null">
+                category,
+            </if>
+            <if test="brand != null">
+                brand,
+            </if>
+            <if test="sku != null">
+                sku,
+            </if>
+            <if test="productName != null">
+                productName,
+            </if>
+            <if test="consignee != null">
+                consignee,
+            </if>
+            <if test="cPayTime != null">
+                cPayTime,
+            </if>
+            <if test="number != null">
+                number,
+            </if>
+            <if test="productAmount != null">
+                productAmount,
+            </if>
+            <if test="cOrderStatus != null">
+                cOrderStatus,
+            </if>
+            <if test="period != null">
+                period,
+            </if>
+            <if test="year != null">
+                year,
+            </if>
+            <if test="invoiceStatus != null">
+                invoiceStatus,
+            </if>
+            <if test="settleType != null">
+                settleType,
+            </if>
+            <if test="sendStatus != null">
+                sendStatus,
+            </if>
+            <if test="dataStatus != null">
+                dataStatus,
+            </if>
+            <if test="invoiceTime != null">
+                invoiceTime,
+            </if>
+            <if test="auditStatus != null">
+                auditStatus,
+            </if>
+            <if test="sendTime != null">
+                sendTime,
+            </if>
+            <if test="businessAuditPeople != null">
+                businessAuditPeople,
+            </if>
+            <if test="businessAuditTime != null">
+                businessAuditTime,
+            </if>
+            <if test="financeAuditPeople != null">
+                financeAuditPeople,
+            </if>
+            <if test="financeAuditTime != null">
+                financeAuditTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="cOrderSn != null">
+                #{cOrderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="cOrderSnOld != null">
+                #{cOrderSnOld,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceOrderSn != null">
+                #{sourceOrderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null">
+                #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="sellPeople != null">
+                #{sellPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="category != null">
+                #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null">
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="sku != null">
+                #{sku,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null">
+                #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="consignee != null">
+                #{consignee,jdbcType=VARCHAR},
+            </if>
+            <if test="cPayTime != null">
+                #{cPayTime,jdbcType=VARCHAR},
+            </if>
+            <if test="number != null">
+                #{number,jdbcType=SMALLINT},
+            </if>
+            <if test="productAmount != null">
+                #{productAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="cOrderStatus != null">
+                #{cOrderStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="period != null">
+                #{period,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="invoiceStatus != null">
+                #{invoiceStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="settleType != null">
+                #{settleType,jdbcType=CHAR},
+            </if>
+            <if test="sendStatus != null">
+                #{sendStatus,jdbcType=CHAR},
+            </if>
+            <if test="dataStatus != null">
+                #{dataStatus,jdbcType=CHAR},
+            </if>
+            <if test="invoiceTime != null">
+                #{invoiceTime,jdbcType=VARCHAR},
+            </if>
+            <if test="auditStatus != null">
+                #{auditStatus,jdbcType=CHAR},
+            </if>
+            <if test="sendTime != null">
+                #{sendTime,jdbcType=VARCHAR},
+            </if>
+            <if test="businessAuditPeople != null">
+                #{businessAuditPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="businessAuditTime != null">
+                #{businessAuditTime,jdbcType=VARCHAR},
+            </if>
+            <if test="financeAuditPeople != null">
+                #{financeAuditPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="financeAuditTime != null">
+                #{financeAuditTime,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.haier.distribute.data.model.TAdjustData">
+        update t_adjust_data
+        <set>
+            <if test="cOrderSn != null">
+                cOrderSn = #{cOrderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="cOrderSnOld != null">
+                cOrderSnOld = #{cOrderSnOld,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceOrderSn != null">
+                sourceOrderSn = #{sourceOrderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null">
+                source = #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="sellPeople != null">
+                sellPeople = #{sellPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="category != null">
+                category = #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null">
+                brand = #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="sku != null">
+                sku = #{sku,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null">
+                productName = #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="consignee != null">
+                consignee = #{consignee,jdbcType=VARCHAR},
+            </if>
+            <if test="cPayTime != null">
+                cPayTime = #{cPayTime,jdbcType=VARCHAR},
+            </if>
+            <if test="number != null">
+                number = #{number,jdbcType=SMALLINT},
+            </if>
+            <if test="productAmount != null">
+                productAmount = #{productAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="cOrderStatus != null">
+                cOrderStatus = #{cOrderStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="period != null">
+                period = #{period,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="invoiceStatus != null">
+                invoiceStatus = #{invoiceStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="settleType != null">
+                settleType = #{settleType,jdbcType=CHAR},
+            </if>
+            <if test="sendStatus != null">
+                sendStatus = #{sendStatus,jdbcType=CHAR},
+            </if>
+            <if test="dataStatus != null">
+                dataStatus = #{dataStatus,jdbcType=CHAR},
+            </if>
+            <if test="invoiceTime != null">
+                invoiceTime = #{invoiceTime,jdbcType=VARCHAR},
+            </if>
+            <if test="auditStatus != null">
+                auditStatus = #{auditStatus,jdbcType=CHAR},
+            </if>
+            <if test="sendTime != null">
+                sendTime = #{sendTime,jdbcType=VARCHAR},
+            </if>
+            <if test="businessAuditPeople != null">
+                businessAuditPeople = #{businessAuditPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="businessAuditTime != null">
+                businessAuditTime = #{businessAuditTime,jdbcType=VARCHAR},
+            </if>
+            <if test="financeAuditPeople != null">
+                financeAuditPeople = #{financeAuditPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="financeAuditTime != null">
+                financeAuditTime = #{financeAuditTime,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.haier.distribute.data.model.TAdjustData">
+    update t_adjust_data
+    set cOrderSn = #{cOrderSn,jdbcType=VARCHAR},
+      cOrderSnOld = #{cOrderSnOld,jdbcType=VARCHAR},
+      sourceOrderSn = #{sourceOrderSn,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      sellPeople = #{sellPeople,jdbcType=VARCHAR},
+      category = #{category,jdbcType=VARCHAR},
+      brand = #{brand,jdbcType=VARCHAR},
+      sku = #{sku,jdbcType=VARCHAR},
+      productName = #{productName,jdbcType=VARCHAR},
+      consignee = #{consignee,jdbcType=VARCHAR},
+      cPayTime = #{cPayTime,jdbcType=VARCHAR},
+      number = #{number,jdbcType=SMALLINT},
+      productAmount = #{productAmount,jdbcType=DECIMAL},
+      cOrderStatus = #{cOrderStatus,jdbcType=VARCHAR},
+      period = #{period,jdbcType=VARCHAR},
+      year = #{year,jdbcType=VARCHAR},
+      invoiceStatus = #{invoiceStatus,jdbcType=VARCHAR},
+      settleType = #{settleType,jdbcType=CHAR},
+      sendStatus = #{sendStatus,jdbcType=CHAR},
+      dataStatus = #{dataStatus,jdbcType=CHAR},
+      invoiceTime = #{invoiceTime,jdbcType=VARCHAR},
+      auditStatus = #{auditStatus,jdbcType=CHAR},
+      sendTime = #{sendTime,jdbcType=VARCHAR},
+      businessAuditPeople = #{businessAuditPeople,jdbcType=VARCHAR},
+      businessAuditTime = #{businessAuditTime,jdbcType=VARCHAR},
+      financeAuditPeople = #{financeAuditPeople,jdbcType=VARCHAR},
+      financeAuditTime = #{financeAuditTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <sql id="where_fragement">
+        where 1=1
+        <if test="entity!=null">
+            <if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id = #{entity.id} ]]>
+            </if>
+            <if test="entity.attYearMonth != null and entity.attYearMonth !='' ">
+                <![CDATA[ and (year = #{entity.year} and period = #{entity.period}) ]]>
+            </if>
+            <if test="entity.settleType != null and entity.settleType !='' ">
+                <![CDATA[ and settleType = #{entity.settleType}]]>
+            </if>
+            <if test="entity.dataStatus != null and entity.dataStatus !='' ">
+                <![CDATA[ and dataStatus = #{entity.dataStatus} ]]>
+            </if>
+            <if test="entity.sellPeople != null and entity.sellPeople !='' ">
+                <![CDATA[ and sellPeople  LIKE CONCAT('%',#{entity.sellPeople},'%')]]>
+            </if>
+            <if test="entity.cPayTimeStart != null and entity.cPayTimeStart !='' ">
+                <![CDATA[ and cPayTime >= #{entity.cPayTimeStart} ]]>
+            </if>
+            <if test="entity.cPayTimeEnd != null and entity.cPayTimeEnd !='' ">
+                <![CDATA[ and cPayTime <= #{entity.cPayTimeEnd} ]]>
+            </if>
+
+            <if test="entity.fpTimeStart != null and entity.fpTimeStart !='' ">
+                <![CDATA[ and invoiceTime >= #{entity.fpTimeStart} ]]>
+            </if>
+            <if test="entity.fpTimeEnd != null and entity.fpTimeEnd !='' ">
+                <![CDATA[ and invoiceTime <= #{entity.fpTimeEnd} ]]>
+            </if>
+
+        </if>
+    </sql>
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+    <!--分页count -->
+    <select id="getPagerCount" resultType="long" parameterType="com.haier.distribute.data.model.TAdjustData">
+        select count(1) from t_adjust_data
+        <include refid="where_fragement"/>
+    </select>
+    <!-- 查询page -->
+    <select id="getPageByCondition" resultMap="BaseResultMap">
+        SELECT
+        t.*,c.channelName
+        FROM t_adjust_data t left join t_channels_info c on t.source = c.id
+        <include refid="where_fragement"/>
+        <include refid="pagination"/>
+    </select>
+    <select id="exportAdjustList" resultMap="BaseResultMap">
+        SELECT
+        t.*,c.channelName
+        FROM t_adjust_data t left join t_channels_info c on t.source = c.channelCode
+        <include refid="where_fragement"/>
+    </select>
+    <update id="updateSelectiveByAdjustNo" parameterType="com.haier.distribute.data.model.TAdjustData">
+        UPDATE t_adjust_data
+        SET auditStatus = #{entity.auditStatus},
+        <if test="entity!=null">
+            <if test="entity.businessAuditPeople != null and entity.businessAuditPeople !='' ">
+                businessAuditPeople = #{entity.businessAuditPeople},
+            </if>
+            <if test="entity.businessAuditTime != null and entity.businessAuditTime !='' ">
+                businessAuditTime = #{entity.businessAuditTime}
+            </if>
+            <if test="entity.financeAuditPeople != null and entity.financeAuditPeople !='' ">
+                financeAuditPeople = #{entity.financeAuditPeople},
+            </if>
+            <if test="entity.financeAuditTime != null and entity.financeAuditTime !='' ">
+                financeAuditTime = #{entity.financeAuditTime}
+            </if>
+        </if>
+        WHERE id = #{entity.id}
+    </update>
+</mapper>

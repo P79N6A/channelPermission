@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.SgStoreDao">
+
+	<resultMap id="sgStoreResult" type="com.haier.stock.model.SgStore">
+		<result property="id" column="id" />
+		<result property="ownerId" column="owner_id" />
+		<result property="storeName" column="store_name" />
+		<result property="storeCode" column="store_code" />
+		<result property="storeType" column="store_type" />
+		<result property="miniRoot" column="mini_root" />
+		<result property="distributionTime" column="distribution_time" />
+		<result property="licenseId" column="license_id" />
+		<result property="licensePhote" column="license_phote" />
+		<result property="openAccountBank" column="open_account_bank" />
+		<result property="bankAccount" column="bank_account" />
+		<result property="isCod" column="is_cod" />
+		<result property="isEc" column="is_ec" />
+		<result property="isPriceChange" column="is_price_change" />
+		<result property="platformFeeScale" column="platform_fee_scale" />
+		<result property="addUser" column="add_user" />
+		<result property="addTime" column="add_time" />
+		<result property="modifyUser" column="modify_user" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="auditUser" column="audit_user" />
+		<result property="auditTime" column="audit_time" />
+		<result property="auditOpinion" column="audit_opinion" />
+		<result property="storeState" column="store_state" />
+		<result property="isWa" column="is_wa" />
+	</resultMap>
+
+	<select id="getSgStore" resultMap="sgStoreResult">
+		select `id`,`owner_id`,`store_name`,`store_code`,`store_type`,`mini_root`,`distribution_time`,`license_id`,`license_phote`,`open_account_bank`,`bank_account`,`is_cod`,`is_ec`,`is_price_change`,`platform_fee_scale`,`add_user`,`add_time`,`modify_user`,`modify_time`,`audit_user`,`audit_time`,`audit_opinion`,`store_state`,`is_wa` 
+		from sg_store
+		where store_code =#{storeCode}
+		<if test="storeType !=null">
+	    	AND store_type = #{storeType}
+	    </if>
+	    <if test="storeState !=null">
+	    	AND store_state = #{storeState}
+	    </if>
+	    limit 1
+	</select>
+	
+	<select id="getSgStoreList" resultMap="sgStoreResult">
+		select distinct s.`owner_id` as owner_id,s.`store_name` as store_name,s.`store_code` as store_code
+		from sg_store s inner join sg_flagship_store_authorization f on s.owner_id=f.owner_id
+		where f.region_id =#{regionId}
+		<if test="storeType !=null">
+	    	AND s.store_type = #{storeType}
+	    </if>
+	    <if test="storeState !=null">
+	    	AND s.store_state = #{storeState}
+	    </if>
+	    <if test="department !=null and department!='' ">
+	    	AND f.department = #{department}
+	    </if>
+	</select>
+	
+	<select id="getSgStoreById" resultMap="sgStoreResult">
+		select `id`,`owner_id`,`store_name`,`store_code`,`store_type`,`mini_root`,`distribution_time`,`license_id`,`license_phote`,`open_account_bank`,`bank_account`,`is_cod`,`is_ec`,`is_price_change`,`platform_fee_scale`,`add_user`,`add_time`,`modify_user`,`modify_time`,`audit_user`,`audit_time`,`audit_opinion`,`store_state`,`is_wa` 
+		from sg_store
+		where owner_id =#{storeId}
+	    limit 1
+	</select>
+
+
+</mapper>

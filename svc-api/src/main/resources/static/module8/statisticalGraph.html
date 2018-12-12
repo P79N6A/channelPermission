@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <link rel="stylesheet" href="../static/css/staticHtml.css">
+    <link rel="stylesheet" href="css/style.css" media="screen" type="text/css"/>
+
+    <title>差评受理</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+<div class="col-md-7 col-sm-12" style="width: 55%">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="ion-pie-graph"></i> 差评分类
+        </div>
+        <div class="panel-body" style="height: 500px;">
+            <div id="pie1" style="width: 95%;height:75%;"></div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default" style="width: 45%">
+    <div class="panel-heading">
+        <i class="ion-pie-graph"></i>差评处理分析
+    </div>
+    <div class="panel-body" style="height: 500px;">
+        <!--<span style="margin-left: 30px;">平台类问题处理率</span><span style="margin-left: 13%;">物流问题处理率</span><span-->
+            <!--style="margin-left: 13%;">客服问题处理率</span>-->
+        <div>
+            <div id="pingtai1" class="chart" style="float: left;height: 240px;width: 33%"></div>
+            <div id="kefu1" class="chart" style="float: right;height: 240px;width: 33%"></div>
+            <div id="wuliu1" class="chart" style="float: right;height: 240px;width: 33%"></div>
+
+        </div>
+        <!--<span style="margin-left: 30px;">售后问题处理率</span><span style="margin-left: 13%;">产品质量问题处理率</span><span-->
+            <!--style="margin-left: 13%;">其他问题处理率</span>-->
+        <div>
+            <div id="shouhou1" class="chart" style="float: left;height: 240px;width: 33%"></div>
+            <div id="qita1" class="chart" style="float: right;height: 240px;width: 33%"></div>
+            <div id="chanpin1" class="chart" style="float: right;height: 240px;width: 33%"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../static/third/echarts/echarts.min.js"></script>
+<script>
+    function PercentPie(option) {
+        this.backgroundColor = option.backgroundColor || '#fff';
+        this.color = option.color || ['#38a8da', '#d4effa'];
+        this.fontSize = option.fontSize || 12;
+        this.domEle = option.domEle;
+        this.value1 = option.value1;
+        this.value2 = option.value2;
+        this.name = option.name;
+        this.title = option.title;
+    }
+
+    PercentPie.prototype.init = function () {
+        var _that = this;
+        var option = {
+            backgroundColor: _that.backgroundColor,
+            color: _that.color,
+            title: {
+                text: _that.title,
+                top: '3%',
+                left: '1%',
+                textStyle: {
+                    color: '#333',
+                    fontStyle: 'normal',
+                    fontWeight: 'normal',
+                    fontFamily: 'sans-serif',
+                    fontSize: 16,
+                }
+            },
+            series: [{
+                name: '来源',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                hoverAnimation: true,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center',
+                        textStyle: {
+                            fontSize: _that.fontSize,
+                            fontWeight: 'bold'
+                        },
+                        formatter: '已处理'+'{c}\n{b}{d}%'
+                    }
+                },
+                data: [{
+                    value: _that.value1,
+                    name: _that.name,
+                    label: {
+                        normal: {
+                            show: true
+                        }
+                    }
+                },
+                    {
+                        value: _that.value2,
+                        name: '未处理'
+                    }
+                ]
+            }]
+        };
+
+        echarts.init(_that.domEle).setOption(option);
+    };
+</script>
+<script>
+    //平台类
+    var pingtai = {
+        value1:17,//已处理,必填
+        value2:3,//未处理,必填
+        name:'处理率',//必填
+        title:'平台类问题处理率',
+        backgroundColor:null,
+        color:['#00A75A','#404D5C'],
+        fontSize:13,
+        domEle:document.getElementById("pingtai1")//必填
+    },percentPie1 = new PercentPie(pingtai);
+    percentPie1.init();
+    //物流
+    var wuliu = {
+        value1:47,//已处理,必填
+        value2:13,//未处理,必填
+        name:'处理率',//必填
+        title:'物流问题处理率',
+        backgroundColor:null,
+        color:["#F39D12","#404D5C"],
+        fontSize:13,
+        domEle:document.getElementById("wuliu1")//必填
+    },percentPie1_wuliu = new PercentPie(wuliu);
+    percentPie1_wuliu.init();
+    //客服
+    var kefu = {
+        value1:18,//已处理,必填
+        value2:2,//未处理,必填
+        name:'处理率',//必填
+        title:'客服问题处理率',
+        backgroundColor:null,
+        color:["#3C8DBD","#404D5C"],
+        fontSize:13,
+        domEle:document.getElementById("kefu1")//必填
+    },percentPie1_kefu = new PercentPie(kefu);
+    percentPie1_kefu.init();
+    //售后
+    var shouhou = {
+        value1:37,//已处理,必填
+        value2:3,//未处理,必填
+        name:'处理率',//必填
+        title:'售后问题处理率',
+        backgroundColor:null,
+        color:["#DD4A38","#404D5C"],
+        fontSize:13,
+        domEle:document.getElementById("shouhou1")//必填
+    },percentPie1_shouhou = new PercentPie(shouhou);
+    percentPie1_shouhou.init();
+    //产品
+    var chanpin = {
+        value1:38,//已处理,必填
+        value2:2,//未处理,必填
+        name:'处理率',//必填
+        title:'产品质量问题处理率',
+        backgroundColor:null,
+        color:["#12F3DE","#404D5C"],
+        fontSize:13,
+        domEle:document.getElementById("chanpin1")//必填
+    },percentPie1_chanpin = new PercentPie(chanpin);
+    percentPie1_chanpin.init();
+    //其他问题
+    var qita = {
+        value1:14,//已处理,必填
+        value2:6,//未处理,必填
+        name:'处理率',//必填
+        title:'其他问题处理率',
+        backgroundColor:null,
+        color:["#F312C3","#404D5C"],
+        fontSize:13,
+        domEle:document.getElementById("qita1")//必填
+    },percentPie_qita = new PercentPie(qita);
+    percentPie_qita.init();
+
+    var pie1 = echarts.init(document.getElementById("pie1"));
+
+    option_pie1 = {
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient: '',
+            left: 'left',
+            data: ['平台类', '物流问题', '客服问题', '售后问题', '产品质量问题', '其他问题']
+        },
+        series: [
+            {
+                name: '差评来源',
+                type: 'pie',
+                radius: '80%',
+                center: ['50%', '60%'],
+                data: [
+                    {value: 20, name: '平台类'},
+                    {value: 60, name: '物流问题'},
+                    {value: 20, name: '客服问题'},
+                    {value: 40, name: '售后问题'},
+                    {value: 40, name: '产品质量问题'},
+                    {value: 20, name: '其他问题'}
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                },
+                color: ['#00A75A', '#F39D12', '#3C8DBD', '#DD4A38', '#12f3de', '#f312c3'],
+                itemStyle: {
+                    normal: {
+                        label: {
+                            show: true,
+                            formatter: '{b} : {c} ({d}%)'
+                        },
+                        labelLine: {show: true}
+                    }
+                }
+            }
+        ]
+    };
+
+    pie1.setOption(option_pie1);
+</script>
+
+<script src="../static/third/jquery.js"></script>
+
+</html>

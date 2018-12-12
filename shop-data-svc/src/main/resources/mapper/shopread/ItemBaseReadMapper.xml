@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.ItemBaseReadDao">
+	<resultMap id="ItemBaseResult" type="com.haier.shop.model.ItemBase">
+			<result property="id" column="id" />
+			<result property="rowId" column="row_id" />
+			<result property="materialCode" column="material_code" />
+			<result property="materialDescription" column="material_description" />
+			<result property="materialType" column="material_type" />
+			<result property="industry" column="industry" />
+			<result property="mtlGroupCode" column="mtl_group_code" />
+			<result property="primaryUom" column="primary_uom" />
+			<result property="department" column="department" />
+			<result property="deleteFlag" column="delete_flag" />
+			<result property="created" column="created" />
+			<result property="lastUpd" column="last_upd" />
+			<result property="kindOne" column="kind_one" />
+			<result property="kindAdd" column="kind_add" />
+			<result property="proType" column="pro_type" />
+			<result property="typeDisc" column="type_disc" />
+			<result property="isViliageProduct" column="is_viliage_product" />
+			<result property="markFlag" column="mark_flag" />
+			<result property="proBand" column="pro_band" />
+			<result property="lengthNumber" column="length_number" />
+			<result property="widthNumber" column="width_number" />
+			<result property="highNumber" column="high_number" />
+			<result property="storeLayerNumber" column="store_layer_number" />
+			<result property="grossWeightNumber" column="gross_weight_number" />
+			<result property="weightUnit" column="weight_unit" />
+			<result property="isCrustFlag" column="is_crust_flag" />
+			<result property="rebateRate" column="rebate_rate" />
+			<result property="saleChar" column="sale_char" />
+			<result property="createdBy" column="created_by" />
+			<result property="productList" column="product_list" />
+			<result property="status" column="status" />
+			<result property="isAutoUpdate" column="is_auto_update" />
+			<result property="productType" column="product_type" />
+			<result property="modifier" column="modifier" />
+			<result property="price" column="price" />
+			<result property="departmentName" column="value_meaning"/>
+			<result property="cbsCategory" column="cbs_category"/>
+	</resultMap>
+
+	<select id="findItemBaseByMaterialId"  resultMap="ItemBaseResult">
+		SELECT
+			`id`,
+			`row_id`,
+			`material_code`,
+			`material_description`,
+			`material_type`,
+			`industry`,
+			`mtl_group_code`,
+			`primary_uom`,
+			`department`,
+			`delete_flag`,
+			`created`,
+			`last_upd`,
+			`kind_one`,
+			`kind_add`,
+			`pro_type`,
+			`type_disc`,
+			`is_viliage_product`,
+			`mark_flag`,
+			`pro_band`,
+			`length_number`,
+			`width_number`,
+			`high_number`,
+			`store_layer_number`,
+			`gross_weight_number`,
+			`weight_unit`,
+			`is_crust_flag`,
+			`rebate_rate`,
+			`sale_char`,
+			`created_by`,
+			`product_list`,
+			`price`
+		FROM
+			`item_base`
+		WHERE
+			delete_flag = 0
+			<if test="material_id != null and material_id !='' ">
+				AND material_code = #{material_id}
+			</if>
+	</select>
+	
+	<select id="getBySku" parameterType="com.haier.shop.model.ItemBase" resultMap="ItemBaseResult">
+		select
+			`id`,
+			`row_id`,
+			`material_code`,
+			`material_description`,
+			`material_type`,
+			`industry`,
+			`mtl_group_code`,
+			`primary_uom`,
+			`department`,
+			`delete_flag`,
+			`created`,
+			`last_upd`,
+			`kind_one`,
+			`kind_add`,
+			`pro_type`,
+			`type_disc`,
+			`is_viliage_product`,
+			`mark_flag`,
+			`pro_band`,
+			`length_number`,
+			`width_number`,
+			`high_number`,
+			`store_layer_number`,
+			`gross_weight_number`,
+			`weight_unit`,
+			`is_crust_flag`,
+			`rebate_rate`,
+			`sale_char`,
+			`created_by`,
+			`product_list`,
+			`status`,
+			`is_auto_update`,
+			`product_type`,
+			`modifier`,
+			`price`
+		from `item_base`
+		where `material_code` = #{materialCode} and `delete_flag` = #{deleteFlag}
+	</select>
+
+	<select id="getIncompleteItemBaseList" resultMap="ItemBaseResult">
+		select
+                        `id`,
+                        `row_id`,
+                        `material_code`,
+                        `material_description`,
+                        `material_type`,
+                        `industry`,
+                        `material_type`,
+                        `industry`,
+                        `mtl_group_code`,
+                        `primary_uom`,
+                        `department`,
+                        `delete_flag`,
+                        `created`,
+                        `last_upd`,
+                        `kind_one`,
+                        `kind_add`,
+                        `pro_type`,
+                        `type_disc`,
+                        `is_viliage_product`,
+                        `mark_flag`,
+                        `pro_band`,
+                        `length_number`,
+                        `width_number`,
+                        `high_number`,
+                        `store_layer_number`,
+                        `gross_weight_number`,
+                        `weight_unit`,
+                        `is_crust_flag`,
+                        `rebate_rate`,
+                        `sale_char`,
+                        `created_by`,
+                        `product_list`,
+                        `status`,
+                        `is_auto_update`,
+                        `product_type`,
+                        `modifier`
+                from `item_base`  where `material_code` != '' and `department` = '' and `delete_flag` =0
+                union select
+                        `id`,
+                        `row_id`,
+                        `material_code`,
+                        `material_description`,
+                        `material_type`,
+                        `industry`,
+                        `material_type`,
+                        `industry`,
+                        `mtl_group_code`,
+                        `primary_uom`,
+                        `department`,
+                        `delete_flag`,
+                        `created`,
+                        `last_upd`,
+                        `kind_one`,
+                        `kind_add`,
+                        `pro_type`,
+                        `type_disc`,
+                        `is_viliage_product`,
+                        `mark_flag`,
+                        `pro_band`,
+                        `length_number`,
+                        `width_number`,
+                        `high_number`,
+                        `store_layer_number`,
+                        `gross_weight_number`,
+                        `weight_unit`,
+                        `is_crust_flag`,
+                        `rebate_rate`,
+                        `sale_char`,
+                        `created_by`,
+                        `product_list`,
+                        `status`,
+                        `is_auto_update`,
+                        `product_type`,
+                        `modifier` from `item_base` where `material_code` != ''  and `product_type` = '' and `delete_flag` =0 
+                 union select
+                        `id`,
+                        `row_id`,
+                        `material_code`,
+                        `material_description`,
+                        `material_type`,
+                        `industry`,
+                        `material_type`,
+                        `industry`,
+                        `mtl_group_code`,
+                        `primary_uom`,
+                        `department`,
+                        `delete_flag`,
+                        `created`,
+                        `last_upd`,
+                        `kind_one`,
+                        `kind_add`,
+                        `pro_type`,
+                        `type_disc`,
+                        `is_viliage_product`,
+                        `mark_flag`,
+                        `pro_band`,
+                        `length_number`,
+                        `width_number`,
+                        `high_number`,
+                        `store_layer_number`,
+                        `gross_weight_number`,
+                        `weight_unit`,
+                        `is_crust_flag`,
+                        `rebate_rate`,
+                        `sale_char`,
+                        `created_by`,
+                        `product_list`,
+                        `status`,
+                        `is_auto_update`,
+                        `product_type`,
+                        `modifier` from `item_base` where `material_code` != '' and `delete_flag` =0 and `material_description` = '' limit 1000
+	</select>
+	
+	<select id="queryItemBaseByParamWithLike" parameterType="com.haier.shop.model.ItemBase" resultMap="ItemBaseResult">
+		select
+			`id`,
+			`row_id`,
+			`material_code`,
+			`material_description`,
+			`material_type`,
+			`industry`,
+			`mtl_group_code`,
+			`primary_uom`,
+			`department`,
+			`delete_flag`,
+			`created`,
+			`last_upd`,
+			`kind_one`,
+			`kind_add`,
+			`pro_type`,
+			`type_disc`,
+			`is_viliage_product`,
+			`mark_flag`,
+			`pro_band`,
+			`length_number`,
+			`width_number`,
+			`high_number`,
+			`store_layer_number`,
+			`gross_weight_number`,
+			`weight_unit`,
+			`is_crust_flag`,
+			`rebate_rate`,
+			`sale_char`,
+			`created_by`,
+			`product_list`,
+			`status`,
+			`is_auto_update`,
+			`product_type`,
+			`modifier`,
+			`price`
+		from `item_base`
+		<where>
+				<if test="deleteFlag != null"> `delete_flag`= #{deleteFlag}</if>
+				<if test="deleteFlag == null"> `delete_flag`= 0</if>
+				<if test="id != null">and `id`= #{id}</if>
+				<if test="rowId != null and rowId != ''">and `row_id`= #{rowId}</if>
+				<if test="materialCode != null and materialCode != ''">and lcase(`material_code`) like CONCAT(CONCAT('%', #{materialCode}),'%')</if>
+				<if test="materialDescription != null and materialDescription != ''">and `material_description` like CONCAT(CONCAT('%', #{materialDescription}),'%')</if>
+				<if test="materialType != null and materialType != ''">and `material_type`= #{materialType}</if>
+				<if test="industry != null and industry != ''">and `industry`= #{industry}</if>
+				<if test="mtlGroupCode != null and mtlGroupCode != ''">and `mtl_group_code`= #{mtlGroupCode}</if>
+				<if test="primaryUom != null and primaryUom != ''">and `primary_uom`= #{primaryUom}</if>
+				<if test="departments != null">
+				and department in 
+					<foreach collection="departments" index="index" item="department" open="(" separator="," close=")">
+	           		#{department}
+	        		</foreach>
+				</if>
+				<if test="created != null">and `created`= #{created}</if>
+				<if test="lastUpd != null">and `last_upd`= #{lastUpd}</if>
+				<if test="kindOne != null and kindOne != ''">and `kind_one`= #{kindOne}</if>
+				<if test="kindAdd != null and kindAdd != ''">and `kind_add`= #{kindAdd}</if>
+				<if test="proType != null and proType != ''">and `pro_type`= #{proType}</if>
+				<if test="typeDisc != null and typeDisc != ''">and `type_disc`= #{typeDisc}</if>
+				<if test="isViliageProduct != null">and `is_viliage_product`= #{isViliageProduct}</if>
+				<if test="markFlag != null">and `mark_flag`= #{markFlag}</if>
+				<if test="proBand != null and proBand != ''">and `pro_band`= #{proBand}</if>
+				<if test="lengthNumber != null">and `length_number`= #{lengthNumber}</if>
+				<if test="widthNumber != null">and `width_number`= #{widthNumber}</if>
+				<if test="highNumber != null">and `high_number`= #{highNumber}</if>
+				<if test="storeLayerNumber != null">and `store_layer_number`= #{storeLayerNumber}</if>
+				<if test="grossWeightNumber != null">and `gross_weight_number`= #{grossWeightNumber}</if>
+				<if test="weightUnit != null and weightUnit != ''">and `weight_unit`= #{weightUnit}</if>
+				<if test="isCrustFlag != null and isCrustFlag != ''">and `is_crust_flag`= #{isCrustFlag}</if>
+				<if test="rebateRate != null and rebateRate != ''">and `rebate_rate`= #{rebateRate}</if>
+				<if test="saleChar != null and saleChar != ''">and `sale_char`= #{saleChar}</if>
+				<if test="createdBy != null and createdBy != ''">and `created_by`= #{createdBy}</if>
+				<if test="productList != null and productList != ''">and `product_list`= #{productList}</if>
+				<if test="status != null and status != ''">and `status`= #{status}</if>
+				<if test="isAutoUpdate != null">and `is_auto_update`= #{isAutoUpdate}</if>
+				<if test="productType != null and productType != ''">
+					and `product_type` = #{productType} 
+				</if>
+				<if test="modifier != null and modifier != ''">and `modifier`= #{modifier}</if>
+		</where>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="countItemBaseByParamWithLike" parameterType="com.haier.shop.model.ItemBase" resultType="Integer">
+		select count(`id`) 
+		from `item_base`
+		<where>
+				<if test="deleteFlag != null"> `delete_flag`= #{deleteFlag}</if>
+				<if test="deleteFlag == null"> `delete_flag`= 0</if>
+				<if test="id != null">and `id`= #{id}</if>
+				<if test="rowId != null and rowId != ''">and `row_id`= #{rowId}</if>
+				<if test="materialCode != null and materialCode != ''">and lcase(`material_code`) like CONCAT(CONCAT('%', #{materialCode}),'%')</if>
+				<if test="materialDescription != null and materialDescription != ''">and `material_description` like CONCAT(CONCAT('%', #{materialDescription}),'%')</if>
+				<if test="materialType != null and materialType != ''">and `material_type`= #{materialType}</if>
+				<if test="industry != null and industry != ''">and `industry`= #{industry}</if>
+				<if test="mtlGroupCode != null and mtlGroupCode != ''">and `mtl_group_code`= #{mtlGroupCode}</if>
+				<if test="primaryUom != null and primaryUom != ''">and `primary_uom`= #{primaryUom}</if>
+				<if test="departments != null">
+				and department in 
+					<foreach collection="departments" index="index" item="department" open="(" separator="," close=")">
+	           		#{department}
+	        		</foreach>
+				</if>
+				<if test="created != null">and `created`= #{created}</if>
+				<if test="lastUpd != null">and `last_upd`= #{lastUpd}</if>
+				<if test="kindOne != null and kindOne != ''">and `kind_one`= #{kindOne}</if>
+				<if test="kindAdd != null and kindAdd != ''">and `kind_add`= #{kindAdd}</if>
+				<if test="proType != null and proType != ''">and `pro_type`= #{proType}</if>
+				<if test="typeDisc != null and typeDisc != ''">and `type_disc`= #{typeDisc}</if>
+				<if test="isViliageProduct != null">and `is_viliage_product`= #{isViliageProduct}</if>
+				<if test="markFlag != null">and `mark_flag`= #{markFlag}</if>
+				<if test="proBand != null and proBand != ''">and `pro_band`= #{proBand}</if>
+				<if test="lengthNumber != null">and `length_number`= #{lengthNumber}</if>
+				<if test="widthNumber != null">and `width_number`= #{widthNumber}</if>
+				<if test="highNumber != null">and `high_number`= #{highNumber}</if>
+				<if test="storeLayerNumber != null">and `store_layer_number`= #{storeLayerNumber}</if>
+				<if test="grossWeightNumber != null">and `gross_weight_number`= #{grossWeightNumber}</if>
+				<if test="weightUnit != null and weightUnit != ''">and `weight_unit`= #{weightUnit}</if>
+				<if test="isCrustFlag != null and isCrustFlag != ''">and `is_crust_flag`= #{isCrustFlag}</if>
+				<if test="rebateRate != null and rebateRate != ''">and `rebate_rate`= #{rebateRate}</if>
+				<if test="saleChar != null and saleChar != ''">and `sale_char`= #{saleChar}</if>
+				<if test="createdBy != null and createdBy != ''">and `created_by`= #{createdBy}</if>
+				<if test="productList != null and productList != ''">and `product_list`= #{productList}</if>
+				<if test="status != null and status != ''">and `status`= #{status}</if>
+				<if test="isAutoUpdate != null">and `is_auto_update`= #{isAutoUpdate}</if>
+				<if test="productType != null and productType != ''">
+					and `product_type` = #{productType} 
+				</if>
+				<if test="modifier != null and modifier != ''">and `modifier`= #{modifier}</if>
+		</where>
+	</select>
+	<select id="getType" parameterType="com.haier.shop.model.ItemBase" resultMap="ItemBaseResult">
+			select DISTINCT material_type from item_base 
+	</select>
+<sql id="getProductBaseDataListSQLCond">
+		FROM
+		item_base itb 
+    left join  `item_attribute` ita 
+    on ita.value = itb.department
+		WHERE
+		1=1 and value_set_id = 'ProductGroup' 
+		and (value!='00' and value != '01' and value != '20'and value != '30'and value != '99')
+		<if test="type != null and type != ''">
+			AND material_type = #{type}
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND department = #{product_group_id}
+		</if>
+		<if test="status != null and status != ''">
+			AND status = #{status}
+		</if>
+		<if test="update != null and update != ''">
+			AND is_auto_update = #{update}
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(material_code) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="materials_desc !=null and materials_desc != ''">
+			AND UPPER(material_description) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_desc})),'%')
+		</if>
+		<if test="category_id !=null and category_id != ''">
+			AND cbs_category = #{category_id}
+		</if> 
+	</sql>
+	
+	<select id="getProductBaseData" parameterType="Map"
+		resultMap="ItemBaseResult">
+		SELECT 
+			itb.`id`,
+			`row_id`,
+			`material_code`,
+			`material_description`,
+			`material_type`,
+			`industry`,
+			`mtl_group_code`,
+			`primary_uom`,
+			`department`,
+			itb.`delete_flag`,
+			itb.`created`,
+			itb.`last_upd`,
+			`kind_one`,
+			`kind_add`,
+			`pro_type`,
+			`type_disc`,
+			`is_viliage_product`,
+			`mark_flag`,
+			`pro_band`,
+			`length_number`,
+			`width_number`,
+			`high_number`,
+			`store_layer_number`,
+			`gross_weight_number`,
+			`weight_unit`,
+			`is_crust_flag`,
+			`rebate_rate`,
+			`sale_char`,
+			`created_by`,
+			`product_list`,
+			`status`,
+			`is_auto_update`,
+			`product_type`,
+			`modifier`,
+			 value,
+			 value_meaning,
+			 cbs_category
+		<!-- category_id -->
+		<include refid="getProductBaseDataListSQLCond" />
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+		<select id="getRowCnts" resultType="int">
+		SELECT COUNT(1)
+		<include refid="getProductBaseDataListSQLCond" />
+	</select>
+	<select id="getItemListByDepList" parameterType="com.haier.shop.model.ItemBase" resultMap="ItemBaseResult">
+	select
+			`id`,
+			`row_id`,
+			`material_code`,
+			`material_description`,
+			`material_type`,
+			`industry`,
+			`mtl_group_code`,
+			`primary_uom`,
+			`department`,
+			`delete_flag`,
+			`created`,
+			`last_upd`,
+			`kind_one`,
+			`kind_add`,
+			`pro_type`,
+			`type_disc`,
+			`is_viliage_product`,
+			`mark_flag`,
+			`pro_band`,
+			`length_number`,
+			`width_number`,
+			`high_number`,
+			`store_layer_number`,
+			`gross_weight_number`,
+			`weight_unit`,
+			`is_crust_flag`,
+			`rebate_rate`,
+			`sale_char`,
+			`created_by`,
+			`product_list`,
+			`status`,
+			`is_auto_update`,
+			`product_type`,
+			`modifier`
+		from `item_base`
+		<where>
+			 `delete_flag`= 0
+			 <if test="depList != null">
+				 and department in
+				 <foreach collection="depList" index="index" item="item" open="("
+						separator="," close=")">
+					#{item}
+				 </foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

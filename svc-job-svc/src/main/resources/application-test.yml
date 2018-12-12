@@ -1,0 +1,35 @@
+interconn:
+  project: 3W-CBS
+  app: svc-job
+  monitor:
+    url: http://collector.c.haier.net
+    enable: false
+
+dubbo:
+  registry: 10.162.162.43:2181,10.162.162.44:2181,10.162.162.45:2181
+  port: 20889
+  timeout: 10000
+  threads: 100
+  heartBeats: 10000
+
+
+
+spring:
+  datasource:
+    base:
+     url: jdbc:mysql://10.135.26.223:3306/base_system?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+     username: root
+     password: haier123456
+     driver-class-name: com.mysql.jdbc.Driver
+     testOnBorrow: true
+     testOnReturn: true
+     testWhileIdle: true
+     validation-query: SELECT 1
+     time-between-eviction-runs-millis: 30000
+     min-evictable-idle-time-millis: 60000
+     max-active: 200
+     max-idle: 10
+
+mybatis:
+  type-aliases-package: com.haier.svc.job.model
+  mapper-locations: classpath*:mapper/*Mapper.xml

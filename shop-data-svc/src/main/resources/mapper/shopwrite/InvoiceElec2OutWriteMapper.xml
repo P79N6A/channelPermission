@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.InvoiceElectric2OutWriteDao">
+
+
+    <insert id="insert" parameterType="com.haier.shop.model.InvoiceElectric2Out">
+        insert into `invoice_electric_2_out`(`invoice_id`,`success`,`count`,`add_time`,`process_time`,`last_message`,`send_type`)
+        values(#{invoiceId},#{success},#{count},#{addTime},#{processTime},#{lastMessage},#{sendType})
+    </insert>
+    <update id="updateAfterSync" parameterType="com.haier.shop.model.InvoiceElectric2Out">
+        update `invoice_electric_2_out`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="success != null">
+                `success`=#{success},
+            </if>
+            <if test="count != null">
+                `count`=#{count},
+            </if>
+            <if test="processTime != null and processTime != '' ">
+                `process_time`=#{processTime},
+            </if>
+            <if test="lastMessage != null and lastMessage != '' ">
+                `last_message`=#{lastMessage},
+            </if>
+        </trim>
+        where `id` = #{id}
+    </update>
+</mapper>

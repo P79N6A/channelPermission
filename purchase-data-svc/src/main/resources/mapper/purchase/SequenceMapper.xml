@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.cbs.purchase.dao.SequenceDao">
+    <update id="clearSequence"  parameterType="java.util.Map">
+        UPDATE sequence
+        SET
+        id = #{id}
+        WHERE
+        name = #{name}
+    </update>
+
+    <select id="selectSequence" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select seq from order_seq_t where order_id = #{order_id}
+    </select>
+
+    <insert id="insertSequence" parameterType="java.util.Map">
+        insert into order_seq_t(order_id,seq) values (#{order_id},1)
+    </insert>
+
+    <update id="updateSequence" parameterType="java.util.Map">
+        update order_seq_t set seq=#{seq} where order_id=#{order_id}
+    </update>
+
+    <update id="insertOrUpdateSequence" parameterType="java.util.Map">
+        INSERT INTO order_seq_t(order_id, seq)
+        VALUES
+        (#{order_id},1
+        ) ON DUPLICATE KEY UPDATE seq = seq + 1
+    </update>
+</mapper>

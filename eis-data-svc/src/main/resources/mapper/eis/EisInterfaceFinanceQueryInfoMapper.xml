@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.EisInterfaceFinanceQueryInfoDao">
+	<resultMap id="eisInterfaceFinanceQueryInfoResult" type="com.haier.eis.model.EisInterfaceFinanceQueryInfo">
+		<result property="id" column="id" />
+		<result property="financeId" column="les_stock_trans_queue_id" />
+		<result property="interfaceCode" column="interface_code" />
+		<result property="cordersn" column="cordersn" />
+		<result property="system" column="system" />
+		<result property="eaiType" column="eai_type" />
+		<result property="mark" column="mark" />
+		<result property="eaiMessage" column="message" />
+		<result property="addTime" column="add_time" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="eisInterfaceFinanceQueryInfoResult">
+		select `id`,`les_stock_trans_queue_id`,`interface_code`,`cordersn`,`system`,`eai_type`,`mark`,`message`,`add_time`
+		from `eis_interface_finance_query_info`
+		where `id` = #{id}
+	</select>
+	<insert id="insert" parameterType="com.haier.eis.model.EisInterfaceFinanceQueryInfo">
+		insert into `eis_interface_finance_query_info`(`les_stock_trans_queue_id`,`interface_code`,`cordersn`,`system`,`eai_type`,`mark`,`message`,`add_time`)
+		values(#{financeId},#{interfaceCode},#{cordersn},#{system},#{eaiType},#{mark},#{eaiMessage},#{addTime})
+	</insert>
+	<update id="update" parameterType="com.haier.eis.model.EisInterfaceFinanceQueryInfo">
+		update `eis_interface_finance_query_info` set `les_stock_trans_queue_id`=#{financeId},`interface_code`=#{interfaceCode},`cordersn`=#{cordersn},`system`=#{system},`eai_type`=#{eaiType},`mark`=#{mark},`message`=#{eaiMessage},`add_time`=#{addTime}
+		where `id` = #{id}
+	</update>
+</mapper>

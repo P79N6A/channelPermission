@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.Order2thsWriteDao">
+    <update id="update" parameterType="com.haier.shop.model.Order4Invoices">
+        UPDATE `Order2ths`
+        SET `orderSn`=#{orderSn},`orderSourceSn`=#{orderSourceSn},`addTime`=#{addTime},`orderSource`=#{orderSource},`sCode`=#{sCode},`industryCode`=#{industryCode},`industryName`=#{industryName},`productType`=#{productType},`sku`=#{sku},`productName`=#{productName},`price`=#{price},`number`=#{number},`shippingAmount`=#{shippingAmount},`orderAmount`=#{orderAmount},`consignee`=#{consignee},`mobile1`=#{mobile1},`mobile2`=#{mobile2},`deliverySn`=#{deliverySn},`remark`=#{remark},`status`=#{status},`receiptTitle`=#{receiptTitle},`taxSpotNum`=#{taxSpotNum},`regPhone`=#{regPhone},`regAddress`=#{regAddress},`receiptBank`=#{receiptBank},`bankAccount`=#{bankAccount},`receiptType`=#{receiptType},`receiptNumber`=#{receiptNumber},`createTime`=#{createTime},`JSDate`=#{jSDate},`isReceipted`=#{isReceipted},`memberInvoiceId`=#{memberInvoiceId},`creator`=#{creator}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateForsynInvoices" parameterType="com.haier.shop.model.Order4Invoices">
+        UPDATE `Order2ths`
+        SET `isReceipted`=#{isReceipted}
+        WHERE `id` = #{id}
+    </update>
+</mapper>

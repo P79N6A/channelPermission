@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- velocity -->
+    <bean class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="classpath:/templates/"></property>
+        <property name="velocityProperties">
+            <props>
+                <prop key="input.encoding">UTF-8</prop>
+                <prop key="output.encoding">UTF-8</prop>
+                <!-- 关闭autoreload -->
+                <prop key="velocimacro.library.autoreload">false</prop>
+                <!-- 开启缓存 -->
+                <prop key="file.resource.loader.cache">false</prop>
+                <!-- 页面缓存数量，默认值89，此处修改为1024 -->
+                <prop key=" resource.manager.defaultcache.size">1024</prop>
+                <!-- 定期扫描文件，单位秒 -->
+                <prop key="file.resource.loader.modificationCheckInterval">300</prop>
+                <!-- 允许变量设置为null -->
+                <prop key="directive.set.null.allowed">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <!-- 生产环境需要开启缓存功能，默认缓存数量1024 -->
+        <property name="cache" value="false"></property>
+        <property name="prefix" value=""></property>
+        <property name="suffix" value=".vm" />
+        <property name="requestContextAttribute" value="rc"/>
+        <property name="contentType"><value>text/html;charset=UTF-8</value></property>
+        <!-- tools -->
+        <property name="dateToolAttribute" value="date" />
+        <property name="numberToolAttribute" value="number" />
+    </bean>
+</beans>

@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.LesStockTransQueueDao">
+    <resultMap id="lesStockTransQueueResult" type="com.haier.eis.model.LesStockTransQueue">
+        <result property="id" column="id"/>
+        <result property="lesBatchId" column="les_batch_id"/>
+        <result property="sku" column="sku"/>
+        <result property="externalSku" column="sku"/>
+        <result property="secCode" column="sec_code"/>
+        <result property="corderSn" column="corder_sn"/>
+        <result property="outping" column="outping"/>
+        <result property="billTime" column="bill_time"/>
+        <result property="billType" column="bill_type"/>
+        <result property="quantity" column="quantity"/>
+        <result property="zeile" column="zeile"/>
+        <result property="lesBillNo" column="les_bill_no"/>
+        <result property="mark" column="mark"/>
+        <result property="matkl" column="matkl"/>
+        <result property="kunnrSaleTo" column="kunnr_sale_to"/>
+        <result property="kunnrSendTo" column="kunnr_send_to"/>
+        <result property="tknum" column="tknum"/>
+        <result property="bwart" column="bwart"/>
+        <result property="charg" column="charg"/>
+        <result property="reserve1" column="reserve1"/>
+        <result property="reserve2" column="reserve2"/>
+        <result property="bstkd" column="bstkd"/>
+        <result property="data" column="data"/>
+        <result property="status" column="status"/>
+        <result property="financeStatus" column="finance_status"/>
+        <result property="processTime" column="process_time"/>
+        <result property="addTime" column="add_time"/>
+        <result property="errorMessage" column="error_message"/>
+        <result property="versionCode" column="version_code"/>
+        <result property="channelCode" column="channel_code"/>
+        <result property="financeStatus" column="finance_status"/>
+        <result property="channelRevised" column="channel_revised"/>
+        <result property="isManualSetChannel" column="is_manual_set_channel"/>
+    </resultMap>
+    <select id="getByLesBillNo" resultMap="lesStockTransQueueResult">
+        SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `data`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`,
+            `channel_revised`,
+            `is_manual_set_channel`
+        FROM `les_stock_trans_queue`
+        WHERE
+            `les_bill_no` = #{lesBillNo}
+        LIMIT 1
+    </select>
+    <select id="getById" resultMap="lesStockTransQueueResult">
+        SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `status`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`,
+            `channel_revised`,
+            `is_manual_set_channel`
+        FROM `les_stock_trans_queue`
+        WHERE
+            `id` = #{id}
+    </select>
+    <select id="getByStatus" resultMap="lesStockTransQueueResult">
+        SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `status`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`,
+            `channel_revised`,
+            `is_manual_set_channel`
+        FROM `les_stock_trans_queue`
+        WHERE
+            `status` = ${status}
+        LIMIT ${topx}
+    </select>
+    <select id="getForFinance" resultMap="lesStockTransQueueResult">
+	 <![CDATA[
+        SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `data`,
+            `status`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`,
+            `channel_revised`,
+            `is_manual_set_channel`
+        FROM `les_stock_trans_queue`
+        WHERE finance_status = 0
+        LIMIT 500
+        ]]>
+	</select>
+    <select id="getNotProcessByBatchId" parameterType="Integer"
+            resultMap="lesStockTransQueueResult">
+        SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `data`,
+            `status`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`,
+            `channel_revised`,
+            `is_manual_set_channel`
+        FROM `les_stock_trans_queue`
+        WHERE `les_batch_id` = #{les_batch_id} AND
+              status = 0
+    </select>
+
+    <select id="getNotConvertedByBatchId" parameterType="Integer"
+            resultMap="lesStockTransQueueResult">
+        SELECT
+            `id`,
+            `sku`
+        FROM `les_stock_trans_queue`
+        WHERE
+            `les_batch_id` = #{les_batch_id} AND
+            status = 10
+        ORDER BY sku
+    </select>
+    <select id="getNotProcessedLesBatchId" resultType="Integer">
+        SELECT
+            DISTINCT (`les_batch_id`)
+        FROM `les_stock_trans_queue`
+        WHERE status = 0
+    </select>
+    <select id="getNotConvertedLesBatchId" resultType="Integer">
+        SELECT `les_batch_id`
+        FROM `les_stock_trans_queue`
+        WHERE status = 10
+        GROUP
+        BY
+            `les_batch_id`
+    </select>
+    <insert id="insert" parameterType="com.haier.eis.model.LesStockTransQueue">
+        INSERT INTO
+            `les_stock_trans_queue` (`les_batch_id`, `sku`, `sec_code`, `corder_sn`, `outping`, `bill_time`, `bill_type`, `quantity`, `zeile`, `les_bill_no`, `mark`, `matkl`, `kunnr_sale_to`, `kunnr_send_to`, `tknum`, `bwart`, `charg`, `reserve1`, `reserve2`, `bstkd`, `data`, `status`, `process_time`, `add_time`, `error_message`, `version_code`, `channel_code`)
+        VALUES (#{lesBatchId}, #{sku}, #{secCode}, #{corderSn}, #{outping}, #{billTime}, #{billType}, #{quantity},
+                #{zeile}, #{lesBillNo}, #{mark}, #{matkl}, #{kunnrSaleTo}, #{kunnrSendTo}, #{tknum}, #{bwart}, #{charg},
+                #{reserve1}, #{reserve2}, #{bstkd}, #{data}, #{status}, #{processTime}, #{addTime}, #{errorMessage},
+                #{versionCode}, #{channelCode})
+    </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into
+        `les_stock_trans_queue`(`les_batch_id`,`sku`,`sec_code`,`corder_sn`,`outping`,`bill_time`,`bill_type`,`quantity`,`zeile`,`les_bill_no`,`mark`,`matkl`,`kunnr_sale_to`,`kunnr_send_to`,`tknum`,`bwart`,`charg`,`reserve1`,`reserve2`,`bstkd`,`data`,`status`,`process_time`,`add_time`,`error_message`,`version_code`,`channel_code`)
+        values
+        <foreach collection="stockTransQueues" item="item" index="index" separator=",">
+            (#{item.lesBatchId},#{item.sku},#{item.secCode},#{item.corderSn},#{item.outping},#{item.billTime},#{item.billType},#{item.quantity},#{item.zeile},#{item.lesBillNo},
+            #{item.mark},#{item.matkl},#{item.kunnrSaleTo},#{item.kunnrSendTo},#{item.tknum},#{item.bwart},#{item.charg},#{item.reserve1},#{item.reserve2},#{item.bstkd},
+            #{item.data},#{item.status},#{item.processTime},#{item.addTime},#{item.errorMessage},#{item.versionCode},#{item.channelCode})
+        </foreach>
+    </insert>
+    <update id="update" parameterType="com.haier.eis.model.LesStockTransQueue">
+        UPDATE `les_stock_trans_queue`
+        SET
+            `les_batch_id` = #{lesBatchId}, `sku` = #{sku}, `sec_code` = #{secCode}, `corder_sn` = #{corderSn},
+            `outping`      = #{outping}, `bill_time` = #{billTime}, `bill_type` = #{billType},
+            `quantity`     = #{quantity}, `zeile` = #{zeile}, `les_bill_no` = #{lesBillNo}, `mark` = #{mark},
+            `matkl`        = #{matkl}, `kunnr_sale_to` = #{kunnrSaleTo}, `kunnr_send_to` = #{kunnrSendTo},
+            `tknum`        = #{tknum}, `bwart` = #{bwart}, `charg` = #{charg}, `reserve1` = #{reserve1},
+            `reserve2`     = #{reserve2}, `bstkd` = #{bstkd}, `data` = #{data}, `status` = #{status},
+            `process_time` = #{processTime}, `add_time` = #{addTime}, `error_message` = #{errorMessage},
+            `version_code` = #{versionCode}, `channel_code` = #{channelCode}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateAfterConvert" parameterType="com.haier.eis.model.LesStockTransQueue">
+        UPDATE
+            `les_stock_trans_queue`
+        SET
+            `sku`              = #{sku}, `status` = #{status}, `process_time` =
+        now(), `error_message` = #{errorMessage}
+        WHERE id = #{id}
+    </update>
+    <update id="updateStatus">
+        UPDATE
+            `les_stock_trans_queue`
+        SET status = #{status}, process_time = now(), error_message = #{msg}
+        WHERE id =
+              #{id} AND status = #{oldStatus}
+    </update>
+    <update id="updateSKU">
+        UPDATE `les_stock_trans_queue` SET sku = #{sku} WHERE id = #{id}
+    </update>
+    <update id="updateIsManualSetChannel">
+        UPDATE
+            `les_stock_trans_queue`
+        SET `status`              = #{status}, process_time = now(), error_message = #{msg},
+            is_manual_set_channel = #{isManualSetChannel}
+        WHERE id =
+              #{id} AND `status` = #{oldStatus}
+    </update>
+    <update id="updateChannel">
+        UPDATE
+            `les_stock_trans_queue`
+        SET channel_revised = #{channel}, reviser = #{user}, revise_time = now()
+        WHERE id =
+              #{id} AND status = 2
+    </update>
+    <update id="updateAfterDoFinance" parameterType="com.haier.eis.model.LesStockTransQueue">
+        UPDATE
+            `les_stock_trans_queue`
+        SET
+            `finance_status` = 1
+        WHERE id = #{id}
+    </update>
+    <select id="getByOrderSn" resultMap="lesStockTransQueueResult">
+        SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `data`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`
+        FROM `les_stock_trans_queue`
+        WHERE
+            `corder_sn` = #{corder_sn} AND `sku` = #{sku}
+        LIMIT 1
+    </select>
+    <resultMap id="inventoryDetailResult" type="com.haier.eis.model.InventoryDetail">
+        <result property="itemName" column="sku"/>
+        <result property="itemId" column="external_sku"/>
+        <result property="opType" column="mark"/>
+        <result property="batchCode" column="charg"/>
+        <result property="storeCode" column="sec_code"/>
+        <result property="quantity" column="quantity"/>
+        <result property="modifyTime" column="add_time"/>
+        <result property="detailNo" column="outping"/>
+    </resultMap>
+    
+	<resultMap id="orderInventoryDetailResult" type="com.haier.eis.model.OrderInventoryDetail">
+        <result property="orderCode" column="corder_sn"/>
+        <collection property="inventoryDetailList" resultMap="inventoryDetailResult"/>
+    </resultMap>
+    
+	<resultMap id="lesStockTransResult" type="com.haier.eis.model.InventoryListOutput">
+        <result property="storeCode" column="sec_code"/>
+        <collection property="orderInventoryDetailList" resultMap="orderInventoryDetailResult"/>
+    </resultMap>
+    
+	<select id="queryLesStockTrans" resultMap="lesStockTransResult">
+		SELECT SQL_CALC_FOUND_ROWS
+			q.sec_code,
+			q.corder_sn,
+			q.sku,
+			(case when u.external_sku is null then q.sku else u.external_sku end) as external_sku,
+			q.mark,
+			q.charg,
+			q.sec_code,
+			q.quantity,
+			q.add_time,
+			q.outping
+		FROM
+			les_stock_trans_queue q
+		LEFT JOIN eis_external_sku u ON q.sku = u.sku
+		WHERE
+			q.bill_type not in('ZBJT','ZGI6','ZGR6')
+			AND q.data !='XN'
+		<if test="status != null and status !=''">
+        	AND q.`status`<![CDATA[<>]]>#{status}
+		</if>
+		<if test="beginAddTime != null and beginAddTime !=''">
+        	AND q.add_time<![CDATA[>=]]>#{beginAddTime}
+		</if>
+		<if test="endAddTime != null and endAddTime !=''">
+        	AND q.add_time<![CDATA[<=]]>#{endAddTime}
+		</if>
+	<if test="start!=null and size!=null">
+		Limit ${start},${size}
+	</if>
+	</select>
+	
+    <select id="getRowCnts" resultType="int">
+        SELECT
+            FOUND_ROWS();
+    </select>
+    
+    <select id="getLesStockTransQueueByCorderSn" resultMap="lesStockTransQueueResult">
+        SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `data`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`
+        FROM `les_stock_trans_queue`
+        WHERE
+            `corder_sn` = #{corderSn}
+        LIMIT 1
+    </select>
+    
+    <delete id="delete" parameterType="Integer" statementType="PREPARED">
+		delete from `les_stock_trans_queue`
+		where 
+		`id`= #{id}
+	</delete>
+	
+	<select id="getBySnSku" resultMap="lesStockTransQueueResult">
+        SELECT
+            `id`
+        FROM `les_stock_trans_queue`
+        WHERE
+            `corder_sn` = #{corder_sn} AND `sku` = #{sku} 
+    </select>
+    
+    <update id="updateLesStatus" parameterType="java.util.Map">
+        UPDATE
+            `les_stock_trans_queue`
+        SET
+            `status` = 1
+        WHERE id in
+        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">
+           #{id}
+        </foreach>
+    </update>
+    
+    
+      <select id="getDelayTrans" resultMap="lesStockTransQueueResult">
+        SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `data`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`,
+            `channel_revised`,
+            `reviser`,
+            `revise_time`,
+            `is_manual_set_channel`
+        FROM `les_stock_trans_queue`
+        WHERE
+            `status` = 2
+        LIMIT #{start}, #{size}
+    </select>
+    
+       <select id="getDelayTransCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM les_stock_trans_queue
+        WHERE
+            `status` = 2
+    </select>
+    
+</mapper>

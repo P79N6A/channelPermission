@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="TransAccountCheckingFromCBSToLES" targetNamespace="http://www.example.org/TransAccountCheckingFromCBSToLES/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/TransAccountCheckingFromCBSToLES/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/TransAccountCheckingFromCBSToLES/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/TransAccountCheckingFromCBSToLES/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="TransAccountCheckingFromCBSToLES">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in" type="tns:inType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TransAccountCheckingFromCBSToLESResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="tns:outType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="inType">
+        <xsd:sequence>
+          <xsd:element name="FLAG" type="xsd:string"/>
+          <xsd:element name="LGORT" type="xsd:string"/>
+          <xsd:element name="MATNR" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="outType">
+        <xsd:sequence>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="CBS_KC" type="tns:CBS_KCType"/>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="CBS_MX" type="tns:CBS_MXType"/>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="COLLECTOR" type="tns:COLLECTORType"/>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="LTMX" type="tns:LTMXType"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CBS_KCType">
+        <xsd:sequence>
+          <xsd:element name="LGORT1" type="xsd:string"/>
+          <xsd:element name="LGORT" type="xsd:string"/>
+          <xsd:element name="MATNR" type="xsd:string"/>
+          <xsd:element name="MATNR_NEW" type="xsd:string"/>
+          <xsd:element name="ATWART" type="xsd:string"/>
+          <xsd:element name="CLABS" type="xsd:decimal"/>
+          <xsd:element name="CUMLM" type="xsd:decimal"/>
+          <xsd:element name="MEINS" type="xsd:string"/>
+          <xsd:element name="ZMENGE1" type="xsd:decimal"/>
+          <xsd:element name="VRKME" type="xsd:string"/>
+          <xsd:element name="MENGE1" type="xsd:decimal"/>
+          <xsd:element name="MENGE2" type="xsd:decimal"/>
+          <xsd:element name="MATKL" type="xsd:string"/>
+          <xsd:element name="VOLUM" type="xsd:decimal"/>
+          <xsd:element name="ZVOLEH" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CBS_MXType">
+        <xsd:sequence>
+          <xsd:element name="BKTXT" type="xsd:string"/>
+          <xsd:element name="BLDAT" type="xsd:string"/>
+          <xsd:element name="BUDAT" type="xsd:string"/>
+          <xsd:element name="BWART" type="xsd:string"/>
+          <xsd:element name="CHARG" type="xsd:string"/>
+          <xsd:element name="CPUTM" type="xsd:string"/>
+          <xsd:element name="ERFME" type="xsd:string"/>
+          <xsd:element name="ERFMG" type="xsd:decimal"/>
+          <xsd:element name="LGORT" type="xsd:string"/>
+          <xsd:element name="LIFNR" type="xsd:string"/>
+          <xsd:element name="MATNR" type="xsd:string"/>
+          <xsd:element name="MBLNR" type="xsd:string"/>
+          <xsd:element name="MEINS" type="xsd:string"/>
+          <xsd:element name="MENGE" type="xsd:decimal"/>
+          <xsd:element name="MJAHR" type="xsd:string"/>
+          <xsd:element name="SHKZG" type="xsd:string"/>
+          <xsd:element name="USNAM" type="xsd:string"/>
+          <xsd:element name="WERKS" type="xsd:string"/>
+          <xsd:element name="XBLNR" type="xsd:string"/>
+          <xsd:element name="LGPLA" type="xsd:string"/>
+          <xsd:element name="LGOBE" type="xsd:string"/>
+          <xsd:element name="VOLUM" type="xsd:decimal"/>
+          <xsd:element name="ZVOLUM" type="xsd:decimal"/>
+          <xsd:element name="VBELV" type="xsd:string"/>
+          <xsd:element name="POSNV" type="xsd:string"/>
+          <xsd:element name="VBELN" type="xsd:string"/>
+          <xsd:element name="PEICHE" type="xsd:string"/>
+          <xsd:element name="TPLST" type="xsd:string"/>
+          <xsd:element name="VBELV_O" type="xsd:string"/>
+          <xsd:element name="POSNV_O" type="xsd:string"/>
+          <xsd:element name="BSTKD" type="xsd:string"/>
+          <xsd:element name="NAME1_SDF" type="xsd:string"/>
+          <xsd:element name="MATKL" type="xsd:string"/>
+          <xsd:element name="EXTWG" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="COLLECTORType">
+        <xsd:sequence>
+          <xsd:element name="MATNR" type="xsd:string"/>
+          <xsd:element name="WERKS" type="xsd:string"/>
+          <xsd:element name="LGORT" type="xsd:string"/>
+          <xsd:element name="CHARG" type="xsd:string"/>
+          <xsd:element name="MATKL" type="xsd:string"/>
+          <xsd:element name="CLABS" type="xsd:decimal"/>
+          <xsd:element name="MEINS" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="LTMXType">
+        <xsd:sequence>
+          <xsd:element name="MBLNR" type="xsd:string"/>
+          <xsd:element name="MJAHR" type="xsd:string"/>
+          <xsd:element name="CPUDT" type="xsd:string"/>
+          <xsd:element name="ZEILE" type="xsd:string"/>
+          <xsd:element name="MATNR" type="xsd:string"/>
+          <xsd:element name="MEINS" type="xsd:string"/>
+          <xsd:element name="MENGE" type="xsd:decimal"/>
+          <xsd:element name="WERKS" type="xsd:string"/>
+          <xsd:element name="LGORT" type="xsd:string"/>
+          <xsd:element name="CHARG" type="xsd:string"/>
+          <xsd:element name="BWART" type="xsd:string"/>
+          <xsd:element name="VBELN_DN" type="xsd:string"/>
+          <xsd:element name="POSNR_DN" type="xsd:string"/>
+          <xsd:element name="VBELN_SO" type="xsd:string"/>
+          <xsd:element name="POSNR_SO" type="xsd:string"/>
+          <xsd:element name="AUART" type="xsd:string"/>
+          <xsd:element name="BSTNK" type="xsd:string"/>
+          <xsd:element name="BSTNK100" type="xsd:string"/>
+          <xsd:element name="ERNAM" type="xsd:string"/>
+          <xsd:element name="ERDAT" type="xsd:string"/>
+          <xsd:element name="SHKZG" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="TransAccountCheckingFromCBSToLESRequest">
+    <WL5G3N0:part element="WL5G3N1:TransAccountCheckingFromCBSToLES" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="TransAccountCheckingFromCBSToLESResponse">
+    <WL5G3N0:part element="WL5G3N1:TransAccountCheckingFromCBSToLESResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="TransAccountCheckingFromCBSToLES">
+    <WL5G3N0:operation name="TransAccountCheckingFromCBSToLES">
+      <WL5G3N0:input message="WL5G3N1:TransAccountCheckingFromCBSToLESRequest"/>
+      <WL5G3N0:output message="WL5G3N1:TransAccountCheckingFromCBSToLESResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="TransAccountCheckingFromCBSToLESSOAP" type="WL5G3N1:TransAccountCheckingFromCBSToLES">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="TransAccountCheckingFromCBSToLES">
+      <WL5G3N2:operation soapAction="http://www.example.org/TransAccountCheckingFromCBSToLES/TransAccountCheckingFromCBSToLES"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="TransAccountCheckingFromCBSToLES">
+    <WL5G3N0:port binding="WL5G3N1:TransAccountCheckingFromCBSToLESSOAP" name="TransAccountCheckingFromCBSToLESSOAP">
+      <WL5G3N2:address location="http://58.56.128.10:19001/EAI/service/LES/TransAccountCheckingFromCBSToLES/TransAccountCheckingFromCBSToLES?INT_CODE=EAI_INT_2780"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

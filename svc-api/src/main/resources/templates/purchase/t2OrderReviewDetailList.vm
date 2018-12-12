@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>T+2订单审核详细页面</title>
+	<link rel="stylesheet" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+	<script src="../static/third/jquery-1.8.3.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<!--  <div data-options="region:'center',title:'T+2订单审核详细页面',border:false" >
+		    <table id="dataGrid" style="height:410px"></table>
+	</div>-->
+	<div data-options="region:'center',border:false" style="display:none;height: 220px;overflow: auto; " align="left">
+		<form id="reviewForm" action="#">
+			<table align="left">
+				<tr>
+					<td>审核意见</td>
+					<td>
+						<input id='audit_remark' name='audit_remark' style="width:250px;height:110px;" autofocus =true style="overflow:auto" class="easyui-validatebox" data-options="validType:'minLength[5]'"validType="maxLength[2000]"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td  width="200px">
+						<a id='passReview' href="#" class="easyui-linkbutton" iconCls="icon-ok">审核通过</a>
+						&nbsp;
+	    				<a id='nopassReview' href="#" class="easyui-linkbutton" iconCls="icon-no">作废</a>
+	    				&nbsp;
+	    				<a id='close' href="" class="easyui-linkbutton"  onclick='onGoBack()' iconCls="icon-back">返回</a>
+		 			</td>
+				</tr>
+			</table>
+			<!-- 下面隐藏控件用来存放点击审核后的数据 -->
+			<input id="reviewData" name="reviewData" type="hidden"/>
+			<input id="reviewFlag" name="reviewFlag" type="hidden"/>
+			<input id="audit_remark" name="audit_remark" type="hidden"/>
+		</form>
+	</div>
+</div>
+
+<script type="application/javascript">
+//审核通过
+$('#passReview').click(function(){
+	//审核通过FLAG（10:审核通过 -10：作废）
+    var reviewFlag = '0';
+    $("#reviewFlag").val(reviewFlag);
+	$("#reviewData").val('$!reviewData');
+    var audit_remark  = $('#audit_remark').val();
+    $("#audit_remark").val(audit_remark);
+
+	if( $!reviewData == ""){
+		$.messager.alert('提示','没有需要审核的数据！','info');
+		$("#audit_remark").val("");
+		return;	
+	}
+
+	var flag = true;
+	$('#reviewForm input').each(function () {
+	    if ($(this).attr('validType')) {
+		    if (!$(this).validatebox('isValid')) {
+		        flag = false;
+		        return;
+		    }
+	    }
+	});
+
+	if(flag){    
+		jQuery.ajax({
+	         url: "/purchase/reviewT2OrderReviewDetailList",   // 提交的页面
+	         type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+	         data:{
+	        	 "reviewFlag":$("#reviewFlag").val(),
+	        	 "reviewData": $("#reviewData").val(),
+	        	 "audit_remark": $("#audit_remark").val()
+	        	 },
+        	 beforeSend: function(){  
+		        var win = $.messager.progress({  
+		                title:'请等待',  
+		                msg:'数据保存中...',
+		                text:'处理中',
+		                interval:700
+		            });  
+		      },  
+		      complete: function(){  
+		        //AJAX请求完成时隐藏loading提示  
+		        $.messager.progress('close'); 
+		      },  
+	         success: function (data) {
+	        	 if(data.data != null) {$.messager.alert('错误',data.data,'error');}
+            	 else {
+	        	 var message = data.message;
+	 		 	if(data.message == "success"){
+	 		 		$.messager.alert('提示',"审核通过状态更新成功！",'info',function(r){
+		 		 		onGoBack();
+	 		 		});
+	 		 	}else{
+	 		 		$.messager.alert('提示',"审核通过状态更新失败！",'info');
+	            }
+	         }}
+		 });
+	}else{
+		$.messager.alert('提示',"请输入正确数据",'error');
+	}	 		 
+});
+//返回调用画面
+function onGoBack(){
+  var url = '$!url';
+  window.location.href=url;
+ }
+//作废
+$('#nopassReview').click(function(){
+	//审核通过FLAG
+    var reviewFlag = '1';
+    $("#reviewFlag").val(reviewFlag);
+    $("#reviewData").val('$!reviewData');
+    var audit_remark  = $('#audit_remark').val();
+    $("#audit_remark").val(audit_remark);
+
+	if( $!reviewData == ""){
+		$.messager.alert('提示','没有需要审核的数据！','info');
+		$("#audit_remark").val("");
+		return;	
+	}
+
+	var flag = true;
+	$('#reviewForm input').each(function () {
+	    if ($(this).attr('validType')) {
+		    if (!$(this).validatebox('isValid')) {
+		        flag = false;
+		        return;
+		    }
+	    }
+	});
+
+	if(flag){
+		jQuery.ajax({
+	         url: "/purchase/reviewT2OrderReviewDetailList",   // 提交的页面
+	         type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+	         data:{
+	        	 "reviewFlag":$("#reviewFlag").val(),
+	        	 "reviewData": $("#reviewData").val(),
+	        	 "audit_remark": $("#audit_remark").val()
+	        	 },
+	         success: function (data) {
+	        	 var message = data.message;
+			 	if(data.message == "success"){
+			 		$.messager.alert('提示',"作废状态更新成功！",'info',function(r){
+			 			onGoBack();
+			 		});
+			 	}else{
+			 		$.messager.alert('提示',"作废状态更新失败！",'info');
+			 	}
+	         }
+		 });
+	}else{
+		$.messager.alert('提示',"请输入正确数据",'error');
+	}	 
+});
+/*
+var datagrid;
+$(function () {
+	//接收订单ID
+	$("#reviewData").val('$!reviewData');
+    
+    datagrid = $('#dataGrid').datagrid({
+        url: "/purchase/findT2OrderReviewDetailList",
+        fit: true,
+        fitColumns: true,
+        singleSelect: true,
+        nowrap: true,
+        rownumbers: true,
+        height:410,
+        queryParams:{
+        	  reviewData:$('#reviewData').val()
+        },
+        columns: [
+            [
+	             {
+	                 field: 'ed_channel_name',
+	                 title: '渠道',
+	                 width: 80,
+	                 align: 'center'
+	             },
+	             {
+                	field:'category_id',
+                	title:'品类',
+                	width:100,
+                	align:'center'
+                 },
+	             {
+	                 field: 'product_group_name',
+	                 title: '产品组',
+	                 width: 120,
+	                 align: 'center'
+	             },
+	             {
+	                 field: 'storage_id',
+	                 title: '库位码',
+	                 width: 100,
+	                 align: 'center'
+	             },
+	             {
+	                 field: 'materials_id',
+	                 title: '物料号',
+	                 width: 120,
+	                 align: 'center'
+	             },
+	             {
+	                 field: 'materials_desc',
+	                 title: '型号',
+	                 width: 190,
+	                 align: 'center'
+	             },
+	             {
+	                 field: 't2_delivery_prediction',
+	                 title: 'T+2周订单数量',
+	                 width: 90,
+	                 align: 'center'
+	             },
+	             {
+	                 field: 'customization_name',
+	                 title: '定制',
+	                 width: 40,
+	                 align: 'center'
+	             },
+	             {
+	                 field: 'satisfy_type_id',
+	                 title: '库存满足方式',
+	                 width: 100,
+	                 align: 'center',
+	                 hidden:true
+	             },
+	             {
+	                 field: 'satisfy_type_name',
+	                 title: '库存满足方式',
+	                 width: 100,
+	                 align: 'center'
+	             },
+	             {
+                     field: 'order_type_name',
+                     title: '订单类型',
+                     width: 70,
+                     align: 'center'
+	             }
+            ]
+        ]
+    });
+});
+*/
+$.extend($.fn.validatebox.defaults.rules, {
+    maxLength: {
+        validator: function(value, param){
+            return value.length <= param[0];
+        },
+        message: 'Please enter no more than {0} characters.'
+    }
+});
+
+</script>
+</body>

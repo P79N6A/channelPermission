@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>区县库存管理</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false,showFooter:true">
+    <table id="stockAreaTable"></table>
+</div>
+
+<div id="exportProduct">
+    <form id="exportForm" action="#">
+        <input id="storeCodeData" name="storeCodeData" type="hidden">
+        <input id="skuData" name="skuData" type="hidden">
+        <input id="stockQtyData" name="stockQtyData" type="hidden">
+        <input id="productTypeNameData" name="productTypeNameData" type="hidden">
+        <input id="productNameData" name="productNameData" type="hidden">
+    </form>
+</div>
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+       
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  省份
+			</span>
+                <select class="easyui-combobox" name="province_code" id="province_code" province style="width: 174px;" onchange="getAllCityByProvId()">
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  城市
+			</span>
+                <select name="city_code" id="city_code" style="width:174px;height: 26px" onchange="getAllRegionByCityId(this.value)">
+                    <option value="0">--请选择--</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  区县
+			</span>
+                <select name="regionCode" id="regionCode" style="width:174px;height: 26px">
+                    <option value="0">--请选择--</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  渠道
+			</span>
+                <select class="easyui-combobox"  name="channel_code" id="channel_code" style="width:174px">
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  物料编码
+			</span>
+                <input class="easyui-textbox" wlbm name="sku" id="sku"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+       <!-- <a href="#" class="easyui-linkbutton" id="importBtn_productList"
+           data-options="iconCls:'icon-save',plain:true">导出</a>-->
+    </form>
+</div>
+
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this =
+        $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#stockAreaTable').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="/static/js/stock/stock/stockAreaList.js"></script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <link rel="stylesheet" href="../static/css/staticHtml.css">
+    <title>退换货订单关闭及时率</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+
+<div id="searchPanel_areapeoplemanage" class="easyui-panel"
+     style="width:100%;height:60%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_areapeoplemanage">
+        <tbody>
+        <tr><td></td><td nowrap>合计</td><td nowrap>4</td><td nowrap>4</td><td nowrap>0</td><td nowrap>100.00%</td><td nowrap>100.00%</td>  </tr>
+        <tr><td></td><td nowrap>胶州市</td><td nowrap>1</td><td nowrap>1</td><td nowrap>0</td><td nowrap>100.00%</td><td nowrap>100.00%</td></tr>
+        <tr><td></td><td nowrap>平度市</td><td nowrap>1</td><td nowrap>1</td><td nowrap>0</td><td nowrap>100.00%</td><td nowrap>100.00%</td></tr>
+        <tr><td></td><td nowrap>城阳区</td><td nowrap>1</td><td nowrap>1</td><td nowrap>0</td><td nowrap>100.00%</td><td nowrap>100.00%</td></tr>
+        <tr><td></td><td nowrap>黄岛区</td><td nowrap>1</td><td nowrap>1</td><td nowrap>0</td><td nowrap>100.00%</td><td nowrap>100.00%</td></tr>
+        </tbody>
+    </table>
+</div>
+<div id="new_div" class="easyui-panel"
+     style="width:100%;height:40%;" title="入库超期统计"
+     data-options="iconCls:'',collapsed:false,
+    collapsible:true">
+    <table id="datagrid_areapeoplemanage_1">
+        <tbody>
+        <tr><td></td><td nowrap>已完成已超期</td><td nowrap>0</td><td nowrap>/</td><td nowrap>/</td><td nowrap>/</td><td nowrap>/</td> </tr>
+        <tr><td></td><td nowrap>未完成已超期</td><td nowrap>0</td><td nowrap>/</td><td nowrap>/</td><td nowrap>/</td><td nowrap>/</td></tr>
+        <tr><td></td><td nowrap>未完成未超期</td><td nowrap>0</td><td nowrap>/</td><td nowrap>/</td><td nowrap>/</td><td nowrap>/</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_areapeoplemanage">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_areapeoplemanagel" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">开始时间</span>
+                <input class="easyui-datebox" name="countryName"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">结束时间</span>
+                <input class="easyui-datebox" id="seName" name="seName"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">渠道</span>
+                <select id="u498_input" class="easyui-combobox">
+                    <option value="--请选择--">--请选择--</option>
+                    <option value="淘宝海尔官方旗舰店">淘宝海尔官方旗舰店</option>
+                    <option value="淘宝海尔官方旗舰店分销店">淘宝海尔官方旗舰店分销店</option>
+                    <option value="淘宝海尔买帮专卖店">淘宝海尔买帮专卖店</option>
+                    <option value="淘宝海尔热水器专卖店">淘宝海尔热水器专卖店</option>
+                    <option value="淘宝海尔生活电器专卖店">淘宝海尔生活电器专卖店</option>
+                    <option value="淘宝海尔手机专卖店">淘宝海尔手机专卖店</option>
+                    <option value="淘宝海尔生活家电旗舰店分销平台">淘宝海尔生活家电旗舰店分销平台</option>
+                    <option value="淘宝新宝">淘宝新宝</option>
+                    <option value="淘宝空调旗舰店">淘宝空调旗舰店</option>
+                    <option value="天猫模卡分销店铺">天猫模卡分销店铺</option>
+                    <option value="淘宝村淘">淘宝村淘</option>
+                    <option value="天猫企业沟">天猫企业沟</option>
+                    <option value="天猫生态">天猫生态</option>
+                    <option value="天猫海尔电视">天猫海尔电视</option>
+                    <option value="淘宝海尔厨房大电旗舰店">淘宝海尔厨房大电旗舰店</option>
+                </select>
+            </div>
+            <div class="mar_r6px" style="padding-bottom: 5px;display: inline-block;">
+                <input name="selecttype" class="changeselect" type="radio" value="1" checked="checked"/>
+                <span style="margin-right: 5px;">省市区筛选</span>
+
+                <input name="selecttype" class="changeselect" type="radio" value="2"/>
+                <span style="margin-right: 5px;">区域筛选</span>
+
+                <input name="selecttype" class="changeselect" type="radio" value="3"/>
+                <span style="margin-right: 5px;">物流区域筛选</span>
+            </div>
+            <div name="areaselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">省</span>
+                <select  class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div  name="areaselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">市</span>
+                <select class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div  name="areaselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">区</span>
+                <select class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div  name="areaselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">中心</span>
+                <select class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div name="quyuselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">区域</span>
+                <select  class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div name="quyuselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">人员</span>
+                <select  class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div name="quyuselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">工贸</span>
+                <select class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div name="wuliuselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">物流区域</span>
+                <select  class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div name="wuliuselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">工贸</span>
+                <select  class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div name="wuliuselect" class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">中心</span>
+                <select  class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">网单号</span>
+                <input name="areacenter" data-options="prompt:'只根据网单号筛选，忽略其他筛选条件'" class="easyui-textbox" style="width:280px;"/>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">中心</span>
+                <select class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+
+            <span class="search-row-label_80">历史查询</span>
+            <input class="checkbox_input" type="checkbox">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">网单类型</span>
+                <select class="easyui-combobox">
+                    <option>请选择</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderForecastGoal"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+<div id="addDlg_areapeoplemanage" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:380px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>省名称<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field0" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>市名称<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field2" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>区县名称<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field4" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>库位名称<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field6" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>工贸名称<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field7" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>物流区域<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field8" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>区域名称<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="field9" required="true"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_areapeoplemanage').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_areapeoplemanage').datagrid('resize');
+        }, 500);
+    }
+    $(function () {
+        var area = $('div[name=areaselect]');
+        var quyu = $('div[name=quyuselect]');
+        var wuliu = $('div[name=wuliuselect]');
+        groupsetcss($(area),"");
+        groupsetcss($(quyu),"none");
+        groupsetcss($(wuliu),"none");
+        $('.changeselect').on('click',function () {
+            var tempv = $('.changeselect:checked').val();
+            if (tempv == 1){
+                groupsetcss($(area),"");
+                groupsetcss($(quyu),"none");
+                groupsetcss($(wuliu),"none");
+            }
+            if (tempv == 2){
+                groupsetcss($(area),"none");
+                groupsetcss($(quyu),"");
+                groupsetcss($(wuliu),"none");
+            }
+            if (tempv == 3){
+                groupsetcss($(area),"none");
+                groupsetcss($(quyu),"none");
+                groupsetcss($(wuliu),"");
+            }
+        });
+        $('.panel-tool-collapse').on('click',function () {
+            var heightv = $('body').height();
+            var newh = $('#new_div').height();
+            console.log(13+"=="+heightv+"=="+newh);
+            if(newh > 0){
+                $('#new_div').css('height',heightv*0.08+"px");
+                $('#searchPanel_areapeoplemanage').css('height',heightv*0.92+"px");
+                $('#datagrid_areapeoplemanage').datagrid('resize');
+            }else {
+                $('#new_div').css('height',heightv*0.4+"px");
+                $('#searchPanel_areapeoplemanage').css('height',heightv*0.6+"px");
+                $('#datagrid_areapeoplemanage').datagrid('resize');
+                $('#datagrid_areapeoplemanage_1').datagrid('resize');
+            }
+        })
+    });
+    function groupsetcss(tempv,isnone) {
+        $.each(tempv,function (name,value) {
+            $(value).css("display",isnone);
+        });
+    }
+
+</script>
+<script src="../static/js/report_data/returnChangeLessRate.js"></script>
+</body>
+</html>

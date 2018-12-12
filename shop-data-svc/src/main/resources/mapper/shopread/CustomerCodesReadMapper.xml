@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.CustomerCodesReadDao">
+
+    <select id="getCustomerCode" parameterType="String" resultType="String">
+        select `code`
+        from `CustomerCodes`
+        where `title` = #{title}
+    </select>
+    <resultMap id="customerCodesResult" type="com.haier.shop.model.CustomerCodes">
+        <result property="id" column="id" />
+        <result property="siteId" column="siteId" />
+        <result property="addTime" column="addTime" />
+        <result property="code" column="code" />
+        <result property="title" column="title" />
+        <result property="updateTime" column="updateTime" />
+    </resultMap>
+    <select id="getByTitle" parameterType="Integer" resultMap="customerCodesResult">
+        select `id`,`siteId`,`addTime`,`code`,`title`,`updateTime`
+        from `CustomerCodes`
+        where `title` = #{title}
+    </select>
+
+</mapper>

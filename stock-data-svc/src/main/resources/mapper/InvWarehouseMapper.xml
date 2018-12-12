@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.stock.dao.stock.InvWarehouseDao">
+
+	<resultMap id="invWarehouseResult" type="com.haier.stock.model.InvWarehouse">
+		<result column="wh_code" property="whCode" jdbcType="CHAR" />
+		<result column="wh_name" property="whName" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="center_code" property="centerCode" jdbcType="VARCHAR" />
+		<result column="support_cod" property="supportCod" jdbcType="TINYINT" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="les_accepter" property="lesAccepter" jdbcType="VARCHAR" />
+		<result column="estorge_id" property="estorge_id" jdbcType="VARCHAR" />
+		<result column="estorge_name" property="estorge_name" jdbcType="VARCHAR" />
+		<result column="transmit_id" property="transmit_id" jdbcType="VARCHAR" />
+		<result column="transmit_desc" property="transmit_desc"
+			jdbcType="VARCHAR" />
+		<result column="les_OE_id" property="les_OE_id" jdbcType="VARCHAR" />
+		<result column="custom_id" property="custom_id" jdbcType="VARCHAR" />
+		<result column="custom_desc" property="custom_desc" jdbcType="VARCHAR" />
+		<result column="industry_trade_id" property="industry_trade_id"
+			jdbcType="VARCHAR" />
+		<result column="industry_trade_desc" property="industry_trade_desc"
+			jdbcType="VARCHAR" />
+		<result column="graininess_id" property="graininess_id"
+			jdbcType="VARCHAR" />
+		<result column="net_management_id" property="net_management_id"
+			jdbcType="VARCHAR" />
+		<result column="esale_id" property="esale_id" jdbcType="VARCHAR" />
+		<result column="esale_name" property="esale_name" jdbcType="VARCHAR" />
+		<result column="sale_org_id" property="sale_org_id" jdbcType="VARCHAR" />
+		<result column="branch" property="branch" jdbcType="VARCHAR" />
+		<result column="payment_id" property="payment_id" jdbcType="VARCHAR" />
+		<result column="payment_name" property="payment_name" jdbcType="VARCHAR" />
+		<result column="area_id" property="area_id" jdbcType="VARCHAR" />
+		<result column="rrs_distribution_id" property="rrs_distribution_id"
+			jdbcType="VARCHAR" />
+		<result column="rrs_distribution_name" property="rrs_distribution_name"
+			jdbcType="VARCHAR" />
+		<result column="rrs_sale_id" property="rrs_sale_id" jdbcType="VARCHAR" />
+		<result column="rrs_sale_name" property="rrs_sale_name"
+			jdbcType="VARCHAR" />
+		<result column="oms_rrs_payment_id" property="oms_rrs_payment_id"
+			jdbcType="VARCHAR" />
+		<result column="oms_rrs_payment_name" property="oms_rrs_payment_name"
+			jdbcType="VARCHAR" />
+		<result column="is_enabled" property="is_enabled" />
+		<result column="city_code" property="city_code" />
+		<result column="city_desc" property="city_desc" />
+	</resultMap>
+
+	<select id="getWhByEstorgeId" resultMap="invWarehouseResult">
+		SELECT
+		`wh_code`,
+		`wh_name`,
+		`estorge_id`,
+		`estorge_name`,
+		`transmit_id`,
+		`transmit_desc`,
+		`custom_id`,
+		`custom_desc`,
+		`industry_trade_id`,
+		`industry_trade_desc`,
+		`rrs_distribution_id`,
+		`rrs_distribution_name`,
+		`payment_id`,
+		`payment_name`,
+		`sale_org_id`,
+		`branch`,
+		`area_id`,
+		`center_code`,
+		`rrs_sale_id`,
+		`net_management_id`,
+		`esale_id`
+		FROM
+		`inv_warehouse`
+		WHERE
+		estorge_id = #{estorge_id}
+<!-- 		and -->
+<!-- 		is_enabled=0 -->
+	</select>
+	<select id="findCenter" resultMap="invWarehouseResult">
+	select distinct industry_trade_desc,estorge_id,estorge_name  from inv_warehouse
+	</select>
+	<select id="getAllWhByEstorgeId" resultMap="invWarehouseResult">
+		SELECT
+		`wh_code`,
+		`wh_name`,
+		`estorge_id`,
+		`estorge_name`,
+		`transmit_id`,
+		`transmit_desc`,
+		`custom_id`,
+		`custom_desc`,
+		`industry_trade_id`,
+		`industry_trade_desc`,
+		`rrs_distribution_id`,
+		`rrs_distribution_name`,
+		`payment_id`,
+		`payment_name`,
+		`sale_org_id`,
+		`branch`,
+		`area_id`,
+		`center_code`,
+		`rrs_sale_id`,
+		`net_management_id`,
+		`esale_id`
+		FROM
+		`inv_warehouse`
+		WHERE
+		estorge_id = #{estorge_id}
+	</select>
+	
+	 <select id="getByWhCode" resultMap="invWarehouseResult">
+        SELECT
+            `wh_code`,
+            `wh_name`,
+            `status`,
+            `center_code`,
+            `support_cod`,
+            `supported_delivery_mode`,
+            `create_user`,
+            `create_time`,
+            `update_user`,
+            `update_time`,
+            `les_five_yard`,
+            `les_wh_code`,
+            `les_accepter`,
+            `rrs_deliver_code`,
+            `crm_area_code`,
+            `ehaier_payer`,
+            `itc_code`,
+            `mo_code`,
+            `custom_id`,
+            `custom_desc`,
+            `sap_customer_code`,
+            `sap_customer_name`
+        FROM `inv_warehouse`
+        WHERE `wh_code` = #{wh_code}
+    </select>
+    <select id="getWhCodeByCenterCode" resultType="java.lang.String">
+        SELECT
+            `wh_code`
+        FROM `inv_warehouse`
+        WHERE `center_code` = #{center_code}
+    </select>
+</mapper>

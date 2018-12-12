@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.OrderRepairLESRecordsReadDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.OrderRepairLESRecords" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="siteId" property="siteId" jdbcType="INTEGER" />
+    <result column="addTime" property="addTime" jdbcType="INTEGER" />
+    <result column="orderProductId" property="orderProductId" jdbcType="INTEGER" />
+    <result column="orderRepairId" property="orderRepairId" jdbcType="INTEGER" />
+    <result column="recordSn" property="recordSn" jdbcType="VARCHAR" />
+    <result column="operate" property="operate" jdbcType="TINYINT" />
+    <result column="storageType" property="storageType" jdbcType="TINYINT" />
+    <result column="lesOrderSn" property="lesOrderSn" jdbcType="VARCHAR" />
+    <result column="lesOrderSnTime" property="lesOrderSnTime" jdbcType="INTEGER" />
+    <result column="lesOutPing" property="lesOutPing" jdbcType="VARCHAR" />
+    <result column="lesOutPingTime" property="lesOutPingTime" jdbcType="INTEGER" />
+    <result column="sCode" property="sCode" jdbcType="VARCHAR" />
+    <result column="success" property="success" jdbcType="TINYINT" />
+    <result column="opCancelFlag" property="opCancelFlag" jdbcType="TINYINT" />
+    <result column="addTimeTs" property="addTimeTs" jdbcType="VARCHAR" />
+  </resultMap>
+	<resultMap id="orderRepairLESRecordsResult" type="com.haier.shop.model.OrderRepairLESRecords">
+		<result property="id" column="id" />
+	<result property="siteId" column="siteId" />
+	<result property="addTime" column="addTime" />
+	<result property="orderProductId" column="orderProductId" />
+	<result property="orderRepairId" column="orderRepairId" />
+	<result property="recordSn" column="recordSn" />
+	<result property="operate" column="operate" />
+	<result property="storageType" column="storageType" />
+	<result property="lesOrderSn" column="lesOrderSn" />
+	<result property="lesOrderSnTime" column="lesOrderSnTime"/>
+	<result property="lesOutPing" column="lesOutPing" />
+	<result property="lesOutPingTime" column="lesOutPingTime" />
+	<result property="sCode" column="sCode" />
+	<result property="success" column="success" />
+	<result property="opCancelFlag" column="opCancelFlag" />
+	<result property="number" column="number" />
+	<result property="price" column="price" />
+	<result property="productName" column="productName" />
+	<result property="pushFailNumber" column="pushFailNumber" />
+	<result property="repairSn" column="repairSn" />
+	
+	</resultMap>
+  <select id="get" parameterType="Integer" resultMap="orderRepairLESRecordsResult">
+		select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`recordSn`,`operate`,`storageType`,`lesOrderSn`,`lesOutPing`,`lesOutPingTime`,`sCode`,`success`
+		from `OrderRepairLESRecords`
+		where `id` = #{id}
+	</select>
+	<select id="getByRecordSn" parameterType="map" resultMap="orderRepairLESRecordsResult">
+		select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`recordSn`,`operate`,`storageType`,`lesOrderSn`,`lesOutPing`,`lesOutPingTime`,`sCode`,`success`
+		from `OrderRepairLESRecords`
+		where `recordSn` = #{recordSn} 
+		order by id desc
+		limit 1
+	</select>
+	<select id="queryLesreCodrdsId" parameterType="java.lang.String" resultMap="BaseResultMap">
+	 SELECT
+		from_unixtime(addTime) addTimeTs,
+		operate,
+		storageType,
+		lesOrderSn,
+		lesOrderSnTime
+	FROM
+		OrderRepairLESRecords
+	WHERE
+		orderRepairId = #{id}
+  </select>
+	<select id="countOrderChangesByOperate" parameterType="map" resultType="int">
+		select count(*)
+		from `OrderRepairLESRecords`
+		where `orderProductId` = #{orderProductId} and `operate`=#{operate}
+	</select>
+	<select id="getByLesOrderSn" resultMap="orderRepairLESRecordsResult">
+	  select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`recordSn`,`operate`,`storageType`,
+		`lesOrderSn`,`lesOutPing`,`lesOutPingTime`,`sCode`,`success`
+		from `OrderRepairLESRecords`
+		where `lesOrderSn` = #{lesOrderSn} and recordSn=#{cOrderSn} limit 1
+	</select>
+	<select id="queryLesRecords" parameterType="com.haier.shop.model.OrderRepairLESRecords" resultMap="orderRepairLESRecordsResult">
+		select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`recordSn`,`operate`,`storageType`,
+		`lesOrderSn`,`lesOutPing`,`lesOutPingTime`,`sCode`,`success`
+		from `OrderRepairLESRecords`
+		where `orderRepairId` = #{orderRepairId} 
+		<if test="operate != null">
+			and operate = #{operate} 
+		</if>
+		<if test="success != null">
+			and success = #{success} 
+		</if>
+		<if test="storageType != null">
+			and storageType = #{storageType}
+		</if>
+	</select>
+	<select id="queryUNSucCancelLesRecordsCnt" resultType="int">
+		select count(*)
+		from `OrderRepairLESRecords` where `orderRepairId`=#{orderRepairId} and `operate`=#{operate}
+		and `storageType`=#{storageType} and `success` != 2
+	</select>
+    <select id="getWaitforCancelOP" resultMap="orderRepairLESRecordsResult">
+    	select * from OrderRepairLESRecords 
+    	where 
+    	opCancelFlag = 0 and lesOutPing != '' 
+    	and lesOutPingTime > 0 
+    	order by id DESC limit #{limitNum}
+    </select>
+    
+     <select id="queryOutofStorage" resultMap="orderRepairLESRecordsResult">
+     SELECT
+		r.id,
+		r.orderProductId,
+		r.orderRepairId,
+		r.recordSn,
+		r.operate,
+		r.storageType,
+		r.lesOrderSn,
+		r.lesOrderSnTime,
+		r.lesOutPing,
+		r.lesOutPingTime,
+		r.sCode,
+		r.success,
+		r.opCancelFlag,
+		r.falg,
+		p.productId,
+		p.price,
+		p.number,
+		p.productName,
+		p.sku,
+		r.pushFailNumber,
+		s.repairSn
+	FROM
+		OrderRepairLESRecords r,
+		OrderProducts p,
+		OrderRepairs s
+	WHERE
+		r.orderProductId = p.id
+	AND r.orderRepairId = s.id
+	AND r.falg in ('0','2')
+	and r.PushFailNumber <![CDATA[  < ]]>10
+    </select>
+	<select id="queryRecordSn" resultMap="BaseResultMap" parameterType="java.lang.String">
+	 SELECT
+		id,
+		orderProductId,
+		orderRepairId,
+		recordSn,
+		operate,
+		storageType
+	FROM
+		OrderRepairLESRecords
+	WHERE
+		orderRepairId = #{orderRepairId}
+	 </select>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.SgRealtimeStockWriteDao">
+
+	<insert id="insert" parameterType="com.haier.shop.model.SgRealtimeStock">
+		insert into sg_realtime_stock (sku, store_id,
+		store_code, scode, stock_qty, store_ts,
+		add_time)
+		values (#{sku,jdbcType=VARCHAR},
+		#{storeId,jdbcType=INTEGER},
+		#{storeCode,jdbcType=VARCHAR}, #{scode,jdbcType=VARCHAR}, #{stockQty,jdbcType=INTEGER},
+		#{storeTs,jdbcType=TIMESTAMP},#{addTime,jdbcType=TIMESTAMP})
+	</insert>
+	<update id="updateByParams" parameterType="com.haier.shop.model.SgRealtimeStock">
+		update sg_realtime_stock
+		set stock_qty = #{stockQty},store_ts=#{storeTs}
+		where
+		sku = #{sku,jdbcType=VARCHAR} and 
+		store_id = #{storeId,jdbcType=INTEGER} and 
+		store_code = #{storeCode,jdbcType=VARCHAR} and 
+		scode = #{scode,jdbcType=VARCHAR}
+	</update>
+</mapper>

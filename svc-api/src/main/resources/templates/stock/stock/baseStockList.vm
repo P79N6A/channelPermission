@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false,showFooter:true">
+    <table id="invBaseStockTable"></table>
+</div>
+
+<div id="exportProduct">
+    <form id="exportForm" action="#">
+        <input id="secCodeData" name="secCodeData" type="text">
+        <input id="skuData" name="skuData" type="hidden">
+        <input id="stockQtyData" name="stockQtyData" type="hidden">
+        <input id="avaiableQtyData" name="avaiableQtyData" type="hidden">
+        <input id="itemPropertyData" name="itemPropertyData" type="hidden">
+        <input id="productTypeNameData" name="productTypeNameData" type="hidden">
+        <input id="productNameData" name="productNameData" type="hidden">
+        <input id="stockQtyCodeData" name="stockQtyCodeData" type="hidden">
+        <input id="avaiableQtyCodeData" name="avaiableQtyCodeData" type="hidden">
+        <input id="code" name="code" type="hidden">
+    </form>
+</div>
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+        
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  库位编码
+			</span>
+                <input class="easyui-textbox" id="secCode" name="secCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  物料编码
+			</span>
+                <input class="easyui-textbox" id="sku" name="sku"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  实际库存
+			</span>
+                <select class="easyui-combobox" id="stockQtyCode" style="width:90px">
+                    <option value="">全部</option>
+                    <option value="AB">大于</option>
+                    <option value="AA">等于</option>
+                    <option value="BA">小于</option>
+                </select>
+                <input class="easyui-textbox" name="stockQty" id="stockQty" style="width:80px"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  可用库存
+			</span>
+                <select class="easyui-combobox" id="avaiableQtyCode" style="width:90px">
+                    <option value="">全部</option>
+                    <option value="AB">大于</option>
+                    <option value="AA">等于</option>
+                    <option value="BA">小于</option>
+                </select>
+                <input class="easyui-textbox" name="avaiableQty" id="avaiableQty" style="width:80px"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  商品属性
+			</span>
+                <select class="easyui-combobox" name="itemProperty" id="itemProperty" style="width: 174px;">
+                    <option value="">全部</option>
+                    <option value="10">正品</option>
+                    <option value="21">不良品</option>
+                    <option value="22">开箱正品</option>
+                    <option value="40">样品</option>
+                    <option value="41">夺宝机</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  品类
+			</span>
+                <select class="easyui-combobox" name="product_type_name" id="product_type_name" style="width: 174px;">
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  产品型号
+			</span>
+                <input class="easyui-textbox" name="productName" id="productName"/>
+            </div>
+        </div>
+
+
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="searchMachineBtn"
+           data-options="iconCls:'icon-search',plain:true">查询套机</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn_productList"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this =
+        $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#invBaseStockTable').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="/static/js/stock/stock/baseStockList.js"></script>
+</body>
+</html>

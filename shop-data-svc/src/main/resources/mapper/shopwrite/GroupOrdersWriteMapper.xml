@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.GroupOrdersWriteDao">
+
+	<insert id="insert" parameterType="com.haier.shop.model.GroupOrders">
+		insert into `GroupOrders`(`siteId`,`type`,`tailOrderId`,`depositOrderId`,`tailCOrderSn`,`depositOrderProductId`,`depositCOrderSn`,`status`,`addTime`,`syncHpTime`,`member`,`groupId`,`errorMessage`,`from`,`extensions`,`params`,`hpResult`,`tryCombineNum`,`lastErrorMsg`)
+		values(#{siteId},#{type},#{tailOrderId},#{depositOrderId},#{tailCOrderSn},#{depositOrderProductId},#{depositCOrderSn},#{status},#{addTime},#{syncHpTime},#{member},#{groupId},#{errorMessage},#{from},#{extensions},#{params},#{hpResult},#{tryCombineNum},#{lastErrorMsg})
+	</insert>
+	<update id="updateStatus" parameterType="com.haier.shop.model.GroupOrders">
+		update `GroupOrders` set `status`=#{status}
+		where `id` = #{id}
+	</update>
+	<update id="updateLesStatus" parameterType="com.haier.shop.model.GroupOrders">
+		update `GroupOrders` set `lesStatus`=#{lesStatus},`lesMessage`=#{lesMessage},`lesLastTime`=#{lesLastTime}
+		where `id` = #{id}
+	</update>
+
+	<update id="update" parameterType="java.util.Map">
+		update GroupOrders
+		<set>
+			<if test="siteId != null">
+				siteId = #{siteId},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="tailOrderId != null">
+				tailOrderId = #{tailOrderId},
+			</if>
+			<if test="depositOrderId != null">
+				depositOrderId = #{depositOrderId},
+			</if>
+			<if test="tailCOrderSn != null">
+				tailCOrderSn = #{tailCOrderSn},
+			</if>
+			<if test="depositOrderProductId != null">
+				depositOrderProductId = #{depositOrderProductId},
+			</if>
+			<if test="depositCOrderSn != null">
+				depositCOrderSn = #{depositCOrderSn},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="addTime != null">
+				addTime = #{addTime},
+			</if>
+			<if test="syncHpTime != null">
+				syncHpTime = #{syncHpTime},
+			</if>
+			<if test="member != null">
+				member = #{member},
+			</if>
+			<if test="groupId != null">
+				groupId = #{groupId},
+			</if>
+			<if test="from != null">
+				`from` = #{from},
+			</if>
+			<if test="tryCombineNum != null">
+				tryCombineNum = #{tryCombineNum},
+			</if>
+			<if test="lastErrorMsg != null">
+				lastErrorMsg = #{lastErrorMsg},
+			</if>
+			<if test="lesStatus != null">
+				lesStatus = #{lesStatus},
+			</if>
+			<if test="lesLastTime != null">
+				lesLastTime = #{lesLastTime},
+			</if>
+			<if test="errorMessage != null">
+				errorMessage = #{errorMessage},
+			</if>
+			<if test="extensions != null">
+				extensions = #{extensions},
+			</if>
+			<if test="params != null">
+				params = #{params},
+			</if>
+			<if test="hpResult != null">
+				hpResult = #{hpResult},
+			</if>
+			<if test="lesMessage != null">
+				lesMessage = #{lesMessage},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.LesShippingInfosRradDao">
+    <resultMap id="lesShippingInfosResult" type="com.haier.shop.model.LesShippingInfos">
+        <result property="id" column="id"/>
+        <result property="orderId" column="orderId"/>
+        <result property="orderProductId" column="orderProductId"/>
+        <result property="cOrderSn" column="cOrderSn"/>
+        <result property="nodeTime" column="nodeTime"/>
+        <result property="deliveryType" column="deliveryType"/>
+        <result property="nodeCode" column="nodeCode"/>
+        <result property="nodeDesc" column="nodeDesc"/>
+        <result property="addTime" column="addTime"/>
+        <result property="logId" column="logId"/>
+        <result property="syncTBStatus" column="syncTBStatus"/>
+    </resultMap>
+
+    <select id="getByCorderSn" resultMap="lesShippingInfosResult">
+        SELECT
+            id,
+            orderId,
+            orderProductId,
+            cOrderSn,
+            nodeTime,
+            deliveryType,
+            nodeCode,
+            nodeDesc,
+            addTime,
+            logId,
+            syncTBStatus
+        FROM LesShippingInfos
+        WHERE cOrderSn = #{corderSn}
+        ORDER BY nodeTime
+    </select>
+    <insert id="insert">
+        INSERT INTO LesShippingInfos (orderId, orderProductId, cOrderSn, nodeTime, deliveryType, nodeCode, nodeDesc, addTime, logId, syncTBStatus)
+        VALUES (#{orderId}, #{orderProductId}, #{cOrderSn}, #{nodeTime}, #{deliveryType}, #{nodeCode}, #{nodeDesc},
+                UNIX_TIMESTAMP(), #{logId}, #{syncTBStatus})
+    </insert>
+</mapper>

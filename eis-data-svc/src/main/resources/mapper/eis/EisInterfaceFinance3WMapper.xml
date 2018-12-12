@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.EisInterfaceFinance3WDao">
+	<resultMap id="eisInterfaceFinance3wResult" type="com.haier.eis.model.EisInterfaceFinance3w">
+		<result property="id" column="id" />
+		<result property="lesStockTransQueue3WId" column="les_stock_trans_queue_3w_id" />
+		<result property="interfaceCode" column="interface_code" />
+		<result property="status" column="status" />
+		<result property="eaiType" column="eai_type" />
+		<result property="message" column="message" />
+		<result property="addTime" column="add_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="eaiDataLogId" column="eai_data_log_id" />
+	</resultMap>
+	<select id="getByTransQueue3WId" resultMap="eisInterfaceFinance3wResult">
+		select
+		`id`,`les_stock_trans_queue_3w_id`,`interface_code`,`status`,`eai_type`,`message`,`add_time`,`update_time`,`eai_data_log_id`
+		from `eis_interface_finance_3w`
+		where `les_stock_trans_queue_3w_id` =
+		#{les_stock_trans_queue_3w_id} and interface_code=#{interfaceCode}
+		limit 1;
+	</select>
+	<select id="getByStatus" resultMap="eisInterfaceFinance3wResult">
+		select
+		`id`,`les_stock_trans_queue_3w_id`,`interface_code`,`status`,`eai_type`,`message`,`add_time`,`update_time`,`eai_data_log_id`
+		from `eis_interface_finance_3w`
+		where `status` = #{status}
+		limit 500;
+	</select>
+	<insert id="insert" parameterType="com.haier.eis.model.EisInterfaceFinance3w">
+		insert into
+		`eis_interface_finance_3w`(`les_stock_trans_queue_3w_id`,`interface_code`,`status`,`eai_type`,`message`,`add_time`,`update_time`,`eai_data_log_id`)
+		values(#{lesStockTransQueue3WId},#{interfaceCode},#{status},#{eaiType},#{message},#{addTime},#{updateTime},#{eaiDataLogId})
+	</insert>
+	<update id="update" parameterType="com.haier.eis.model.EisInterfaceFinance3w">
+		update `eis_interface_finance_3w`
+		set
+		`les_stock_trans_queue_3w_id`=#{lesStockTransQueue3WId},`interface_code`=#{interfaceCode},`status`=#{status},`eai_type`=#{eaiType},`message`=#{message},`add_time`=#{addTime},`update_time`=#{updateTime}
+		<if test="eaiDataLogId &gt;0">
+			,`eai_data_log_id`=#{eaiDataLogId}
+		</if>
+		where `id` = #{id} 
+	</update>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.system.dao.BaseErrDao">
+
+	<resultMap id="queryErrResult" type="com.haier.system.model.BaseErr">
+		<result property="log_id" column="log_id" />
+		<result property="order_id" column="order_id" />
+		<result property="menu_path" column="menu_path" />
+		<result property="interface_path" column="interface_path" />
+		<result property="message" column="message" />
+		<result property="log_time" column="log_time" />
+		<result property="user_id" column="user_id" />
+		<result property="role_id" column="role_id" />
+	</resultMap>
+	
+	<sql id="findBaseErrListSQLCond">
+		FROM
+		interface_error_log
+		WHERE 1 = 1
+		<if test="order_id !=null and order_id != ''">
+			AND UPPER(order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{order_id})),'%')
+		</if>
+		
+		<if test="start_week  !=null and start_week != ''">
+        	<![CDATA[
+				and log_time >= #{start_week}
+			]]>
+		</if>
+		
+		<if test="end_week  !=null and end_week != ''">
+        	<![CDATA[
+				and log_time <= #{end_week}
+			]]>
+		</if>
+		
+		<if test="menu_path !=null and menu_path != ''">
+			AND UPPER(menu_path) LIKE CONCAT(CONCAT('%',UPPER
+			(#{menu_path})),'%')
+		</if>
+		
+		<if test="interface_path !=null and interface_path != ''">
+			AND UPPER(interface_path) LIKE CONCAT(CONCAT('%',UPPER
+			(#{interface_path})),'%')
+		</if>
+	</sql>
+	
+    <insert id="adderr" parameterType="com.haier.system.model.BaseErr">
+		insert into interface_error_log 
+		  (log_id,order_id,menu_path,interface_path,message,log_time,user_id,role_id) 
+		values
+			(#{log_id},#{order_id},#{menu_path},#{interface_path},#{message},#{log_time},#{user_id},#{role_id})
+	</insert>
+	
+	<select id="queryErr" parameterType="Map" resultMap="queryErrResult">
+		select 
+			order_id,menu_path,interface_path,message,log_time,user_id,role_id
+		<include refid="findBaseErrListSQLCond"></include>
+		ORDER BY log_time desc
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	
+	<select id="getRowCnts" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findBaseErrListSQLCond" />
+	</select>
+	
+</mapper>

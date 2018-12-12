@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.VomReceivedQueueDao">
+    <resultMap id="vomReceivedQueueResult" type="com.haier.eis.model.VomReceivedQueue">
+        <result property="id" column="id"/>
+        <result property="outCode" column="out_code"/>
+        <result property="buType" column="bu_type"/>
+        <result property="notifyTime" column="notify_time"/>
+        <result property="source" column="source"/>
+        <result property="type" column="type"/>
+        <result property="sign" column="sign"/>
+        <result property="content" column="content"/>
+        <result property="status" column="status"/>
+        <result property="errorMessage" column="error_message"/>
+        <result property="addTime" column="add_time"/>
+    </resultMap>
+    <select id="getByStatus" parameterType="Integer" resultMap="vomReceivedQueueResult">
+        SELECT
+            `id`,
+            `out_code`,
+            `bu_type`,
+            `notify_time`,
+            `source`,
+            `type`,
+            `sign`,
+            `content`,
+            `status`,
+            `error_message`
+        FROM `vom_received_queue`
+        WHERE `status` = #{status}
+        LIMIT 2000
+    </select>
+    <select id="getByIdStatus" resultMap="vomReceivedQueueResult">
+        SELECT
+            `id`,
+            `out_code`,
+            `bu_type`,
+            `notify_time`,
+            `source`,
+            `type`,
+            `sign`,
+            `content`,
+            `status`,
+            `error_message`
+        FROM `vom_received_queue`
+        WHERE `id` > #{id}
+        AND `status` = #{status}
+        LIMIT 2000
+    </select>
+    <select id="outCode" resultType="int">
+        SELECT
+            count(1)
+        FROM `vom_received_queue`
+        WHERE `out_code` = #{out_code}
+    </select>
+    <insert id="insert" parameterType="com.haier.eis.model.VomReceivedQueue">
+        INSERT INTO
+            `vom_received_queue`
+            (`out_code`, `bu_type`, `notify_time`, `source`, `type`, `sign`, `content`, `status`, `error_message`, `add_time`)
+        VALUES
+            (#{outCode}, #{buType}, #{notifyTime}, #{source}, #{type}, #{sign}, #{content}, #{status}, #{errorMessage},
+             #{addTime})
+    </insert>
+    <update id="updateDone">
+        UPDATE `vom_received_queue`
+        SET `status` = 1, `process_time` = now()
+        WHERE `id` = #{id} AND `status` = 0
+    </update>
+    <update id="updateError">
+        UPDATE `vom_received_queue`
+        SET `status` = 2, `error_message` = #{errorMessage}, `process_time` = now()
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateStatusById">
+        UPDATE `vom_received_queue`
+        SET `status` = #{status}, `process_time` = now()
+        WHERE `id` = #{id}
+    </update>
+</mapper>

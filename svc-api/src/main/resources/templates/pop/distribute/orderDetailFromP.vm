@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+</head>
+
+<body class="iframe-body">
+<div style="height:100%;width:100%;overflow:auto">
+    <div id="orderDetail_div" style="padding-bottom: 20px;">
+        <div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px ">
+            <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;">基本信息</span>
+            #if($order.oid!="")
+                <span style="padding-left: 15px;"><button id="updateOid" style="color:blue;">&nbsp;修改关联订单号&nbsp;</button></span>
+            #else
+            #end
+
+            #if(!$order.expressNo)
+            #else
+                <span style="padding-left: 15px;"><button id="updateExpressNo" style="color:blue;">&nbsp;修改物流编号&nbsp;</button></span>
+            #end
+
+            #if($order.orderStatus == "203" && $flagCode == "1")
+                <span style="padding-left: 15px;"><button id="cancelOrder" style="color:blue;">&nbsp;取消订单&nbsp;</button></span>
+            #else
+            #end
+            <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;">
+                <input id="pi" value="$page.pageIndex" type="hidden">
+                <input id="ps" value="$page.pageSize" type="hidden">
+	        	<input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true" value="返回"
+                       onclick="goback()" style="float: right;color:blue;"/>
+	        </span>
+        </div>
+        <!-- /***************修改关联订单号**************/-->
+        <div id="updateOid_dialog" data-options="title:'修改关联订单号信息',resizable:true,modal:true"
+             class="easyui-dialog add-dlg"
+             style="width:400px;height:190px;" closed="true" buttons="#dlg-buttons_orderForecastGoal">
+            <form id="updateOid_form" method="post">
+                <input name="id" type="text" style="display:none;"/>
+                <div class="fitem">
+                    <div style="margin-bottom:20px">
+                        <div>关联订单号:</div>
+                        <input id="oid" name="expressNo" value="$order.oid" type="hidden">
+                        <input class="easyui-textbox" id="codConfirmOid" name="codConfirmOid"
+                               data-options="validType:'length[0,50]'" style="width:100%;height:32px">
+                    </div>
+                </div>
+            </form>
+            <div id="dlg-buttons_updateOid" style="margin-left: 191px;">
+                <a href="#" class="easyui-linkbutton" id="save_updateOid" iconCls="icon-ok">保存</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+                   onclick="javascript:$('#updateOid_dialog').dialog('close')">取消</a>
+            </div>
+        </div>
+        <!-- /***************修改物流编号**************/-->
+        <div id="updateExpressNo_dialog" data-options="title:'修改物流编号信息',resizable:true,modal:true"
+             class="easyui-dialog add-dlg"
+             style="width:400px;height:190px;" closed="true" buttons="#dlg-buttons_orderForecastGoal">
+            <form id="updateExpressNo_form" method="post">
+                <input name="id" type="text" style="display:none;"/>
+                <div class="fitem">
+                    <div style="margin-bottom:20px">
+                        <div>物流编号:</div>
+                        <input id="expressNo" name="expressNo" value="$order.expressNo" type="hidden">
+                        <input class="easyui-textbox" id="codConfirmExpressNo" name="codConfirmExpressNo"
+                               data-options="validType:'length[0,30]'" style="width:100%;height:32px">
+                    </div>
+                </div>
+            </form>
+            <div id="dlg-buttons_updateExpressNo" style="margin-left: 191px;">
+                <a href="#" class="easyui-linkbutton" id="save_updateExpressNo" iconCls="icon-ok">保存</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+                   onclick="javascript:$('#updateExpressNo_dialog').dialog('close')">取消</a>
+            </div>
+        </div>
+        <!--/*******基本信息*********/-->
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail100" style="float: left;margin-left: 15px;">订单号：</span>
+                        <span>$order.orderSn &nbsp;</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">下单时间：</span>
+                        <span>$order.addTimeStart &nbsp;</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">下单人：</span>
+                        <span>$order.mobile &nbsp;</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">首次确认时间：</span>
+                        <span>
+                        #if($order.firstTureTime == 0 || !$order.firstTureTime)
+                            尚未确认
+                        #else
+                            $order.firstTureTime
+                        #end
+                            &nbsp;</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">订单来源：</span>
+                        <span>
+                        #if(!$order.source)
+                            未知
+                        #else
+                            $order.source
+                        #end
+                            &nbsp;</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">是否付款：</span>
+                        <span>
+                        #if($order.paymentStatus ==  100)
+                            未付款
+                        #elseif($order.paymentStatus == 101)
+                            已付款
+                        #elseif($order.paymentStatus == 102)
+                            待退款
+                        #elseif($order.paymentStatus == 103)
+                            已退款
+                        #else
+
+                        #end
+
+                            &nbsp;</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">付款时间：</span>
+                        <span>$order.payTime &nbsp;</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">支付方式：</span>
+                        <span>在线支付 &nbsp;</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">销售代表：</span>
+                        <span>$order.sellPeople &nbsp;</span>
+                    </div>
+                    <!--<div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">订单类型：</span>
+                        <span style="color: red;">
+                            #if($order.orderType ==  0)
+                                团购预付款
+                            #elseif($order.orderType == 2)
+                                团购正式单
+                            #else
+
+                            #end
+                            &nbsp;</span>
+                    </div>-->
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">来源订单编号：</span>
+                        <span>$order.sourceOrderSn &nbsp;</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">订单状态：</span>
+                        <span style="color: red;">
+                        #if($order.orderStatus ==  200)
+                            未确认
+                        #elseif($order.orderStatus == 204)
+                            缺货
+                        #elseif($order.orderStatus == 201)
+                            已确认
+                        #elseif($order.orderStatus == 203)
+                            已完成
+                        #elseif($order.orderStatus == 202)
+                            已取消
+                        #elseif($order.orderStatus == 205)
+                            配送中
+                        #else
+
+                        #end
+                            &nbsp;</span>
+                    </div>
+                    <div id="OidId" class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">关联订单号：</span>
+                        <span class="oid">$order.oid&nbsp;</span>
+                    </div>
+                    <div id="ExpressNoId" class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">物流编号：</span>
+                        <span class="expressNo">
+                            #if(!$order.expressNo)
+                                &nbsp;
+                            #else
+                                $order.expressNo
+                            #end &nbsp;</span>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <!--发票信息-->
+        <div id="receipt" class="param-form" style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">发票信息</span>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+                    <div id="consigneeId" class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">发票类型：</span>
+                        <span class="">电子发票 &nbsp;</span>
+                    </div>
+                    <div id="consigneeId" class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">发票抬头：</span>
+                        <span class="">$order.receiptInfo &nbsp;</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!--收货人信息编辑Form-->
+        <div id="updateOrigin_dialog" data-options="title:'修改收货人信息',resizable:true,modal:true"
+             class="easyui-dialog add-dlg"
+             style="width:400px;height:347px;" closed="true" buttons="#dlg-buttons_orderForecastGoal">
+            <form id="updateOrigin_form" method="post">
+                <input name="id" type="text" style="display:none;"/>
+                <div class="fitem">
+                    <div style="margin-bottom:20px">
+                        <div>收件人:</div>
+
+                        <input class="easyui-textbox" id="consignee" name="consignee"
+                               data-options="validType:'length[0,30]'" style="width:100%;height:32px">
+                        <div>联系电话:</div>
+                        <input class="easyui-textbox" id="mobile" name="mobile" data-options="validType:'length[0,15]'"
+                               style="width:100%;height:32px">
+                        <div>所在地:</div>
+                        <input class="easyui-textbox" id="originRegionName" name="originRegionName"
+                               data-options="validType:'length[0,125]'" style="width:100%;height:32px">
+                        <div>详细信息:</div>
+                        <input class="easyui-textbox" id="originAddress" name="originAddress"
+                               data-options="validType:'length[0,125]'" style="width:100%;height:32px">
+                    </div>
+                </div>
+            </form>
+            <div id="dlg-buttons_updateOrigin" style="margin-left: 191px;">
+                <a href="#" class="easyui-linkbutton" id="save_updateOrigin" iconCls="icon-ok">保存</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+                   onclick="javascript:$('#updateOrigin_dialog').dialog('close')">取消</a>
+            </div>
+        </div>
+
+        <!--收货人信息-->
+        <div id="receivePerson" class="param-form"
+             style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">收货人信息</span>
+            <span style="padding-left: 15px;"><button id="updateOrign" style="color:blue;">&nbsp;修改收货人信息&nbsp;</button></span>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+                    <div id="consigneeId" class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">收件人：</span>
+                        <span class="consignee">$order.consignee</span>
+                    </div>
+                    <div id="mobileId" class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">联系电话：</span>
+                        <span class="mobile">$order.mobile</span>
+                    </div>
+                    <div id="originRegionNameId" class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">所在地：</span>
+                        <span class="originRegionName">$order.originRegionName</span>
+                    </div>
+                    <div id="originAddressId" class="search-row_400" style="width: 600px;">
+                        <span class="search-row-label_detail">详细信息：</span>
+                        <span class="originAddress">$order.originAddress</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!--
+        <div id="recepitAddress" class="param-form"
+             style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+        <span style="padding-left: 15px;">
+                        发票邮寄地址
+        </span>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+                    <div class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">收件人：</span>
+                        <span class="">$order.consignee &nbsp;</span>
+                    </div>
+                    <div class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">邮寄地址：</span>
+                        <span> &nbsp;</span>
+                    </div>
+                    <div class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">邮编：</span>
+                        <span> &nbsp;</span>
+                    </div>
+                    <div class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">联系电话：</span>
+                        <span> &nbsp;</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        -->
+        <div id="productInfo" class="param-form"
+             style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">商品信息</span>
+        </div>
+        <div style="width: 100%;height: 200px;overflow: auto">
+            <table id="datagrid_orderForecastLogs"></table>
+        </div>
+        <div id="recepitAddress" class="param-form"
+             style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">订单备注信息</span>
+            <span style="padding-left: 15px;"><button id="updateRemark" style="color:blue;">&nbsp;修改备注信息&nbsp;</button></span>
+        </div>
+        <div id="updateRemark_dialog" data-options="title:'修改订单备注信息',resizable:true,modal:true"
+             class="easyui-dialog add-dlg"
+             style="width:400px;height:190px;" closed="true" buttons="#dlg-buttons_orderForecastGoal">
+            <form id="updateRemark_form" method="post">
+                <input name="id" type="text" style="display:none;"/>
+                <div class="fitem">
+                    <div style="margin-bottom:20px">
+                        <div>备注:</div>
+
+                        <input id="orderSn" name="orderSn" type="text" value="$order.orderSn" style="display:none;"/>
+                        <input class="easyui-textbox" id="codConfirmRemark" name="codConfirmRemark"
+                               data-options="validType:'length[0,125]'" style="width:100%;height:32px">
+                    </div>
+                </div>
+            </form>
+            <div id="dlg-buttons_updateRemark" style="margin-left: 191px;">
+                <a href="#" class="easyui-linkbutton" id="save_updateRemark" iconCls="icon-ok">保存</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+                   onclick="javascript:$('#updateRemark_dialog').dialog('close')">取消</a>
+            </div>
+        </div>
+
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+                    <div id="remarkId" class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">备注：</span>
+                        <span style="width: 1155px;
+						    text-align: left;
+						    display: inline-block;
+						    margin-left: 13px;" class="codConfirmRemark">$order.codConfirmRemark</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!--操作历史-->
+        <div id="operateHistory" class="param-form"
+             style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">操作历史</span>
+        </div>
+        <div style="width: 100%;height: 200px;overflow: auto">
+            <table id="datagrid_operateHistory"></table>
+        </div>
+
+        <!--
+        <div id="promotionRemark" class="param-form"
+             style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">优惠券信息备注 &nbsp;</span>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+
+                    <div class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">商品名称：</span>
+                        <span class=""> &nbsp;</span>
+                    </div>
+                    <div class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">优惠券金额：</span>
+                        <span class="">$order.couponCodeValue &nbsp;</span>
+                    </div>
+                    <div class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left;width: 150px;">优惠券文件编号：</span>
+                        <span class="">$order.couponCode &nbsp;</span>
+                    </div>
+                    <div class="search-row_400">
+                        <span class="search-row-label_detail" style="float: left">备注：</span>
+                        <span class=""> &nbsp;</span>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <div class="detail_content" style="padding-left: 10px;padding-top:10px;">
+            <table width="100%">
+                <tbody style="align-content: center;">
+                <tr>
+                    <th width="10%"style="text-align: center;">操作时间</th>
+                    <th width="10%"style="text-align: center;">订单号</th>
+                    <th width="20%"style="text-align: center;">操作人</th>
+                    <th width="20%"style="text-align: center;">更改内容</th>
+                    <th width="15%"style="text-align: center;">备注</th>
+                </tr>
+                <tr style="text-align: center">
+                    <td>2017-08-18 14:21:01</td>
+                    <td>
+                        WD170818303207
+                    </td>
+                    <td>CBS系统</td>
+                    <td>订单处理方式选择</td>
+                    <td>获取标建成功，自动处理</td>
+                </tr>
+                <tr style="text-align: center">
+                    <td>2017-08-18 14:21:01</td>
+                    <td>
+                        WD170818303205
+                    </td>
+                    <td>CBS系统</td>
+                    <td>订单处理方式选择</td>
+                    <td>获取标建成功，自动处理</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+-->
+    </div>
+    <div style="text-align: center;height: 35px;background-color:#e8e8e8;padding-top: 10px;">Powered by Haier</div>
+</div>
+<script type="text/javascript"></script>
+<script src="/static/js/pop/distribute_order/orderDetailFromP.js"></script>
+</body>
+</html>

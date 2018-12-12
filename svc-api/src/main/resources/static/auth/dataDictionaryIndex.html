@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <link rel="stylesheet" href="../static/css/staticHtml.css">
+  <title>dataDictionary</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/easyui-extention.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_dataDictionary" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+  <table id="datagrid_dataDictionary"></table>
+</div>
+
+<div id="datagridToolbar_dataDictionary">
+  <form id="paramForm_dataDictionary" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          类别
+        </span>
+          <input class="easyui-textbox" name="valueSetId"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          对应中文名称
+        </span>
+          <input class="easyui-textbox" name="valueSetMeaning"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          常量代码
+        </span>
+          <input class="easyui-textbox" name="value"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          常量值-中文
+        </span>
+          <input class="easyui-textbox" name="valueMeaning"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          排序标志
+        </span>
+          <input class="easyui-textbox" name="orderFlag"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          是否删除
+        </span>
+          <input class="easyui-textbox" name="deleteFlag"/>
+      </div>
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn_dataDictionary" data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_dataDictionary" data-options="iconCls:'icon-redo',plain:true">充值</a>
+    <a href="#" class="easyui-linkbutton" id="addBtn_dataDictionary" data-options="iconCls:'icon-add',plain:true">增加</a>
+    <a href="#" class="easyui-linkbutton" id="editBtn_dataDictionary" data-options="iconCls:'icon-edit',plain:true">修改</a>
+    <a href="#" class="easyui-linkbutton" id="deleteBtn_dataDictionary" data-options="iconCls:'icon-remove',plain:true">删除</a>
+  </form>
+</div>
+<div id="addDlg_dataDictionary" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_dataDictionary">
+  <form id="addForm_dataDictionary" method="post">
+    <input name="id" type="text" style="display:none;"/>
+    <input __actType type="hidden"/>
+    <div class="fitem">
+      <label>类别:</label>
+        <input class="easyui-textbox" name="valueSetId" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>对应中文名称:</label>
+        <input class="easyui-textbox" name="valueSetMeaning" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>常量代码:</label>
+        <input class="easyui-textbox" name="value" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>常量值-中文:</label>
+        <input class="easyui-textbox" name="valueMeaning" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>排序标志:</label>
+        <input class="easyui-textbox" name="orderFlag" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>是否删除:</label>
+        <input class="easyui-textbox" name="deleteFlag" required="true"/>
+    </div>
+  </form>
+  <div id="dlg-buttons_dataDictionary">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_dataDictionary" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_dataDictionary').dialog('close')">取消</a>
+  </div>
+</div>
+
+<script src="../static/js/auth/dataDictionaryIndex.js"></script>
+</body>
+</html>

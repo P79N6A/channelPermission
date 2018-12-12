@@ -1,0 +1,32 @@
+interconn:
+  project: 3W-CBS
+  app: invoice-svc
+  monitor:
+    url: http://collector.c.haier.net
+    enable: false
+  trace:
+    url: http://collector-trace.c.haier.net
+    sample: 0.1 #抽样率，0：关闭，1：全采样，sample<1：部分采样
+
+dubbo:
+  registry: 10.138.8.223:2181,10.138.8.224:2181,10.138.8.225:2181
+  port: 20890
+  timeout: 10000
+  threads: 100
+  heartBeats: 10000
+
+invoice:
+  platformcode: PTTEST11
+  version: 2.0
+  wsdl:
+    location: /wsdl_test
+
+einvoice:
+  cerpath: /einvoice_test/abnerca_signed_test.cer
+  scriptpath: /einvoice_test/PTTEST11.keystore
+  keyStoreAbner: PTTEST11
+  keyStorePassWord: PTTEST11
+
+logging:
+    config: classpath:logback-spring.xml
+    path: /home/haieradmin/admin/javalog/invoice-svc/

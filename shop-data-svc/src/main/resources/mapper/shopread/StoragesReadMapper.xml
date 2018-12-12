@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.StoragesReadDao">
+	<resultMap id="storagesResult" type="com.haier.shop.model.Storages">
+		<result property="id" column="id" />
+		<result property="isFreightInvoice" column="isFreightInvoice" />
+		<result property="isSupportCod" column="isSupportCod" />
+		<result property="name" column="name" />
+		<result property="code" column="code" />
+		<result property="type" column="type" />
+		<result property="centerCode" column="centerCode" />
+		<result property="taobaoStoreCode" column="taobaoStoreCode" />
+		<result property="centerCity" column="centerCity" />
+		<result property="industryCode" column="industryCode" />
+		<result property="industryName" column="industryName" />
+		<result property="area" column="area" />
+		<result property="limitTime" column="limitTime" />
+		<result property="remark" column="remark" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="storagesResult">
+		select `id`,`isFreightInvoice`,`isSupportCod`,`name`,`code`,`type`,`centerCode`,`taobaoStoreCode`,`centerCity`,`industryCode`,`industryName`,`area`,`limitTime`,`remark`
+		from `Storages`
+		where `id` = #{id}
+	</select>
+	<select id="getByCode" parameterType="String" resultMap="storagesResult">
+		select `id`,`isFreightInvoice`,`isSupportCod`,`name`,`code`,`type`,`centerCode`,`taobaoStoreCode`,`centerCity`,`industryCode`,`industryName`,`area`,`limitTime`,`remark`
+		from `Storages`
+		where `code` = #{code}
+	</select>
+</mapper>

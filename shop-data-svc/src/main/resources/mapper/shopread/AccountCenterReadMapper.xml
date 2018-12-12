@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.AccountCenterReadDao">
+	<resultMap id="o2oOrderCloseQueuesResult" type="com.haier.shop.model.O2oOrderCloseQueues">
+		<result property="id" column="id" />
+		<result property="orderId" column="order_id" />
+		<result property="orderProductId" column="order_product_id" />
+		<result property="type" column="type" />
+		<result property="addTime" column="add_time" />
+		<result property="pushData" column="push_data" />
+		<result property="returnData" column="return_data" />
+		<result property="success" column="success" />
+		<result property="count" column="count" />
+		<result property="successTime" column="success_time" />
+		<result property="lastTryTime" column="last_try_time" />
+		<result property="lastMessage" column="last_message" />
+		<result property="modifyTime" column="modify_time" />
+	</resultMap>
+	
+	<resultMap id="o2oOrderCloseQueuesExtResult" type="com.haier.shop.model.O2oOrderCloseQueuesExt">
+		<result property="id" column="id" />
+		<result property="orderId" column="order_id" />
+		<result property="orderProductId" column="order_product_id" />
+		<result property="type" column="type" />
+		<result property="addTime" column="add_time" />
+		<result property="pushData" column="push_data" />
+		<result property="returnData" column="return_data" />
+		<result property="success" column="success" />
+		<result property="count" column="count" />
+		<result property="successTime" column="success_time" />
+		<result property="lastTryTime" column="last_try_time" />
+		<result property="lastMessage" column="last_message" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="orderRepairId" column="order_repair_id" />
+	</resultMap>
+	
+	<select id="getCancelStatusOrderQueues" parameterType="map" resultMap="o2oOrderCloseQueuesResult">
+		select 
+		o2o.id,
+		o2o.order_id,
+		o2o.order_product_id,
+		o2o.type,
+		o2o.add_time,
+		o2o.`push_data`,
+		o2o.`return_data`,
+		o2o.success,
+		o2o.count,
+		o2o.success_time,
+		o2o.last_try_time,
+		o2o.`last_message`,
+		o2o.modify_time
+		from o2o_order_close_queues o2o INNER JOIN Orders os on os.id=o2o.order_id  and (os.paymentCode ='giftCard' or os.paymentCode ='balance' or os.paymentCode ='cod')
+ 		INNER JOIN OrderProducts op on op.id=o2o.order_product_id and op.`lessShipTime` = 0 
+  		where o2o.type=2 and o2o.success=0 
+  		<if test="flag == 0">
+  			and o2o.count &lt; 30 and o2o.count &gt; 0
+        </if>
+        <if test="flag == 1">
+        	and o2o.count = 0
+        </if>
+        AND NOT EXISTS ( SELECT 0 FROM o2o_order_repairs_queues o WHERE o.order_product_id = o2o.order_product_id )
+        order by o2o.id
+		limit #{topX}
+	</select>
+	<select id="getFinishColseQueues" parameterType="map" resultMap="o2oOrderCloseQueuesResult">
+		<![CDATA[
+		select 
+		id,
+		order_id,
+		order_product_id,
+		type,
+		add_time,
+		`push_data`,
+		`return_data`,
+		success,
+		count,
+		success_time,
+		last_try_time,
+		`last_message`,
+		modify_time
+		from o2o_order_close_queues where type=1 and success=0 and count=0 order by id 
+		limit #{topX}
+		]]>	
+	</select>
+	<select id="getDealFinishColseQueues" parameterType="map" resultMap="o2oOrderCloseQueuesResult">
+		<![CDATA[
+		select 
+		id,
+		order_id,
+		order_product_id,
+		type,
+		add_time,
+		`push_data`,
+		`return_data`,
+		success,
+		count,
+		success_time,
+		last_try_time,
+		`last_message`,
+		modify_time
+		from o2o_order_close_queues where type=1 and success=0 and count>0 and count<30 order by id 
+		limit #{topX}
+		]]>	
+	</select>
+
+	<!-- O2O二期 正向单订单确认后推送结算中心 Start -->
+	<resultMap id="o2oOrderConfirmQueuesResult" type="com.haier.shop.model.O2OOrderConfirmQueues">
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="orderProductId" column="order_product_id"/>
+        <result property="addTime" column="add_time"/>
+        <result property="pushData" column="push_data"/>
+        <result property="returnData" column="return_data"/>
+        <result property="success" column="success"/>
+        <result property="count" column="count"/>
+        <result property="successTime" column="success_time"/>
+        <result property="lastTryTime" column="last_try_time"/>
+        <result property="lastMessage" column="last_message"/>
+        <result property="modifyTime" column="modify_time" />
+    </resultMap>
+	<select id="getForwardConfirmToAccountCenterList" parameterType="Integer" resultMap="o2oOrderConfirmQueuesResult">
+		<![CDATA[
+		select 
+		id,
+		order_id,
+		order_product_id,
+		add_time,
+		`push_data`,
+		`return_data`,
+		success,
+		count,
+		success_time,
+		last_try_time,
+		`last_message`,
+		modify_time
+		from o2o_order_confirm_queues where success=0 and count=0
+		limit #{topX}		
+		]]>
+	</select>
+	<select id="getForwardConfirmToAccountCenterListThousand" parameterType="Integer" resultMap="o2oOrderConfirmQueuesResult">
+		<![CDATA[
+		select 
+		id,
+		order_id,
+		order_product_id,
+		add_time,
+		`push_data`,
+		`return_data`,
+		success,
+		count,
+		success_time,
+		last_try_time,
+		`last_message`,
+		modify_time
+		from o2o_order_confirm_queues where success=0 and count<30 and count>0
+		limit #{topX}		
+		]]>
+	</select>
+
+	<select id="getForwardConfirmToAccountCenterByOrderProductId" parameterType="Integer" resultMap="o2oOrderConfirmQueuesResult">
+		<![CDATA[
+		select 
+		id,
+		order_id,
+		order_product_id,
+		add_time,
+		`push_data`,
+		`return_data`,
+		success,
+		count,
+		success_time,
+		last_try_time,
+		`last_message`,
+		modify_time
+		from o2o_order_confirm_queues where order_product_id = #{orderProductId}
+		]]>
+	</select>
+	<!-- O2O二期 正向单订单确认后推送结算中心 End -->
+	<!-- O2O二期 o2o已付尾款订单队列表推送结算中心 Start -->
+	<resultMap id="o2oOrderTailendQueuesResult" type="com.haier.shop.model.O2OOrderTailendQueues">
+        <result property="id" column="id"/>
+        <result property="depositOrderId" column="deposit_order_id"/>
+        <result property="depositOrderProductId" column="deposit_order_product_id"/>
+        <result property="tailOrderId" column="tail_order_id"/>
+        <result property="tailOrderProductId" column="tail_order_product_id"/>
+        <result property="addTime" column="add_time"/>
+        <result property="pushData" column="push_data"/>
+        <result property="returnData" column="return_data"/>
+        <result property="success" column="success"/>
+        <result property="count" column="count"/>
+        <result property="successTime" column="success_time"/>
+        <result property="lastTryTime" column="last_try_time"/>
+        <result property="lastMessage" column="last_message"/>
+        <result property="modifyTime" column="modify_time" />
+    </resultMap>
+    <select id="getTailendToAccountCenterList" parameterType="Integer" resultMap="o2oOrderTailendQueuesResult">
+		<![CDATA[
+		select 
+		id,
+		deposit_order_id,
+		deposit_order_product_id,
+		tail_order_id,
+		tail_order_product_id,
+		add_time,
+		`push_data`,
+		`return_data`,
+		success,
+		count,
+		success_time,
+		last_try_time,
+		`last_message`,
+		modify_time
+		from o2o_order_tailend_queues where success=0 and count=0
+		limit #{topX}		
+		]]>
+	</select>
+	<select id="getTailendToAccountCenterListThousand" parameterType="Integer" resultMap="o2oOrderTailendQueuesResult">
+		<![CDATA[
+		select 
+		id,
+		deposit_order_id,
+		deposit_order_product_id,
+		tail_order_id,
+		tail_order_product_id,
+		add_time,
+		`push_data`,
+		`return_data`,
+		success,
+		count,
+		success_time,
+		last_try_time,
+		`last_message`,
+		modify_time
+		from o2o_order_tailend_queues where success=0 and count<30 and count>0
+		limit #{topX}		
+		]]>
+	</select>
+
+	<select id="getTailendToAccountCenterByDepositOrderProductId" parameterType="Integer" resultMap="o2oOrderTailendQueuesResult">
+		<![CDATA[
+		select 
+		id,
+		deposit_order_id,
+		deposit_order_product_id,
+		tail_order_id,
+		tail_order_product_id,
+		add_time,
+		`push_data`,
+		`return_data`,
+		success,
+		count,
+		success_time,
+		last_try_time,
+		`last_message`,
+		modify_time
+		from o2o_order_tailend_queues where deposit_order_product_id = #{depositOrderProductId}
+		]]>
+	</select>
+	<!-- O2O二期 o2o已付尾款订单队列表推送结算中心 End -->
+	<select id="getBrands" resultType="java.util.Map">
+		select 
+			`id`,`brandName`
+		from 
+			`Brands`
+	</select>
+	
+	<select id="getProductCates" resultType="java.util.Map">
+		select 
+			`id`,`cateName`
+		from 
+			`ProductCates`
+	</select>
+	
+	<select id="getCountOcqByTypeAndOrderProductId" parameterType="java.util.Map"  resultType="java.lang.Integer">
+	  select count(1)as 'size' from o2o_order_close_queues where type = #{type} and order_product_id = #{orderProductId}
+	</select>
+	<select id="getReverseAcceptFinishInfo" resultType="java.util.Map">
+		<![CDATA[ 
+		select os.id as orderId,op.id as orderProductId,ors.id as orderRepairId,ors.finishTime
+		from
+		OrderRepairs ors
+		inner join 
+		OrderProducts op on ors.orderProductId=op.id
+		inner join
+		Orders os on ors.orderId=os.id
+		where ors.handleStatus = 3 and ors.storageStatus = 2 and ors.finishTime >  #{lastTime} 
+		and os.source='SCFX' and op.stockType='WA'
+		
+		union all
+		select os.id as orderId,op.id as orderProductId,ors.id as orderRepairId,ors.finishTime
+		from
+		OrderRepairs ors
+		inner join
+		OrderProducts op on ors.orderProductId=op.id
+		inner join
+		Orders os on ors.orderId=os.id
+		where ors.handleStatus = 3 and ors.storageStatus = 2 and ors.finishTime >  #{lastTime} 
+		and op.o2oType in (2,3,4,5,50,60)
+		
+		union all
+		
+		select os.id as orderId,op.id as orderProductId,ors.id as orderRepairId,ors.finishTime
+		from
+		OrderRepairs ors
+		inner join
+		OrderProducts op on ors.orderProductId=op.id
+		inner join
+		Orders os on ors.orderId=os.id
+		where ors.storageTime >  #{lastTime} and ors.storageStatus > 100 
+		and os.source='SCFX' and op.stockType='WA'
+		
+		union all
+		
+		select os.id as orderId,op.id as orderProductId,ors.id as orderRepairId,ors.finishTime
+		from
+		OrderRepairs ors
+		inner join
+		OrderProducts op on ors.orderProductId=op.id
+		inner join
+		Orders os on ors.orderId=os.id
+		where ors.storageTime >  #{lastTime} and ors.storageStatus > 100 
+		and op.o2oType in (2,3,4,5,50,60)
+		
+		order by finishTime asc
+		 ]]>
+	</select>
+	<select id="getCountOcqByfinishColseQueues" resultType="java.lang.Integer">
+	  	<![CDATA[ 
+	  	select 
+	  		count(1) as 'size' 
+	  	from o2o_order_close_queues 
+	  	where type=1 and success=0 and count < 30
+	    ]]>
+	</select> 
+	<select id="getCountOcqCancelStatusOrderQueues" resultType="java.lang.Integer">
+	 	<![CDATA[  
+	 	select 
+			count(1) as 'size' 
+		from o2o_order_close_queues where type=2 and success=0 and count < 30
+	     ]]>
+	</select>
+	
+	<!-- 获取受理完成队列和取消关闭关联后的数据 -->
+	<select id="getUnSendOrderRepairsAndCancel" parameterType="java.util.Map" resultMap="o2oOrderCloseQueuesExtResult">
+		select 
+			close.`id`,close.`order_id`,close.`order_product_id`,close.`type`,close.`add_time`,close.`push_data`,close.`return_data`,
+			close.`success`,close.`count`,close.`success_time`,close.`last_try_time`,close.`last_message`,close.`modify_time`,repair.`order_repair_id` 
+		from 
+			o2o_order_close_queues close inner join o2o_order_repairs_queues repair on close.order_product_id = repair.order_product_id
+		where 
+			close.success=0
+		and close.type=2
+		<if test="sendCount > 0">
+			and close.count &gt; 0 and close.count &lt; #{sendCount}
+		</if>
+		<if test="sendCount == 0">
+			and close.count = 0
+		</if>
+		order by 
+			close.id
+		limit #{unSendQueryNum}
+	</select>
+
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvSgStockDao">
+	<resultMap id="InvSgStockResult" type="com.haier.stock.model.InvSgStockEntity">
+	<result property="id" column="id" />
+	<result property="sku" column="sku" />
+	<result property="itemProperty" column="item_property" />
+	<result property="storeCode" column="store_code" />
+	<result property="scode" column="scode" />
+	<result property="stockQty" column="stock_qty" />
+	<result property="frozenQty" column="frozen_qty" />
+	<result property="storeTs" column="store_ts" />
+	<result property="model" column="model" />
+	<result property="type" column="type" />
+	<result property="group" column="group" />
+	<result property="addTime" column="add_time" />
+	<result property="modifyTime" column="modify_time" />
+	</resultMap>
+
+	<resultMap id="invStoreResult" type="com.haier.stock.model.InvStore">
+		<result property="id" column="id" />
+		<result property="sku" column="sku" />
+		<result property="itemProperty" column="item_property" />
+		<result property="storeCode" column="store_code" />
+		<result property="stockQty" column="stock_qty" />
+		<result property="lockQty" column="lock_qty" />
+		<result property="storeTs" column="store_ts" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="productName" column="product_name" />
+		<result property="productTypeName" column="product_type_name" />
+		<result property="productGroupName" column="product_group_name" />
+		<result property="storeName" column="store_name" />
+	</resultMap>
+	
+	<sql id="selectAllColumns">
+		<![CDATA[
+		select
+		id,sku,item_property,store_code,scode,stock_qty,frozen_qty,store_ts,model,type,`group`,add_time,modify_time
+		from inv_sg_stock
+		]]>
+	</sql>
+
+
+	<select id="findInvSgStockById" parameterType="String" resultMap="InvSgStockResult">
+	    <include refid="selectAllColumns" />
+	    where id = #{id}
+	</select>
+	
+	<!-- 根据库位list，sku，请求数量获取第一条满足库存 -->
+	<select id="findInvSgStockByScodesAndSkuAndRequireQty" resultMap="InvSgStockResult">
+	    <include refid="selectAllColumns" />
+	    where 1=1 
+	    and scode in
+	   <foreach item="item" index="index" collection="sCodes" open="(" separator="," close=")">  
+			  #{item}  
+		 </foreach> 
+	    and sku=#{sku}
+	    <if test="requireQty != null and requireQty > 0">
+	    	and stock_qty >= #{requireQty}
+	    </if>
+	    limit 0,1
+	</select>
+	
+	<insert id="insertInvSgStock" parameterType="com.haier.stock.model.InvSgStockEntity" >
+	<![CDATA[
+		insert into inv_sg_stock(id,sku,item_property,store_code,scode,stock_qty,frozen_qty,store_ts,model,type,`group`,add_time,modify_time)
+		values(
+		#{id},#{sku},#{itemProperty},#{storeCode},#{scode},#{stockQty},#{frozenQty},#{storeTs},#{model},#{type},#{group},now(),#{modifyTime}
+		)
+	]]>
+	</insert>
+
+	<update id="updateInvSgStock" parameterType="com.haier.stock.model.InvSgStockEntity">
+		update inv_sg_stock set modify_time=now()
+		<if test="sku !=null and sku !=''">
+			,sku=#{sku}
+		</if>
+		<if test="itemProperty !=null and itemProperty !=''">
+			,item_property=#{itemProperty}
+		</if>
+		<if test="storeCode !=null and storeCode !=''">
+			,store_code=#{storeCode}
+		</if>
+		<if test="scode !=null and scode !=''">
+			,scode=#{scode}
+		</if><if test="stockQty !=null ">
+			,stock_qty=#{stockQty}
+		</if><if test="frozenQty !=null ">
+			,frozen_qty=#{frozenQty}
+		</if><if test="storeTs !=null ">
+			,store_ts=#{storeTs}
+		</if>
+		<if test="model !=null and model !=''">
+			,model=#{model}
+		</if>
+		<if test="type !=null and type !=''">
+			,type=#{type}
+		</if>
+		<if test="group !=null and group !=''">
+			,`group`=#{group}
+		</if><if test="addTime !=null ">
+			,add_time=#{addTime}
+		</if>
+		where id = #{id}
+	</update>
+
+	<select id="findInvSgStockBySkuRefNoStoreCode" parameterType="String" resultMap="InvSgStockResult">
+	    <include refid="selectAllColumns" />
+	    where sku = #{sku} and scode = #{scode} and store_code = #{storeCode}
+	</select>
+	
+	<update id="updateInvSgStockQty">
+		update inv_sg_stock set modify_time=now(),stock_qty = stock_qty - #{lockQty}, frozen_qty = IFNULL(frozen_qty,0) + #{lockQty}
+		where sku = #{sku} and store_code = #{storeCode} and scode = #{scode}
+	</update>
+	
+	<update id="updateReleaseForReturn">
+		update inv_sg_stock set modify_time=now(),stock_qty = stock_qty + #{releaseQty}, frozen_qty = frozen_qty - #{releaseQty}
+		where sku = #{sku} and store_code = #{storeCode} and scode = #{scode}
+	</update>
+	
+	<!-- 更新占有库存数量 -->
+	<update id="updatefrozenQty">
+		update inv_sg_stock set modify_time=now(), frozen_qty = frozen_qty - #{releaseQty}
+		where sku = #{sku} and store_code = #{storeCode} and scode = #{scode}
+	</update>
+	
+	<select id="findInvSgStockByStoreId" parameterType="String" resultMap="InvSgStockResult">
+	    <include refid="selectAllColumns" />
+	    where store_code = #{storeId}
+	    and stock_qty>0
+	</select>
+	
+	<select id="findInvStockByStoreCode" parameterType="map" resultMap="invStoreResult">
+    select inv.`id`,inv.`sku`,inv.`item_property`,inv.`store_code`,stock_qty,0 lock_qty,
+    `store_ts`,`create_time`,`update_time`,
+    `product_name`,`product_type_name`,`product_group_name`,`store_name`
+		from `inv_store` inv
+		where inv.`store_code` =#{storeCode} and inv.`item_property`=#{itemProperty}
+	</select>
+	
+	<select id="fingSgStockByLastTime" resultMap="InvSgStockResult">
+		select * from inv_sg_stock where modify_time > #{updateTime} order by modify_time limit ${topX} 
+	</select>
+	
+</mapper>

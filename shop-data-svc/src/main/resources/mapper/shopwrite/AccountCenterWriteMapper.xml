@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.AccountCenterWriteDao">
+
+	<update id="updateO2oCloseQueuesSuccessData" parameterType="com.haier.shop.model.O2oOrderCloseQueues">
+		update `o2o_order_close_queues`  
+		<trim prefix="set" suffixOverrides=",">  
+			<if test="count != null">
+				count=#{count},
+			</if>
+			<if test="lastTryTime != null">
+				last_try_time=#{lastTryTime},
+			</if>
+	        <if test="lastMessage != null">
+	        	`last_message` = #{lastMessage},
+	        </if>
+	        <if test="pushData != null">
+	        	`push_data` = #{pushData},
+	        </if>
+	        <if test="returnData != null">
+	        	`return_data` = #{returnData},
+	        </if>
+	        <if test="success != null">
+	        	success = #{success},
+	        </if>
+	        <if test="successTime != null">
+	        	success_time = #{successTime}
+	        </if>
+		</trim>
+		where `id` = #{id} and success=0
+	</update>
+	<update id="updateO2oCloseQueuesFailData" parameterType="com.haier.shop.model.O2oOrderCloseQueues">
+		update `o2o_order_close_queues`  
+		<trim prefix="set" suffixOverrides=",">  
+			<if test="count != null">
+				count=#{count},
+			</if>
+			<if test="lastTryTime != null">
+				last_try_time=#{lastTryTime},
+			</if>
+	        <if test="lastMessage != null">
+	        	`last_message` = #{lastMessage},
+	        </if>
+	        <if test="pushData != null">
+	        	`push_data` = #{pushData},
+	        </if>
+	        <if test="returnData != null">
+	        	`return_data` = #{returnData},
+	        </if>
+	         <if test="success != null">
+	        	success = #{success}
+	        </if>
+		</trim>
+		where `id` = #{id} and success=0
+	</update>
+	<insert id="insert" parameterType="com.haier.shop.model.O2oOrderCloseQueues">
+		insert into o2o_order_close_queues(`order_id`,`order_product_id`,`type`,`add_time`,`push_data`,`return_data`,`success`,`count`,`success_time`,`last_try_time`,`last_message`,`modify_time`)
+		values(#{orderId},#{orderProductId},#{type},#{addTime},#{pushData},#{returnData},#{success},#{count},#{successTime},#{lastTryTime},#{lastMessage},#{modifyTime})
+	</insert>
+	<insert id="insertNotExists" parameterType="com.haier.shop.model.O2oOrderCloseQueues">
+	  <![CDATA[
+	    insert into o2o_order_close_queues(`order_id`,`order_product_id`,`type`,`add_time`,`push_data`,`return_data`,`success`,`count`,`success_time`,`last_try_time`,`last_message`,`modify_time`)
+		select #{orderId},#{orderProductId},#{type},#{addTime},#{pushData},#{returnData},#{success},#{count},#{successTime},#{lastTryTime},#{lastMessage},#{modifyTime} from dual 
+		where not exists (select 1 from o2o_order_close_queues where type = #{type} and order_product_id = #{orderProductId})
+	  ]]>
+	</insert>
+	<update id="updateForwardConfirmToAccountCenterList" parameterType="com.haier.shop.model.O2OOrderConfirmQueues">
+		update `o2o_order_confirm_queues` set
+				`push_data`=#{pushData},`return_data`=#{returnData},`success`=#{success},`count`=#{count},`success_time`=#{successTime},
+				`last_try_time`=#{lastTryTime},`last_message`=#{lastMessage}
+		where `id` = #{id} and success=0
+	</update>
+	<insert id="insertForwardConfirmToAccountCenterList" parameterType="com.haier.shop.model.O2OOrderConfirmQueues">
+		INSERT INTO `o2o_order_confirm_queues` 
+			(`order_id`, `order_product_id`, `add_time`, `push_data`, `return_data`, `success`, `count`, `success_time`, `last_try_time`, `last_message`) 
+			VALUES (#{orderId}, #{orderProductId}, #{addTime}, #{pushData}, #{returnData}, #{success}, #{count}, #{successTime}, #{lastTryTime}, #{lastMessage})
+		<selectKey resultType="int" keyProperty="id" order="AFTER">select last_insert_id()</selectKey>
+	</insert>
+	<update id="updateTailendToAccountCenterList" parameterType="com.haier.shop.model.O2OOrderTailendQueues">
+		update `o2o_order_tailend_queues` set
+				`push_data`=#{pushData},`return_data`=#{returnData},`success`=#{success},`count`=#{count},`success_time`=#{successTime},
+				`last_try_time`=#{lastTryTime},`last_message`=#{lastMessage}
+		where `id` = #{id} and success=0
+	</update>
+	<insert id="insertTailendToAccountCenterList" parameterType="com.haier.shop.model.O2OOrderTailendQueues">
+		INSERT INTO `o2o_order_tailend_queues` 
+			(`deposit_order_id`, `deposit_order_product_id`, `tail_order_id`, `tail_order_product_id`, `add_time`, `push_data`, `return_data`, `success`, `count`, `success_time`, `last_try_time`, `last_message`) 
+			VALUES (#{depositOrderId}, #{depositOrderProductId}, #{tailOrderId}, #{tailOrderProductId}, #{addTime}, #{pushData}, #{returnData}, #{success}, #{count}, #{successTime}, #{lastTryTime}, #{lastMessage})
+		<selectKey resultType="int" keyProperty="id" order="AFTER">select last_insert_id()</selectKey>
+	</insert>
+	<update id="updateOrderCloseQueue" parameterType="com.haier.shop.model.O2oOrderCloseQueuesExt">
+		update o2o_order_close_queues 
+		set `push_data`=#{pushData},`return_data`=#{returnData},`success`=#{success},`count`=#{count},`success_time`=#{successTime},`last_try_time`=#{lastTryTime},`last_message`=#{lastMessage}
+		where `id`=#{id} and success=0
+	</update>
+</mapper>

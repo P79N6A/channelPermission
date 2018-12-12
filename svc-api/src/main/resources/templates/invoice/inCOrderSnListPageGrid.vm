@@ -1,0 +1,37 @@
+
+	 <table  class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="simpleList" >
+		 <thead>
+    		<tr role="row">
+    			<th class="sorting" style="min-width:30px; text-align:center;">序号</th>
+    			<th class="sorting" style="min-width:70px; text-align:center;">网单号</th>
+    			<th class="sorting" style="min-width:60px; text-align:center;">物料编码</th>
+    			<th class="sorting" style="min-width:60px; text-align:center;">渠道</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">总价</th>
+    			<th class="sorting" style="min-width:60px; text-align:center;">数量</th>
+    			<th class="sorting" style="min-width:60px; text-align:center;">售达方(客户码)</th>
+    			<th class="sorting" style="min-width:60px; text-align:center;">渠道(SAP渠道编码)</th>
+    		</tr>
+         </thead>
+		  <tbody role="alert" aria-live="polite" aria-relevant="all">
+		 #set($count=0)
+		#foreach($row in $!rowList)
+			 #if($count%2==0)
+        		<tr>
+    		#else
+        		<tr class="tr-bg">
+			#end
+			 		#set($count=$count+1)
+			 		#set($num = ( $pager.pageIndex - 1 ) * $pager.pageSize + $count)
+			 		
+				    <td style="text-align:center;">$!num</td>
+				    <td style="text-align:center;">$!{row.cOrderSn}</td>
+					<td style="text-align:center;">$!{row.sku}</td>
+					<td style="text-align:center;">$!{row.channelName}</td>
+					<td style="text-align:center;">$!{row.productAmount}</td>
+					<td style="text-align:center;">$!{row.number}</td>
+					<td style="text-align:center;">$!{row.customerCode}</td>
+					<td style="text-align:center;">$!{row.sapChannelCode}</td>
+				</tr>
+			#end
+		</tbody>
+	</table>

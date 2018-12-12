@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>tbOrderSyncSet</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/third/WdatePicker/WdatePicker.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_tbgroupbuy" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_tbgroupbuy"></table>
+</div>
+<div id="datagridToolbar_tbgroupbuy">
+    <form id="paramForm_tbgroupbuy" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">商品sku</span>
+                <input class="easyui-textbox" name="sku" id="sku"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_tbgroupbuy"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_tbgroupbuy"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_tbgroupbuy"
+           data-options="iconCls:'icon-add',plain:true">新增</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_tbgroupbuy"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_tbgroupbuy"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+    </form>
+</div>
+<div id="addDlg_tbgroupbuy" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:600px;height:435px;"
+     closed="true" buttons="#dlg-buttons_tbgroupbuy">
+    <form id="addForm_tbgroupbuy" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>团购名称<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="groupName" required="true" data-options="validType:'length[2,25]'"/>
+        </div>
+        <div class="fitem">
+            <label>团购商品SKU<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="sku" required="true" data-options="validType:'length[2,10]'" />
+        </div>
+        <div class="fitem">
+            <label>订金金额<span style="color: red;">*</span></label>
+            <select class="easyui-combobox" name="depositAmount" required="true">
+                <option></option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>尾款金额<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="balanceAmount" required="true"/>
+        </div>
+        <div class="fitem" style="width: 320px;">
+            <label>订金开始时间<span style="color: red;">*</span></label>
+            <input class="Wdate" id="d122" name="depositStartTime" required="true" style="height: 30px;border-color: #cccccc;width: 200px;padding-left: 7px"
+                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'d123\')}',readOnly:true,errDealMode:-1})"/>
+        </div>
+        <div class="fitem" style="width: 500px;">
+            <label>订金结束时间<span style="color: red;">*</span></label>
+            <input class="Wdate" id="d123" name="depositEndTime" style="height: 30px;border-color: #cccccc;padding-left: 7px;width: 200px;"
+                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'d122\')}',maxDate:'#F{$dp.$D(\'d124\')}',readOnly:true,errDealMode:-1})"  required="true"/>
+        </div>
+        <div class="fitem" style="width: 320px;">
+            <label>尾款开始时间<span style="color: red;">*</span></label>
+            <input class="Wdate" id="d124" name="balanceStartTime" style="height: 30px;border-color: #cccccc;width: 200px;padding-left: 7px"
+                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'d123\')}',maxDate:'#F{$dp.$D(\'d125\')}',readOnly:true,errDealMode:-1})" required="true"/>
+            <!--<input class="easyui-datebox" name="balanceStartTime" required="true"/>-->
+        </div>
+        <div class="fitem" style="width: 500px;">
+            <label>尾款结束时间<span style="color: red;">*</span></label>
+            <input class="Wdate" id="d125" name="balanceEndTime" style="height: 30px;border-color: #cccccc;padding-left: 7px;width: 200px;"
+                   onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'d124\')}',readOnly:true,errDealMode:-1})" required="true"/>
+                <span  style="float:right;color: red;width: 400px;">请务必保证在活动期间不得产生与团购SKU相同的且订单金额也与活动价(包括订金金额和尾款金额)相同的普通淘宝订单！</span>
+        </div>
+        <div class="fitem">
+            <label>发货时机<span style="color: red;">*</span></label>
+            <select class="easyui-combobox" name="shippingOpporunity" required="true">
+                <option value="0">定金发货</option>
+                <option value="1">尾款发货</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>发布状态<span style="color: red;">*</span></label>
+            <select class="easyui-combobox" name="status" required="true">
+                <option value="1">开启</option>
+                <option value="0">关闭</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>套装设置</label>
+            <input class="easyui-textbox" name="productSpecs"/>
+            <!-- 
+            <a class="easyui-linkbutton" required="true">添加商品栏</a>
+            -->
+            <div id="products_id"></div>
+        </div>
+    </form>
+    <div id="dlg-buttons_tbgroupbuy">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_tbgroupbuy" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_tbgroupbuy').dialog('close')">取消</a>
+    </div>
+</div>
+<script src="../static/js/order/tbGroupBuy.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.system.dao.PlanInDateDao">
+	<resultMap id="planInDateResult" type="com.haier.system.model.PlanInDate">
+		<result property="id" column="id" />
+		<result property="type" column="type" />
+		<result property="typeName" column="type_name" />
+		<result property="value" column="value" />
+		<result property="name" column="name" />
+		<result property="add1" column="add1" />
+		<result property="add2" column="add2" />
+		<result property="createUser" column="create_user" />
+		<result property="createTime" column="create_time" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+ 
+	<select id="getPlanInDateList"  resultMap="planInDateResult">
+		select `id`,`type`,`type_name`,`value`,`name`,`add1`,`add2`,`create_user`,`create_time`,`update_user`,`update_time`
+		from plan_in_date where 1=1
+		order by `type` asc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	<select id="getPlanInDateById" resultMap="planInDateResult">
+		select `id`,`type`,`type_name`,`value`,`name`,`add1`,`add2`,`create_user`,`create_time`,`update_user`,`update_time`
+		from plan_in_date
+		where id=#{id}
+	</select>
+	<select id="getPlanInDateByTypeId" resultMap="planInDateResult">
+		select `id`,`type`,`type_name`,`value`,`name`,`add1`,`add2`,`create_user`,`create_time`,`update_user`,`update_time`
+		from plan_in_date
+		where type=#{type}
+	</select>
+	<select id="findPlanInDateCount" resultType="Integer">
+		select count(1)
+		from plan_in_date
+	</select>
+	<update id="update" parameterType="com.haier.system.model.PlanInDate">
+        UPDATE plan_in_date
+        <set>
+            <if test="entity!=null">
+                <if test="entity.id != null">
+                    <![CDATA[ id = #{entity.id}, ]]>
+                </if>
+                <if test="entity.type != null and entity.type !='' ">
+                    <![CDATA[ type = #{entity.type}, ]]>
+                </if>
+                <if test="entity.typeName != null and entity.typeName !='' ">
+                    <![CDATA[ type_name = #{entity.typeName}, ]]>
+                </if>
+                <if test="entity.value != null and entity.value !='' ">
+                    <![CDATA[ value = #{entity.value}, ]]>
+                </if>
+                <if test="entity.name != null and entity.name !='' ">
+                    <![CDATA[ name = #{entity.name}, ]]>
+                </if>
+                <if test="entity.add1 != null and entity.add1 !='' ">
+                    <![CDATA[ add1 = #{entity.add1}, ]]>
+                </if>
+                <if test="entity.add2 != null and entity.add2 !='' ">
+                    <![CDATA[ add2 = #{entity.add2}, ]]>
+                </if>
+                <if test="entity.updateUser != null and entity.updateUser !='' ">
+                    <![CDATA[ update_user = #{entity.updateUser}, ]]>
+                </if>
+            </if>
+        </set>
+        WHERE id = #{entity.id}
+    </update>
+	<insert id="insertSelective" parameterType="com.haier.system.model.PlanInDate">
+        INSERT INTO plan_in_date
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null and type !='' ">
+                <![CDATA[ type, ]]>
+            </if>
+            <if test="typeName != null and typeName !='' ">
+                <![CDATA[ type_name, ]]>
+            </if>
+            <if test="value != null and value !='' ">
+                <![CDATA[ value, ]]>
+            </if>
+            <if test="name != null and name !='' ">
+                <![CDATA[ name, ]]>
+            </if>
+            <if test="add1 != null and add1 !='' ">
+                <![CDATA[ add1, ]]>
+            </if>
+            <if test="add2 != null and add2 !='' ">
+                <![CDATA[ add2, ]]>
+            </if>
+            <if test="createUser != null and createUser !='' ">
+                <![CDATA[ create_user, ]]>
+            </if>
+            create_time
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="type != null and type !='' ">
+                <![CDATA[ #{type,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="typeName != null and typeName !='' ">
+                <![CDATA[ #{type_name,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="value != null and value !='' ">
+                <![CDATA[ #{value,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="name != null and name !='' ">
+                <![CDATA[ #{name,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="add1 != null and add1 !='' ">
+                <![CDATA[ #{add1,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="add2 != null and add2 !='' ">
+                <![CDATA[ #{add2,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="createUser != null and createUser !='' ">
+                <![CDATA[ #{createUser,jdbcType=VARCHAR}, ]]>
+            </if>
+            now()
+        </trim>
+    </insert>
+	
+</mapper>

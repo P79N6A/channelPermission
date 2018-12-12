@@ -1,0 +1,1402 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.CgoNewDao">
+	<resultMap id="cgoOrderResult" type="com.haier.purchase.data.model.CgoOrderItem">
+		<result property="storage_id" column="storage_id" />
+		<result property="storage_name" column="storage_name" />
+		<result property="materials_desc" column="materials_desc" />
+		<result property="t2_delivery_prediction" column="T2_delivery_prediction" />
+		<result property="customization" column="customization" />
+		<result property="order_id" column="order_id" />
+		<result property="satisfy_type_id" column="satisfy_type_id" />
+		<result property="delete_flag" column="delete_flag" />
+		<result property="flow_flag" column="flow_flag" />
+		<result property="revoke_flag" column="revoke_flag" />
+		<result property="error_msg" column="error_msg" />
+		<result property="audit_remark" column="audit_remark" />
+		<result property="report_year_week" column="report_year_week" />
+		<result property="ed_channel_id" column="ed_channel_id" />
+		<result property="product_group_id" column="product_group_id" />
+		<result property="materials_id" column="materials_id" />
+		<result property="category_id" column="category_id" />
+		<result property="brand_id" column="brand_id" />
+		<result property="order_type_id" column="order_type_id" />
+		<result property="confirm_order_time_display" column="confirm_order_time_display" />
+		<result property="order_close_time_display" column="order_close_time_display" />
+		<result property="channel_commit_time_display" column="channel_commit_time_display" />
+		<result property="channel_commit_user" column="channel_commit_user" />
+		<result property="demand_arrive_date_display" column="demand_arrive_date_display" />
+		<result property="actual_deliver_date_display" column="actual_deliver_date_display" />
+		<result property="latest_leave_base_date_display" column="latest_leave_base_date_display" />
+		<result property="factory_id" column="factory_id" />
+		<result property="factory_name" column="factory_name" />
+		<result property="cgo_order_id" column="cgo_order_id" />
+		<result property="WAqty" column="WAqty" />
+		<result property="rrs_in_time_display" column="rrs_in_time_display" />
+		<result property="rrs_out_time_display" column="rrs_out_time_display" />
+		<result property="wa_in_order_id" column="wa_in_order_id" />
+		<result property="price" column="price" />
+		<result property="amount" column="amount" />
+		<result property="po_no" column="po_no" />
+		<result property="si_ou_slipNo" column="si_ou_slipNo" />
+		<result property="fold_slip_no" column="fold_slip_no" />
+		<result property="order_close_user" column="order_close_user" />
+		<result property="audit_user" column="audit_user" />
+		<result property="audit_time_display" column="audit_time_display" />
+		<result property="audit_depart_user" column="audit_depart_user" />
+		<result property="audit_depart_time_display" column="audit_depart_time_display" />
+		<result property="audit_depart_remark" column="audit_depart_remark" />
+	</resultMap>
+	<resultMap id="cgoGenuineRejectResult"
+		type="com.haier.purchase.data.model.CgoGenuineRejectItemNew">
+		<result property="wp_order_id" column="wp_order_id" />
+		<result property="request_user" column="request_user" />
+		<result property="address" column="address" />
+		<result property="concat_person" column="concat_person" />
+		<result property="concat_phone" column="concat_phone" />
+		<result property="brand_id" column="brand_id" />
+		<result property="category_id" column="category_id" />
+		<result property="product_group_id" column="product_group_id" />
+		<result property="materials_id" column="materials_id" />
+		<result property="model_id" column="model_id" />
+		<result property="ed_channel_id" column="ed_channel_id" />
+		<result property="storage_id" column="storage_id" />
+		<result property="quantity" column="quantity" />
+		<result property="tax_in_price" column="tax_in_price" />
+		<result property="warehouse_out_time" column="warehouse_out_time" />
+		<result property="warehouse_in_time" column="warehouse_in_time" />
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="modify_user" column="modify_user" />
+		<result property="modify_time" column="modify_time" />
+		<result property="delete_user" column="delete_user" />
+		<result property="delete_time" column="delete_time" />
+		<result property="delete_flag" column="delete_flag" />
+		<result property="audit_user" column="audit_user" />
+		<result property="audit_time" column="audit_time" />
+		<result property="audit_remark" column="audit_remark" />
+		<result property="flow_flag" column="flow_flag" />
+		<result property="error_msg" column="error_msg" />
+		<result property="request_quantity" column="request_quantity" />
+		<result property="permit_quantity" column="permit_quantity" />
+	</resultMap>
+	<resultMap id="cgoGenuineRejectDetailResult" type="com.haier.purchase.data.model.SIOUInfoItem">
+		<result property="order_id" column="order_id" />
+		<result property="si_ou_slipNo" column="si_ou_slipNo" />
+		<result property="quantity" column="quantity" />
+		<result property="tax_include_amount" column="tax_include_amount" />
+		<result property="slip_date" column="slip_date" />
+		<result property="leave_warehouse_time" column="leave_warehouse_time" />
+		<result property="wa_in_time" column="wa_in_time" />
+		<result property="bill_time_display" column="bill_time_display" />
+		<result property="rrs_out_time_display" column="rrs_out_time_display" />
+		<result property="wa_in_time_display" column="wa_in_time_display" />
+		<result property="ed_channel_id" column="ed_channel_id" />
+		<result property="product_group_id" column="product_group_id" />
+		<result property="materials_id" column="materials_id" />
+		<result property="materials_desc" column="materials_desc" />
+		<result property="flow_flag" column="flow_flag" />
+		<result property="location_code" column="location_code" />
+		<result property="brand_id" column="brand_id" />
+		<result property="category_id" column="category_id" />
+		<result property="price" column="price" />
+		<result property="t2_amount" column="t2_amount" />
+		<result property="amount" column="amount" />
+		<result property="audit_result" column="audit_result" />
+		<result property="audit_time_display" column="audit_time_display" />
+		<result property="remark" column="remark" />
+	</resultMap>
+	<resultMap id="cgoOrderRejectResult"
+		type="com.haier.purchase.data.model.CgoOrderRejectItemNew">
+		<result property="orderId" column="order_id" />
+		<result property="sourceOrderId" column="source_order_id" />
+		<result property="storageId" column="storage_id" />
+		<result property="materialsId" column="materials_id" />
+		<result property="categoryId" column="category_id" />
+		<result property="quantity" column="quantity" />
+		<result property="vomReverseInWaNo" column="vom_reverse_in_wa_no" />
+	</resultMap>
+	<sql id="findCgoOrderListSQLCond">
+		FROM
+		leader_nb_t2_order_t
+		WHERE
+		delete_flag = 0 AND type="TS"
+		<if test="report_year_week !=null and report_year_week != ''">
+			AND report_year_week = #{report_year_week}
+		</if>
+		<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND ed_channel_id in
+			<foreach item="item" index="index" collection="ed_channel_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND product_group_id in
+			<foreach item="item" index="index" collection="product_group_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="cbsCategory !=null and cbsCategory != ''">
+			AND category_id in
+			<foreach item="item" index="index" collection="cbsCategory"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="order_id !=null and order_id != ''">
+			AND UPPER(order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{order_id})),'%')
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND UPPER(storage_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{storage_id})),'%')
+		</if>
+		<if test="flow_flag !=null and flow_flag != ''">
+			AND flow_flag in
+			<foreach item="item" index="index" collection="flow_flag"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="order_list !=null and order_list != ''">
+			AND order_id in
+			<foreach item="item" index="index" collection="order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</sql>
+	<select id="findCgoOrderList" parameterType="Map" resultMap="cgoOrderResult">
+		SELECT storage_id,
+		report_year_week,
+		ed_channel_id,
+		product_group_id,
+		materials_id,
+		materials_desc,
+		order_id,
+		delete_flag,
+		flow_flag,
+		T2_delivery_prediction,
+		customization,
+		satisfy_type_id,
+		order_type_id,
+		category_id,
+		error_msg,
+		brand_id,
+		price,
+		amount,
+		channel_commit_user,
+		date_format(channel_commit_time,'%Y-%m-%d %H:%i:%S') as
+		channel_commit_time_display,
+		date_format(audit_time,'%Y-%m-%d
+		%H:%i:%S') as audit_time_display,
+		audit_user,
+		date_format(audit_depart_time,'%Y-%m-%d %H:%i:%S') as
+		audit_depart_time_display,
+		audit_depart_user
+		<include refid="findCgoOrderListSQLCond" />
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<select id="findCgoOrderListCNT" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findCgoOrderListSQLCond" />
+	</select>
+	<select id="findCgoStorgeId" parameterType="Map" resultType="java.lang.String">
+		SELECT
+		storage_id
+		FROM
+		leader_nb_t2_order_t
+		WHERE
+		delete_flag = 0 and
+		order_id = #{order_id} and latest_leave_base_date is null
+	</select>
+	<sql id="findCgoPOListSQLCond">
+		FROM
+		leader_nb_t2_order_t t2 right join si_ou_info_t siou on
+		t2.order_id = siou.source_order_id
+		WHERE
+		t2.delete_flag = 0 AND
+		siou.bill_type=1
+		<if test="report_start_week  !=null and report_start_week  != ''">
+	        	<![CDATA[
+					and t2.report_year_week >= #{report_start_week}
+				]]>
+		</if>
+		<if test="report_end_week  !=null and report_end_week  != ''">
+	         	<![CDATA[
+					and t2.report_year_week <= #{report_end_week}
+				]]>
+		</if>
+		<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND t2.ed_channel_id in
+			<foreach item="item" index="index" collection="ed_channel_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND t2.product_group_id in
+			<foreach item="item" index="index" collection="product_group_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="wp_order_id !=null and wp_order_id != ''">
+			AND UPPER(t2.order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{wp_order_id})),'%')
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND UPPER(t2.storage_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{storage_id})),'%')
+		</if>
+		<if test="flow_flag !=null and flow_flag != ''">
+			AND t2.flow_flag in
+			<foreach item="item" index="index" collection="flow_flag"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(t2.materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="bill_time_start  !=null and bill_time_start  != ''">
+	        	<![CDATA[
+					and siou.slip_date >= #{bill_time_start}
+				]]>
+		</if>
+		<if test="bill_time_end  !=null and bill_time_end  != ''">
+	         	<![CDATA[
+					and siou.slip_date < #{bill_time_end}
+				]]>
+		</if>
+		<if test="bill_order_id !=null and bill_order_id != ''">
+			AND UPPER(siou.si_ou_slipNo) LIKE CONCAT(CONCAT('%',UPPER
+			(#{bill_order_id})),'%')
+		</if>
+		<if test="datestorge_start  !=null and datestorge_start  != ''">
+	        	<![CDATA[
+					and siou.wa_in_time >= #{datestorge_start}
+				]]>
+		</if>
+		<if test="datestorge_end  !=null and datestorge_end  != ''">
+	         	<![CDATA[
+					and siou.wa_in_time < #{datestorge_end}
+				]]>
+		</if>
+		<if test="brand_id !=null and brand_id != ''">
+			AND t2.brand_id = #{brand_id}
+		</if>
+		<if test="category_id !=null and category_id != ''">
+			AND t2.category_id in
+			<foreach item="item" index="index" collection="category_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="materials_desc !=null and materials_desc != ''">
+			AND UPPER(t2.materials_desc) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_desc})),'%')
+		</if>
+		<if test="wp_order_list !=null and wp_order_list != ''">
+			AND t2.order_id in
+			<foreach item="item" index="index" collection="wp_order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="bill_order_list !=null and bill_order_list != ''">
+			AND siou.si_ou_slipNo in
+			<foreach item="item" index="index" collection="bill_order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</sql>
+	<select id="findCgoPOList" parameterType="Map"
+		resultMap="cgoGenuineRejectDetailResult">
+		SELECT t2.order_id,
+
+		siou.si_ou_slipNo,
+		CASE siou.slip_date WHEN
+		DEFAULT(siou.slip_date) THEN '' ELSE
+		date_format(siou.slip_date,'%Y-%m-%d %H:%i:%S') END as
+		bill_time_display,
+
+		t2.ed_channel_id,
+		t2.product_group_id,
+		t2.materials_desc,
+		t2.materials_id,
+
+		CASE siou.leave_warehouse_time WHEN
+		DEFAULT(siou.leave_warehouse_time)
+		THEN '' ELSE
+		date_format(siou.leave_warehouse_time,'%Y-%m-%d %H:%i:%S') END as
+		rrs_out_time_display,
+		CASE siou.wa_in_time WHEN
+		DEFAULT(siou.wa_in_time) THEN '' ELSE
+		date_format(siou.wa_in_time,'%Y-%m-%d %H:%i:%S') END as
+		wa_in_time_display,
+		t2.flow_flag,
+		t2.delete_flag,
+		t2.storage_id,
+		t2.report_year_week,
+		t2.brand_id,
+		t2.category_id,
+		t2.price,
+		t2.amount as
+		t2_amount,
+		siou.tax_include_amount,
+		TRUNCATE(siou.tax_include_amount/quantity,3) as amount
+		<include refid="findCgoPOListSQLCond" />
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<select id="findCgoPOListCNT" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findCgoPOListSQLCond" />
+	</select>
+	<update id="manualCloseCgoOrder" parameterType="Map">
+		UPDATE si_ou_info_t SET order_close_user=#{order_close_user},
+		order_close_time=CURRENT_TIMESTAMP(), flow_flag=-70
+		WHERE flow_flag =
+		60 AND si_ou_slipNo in
+		<foreach collection="manualCloseList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- xuelin.zhao 撤销手工关单 -->
+	<update id="cancelCloseCgoOrder" parameterType="Map">
+		UPDATE si_ou_info_t SET order_close_time = null , order_close_user =
+		null, flow_flag=60
+		WHERE flow_flag = -70 AND si_ou_slipNo in
+		<foreach collection="cancelCloseList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<sql id="findCgoOrderMultipleListSQLCond">
+		FROM
+		leader_nb_t2_order_t t2 left join cgo_audit_info_t au on
+		t2.order_id = au.source_order_id
+		left join si_ou_info_t siou on
+		au.order_id = siou.order_id and
+		siou.bill_type = "1"
+		left join kb_info_t
+		kb on au.order_id = kb.order_id
+		WHERE
+		t2.delete_flag = 0 AND
+		t2.type="TS"
+		<if test="arrival_start_week  !=null and arrival_start_week  != ''">
+	        	<![CDATA[
+					and t2.request_arrive_date >= #{arrival_start_week}
+				]]>
+		</if>
+		<if test="arrival_end_week  !=null and arrival_end_week  != ''">
+	         	<![CDATA[
+					and t2.request_arrive_date <= #{arrival_end_week}
+				]]>
+		</if>
+		<if test="report_year_week  !=null and report_year_week  != ''">
+			and t2.report_year_week = #{report_year_week}
+		</if>
+		<if test="report_year_week_start !=null and report_year_week_start != ''">
+        	<![CDATA[
+			AND t2.report_year_week >= #{report_year_week_start}
+			]]>
+		</if>
+		<if test="report_year_week_end !=null and report_year_week_end != ''">
+        	<![CDATA[
+			AND t2.report_year_week <= #{report_year_week_end}
+			]]>
+		</if>
+		<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND t2.ed_channel_id in
+			<foreach item="item" index="index" collection="ed_channel_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND t2.product_group_id in
+			<foreach item="item" index="index" collection="product_group_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="order_id !=null and order_id != ''">
+			AND UPPER(t2.order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{order_id})),'%')
+		</if>
+		<if test="brand_id !=null and brand_id != ''">
+			AND t2.brand_id = #{brand_id}
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(t2.materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="materials_desc !=null and materials_desc != ''">
+			AND UPPER(t2.materials_desc) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_desc})),'%')
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND UPPER(t2.storage_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{storage_id})),'%')
+		</if>
+		<if test="flow_flag == '-20'">
+			AND au.audit_result = 0
+		</if>
+		<if test="si_ou_slipNo !=null and si_ou_slipNo != ''">
+			AND UPPER(siou.si_ou_slipNo) LIKE CONCAT(CONCAT('%',UPPER
+			(#{si_ou_slipNo})),'%')
+		</if>
+		<if test="flow_flag != null and flow_flag != '' and flow_flag != '-20'">
+			AND ((siou.flow_flag is null AND t2.flow_flag = #{flow_flag} AND
+			(au.audit_result is null or <![CDATA[au.audit_result <> 0]]>))
+			OR (siou.flow_flag is not null AND siou.flow_flag = #{flow_flag}))
+		</if>
+		<if test="order_type !=null and order_type != ''">
+			AND t2.order_type_id = #{order_type}
+		</if>
+		<if test="category_id !=null and category_id != ''">
+			AND t2.category_id in
+			<foreach item="item" index="index" collection="category_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="wp_order_list !=null and wp_order_list != ''">
+			AND t2.order_id in
+			<foreach item="item" index="index" collection="wp_order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="bill_time_start  !=null and bill_time_start  != ''">
+	        	<![CDATA[
+					and siou.slip_date >= #{bill_time_start}
+				]]>
+		</if>
+		<if test="bill_time_end  !=null and bill_time_end  != ''">
+	         	<![CDATA[
+					and siou.slip_date < #{bill_time_end}
+				]]>
+		</if>
+		<if test="bill_order_id !=null and bill_order_id != ''">
+			AND UPPER(siou.si_ou_slipNo) LIKE CONCAT(CONCAT('%',UPPER
+			(#{bill_order_id})),'%')
+		</if>
+		<if test="datestorge_start  !=null and datestorge_start  != ''">
+	        	<![CDATA[
+					and siou.wa_in_time >= #{datestorge_start}
+				]]>
+		</if>
+		<if test="datestorge_end  !=null and datestorge_end  != ''">
+	         	<![CDATA[
+					and siou.wa_in_time < #{datestorge_end}
+				]]>
+		</if>
+	</sql>
+	<select id="findCgoOrderMultipleList" parameterType="Map"
+		resultMap="cgoOrderResult">
+		SELECT SQL_CALC_FOUND_ROWS
+		CASE
+		WHEN siou.flow_flag IS NULL THEN
+		(
+		CASE
+		WHEN au.audit_result = 0 THEN
+		- 20
+		ELSE
+		CASE
+		WHEN kb.arrival_time IS NOT
+		NULL THEN
+		60
+		WHEN kb.leave_warehouse_time IS NOT NULL THEN
+		50
+		WHEN
+		kb.order_id IS NOT NULL THEN
+		40
+		ELSE
+		t2.flow_flag
+		END
+		END
+		)
+		ELSE
+		siou.flow_flag
+		END AS flow_flag,
+		t2.order_id,
+		date_format(t2.channel_commit_time,'%Y-%m-%d %H:%i:%S') as
+		channel_commit_time_display,
+		CONCAT('PO',siou.si_ou_slipNo) as po_no,
+		siou.si_ou_slipNo,
+		kb.fold_slip_no,
+		siou.cust_unit_code,
+		CASE WHEN
+		siou.address_id is null THEN kb.addr_code ELSE siou.address_id
+		END as
+		address_id,
+		t2.ed_channel_id,
+		t2.category_id,
+		t2.product_group_id,
+		t2.brand_id,
+		t2.materials_id,
+		t2.materials_desc,
+		t2.order_type_id,
+		t2.report_year_week,
+		CASE WHEN siou.quantity is null THEN (CASE WHEN
+		kb.quantity is null THEN
+		t2.T2_delivery_prediction ELSE kb.quantity
+		END) ELSE siou.quantity END
+		as si_quantity,
+		t2.price,
+		t2.price * (CASE
+		WHEN siou.quantity is null THEN (CASE WHEN kb.quantity is
+		null THEN
+		t2.T2_delivery_prediction ELSE kb.quantity END) ELSE
+		siou.quantity END)
+		as si_amount,
+		au.quantity as audit_quantity,
+		t2.price * au.quantity as
+		audit_amount,
+		t2.storage_id,
+		t2.storage_name,
+		t2.arrival_storage_desc,
+		CASE siou.slip_date WHEN DEFAULT(siou.slip_date) THEN '' ELSE
+		date_format(siou.slip_date,'%Y-%m-%d') END as bill_time_display,
+		t2.T2_delivery_prediction,
+		date_format(t2.request_arrive_date,'%Y-%m-%d') as
+		request_arrive_date_display,
+		CASE WHEN kb.leave_warehouse_time is null
+		THEN
+		date_format(siou.leave_warehouse_time,'%Y-%m-%d %H:%i:%S') ELSE
+		date_format(kb.leave_warehouse_time,'%Y-%m-%d %H:%i:%S') END as
+		actual_deliver_date_display,
+		date_format(au.latest_leavebase_time,'%Y-%m-%d') as
+		latest_leave_base_date_display,
+		au.factory_id as factory_id,
+		au.factory_name as factory_name,
+		t2.shipment_combination_id,
+		date_format(IFNULL(kb.arrival_time,siou.rrs_in_time),'%Y-%m-%d
+		%H:%i:%S') as rrs_in_time_display,
+		date_format(siou.rrs_out_time,'%Y-%m-%d %H:%i:%S') as
+		rrs_out_time_display,
+		siou.wa_in_num,
+		CASE siou.wa_in_time WHEN
+		DEFAULT(siou.wa_in_time) THEN '' ELSE
+		date_format(siou.wa_in_time,'%Y-%m-%d %H:%i:%S') END as
+		wa_in_time_display,
+		siou.tax_include_amount,
+		siou.receipt_quantity,
+		TRUNCATE(siou.tax_include_amount/siou.receipt_quantity,2) as
+		tax_price,
+		t2.channel_commit_user,
+		t2.audit_user,
+		t2.error_msg,
+		date_format(t2.audit_time,'%Y-%m-%d %H:%i:%S') as audit_time_display,
+		siou.order_close_user,
+		CASE siou.order_close_time WHEN
+		DEFAULT(siou.order_close_time) THEN ''
+		ELSE
+		date_format(siou.order_close_time,'%Y-%m-%d %H:%i:%S') END as
+		order_close_time_display
+		<include refid="findCgoOrderMultipleListSQLCond" />
+		order BY
+		t2.order_id
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<!-- xuelin.zhao -->
+	<select id="findCgoOrderListBySiou" parameterType="Map"
+		resultMap="cgoGenuineRejectDetailResult">
+		SELECT
+		ou.order_id,ou.source_order_id,ou.si_ou_slipNo,ou.flow_flag,ou.quantity,t2.materials_id
+		FROM
+		si_ou_info_t ou
+		left join leader_nb_return_order_t t2 on
+		ou.source_order_id =
+		t2.wp_order_id
+		WHERE
+		t2.delete_flag = 0 AND
+		t2.type="TS" and ou.bill_type=2
+		<if test="si_ou_slipNo_list !=null and si_ou_slipNo_list != ''">
+			AND ou.si_ou_slipNo in
+			<foreach item="item" index="index" collection="si_ou_slipNo_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="findCgoOrderMultipleListCNT" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findCgoOrderMultipleListSQLCond" />
+	</select>
+	<update id="updateCgoOrderStatus" parameterType="Map">
+		UPDATE
+		leader_nb_t2_order_t SET
+		flow_flag=3,channel_commit_user=#{commituser},channel_commit_time=CURRENT_TIMESTAMP(),error_msg=null
+		WHERE delete_flag = 0 AND type="TS" AND flow_flag = 0 AND order_id =
+		#{order_id}
+	</update>
+	<update id="deleteCgoOrderStatus" parameterType="Map">
+		UPDATE leader_nb_t2_order_t SET delete_flag =
+		1,delete_user=#{commituser},delete_time=CURRENT_TIMESTAMP()
+		WHERE
+		delete_flag = 0 AND type="TS" AND (flow_flag = 0 or flow_flag = 3 or
+		flow_flag = 10) AND order_id in
+		<foreach collection="deleteList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<insert id="insertCgoOrderList" parameterType="com.haier.purchase.data.model.CgoOrderItem">
+		INSERT INTO
+		leader_nb_t2_order_t
+		(storage_id,storage_name,materials_desc,T2_delivery_prediction,customization,satisfy_type_id,create_user,create_time,delete_flag,flow_flag,order_id,materials_id,category_id,ed_channel_id,product_group_id,report_year_week,brand_id,order_type_id,type,arrival_storage_desc,price,amount)
+		VALUES(#{storage_id},#{storage_name},#{materials_desc},#{t2_delivery_prediction},#{customization},#{satisfy_type_id},#{create_user},CURRENT_TIMESTAMP(),"0","0",#{order_id},#{materials_id},#{category_id},#{ed_channel_id},#{product_group_id},#{report_year_week},#{brand_id},#{order_type_id},"TS",#{arrival_storage_desc},#{price},#{amount})
+	</insert>
+	<update id="reviewCgoOrderList" parameterType="Map">
+		UPDATE leader_nb_t2_order_t SET
+		flow_flag=#{flow_flag},audit_user=#{audit_user},audit_time=CURRENT_TIMESTAMP(),audit_remark=#{audit_remark}
+		<if test="error_msg != null and error_msg != ''">
+			,error_msg=#{error_msg}
+		</if>
+		<if test="error_msg == null or error_msg == ''">
+			,error_msg=null
+		</if>
+		WHERE delete_flag = 0
+		<if test="reviewList != null and reviewList != ''">
+			AND order_id in
+			<foreach collection="reviewList" item="item" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</update>
+	<update id="reviewCgoOrderDepart" parameterType="Map">
+		UPDATE leader_nb_t2_order_t SET
+		flow_flag=#{flow_flag},audit_depart_user=#{audit_user},audit_depart_time=CURRENT_TIMESTAMP(),audit_depart_remark=#{audit_remark}
+		<if test="error_msg != null and error_msg != ''">
+			,error_msg=#{error_msg}
+		</if>
+		<if test="error_msg == null or error_msg == ''">
+			,error_msg=null
+		</if>
+		WHERE delete_flag = 0 AND type="TS" AND flow_flag = 3
+		<if test="reviewList != null and reviewList != ''">
+			AND order_id in
+			<foreach collection="reviewList" item="item" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</update>
+	<select id="getRowCnts" resultType="int">
+		SELECT
+		FOUND_ROWS();
+	</select>
+	<update id="updateCgoOrderRevokeFlag" parameterType="Map">
+		UPDATE leader_nb_t2_order_t SET flow_flag=-30
+		WHERE delete_flag = 0 AND
+		type="TS" AND order_id in
+		<foreach collection="revokeList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND (flow_flag = 20 or flow_flag = 30)
+	</update>
+	<update id="updateCgoOrderCount" parameterType="Map">
+		UPDATE
+		leader_nb_t2_order_t SET T2_delivery_prediction=#{modifycount},amount
+		= #{modifycount} * price
+		WHERE order_id =#{order_id} and (flow_flag=10
+		or flow_flag=3) AND type="TS"
+	</update>
+	<sql id="findCgoGenuineRejectListSQLCond">
+		FROM leader_nb_return_order_t t2 LEFT JOIN cgo_audit_info_t au on
+		t2.wp_order_id = au.source_order_id left join si_ou_info_t siou ON
+		t2.wp_order_id = siou.source_order_id
+		WHERE t2.delete_flag = 0 AND
+		t2.type="TS"
+		<if test="wp_order_id !=null and wp_order_id != ''">
+			AND UPPER(t2.wp_order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{wp_order_id})),'%')
+		</if>
+		<if test="request_user !=null and request_user != ''">
+			AND t2.request_user = #{request_user}
+		</if>
+		<if test="flow_flag !=null and flow_flag != ''">
+			AND ((siou.flow_flag is null AND t2.flow_flag =
+			#{flow_flag}) OR
+			(siou.flow_flag is not null AND siou.flow_flag =
+			#{flow_flag}))
+		</if>
+		<if test="commit_time_start !=null and commit_time_start != ''">
+			AND t2.commit_time >= #{commit_time_start}
+		</if>
+		<if test="commit_time_end !=null and commit_time_end != ''">
+			AND t2.commit_time &lt; #{commit_time_end}
+		</if>
+		<if test="brand !=null and brand != ''">
+			AND t2.brand_id = #{brand}
+		</if>
+		<if test="cbsCategory !=null and cbsCategory != ''">
+			AND t2.category_id in
+			<foreach item="item" index="index" collection="cbsCategory"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND t2.product_group_id in
+			<foreach item="item" index="index" collection="product_group_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(t2.materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="model_id !=null and model_id != ''">
+			AND UPPER(t2.model_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{model_id})),'%')
+		</if>
+		<if test="channel !=null and channel != ''">
+			AND t2.ed_channel_id in
+			<foreach item="item" index="index" collection="channel" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND UPPER(t2.storage_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{storage_id})),'%')
+		</if>
+		<if test="order_id !=null and order_id != ''">
+			AND UPPER(siou.order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{order_id})),'%')
+		</if>
+		<if test="wp_order_id_list!=null and wp_order_id_list!=''">
+			AND t2.wp_order_id in
+			<foreach item="item" index="index" collection="wp_order_id_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="order_id_list!=null and order_id_list!=''">
+			AND siou.order_id in
+			<foreach item="item" index="index" collection="order_id_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="si_ou_slipNo !=null and si_ou_slipNo != ''">
+			AND siou.si_ou_slipNo = #{si_ou_slipNo}
+		</if>
+	</sql>
+	<select id="findCgoGenuineRejectList" parameterType="Map"
+		resultMap="cgoGenuineRejectResult">
+		SELECT t2.wp_order_id,
+		CASE WHEN siou.flow_flag is null THEN (CASE WHEN
+		au.audit_result = 0 THEN
+		-110 ELSE t2.flow_flag END) ELSE
+		siou.flow_flag END as flow_flag,
+		siou.order_id,
+		date_format(siou.wa_out_time,'%Y-%m-%d %H:%i:%S') as
+		warehouse_out_time_display,
+		date_format(siou.rrs_in_time,'%Y-%m-%d
+		%H:%i:%S') as
+		warehouse_in_time_display,
+		date_format(t2.commit_time,'%Y-%m-%d %H:%i:%S') as
+		commit_time_display,
+		date_format(siou.syn_vom_time,'%Y-%m-%d %H:%i:%S')
+		as
+		delivery_time_display,
+		date_format(siou.slip_date,'%Y-%m-%d') as
+		slip_date_display,
+		t2.request_user,
+		t2.ed_channel_id,
+		t2.brand_id,
+		t2.product_group_id,
+		t2.category_id,
+		CASE WHEN siou.error_msg is null
+		THEN t2.error_msg ELSE siou.error_msg END
+		as error_msg,
+		t2.materials_id,
+		t2.model_id,
+		t2.storage_id,
+		t2.tax_in_price,
+		t2.quantity
+		as request_quantity,
+		CASE WHEN au.quantity is null THEN siou.quantity
+		ELSE au.quantity END as
+		permit_quantity,
+		siou.taxIncludeAmount,
+		t2.address,
+		t2.concat_person,
+		t2.concat_phone,
+		siou.si_ou_slipNo,
+		siou.vom_reverse_in_wa_no,
+		date_format(siou.reverse_syn_vom_time,'%Y-%m-%d %H:%i:%S')as
+		reverse_syn_vom_time_display,
+		date_format(siou.wa_in_time,'%Y-%m-%d
+		%H:%i:%S')as
+		wa_in_time_display
+		<include refid="findCgoGenuineRejectListSQLCond" />
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<select id="findCgoGenuineRejectListCNT" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findCgoGenuineRejectListSQLCond" />
+	</select>
+	<insert id="insertCgoGenuineRejectList" parameterType="com.haier.purchase.data.model.CgoGenuineRejectItemNew">
+		insert
+		into
+		leader_nb_return_order_t
+		(wp_order_id,request_user,brand_id,category_id,product_group_id,materials_id,model_id,ed_channel_id,storage_id,quantity,tax_in_price,create_user,create_time,delete_flag,flow_flag,address,concat_person,concat_phone,type)
+		values(#{wp_order_id},#{request_user},#{brand_id},#{category_id},#{product_group_id},#{materials_id},#{model_id},#{ed_channel_id},UPPER(#{storage_id}),#{quantity},#{tax_in_price},#{create_user},current_timeStamp,'0','100',#{address},#{concat_person},#{concat_phone},"TS")
+	</insert>
+	<update id="deleteCgoGenuineRejectStatus" parameterType="Map">
+		UPDATE leader_nb_return_order_t SET delete_flag =
+		1,delete_user=#{commituser},delete_time=CURRENT_TIMESTAMP()
+		WHERE
+		delete_flag = 0 AND flow_flag = 100 AND wp_order_id in
+		<foreach collection="deleteList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="updateCgoGenuineRejectStatus" parameterType="Map">
+		UPDATE leader_nb_return_order_t SET flow_flag=110
+		WHERE delete_flag = 0
+		AND flow_flag = 100 AND wp_order_id in
+		<foreach collection="commitList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="updateCgoGenuineRejectCommitTime" parameterType="Map">
+		UPDATE leader_nb_return_order_t SET commit_time=CURRENT_TIMESTAMP()
+		WHERE delete_flag = 0 AND flow_flag = 100 AND commit_time is null and
+		wp_order_id in
+		<foreach collection="commitList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="revokeCgoGenuineRejectStatus" parameterType="com.haier.purchase.data.model.CgoGenuineRejectItemNew">
+		UPDATE
+		leader_nb_return_order_t SET
+		flow_flag=#{flow_flag},error_msg=#{error_msg},revoke_flag=1
+		WHERE
+		delete_flag = 0 AND flow_flag = 110 AND wp_order_id = #{wp_order_id}
+
+	</update>
+	<!-- xuelin.zhao -->
+	<update id="cancelCgoGenuineRejectStatus" parameterType="Map">
+		UPDATE leader_nb_return_order_t SET flow_flag=-120
+		WHERE delete_flag =
+		0 AND ( flow_flag = 140 or flow_flag = 110 or flow_flag = 135 or
+		flow_flag = 120 or flow_flag = 130) AND wp_order_id in
+		<foreach collection="cancelList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="exwarehouseCgoGenuineRejectStatus" parameterType="Map">
+		UPDATE leader_nb_return_order_t SET
+		<choose>
+			<when test="flow_flag != null and flow_flag != ''">
+				flow_flag=#{flow_flag}
+			</when>
+			<otherwise>
+				flow_flag=140,delivery_time=CURRENT_TIMESTAMP()
+			</otherwise>
+		</choose>
+		<if test="error_msg != null and error_msg != ''">
+			,error_msg = #{error_msg}
+		</if>
+		WHERE delete_flag = 0 AND flow_flag = 135 AND wp_order_id in
+		<foreach collection="exwarehouseList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<sql id="findCgoGenuineRejectDetailListSQLCond">
+		FROM si_ou_info_t ou left join cgo_audit_info_t au on ou.si_ou_slipNo
+		= au.order_id
+		WHERE ou.bill_type="2"
+		<if test="source_order_id!=null and source_order_id!='' ">
+			AND ou.source_order_id=#{source_order_id}
+		</if>
+		<if test="wp_order_id_list!=null and wp_order_id_list!=''">
+			AND ou.source_order_id in
+			<foreach item="item" index="index" collection="wp_order_id_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="flow_flag!=null and flow_flag!=''">
+			AND ou.flow_flag =#{flow_flag}
+		</if>
+	</sql>
+	<select id="findCgoGenuineRejectDetailList" parameterType="Map"
+		resultMap="cgoGenuineRejectDetailResult">
+		SELECT ou.order_id,
+		ou.source_order_id,
+		ou.si_ou_slipNo,
+		ou.quantity,
+		ou.tax_include_amount,
+		DATE_FORMAT(ou.slip_date,'%Y-%m-%d')
+		slip_date_display,
+		ou.location_code,
+		ou.flow_flag,
+		au.audit_result,
+		au.remark,
+		date_format(au.audit_time,'%Y-%m-%d %H:%i:%S')
+		audit_time_display
+		<include refid="findCgoGenuineRejectDetailListSQLCond" />
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<select id="findCgoGenuineRejectDetailListCNT" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findCgoGenuineRejectDetailListSQLCond" />
+	</select>
+	<update id="updateCgoOrderStatusFrom20" parameterType="Map">
+		UPDATE leader_nb_t2_order_t SET
+		flow_flag=#{flow_flag},error_msg=#{error_msg},request_arrive_date=#{request_arrive_date}
+		<if test="request_arrive_date==null">
+			,audit_user=null,audit_time=null,audit_remark=null
+		</if>
+		WHERE order_id =#{order_id}
+	</update>
+	<update id="updateCgoOrderStatusFrom30" parameterType="Map">
+		UPDATE leader_nb_t2_order_t SET flow_flag=#{flow_flag}
+		WHERE order_id
+		=#{order_id}
+		<if test="flow_flag!=null and flow_flag!=40">
+			and flow_flag=30
+		</if>
+	</update>
+	<update id="updateCgoTuiOrderStatusFrom30" parameterType="Map">
+		UPDATE leader_nb_return_order_t SET flow_flag=#{flow_flag}
+		WHERE
+		wp_order_id =#{order_id}
+		<if test="flow_flag!=null and flow_flag!=120">
+			and flow_flag=110
+		</if>
+	</update>
+	<update id="updateOrderStatusByOrderID" parameterType="Map">
+		UPDATE leader_nb_t2_order_t SET flow_flag=#{flow_flag}
+		<if test="prescription!=null and prescription!=''">
+			,latest_leave_base_date =
+			DATE_ADD(request_arrive_date,INTERVAL #{prescription} DAY)
+		</if>
+		WHERE order_id =#{order_id}
+		<![CDATA[ and ((flow_flag >= 0  and flow_flag <= #{flow_flag}) or (flow_flag >=0 and #{flow_flag} < 0))]]>
+	</update>
+
+	<select id="getMaxFlowFlagFromCGO" parameterType="Map"
+		resultType="java.lang.Integer">
+		select max(flow_flag) from si_ou_info_t t
+		where
+		t.source_order_id=(select source_order_id t2 from si_ou_info_t t2
+		where
+		t2.order_id=#{order_id}) group by source_order_id
+	</select>
+	<update id="updateRejectOrderStatusByOrderID" parameterType="Map">
+		UPDATE leader_nb_return_order_t SET flow_flag=#{flow_flag}
+		WHERE
+		wp_order_id =#{order_id}
+		<![CDATA[ and flow_flag >= 0  and flow_flag <= #{flow_flag}]]>
+	</update>
+
+	<update id="updateOrderErrorMessage" parameterType="Map">
+		UPDATE
+		leader_nb_t2_order_t SET error_msg=#{error_msg}
+		WHERE order_id
+		=#{order_id}
+	</update>
+	<update id="updateRejectOrderErrorMessage" parameterType="Map">
+		UPDATE
+		leader_nb_return_order_t SET error_msg=#{error_msg}
+		WHERE wp_order_id
+		=#{order_id}
+	</update>
+	<select id="getOnwayNumByCateChan" resultType="com.haier.purchase.data.model.CgoOrderItem">
+		SELECT
+		category_id,ed_channel_id,sum(t2_delivery_prediction * price) as
+		amount
+		FROM
+		leader_nb_t2_order_t
+		WHERE
+		delete_flag = 0
+		<if test="category_id!=null and category_id!=''">
+			AND category_id = #{category_id}
+		</if>
+		<if test="ed_channel_id!=null and ed_channel_id!=''">
+			AND ed_channel_id = #{ed_channel_id}
+		</if>
+		AND flow_flag IN (50, 60)
+		group by category_id,ed_channel_id
+	</select>
+	<select id="getUsedNumByCateChan" resultType="com.haier.purchase.data.model.CgoOrderItem">
+		SELECT
+		category_id,ed_channel_id,sum(t2_delivery_prediction * price) as
+		amount
+		FROM
+		leader_nb_t2_order_t
+		WHERE
+		delete_flag = 0
+		<if test="report_year_week!=null and report_year_week!=''">
+			AND report_year_week = #{report_year_week}
+		</if>
+		<if test="category_id!=null and category_id!=''">
+			AND category_id = #{category_id}
+		</if>
+		<if test="ed_channel_id!=null and ed_channel_id!=''">
+			AND ed_channel_id = #{ed_channel_id}
+		</if>
+		AND ((type='TS' and flow_flag in (10,20,30,40)) or (type='NB' and
+		flow_flag in (10,20,40)))
+		group by category_id,ed_channel_id
+	</select>
+	<update id="updateByQty" parameterType="com.haier.purchase.data.model.CgoOrderItem">
+		UPDATE
+		leader_nb_t2_order_t SET error_msg=#{error_msg}
+		WHERE
+		delete_flag = 0
+		AND order_id = #{order_id}
+	</update>
+	<update id="updatePrice" parameterType="com.haier.purchase.data.model.CgoOrderItem">
+		UPDATE
+		leader_nb_t2_order_t SET price=#{price},amount=#{amount}
+		WHERE
+		delete_flag = 0 AND order_id = #{order_id}
+	</update>
+	<!-- tie.liu start -->
+	<select id="findCgoOrderRejectList" parameterType="Map"
+		resultMap="cgoOrderRejectResult">
+		SELECT
+		a.order_id,
+		a.source_order_id,
+		b.storage_id,
+		b.materials_id,
+		b.category_id,
+		a.quantity,
+		a.vom_reverse_in_wa_no
+		FROM
+		si_ou_info_t a
+		inner join leader_nb_return_order_t b on
+		a.source_order_id = b.wp_order_id
+		where a.si_ou_slipNo = #{siOuNo}
+		and
+		a.bill_type = '2'
+	</select>
+	<!-- tie.liu end -->
+	<update id="updateSiOuInfoErrorMessage" parameterType="Map">
+		UPDATE
+		si_ou_info_t SET error_msg=#{error_msg}
+		WHERE order_id =#{order_id}
+	</update>
+	<select id="findCgoGenuineRejectListByWporderid" parameterType="Map"
+		resultMap="cgoGenuineRejectDetailResult">
+		SELECT wp_order_id as order_id, wp_order_id as
+		source_order_id,flow_flag, materials_id,quantity
+		FROM
+		leader_nb_return_order_t
+		WHERE delete_flag=0 AND type="TS"
+		<if test="wp_order_id_list!=null and wp_order_id_list!=''">
+			AND wp_order_id in
+			<foreach item="item" index="index" collection="wp_order_id_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="getTSOrderInfo" parameterType="Map" resultMap="cgoOrderResult">
+		select
+		order_id,
+		type,
+		report_year_week,
+		ed_channel_id,
+		product_group_id,
+		category_id,
+		brand_id,
+		storage_id,
+		storage_name,
+		materials_id,
+		materials_desc,
+		T2_delivery_prediction,
+		price,
+		amount,
+		customization,
+		satisfy_type_id,
+		order_type_id,
+		create_user,
+		create_time,
+		modify_user,
+		modify_time,
+		delete_user,
+		delete_time,
+		delete_flag,
+		revoke_flag,
+		flow_flag,
+		error_msg,
+		audit_user,
+		audit_time,
+		audit_remark,
+		channel_commit_time,
+		channel_commit_user,
+		sell_id,
+		arrive_id,
+		request_arrive_date,
+		plan_deliver_date,
+		actual_deliver_date,
+		predict_arrive_date,
+		shipment_combination_id,
+		cgo_order_id,
+		commit_time,
+		arrival_storage_desc,
+		factory_id,
+		factory_name,
+		latest_leave_base_date,
+		order_close_time,
+		order_close_user
+		from leader_nb_t2_order_t
+		where 1=1
+		<if test="order_id !=null and order_id != ''">
+			and order_id = #{order_id}
+		</if>
+	</select>
+
+	<select id="findRequestArrivalTime" parameterType="Map"
+		resultType="java.lang.String">
+		select request_arrive_date
+		from leader_nb_t2_order_t
+		where 1=1
+		<if test="order_id !=null and order_id != ''">
+			and order_id = #{order_id}
+		</if>
+	</select>
+	<update id="updateStatusInfo"
+		parameterType="com.haier.purchase.data.model.PurchaseT2AuditResultFromCGO">
+		update cgo_audit_info_t
+		<set>
+			<if test="factory_id != null and factory_id != ''">
+				`factory_id`=#{factory_id},
+			</if>
+			<if test="factory_name != null and factory_name != ''">
+				`factory_name`=#{factory_name},
+			</if>
+			<if
+				test="prescription != null and prescription != '' and request_arrive_date != null and request_arrive_date != ''">
+				`latest_leavebase_time`=DATE_ADD(#{request_arrive_date},INTERVAL
+				#{prescription} DAY),
+			</if>
+			<if test="order_type != null and order_type != ''">
+				order_type = #{order_type}
+			</if>
+		</set>
+		where order_id = #{splitted_order_id}
+		<if test="order_types != null">
+			and (order_type is null or order_type in
+			<foreach collection="order_types" item="order_type" open="("
+				close=")" separator=",">
+				#{order_type}
+			</foreach>
+			)
+		</if>
+	</update>
+	
+	
+	
+	<!-- 单元测试使用 ，不要在正式环境中使用，切记-->
+	<update id="insertOrUpdateSiOrderInfo" parameterType="com.haier.purchase.data.model.CreateSiOuInfoVO">
+		insert into si_ou_info_t(
+			order_id,
+			source_order_id,
+			si_ou_slipNo,
+			si_ou_slipLineNo,
+			bill_type,
+			slip_date,
+			company_id,
+			mdm_partsCode,
+			quantity,
+			taxIncludeAmount,
+			taxExcludeAmount,
+			rejectFlag,
+			busi_company_id,
+			leave_warehouse_time,
+			location_code,
+			si_ou_status,
+			tax_exclude_amount,
+			receipt_quantity,
+			invoice_no,
+			sys_invoice_date,
+			invoice_status,
+			delete_date,
+			flow_flag,
+			cust_unit_code,
+			address_id,
+			supplier
+		) values (
+		<choose>
+			<when test="custom_purchase_id != null and custom_purchase_id != ''">#{custom_purchase_id},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="source_order_id != null and source_order_id != ''">#{source_order_id},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="siOuSlipNo != null and siOuSlipNo != ''">#{siOuSlipNo},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="siOuSlipLineNo != null and siOuSlipLineNo != ''">#{siOuSlipLineNo},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="billType != null and billType != ''">#{billType},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="slip_date != null and slip_date != ''">str_to_date(#{slip_date}, '%Y-%m-%d'),</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="companyId != null and companyId != ''">#{companyId},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="mdm_partsCode != null and mdm_partsCode != ''">#{mdm_partsCode},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="quantity != null and quantity != ''">#{quantity},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="taxIncludeAmount != null and taxIncludeAmount != ''">#{taxIncludeAmount},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="taxExcludeAmount != null and taxExcludeAmount != ''">#{taxExcludeAmount},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="rejectFlag != null and rejectFlag != ''">#{rejectFlag},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="busi_company_id != null and busi_company_id != ''">#{busi_company_id},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="leave_warehouse_time != null and leave_warehouse_time != ''">#{leave_warehouse_time},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="location_code != null and location_code != ''">#{location_code},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="si_ou_status != null and si_ou_status != ''">#{si_ou_status},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="tax_exclude_amount != null and tax_exclude_amount != ''">#{tax_exclude_amount},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="receipt_quantity != null and receipt_quantity != ''">#{receipt_quantity},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="invoice_no != null and invoice_no != ''">#{invoice_no},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="sys_invoice_date != null and sys_invoice_date != ''">str_to_date(#{sys_invoice_date}, '%Y-%m-%d'),</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="invoice_status != null and invoice_status != ''">#{invoice_status},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="delete_date != null and delete_date != ''">str_to_date(#{delete_date}, '%Y-%m-%d'),</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="flow_flag != null and flow_flag != ''">#{flow_flag},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="cust_unit_code != null and cust_unit_code != ''">#{cust_unit_code},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="address_id != null and address_id != ''">#{address_id},</when>
+			<otherwise>NULL,</otherwise>
+		</choose>
+		<choose>
+			<when test="supplier != null and supplier != ''">#{supplier}</when>
+			<otherwise>'DBM'</otherwise>
+		</choose>		
+		) ON DUPLICATE KEY UPDATE 
+		bill_type = VALUES(bill_type)
+		<if test="slip_date != null and slip_date != ''">
+			,slip_date = VALUES(slip_date)
+		</if>
+		<if test="companyId != null and companyId != ''">
+	        ,company_id = VALUES(company_id)
+        </if>
+		<if test="mdm_partsCode != null and mdm_partsCode != ''">
+        	,mdm_partsCode = VALUES(mdm_partsCode)
+        </if>
+		<if test="quantity != null and quantity !=''">
+			,quantity = VALUES(quantity)
+		</if>
+		<if test="taxIncludeAmount != null and taxIncludeAmount !=''">
+			,taxIncludeAmount = VALUES(taxIncludeAmount)
+		</if>
+		<if test="taxExcludeAmount != null and taxExcludeAmount !=''">
+			,taxExcludeAmount = VALUES(taxExcludeAmount)
+		</if>
+		<if test="rejectFlag != null and rejectFlag != ''">
+		    ,rejectFlag = VALUES(rejectFlag)
+        </if>
+        <if test="custom_purchase_id != null and custom_purchase_id != ''">
+		    ,order_id = VALUES(order_id)
+		</if>
+		<if test="source_order_id != null and source_order_id != ''">
+		    ,source_order_id = VALUES(source_order_id)
+		</if>
+		<if test="flow_flag != null and flow_flag != ''">
+		    ,flow_flag = VALUES(flow_flag)
+		</if>
+		<if test="cust_unit_code != null and cust_unit_code != ''">
+		    ,cust_unit_code = VALUES(cust_unit_code)
+		</if>
+		<if test="address_id != null and address_id != ''">
+		    ,address_id = VALUES(address_id)
+		</if>
+	</update>
+</mapper>

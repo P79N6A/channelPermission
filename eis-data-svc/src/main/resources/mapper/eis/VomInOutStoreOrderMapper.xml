@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.VomInOutStoreOrderDao">
+    <resultMap id="vomInOutStoreOrderResult" type="com.haier.eis.model.VomInOutStoreOrder">
+        <result property="id" column="id"/>
+        <result property="receivedId" column="received_id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="expNo" column="exp_no"/>
+        <result property="busType" column="bus_type"/>
+        <result property="orderType" column="order_type"/>
+        <result property="outInDate" column="out_in_date"/>
+        <result property="storeCode" column="store_code"/>
+        <result property="isComplete" column="is_complete"/>
+        <result property="remark" column="remark"/>
+        <result property="certification" column="certification"/>
+        <result property="remark1" column="remark1"/>
+        <result property="remark2" column="remark2"/>
+        <result property="remark3" column="remark3"/>
+        <result property="processStatus" column="process_status"/>
+        <result property="delay" column="delay"/>
+        <result property="addTime" column="add_time"/>
+    </resultMap>
+    <select id="getByProcessStatus" parameterType="Integer" resultMap="vomInOutStoreOrderResult">
+        SELECT
+            `id`,
+            `received_id`,
+            `order_no`,
+            `exp_no`,
+            `bus_type`,
+            `order_type`,
+            `out_in_date`,
+            `store_code`,
+            `is_complete`,
+            `remark`,
+            `certification`,
+            `remark1`,
+            `remark2`,
+            `remark3`,
+            `process_status`,
+            `delay`
+        FROM `vom_in_out_store_order`
+        WHERE `process_status` = #{process_status} AND `delay` = #{delay} AND not instr(`order_no`, 'TC' )>0
+        LIMIT 500
+    </select>
+    
+    <select id="findInTime" parameterType="Integer" resultMap="vomInOutStoreOrderResult">
+       SELECT 
+       order_no,
+       add_time 
+       from vom_in_out_store_order
+		where bus_type = '2'
+    </select>
+<insert id="insert" parameterType="com.haier.eis.model.VomInOutStoreOrder" >
+    
+    insert into
+    `vom_in_out_store_order`(`id`,`received_id`,`order_no`,`exp_no`,`bus_type`,`order_type`,`out_in_date`,`store_code`,`is_complete`,`remark`,`certification`,`remark1`,`remark2`,`remark3`,`process_status`,`delay`,`add_time`)
+    values(#{id},#{receivedId},#{orderNo},#{expNo},#{busType},#{orderType},#{outInDate},#{storeCode},#{isComplete},#{remark},#{certification},#{remark1},#{remark2},#{remark3},#{processStatus},#{delay},#{addTime})
+<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer" >
+    SELECT LAST_INSERT_ID() 
+    </selectKey>
+    </insert>
+    <update id="updateProcessStatus">
+        UPDATE `vom_in_out_store_order`
+        SET
+            `process_status` = #{process_status_update_to}, `process_time` = now(), `message` = ''
+        WHERE `id` = #{id} AND `process_status` = #{process_status_update_from}
+    </update>
+    <update id="setDelay">
+        UPDATE `vom_in_out_store_order`
+        SET
+            `delay` = 1, `message` = #{msg}, `process_time` = now()
+        WHERE `id` = #{id}
+    </update>
+    
+    <select id="getByProcessStatus3W" parameterType="Integer" resultMap="vomInOutStoreOrderResult">
+        SELECT
+            `id`,
+            `received_id`,
+            `order_no`,
+            `exp_no`,
+            `bus_type`,
+            `order_type`,
+            `out_in_date`,
+            `store_code`,
+            `is_complete`,
+            `remark`,
+            `certification`,
+            `remark1`,
+            `remark2`,
+            `remark3`,
+            `process_status`,
+            `delay`
+        FROM `vom_in_out_store_order`
+        WHERE `process_status` = #{process_status} AND `delay` = #{delay} AND instr(`order_no`, 'TC' )>0
+        LIMIT 500
+    </select>
+    
+    <select id="queryVomInOut" resultType="int" parameterType="java.lang.String">
+	SELECT
+		count(*)
+	FROM
+		vom_in_out_store_order o,
+		vom_in_out_store_item s
+	WHERE
+		o.id = s.order_id
+		and s.storage_type='22'
+		and o.bus_type='2'
+		and order_no =#{orderNo}
+    </select>
+</mapper>

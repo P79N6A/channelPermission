@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--广播注册中心暴露服务地址 -->
+  <!--  <dubbo:registry id="demoRegistry" address="zookeeper://127.0.0.1:2181"/>-->
+    <!--  暴露服务 -->
+
+    <dubbo:service retries="0" interface="com.haier.system.service.SysAccessLogService"
+                   ref="sysAccessLogServiceImpl" version="1.0.0" timeout="1200000" />
+
+    <dubbo:service retries="0" interface="com.haier.system.service.SysActionService"
+                   ref="sysActionServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.system.service.SysMenuService"
+                   ref="sysMenuServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.system.service.SysPermissionService"
+                   ref="sysPermissionServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.system.service.SysRoleService"
+                   ref="sysRoleServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.system.service.SysSessionService"
+                   ref="sysSessionServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.system.service.SysUserRoleService"
+                   ref="sysUserRoleServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.system.service.SysUserService"
+                   ref="sysUserServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.system.service.BaseErrService"
+                   ref="baseErrServiceImpl" version="1.0.0" timeout="1200000"/>
+                   
+    <dubbo:service retries="0" interface="com.haier.system.service.PlanInDateService"
+                   ref="planInDateServiceImpl" version="1.0.0" timeout="1200000"/>
+
+</beans>

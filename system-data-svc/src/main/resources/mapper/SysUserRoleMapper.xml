@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.system.dao.SysUserRoleDao">
+	<resultMap id="SysUserRoleResult" type="com.haier.system.model.SysUserRole">
+		<result property="userRoleId" column="user_role_id" />
+		<result property="userId" column="user_id" />
+		<result property="roleId" column="role_id" />
+		<result property="startTime" column="start_time" />
+		<result property="endTime" column="end_time" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="SysUserRoleResult">
+		select `user_role_id`,`user_id`,`role_id`,`start_time`,`end_time`,`update_user`,`update_time`
+		from `sys_user_role`
+		where `user_role_id` = #{userRoleId}
+	</select>
+	<insert id="insert" parameterType="com.haier.system.model.SysUserRole">
+		insert into `sys_user_role`(`user_id`,`role_id`,`start_time`,`end_time`,`update_user`,`update_time`)
+		values(#{userId},#{roleId},#{startTime},#{endTime},#{updateUser},#{updateTime})
+	</insert>
+	<update id="update" parameterType="com.haier.system.model.SysUserRole">
+		update `sys_user_role` set `user_id`=#{userId},`role_id`=#{roleId},`start_time`=#{startTime},`end_time`=#{endTime},`update_user`=#{updateUser},`update_time`=#{updateTime}
+		where `user_role_id` = #{userRoleId}
+	</update>
+</mapper>

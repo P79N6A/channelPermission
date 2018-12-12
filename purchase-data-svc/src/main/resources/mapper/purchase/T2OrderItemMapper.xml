@@ -1,0 +1,1626 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.T2OrderDao">
+	<resultMap id="t2OrderResult" type="com.haier.purchase.data.model.T2OrderItem">
+		<result property="storage_id" column="storage_id" />
+		<result property="storage_name" column="storage_name" />
+		<result property="industry_trade_id" column="industry_trade_id" />
+		<result property="industry_trade_desc" column="industry_trade_desc" />
+		<result property="custom_id" column="custom_id" />
+		<result property="custom_desc" column="custom_desc" />
+		<result property="transmit_id" column="transmit_id" />
+		<result property="transmit_desc" column="transmit_desc" />
+		<result property="distribution_center_id" column="distribution_center_id" />
+		<result property="distribution_center_desc" column="distribution_center_desc" />
+		<result property="arrival_storage_id" column="arrival_storage_id" />
+		<result property="arrival_storage_desc" column="arrival_storage_desc" />
+		<result property="materials_desc" column="materials_desc" />
+		<result property="t2_delivery_prediction" column="T2_delivery_prediction" />
+		<result property="customization" column="customization" />
+		<result property="order_id" column="order_id" />
+		<result property="oms_order_id" column="oms_order_id" />
+		<result property="order_num" column="order_num" />
+		<result property="status" column="status" />
+		<result property="count" column="count" />
+		<result property="price" column="price" />
+		<result property="amount" column="amount" />
+		<result property="latest_arrive_date_display" column="latest_arrive_date_display" />
+		<result property="plan_deliver_date_display" column="plan_deliver_date_display" />
+		<result property="promise_arrive_date_display" column="promise_arrive_date_display" />
+		<result property="actual_deliver_date_display" column="actual_deliver_date_display" />
+		<result property="predict_arrive_date_display" column="predict_arrive_date_display" />
+		<result property="dn_create_date_display" column="dn_create_date_display" />
+		<result property="industry_trade_take_date_display" column="industry_trade_take_date_display" />
+		<result property="industry_trade_deliver_date_display" column="industry_trade_deliver_date_display" />
+		<result property="custom_sign_date_display" column="custom_sign_date_display" />
+		<result property="return_order_date_display" column="return_order_date_display" />
+		<result property="satisfy_type_id" column="satisfy_type_id" />
+		<result property="shipment_combination_id" column="shipment_combination_id" />
+		<result property="sign_num" column="sign_num" />
+		<result property="arrive_delay_days" column="arrive_delay_days" />
+		<result property="trans_delay_days" column="trans_delay_days" />
+		<result property="no_pass_reason" column="no_pass_reason" />
+		<result property="order_type_id" column="order_type_id" />
+		<result property="take_type_id" column="take_type_id" />
+		<result property="gvs_order_id" column="gvs_order_id" />
+		<result property="dn_id" column="dn_id" />
+		<result property="confirm_order_time_display" column="confirm_order_time_display" />
+		<result property="order_close_time_display" column="order_close_time_display" />
+		<result property="channel_commit_time_display" column="channel_commit_time_display" />
+		<result property="rrs_order_flag" column="rrs_order_flag" />
+		<result property="channel_price" column="channel_price" />
+		<result property="delete_flag" column="delete_flag" />
+		<result property="flow_flag" column="flow_flag" />
+		<result property="channel_commit_user" column="channel_commit_user" />
+		<result property="revoke_flag" column="revoke_flag" />
+		<result property="error_msg" column="error_msg" />
+		<result property="audit_remark" column="audit_remark" />
+		<result property="report_year_week" column="report_year_week" />
+		<result property="ed_channel_id" column="ed_channel_id" />
+		<result property="product_group_id" column="product_group_id" />
+		<result property="materials_id" column="materials_id" />
+		<result property="brand_id" column="brand_id" />
+		<result property="series_id" column="series_id" />
+		<result property="oms_order_type" column="oms_order_type" />
+		<result property="factory_id" column="factory_id" />
+		<result property="factory_name" column="factory_name" />
+		<result property="commit_time_display" column="commit_time_display" />
+		<result property="WAamount" column="WAamount" />
+		<result property="WAqty" column="WAqty" />
+		<result property="WAtotal" column="WAtotal" />
+		<result property="category_id" column="category_id" />
+		<result property="audit_user" column="audit_user" />
+		<result property="audit_time_display" column="audit_time_display" />
+		<result property="order_close_user" column="order_close_user" />
+		<result property="order_category" column="order_category" />
+		<result property="audit_depart_user" column="audit_depart_user" />
+		<result property="audit_depart_time_display" column="audit_depart_time_display" />
+		<result property="audit_depart_remark" column="audit_depart_remark" />
+		<result property="importCount" column="IMPORT_COUNT" />
+		<result property="relevanceId" column="RELEVANCE_ID" />
+		<result property="cancelOrderId" column="CANCEL_ORDER_ID" />
+		<result property="cancelFlag" column="CANCEL_FLAG" />
+		<result property="waInTime" column="wa_in_time" />
+		<result property="mblnr" column="MBLNR" />
+	</resultMap>
+	<resultMap id="crmOrderResult" type="com.haier.purchase.data.model.CrmOrderItem">
+		<result property="order_id" column="order_id" />
+		<result property="t2_delivery_prediction" column="T2_delivery_prediction" />
+		<result property="po_id" column="po_id" />
+		<result property="bill_order_id" column="bill_order_id" />
+		<result property="bill_time" column="bill_time" jdbcType="TIMESTAMP"
+			typeHandler="org.apache.ibatis.type.DateTypeHandler" />
+		<result property="so_id" column="so_id" />
+		<result property="dn_id" column="dn_id" />
+		<result property="ed_channel_id" column="ed_channel_id" />
+		<result property="product_group_id" column="product_group_id" />
+		<result property="materials_id" column="materials_id" />
+		<result property="materials_desc" column="materials_desc" />
+		<result property="amount" column="amount" />
+		<result property="qty" column="qty" />
+		<result property="total" column="total" />
+		<result property="bate_rate" column="bate_rate" />
+		<result property="flow_flag" column="flow_flag" />
+		<result property="rrs_out_time" column="rrs_out_time" jdbcType="TIMESTAMP"
+			typeHandler="org.apache.ibatis.type.DateTypeHandler" />
+		<result property="wa_in_time" column="wa_in_time" jdbcType="TIMESTAMP"
+			typeHandler="org.apache.ibatis.type.DateTypeHandler" />
+		<result property="storage_id" column="storage_id" />
+		<result property="brand_id" column="brand_id" />
+		<result property="category_id" column="category_id" />
+		<result property="bill_time_display" column="bill_time_display" />
+		<result property="rrs_out_time_display" column="rrs_out_time_display" />
+		<result property="wa_in_time_display" column="wa_in_time_display" />
+		<result property="price" column="price" />
+		<result property="t2_amount" column="t2_amount" />
+		<result property="shipment_combination_id" column="shipment_combination_id" />
+		<result property="custpodetailcode" column="custpodetailcode" />
+
+		<result property="subscribe_code" column="subscribe_code" />
+		<result property="push_sap_resoult" column="push_sap_resoult" />
+		<result property="w3_local_code" column="3w_local_code" />
+		<result property="sign_num" column="sign_num" />
+		<result property="import_date" column="import_date" />
+		<result property="sign_date" column="sign_date" />
+		<result property="jcode" column="jcode" />
+	</resultMap>
+	<sql id="findT2OrdersSQLCond">
+		FROM
+		haier_t2_order_t
+		WHERE
+		delete_flag = 0
+		<if test="report_year_week !=null and report_year_week != ''">
+			AND report_year_week = #{report_year_week}
+		</if>
+		<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND ed_channel_id = #{ed_channel_id}
+			<!-- AND ed_channel_id in -->
+			<!-- <foreach item="item" index="index" collection="ed_channel_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND product_group_id = #{product_group_id}
+			<!-- AND product_group_id in -->
+			<!-- <foreach item="item" index="index" collection="product_group_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="cbsCategory !=null and cbsCategory != ''">
+			AND category_id = #{cbsCategory}
+			<!-- AND category_id in -->
+			<!-- <foreach item="item" index="index" collection="cbsCategory" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="order_id !=null and order_id != ''">
+			AND UPPER(order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{order_id})),'%')
+		</if>
+		<if test="order_idList !=null">
+			AND order_id in
+			<foreach collection="order_idList" item="item" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND UPPER(storage_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{storage_id})),'%')
+		</if>
+		<if test="flow_flag !=null">
+			AND flow_flag in
+			<foreach item="item" index="index" collection="flow_flag"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="order_category !=null and order_category != ''">
+			AND order_category = #{order_category}
+		</if>
+		<if test="order_list !=null">
+			AND order_id in
+			<foreach item="item" index="index" collection="order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</sql>
+	<select id="findT2Orders" parameterType="Map" resultMap="t2OrderResult">
+		SELECT storage_id,
+		report_year_week,
+		ed_channel_id,
+		product_group_id,
+		materials_id,
+		materials_desc,
+		order_id,
+		count,
+		delete_flag,
+		flow_flag,
+		order_category,
+		T2_delivery_prediction,
+		customization,
+		satisfy_type_id,
+		order_type_id,
+		category_id,
+		error_msg,
+		brand_id,
+		price,
+		amount,
+		channel_commit_user,
+		payment_id,
+		storage_id,
+		transmit_id,
+		distribution_center_id,
+		date_format(predict_arrive_date,'%Y-%m-%d
+		%H:%i:%S') as
+		predict_arrive_date_display,
+		date_format(channel_commit_time,'%Y-%m-%d %H:%i:%S') as
+		channel_commit_time_display,
+		date_format(audit_time,'%Y-%m-%d
+		%H:%i:%S') as audit_time_display,
+		audit_user,
+		date_format(audit_depart_time,'%Y-%m-%d %H:%i:%S') as
+		audit_depart_time_display,
+		audit_depart_user,
+		import_count,
+		cancel_order_id,
+		cancel_flag
+		<include refid="findT2OrdersSQLCond" />
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<select id="findT2OrdersCNT" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findT2OrdersSQLCond" />
+	</select>
+	<select id="findT2OrdersSum" parameterType="Map" resultMap="t2OrderResult">
+		SELECT m.ed_channel_id,
+		m.category_id,
+		t2.t2Qty as
+		T2_delivery_prediction,
+		t3.t3Qty as count,
+		m.acc_rate as amount
+		FROM
+		materials_acc_rate_gate_t m left join (select
+		category_id,ed_channel_id,sum(T2_delivery_prediction) as t2Qty
+		from
+		haier_t2_order_t
+		where delete_flag =0 and report_year_week =
+		#{T2_report_year_week} and
+		flow_flag >=5 and
+		materials_id=#{materials_id} and
+		ed_channel_id=#{ed_channel_id}
+		group by
+		ed_channel_id,category_id) t2
+		on m.category_id = t2.category_id and
+		m.ed_channel_id = t2.ed_channel_id
+		left join (select
+		ed_channel_id,category_id,sum(T3_require_prediction)
+		as t3Qty
+		from
+		haier_t3_prediction_t
+		where delete_flag = 0 and report_year_week =
+		#{T3_report_year_week} and
+		flow_flag=2 and materials_id=#{materials_id}
+		and
+		ed_channel_id=#{ed_channel_id}
+		group by ed_channel_id,category_id)
+		t3
+		on m.category_id = t3.category_id and m.ed_channel_id =
+		t3.ed_channel_id
+		WHERE
+		m.is_enabled = 1
+		and m.category_id=#{category_id}
+		and m.ed_channel_id=#{ed_channel_id}
+	</select>
+	<update id="updateByQty" parameterType="com.haier.purchase.data.model.T2OrderItem">
+		UPDATE haier_t2_order_t
+		SET error_msg=#{error_msg}
+		WHERE delete_flag =
+		0 AND order_id =
+		#{order_id}
+	</update>
+	<update id="updatePrice" parameterType="com.haier.purchase.data.model.T2OrderItem">
+		UPDATE haier_t2_order_t
+		SET price=#{price},amount=#{amount}
+		WHERE
+		delete_flag = 0 AND order_id =
+		#{order_id}
+	</update>
+	<sql id="findPOListSQLCond">
+		FROM
+		haier_t2_order_t t2 right join crm_order_t crm on t2.order_id =
+		crm.source_order_id
+		WHERE
+		t2.delete_flag = 0
+		<if test="report_start_week  !=null and report_start_week  != ''">
+	        	<![CDATA[
+					and t2.latest_arrive_date >= #{report_start_week}
+				]]>
+		</if>
+		<if test="report_end_week  !=null and report_end_week  != ''">
+	         	<![CDATA[
+					and t2.latest_arrive_date <= #{report_end_week}
+				]]>
+		</if>
+		<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND t2.ed_channel_id = #{ed_channel_id}
+			<!-- AND t2.ed_channel_id in -->
+			<!-- <foreach item="item" index="index" collection="ed_channel_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND t2.product_group_id = #{product_group_id}
+			<!-- AND t2.product_group_id in -->
+			<!-- <foreach item="item" index="index" collection="product_group_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="wp_order_id !=null and wp_order_id != ''">
+			AND UPPER(t2.order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{wp_order_id})),'%')
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND UPPER(t2.storage_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{storage_id})),'%')
+		</if>
+		<if test="flow_flag !=null and flow_flag != ''">
+			AND crm.flow_flag = #{flow_flag}
+			<!-- AND crm.flow_flag in -->
+			<!-- <foreach item="item" index="index" collection="flow_flag" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(t2.materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="bill_time_start  !=null and bill_time_start  != ''">
+	        	<![CDATA[
+					and crm.bill_time >= #{bill_time_start}
+				]]>
+		</if>
+		<if test="bill_time_end  !=null and bill_time_end  != ''">
+	         	<![CDATA[
+					and crm.bill_time < #{bill_time_end}
+				]]>
+		</if>
+		<if test="bill_order_id !=null and bill_order_id != ''">
+			AND UPPER(crm.bill_order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{bill_order_id})),'%')
+		</if>
+		<if test="so_id !=null and so_id != ''">
+			AND UPPER(crm.so_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{so_id})),'%')
+		</if>
+		<if test="dn_id !=null and dn_id != ''">
+			AND UPPER(crm.dn_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{dn_id})),'%')
+		</if>
+		<if test="datestorge_start  !=null and datestorge_start  != ''">
+	        	<![CDATA[
+					and crm.wa_in_time >= #{datestorge_start}
+				]]>
+		</if>
+		<if test="datestorge_end  !=null and datestorge_end  != ''">
+	         	<![CDATA[
+					and crm.wa_in_time < #{datestorge_end}
+				]]>
+		</if>
+		<if test="brand_id !=null and brand_id != ''">
+			AND t2.brand_id = #{brand_id}
+		</if>
+		<if test="category_id !=null and category_id != ''">
+			AND t2.category_id = #{category_id}
+			<!-- AND t2.category_id in -->
+			<!-- <foreach item="item" index="index" collection="category_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="materials_desc !=null and materials_desc != ''">
+			AND UPPER(t2.materials_desc) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_desc})),'%')
+		</if>
+		<if test="wp_order_list !=null">
+			AND t2.order_id in
+			<foreach item="item" index="index" collection="wp_order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="bill_order_list !=null">
+			AND crm.bill_order_id in
+			<foreach item="item" index="index" collection="bill_order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</sql>
+	<sql id="find3WListSQLCond">
+		from haier_t2_order_t t2
+		left join 3w_order_t 3w on
+		3w.wp_order_id=t2.order_id
+		left join crm_order_t
+		crm on
+		crm.source_order_id=t2.order_id
+		where t2.delete_flag=0 and
+		t2.order_category='1'
+		<if test="report_start_week  !=null and report_start_week  != ''">
+	        	<![CDATA[
+					and t2.latest_arrive_date >= #{report_start_week}
+				]]>
+		</if>
+		<if test="report_end_week  !=null and report_end_week  != ''">
+	         	<![CDATA[
+					and t2.latest_arrive_date <= #{report_end_week}
+				]]>
+		</if>
+		<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND t2.ed_channel_id = #{ed_channel_id}
+			<!-- AND t2.ed_channel_id in -->
+			<!-- <foreach item="item" index="index" collection="ed_channel_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND t2.product_group_id = #{product_group_id}
+			<!-- AND t2.product_group_id in -->
+			<!-- <foreach item="item" index="index" collection="product_group_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="wp_order_id !=null and wp_order_id != ''">
+			AND UPPER(t2.order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{wp_order_id})),'%')
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND UPPER(t2.storage_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{storage_id})),'%')
+		</if>
+		<if test="flow_flag !=null ">
+			AND (crm.flow_flag in
+			<foreach item="item" index="index" collection="flow_flag"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			or t2.flow_flag in
+			<foreach item="item" index="index" collection="flow_flag"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			)
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(t2.materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="bill_time_start  !=null and bill_time_start  != ''">
+	        	<![CDATA[
+					and crm.bill_time >= #{bill_time_start}
+				]]>
+		</if>
+		<if test="bill_time_end  !=null and bill_time_end  != ''">
+	         	<![CDATA[
+					and crm.bill_time < #{bill_time_end}
+				]]>
+		</if>
+		<if test="dn_id !=null and dn_id != ''">
+			AND UPPER(crm.dn_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{dn_id})),'%')
+		</if>
+		<if test="datestorge_start  !=null and datestorge_start  != ''">
+	        	<![CDATA[
+					and crm.wa_in_time >= #{datestorge_start}
+				]]>
+		</if>
+		<if test="datestorge_end  !=null and datestorge_end  != ''">
+	         	<![CDATA[
+					and crm.wa_in_time < #{datestorge_end}
+				]]>
+		</if>
+		<if test="brand_id !=null and brand_id != ''">
+			AND t2.brand_id = #{brand_id}
+		</if>
+		<if test="category_id !=null and category_id != ''">
+			AND t2.category_id = #{category_id}
+			<!-- AND t2.category_id in -->
+			<!-- <foreach item="item" index="index" collection="category_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="materials_desc !=null and materials_desc != ''">
+			AND UPPER(t2.materials_desc) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_desc})),'%')
+		</if>
+		<if test="wp_order_list !=null">
+			AND t2.order_id in
+			<foreach item="item" index="index" collection="wp_order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="shipment_combination_id !=null and shipment_combination_id != ''">
+			AND UPPER(t2.shipment_combination_id) LIKE
+			CONCAT(CONCAT('%',UPPER
+			(#{shipment_combination_id})),'%')
+		</if>
+		<if test="subscribe_code !=null and subscribe_code != ''">
+			AND UPPER(3w.subscribe_code) LIKE CONCAT(CONCAT('%',UPPER
+			(#{subscribe_code})),'%')
+		</if>
+		<if test="import_start  !=null and import_start  != ''">
+	        	<![CDATA[
+					and 3w.import_date >= #{import_start}
+				]]>
+		</if>
+		<if test="import_end  !=null and import_end  != ''">
+	         	<![CDATA[
+					and 3w.import_date < #{import_end}
+				]]>
+		</if>
+	</sql>
+	<select id="findPOList" parameterType="Map" resultMap="crmOrderResult">
+		SELECT t2.order_id,
+		CONCAT('PO',crm.so_id) as po_id,
+		crm.bill_order_id,
+		CASE crm.bill_time WHEN DEFAULT(crm.bill_time) THEN '' ELSE
+		date_format(crm.bill_time,'%Y-%m-%d %H:%i:%S') END as
+		bill_time_display,
+		crm.so_id,
+		crm.dn_id,
+		t2.ed_channel_id,
+		t2.product_group_id,
+		t2.materials_desc,
+		t2.materials_id,
+		crm.amount,
+		crm.qty,
+		crm.total,
+		crm.bate_rate,
+		CASE crm.rrs_out_time WHEN
+		DEFAULT(crm.rrs_out_time) THEN '' ELSE
+		date_format(crm.rrs_out_time,'%Y-%m-%d %H:%i:%S') END as
+		rrs_out_time_display,
+		CASE crm.wa_in_time WHEN DEFAULT(crm.wa_in_time)
+		THEN '' ELSE
+		date_format(crm.wa_in_time,'%Y-%m-%d %H:%i:%S') END as
+		wa_in_time_display,
+		crm.flow_flag,
+		t2.delete_flag,
+		t2.storage_id,
+		t2.storage_name,
+		t2.report_year_week,
+		t2.brand_id,
+		t2.category_id,
+		t2.price,
+		t2.amount as t2_amount
+		<include refid="findPOListSQLCond" />
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<select id="find3WList" parameterType="Map" resultMap="crmOrderResult">
+		SELECT 3w.subscribe_code,
+		t2.shipment_combination_id,
+		t2.order_id,
+		case
+		when 3w.dn_id = '' then crm.dn_id
+		when 3w.dn_id is null then crm.dn_id
+		else 3w.dn_id
+		end as dn_id,
+		t2.materials_id,
+		t2.ed_channel_id,
+		t2.category_id,
+		t2.storage_id,
+		t2.storage_name,
+		t2.product_group_id,
+		t2.materials_desc,
+		CASE WHEN crm.qty='' THEN t2.t2_delivery_prediction
+		WHEN crm.qty is NULL THEN t2.t2_delivery_prediction
+		ELSE crm.qty END AS
+		qty,
+		t2.custpodetailcode,
+		3w.3w_local_code,
+		3w.sign_num,
+		CASE 3w.sign_date
+		WHEN DEFAULT(3w.sign_date) THEN '' ELSE
+		date_format(3w.sign_date,'%Y-%m-%d %H:%i:%S') END as sign_date,
+		CASE
+		3w.import_date WHEN DEFAULT(3w.import_date) THEN '' ELSE
+		date_format(3w.import_date,'%Y-%m-%d %H:%i:%S') END as import_date,
+		3w.import_user,
+		3w.push_sap_resoult
+		<include refid="find3WListSQLCond" />
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<select id="findPOListCNT" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findPOListSQLCond" />
+	</select>
+	<select id="find3WListCNT" resultType="int">
+		SELECT COUNT(1)
+		<include refid="find3WListSQLCond" />
+	</select>
+	<update id="updateOrderStatus" parameterType="Map">
+		UPDATE
+		haier_t2_order_t SET
+		flow_flag=3,channel_commit_user=#{commituser},channel_commit_time=CURRENT_TIMESTAMP(),error_msg=null
+		WHERE delete_flag = 0 AND flow_flag = 0 AND order_id = #{order_id}
+	</update>
+	<update id="deleteOrderStatus" parameterType="Map">
+		UPDATE haier_t2_order_t SET delete_flag =
+		1,delete_user=#{commituser},delete_time=CURRENT_TIMESTAMP()
+		WHERE
+		delete_flag = 0 AND (flow_flag = 0 or flow_flag = 3 or flow_flag = 5)
+		AND order_id in
+		<foreach collection="deleteList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<insert id="insert" parameterType="com.haier.purchase.data.model.T2OrderItem">
+		insert into
+		haier_t2_order_t
+		(storage_id,storage_name,materials_desc,T2_delivery_prediction,customization,satisfy_type_id,create_user,create_time,delete_flag,flow_flag,order_id,materials_id,brand_id,category_id,ed_channel_id,product_group_id,report_year_week,order_type_id,industry_trade_id,industry_trade_desc,custom_id,custom_desc,transmit_id,transmit_desc,distribution_center_id,distribution_center_desc,arrival_storage_id,arrival_storage_desc,price,amount,payment_id,payment_name,order_category,import_count,cancel_order_id,cancel_flag)
+		values(#{storage_id},#{storage_name},#{materials_desc},#{t2_delivery_prediction},#{customization},#{satisfy_type_id},#{create_user},current_timeStamp,#{delete_flag},#{flow_flag},#{order_id},#{materials_id},#{brand_id},#{category_id},#{ed_channel_id},#{product_group_id},#{report_year_week},#{order_type_id},#{industry_trade_id},#{industry_trade_desc},#{custom_id},#{custom_desc},#{transmit_id},#{transmit_desc},#{distribution_center_id},#{distribution_center_desc},#{arrival_storage_id},#{arrival_storage_desc},#{price},#{amount},#{payment_id},#{payment_name},#{order_category},#{t2_delivery_prediction},#{cancelOrderId},#{cancelFlag})
+	</insert>
+	<update id="updateRevokeFlag" parameterType="Map">
+		UPDATE haier_t2_order_t SET flow_flag=-30
+		WHERE delete_flag = 0 AND
+		order_id in
+		<foreach collection="revokeList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND (flow_flag = 10 or flow_flag = 15 or flow_flag = 20)
+	</update>
+	<update id="updateErrMsg" parameterType="Map">
+		UPDATE haier_t2_order_t
+		SET error_msg=#{error_msg}
+		WHERE delete_flag = 0 AND
+		order_id =
+		#{order_id}
+		AND (flow_flag = 15 or flow_flag = 20)
+	</update>
+	<update id="updateCount" parameterType="Map">
+		UPDATE haier_t2_order_t
+		SET
+		<if test="relevanceId  !=null and relevanceId  != ''">
+			relevance_id = #{relevanceId},
+		</if>
+		T2_delivery_prediction=#{modifycount},amount =
+		#{modifycount} *
+		price
+		WHERE order_id =#{order_id} and (flow_flag=5 or flow_flag=3)
+	</update>
+	<!-- xuelin.zhao -->
+	<update id="manualCloseOrder" parameterType="Map">
+		UPDATE haier_t2_order_t SET order_close_user=#{order_close_user},
+		order_close_time=CURRENT_TIMESTAMP(), flow_flag=-70
+		WHERE delete_flag =
+		0 AND flow_flag = 60 AND order_id in
+		<foreach collection="manualCloseList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<!-- xuelin.zhao �����ֹ��ص� ���ص���������˳״̬ -->
+	<update id="cancelCloseOrder" parameterType="Map">
+		UPDATE haier_t2_order_t SET order_close_time = null , order_close_user
+		= null, flow_flag=60
+		WHERE delete_flag = 0 AND flow_flag = -70 AND
+		order_id in
+		<foreach collection="cancelCloseList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<sql id="findT2OrderMultipleListSQLCond">
+		FROM
+		haier_t2_order_t t2 left join crm_order_t crm on t2.order_id =
+		crm.source_order_id
+		WHERE
+		t2.delete_flag = 0
+		<if test="arrival_start_week  !=null and arrival_start_week  != ''">
+	        	<![CDATA[
+					and t2.latest_arrive_date >= #{arrival_start_week}
+				]]>
+		</if>
+		<if test="arrival_end_week  !=null and arrival_end_week  != ''">
+	         	<![CDATA[
+					and t2.latest_arrive_date <= #{arrival_end_week}
+				]]>
+		</if>
+		<if test="report_year_week_start !=null and report_year_week_start != ''">
+        	<![CDATA[
+			AND t2.report_year_week >= #{report_year_week_start}
+			]]>
+		</if>
+		<if test="report_year_week_end !=null and report_year_week_end != ''">
+        	<![CDATA[
+			AND t2.report_year_week <= #{report_year_week_end}
+			]]>
+		</if>
+		<if test="report_year_week != null and report_year_week != ''">
+			and report_year_week = #{report_year_week}
+		</if>
+		<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND t2.ed_channel_id = #{ed_channel_id}
+			<!-- AND t2.ed_channel_id in -->
+			<!-- <foreach item="item" index="index" collection="ed_channel_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND t2.product_group_id = #{product_group_id}
+			<!-- AND t2.product_group_id in -->
+			<!-- <foreach item="item" index="index" collection="product_group_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="order_id !=null and order_id != ''">
+			AND UPPER(t2.order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{order_id})),'%')
+		</if>
+		<if test="oms_order_id !=null and oms_order_id != ''">
+			AND UPPER(t2.oms_order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{oms_order_id})),'%')
+		</if>
+		<if test="brand_id !=null and brand_id != ''">
+			AND t2.brand_id = #{brand_id}
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(t2.materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="materials_desc !=null and materials_desc != ''">
+			AND UPPER(t2.materials_desc) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_desc})),'%')
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND UPPER(t2.storage_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{storage_id})),'%')
+		</if>
+		<if test="flow_flag !=null and flow_flag != ''">
+			AND t2.flow_flag = #{flow_flag}
+			<!-- AND t2.flow_flag in -->
+			<!-- <foreach item="item" index="index" collection="flow_flag" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="shipment_combination_id !=null and shipment_combination_id != ''">
+			AND UPPER(t2.shipment_combination_id) LIKE
+			CONCAT(CONCAT('%',UPPER
+			(#{shipment_combination_id})),'%')
+		</if>
+		<if test="gvs_order_id !=null and gvs_order_id != ''">
+			AND UPPER(t2.gvs_order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{gvs_order_id})),'%')
+		</if>
+		<if test="custom_order_id !=null and custom_order_id != ''">
+			AND UPPER(t2.custpodetailcode) LIKE
+			CONCAT(CONCAT('%',UPPER
+			(#{custom_order_id})),'%')
+		</if>
+		<if test="customization !=null and customization != ''">
+			AND t2.customization = #{customization}
+		</if>
+		<if test="order_type !=null and order_type != ''">
+			AND t2.order_type_id = #{order_type}
+		</if>
+		<if test="sync_status !=null and sync_status != ''">
+			AND t2.sync_status in (${sync_status})
+		</if>
+		<if test="category_id !=null and category_id != ''">
+			AND t2.category_id = #{category_id}
+			<!-- AND t2.category_id in -->
+			<!-- <foreach item="item" index="index" collection="category_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="wp_order_list !=null">
+			AND t2.order_id in
+			<foreach item="item" index="index" collection="wp_order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="order_category !=null and order_category != ''">
+			AND order_category = #{order_category}
+		</if>
+		<if test="cancelOrder !=null and cancelOrder != ''">
+			AND cancel_flag = #{cancelOrder}
+		</if>
+	</sql>
+	<select id="findT2OrderMultipleList" parameterType="Map"
+		resultMap="t2OrderResult">
+		SELECT SQL_CALC_FOUND_ROWS
+		t2.flow_flag,
+		t2.order_id,
+		date_format(t2.channel_commit_time,'%Y-%m-%d %H:%i:%S') as
+		channel_commit_time_display,
+		t2.oms_order_id,
+		t2.custom_desc,
+		t2.transmit_desc,
+		t2.report_year_week,
+		t2.industry_trade_desc,
+		t2.ed_channel_id,
+		t2.product_group_id,
+		t2.brand_id,
+		t2.materials_id,
+		t2.materials_desc,
+		t2.order_type_id,
+		t2.count,
+		t2.price,
+		t2.amount,
+		t2.storage_id,
+		t2.storage_name,
+		t2.distribution_center_desc,
+		t2.arrival_storage_desc,
+		t2.series_id,
+		t2.status,
+		t2.order_category,
+		t2.T2_delivery_prediction,
+		date_format(t2.latest_arrive_date,'%Y-%m-%d') as
+		latest_arrive_date_display,
+		date_format(t2.plan_deliver_date,'%Y-%m-%d') as
+		plan_deliver_date_display,
+		date_format(t2.promise_arrive_date,'%Y-%m-%d') as
+		promise_arrive_date_display,
+		date_format(t2.actual_deliver_date,'%Y-%m-%d') as
+		actual_deliver_date_display,
+		date_format(t2.predict_arrive_date,'%Y-%m-%d') as
+		predict_arrive_date_display,
+		date_format(t2.industry_trade_take_date,'%Y-%m-%d') as
+		industry_trade_take_date_display,
+		date_format(t2.custom_sign_date,'%Y-%m-%d') as
+		custom_sign_date_display,
+		date_format(t2.return_order_date,'%Y-%m-%d')
+		as return_order_date_display,
+		t2.satisfy_type_id,
+		date_format(t2.latest_leave_base_date,'%Y-%m-%d') as
+		latest_leave_base_date_display,
+		t2.factory_id,
+		t2.factory_name,
+		t2.shipment_combination_id,
+		t2.sign_num,
+		t2.no_pass_reason,
+		t2.pass_reason,
+		t2.gvs_order_id,
+		t2.dn_id,
+		date_format(t2.confirm_order_time,'%Y-%m-%d %H:%i:%S') as
+		confirm_order_time_display,
+		date_format(t2.commit_time,'%Y-%m-%d') as
+		commit_time_display,
+		t2.rrs_order_flag,
+		t2.customization,
+		t2.category_id,
+		sum(crm.wa_in_num)
+		as WAqty,
+		t2.channel_commit_user,
+		t2.custpodetailcode,
+		t2.audit_user,
+		t2.error_msg,
+		CASE t2.audit_time WHEN
+		DEFAULT(t2.audit_time) THEN ''
+		ELSE
+		date_format(t2.audit_time,'%Y-%m-%d
+		%H:%i:%S') END as
+		audit_time_display,
+		t2.order_close_user,
+		CASE
+		t2.order_close_time WHEN
+		DEFAULT(t2.order_close_time) THEN '' ELSE
+		date_format(t2.order_close_time,'%Y-%m-%d %H:%i:%S') END as
+		order_close_time_display,
+		t2.relevance_id,
+		t2.cancel_order_id,
+		t2.cancel_flag
+		<include refid="findT2OrderMultipleListSQLCond" />
+		group by t2.order_id
+		ORDER BY
+		t2.order_id
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<select id="findT2OrderMultipleListCNT" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findT2OrderMultipleListSQLCond" />
+	</select>
+	<select id="findT2OrderForOms" parameterType="Map" resultMap="t2OrderResult">
+		SELECT
+		order_id,
+		flow_flag,
+		custom_id,
+		product_group_id,
+		materials_id,
+		T2_delivery_prediction,
+		storage_id,
+		arrival_storage_id,
+		ed_channel_id,
+		category_id,
+		payment_id,
+		sync_status,
+		order_category,
+		cancel_order_id,
+		cancel_flag
+		FROM
+		haier_t2_order_t
+		WHERE
+		delete_flag = 0
+		<if test="reviewList !=null">
+			AND order_id in
+			<foreach item="item" index="index" collection="reviewList"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="report_year_week != null and report_year_week != ''">
+			and report_year_week = #{report_year_week}
+		</if>
+		<if test="sync_status != null and sync_status != ''">
+			and sync_status in (${sync_status})
+		</if>
+		<if test="flow_flag != null and flow_flag != ''">
+			and flow_flag = #{flow_flag}
+		</if>
+		order BY
+		order_id
+	</select>
+	<select id="findCancelT2OrderForOms" parameterType="Map"
+		resultMap="t2OrderResult">
+		SELECT
+		order_id,
+		oms_order_id,
+		flow_flag
+		FROM
+		haier_t2_order_t
+		WHERE
+		delete_flag = 0
+		<if test="revokeList !=null">
+			AND order_id in
+			<foreach item="item" index="index" collection="revokeList"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		order BY
+		order_id
+	</select>
+	<update id="reviewT2Order" parameterType="Map">
+		UPDATE haier_t2_order_t SET
+		flow_flag=#{flow_flag},audit_user=#{audit_user},audit_time=current_timeStamp,audit_remark=#{audit_remark}
+		WHERE delete_flag = 0 AND flow_flag = 5 AND order_id in
+		<foreach collection="reviewList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="reviewT2OrderDepart" parameterType="Map">
+		UPDATE haier_t2_order_t SET
+		flow_flag=#{flow_flag},audit_depart_user=#{audit_user},audit_depart_time=current_timeStamp,audit_depart_remark=#{audit_remark}
+		WHERE delete_flag = 0 AND flow_flag = 3 AND order_id in
+		<foreach collection="reviewList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="updateByOms" parameterType="com.haier.purchase.data.model.T2OrderItem">
+		UPDATE haier_t2_order_t SET error_msg=#{error_msg}
+		<if test="oms_order_id != null and oms_order_id != ''">
+			,oms_order_id=#{oms_order_id}
+		</if>
+		<if test="audit_user !=null and audit_user != ''">
+			,audit_user=#{audit_user},audit_time=current_timeStamp,audit_remark=#{audit_remark}
+		</if>
+		<if test="sync_status != null and sync_status != ''">
+			,sync_status=#{sync_status, jdbcType=INTEGER}
+		</if>
+		WHERE delete_flag = 0 AND order_id = #{order_id}
+	</update>
+
+	<update id="updateOmsFlowFlagOnly" parameterType="com.haier.purchase.data.model.T2OrderItem">
+		UPDATE haier_t2_order_t SET
+		<if test="flow_flag !=null and flow_flag != ''">
+			flow_flag=#{flow_flag}
+		</if>
+		where delete_flag = 0 AND order_id = #{order_id}
+        <![CDATA[ and ((flow_flag >= 0 and flow_flag <= #{flow_flag}) or (flow_flag >= 0 and #{flow_flag} < 0))]]>
+	</update>
+
+	<update id="updateSyncStatusByOms" parameterType="com.haier.purchase.data.model.T2OrderItem">
+		UPDATE haier_t2_order_t SET
+		error_msg=#{error_msg},sync_status=#{sync_status},predict_arrive_date=#{predict_arrive_date_display}
+		<if test="flow_flag != null and flow_flag != ''">
+			,flow_flag=#{flow_flag}
+		</if>
+		WHERE delete_flag = 0 AND order_id = #{order_id}
+	</update>
+
+	<update id="updateStatusToOutRRS" parameterType="Map">
+		UPDATE
+		haier_t2_order_t SET flow_flag='70'
+		WHERE delete_flag = 0 AND
+		flow_flag
+		= 60 AND gvs_order_id = #{so_id}
+	</update>
+	<update id="updateStatusToInWA" parameterType="Map">
+		UPDATE
+		haier_t2_order_t SET flow_flag='80'
+		WHERE delete_flag = 0 AND
+		flow_flag
+		= 70
+		AND gvs_order_id = #{so_id}
+	</update>
+	<update id="updateStatusToInWAByDN" parameterType="Map">
+		UPDATE haier_t2_order_t,
+		crm_order_t
+		SET haier_t2_order_t.flow_flag =
+		#{flow_flag}
+		WHERE
+		haier_t2_order_t.order_id =
+		crm_order_t.source_order_id
+		AND
+		crm_order_t.dn_id = #{dn_id}
+		AND
+		crm_order_t.source_order_id IS NOT
+		NULL
+		<![CDATA[
+		AND (
+			(
+				haier_t2_order_t.flow_flag >= 0
+				AND haier_t2_order_t.flow_flag <= #{flow_flag}
+			)
+			OR (
+				haier_t2_order_t.flow_flag >= 0
+				AND #{flow_flag} < 0
+			)
+		)
+		]]>
+	</update>
+	<update id="updateStatus" parameterType="Map">
+		UPDATE haier_t2_order_t SET flow_flag = ${flow_flag}
+		WHERE delete_flag
+		= 0 
+		<![CDATA[AND flow_flag >= 0 AND flow_flag <= ${flow_flag} ]]>
+		AND order_id = #{order_id}
+	</update>
+	<select id="getOnwayNumByCateChan" resultType="com.haier.purchase.data.model.T2OrderItem">
+		SELECT
+		category_id,ed_channel_id,sum(T2_delivery_prediction * price) as
+		amount
+		FROM
+		haier_t2_order_t
+		WHERE
+		delete_flag = 0
+		<if test="category_id!=null and category_id!=''">
+			AND category_id = #{category_id}
+		</if>
+		<if test="ed_channel_id!=null and ed_channel_id!=''">
+			AND ed_channel_id = #{ed_channel_id}
+		</if>
+		AND flow_flag IN (40, 50, 60)
+		group by category_id,ed_channel_id
+	</select>
+	<select id="getUsedNumByCateChan" resultType="com.haier.purchase.data.model.T2OrderItem">
+		SELECT
+		category_id,ed_channel_id,sum(T2_delivery_prediction * price) as
+		amount
+		FROM
+		haier_t2_order_t
+		WHERE
+		delete_flag = 0
+		<if test="report_year_week!=null and report_year_week!=''">
+			AND report_year_week = #{report_year_week}
+		</if>
+		<if test="category_id!=null and category_id!=''">
+			AND category_id = #{category_id}
+		</if>
+		<if test="ed_channel_id!=null and ed_channel_id!=''">
+			AND ed_channel_id = #{ed_channel_id}
+		</if>
+		AND flow_flag IN (5,10,15,20,25,30,35)
+		group by
+		category_id,ed_channel_id
+	</select>
+	<select id="get85DNFromHaierT2" parameterType="java.util.Map"
+		resultType="java.lang.String">
+		SELECT
+		t2.dn_id
+		FROM
+		crm_order_t t2 left join haier_t2_order_t t1 on
+		t1.order_id = t2.wp_order_id
+		<![CDATA[WHERE (1=1 and t2.dn_id is not null and t2.dn_id <> '']]>
+		<if test="order_id !=null and order_id != ''">
+			AND t1.order_id = #{order_id}
+		</if>
+		<if test="flow_flag !=null and flow_flag != ''">
+			and t2.flow_flag in (${flow_flag})
+		</if>
+		)
+		<if test="addition_condition !=null and addition_condition != ''">
+			${addition_condition}
+		</if>
+	</select>
+
+	<select id="findT2OrderDNSyncFromLes" parameterType="Map"
+		resultType="java.lang.String">
+
+	</select>
+
+	<select id="getFullChannelProductList" resultType="com.haier.purchase.data.model.HaierLimitHistoryItem"
+		parameterType="Map">
+		select id,
+		category_id,
+		ed_channel_id,
+		target_num,
+		limit_num,
+		loan_num,
+		modify_user,
+		modify_time,
+		month
+		from haier_limit_gate_t
+		where 1=1
+		<if test="month != null and month != ''">
+			and month = #{month}
+		</if>
+		group by category_id, ed_channel_id
+	</select>
+
+	<insert id="insertOrUpdateLimitHistory" parameterType="com.haier.purchase.data.model.HaierLimitHistoryItem">
+		insert
+		into haier_limit_history_t(
+		category_id,
+		year_week,
+		ed_channel_id,
+		target_num,
+		limit_num,
+		loan_num,
+		total_num,
+		on_way_num,
+		used_num,
+		available_num,
+		create_time
+		) values (
+		#{category_id},
+		#{year_week},
+		#{ed_channel_id},
+		#{target_num},
+		#{limit_num},
+		#{loan_num},
+		#{total_num},
+		#{on_way_num},
+		#{used_num},
+		#{available_num},
+		str_to_date(#{create_time}, '%Y-%m-%d %H:%i:%s')
+		) ON DUPLICATE KEY
+		UPDATE
+		category_id=VALUES(category_id),
+		year_week=VALUES(year_week),
+		ed_channel_id=VALUES(ed_channel_id),
+		target_num=VALUES(target_num),
+		limit_num=VALUES(limit_num),
+		loan_num=VALUES(loan_num),
+		total_num=VALUES(total_num),
+		on_way_num=VALUES(on_way_num),
+		used_num=VALUES(used_num),
+		available_num=VALUES(available_num),
+		create_time=VALUES(create_time)
+	</insert>
+
+	<insert id="insertLimitHistory" parameterType="com.haier.purchase.data.model.HaierLimitHistoryItem">
+		insert into
+		haier_limit_history_t(
+		category_id,
+		year_week,
+		ed_channel_id,
+		target_num,
+		limit_num,
+		loan_num,
+		total_num,
+		on_way_num,
+		used_num,
+		available_num,
+		create_time
+		) values (
+		#{category_id},
+		#{year_week},
+		#{ed_channel_id},
+		#{target_num},
+		#{limit_num},
+		#{loan_num},
+		#{total_num},
+		#{on_way_num},
+		#{used_num},
+		#{available_num},
+		str_to_date(#{create_time}, '%Y-%m-%d
+		%H:%i:%s')
+		)
+	</insert>
+	<update id="updateLimitHistory" parameterType="com.haier.purchase.data.model.HaierLimitHistoryItem">
+		update
+		haier_limit_history_t set
+		total_num=#{total_num},
+		on_way_num=#{on_way_num},
+		used_num=#{used_num}
+		where
+		category_id=#{category_id}
+		and ed_channel_id=#{ed_channel_id}
+		year_week=#{year_week}
+	</update>
+	<select id="getRowCnts" resultType="int">
+		SELECT
+		FOUND_ROWS();
+	</select>
+	<update id="commitAgainOrderMultiple" parameterType="map">
+		update
+		haier_t2_order_t SET
+		flow_flag=(case when #{status}='S' Then 30 else
+		flow_flag end),
+		no_pass_reason = #{no_pass_reason},
+		pass_reason=#{pass_reason}
+		where
+		oms_order_id= #{oms_order_id} and
+		flow_flag=25;
+	</update>
+	<select id="getDataBySourceOrderId" resultMap="t2OrderResult">
+		SELECT
+		storage_id,storage_name,product_group_id,ed_channel_id,industry_trade_id,
+		industry_trade_desc,custom_id,custom_desc,transmit_id,transmit_desc,distribution_center_id,
+		distribution_center_desc,materials_id,materials_desc,order_id,count,brand_id,payment_id,payment_name,order_category,T2_delivery_prediction
+		FROM haier_t2_order_t
+		WHERE
+		order_id=#{source_order_id}
+	</select>
+	<insert id="w3insert" parameterType="com.haier.purchase.data.model.CrmOrderItem">
+		insert into
+		3w_order_t(wp_order_id,sign_num,sign_date,push_sap_resoult,3w_local_code,subscribe_code,import_user,import_date,dn_id,jcode,is_sap)
+		values(#{wp_order_id},#{sign_num},#{sign_date},#{push_sap_resoult},#{w3_local_code},#{subscribe_code},#{import_user},#{import_date},#{dn_id},#{jcode},#{is_sap})
+	</insert>
+	<update id="update3wByDnCode" parameterType="com.haier.purchase.data.model.CrmOrderItem">
+		update
+		3w_order_t SET
+		sign_num=#{sign_num},
+		sign_date = #{sign_date},
+		3w_local_code = #{w3_local_code},
+		subscribe_code =
+		#{subscribe_code},
+		push_sap_resoult=#{push_sap_resoult},
+		<if test="category_id !=null and category_id != ''">
+			dn_id = #{category_id} ,
+		</if>
+		import_user = #{import_user},
+		import_date = #{import_date}
+
+		where
+		subscribe_code=#{subscribe_code}
+		<if test="dn_id !=null and dn_id != ''">
+			AND dn_id = #{dn_id}
+		</if>
+		<if test="jcode !=null and jcode != ''">
+			AND jcode = #{jcode}
+		</if>
+	</update>
+	<!-- 根据85码获取wp单号 -->
+	<select id="getDataBySourceByWPid" parameterType="com.haier.purchase.data.model.CrmOrderItem"
+		resultMap="crmOrderResult">
+		select t2.storage_id,t2.materials_id,t2.order_id,crm.qty
+		FROM
+		haier_t2_order_t t2 left join crm_order_t crm on
+		t2.order_id=crm.source_order_id
+		WHERE t2.delete_flag = 0
+		<if test="dn_id !=null and dn_id != ''">
+			and crm.dn_id=#{dn_id}
+		</if>
+	</select>
+	<!-- 根据J/K单号获取wp单号 -->
+	<select id="getDataByJCode" parameterType="com.haier.purchase.data.model.CrmOrderItem"
+		resultMap="crmOrderResult">
+		select
+		t2.storage_id,t2.materials_id,t2.order_id,t2.T2_delivery_prediction,crm.dn_id
+		FROM haier_t2_order_t t2 left join crm_order_t crm on
+		t2.order_id=crm.source_order_id
+		WHERE t2.delete_flag = 0 and
+		t2.custpodetailcode=#{jcode}
+	</select>
+	<!-- 根据预约单号和85码从3w表中查询数据 -->
+	<select id="getIs3wList" parameterType="com.haier.purchase.data.model.CrmOrderItem"
+		resultMap="crmOrderResult">
+		select dn_id,subscribe_code,sign_num
+		FROM 3w_order_t
+		WHERE
+		subscribe_code = #{subscribe_code}
+		<if test="dn_id !=null and dn_id != ''">
+			and dn_id = #{dn_id}
+		</if>
+		<if test="jcode !=null and jcode != ''">
+			and jcode = #{jcode}
+		</if>
+	</select>
+	<!-- 根据85或者j/k单号从3w表中查询已签收的货物数量 -->
+	<select id="getSumByWPNo" parameterType="com.haier.purchase.data.model.CrmOrderItem"
+		resultMap="crmOrderResult">
+		select ifnull(sum(sign_num),0) sign_num
+		FROM 3w_order_t
+		WHERE 1=1
+		<if test="dn_id !=null and dn_id != ''">
+			and dn_id = #{dn_id}
+		</if>
+		<if test="jcode !=null and jcode != ''">
+			and jcode = #{jcode}
+		</if>
+	</select>
+	<!-- 预约导出列表信息 -->
+	<select id="get3wSubscribeList" resultMap="crmOrderResult"
+		parameterType="com.haier.purchase.data.model.CrmOrderItem">
+		select t2.order_id,
+		CASE WHEN crm.flow_flag is null then t2.flow_flag
+		WHEN crm.flow_flag ='' then t2.flow_flag
+		else crm.flow_flag end as
+		flow_flag,
+		t2.storage_id,
+		t2.storage_name,
+		t2.shipment_combination_id,
+		t2.materials_id,
+		t2.ed_channel_id,
+		t2.category_id,
+		t2.product_group_id,
+		t2.t2_delivery_prediction,
+		CASE WHEN crm.dn_id='' THEN
+		t2.custpodetailcode
+		WHEN crm.dn_id is NULL THEN t2.custpodetailcode
+		ELSE crm.dn_id END AS dn_id,
+		t2.materials_desc
+		from haier_t2_order_t t2
+		LEFT JOIN crm_order_t crm ON t2.order_id=crm.source_order_id
+		LEFT JOIN
+		3w_order_t 3w ON 3w.dn_id=crm.dn_id
+		where t2.delete_flag=0 and
+		t2.order_category='1' and
+		((crm.dn_id is not null and crm.dn_id!='') or
+		(t2.custpodetailcode is not null
+		and t2.custpodetailcode !='')) and
+		(3w.dn_id is null or 3w.dn_id ='')
+		and t2.flow_flag>0 and t2.flow_flag
+		not in('0','5')
+		<if test="report_start_week  !=null and report_start_week  != ''">
+	        	<![CDATA[
+					and t2.latest_arrive_date >= #{report_start_week}
+				]]>
+		</if>
+		<if test="report_end_week  !=null and report_end_week  != ''">
+	         	<![CDATA[
+					and t2.latest_arrive_date <= #{report_end_week}
+				]]>
+		</if>
+		<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND t2.ed_channel_id = #{ed_channel_id}
+			<!-- AND t2.ed_channel_id in -->
+			<!-- <foreach item="item" index="index" collection="ed_channel_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND t2.product_group_id = #{product_group_id}
+			<!-- AND t2.product_group_id in -->
+			<!-- <foreach item="item" index="index" collection="product_group_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="wp_order_id !=null and wp_order_id != ''">
+			AND UPPER(t2.order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{wp_order_id})),'%')
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND UPPER(t2.storage_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{storage_id})),'%')
+		</if>
+		<if test="flow_flag !=null">
+			AND (crm.flow_flag in
+			<foreach item="item" index="index" collection="flow_flag"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			or t2.flow_flag in
+			<foreach item="item" index="index" collection="flow_flag"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			)
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(t2.materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="bill_time_start  !=null and bill_time_start  != ''">
+	        	<![CDATA[
+					and crm.bill_time >= #{bill_time_start}
+				]]>
+		</if>
+		<if test="bill_time_end  !=null and bill_time_end  != ''">
+	         	<![CDATA[
+					and crm.bill_time < #{bill_time_end}
+				]]>
+		</if>
+		<if test="dn_id !=null and dn_id != ''">
+			AND UPPER(crm.dn_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{dn_id})),'%')
+		</if>
+		<if test="datestorge_start  !=null and datestorge_start  != ''">
+	        	<![CDATA[
+					and crm.wa_in_time >= #{datestorge_start}
+				]]>
+		</if>
+		<if test="datestorge_end  !=null and datestorge_end  != ''">
+	         	<![CDATA[
+					and crm.wa_in_time < #{datestorge_end}
+				]]>
+		</if>
+		<if test="brand_id !=null and brand_id != ''">
+			AND t2.brand_id = #{brand_id}
+		</if>
+		<if test="category_id !=null and category_id != ''">
+			AND t2.category_id = #{category_id}
+			<!-- AND t2.category_id in -->
+			<!-- <foreach item="item" index="index" collection="category_id" -->
+			<!-- open="(" separator="," close=")"> -->
+			<!-- #{item} -->
+			<!-- </foreach> -->
+		</if>
+		<if test="materials_desc !=null and materials_desc != ''">
+			AND UPPER(t2.materials_desc) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_desc})),'%')
+		</if>
+		<if test="wp_order_list !=null">
+			AND t2.order_id in
+			<foreach item="item" index="index" collection="wp_order_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="shipment_combination_id !=null and shipment_combination_id != ''">
+			AND UPPER(t2.shipment_combination_id) LIKE
+			CONCAT(CONCAT('%',UPPER
+			(#{shipment_combination_id})),'%')
+		</if>
+
+	</select>
+	<!-- 查询需要从crm那边获取订单信息的单据 -->
+	<select id="getT2ListToCrm" resultMap="crmOrderResult"
+		parameterType="com.haier.purchase.data.model.CrmOrderItem">
+		select t2.order_id,crm.dn_id
+		from haier_t2_order_t t2
+		left join crm_order_t crm
+		on crm.source_order_id=t2.order_id
+		where
+		t2.delete_flag=0 and
+		t2.order_category='1' and (crm.dn_id is null or
+		crm.dn_id='')
+		and
+		t2.flow_flag>0 and t2.flow_flag not in('0','5')
+	</select>
+	<!-- 更新状态为已入3w库 -->
+	<update id="update3Wyiru" parameterType="com.haier.purchase.data.model.CrmOrderItem">
+		update
+		haier_t2_order_t
+		SET
+		flow_flag=#{flow_flag}
+		where delete_flag=0
+		and order_id=
+		#{wp_order_id}
+	</update>
+	<!-- 查询3w已签收但未推送cbs的数据 -->
+	<select id="getListByNoToSAP" resultMap="crmOrderResult"
+		parameterType="com.haier.purchase.data.model.CrmOrderItem">
+		SELECT
+		3w.3w_local_code,
+		t2.materials_id,
+		3w.wp_order_id,
+		crm.dn_id,
+		3w.subscribe_code,
+		3w.sign_num,
+		3w.sign_date,
+		3w.jcode
+		from
+		haier_t2_order_t t2
+		left join 3w_order_t 3w on
+		3w.wp_order_id=t2.order_id
+		left join crm_order_t
+		crm on
+		crm.source_order_id=t2.order_id
+		where t2.delete_flag=0 and
+		t2.order_category='1' and 3w.is_sap='0' and 3w.jcode is not null and
+		crm.dn_id is not null and crm.dn_id !=''
+	</select>
+	<!-- 更新3w推送sap状态 -->
+	<update id="updateToSAPresoult" parameterType="com.haier.purchase.data.model.CrmOrderItem">
+		update 3w_order_t
+		set
+		dn_id=#{dn_id},
+		is_sap=#{is_sap},
+		push_sap_resoult=#{push_sap_resoult}
+		where
+		subscribe_code=#{subscribe_code} and
+		jcode=#{jcode}
+	</update>
+
+	<select id="findT2OrdersToSap" parameterType="Map" resultMap="t2OrderResult">
+		SELECT
+		vod.order_id,
+		cot.wa_in_time,
+		vod.Materials_id,
+		vod.t2_delivery_prediction,
+		vod.Storage_id,
+		cot.Dn_id,
+		lio.MBLNR
+		FROM
+		haier_t2_order_t vod
+		LEFT JOIN
+		crm_order_t cot ON vod.order_id = cot.source_order_id
+		LEFT JOIN
+		les_in_out_t lio ON CONCAT(cot.dn_id, 'D') = CONCAT(lio.BSTNK,
+		'')
+		WHERE
+		vod.flow_flag = '80'
+		AND vod.order_id NOT IN (
+		SELECT
+		cn_stock_syncs_id
+		FROM
+		cn_t2_purchase_stock
+		WHERE
+		STATUS = '1'
+		)
+		AND
+		cot.Dn_id != ''
+		AND lio.mblnr != ''
+		AND cot.wa_in_time != ''
+	</select>
+
+	<insert id="insertT2OrderInterfaceLog" parameterType="Map">
+		insert into
+		t2_order_interface_log
+		(interface_name,interface_category,interface_date,interface_message)
+		values
+		(#{interfaceName},#{interfaceCategory},#{interfaceDate},#{interfaceMessage})
+	</insert>
+
+    <resultMap id="T2OrderInterfaceLogResult" type="com.haier.purchase.data.model.T2OrderInterfaceLog">
+        <result property="interfaceId" column="interface_id" />
+        <result property="interfaceName" column="interface_name" />
+        <result property="interfaceCategory" column="interface_category" />
+        <result property="interfaceDate" column="interface_date" />
+        <result property="interfaceMessage" column="interface_message" />
+    </resultMap>
+
+    <sql id="findT2OrderInterfaceLogSQLCond">
+        FROM
+        t2_order_interface_log
+        WHERE 1 = 1
+
+        <if test="startTime  !=null and startTime != ''">
+            <![CDATA[
+				and interface_date >= #{startTime}
+			]]>
+        </if>
+
+        <if test="endTime  !=null and endTime != ''">
+            <![CDATA[
+				and interface_date <= #{endTime}
+			]]>
+        </if>
+
+        <if test="interfaceName !=null and interfaceName != ''">
+            AND UPPER(interface_name) LIKE
+            CONCAT(CONCAT('%',UPPER(#{interfaceName})),'%')
+        </if>
+
+        <if test="interfaceCategory !=null and interfaceCategory != '' and interfaceCategory != '全部'">
+            AND interface_category = #{interfaceCategory}
+        </if>
+
+		<if test="interfaceMessage !=null and interfaceMessage != ''">
+			AND UPPER(interface_message) LIKE
+			CONCAT(CONCAT('%',UPPER(#{interfaceMessage})),'%')
+		</if>
+    </sql>
+
+    <select id="findPurchaseLog" parameterType="Map" resultMap="T2OrderInterfaceLogResult">
+        select
+        interface_id,interface_name,interface_category,interface_date,interface_message
+        <include refid="findT2OrderInterfaceLogSQLCond"></include>
+        <if test="m!=null and n!=null">
+            limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getPurchaseLogRow" resultType="int">
+        SELECT COUNT(1)
+        <include refid="findT2OrderInterfaceLogSQLCond" />
+    </select>
+
+</mapper>

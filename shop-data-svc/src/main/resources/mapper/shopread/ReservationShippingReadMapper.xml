@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.ReservationShippingReadDao">
+	<resultMap id="reservationShippingResult" type="com.haier.shop.model.ReservationShipping">
+		<result property="orderId" column="orderId" />
+		<result property="date" column="date" />
+		<result property="time" column="time" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="reservationShippingResult">
+		select `orderId`,`date`,`time`
+		from `ReservationShipping`
+		where `orderId` = #{orderId}
+	</select>
+</mapper>

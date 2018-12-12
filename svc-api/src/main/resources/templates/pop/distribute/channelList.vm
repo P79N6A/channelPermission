@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+     <style type="text/css">
+   .dlg{
+     width:400px;
+     height:100px;
+     padding:10px;	
+     margin-top:20px;	
+    },
+    easyui-panel.{
+    overflow-x: show;
+    }
+    .input { padding: 5px; margin: 0; border: 1px solid #beceeb; }
+	.clear { display: none; position: absolute; width: 16px; height: 16px; margin: 6px 0 0 -20px; background: url(clear.png);}
+	.input::-ms-clear { display: none; }
+	.input:valid + .clear { display: inline; }
+  </style>
+    
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_channelForecastGoal"></table>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+        
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+        <!--
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">是否转人工处理</span>
+                <select id="smConfirmStatus" name="smConfirmStatus" class="easyui-combobox">
+                    <option value="是否转人工处理">全部</option>
+                    <option value="是">是</option>
+                    <option value="否">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">货到付款订单</span>
+                <select id="isCod" name="isCod" class="easyui-combobox">
+                    <option value="货到付款订单" style="color: #aaa;">全部</option>
+                    <option value="是">是</option>
+                    <option value="否">否</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">货到付款状态</span>
+                <select id="u440_input" class="easyui-combobox">
+                    <option value="货到付款确认状态" style="color: #aaa;">全部</option>
+                    <option value="无需审核">无需审核</option>
+                    <option value="待审核">待审核</option>
+                    <option value="审核确认通过">审核确认通过</option>
+                    <option value="审核确认无效">审核确认无效</option>
+                </select>
+            </div>
+           -->
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">渠道名称</span>
+                <input id="channelname" class="easyui-textbox" data-options="prompt:'请输入渠道名称'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">金额额度</span>
+                <input id="moneyMin" class="easyui-textbox" data-options="prompt:'请输入金额额度'">
+            </div>  
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">至</span>
+                <input id="moneyMax" class="easyui-textbox" data-options="prompt:'请输入金额额度'">
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderForecastGoal"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <!--<a href="#" class="easyui-linkbutton" id="importBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出</a>-->
+    </form>
+</div>
+<div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:350px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>渠道编码<span style="color: red;">*</span></label>
+            <input id="channelCode" class="input" name="channelCode" maxlength="20"/>
+        </div>
+        <div class="fitem">
+            <label>渠道名称<span style="color: red;">*</span></label>
+            <input id="channelName" class="easyui-textbox" name="channelName" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>金额额度<span style="color: red;">*</span></label>
+            <input id="moneyLimit" class="easyui-numberbox" name="moneyLimit" precision="2" max="9999999.99" min="0" maxlength="10" required="true"/>
+        </div>
+        <!--<div class="fitem">
+            <label>排序<span style="color: red;">*</span></label>
+            <input id="" class="easyui-textbox" name="sort" required="true"/>
+        </div>-->
+        <div class="fitem">
+            <label>报警金额<span style="color: red;">*</span></label>
+            <input id="moneyAlert" class="easyui-numberbox" precision="2" max="9999999.99" min="0" maxlength="10" name="moneyAlert" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>锁定金额<span style="color: red;">*</span></label>
+            <input id="moneyLock" class="easyui-numberbox" precision="2" max="9999999.99" min="0" maxlength="10" name="moneyLock" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>备注</label>
+            <input id="remark" class="easyui-textbox" name="remark" />
+        </div>
+        <!--<div class="fitem">
+            <label>状态 <span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="status" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-datebox" name="createtime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="createuser" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-datebox" name="updatetime" required="true"/>
+        </div>
+        <div class="fitem">
+            <label><span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="updateuser" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>删除标志<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="deleteflag" required="true"/>
+        </div>-->
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_orderForecastGoal').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_channelForecastGoal').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="/static/js/pop/distribute_order/channelList.js"></script>
+</body>
+</html>

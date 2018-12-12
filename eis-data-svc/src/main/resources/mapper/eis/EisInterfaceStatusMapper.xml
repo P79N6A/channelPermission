@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.EisInterfaceStatusDao">
+	<resultMap id="eisInterfaceStatusResult" type="com.haier.eis.model.EisInterfaceStatus">
+		<result property="id" column="id" />
+		<result property="interfaceCode" column="interface_code" />
+		<result property="lastTime" column="last_time" />
+		<result property="lastId" column="last_id" />
+		<result property="updateTime" column="update_time" />
+		<result property="now" column="now"/>
+	</resultMap>
+	<select id="getByInterfaceCode" parameterType="String" resultMap="eisInterfaceStatusResult">
+		select `id`,`interface_code`,`last_time`,`update_time`,`last_id`,now() as `now`
+		from `eis_interface_status`
+		where `interface_code` = #{interfaceCode}
+	</select>
+	<!-- 
+	<insert id="insert" parameterType="com.haier.cbs.eis.entity.EisInterfaceStatus">
+		insert into `eis_interface_status`(`id`,`interface_code`,`last_time`,`update_time`)
+		values(#{id},#{interfaceCode},#{lastTime},#{updateTime})
+	</insert>
+	 -->
+	<update id="update" parameterType="com.haier.eis.model.EisInterfaceStatus">
+		update `eis_interface_status` set `interface_code`=#{interfaceCode},`last_time`=#{lastTime},`update_time`=#{updateTime},`last_id`=#{lastId}
+		where `id` = #{id}
+	</update>
+	
+</mapper>

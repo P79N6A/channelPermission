@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderRepairsWriteDao">
+
+    <update id="updateReceiptInfo" parameterType="com.haier.shop.model.OrderRepairs">
+        update `OrderRepairs`
+        set
+        `receiptStatus`=#{receiptStatus},`receiptTime`=#{receiptTime}
+        where `id` = #{id}
+    </update>
+    
+      
+  <update id="updataStatus" parameterType="java.lang.String">
+  	UPDATE OrderRepairs
+	SET handleStatus =#{status},
+		handleTime =unix_timestamp(now()),
+	handleRemark = #{handleRemark}
+	WHERE
+		id = #{id}
+  
+  </update>
+    <insert id="insertSelective" parameterType="com.haier.shop.model.OrderRepairsVo" >
+        insert into OrderRepairs
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="siteId != null" >
+                siteId,
+            </if>
+            <if test="addTime != null" >
+                addTime,
+            </if>
+            <if test="memberId != null" >
+                memberId,
+            </if>
+            <if test="orderId != null" >
+                orderId,
+            </if>
+            <if test="orderProductId != null" >
+                orderProductId,
+            </if>
+            <if test="paymentStatus != null" >
+                paymentStatus,
+            </if>
+            <if test="paymentTime != null" >
+                paymentTime,
+            </if>
+            <if test="paymentName != null" >
+                paymentName,
+            </if>
+            <if test="receiptStatus != null" >
+                receiptStatus,
+            </if>
+            <if test="receiptTime != null" >
+                receiptTime,
+            </if>
+            <if test="storageStatus != null" >
+                storageStatus,
+            </if>
+            <if test="storageTime != null" >
+                storageTime,
+            </if>
+            <if test="typeExpect != null" >
+                typeExpect,
+            </if>
+            <if test="typeActual != null" >
+                typeActual,
+            </if>
+            <if test="reason != null" >
+                reason,
+            </if>
+            <if test="contactName != null" >
+                contactName,
+            </if>
+            <if test="contactMobile != null" >
+                contactMobile,
+            </if>
+            <if test="handleStatus != null" >
+                handleStatus,
+            </if>
+            <if test="handleTime != null" >
+                handleTime,
+            </if>
+            <if test="repairSn != null" >
+                repairSn,
+            </if>
+            <if test="count != null" >
+                count,
+            </if>
+            <if test="requestServiceRemark != null" >
+                requestServiceRemark,
+            </if>
+            <if test="requestServiceDate != null" >
+                requestServiceDate,
+            </if>
+            <if test="offlineFlag != null" >
+                offlineFlag,
+            </if>
+            <if test="offlineReason != null" >
+                offlineReason,
+            </if>
+            <if test="offlineAmount != null" >
+                offlineAmount,
+            </if>
+            <if test="offlineRemark != null" >
+                offlineRemark,
+            </if>
+            <if test="offlineConfirmFlag != null" >
+                offlineConfirmFlag,
+            </if>
+            <if test="hpFirstAddTime != null" >
+                hpFirstAddTime,
+            </if>
+            <if test="hpSecondAddTime != null" >
+                hpSecondAddTime,
+            </if>
+            <if test="modified != null" >
+                modified,
+            </if>
+            <if test="finishTime != null" >
+                finishTime,
+            </if>
+            <if test="refundAmount != null" >
+                refundAmount,
+            </if>
+            <if test="ybkExchangeType != null" >
+                ybkExchangeType,
+            </if>
+            <if test="typeFlag != null" >
+                typeFlag,
+            </if>
+            <if test="cOrderSnStatus != null" >
+                cOrderSnStatus,
+            </if>
+            <if test="vomRepairSn != null" >
+                vomRepairSn,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="handleRemark != null" >
+                handleRemark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="siteId != null" >
+                #{siteId,jdbcType=INTEGER},
+            </if>
+            <if test="addTime != null" >
+                #{addTime,jdbcType=INTEGER},
+            </if>
+            <if test="memberId != null" >
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="orderId != null" >
+                #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="orderProductId != null" >
+                #{orderProductId,jdbcType=INTEGER},
+            </if>
+            <if test="paymentStatus != null" >
+                #{paymentStatus,jdbcType=TINYINT},
+            </if>
+            <if test="paymentTime != null" >
+                #{paymentTime,jdbcType=INTEGER},
+            </if>
+            <if test="paymentName != null" >
+                #{paymentName,jdbcType=VARCHAR},
+            </if>
+            <if test="receiptStatus != null" >
+                #{receiptStatus,jdbcType=TINYINT},
+            </if>
+            <if test="receiptTime != null" >
+                #{receiptTime,jdbcType=INTEGER},
+            </if>
+            <if test="storageStatus != null" >
+                #{storageStatus,jdbcType=TINYINT},
+            </if>
+            <if test="storageTime != null" >
+                #{storageTime,jdbcType=INTEGER},
+            </if>
+            <if test="typeExpect != null" >
+                #{typeExpect,jdbcType=TINYINT},
+            </if>
+            <if test="typeActual != null" >
+                #{typeActual,jdbcType=TINYINT},
+            </if>
+            <if test="reason != null" >
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="contactName != null" >
+                #{contactName,jdbcType=VARCHAR},
+            </if>
+            <if test="contactMobile != null" >
+                #{contactMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="handleStatus != null" >
+                #{handleStatus,jdbcType=INTEGER},
+            </if>
+            <if test="handleTime != null" >
+                #{handleTime,jdbcType=INTEGER},
+            </if>
+            <if test="repairSn != null" >
+                #{repairSn,jdbcType=VARCHAR},
+            </if>
+            <if test="count != null" >
+                #{count,jdbcType=INTEGER},
+            </if>
+            <if test="requestServiceRemark != null" >
+                #{requestServiceRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="requestServiceDate != null" >
+                #{requestServiceDate,jdbcType=INTEGER},
+            </if>
+            <if test="offlineFlag != null" >
+                #{offlineFlag,jdbcType=TINYINT},
+            </if>
+            <if test="offlineReason != null" >
+                #{offlineReason,jdbcType=VARCHAR},
+            </if>
+            <if test="offlineAmount != null" >
+                #{offlineAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="offlineRemark != null" >
+                #{offlineRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="offlineConfirmFlag != null" >
+                #{offlineConfirmFlag,jdbcType=TINYINT},
+            </if>
+            <if test="hpFirstAddTime != null" >
+                #{hpFirstAddTime,jdbcType=INTEGER},
+            </if>
+            <if test="hpSecondAddTime != null" >
+                #{hpSecondAddTime,jdbcType=INTEGER},
+            </if>
+            <if test="modified != null" >
+                #{modified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="finishTime != null" >
+                #{finishTime,jdbcType=INTEGER},
+            </if>
+            <if test="refundAmount != null" >
+                #{refundAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="ybkExchangeType != null" >
+                #{ybkExchangeType,jdbcType=TINYINT},
+            </if>
+            <if test="typeFlag != null" >
+                #{typeFlag,jdbcType=TINYINT},
+            </if>
+            <if test="cOrderSnStatus != null" >
+                #{cOrderSnStatus,jdbcType=SMALLINT},
+            </if>
+            <if test="vomRepairSn != null" >
+                #{vomRepairSn,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="handleRemark != null" >
+                #{handleRemark,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updatePushHp" parameterType="com.haier.shop.model.OrderRepairsVo" >
+        UPDATE OrderRepairs
+        set
+        requestServiceDate =UNIX_TIMESTAMP(#{requeStservieDateTS,jdbcType=VARCHAR}),
+        requestServiceRemark =#{requestServiceRemark,jdbcType=VARCHAR},
+        offlineFlag =#{offlineFlag},
+        offlineReason = #{offlineReason},
+        offlineAmount = #{offlineAmount},
+        offlineRemark =#{offlineRemark},
+        receiptStatus = #{receiptStatus,jdbcType=VARCHAR},
+        storageStatus =#{storageStatus,jdbcType=VARCHAR}
+        <if test="hpFirstAddTime != null and hpFirstAddTime !=''" >
+            ,hpFirstAddTime = unix_timestamp(now())
+        </if>
+        <if test="hpSecondAddTime != null and hpSecondAddTime !=''">
+            ,hpSecondAddTime = unix_timestamp(now())
+        </if>
+        where
+        id = #{id}
+    </update>
+    <update id="updateStatus" parameterType="java.lang.String">
+        UPDATE OrderRepairs
+        SET receiptStatus = #{receiptStatus,jdbcType=VARCHAR},
+        storageStatus =#{storageStatus,jdbcType=VARCHAR}
+        WHERE
+        id=#{id,jdbcType=VARCHAR}
+    </update>
+    	<update id="updataPushSap" parameterType="java.lang.String">
+    	UPDATE OrderRepairs
+		SET pushSAP = '1',
+		 pushSAPAddTime = unix_timestamp(now())
+		where 
+			id=#{id}
+    	</update>
+    	
+    	
+	<update id="RepairsTermination" parameterType="java.lang.String">
+	UPDATE OrderRepairs
+	SET handleStatus = '6',
+	 handleRemark = #{handleRemark,jdbcType=VARCHAR}
+	WHERE
+		id = #{id}
+	</update>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.PurchaseCommonDao">
+    <resultMap id="privilegeResult" type="com.haier.purchase.data.model.PrivilegeItem">
+		<result property="role_id" column="role_id"/>
+		<result property="role_name" column="role_name"/>
+		<result property="ed_channel_id" column="ed_channel_id"/>
+		<result property="product_group_id" column="product_group_id"/>
+		<result property="cbs_catgory" column="cbs_catgory"/>
+		<result property="gate_limit" column="gate_limit"/>
+    </resultMap>
+
+	<select id="findPrivilege"  parameterType="String"  resultMap="privilegeResult">
+		SELECT
+			data.role_id,
+			data.role_name,
+			data.ed_channel_id,
+			data.product_group_id,
+			data.cbs_catgory,
+			data.gate_limit
+		FROM
+			user_privilege_t user, data_privilege_t data
+		WHERE 
+			user.role_id = data.role_id
+			and user.user_id = #{userId}
+    </select>
+    
+    <select id="getNextVal" resultType="int">
+        SELECT nextVal('WPOrderId')
+    </select>
+
+
+</mapper>

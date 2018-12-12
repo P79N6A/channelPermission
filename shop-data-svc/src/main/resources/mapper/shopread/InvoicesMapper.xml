@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.InvoicesDao">
+	<resultMap id="invoicesResult" type="com.haier.shop.model.Invoices">
+		<result property="id" column="id" />
+		<result property="isOld" column="isOld" />
+		<result property="isReInvoice" column="isReInvoice" />
+		<result property="orderProductId" column="orderProductId" />
+		<result property="cOrderType" column="cOrderType" />
+		<result property="diffId" column="diffId" />
+		<result property="cOrderSn" column="cOrderSn" />
+		<result property="memberInvoiceId" column="memberInvoiceId" />
+		<result property="customerCode" column="customerCode" />
+		<result property="invoiceTitle" column="invoiceTitle" />
+		<result property="taxPayerNumber" column="taxPayerNumber" />
+		<result property="registerAddressAndPhone" column="registerAddressAndPhone" />
+		<result property="bankNameAndAccount" column="bankNameAndAccount" />
+		<result property="remark" column="remark" />
+		<result property="cOrderAddTime" column="cOrderAddTime" />
+		<result property="sku" column="sku" />
+		<result property="productName" column="productName" />
+		<result property="productCateName" column="productCateName" />
+		<result property="unit" column="unit" />
+		<result property="number" column="number" />
+		<result property="price" column="price" />
+		<result property="amount" column="amount" />
+		<result property="nonTaxPrice" column="nonTaxPrice" />
+		<result property="nonTaxAmount" column="nonTaxAmount" />
+		<result property="taxAmount" column="taxAmount" />
+		<result property="taxRate" column="taxRate" />
+		<result property="type" column="type" />
+		<result property="isTogether" column="isTogether" />
+		<result property="state" column="state" />
+		<result property="lessOrderSn" column="lessOrderSn" />
+		<result property="paymentName" column="paymentName" />
+		<result property="sCode" column="sCode" />
+		<result property="orderType" column="orderType" />
+		<result property="invoiceNumber" column="invoiceNumber" />
+		<result property="billingTime" column="billingTime" />
+		<result property="eaiWriteTime" column="eaiWriteTime" />
+		<result property="drawer" column="drawer" />
+		<result property="eaiWriteState" column="eaiWriteState" />
+		<result property="invalidTime" column="invalidTime" />
+		<result property="firstPushTime" column="firstPushTime" />
+		<result property="lastModifyTime" column="lastModifyTime" />
+		<result property="internalSettlement" column="internalSettlement" />
+		<result property="branchOfficeCode" column="branchOfficeCode" />
+		<result property="orderLineNumber" column="orderLineNumber" />
+		<result property="backupFieldA" column="backupFieldA" />
+		<result property="backupFieldB" column="backupFieldB" />
+		<result property="integralAmount" column="integralAmount" />
+		<result property="energySavingAmount" column="energySavingAmount" />
+		<result property="energySavingRemark" column="energySavingRemark" />
+		<result property="statusType" column="statusType" />
+		<result property="success" column="success" />
+		<result property="addTime" column="addTime" />
+		<result property="tryNum" column="tryNum" />
+		<result property="electricFlag" column="electricFlag" />
+		<result property="invalidReason" column="invalidReason" />
+		<result property="fiscalCode" column="fiscalCode" />
+		<result property="eInvViewUrl" column="eInvViewUrl" />
+		<result property="checkCode" column="checkCode" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="invoicesResult">
+		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
+		from `Invoices`
+		where `id` = #{id}
+	</select>
+	<select id="getByCorderSn" resultMap="invoicesResult">
+		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
+		from `Invoices`
+		where `cOrderSn` = #{cOrderSn}
+	</select>
+	<select id="searchInvoicesInfoByCOrderSn" resultType="java.util.Map">
+		select `cOrderSn`,`invoiceTitle`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`state`,`paymentName`,`invoiceNumber`,`billingTime`,`drawer`,`eaiWriteState`,`invalidTime`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
+		from `Invoices`
+		where `cOrderSn` = #{cOrderSn} and `electricFlag`=1
+	</select>
+	<select id="getByOrderProductId" parameterType="Integer" resultMap="invoicesResult">
+		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
+		from `Invoices`
+		where `orderProductId` = #{orderProductId}
+	</select>
+	<insert id="insertInvoice" parameterType="com.haier.shop.model.Invoices">
+		insert into `Invoices`(`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`)
+		values(#{isOld},#{isReInvoice},#{orderProductId},#{cOrderType},#{diffId},#{cOrderSn},#{memberInvoiceId},#{customerCode},#{invoiceTitle},#{taxPayerNumber},#{registerAddressAndPhone},#{bankNameAndAccount},#{remark},#{cOrderAddTime},#{sku},#{productName},#{productCateName},#{unit},#{number},#{price},#{amount},#{nonTaxPrice},#{nonTaxAmount},#{taxAmount},#{taxRate},#{type},#{isTogether},#{state},#{lessOrderSn},#{paymentName},#{sCode},#{orderType},#{invoiceNumber},#{billingTime},#{eaiWriteTime},#{drawer},#{eaiWriteState},#{invalidTime},#{firstPushTime},#{lastModifyTime},#{internalSettlement},#{branchOfficeCode},#{orderLineNumber},#{backupFieldA},#{backupFieldB},#{integralAmount},#{energySavingAmount},#{energySavingRemark},#{statusType},#{success},#{addTime},#{tryNum},#{electricFlag},#{invalidReason})
+	</insert>
+	<update id="update" parameterType="com.haier.shop.model.Invoices">
+		update `Invoices`  
+		<trim prefix="set" suffixOverrides=",">  
+				`lastModifyTime`=UNIX_TIMESTAMP(now()),
+			<if test="statusType != null">
+				`statusType`=#{statusType},
+			</if>
+			<if test="tryNum != null">
+				`tryNum`=#{tryNum},
+			</if>
+	        <if test="state != null">
+	        	`state` = #{state},
+	        </if>
+	        <if test="eaiWriteState != null">
+	        	`eaiWriteState`=#{eaiWriteState},
+	        </if>
+	        <if test="drawer != null and drawer != ''">
+	        	`drawer`=#{drawer},
+	        </if>
+	        <if test="invoiceNumber != null and invoiceNumber!=''">
+	        	`invoiceNumber` =#{invoiceNumber},
+	        </if>
+	        <if test="backupFieldA != null and backupFieldA !=''">
+	        	`backupFieldA` = #{backupFieldA},
+	        </if>
+	        <if test="billingTime != null and billingTime != ''">
+				`billingTime`=#{billingTime},
+			</if>
+			<if test="eaiWriteTime != null and eaiWriteTime != ''">
+				`eaiWriteTime`=#{eaiWriteTime},
+			</if>
+			<if test="invalidTime != null and invalidTime != ''">
+				`invalidTime`=#{invalidTime},
+			</if>
+			<if test="success != null">
+				`success`=#{success},
+			</if>
+			<if test="invalidReason != null and invalidReason != ''">
+				`invalidReason`=#{invalidReason},
+			</if>
+			<if test="electricFlag != null and electricFlag != ''">
+				`electricFlag`=#{electricFlag},
+			</if>
+			<if test="firstPushTime != null and firstPushTime != ''">
+				`firstPushTime`=#{firstPushTime},
+			</if>
+			<if test="fiscalCode != null and fiscalCode != ''">
+				`fiscalCode`=#{fiscalCode},
+			</if>
+			<if test="eInvViewUrl != null and eInvViewUrl != ''">
+				`eInvViewUrl`=#{eInvViewUrl},
+			</if>
+			<if test="checkCode != null and checkCode != ''">
+				`checkCode`=#{checkCode},
+			</if>
+		</trim>
+		where `id` = #{id}
+	</update>
+	<select id="getSyncInvoiceList" parameterType="Integer" resultMap="invoicesResult">
+		<![CDATA[
+		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
+		from `Invoices`
+		where `success` = 0 and `tryNum` < 20
+		order by `id` desc
+		limit #{topX}
+		]]>
+	</select>
+	<select id="getInvoiceInvalidNotEndList" parameterType="Integer" resultMap="invoicesResult">
+		<![CDATA[
+		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
+		from `Invoices`
+		where invalidTime=0 and statusType=4 and success=1 and electricFlag=1 and type=2 and tryNum < 30 and addTime >= 1427817600
+		order by `id` desc
+		limit #{topX}
+		]]>
+	</select>
+	<select id="getOrderProductsByCOrderSn" parameterType="String" resultType="com.haier.shop.model.OrderProductsNew">
+		SELECT
+		id,
+		isTest,
+		supportOneDayLimit,
+		orderId,
+		cOrderSn,
+		isBook,
+		cPaymentStatus,
+		cPayTime,
+		productType,
+		productId,
+		productName,
+		sku,
+		price,
+		number,
+		lockedNumber,
+		unlockedNumber,
+		productAmount,
+		couponAmount,
+		esAmount,
+		cateId,
+		brandId,
+		netPointId,
+		shippingFee,
+		settlementStatus,
+		receiptOrRejectTime,
+		isWmsSku,
+		sCode,
+		tsCode,
+		tsShippingTime,
+		status,
+		invoiceNumber,
+		expressName,
+		invoiceExpressNumber,
+		shippingTime,
+		lessOrderSn,
+		waitGetLesShippingInfo,
+		getLesShippingCount,
+		outping,
+		lessShipTime,
+		closeTime,
+		isReceipt,
+		isMakeReceipt,
+		receiptNum,
+		receiptAddTime,
+		makeReceiptType,
+		shippingMode,
+		lastTimeForShippingMode,
+		lastEditorForShippingMode,
+		systemRemark,
+		externalSaleSettingId,
+		isNoLimitStockProduct,
+		hpRegisterDate,
+		hpFailDate,
+		hpFinishDate,
+		hpReservationDate,
+		shippingOpporunity,
+		isTimeoutFree,
+		itemShareAmount,
+		lessShipTInTime,
+		lessShipTOutTime,
+		cbsSecCode,
+		points,
+		modified,
+		splitFlag,
+		splitRelateCOrderSn,
+		channelId,
+		activityId2,
+		pdOrderStatus,
+		omsOrderSn,
+		couponCode,
+		couponCodeValue
+		FROM
+		OrderProducts
+		WHERE
+		cOrderSn = #{cOrderSn}
+	</select>
+	
+	
+</mapper>

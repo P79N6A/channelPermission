@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.InvoiceSAPLogsReadDao">
+    <resultMap id="invoiceSAPLogsResult" type="com.haier.shop.model.InvoiceSAPLogs">
+        <result property="id" column="id" />
+        <result property="addTime" column="addTime" />
+        <result property="invoiceId" column="invoiceId" />
+        <result property="cOrderType" column="cOrderType" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="diffId" column="diffId" />
+        <result property="pushType" column="pushType" />
+        <result property="pushData" column="pushData" />
+        <result property="returnData" column="returnData" />
+        <result property="success" column="success" />
+        <result property="count" column="count" />
+        <result property="lastTime" column="lastTime" />
+        <result property="lastMessage" column="lastMessage" />
+    </resultMap>
+
+
+    <select id="getByInvoiceIdAndPushType" parameterType="com.haier.shop.model.InvoiceSAPLogs" resultMap="invoiceSAPLogsResult">
+        SELECT id,addTime,invoiceId,cOrderType,orderProductId,diffId,pushType,pushData,returnData
+        ,success,count,lastTime,lastMessage
+        FROM
+        `InvoiceSAPLogs`
+        where  invoiceId=#{invoiceId} and pushType=#{pushType}
+        order by id desc
+    </select>
+
+    <select id="getInvoiceSapLogList" parameterType="Map" resultType="Map">
+        SELECT SQL_CALC_FOUND_ROWS
+        a.id
+        ,a.success as caozuo
+        ,b.cOrderSn
+        ,a.invoiceId
+        ,a.orderProductId
+        ,a.cOrderType
+        ,a.diffId
+        ,a.pushType
+        ,CASE WHEN a.addTime=0 THEN '' ELSE FROM_UNIXTIME(a.addTime) END addTime
+        ,a.success
+        ,a.count
+        ,CASE WHEN a.lastTime=0 THEN '' ELSE FROM_UNIXTIME(a.lastTime) END lastTime
+        ,a.lastMessage
+        FROM InvoiceSAPLogs a,Invoices b
+        WHERE 1=1 AND a.invoiceId=b.id
+        <if test = "count !=null and count != ''">
+            AND a.count=#{count}
+        </if>
+        <if test = "orderProductId !=null and orderProductId != ''">
+            AND UPPER(a.orderProductId) LIKE CONCAT('%',UPPER(#{orderProductId}),'%')
+        </if>
+        <if test = "invoiceId !=null and invoiceId != '' and invoiceId != '0'">
+            AND a.invoiceId=#{invoiceId}
+        </if>
+        <if test = "pushType !=null and pushType != '-1'">
+            AND a.pushType=#{pushType}
+        </if>
+        <if test = "success !=null and success != '-1'">
+            AND a.success=#{success}
+        </if>
+        <if test = "addTimeMin !=null and addTimeMin != ''">
+            AND a.addTime >=UNIX_TIMESTAMP(#{addTimeMin})
+        </if>
+        <if test = "addTimeMax !=null and addTimeMax != ''">
+            AND a.addTime &lt;=UNIX_TIMESTAMP(#{addTimeMax})
+        </if>
+        <if test="lastMessage != null and lastMessage != ''">
+            AND a.lastMessage LIKE CONCAT('%',#{lastMessage},'%')
+        </if>
+        <if test="m != null and n != null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getRowCnts" resultType="int">
+        SELECT
+        FOUND_ROWS();
+    </select>
+
+    <select id="getInvoiceSAPLogsList"  parameterType="Integer" resultMap="invoiceSAPLogsResult">
+        SELECT id
+        ,addTime
+        ,invoiceId
+        ,cOrderType
+        ,orderProductId
+        ,diffId
+        ,pushType
+        ,pushData
+        ,returnData
+        ,success
+        ,count
+        ,lastTime
+        ,lastMessage
+        FROM
+        InvoiceSAPLogs
+        where  success = 0
+        and count&lt;=20
+        order by id
+        limit #{limitNum}
+    </select>
+</mapper>

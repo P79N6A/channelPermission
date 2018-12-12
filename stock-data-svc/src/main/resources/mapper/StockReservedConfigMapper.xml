@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.StockReservedConfigDao">
+		<select id="getReservedConfig" parameterType="com.haier.stock.model.InvReservedConfig" resultType="com.haier.stock.model.InvReservedConfig">
+			select SQL_CALC_FOUND_ROWS id, channel_code channelCode, lock_hours lockHours, status, update_time updateTime,ref,allow_update allowUpdate from inv_reserved_config where 1=1 
+			<if test="config.status != null">
+				and status = #{config.status}
+			</if>
+			<if test="config.id!=null and config.id!=''">
+				and id=#{config.id}
+			</if>
+			<if test="config.channelCode!=null and config.channelCode!=''">
+				and channel_code=#{config.channelCode}
+			</if>
+			<if test="config.ref!=null and config.ref!=''">
+				and ref=#{config.ref}
+			</if>
+			<if test="pager.pageSize != null and pager.pageSize &gt; 0">limit #{pager.start},#{pager.pageSize}</if> 
+		</select>
+		
+		<select id="getRowCnt" parameterType="Map" resultType="int">
+		    select FOUND_ROWS();
+	</select>
+</mapper>

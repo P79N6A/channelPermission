@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.VomOrderDao">
+
+	<select id="getFlowFlagByCrmReturnInfo"  parameterType="java.util.Map"  resultType="java.lang.String">
+		select  flow_flag
+		from crm_return_info_t
+		where wp_order_id = #{source_order_id}
+    </select>
+	
+	<select id="getFlowFlagBySiOuInfo"  parameterType="java.util.Map"  resultType="java.lang.String">
+		select  flow_flag
+		from si_ou_info_t
+		where order_id = #{order_id}
+    </select>
+	
+	<update id="updateLeaderReturnStatus" parameterType="java.util.Map">
+	    update si_ou_info_t
+	    <set>
+	    	<if test="deliveryTime != null">
+				delivery_time = CURRENT_TIMESTAMP(),
+			</if>
+	    	
+			<if test="flow_flag != null and flow_flag != ''">
+				flow_flag = #{flow_flag},
+			</if>
+			
+			<if test="wa_out_time != null and wa_out_time != ''">
+				wa_out_time = str_to_date(#{wa_out_time}, '%Y-%m-%d %H:%i:%s'),
+			</if>
+			<if test="wa_in_time != null and wa_in_time != ''">
+				wa_in_time = #{wa_in_time},
+			</if>
+			<if test="error_msg != null and error_msg != ''">
+				error_msg = #{error_msg},
+			</if>
+		</set>
+	    where order_id = #{order_id}
+	    and bill_type = 2
+	</update>
+	
+	<update id="updateCrmReturnInfo" parameterType="java.util.Map">
+	    update crm_return_info_t
+	    <set>
+	    	<if test="deliveryTime != null">
+				delivery_time = CURRENT_TIMESTAMP(),
+			</if>
+			
+			<if test="flow_flag != null and flow_flag != ''">
+				flow_flag = #{flow_flag},
+			</if>
+			
+			<if test="wa_out_time != null and wa_out_time != ''">
+				warehouse_out_time = #{wa_out_time},
+			</if>
+			<if test="wa_in_time != null and wa_in_time != ''">
+				wa_in_time = #{wa_in_time},
+			</if>
+			<if test="error_msg != null and error_msg != ''">
+				error_msg = #{error_msg},
+			</if>
+		</set>
+	    where wp_order_id = #{source_order_id}
+	</update>
+	
+	<select id="findGoodsBackInfo"  parameterType="java.util.Map"  resultType="com.haier.purchase.data.model.GoodsBackInfoResponse">
+		select  a.mdm_partsCode as materialsId, 
+		a.location_code as locationCode,
+		a.order_id as orderNo,
+		a.source_order_id as sourceOrderNo,
+		a.quantity as quantity,
+		a.si_ou_slipNo as siOuSlipNo,
+		a.si_ou_slipLineNo as siOuSlipLineNo,
+		b.ed_channel_id as channel
+		from si_ou_info_t a
+		inner join leader_nb_return_order_t b on a.source_order_id = b.wp_order_id
+		where a.order_id = #{order_id}
+    </select>
+    
+    <select id="findCrmGoodsBackInfo"  parameterType="java.util.Map"  resultType="com.haier.purchase.data.model.GoodsBackInfoResponse">
+		select  b.materials_id as materialsId, 
+		b.storage_id as locationCode,
+		b.wp_order_id as orderNo,
+		'' as sourceOrderNo,
+		b.quantity as quantity,
+		b.so_id as siOuSlipNo,
+		'' as siOuSlipLineNo,
+		b.ed_channel_id as channel
+		from  crm_return_info_t b 
+		where b.wp_order_id = #{order_id}
+    </select>
+    
+    <update id="updateCgoGenuineRejectStatusVom"  parameterType="java.util.Map">
+		update si_ou_info_t 
+		set 
+		flow_flag = 155,
+		reverse_syn_vom_time = NOW(),
+		vom_reverse_in_wa_no = #{vomReverseInWaNo}
+		where si_ou_slipNo = #{siOuNo}
+		and bill_type = '2'
+    </update>
+    
+    <update id="updateCrmGenuineRejectStatus"  parameterType="java.util.Map">
+		update crm_return_info_t 
+		set 
+		flow_flag = 35,
+		reverse_syn_vom_time = #{vomTime},
+		vom_reverse_in_wa_no = #{vomReverseInWaNo}
+		where wp_order_id = #{waOrderId}
+    </update>
+	
+</mapper>

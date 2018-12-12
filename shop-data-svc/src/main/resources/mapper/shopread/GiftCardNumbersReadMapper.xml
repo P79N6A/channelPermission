@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.GiftCardNumbersReadDao" >
+  <resultMap id="giftCardNumbersResult" type="com.haier.shop.model.GiftCardNumbers" >
+    <id column="id" property="id"  />
+    <result column="siteId" property="siteId"  />
+    <result column="productId" property="productId"  />
+    <result column="orderId" property="orderId"  />
+    <result column="orderProductId" property="orderProductId"  />
+    <result column="cardNumber" property="cardNumber"  />
+    <result column="cardPassword" property="cardPassword"  />
+    <result column="amount" property="amount"  />
+    <result column="balance" property="balance"  />
+    <result column="tempMemberId" property="tempMemberId"  />
+    <result column="memberId" property="memberId"  />
+    <result column="bindMemberId" property="bindMemberId"  />
+    <result column="memberName" property="memberName"  />
+    <result column="memberEmail" property="memberEmail"  />
+    <result column="memberMobile" property="memberMobile"  />
+    <result column="hasBind" property="hasBind"  />
+    <result column="addTime" property="addTime"  />
+    <result column="isActivation" property="isActivation"  />
+    <result column="activationTime" property="activationTime"  />
+    <result column="activationPerson" property="activationPerson"  />
+    <result column="exportTime" property="exportTime"  />
+    <result column="exportPerson" property="exportPerson"  />
+  </resultMap>
+  <select id="getByGiftcardnumbersId" resultMap="giftCardNumbersResult" parameterType="map" >
+    select 
+     id, siteId, productId, orderId, orderProductId, cardNumber, cardPassword, amount, 
+    balance, tempMemberId, memberId, bindMemberId, memberName, memberEmail, memberMobile, 
+    hasBind, addTime, isActivation, activationTime, activationPerson, exportTime, exportPerson
+    from giftcardnumbers
+    where giftcardnumbers = #{giftCardNumberId}
+  </select>
+
+</mapper>

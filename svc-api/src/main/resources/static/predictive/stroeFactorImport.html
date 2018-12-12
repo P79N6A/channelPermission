@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>waAddressT</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+
+
+<div id="datagridToolbar_waAddressT">
+    <form id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0; ">
+        <fieldset style="margin-top: 5px;padding-left: 3px;padding-bottom: 6px;">
+            <span>&nbsp;&nbsp;&nbsp;库位系数Excel：</span>
+
+            <input id="file" name="file" type="file" style="display:none"
+                   onchange="document.getElementById('textfield').value=this.value">
+            <input type="text" readonly="readonly" name="textfield" e="" id="textfield" style="width: 300px;">
+            <a class="easyui-linkbutton" type="button" class="btn" value="选择..." onclick="document.getElementById(&quot;file&quot;).click()">选择...</a>
+            <a class="easyui-linkbutton" type="submit" id="submit" name="submit" class="btn" value="导入">导入</a>
+            <a class="easyui-linkbutton" type="button" id="down" class="btn" value="下载模版">下载模版</a>
+        </fieldset>
+        <!--<div class="search-panel">
+
+        </div>-->
+    </form>
+</div>
+<div id="list" style="">
+
+    <h3 style="    padding: 0;
+    margin: 0;
+    background: #99bce8;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    line-height: 30px;
+    text-indent: 5px;">&nbsp;&nbsp;&nbsp;注意</h3>
+    <ul style="padding-left: 5rem;">
+        <li style="margin-top: 15px;">只支持Excel 2003(<strong>xls</strong>)</li>
+        <li style="margin-top: 5px;">上传中请不要关闭浏览器</li>
+        <li style="margin-top: 5px;">
+            请下载Excel模板，严格按照模板格式填写
+        </li>
+        <li style="margin-top: 5px;">
+            ‘库位系数’字段必须为小于1的小数
+        </li>
+        <li style="margin-top: 5px;">
+            同一产品组、渠道下所有库位对应的库位系数和不能大于1
+        </li>
+        <li style="margin-top: 5px;">
+            每个字段信息均不能为空
+        </li>
+        <li style="margin-top: 5px;">
+            选择文件后点击“开始导入”
+        </li>
+    </ul>
+
+</div>
+<script src="../static/js/predictive/weekGoalImport.js"></script>
+</body>
+</html>

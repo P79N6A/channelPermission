@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderGuaranteePriceInfoReadDao">
+
+	<resultMap id="orderGuaranteePriceInfoResult" type="com.haier.shop.model.OrderGuaranteePriceInfo">
+		<result property="id" column="id" />
+		<result property="channelCode" column="channel_code" />
+		<result property="shippingMode" column="shipping_mode" />
+		<result property="brandId" column="brand_id" />
+		<result property="brandName" column="brand_name" />
+		<result property="cateId" column="cate_id" />
+		<result property="cateName" column="cate_name" />
+		<result property="sku" column="sku" />
+		<result property="productName" column="product_name" />
+		<result property="guaranteePrice" column="guarantee_price" />
+		<result property="supplyPrice" column="supply_price" />
+		<result property="directDeductionPrice" column="direct_deduction_price" />
+		<result property="afterBackPrice" column="after_back_price" />
+		<result property="valueChainRatio" column="value_chain_ratio" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="activityGuaranteePrice" column="activity_guarantee_price" />
+		<result property="activityGuaranteePriceStartTime" column="activity_guarantee_price_start_time" />
+		<result property="activityGuaranteePriceEndTime" column="activity_guarantee_price_end_time" />
+	</resultMap>
+
+	<select id="getById" resultMap="orderGuaranteePriceInfoResult">
+		select `id`,`channel_code`,`shipping_mode`,`brand_id`,`brand_name`,`cate_id`,`cate_name`,`sku`,`product_name`,`guarantee_price`,`supply_price`,`direct_deduction_price`,`after_back_price`,`value_chain_ratio`,`create_time`,`update_time`,`activity_guarantee_price`,`activity_guarantee_price_start_time`,`activity_guarantee_price_end_time` 
+		from order_guarantee_price_info 
+		WHERE `id`=#{id}
+	</select>
+	
+	<select id="getConditions" resultMap="orderGuaranteePriceInfoResult">
+		select `id`,`channel_code`,`shipping_mode`,`brand_id`,`brand_name`,`cate_id`,`cate_name`,`sku`,`product_name`,`guarantee_price`,`supply_price`,`direct_deduction_price`,`after_back_price`,`value_chain_ratio`,`create_time`,`update_time`,`activity_guarantee_price`,`activity_guarantee_price_start_time`,`activity_guarantee_price_end_time`  
+		from order_guarantee_price_info 
+		WHERE channel_code = #{channelCode} 
+        AND shipping_mode = #{shippingMode} 
+        AND sku = #{sku}
+        limit 1
+	</select>
+	
+	<select id="getNewConditions" resultMap="orderGuaranteePriceInfoResult">
+		select `id`,`channel_code`,`shipping_mode`,`brand_id`,`brand_name`,`cate_id`,`cate_name`,`sku`,`product_name`,`guarantee_price`,`supply_price`,`direct_deduction_price`,`after_back_price`,`value_chain_ratio`,`create_time`,`update_time`,`activity_guarantee_price`,`activity_guarantee_price_start_time`,`activity_guarantee_price_end_time`  
+		from order_guarantee_price_info 
+		WHERE channel_code = #{channelCode} 
+        AND shipping_mode = #{shippingMode} 
+        AND sku = #{sku}
+        order by create_time desc
+	</select>
+	
+	<select id="getOrderGuaranteePrice" parameterType="com.haier.shop.model.OrderGuaranteePriceInfo" resultMap="orderGuaranteePriceInfoResult">
+		select `id`,`channel_code`,`shipping_mode`,`brand_id`,`brand_name`,`cate_id`,`cate_name`,`sku`,`product_name`,`guarantee_price`,`supply_price`,`direct_deduction_price`,`after_back_price`,`value_chain_ratio`,`create_time`,`update_time`,`activity_guarantee_price`,`activity_guarantee_price_start_time`,`activity_guarantee_price_end_time`  
+		from order_guarantee_price_info 
+		WHERE channel_code = #{channelCode} 
+        AND shipping_mode = #{shippingMode} 
+        AND sku = #{sku}
+        AND guarantee_price = #{guaranteePrice}
+        AND activity_guarantee_price = #{activityGuaranteePrice}
+        AND activity_guarantee_price_start_time = #{activityGuaranteePriceStartTime}
+        AND activity_guarantee_price_end_time = #{activityGuaranteePriceEndTime}
+        limit 1
+	</select>
+
+</mapper>

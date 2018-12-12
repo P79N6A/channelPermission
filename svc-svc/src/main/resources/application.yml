@@ -1,0 +1,35 @@
+interconn:
+  project: 3W-CBS
+  app: svc-svc
+  monitor:
+    url: http://collector.c.haier.net
+    enable: false
+
+dubbo:
+  registry: zookeeper://127.0.0.1:2181
+  port: 20880     #服务提供者服务端口，默认-1
+  threads: 100    #服务线程池大小(固定大小)，默认为2
+  heartBeats: 10000 #心跳间隔，检查连接是否已断开，默认30000
+  serialization: hessian2    #协议序列化方式（可选配置，Dubbo有默认值）;
+
+
+
+#T+2订单下发CRM
+t2Order:
+  wsdl:
+#   url: http://10.135.1.185:7001/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=CRM_INT_OMS_4
+   url: http://10.138.40.168:8001/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=CRM_INT_OMS_4
+  kxPath: 
+   priceUrl: http://10.138.40.168:8001/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=EAI_INT_1020
+   crm_int_oms_4: http://10.138.40.168:8001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=CRM_INT_OMS_4
+   
+
+#获取wsdl路径
+t2OrderResponse:
+  location: /wsdl_test
+
+
+#mybatis:
+#  typeAliasesPackage: com.haier.svc
+#  mapper-locations: classpath:mapper/*/*Mapper.xml
+

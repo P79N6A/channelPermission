@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  	库位编码
+			</span>
+                <input class="easyui-textbox" name="raiseM" kwbm/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	物料编码
+			</span>
+                <input class="easyui-textbox" name="raiseM" wlbm/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	单据号
+			</span>
+                <input class="easyui-textbox" name="raiseM"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbMtlMeasure"
+           data-options="iconCls:'icon-save',plain:true">重置</a>
+    </form>
+</div>
+
+<table id="backup1" style="display: none">
+    <thead>
+    <tr>
+        <th class="sorting" style="min-width:100px; text-align:center;">凭证抬头文本</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">凭证中的凭证日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">凭证记帐日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">移动类型(库存管理)</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">批次编号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">输入时间</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">输入单位</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">以条目单位的数量</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">库存地点</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">供应商或债权人帐户号</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">物料号码</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">物料凭证编号</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">基本计量单位</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">数量</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">物料凭证的年份</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">借/贷标志</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">用户名</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">工厂</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">参考凭证号</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">仓位</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">仓储地点的描述</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">单位体积</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">体积</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">起始凭证</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">起始项目</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">销售与分销单据号</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">配车单号</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">运输计划点</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">起始凭证</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">起始项目</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">客户采购订单编号</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">名称</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">物料组</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">外部物料组</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-04</td>
+        <td style="text-align:center;">2013-01-04</td>
+        <td style="text-align:center;">653</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">14:41:27</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">88.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4947807418</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">88.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">S</td>
+        <td style="text-align:center;">ORDERIN</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8011124133</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">63.893456</td>
+        <td style="text-align:center;">8011124133</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037314956</td>
+        <td style="text-align:center;">000000000000</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">8523447637D</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-06</td>
+        <td style="text-align:center;">2013-01-06</td>
+        <td style="text-align:center;">601</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">16:18:25</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4947866514</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">H</td>
+        <td style="text-align:center;">MAWMS001</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8428314624</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">-0.726062</td>
+        <td style="text-align:center;">8428314624</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037351816</td>
+        <td style="text-align:center;">000002429750</td>
+        <td style="text-align:center;">HF01</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">WD130105388380</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-08</td>
+        <td style="text-align:center;">2013-01-08</td>
+        <td style="text-align:center;">601</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">10:03:00</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4947907040</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">H</td>
+        <td style="text-align:center;">MAWMS001</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8428345945</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">-0.726062</td>
+        <td style="text-align:center;">8428345945</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037380517</td>
+        <td style="text-align:center;">000002433932</td>
+        <td style="text-align:center;">HF01</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">WD130107392296</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-08</td>
+        <td style="text-align:center;">2013-01-08</td>
+        <td style="text-align:center;">601</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">19:17:31</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4947927545</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">H</td>
+        <td style="text-align:center;">MAWMS001</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8428346763</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">-0.726062</td>
+        <td style="text-align:center;">8428346763</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037381181</td>
+        <td style="text-align:center;">000002434058</td>
+        <td style="text-align:center;">HF01</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">WD130108393141</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-09</td>
+        <td style="text-align:center;">2013-01-09</td>
+        <td style="text-align:center;">601</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">18:02:59</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4947957129</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">H</td>
+        <td style="text-align:center;">MAWMS001</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8428375050</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">-0.726062</td>
+        <td style="text-align:center;">8428375050</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037403923</td>
+        <td style="text-align:center;">000002437533</td>
+        <td style="text-align:center;">HF01</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">WD130108395625</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-09</td>
+        <td style="text-align:center;">2013-01-09</td>
+        <td style="text-align:center;">601</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">22:17:25</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4947963233</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">H</td>
+        <td style="text-align:center;">MAWMS001</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8428374059</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">-0.726062</td>
+        <td style="text-align:center;">8428374059</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037403216</td>
+        <td style="text-align:center;">000002437406</td>
+        <td style="text-align:center;">HF01</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">WD130108395185</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-11</td>
+        <td style="text-align:center;">2013-01-12</td>
+        <td style="text-align:center;">601</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">00:47:47</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4948028059</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">H</td>
+        <td style="text-align:center;">MAWMS001</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8428420201</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">-0.726062</td>
+        <td style="text-align:center;">8428420201</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037439400</td>
+        <td style="text-align:center;">000002442700</td>
+        <td style="text-align:center;">HF01</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">WD130110398972</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-14</td>
+        <td style="text-align:center;">2013-01-14</td>
+        <td style="text-align:center;">601</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">20:47:33</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4948099977</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">H</td>
+        <td style="text-align:center;">MAWMS001</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8428479832</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">-0.726062</td>
+        <td style="text-align:center;">8428479832</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037489701</td>
+        <td style="text-align:center;">000002450217</td>
+        <td style="text-align:center;">HF01</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">WD130114405351</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-19</td>
+        <td style="text-align:center;">2013-01-19</td>
+        <td style="text-align:center;">601</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">18:02:35</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4948265450</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">H</td>
+        <td style="text-align:center;">MAWMS001</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8428602812</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">-0.726062</td>
+        <td style="text-align:center;">8428602812</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037591365</td>
+        <td style="text-align:center;">000002464695</td>
+        <td style="text-align:center;">HF01</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">WD130118414014</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">2013-01-20</td>
+        <td style="text-align:center;">2013-01-20</td>
+        <td style="text-align:center;">601</td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">18:32:56</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">4948291248</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">-1.000</td>
+        <td style="text-align:center;">2013</td>
+        <td style="text-align:center;">H</td>
+        <td style="text-align:center;">MAWMS001</td>
+        <td style="text-align:center;">8820</td>
+        <td style="text-align:center;">8428626333</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">合肥网单库</td>
+        <td style="text-align:center;">0.726062</td>
+        <td style="text-align:center;">-0.726062</td>
+        <td style="text-align:center;">8428626333</td>
+        <td style="text-align:center;">000010</td>
+        <td style="text-align:center;">0037613272</td>
+        <td style="text-align:center;">000002467131</td>
+        <td style="text-align:center;">HF01</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">WD130120416999</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">ZBX05</td>
+    </tr>
+    </tbody>
+</table>
+<script type="application/javascript">
+    var tableHead = ''
+
+    var detailTh = 'WP订单号 \n' +
+        'PO编号 \n' +
+        '销售单号 \n' +
+        '提单时间 \n' +
+        'SO \n' +
+        'DN \n' +
+        '渠道 \n' +
+        '品类 \n' +
+        '产品组 \n' +
+        '物料编号 \n' +
+        '型号 \n' +
+        '数量 \n' +
+        '样表单价 \n' +
+        '样表金额 \n' +
+        '采购价格 \n' +
+        '采购金额 \n' +
+        'WA库位码 \n' +
+        'WA库位名称 \n' +
+        '状态 \n' +
+        '出日日顺库时间 \n' +
+        '入库时间 '
+
+    var detail = {
+        fit: true,
+        fitColumns: false,
+        singleSelect: true,
+        columns: covertColumns(detailTh),
+        rownumbers: true
+    };
+
+    $(function () {
+        $("#searchBtn_dmmtlPbcsMtlMeasure").on("click", function () {
+            var kwbm = $("[kwbm]").val()
+            var wlbm = $("[wlbm]").val()
+            if (kwbm && wlbm) {
+                searchBackUp(1)
+            }else{
+                alert("物料编码和LES库存编码为必填项！")
+            }
+        })
+    })
+
+    function searchBackUp(num) {
+        $("#dg").empty()
+        $("#dg").html($("#backup" + num).html())
+        var ths = $("#backup" + num + " thead")[0].innerText;
+        $("#dg").datagrid({
+            fit: true,
+            fitColumns: true,
+            toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure',
+            striped: true,
+            columns: covertColumns(ths),
+            pagination: true,
+            pageSize: 20,
+            pageList: [10, 20, 30, 40, 50],
+            rownumbers: false
+        })
+    }
+
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>

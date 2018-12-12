@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvBaseStockDao">
+    <resultMap id="invBaseStockResult" type="com.haier.stock.model.InvBaseStock">
+        <result property="stoId" column="sto_id"/>
+        <result property="sku" column="sku"/>
+        <result property="lesSecCode" column="les_sec_code"/>
+        <result property="secCode" column="sec_code"/>
+        <result property="stockQty" column="stock_qty"/>
+        <result property="frozenQty" column="frozen_qty"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <resultMap type="com.haier.stock.model.InvBaseStockLog" id="InvSectionLogResultMap">
+    </resultMap>
+		<resultMap type="com.haier.stock.model.InvBaseStockEx" id="InvSectionResultMap">
+	</resultMap>
+    <select id="get" resultMap="invBaseStockResult">
+		select
+		`sto_id`,`sku`,`les_sec_code`,`sec_code`,`stock_qty`,`frozen_qty`,`create_time`,`update_time`
+		from `inv_base_stock`
+		where `sku` = #{sku} and `sec_code` = #{code}
+	</select>
+    <select id="getForUpdate" resultMap="invBaseStockResult">
+		select
+		`sto_id`,`sku`,`les_sec_code`,`sec_code`,`stock_qty`,`frozen_qty`,`create_time`,`update_time`
+		from `inv_base_stock`
+		where `sku` = #{sku} and `sec_code` = #{sec_code}
+		FOR UPDATE
+	</select>
+    <insert id="insert" parameterType="com.haier.stock.model.InvBaseStock">
+		insert into
+		`inv_base_stock`(`sku`,`les_sec_code`,`sec_code`,`stock_qty`,`frozen_qty`,`create_time`,`update_time`,
+		`product_name`,`product_type_name`,`product_group_name`,`sec_name`,`item_property`)
+		values(#{sku},#{lesSecCode},#{secCode},#{stockQty},#{frozenQty},#{createTime},#{updateTime},#{productName},#{productTypeName},#{productGroupName},#{secName},#{itemProperty})
+	</insert>
+    <update id="update" parameterType="com.haier.stock.model.InvBaseStock">
+		update `inv_base_stock` set
+		`sku`=#{sku},`les_sec_code`=#{lesSecCode},`sec_code`=#{secCode},`stock_qty`=#{stockQty},`frozen_qty`=#{frozenQty},`create_time`=#{createTime},`update_time`=#{updateTime}
+		where `sto_id` = #{stoId}
+	</update>
+
+    <update id="updateQty">
+		<![CDATA[
+
+		update `inv_base_stock` set 
+		`frozen_qty` = case when convert(`frozen_qty`,SIGNED)-${releaseQty}>=0 then frozen_qty-${releaseQty} else 0 end,
+		`update_time`=  #{time} ,
+		`stock_qty` =`stock_qty`+(${qty}) 
+		where `sto_id` = ${id} and convert(`stock_qty`,SIGNED)+(${qty})>=0
+        ]]>
+	</update>
+    <update id="updateQtyForFrozen">
+		<![CDATA[
+		update `inv_base_stock` set 
+		`frozen_qty` = #{frozenQty},
+		`update_time`=  #{updateTime} ,
+		`stock_qty` =#{stockQty} 
+		where `sto_id` = #{stoId} and stock_qty >=#{frozenQty}
+        ]]>
+	</update>
+
+    <update id="updateStockQty">
+		<![CDATA[
+		update `inv_base_stock` set 
+		`update_time`=  #{time} ,
+		`stock_qty` = ${qty}
+		where `sto_id` = ${id}
+        ]]>
+	</update>
+    <update id="frozenQty">
+		<![CDATA[
+		update inv_base_stock SET
+		update_time = #{time},
+		frozen_qty = frozen_qty + ${frozenQty} 
+		where `sto_id` = ${id} and (convert(stock_qty,SIGNED) - frozen_qty - ${frozenQty} >= 0)
+        ]]>
+	</update>
+    <update id="releaseQty">
+		<![CDATA[
+		update inv_base_stock SET
+		update_time =  #{time},
+		frozen_qty = frozen_qty - ${releaseQty}
+		where `sto_id` = ${id} and convert(frozen_qty,SIGNED) - ${releaseQty} >= 0
+        ]]>
+	</update>
+
+    <select id="queryBySkuAndLesSecCode" resultMap="invBaseStockResult">
+		<![CDATA[
+		select
+	   `sto_id`,`sku`,`les_sec_code`,`sec_code`,`item_property`,`create_time`,`update_time`,SUM(stock_qty) AS stock_qty,SUM(frozen_qty) AS frozen_qty
+		from `inv_base_stock`
+		where `sku` = #{sku} and `les_sec_code` = #{lesSecCode} and `item_property` =10 group by les_sec_code and sku
+        ]]>
+	</select>
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+    
+    <sql id="where_fragement_machine">
+        WHERE
+        stock.item_property = 10
+        <if test="entity!=null">
+            <if test="entity.secCode != null and entity.secCode !=''">
+                <![CDATA[ and stock.sec_Code LIKE CONCAT('%', #{entity.secCode} ,'%') ]]>
+            </if>
+            <if test="entity.stockSku != null and entity.stockSku !=''">
+                <![CDATA[ and stock.sku LIKE CONCAT('%', #{entity.stockSku} ,'%') ]]>
+            </if>
+
+            <if test='entity.stockQtyCode =="AB"'>
+                <if test="entity.stockStockQty != null">
+                    <![CDATA[  and stock.stock_qty > #{entity.stockStockQty}]]>
+                </if>
+            </if>
+            <if test='entity.stockQtyCode =="AA"'>
+                <if test="entity.stockStockQty != null">
+                    <![CDATA[ and stock.stock_qty = #{entity.stockStockQty}]]>
+                </if>
+            </if>
+            <if test='entity.stockQtyCode =="BA"'>
+                <if test="entity.stockStockQty != null">
+                    <![CDATA[ and stock.stock_qty < #{entity.stockStockQty}]]>
+                </if>
+            </if>
+
+            <if test='entity.avaiableQtyCode =="AB"'>
+                <if test="entity.avaiableQty != null and entity.avaiableQty !=''">
+                    <![CDATA[  and (stock.stock_qty-stock.frozen_qty)> #{entity.avaiableQty}]]>
+                </if>
+            </if>
+            <if test='entity.avaiableQtyCode =="AA"'>
+                <if test="entity.avaiableQty != null and entity.avaiableQty !=''">
+                    <![CDATA[  and (stock.stock_qty-stock.frozen_qty) = #{entity.avaiableQty}]]>
+                </if>
+            </if>
+            <if test='entity.avaiableQtyCode =="BA"'>
+                <if test="entity.avaiableQty != null and entity.avaiableQty !=''">
+                    <![CDATA[  and (stock.stock_qty-stock.frozen_qty) < #{entity.avaiableQty}]]>
+                </if>
+            </if>
+
+            <if test=" entity.stockItemProperty !='' ">
+                <![CDATA[ and stock.item_property = #{entity.stockItemProperty} ]]>
+            </if>
+            <if test="entity.productTypeName != null and entity.productTypeName !=''">
+                <![CDATA[ and stock.product_type_name LIKE CONCAT('%', #{entity.productTypeName} ,'%') ]]>
+            </if>
+            <if test="entity.productName != null and entity.productName !=''">
+                <![CDATA[ and stock.product_name LIKE CONCAT('%', #{entity.productName} ,'%') ]]>
+            </if>
+        </if>
+    </sql>
+    <select id="getPageByCondition" resultMap="invBaseStockResult">
+        SELECT
+        stock.sku AS stockSku,
+        stock.product_type_name AS cbsCategory,
+        stock.product_name AS productName,
+        stock.sec_code AS secCode,
+        stock.sec_name AS secName,
+        stock.stock_qty AS stockStockQty,
+        stock.frozen_qty AS stockFrozenQty,
+        stock.create_time AS createTime,
+        stock.update_time AS updateTime
+        FROM
+        
+        <include refid="where_fragement"/>
+        <include refid="pagination"/>
+    </select>
+    <select id="getPagerCount" resultType="long" parameterType="com.haier.stock.model.InvBaseStock">
+        select count(1) FROM
+        
+        <include refid="where_fragement"/>
+    </select>
+    <select id="getMachinePageByCondition" resultMap="invBaseStockResult">
+        SELECT
+        stock.sto_id AS stoId,
+        stock.sec_code AS secCode,
+        stock.sec_name AS secName,
+        stock.sku AS stockSku,
+        '' AS lesSecCode,
+        ifnull(stock.stock_qty,0)-ifnull(stock.frozen_qty,0) AS avaiableQty,
+        
+        stock.create_time AS createTime,
+        stock.update_time AS updateTime,
+        stock.product_type_name AS cbsCategory,
+        stock.product_name AS productName
+        FROM
+        inv_stock stock
+        <include refid="where_fragement_machine"/>
+        <include refid="pagination"/>
+    </select>
+    <select id="getMachinePagerCount" resultType="long" parameterType="com.haier.stock.model.InvBaseStock">
+        select count(1) FROM
+        inv_stock stock
+        <include refid="where_fragement_machine"/>
+    </select>
+<select id="queryInvBaseStockList"  parameterType="Map" resultMap="InvSectionResultMap1">
+		SELECT SQL_CALC_FOUND_ROWS DISTINCT
+			stock.sec_code AS secCode,
+			stock.sec_name AS secName,
+			stock.sku AS sku,
+			stock.les_sec_code AS lesSecCode,
+			stock.stock_qty AS stockQty,
+			stock.frozen_qty AS frozenQty,
+			stock.create_time AS createTime,
+			stock.update_time AS updateTime,
+			stock.product_type_name AS cbsCategory,
+			stock.product_name AS productName,
+			stock.item_property AS itemProperty
+		FROM
+			inv_base_stock stock
+		WHERE
+			1 = 1
+		<if test="baseStock.secCode != null and baseStock.secCode !=''">
+				and stock.sec_Code like '%${baseStock.secCode}%'
+		</if>
+		<if test="baseStock.sku != null and baseStock.sku !=''">
+				and stock.sku like '%${baseStock.sku}%'
+		</if>
+		<if test="baseStock.stockQty != null">
+				and stock.stock_qty > #{baseStock.stockQty}
+		</if>
+		<if test="baseStock.avaiableQty != null">
+				and (stock.stock_qty-stock.frozen_qty)> #{baseStock.avaiableQty}
+		</if>
+		<if test="baseStock.itemProperty != null and baseStock.itemProperty !='' ">
+				and stock.item_property in (${baseStock.itemProperty})
+		</if>
+		<if test="baseStock.secName != null and baseStock.secName !='' ">
+				and stock.sec_name = #{baseStock.secName}
+		</if>
+		<if test="baseStock.cbsCategory != null and baseStock.cbsCategory !=''">
+				and stock.product_type_name like '${baseStock.cbsCategory}%'
+		</if>
+		<if test="baseStock.productName != null and baseStock.productName !=''">
+				and stock.product_name like '%${baseStock.productName}%'
+		</if>
+		<if test="baseStock.startDate!=null and baseStock.startDate!='' ">
+				and stock.update_time &gt;= #{baseStock.startDate}
+	    </if>
+	    <if test="baseStock.endDate!=null and baseStock.endDate!='' ">
+			    and stock.update_time &lt;= #{baseStock.endDate}
+        </if>
+		<if test="pager.pageSize != null and pager.pageSize &gt; 0">
+				limit #{pager.start},#{pager.pageSize}
+		</if> 
+	</select>
+		<!-- 计算列表数量 -->
+	<select id="getRowCnt" parameterType="Map" resultType="int">
+		    select FOUND_ROWS();
+	</select>
+	
+	<select id="queryInvStockList"  parameterType="Map" resultMap="InvSectionResultMap">
+		SELECT SQL_CALC_FOUND_ROWS
+			stock.sto_id AS stoId,
+			stock.sec_code AS secCode,
+			stock.sec_name AS secName,
+			stock.sku AS sku,
+			'' AS lesSecCode,
+			stock.stock_qty AS stockQty,
+			stock.create_time AS createTime,
+			stock.update_time AS updateTime,
+			stock.product_type_name AS cbsCategory,
+			stock.product_name AS productName
+		FROM
+			inv_stock stock
+		WHERE
+			stock.item_property = 10
+		<if test="invStock.secCode != null and invStock.secCode !=''">
+				and stock.sec_Code like '%${invStock.secCode}%'
+		</if>
+		<if test="invStock.sku != null and invStock.sku !=''">
+				and stock.sku like '%${invStock.sku}%'
+		</if>
+		<if test="invStock.stockQty != null">
+				and stock.stock_qty > #{invStock.stockQty}
+		</if>
+		<if test="invStock.secName != null and invStock.secName !='' ">
+				and stock.sec_name = #{invStock.secName}
+		</if>
+		<if test="invStock.cbsCategory != null and invStock.cbsCategory !=''">
+				and stock.product_type_name like '${invStock.cbsCategory}%'
+		</if>
+		<if test="invStock.productName != null and invStock.productName !=''">
+				and stock.product_name like '%${invStock.productName}%'
+		</if>
+		<if test="pager.pageSize != null and pager.pageSize &gt; 0">
+				limit #{pager.start},#{pager.pageSize}
+		</if> 
+	</select>
+	
+	<select id="queryInvBaseStockLogList"  parameterType="Map" resultMap="InvSectionLogResultMap">
+		SELECT SQL_CALC_FOUND_ROWS
+			log.sku,
+			log.product_name AS materialDescription,
+			log.les_sec_code AS lesSecCode,
+			log.sec_code AS secCode,
+			log.old_stock_qty oldStockQty,
+			log.old_frozen_qty oldFrozenQty,
+			log.new_stock_qty newStockQty,
+			log.new_frozen_qty AS newFrozenQty,
+			log.bill_type billType,
+			log.ref_no refNo,
+			log.mark mark,
+			log.create_time createTime,
+			log.sec_name secName
+		FROM
+			inv_base_stock_log log
+		WHERE
+			1 = 1
+		<if test="log.secCode != null and log.secCode !=''">
+				and log.sec_Code like '${log.secCode}%'
+		</if>
+		<if test="log.sku != null and log.sku !=''">
+				and log.sku = #{log.sku}
+		</if>
+		<if test="log.refNo != null and log.refNo !=''">
+				and log.ref_no = #{log.refNo}
+		</if>
+		<if test="log.secName != null and log.secName !='' ">
+				and log.sec_name = '%${log.secName}%'
+		</if>
+		<if test="log.startCreateTime != null and log.startCreateTime !=''">
+				and log.create_time &gt;#{log.startCreateTime}
+		</if>
+		<if test="log.endCreateTime != null and log.endCreateTime !=''">
+				and log.create_time &lt;=#{log.endCreateTime}
+		</if>
+		<if test="log.billType != null and log.billType !=''">
+				and log.bill_type = #{log.billType}
+		</if>
+		<if test="log.mark != null and log.mark !=''">
+				and log.mark = #{log.mark}
+		</if>
+		order by log.create_time desc
+		<if test="pager.pageSize != null and pager.pageSize &gt; 0">
+				limit #{pager.start},#{pager.pageSize}
+		</if> 
+	</select>
+	<select id="queryByfrozenQtyGtStockQty"  parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+			stock.sec_code AS secCode,
+			stock.sku AS sku,
+			stock.les_sec_code AS lesSecCode,
+			stock.stock_qty AS stockQty,
+			stock.frozen_qty AS frozenQty,
+			if(stock.frozen_qty-stock.stock_qty&lt;0,0,stock.frozen_qty-stock.stock_qty) AS overSold,
+			stock.create_time AS createTime,
+			stock.update_time AS updateTime
+		FROM
+		 <include refid="wherefrage" /> 
+		<!-- inv_base_stock stock
+		WHERE 1=1
+         
+            <if test="secCode != null and secCode !=''">
+                <![CDATA[ and stock.sec_Code LIKE CONCAT('%', #{secCode} ,'%') ]]>
+            </if>
+            <if test="sku != null and sku !=''">
+                <![CDATA[ and stock.sku LIKE CONCAT('%', #{sku} ,'%') ]]>
+            </if>
+            <if test="stockQty != null and stockQty !=''">
+                <![CDATA[ and stock.stock_qty LIKE CONCAT('%', #{stockQty} ,'%') ]]>
+            </if>
+            <if test="frozenQty != null and frozenQty !=''">
+                <![CDATA[ and stock.frozen_qty LIKE CONCAT('%', #{frozenQty} ,'%') ]]>
+            </if> -->
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if> 
+	</select>
+	
+		
+	<select id="queryByfrozenQtyGtStockQtyCount" parameterType="java.util.Map" resultType="Integer">
+	    select count(*) from
+	    <include refid="wherefrage" />
+	</select>
+	
+	<sql id="wherefrage">
+		inv_base_stock stock
+		WHERE 1=1
+        <!-- <if test="entity!=null">  -->
+            <if test="secCode != null and secCode !=''">
+                <![CDATA[ and stock.sec_Code LIKE CONCAT('%', #{secCode} ,'%') ]]>
+            </if>
+            <if test="sku != null and sku !=''">
+                <![CDATA[ and stock.sku LIKE CONCAT('%', #{sku} ,'%') ]]>
+            </if>
+            
+           <!--  <if test="stockQty != null and stockQty !=''">
+                <![CDATA[ and stock.stock_qty LIKE CONCAT('%', #{stockQty} ,'%') ]]>
+            </if>
+            <if test="frozenQty != null and frozenQty !=''">
+                <![CDATA[ and stock.frozen_qty LIKE CONCAT('%', #{frozenQty} ,'%') ]]>
+            </if> -->
+            
+            <if test="startDate != null and startDate !='' and endDate != null and endDate !='' ">
+                <![CDATA[ and stock.create_time BETWEEN  #{startDate} and #{endDate} ]]>
+            </if>
+
+            <if test='actualSelect =="AB"'>
+                <if test="stockQty != null">
+                    <![CDATA[  and stock.stock_qty > #{stockQty}]]>
+                </if>
+            </if>
+            <if test='actualSelect =="AA"'>
+                <if test="stockQty != null">
+                    <![CDATA[ and stock.stock_qty = #{stockQty}]]>
+                </if>
+            </if>
+            <if test='actualSelect =="BA"'>
+                <if test="stockQty != null">
+                    <![CDATA[ and stock.stock_qty < #{stockQty}]]>
+                </if>
+            </if>
+
+            <if test='frozenSelect =="AB"'>
+                <if test="frozenQty != null and frozenQty !=''">
+                    <![CDATA[  and (stock.stock_qty-stock.frozen_qty)> #{frozenQty}]]>
+                </if>
+            </if>
+            <if test='frozenSelect =="AA"'>
+                <if test="frozenQty != null and frozenQty !=''">
+                    <![CDATA[  and (stock.stock_qty-stock.frozen_qty) = #{frozenQty}]]>
+                </if>
+            </if>
+            <if test='frozenSelect =="BA"'>
+                <if test="frozenQty != null and frozenQty !=''">
+                    <![CDATA[  and (stock.stock_qty-stock.frozen_qty) < #{frozenQty}]]>
+                </if>
+            </if>
+
+            <if test="stockItemProperty !='' and stockItemProperty !=null">
+                <![CDATA[ and stock.item_property = #{entity.stockItemProperty} ]]>
+            </if>
+            <if test="productTypeName != null and productTypeName !=''">
+                <![CDATA[ and stock.product_type_name LIKE CONCAT('%', #{productTypeName} ,'%') ]]>
+            </if>
+            <if test="productName != null and productName !=''">
+                <![CDATA[ and stock.product_name LIKE CONCAT('%', #{productName} ,'%') ]]>
+            </if>
+       <!--  </if> -->
+	</sql>
+	<sql id="where_fragement">
+		inv_base_stock stock
+		WHERE 1=1
+            <if test="entity!=null"> 
+        <if test="entity.secCode != null and entity.secCode !=''"> 
+            <![CDATA[ and stock.sec_Code LIKE CONCAT('%', #{entity.secCode} ,'%') ]]>
+         </if> 
+         <if test="entity.stockSku != null and entity.stockSku !=''"> 
+            <![CDATA[ and stock.sku LIKE CONCAT('%', #{entity.stockSku} ,'%') ]]>
+         </if> 
+         <if test='entity.stockQtyCode =="AB"'> 
+             <if test="entity.stockStockQty != null"> 
+                <![CDATA[ and stock.stock_qty > #{entity.stockStockQty}]]>
+             </if> 
+         </if> 
+         <if test='entity.stockQtyCode =="AA"'> 
+             <if test="entity.stockStockQty != null"> 
+                <![CDATA[ and stock.stock_qty = #{entity.stockStockQty}]]>
+             </if> 
+         </if> 
+         <if test='entity.stockQtyCode =="BA"'> 
+             <if test="entity.stockStockQty != null"> 
+                <![CDATA[ and stock.stock_qty < #{entity.stockStockQty}]]>
+             </if> 
+         </if> 
+         <if test='entity.avaiableQtyCode =="AB"'> 
+             <if test="entity.avaiableQty != null and entity.avaiableQty !=''"> 
+                <![CDATA[ and (stock.stock_qtystock.frozen_qty)> #{entity.avaiableQty}]]>
+             </if> 
+         </if> 
+         <if test='entity.avaiableQtyCode =="AA"'> 
+             <if test="entity.avaiableQty != null and entity.avaiableQty !=''"> 
+                <![CDATA[ and (stock.stock_qtystock.frozen_qty) = #{entity.avaiableQty}]]>
+             </if> 
+         </if> 
+         <if test='entity.avaiableQtyCode =="BA"'> 
+             <if test="entity.avaiableQty != null and entity.avaiableQty !=''"> 
+                <![CDATA[ and (stock.stock_qtystock.frozen_qty) < #{entity.avaiableQty}]]>
+             </if> 
+         </if> 
+         <if test=" entity.stockItemProperty !='' "> 
+            <![CDATA[ and stock.item_property = #{entity.stockItemProperty} ]]>
+         </if> 
+         <if test="entity.productTypeName != null and entity.productTypeName !=''"> 
+            <![CDATA[ and stock.product_type_name LIKE CONCAT('%', #{entity.productTypeName} ,'%') ]]>
+         </if> 
+         <if test="entity.productName != null and entity.productName !=''"> 
+            <![CDATA[ and stock.product_name LIKE CONCAT('%', #{entity.productName} ,'%') ]]>
+         </if> 
+     </if>
+
+	</sql>
+	<resultMap type="com.haier.stock.model.InvBaseStockExcel" id="InvSectionResultMap1">
+		<result property="secCode" column="sec_code"/>
+		<result property="secName" column="sec_name"/>
+		<result property="sku" column="sku"/>
+		<result property="lesSecCode" column="les_sec_code"/>
+		<result property="stockQty" column="stock_qty"/>
+		<result property="frozenQty" column="frozen_qty"/>
+		<result property="createTime" column="create_time"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="cbsCategory" column="product_type_name"/>
+		<result property="productName" column="product_name"/>
+		<result property="itemProperty" column="item_property"/>
+	</resultMap>
+	<select id="queryInvBaseStockCountList"   resultMap="InvSectionResultMap1">
+		SELECT SQL_CALC_FOUND_ROWS DISTINCT
+		stock.sec_code,
+		stock.sec_name,
+		stock.sku,
+		stock.les_sec_code,
+		stock.stock_qty,
+		stock.frozen_qty,
+		stock.create_time,
+		stock.update_time,
+		stock.product_type_name,
+		stock.product_name,
+		stock.item_property
+		FROM
+		inv_base_stock stock
+		WHERE
+		1 = 1
+		<if test="baseStock.secCode != null and baseStock.secCode !=''">
+			and stock.sec_Code like '%${baseStock.secCode}%'
+		</if>
+		<if test="baseStock.sku != null and baseStock.sku !=''">
+			and stock.sku like '%${baseStock.sku}%'
+		</if>
+		<if test="baseStock.stockQty != null">
+			and stock.stock_qty > #{baseStock.stockQty}
+		</if>
+		<if test="baseStock.avaiableQty != null">
+			and (stock.stock_qty-stock.frozen_qty)> #{baseStock.avaiableQty}
+		</if>
+		<!--<if test="baseStock.frozenQty != 0">
+            and stock.frozen_qty = #{baseStock.frozenQty}
+        </if>-->
+		<if test="baseStock.itemProperty != null and baseStock.itemProperty !='' ">
+			and stock.item_property in (${baseStock.itemProperty})
+		</if>
+		<if test="baseStock.secName != null and baseStock.secName !='' ">
+			and stock.sec_name = #{baseStock.secName}
+		</if>
+		<if test="baseStock.cbsCategory != null and baseStock.cbsCategory !=''">
+			and stock.product_type_name like '${baseStock.cbsCategory}%'
+		</if>
+		<if test="baseStock.productName != null and baseStock.productName !=''">
+			and stock.product_name like '%${baseStock.productName}%'
+		</if>
+		<if test="baseStock.startDate!=null and baseStock.startDate!='' ">
+			and stock.update_time &gt;= #{baseStock.startDate}
+		</if>
+		<if test="baseStock.endDate!=null and baseStock.endDate!='' ">
+			and stock.update_time &lt;= #{baseStock.endDate}
+		</if>
+	</select>
+
+	<select id="queryInvBaseStockList1"  resultMap="InvSectionResultMap1">
+		SELECT SQL_CALC_FOUND_ROWS DISTINCT
+		stock.sec_code,
+		stock.sec_name,
+		stock.sku,
+		stock.les_sec_code,
+		stock.stock_qty,
+		stock.frozen_qty,
+		stock.create_time,
+		stock.update_time,
+		stock.product_type_name,
+		stock.product_name,
+		stock.item_property
+		FROM
+		inv_base_stock stock
+		WHERE
+		1 = 1
+		<if test="baseStock.secCode != null and baseStock.secCode !=''">
+			and stock.sec_Code like '%${baseStock.secCode}%'
+		</if>
+		<if test="baseStock.sku != null and baseStock.sku !=''">
+			and stock.sku like '%${baseStock.sku}%'
+		</if>
+		<if test="baseStock.stockQty != null">
+			and stock.stock_qty > #{baseStock.stockQty}
+		</if>
+		<if test="baseStock.avaiableQty != null">
+			and (stock.stock_qty-stock.frozen_qty)> #{baseStock.avaiableQty}
+		</if>
+		<!-- <if test="baseStock.frozenQty != 0">
+             and stock.frozen_qty = #{baseStock.frozenQty}
+         </if>-->
+		<if test="baseStock.itemProperty != null and baseStock.itemProperty !='' ">
+			and stock.item_property in (${baseStock.itemProperty})
+		</if>
+		<if test="baseStock.secName != null and baseStock.secName !='' ">
+			and stock.sec_name = #{baseStock.secName}
+		</if>
+		<if test="baseStock.cbsCategory != null and baseStock.cbsCategory !=''">
+			and stock.product_type_name like '${baseStock.cbsCategory}%'
+		</if>
+		<if test="baseStock.productName != null and baseStock.productName !=''">
+			and stock.product_name like '%${baseStock.productName}%'
+		</if>
+		<if test="baseStock.startDate!=null and baseStock.startDate!='' ">
+			and stock.update_time &gt;= #{baseStock.startDate}
+		</if>
+		<if test="baseStock.endDate!=null and baseStock.endDate!='' ">
+			and stock.update_time &lt;= #{baseStock.endDate}
+		</if>
+		<if test="pager.pageSize != null and pager.pageSize &gt; 0">
+			limit #{pager.start},#{pager.pageSize}
+		</if>
+	</select>
+</mapper>

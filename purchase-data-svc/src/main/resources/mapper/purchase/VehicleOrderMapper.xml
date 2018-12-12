@@ -1,0 +1,1248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.vehcile.VehicleOrderDao">
+
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="vehicleOrderMap"
+		type="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		<result column="order_id" property="orderId" jdbcType="DECIMAL" />
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="corp_code" property="corpCode" jdbcType="VARCHAR" />
+		<result column="corp_name" property="corpName" jdbcType="VARCHAR" />
+		<result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+		<result column="area_name" property="areaName" jdbcType="VARCHAR" />
+		<result column="jd_code" property="jdCode" jdbcType="VARCHAR" />
+		<result column="jd_name" property="jdName" jdbcType="VARCHAR" />
+		<result column="distribution_centre" property="distributionCentre"
+			jdbcType="VARCHAR" />
+		<result column="distribution_centre_name" property="distributionCentreName"
+			jdbcType="VARCHAR" />
+		<result column="sold_to_code" property="soldToCode" jdbcType="VARCHAR" />
+		<result column="sold_to_name" property="soldToName" jdbcType="VARCHAR" />
+		<result column="mg_cust_code" property="mgCustCode" jdbcType="VARCHAR" />
+		<result column="delivery_code" property="deliveryCode"
+			jdbcType="VARCHAR" />
+		<result column="delivery_name" property="deliveryName"
+			jdbcType="VARCHAR" />
+		<result column="total_rebate" property="totalRebate" jdbcType="DECIMAL" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+		<result column="rows" property="rows" jdbcType="DECIMAL" />
+		<result column="loading_volume" property="loadingVolume"
+			jdbcType="DECIMAL" />
+		<result column="car_type" property="carType" jdbcType="VARCHAR" />
+		<result column="car_type_name" property="carTypeName" jdbcType="VARCHAR" />
+		<result column="isxg" property="isxg" jdbcType="VARCHAR" />
+		<result column="ispingcar" property="ispingcar" jdbcType="VARCHAR" />
+		<result column="min_volume" property="minVolume" jdbcType="DECIMAL" />
+		<result column="max_volume" property="maxVolume" jdbcType="DECIMAL" />
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="date_of_arrival" property="dateOfArrival"
+			jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="last_update_by" property="lastUpdateBy"
+			jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="DATE" />
+	</resultMap>
+
+	<resultMap id="vehicleExport"
+		type="com.haier.purchase.data.model.vehcile.ExportVehicleDTO">
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="item_no" property="itemNo" jdbcType="VARCHAR" />
+		<result column="vbeln_dn1" property="vbelnDn1" jdbcType="VARCHAR" />
+		<result column="vbeln_spare" property="vbelnSpare" jdbcType="VARCHAR" />
+		<result column="lbx" property="lbx" jdbcType="VARCHAR" />
+		<result column="rows" property="rows" jdbcType="DECIMAL" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="materiel_id" property="materielId" jdbcType="VARCHAR" />
+		<result column="materiel_code" property="materielCode"
+			jdbcType="VARCHAR" />
+		<result column="materiel_name" property="materielName"
+			jdbcType="VARCHAR" />
+		<result column="product_group" property="productGroup"
+			jdbcType="VARCHAR" />
+		<result column="product_group_name" property="productGroupName"
+			jdbcType="VARCHAR" />
+		<result column="brand" property="brand" jdbcType="VARCHAR" />
+		<result column="qty" property="qty" jdbcType="DECIMAL" />
+		<result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+		<result column="volume" property="volume" jdbcType="DECIMAL" />
+		<result column="total_volume" property="totalVolume" jdbcType="DECIMAL" />
+		<result column="payment_code" property="paymentCode" jdbcType="VARCHAR" />
+		<result column="payment_name" property="paymentName" jdbcType="VARCHAR" />
+		<result column="zq_item_no" property="zqItemNo" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="jd_name" property="jdName" />
+		<result column="delivery_code" property="deliveryCode" />
+		<result column="delivery_name" property="deliveryName" />
+		<result column="distribution_centre" property="distributionCentre" />
+		<result column="distribution_centre_name" property="distributionCentreName" />
+		<!--<result column="wh_code" property="whCode" /> -->
+		<result column="order_time" property="orderTime" />
+		<result column="date_of_arrival" property="dateOfArrival" />
+	</resultMap>
+
+	<!-- =========================================================== -->
+	<!-- 公共变量定义 -->
+	<!-- =========================================================== -->
+	<!-- oracle 分页头部 -->
+	<sql id="pagination_Head">
+    <![CDATA[
+
+
+
+        select * from ( select row_.*, rownum rownum_ from (
+
+
+
+        ]]>
+	</sql>
+	<!-- oracle 分页尾部 -->
+	<sql id="pagination_Tail">
+    <![CDATA[
+
+
+
+        ) row_ where rownum < (#{pager.page} * #{pager.rows} +1) ) where rownum_ >= ((#{pager.page} -1) * #{pager.rows} +1)
+
+
+
+        ]]>
+	</sql>
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+    <![CDATA[
+
+
+
+        select count(1) from (
+
+
+
+        ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+    <![CDATA[
+
+
+
+        )
+
+
+
+        ]]>
+	</sql>
+	<sql id="pagination_OrderBy">
+		<if test="pager.sort != null and pager.sort !=''">
+			ORDER BY ${pager.sort} ${pager.order}
+		</if>
+	</sql>
+
+	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		order_id
+		,order_no
+		,type
+		,status
+		,corp_code
+		,corp_name
+		,area_code
+		,area_name
+		,jd_code
+		,jd_name
+		,distribution_centre
+		,distribution_centre_name
+		,sold_to_code
+		,sold_to_name
+		,mg_cust_code
+		,delivery_code
+		,delivery_name
+		,total_rebate
+		,amount
+		,rows
+		,loading_volume
+		,car_type
+		,car_type_name
+		,isxg
+		,ispingcar
+		,min_volume
+		,max_volume
+		,order_time
+		,date_of_arrival
+		,remark
+		,create_by
+		,create_time
+		,last_update_by
+		,last_update_time
+	</sql>
+
+	<!-- 查询条件 -->
+	<sql id="where_fragement">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.orderId != null and entity.orderId !='' ">
+                <![CDATA[ and order_id  = #{entity.orderId} ]]>
+			</if>
+			<if test="entity.orderNo != null and entity.orderNo !='' ">
+                <![CDATA[ and order_no  LIKE '%' || #{entity.orderNo} ||'%']]>
+			</if>
+			<if test="entity.type != null and entity.type !='' ">
+                <![CDATA[ and type  LIKE '%' || #{entity.type} ||'%']]>
+			</if>
+			<if test="entity.status != null and entity.status !='' ">
+                <![CDATA[ and status  LIKE '%' || #{entity.status} ||'%']]>
+			</if>
+			<if test="entity.corpCode != null and entity.corpCode !='' ">
+                <![CDATA[ and corp_code  LIKE '%' || #{entity.corpCode} ||'%']]>
+			</if>
+			<if test="entity.corpName != null and entity.corpName !='' ">
+                <![CDATA[ and corp_name  LIKE '%' || #{entity.corpName} ||'%']]>
+			</if>
+			<if test="entity.areaCode != null and entity.areaCode !='' ">
+                <![CDATA[ and area_code  LIKE '%' || #{entity.areaCode} ||'%']]>
+			</if>
+			<if test="entity.areaName != null and entity.areaName !='' ">
+                <![CDATA[ and area_name  LIKE '%' || #{entity.areaName} ||'%']]>
+			</if>
+			<if test="entity.jdCode != null and entity.jdCode !='' ">
+                <![CDATA[ and jd_code  LIKE '%' || #{entity.jdCode} ||'%']]>
+			</if>
+			<if test="entity.jdName != null and entity.jdName !='' ">
+                <![CDATA[ and jd_name  LIKE '%' || #{entity.jdName} ||'%']]>
+			</if>
+			<if
+				test="entity.distributionCentre != null and entity.distributionCentre !='' ">
+                <![CDATA[ and distribution_centre  LIKE '%' || #{entity.distributionCentre} ||'%']]>
+			</if>
+			<if
+				test="entity.distributionCentreName != null and entity.distributionCentreName !='' ">
+                <![CDATA[ and distribution_centre_name  LIKE '%' || #{entity.distributionCentreName} ||'%']]>
+			</if>
+			<if test="entity.soldToCode != null and entity.soldToCode !='' ">
+                <![CDATA[ and sold_to_code  LIKE '%' || #{entity.soldToCode} ||'%']]>
+			</if>
+			<if test="entity.soldToName != null and entity.soldToName !='' ">
+                <![CDATA[ and sold_to_name  LIKE '%' || #{entity.soldToName} ||'%']]>
+			</if>
+			<if test="entity.mgCustCode != null and entity.mgCustCode !='' ">
+                <![CDATA[ and mg_cust_code  LIKE '%' || #{entity.mgCustCode} ||'%']]>
+			</if>
+			<if test="entity.deliveryCode != null and entity.deliveryCode !='' ">
+                <![CDATA[ and delivery_code  LIKE '%' || #{entity.deliveryCode} ||'%']]>
+			</if>
+			<if test="entity.deliveryName != null and entity.deliveryName !='' ">
+                <![CDATA[ and delivery_name  LIKE '%' || #{entity.deliveryName} ||'%']]>
+			</if>
+			<if test="entity.totalRebate != null and entity.totalRebate !='' ">
+                <![CDATA[ and total_rebate  = #{entity.totalRebate} ]]>
+			</if>
+			<if test="entity.amount != null and entity.amount !='' ">
+                <![CDATA[ and amount  = #{entity.amount} ]]>
+			</if>
+			<if test="entity.rows != null and entity.rows !='' ">
+                <![CDATA[ and rows  = #{entity.rows} ]]>
+			</if>
+			<if test="entity.loadingVolume != null and entity.loadingVolume !='' ">
+                <![CDATA[ and loading_volume  = #{entity.loadingVolume} ]]>
+			</if>
+			<if test="entity.carType != null and entity.carType !='' ">
+                <![CDATA[ and car_type  LIKE '%' || #{entity.carType} ||'%']]>
+			</if>
+			<if test="entity.carTypeName != null and entity.carTypeName !='' ">
+                <![CDATA[ and car_type_name  LIKE '%' || #{entity.carTypeName} ||'%']]>
+			</if>
+			<if test="entity.isxg != null and entity.isxg !='' ">
+                <![CDATA[ and isxg  LIKE '%' || #{entity.isxg} ||'%']]>
+			</if>
+			<if test="entity.ispingcar != null and entity.ispingcar !='' ">
+                <![CDATA[ and ispingcar  LIKE '%' || #{entity.ispingcar} ||'%']]>
+			</if>
+			<if test="entity.minVolume != null and entity.minVolume !='' ">
+                <![CDATA[ and min_volume  = #{entity.minVolume} ]]>
+			</if>
+			<if test="entity.maxVolume != null and entity.maxVolume !='' ">
+                <![CDATA[ and max_volume  = #{entity.maxVolume} ]]>
+			</if>
+			<if test="entity.orderTime != null ">
+                <![CDATA[ and order_time  = #{entity.orderTime} ]]>
+			</if>
+			<if test="entity.dateOfArrival != null ">
+                <![CDATA[ and date_of_arrival  = #{entity.dateOfArrival} ]]>
+			</if>
+			<if test="entity.remark != null and entity.remark !='' ">
+                <![CDATA[ and remark  LIKE '%' || #{entity.remark} ||'%']]>
+			</if>
+			<if test="entity.createBy != null and entity.createBy !='' ">
+                <![CDATA[ and create_by  LIKE '%' || #{entity.createBy} ||'%']]>
+			</if>
+			<if test="entity.createTime != null ">
+                <![CDATA[ and create_time  = #{entity.createTime} ]]>
+			</if>
+			<if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+                <![CDATA[ and last_update_by  LIKE '%' || #{entity.lastUpdateBy} ||'%']]>
+			</if>
+			<if test="entity.lastUpdateTime != null ">
+                <![CDATA[ and last_update_time  = #{entity.lastUpdateTime} ]]>
+			</if>
+		</if>
+	</sql>
+
+	<!-- 相等查询条件 -->
+	<sql id="where_fragement_equals">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.orderId != null and entity.orderId !='' ">
+                <![CDATA[ and order_id  = #{entity.orderId} ]]>
+			</if>
+			<if test="entity.orderNo != null and entity.orderNo !='' ">
+                <![CDATA[ and order_no  = #{entity.orderNo} ]]>
+			</if>
+			<if test="entity.type != null and entity.type !='' ">
+                <![CDATA[ and type  = #{entity.type} ]]>
+			</if>
+			<if test="entity.status != null and entity.status !='' ">
+                <![CDATA[ and status  = #{entity.status} ]]>
+			</if>
+			<if test="entity.corpCode != null and entity.corpCode !='' ">
+                <![CDATA[ and corp_code  = #{entity.corpCode} ]]>
+			</if>
+			<if test="entity.corpName != null and entity.corpName !='' ">
+                <![CDATA[ and corp_name  = #{entity.corpName} ]]>
+			</if>
+			<if test="entity.areaCode != null and entity.areaCode !='' ">
+                <![CDATA[ and area_code  = #{entity.areaCode} ]]>
+			</if>
+			<if test="entity.areaName != null and entity.areaName !='' ">
+                <![CDATA[ and area_name  = #{entity.areaName} ]]>
+			</if>
+			<if test="entity.jdCode != null and entity.jdCode !='' ">
+                <![CDATA[ and jd_code  = #{entity.jdCode} ]]>
+			</if>
+			<if test="entity.jdName != null and entity.jdName !='' ">
+                <![CDATA[ and jd_name  = #{entity.jdName} ]]>
+			</if>
+			<if
+				test="entity.distributionCentre != null and entity.distributionCentre !='' ">
+                <![CDATA[ and distribution_centre  = #{entity.distributionCentre} ]]>
+			</if>
+			<if
+				test="entity.distributionCentreName != null and entity.distributionCentreName !='' ">
+                <![CDATA[ and distribution_centre_name  = #{entity.distributionCentreName} ]]>
+			</if>
+			<if test="entity.soldToCode != null and entity.soldToCode !='' ">
+                <![CDATA[ and sold_to_code  = #{entity.soldToCode} ]]>
+			</if>
+			<if test="entity.soldToName != null and entity.soldToName !='' ">
+                <![CDATA[ and sold_to_name  = #{entity.soldToName} ]]>
+			</if>
+			<if test="entity.mgCustCode != null and entity.mgCustCode !='' ">
+                <![CDATA[ and mg_cust_code  = #{entity.mgCustCode} ]]>
+			</if>
+			<if test="entity.deliveryCode != null and entity.deliveryCode !='' ">
+                <![CDATA[ and delivery_code  = #{entity.deliveryCode} ]]>
+			</if>
+			<if test="entity.deliveryName != null and entity.deliveryName !='' ">
+                <![CDATA[ and delivery_name  = #{entity.deliveryName} ]]>
+			</if>
+			<if test="entity.totalRebate != null and entity.totalRebate !='' ">
+                <![CDATA[ and total_rebate  = #{entity.totalRebate} ]]>
+			</if>
+			<if test="entity.amount != null and entity.amount !='' ">
+                <![CDATA[ and amount  = #{entity.amount} ]]>
+			</if>
+			<if test="entity.rows != null and entity.rows !='' ">
+                <![CDATA[ and rows  = #{entity.rows} ]]>
+			</if>
+			<if test="entity.loadingVolume != null and entity.loadingVolume !='' ">
+                <![CDATA[ and loading_volume  = #{entity.loadingVolume} ]]>
+			</if>
+			<if test="entity.carType != null and entity.carType !='' ">
+                <![CDATA[ and car_type  = #{entity.carType} ]]>
+			</if>
+			<if test="entity.carTypeName != null and entity.carTypeName !='' ">
+                <![CDATA[ and car_type_name  = #{entity.carTypeName} ]]>
+			</if>
+			<if test="entity.isxg != null and entity.isxg !='' ">
+                <![CDATA[ and isxg  = #{entity.isxg} ]]>
+			</if>
+			<if test="entity.ispingcar != null and entity.ispingcar !='' ">
+                <![CDATA[ and ispingcar  = #{entity.ispingcar} ]]>
+			</if>
+			<if test="entity.minVolume != null and entity.minVolume !='' ">
+                <![CDATA[ and min_volume  = #{entity.minVolume} ]]>
+			</if>
+			<if test="entity.maxVolume != null and entity.maxVolume !='' ">
+                <![CDATA[ and max_volume  = #{entity.maxVolume} ]]>
+			</if>
+			<if test="entity.orderTime != null ">
+                <![CDATA[ and order_time  = #{entity.orderTime} ]]>
+			</if>
+			<if test="entity.dateOfArrival != null ">
+                <![CDATA[ and date_of_arrival  = #{entity.dateOfArrival} ]]>
+			</if>
+			<if test="entity.remark != null and entity.remark !='' ">
+                <![CDATA[ and remark  = #{entity.remark} ]]>
+			</if>
+			<if test="entity.createBy != null and entity.createBy !='' ">
+                <![CDATA[ and create_by  = #{entity.createBy} ]]>
+			</if>
+			<if test="entity.createTime != null ">
+                <![CDATA[ and create_time  = #{entity.createTime} ]]>
+			</if>
+			<if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+                <![CDATA[ and last_update_by  = #{entity.lastUpdateBy} ]]>
+			</if>
+			<if test="entity.lastUpdateTime != null ">
+                <![CDATA[ and last_update_time  = #{entity.lastUpdateTime} ]]>
+			</if>
+			<if test="entity.startOrderTime != null ">
+                <![CDATA[ and order_time > #{entity.startOrderTime} ]]>
+			</if>
+			<if test="entity.endOrderTime != null ">
+                <![CDATA[ and order_time < #{entity.endOrderTime} ]]>
+			</if>
+		</if>
+	</sql>
+
+	<sql id="where_fragement_like">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.orderId != null and entity.orderId !='' ">
+				<![CDATA[ and order_id  = #{entity.orderId} ]]>
+			</if>
+			<if test="entity.orderNo != null and entity.orderNo !='' ">
+				AND UPPER(order_no) LIKE CONCAT(CONCAT('%',UPPER
+				(#{entity.orderNo})),'%')
+			</if>
+			<if test="entity.type != null and entity.type !='' ">
+				<![CDATA[ and type  = #{entity.type} ]]>
+			</if>
+			<if test="entity.status != null and entity.status !='' ">
+				<![CDATA[ and status  = #{entity.status} ]]>
+			</if>
+			<if test="entity.corpCode != null and entity.corpCode !='' ">
+				<![CDATA[ and corp_code  = #{entity.corpCode} ]]>
+			</if>
+			<if test="entity.corpName != null and entity.corpName !='' ">
+				<![CDATA[ and corp_name  = #{entity.corpName} ]]>
+			</if>
+			<if test="entity.areaCode != null and entity.areaCode !='' ">
+				<![CDATA[ and area_code  = #{entity.areaCode} ]]>
+			</if>
+			<if test="entity.areaName != null and entity.areaName !='' ">
+				<![CDATA[ and area_name  = #{entity.areaName} ]]>
+			</if>
+			<if test="entity.jdCode != null and entity.jdCode !='' ">
+				<![CDATA[ and jd_code  = #{entity.jdCode} ]]>
+			</if>
+			<if test="entity.jdName != null and entity.jdName !='' ">
+				<![CDATA[ and jd_name  = #{entity.jdName} ]]>
+			</if>
+			<if
+				test="entity.distributionCentre != null and entity.distributionCentre !='' ">
+				<![CDATA[ and distribution_centre  = #{entity.distributionCentre} ]]>
+			</if>
+			<if
+				test="entity.distributionCentreName != null and entity.distributionCentreName !='' ">
+				<![CDATA[ and distribution_centre_name  = #{entity.distributionCentreName} ]]>
+			</if>
+			<if test="entity.soldToCode != null and entity.soldToCode !='' ">
+				<![CDATA[ and sold_to_code  = #{entity.soldToCode} ]]>
+			</if>
+			<if test="entity.soldToName != null and entity.soldToName !='' ">
+				<![CDATA[ and sold_to_name  = #{entity.soldToName} ]]>
+			</if>
+			<if test="entity.mgCustCode != null and entity.mgCustCode !='' ">
+				<![CDATA[ and mg_cust_code  = #{entity.mgCustCode} ]]>
+			</if>
+			<if test="entity.deliveryCode != null and entity.deliveryCode !='' ">
+				<![CDATA[ and delivery_code  = #{entity.deliveryCode} ]]>
+			</if>
+			<if test="entity.deliveryName != null and entity.deliveryName !='' ">
+				<![CDATA[ and delivery_name  = #{entity.deliveryName} ]]>
+			</if>
+			<if test="entity.totalRebate != null and entity.totalRebate !='' ">
+				<![CDATA[ and total_rebate  = #{entity.totalRebate} ]]>
+			</if>
+			<if test="entity.amount != null and entity.amount !='' ">
+				<![CDATA[ and amount  = #{entity.amount} ]]>
+			</if>
+			<if test="entity.rows != null and entity.rows !='' ">
+				<![CDATA[ and rows  = #{entity.rows} ]]>
+			</if>
+			<if test="entity.loadingVolume != null and entity.loadingVolume !='' ">
+				<![CDATA[ and loading_volume  = #{entity.loadingVolume} ]]>
+			</if>
+			<if test="entity.carType != null and entity.carType !='' ">
+				<![CDATA[ and car_type  = #{entity.carType} ]]>
+			</if>
+			<if test="entity.carTypeName != null and entity.carTypeName !='' ">
+				<![CDATA[ and car_type_name  = #{entity.carTypeName} ]]>
+			</if>
+			<if test="entity.isxg != null and entity.isxg !='' ">
+				<![CDATA[ and isxg  = #{entity.isxg} ]]>
+			</if>
+			<if test="entity.ispingcar != null and entity.ispingcar !='' ">
+				<![CDATA[ and ispingcar  = #{entity.ispingcar} ]]>
+			</if>
+			<if test="entity.minVolume != null and entity.minVolume !='' ">
+				<![CDATA[ and min_volume  = #{entity.minVolume} ]]>
+			</if>
+			<if test="entity.maxVolume != null and entity.maxVolume !='' ">
+				<![CDATA[ and max_volume  = #{entity.maxVolume} ]]>
+			</if>
+			<if test="entity.orderTime != null ">
+				<![CDATA[ and order_time  = #{entity.orderTime} ]]>
+			</if>
+			<if test="entity.dateOfArrival != null ">
+				<![CDATA[ and date_of_arrival  = #{entity.dateOfArrival} ]]>
+			</if>
+			<if test="entity.remark != null and entity.remark !='' ">
+				<![CDATA[ and remark  = #{entity.remark} ]]>
+			</if>
+			<if test="entity.createBy != null and entity.createBy !='' ">
+				<![CDATA[ and create_by  = #{entity.createBy} ]]>
+			</if>
+			<if test="entity.createTime != null ">
+				<![CDATA[ and create_time  = #{entity.createTime} ]]>
+			</if>
+			<if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+				<![CDATA[ and last_update_by  = #{entity.lastUpdateBy} ]]>
+			</if>
+			<if test="entity.lastUpdateTime != null ">
+				<![CDATA[ and last_update_time  = #{entity.lastUpdateTime} ]]>
+			</if>
+			<if test="entity.startOrderTime != null ">
+				<![CDATA[ and order_time > #{entity.startOrderTime} ]]>
+			</if>
+			<if test="entity.endOrderTime != null ">
+				<![CDATA[ and order_time < #{entity.endOrderTime} ]]>
+			</if>
+		</if>
+	</sql>
+
+	<!-- =========================================================== -->
+	<!-- Mapper中的基本增删改查方法 -->
+	<!-- =========================================================== -->
+	<!-- 根据id查询 -->
+	<select id="getOneById" resultMap="vehicleOrderMap"
+		parameterType="Long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM vehicle_order
+		WHERE order_id = #{id}
+	</select>
+
+	<select id="getVehicleOrderNo" resultType="String">
+		CALL
+		generate_orderNo(#{begin});
+	</select>
+
+	<!-- 根据Condition查询 -->
+	<select id="getOneByCondition" resultMap="vehicleOrderMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM vehicle_order
+		<include refid="where_fragement_equals" />
+	</select>
+
+
+	<!-- 查询page -->
+	<select id="getPageByCondition" resultMap="vehicleOrderMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM vehicle_order
+		<include refid="where_fragement_like" />
+
+		<if test="entity.noStatus != null and entity.noStatus !='' ">
+			and status not in
+			<foreach collection="entity.noStatus" item="item" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		order by order_no desc
+		<include refid="pagination" />
+	</select>
+	<!--分页count -->
+	<select id="getPagerCount" resultType="long"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		select count(1) from vehicle_order
+		<include refid="where_fragement_like" />
+		<if test="entity.noStatus != null and entity.noStatus !='' ">
+			and status not in
+			<foreach collection="entity.noStatus" item="item" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<!--查询总条数 -->
+	<select id="countByCondition"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO"
+		resultType="long">
+		<include refid="count_Start_Head" />
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM vehicle_order
+		<include refid="where_fragement" />
+		<include refid="count_Start_Tail" />
+	</select>
+
+	<!-- 查询list -->
+	<select id="getListByCondition" resultMap="vehicleOrderMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM vehicle_order
+		<include refid="where_fragement_equals" />
+	</select>
+
+	<!-- 插入全字段 -->
+	<insert id="insertAllColumn"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		INSERT INTO vehicle_order (
+		<include refid="Base_Column_List" />
+		)VALUES(
+		#{orderId,jdbcType=DECIMAL}
+		,#{orderNo,jdbcType=VARCHAR}
+		,#{type,jdbcType=VARCHAR}
+		,#{status,jdbcType=VARCHAR}
+		,#{jdCode,jdbcType=VARCHAR}
+		,#{jdName,jdbcType=VARCHAR}
+		,#{distributionCentre,jdbcType=VARCHAR}
+		,#{distributionCentreName,jdbcType=VARCHAR}
+		,#{soldToCode,jdbcType=VARCHAR}
+		,#{soldToName,jdbcType=VARCHAR}
+		,#{deliveryCode,jdbcType=VARCHAR}
+		,#{deliveryName,jdbcType=VARCHAR}
+		,#{paymentCode,jdbcType=VARCHAR}
+		,#{paymentName,jdbcType=VARCHAR}
+		,#{totalRebate,jdbcType=DECIMAL}
+		,#{amount,jdbcType=DECIMAL}
+		,#{loadingVolume,jdbcType=DECIMAL}
+		,#{carType,jdbcType=VARCHAR}
+		,#{carTypeName,jdbcType=VARCHAR}
+		,#{isxg,jdbcType=VARCHAR}
+		,#{ispingcar,jdbcType=VARCHAR}
+		,#{minVolume,jdbcType=DECIMAL}
+		,#{maxVolume,jdbcType=DECIMAL}
+		,#{orderTime,jdbcType=DATE}
+		,#{dateOfArrival,jdbcType=DATE}
+		,#{remark,jdbcType=VARCHAR}
+		,#{createBy,jdbcType=VARCHAR}
+		,#{createTime,jdbcType=DATE}
+		,#{lastUpdateBy,jdbcType=VARCHAR}
+		,#{lastUpdateTime,jdbcType=DATE}
+		)
+	</insert>
+
+	<!-- 插入非空字段 -->
+	<insert id="insertSelective"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		INSERT INTO vehicle_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orderNo != null and orderNo !='' ">
+                <![CDATA[ order_no, ]]>
+			</if>
+			<if test="type != null and type !='' ">
+                <![CDATA[ type, ]]>
+			</if>
+			<if test="status != null and status !='' ">
+                <![CDATA[ status, ]]>
+			</if>
+			<if test="corpCode != null and corpCode !='' ">
+                <![CDATA[ corp_code, ]]>
+			</if>
+			<if test="corpName != null and corpName !='' ">
+                <![CDATA[ corp_name, ]]>
+			</if>
+			<if test="areaCode != null and areaCode !='' ">
+                <![CDATA[ area_code, ]]>
+			</if>
+			<if test="areaName != null and areaName !='' ">
+                <![CDATA[ area_name, ]]>
+			</if>
+			<if test="jdCode != null and jdCode !='' ">
+                <![CDATA[ jd_code, ]]>
+			</if>
+			<if test="jdName != null and jdName !='' ">
+                <![CDATA[ jd_name, ]]>
+			</if>
+			<if test="distributionCentre != null and distributionCentre !='' ">
+                <![CDATA[ distribution_centre, ]]>
+			</if>
+			<if test="distributionCentreName != null and distributionCentreName !='' ">
+                <![CDATA[ distribution_centre_name, ]]>
+			</if>
+			<if test="soldToCode != null and soldToCode !='' ">
+                <![CDATA[ sold_to_code, ]]>
+			</if>
+			<if test="soldToName != null and soldToName !='' ">
+                <![CDATA[ sold_to_name, ]]>
+			</if>
+			<if test="mgCustCode != null and mgCustCode !='' ">
+                <![CDATA[ mg_cust_code, ]]>
+			</if>
+			<if test="deliveryCode != null and deliveryCode !='' ">
+                <![CDATA[ delivery_code, ]]>
+			</if>
+			<if test="deliveryName != null and deliveryName !='' ">
+                <![CDATA[ delivery_name, ]]>
+			</if>
+			<if test="totalRebate != null and totalRebate !='' ">
+                <![CDATA[ total_rebate, ]]>
+			</if>
+			<if test="amount != null and amount !='' ">
+                <![CDATA[ amount, ]]>
+			</if>
+			<if test="rows != null and rows !='' ">
+                <![CDATA[ rows, ]]>
+			</if>
+			<if test="loadingVolume != null and loadingVolume !='' ">
+                <![CDATA[ loading_volume, ]]>
+			</if>
+			<if test="carType != null and carType !='' ">
+                <![CDATA[ car_type, ]]>
+			</if>
+			<if test="carTypeName != null and carTypeName !='' ">
+                <![CDATA[ car_type_name, ]]>
+			</if>
+			<if test="isxg != null and isxg !='' ">
+                <![CDATA[ isxg, ]]>
+			</if>
+			<if test="ispingcar != null and ispingcar !='' ">
+                <![CDATA[ ispingcar, ]]>
+			</if>
+			<if test="minVolume != null and minVolume !='' ">
+                <![CDATA[ min_volume, ]]>
+			</if>
+			<if test="maxVolume != null and maxVolume !='' ">
+                <![CDATA[ max_volume, ]]>
+			</if>
+			<if test="orderTime != null ">
+                <![CDATA[ order_time, ]]>
+			</if>
+			<if test="dateOfArrival != null ">
+                <![CDATA[ date_of_arrival, ]]>
+			</if>
+			<if test="remark != null and remark !='' ">
+                <![CDATA[ remark, ]]>
+			</if>
+			<if test="createBy != null and createBy !='' ">
+                <![CDATA[ create_by, ]]>
+			</if>
+			<if test="createTime != null ">
+                <![CDATA[ create_time, ]]>
+			</if>
+			<if test="lastUpdateBy != null and lastUpdateBy !='' ">
+                <![CDATA[ last_update_by, ]]>
+			</if>
+			<if test="lastUpdateTime != null ">
+                <![CDATA[ last_update_time, ]]>
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="orderNo != null and orderNo !='' ">
+                <![CDATA[ #{orderNo,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="type != null and type !='' ">
+                <![CDATA[ #{type,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="status != null and status !='' ">
+                <![CDATA[ #{status,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="corpCode != null and corpCode !='' ">
+                <![CDATA[ #{corpCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="corpName != null and corpName !='' ">
+                <![CDATA[ #{corpName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="areaCode != null and areaCode !='' ">
+                <![CDATA[ #{areaCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="areaName != null and areaName !='' ">
+                <![CDATA[ #{areaName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="jdCode != null and jdCode !='' ">
+                <![CDATA[ #{jdCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="jdName != null and jdName !='' ">
+                <![CDATA[ #{jdName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="distributionCentre != null and distributionCentre !='' ">
+                <![CDATA[ #{distributionCentre,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="distributionCentreName != null and distributionCentreName !='' ">
+                <![CDATA[ #{distributionCentreName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="soldToCode != null and soldToCode !='' ">
+                <![CDATA[ #{soldToCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="soldToName != null and soldToName !='' ">
+                <![CDATA[ #{soldToName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="mgCustCode != null and mgCustCode !='' ">
+                <![CDATA[ #{mgCustCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="deliveryCode != null and deliveryCode !='' ">
+                <![CDATA[ #{deliveryCode,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="deliveryName != null and deliveryName !='' ">
+                <![CDATA[ #{deliveryName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="totalRebate != null and totalRebate !='' ">
+                <![CDATA[ #{totalRebate,jdbcType=DECIMAL}, ]]>
+			</if>
+			<if test="amount != null and amount !='' ">
+                <![CDATA[ #{amount,jdbcType=DECIMAL}, ]]>
+			</if>
+			<if test="rows != null and rows !='' ">
+                <![CDATA[ #{rows,jdbcType=DECIMAL}, ]]>
+			</if>
+			<if test="loadingVolume != null and loadingVolume !='' ">
+                <![CDATA[ #{loadingVolume,jdbcType=DECIMAL}, ]]>
+			</if>
+			<if test="carType != null and carType !='' ">
+                <![CDATA[ #{carType,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="carTypeName != null and carTypeName !='' ">
+                <![CDATA[ #{carTypeName,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="isxg != null and isxg !='' ">
+                <![CDATA[ #{isxg,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="ispingcar != null and ispingcar !='' ">
+                <![CDATA[ #{ispingcar,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="minVolume != null and minVolume !='' ">
+                <![CDATA[ #{minVolume,jdbcType=DECIMAL}, ]]>
+			</if>
+			<if test="maxVolume != null and maxVolume !='' ">
+                <![CDATA[ #{maxVolume,jdbcType=DECIMAL}, ]]>
+			</if>
+			<if test="orderTime != null ">
+                <![CDATA[ #{orderTime,jdbcType=DATE}, ]]>
+			</if>
+			<if test="dateOfArrival != null ">
+                <![CDATA[ #{dateOfArrival,jdbcType=DATE}, ]]>
+			</if>
+			<if test="remark != null and remark !='' ">
+                <![CDATA[ #{remark,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="createBy != null and createBy !='' ">
+                <![CDATA[ #{createBy,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="createTime != null ">
+                <![CDATA[ #{createTime,jdbcType=DATE}, ]]>
+			</if>
+			<if test="lastUpdateBy != null and lastUpdateBy !='' ">
+                <![CDATA[ #{lastUpdateBy,jdbcType=VARCHAR}, ]]>
+			</if>
+			<if test="lastUpdateTime != null ">
+                <![CDATA[ #{lastUpdateTime,jdbcType=DATE}, ]]>
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 逻辑删除,根据主键设置active_flag ='0' -->
+	<update id="deleteLogicalById"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		UPDATE vehicle_order
+		SET ACTIVE_FLAG = '0'
+		,LAST_UPD_BY =
+		#{entity.lastUpdBy,jdbcType=VARCHAR}
+		,LAST_UPD_DATE =
+		#{entity.lastUpdDate,jdbcType=DATE}
+		,REMARK =
+		#{entity.remark,jdbcType=VARCHAR}
+		WHERE ID = #{entity.id}
+	</update>
+
+
+
+	<!-- 逻辑删除,根据主键batch设置active_flag ='0' -->
+	<update id="deleteLogicalBatchByIds">
+		UPDATE vehicle_order
+		SET ACTIVE_FLAG = '0'
+		,LAST_UPD_BY =
+		#{entity.lastUpdBy,jdbcType=VARCHAR}
+		,LAST_UPD_DATE =
+		#{entity.lastUpdDate,jdbcType=DATE}
+		,REMARK =
+		#{entity.remark,jdbcType=VARCHAR}
+		WHERE ID IN
+		<foreach collection="ids" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<!-- 修改有值列 -->
+	<update id="updateSelectiveByOrderNo"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		UPDATE vehicle_order
+		<set>
+			<if test="entity!=null">
+				<if test="entity.orderNo != null and entity.orderNo !='' ">
+                    <![CDATA[ order_no = #{entity.orderNo}, ]]>
+				</if>
+				<if test="entity.type != null and entity.type !='' ">
+                    <![CDATA[ type = #{entity.type}, ]]>
+				</if>
+				<if test="entity.status != null and entity.status !='' ">
+                    <![CDATA[ status = #{entity.status}, ]]>
+				</if>
+				<if test="entity.corpCode != null and entity.corpCode !='' ">
+                    <![CDATA[ corp_code = #{entity.corpCode}, ]]>
+				</if>
+				<if test="entity.corpName != null and entity.corpName !='' ">
+                    <![CDATA[ corp_name = #{entity.corpName}, ]]>
+				</if>
+				<if test="entity.areaCode != null and entity.areaCode !='' ">
+                    <![CDATA[ area_code = #{entity.areaCode}, ]]>
+				</if>
+				<if test="entity.areaName != null and entity.areaName !='' ">
+                    <![CDATA[ area_name = #{entity.areaName}, ]]>
+				</if>
+				<if test="entity.jdCode != null and entity.jdCode !='' ">
+                    <![CDATA[ jd_code = #{entity.jdCode}, ]]>
+				</if>
+				<if test="entity.jdName != null and entity.jdName !='' ">
+                    <![CDATA[ jd_name = #{entity.jdName}, ]]>
+				</if>
+				<if
+					test="entity.distributionCentre != null and entity.distributionCentre !='' ">
+                    <![CDATA[ distribution_centre = #{entity.distributionCentre}, ]]>
+				</if>
+				<if
+					test="entity.distributionCentreName != null and entity.distributionCentreName !='' ">
+                    <![CDATA[ distribution_centre_name = #{entity.distributionCentreName}, ]]>
+				</if>
+				<if test="entity.soldToCode != null and entity.soldToCode !='' ">
+                    <![CDATA[ sold_to_code = #{entity.soldToCode}, ]]>
+				</if>
+				<if test="entity.soldToName != null and entity.soldToName !='' ">
+                    <![CDATA[ sold_to_name = #{entity.soldToName}, ]]>
+				</if>
+				<if test="entity.mgCustCode != null and entity.mgCustCode !='' ">
+                    <![CDATA[ mg_cust_code = #{entity.mgCustCode}, ]]>
+				</if>
+				<if test="entity.deliveryCode != null and entity.deliveryCode !='' ">
+                    <![CDATA[ delivery_code = #{entity.deliveryCode}, ]]>
+				</if>
+				<if test="entity.deliveryName != null and entity.deliveryName !='' ">
+                    <![CDATA[ delivery_name = #{entity.deliveryName}, ]]>
+				</if>
+				<if test="entity.totalRebate != null and entity.totalRebate !='' ">
+                    <![CDATA[ total_rebate = #{entity.totalRebate}, ]]>
+				</if>
+				<if test="entity.amount != null and entity.amount !='' ">
+                    <![CDATA[ amount = #{entity.amount}, ]]>
+				</if>
+				<if test="entity.rows != null and entity.rows !='' ">
+                    <![CDATA[ rows = #{entity.rows}, ]]>
+				</if>
+				<if test="entity.loadingVolume != null and entity.loadingVolume !='' ">
+                    <![CDATA[ loading_volume = #{entity.loadingVolume}, ]]>
+				</if>
+				<if test="entity.carType != null and entity.carType !='' ">
+                    <![CDATA[ car_type = #{entity.carType}, ]]>
+				</if>
+				<if test="entity.carTypeName != null and entity.carTypeName !='' ">
+                    <![CDATA[ car_type_name = #{entity.carTypeName}, ]]>
+				</if>
+				<if test="entity.isxg != null and entity.isxg !='' ">
+                    <![CDATA[ isxg = #{entity.isxg}, ]]>
+				</if>
+				<if test="entity.ispingcar != null and entity.ispingcar !='' ">
+                    <![CDATA[ ispingcar = #{entity.ispingcar}, ]]>
+				</if>
+				<if test="entity.minVolume != null and entity.minVolume !='' ">
+                    <![CDATA[ min_volume = #{entity.minVolume}, ]]>
+				</if>
+				<if test="entity.maxVolume != null and entity.maxVolume !='' ">
+                    <![CDATA[ max_volume = #{entity.maxVolume}, ]]>
+				</if>
+				<if test="entity.orderTime != null ">
+                    <![CDATA[ order_time = #{entity.orderTime}, ]]>
+				</if>
+				<if test="entity.dateOfArrival != null ">
+                    <![CDATA[ date_of_arrival = #{entity.dateOfArrival}, ]]>
+				</if>
+				<if test="entity.remark != null and entity.remark !='' ">
+                    <![CDATA[ remark = #{entity.remark}, ]]>
+				</if>
+				<if test="entity.createBy != null and entity.createBy !='' ">
+                    <![CDATA[ create_by = #{entity.createBy}, ]]>
+				</if>
+				<if test="entity.createTime != null ">
+                    <![CDATA[ create_time = #{entity.createTime}, ]]>
+				</if>
+				<if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+                    <![CDATA[ last_update_by = #{entity.lastUpdateBy}, ]]>
+				</if>
+				<if test="entity.lastUpdateTime != null ">
+                    <![CDATA[ last_update_time = #{entity.lastUpdateTime}, ]]>
+				</if>
+			</if>
+		</set>
+		WHERE order_no = #{entity.orderNo}
+	</update>
+
+	<!-- 修改有值列 -->
+	<update id="updateSelectiveById"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		UPDATE vehicle_order
+		<set>
+			<if test="entity!=null">
+				<if test="entity.orderNo != null and entity.orderNo !='' ">
+                    <![CDATA[ order_no = #{entity.orderNo}, ]]>
+				</if>
+				<if test="entity.type != null and entity.type !='' ">
+                    <![CDATA[ type = #{entity.type}, ]]>
+				</if>
+				<if test="entity.status != null and entity.status !='' ">
+                    <![CDATA[ status = #{entity.status}, ]]>
+				</if>
+				<if test="entity.corpCode != null and entity.corpCode !='' ">
+                    <![CDATA[ corp_code = #{entity.corpCode}, ]]>
+				</if>
+				<if test="entity.corpName != null and entity.corpName !='' ">
+                    <![CDATA[ corp_name = #{entity.corpName}, ]]>
+				</if>
+				<if test="entity.areaCode != null and entity.areaCode !='' ">
+                    <![CDATA[ area_code = #{entity.areaCode}, ]]>
+				</if>
+				<if test="entity.areaName != null and entity.areaName !='' ">
+                    <![CDATA[ area_name = #{entity.areaName}, ]]>
+				</if>
+				<if test="entity.jdCode != null and entity.jdCode !='' ">
+                    <![CDATA[ jd_code = #{entity.jdCode}, ]]>
+				</if>
+				<if test="entity.jdName != null and entity.jdName !='' ">
+                    <![CDATA[ jd_name = #{entity.jdName}, ]]>
+				</if>
+				<if
+					test="entity.distributionCentre != null and entity.distributionCentre !='' ">
+                    <![CDATA[ distribution_centre = #{entity.distributionCentre}, ]]>
+				</if>
+				<if
+					test="entity.distributionCentreName != null and entity.distributionCentreName !='' ">
+                    <![CDATA[ distribution_centre_name = #{entity.distributionCentreName}, ]]>
+				</if>
+				<if test="entity.soldToCode != null and entity.soldToCode !='' ">
+                    <![CDATA[ sold_to_code = #{entity.soldToCode}, ]]>
+				</if>
+				<if test="entity.soldToName != null and entity.soldToName !='' ">
+                    <![CDATA[ sold_to_name = #{entity.soldToName}, ]]>
+				</if>
+				<if test="entity.mgCustCode != null and entity.mgCustCode !='' ">
+                    <![CDATA[ mg_cust_code = #{entity.mgCustCode}, ]]>
+				</if>
+				<if test="entity.deliveryCode != null and entity.deliveryCode !='' ">
+                    <![CDATA[ delivery_code = #{entity.deliveryCode}, ]]>
+				</if>
+				<if test="entity.deliveryName != null and entity.deliveryName !='' ">
+                    <![CDATA[ delivery_name = #{entity.deliveryName}, ]]>
+				</if>
+				<if test="entity.totalRebate != null and entity.totalRebate !='' ">
+                    <![CDATA[ total_rebate = #{entity.totalRebate}, ]]>
+				</if>
+				<if test="entity.amount != null and entity.amount !='' ">
+                    <![CDATA[ amount = #{entity.amount}, ]]>
+				</if>
+				<if test="entity.rows != null and entity.rows !='' ">
+                    <![CDATA[ rows = #{entity.rows}, ]]>
+				</if>
+				<if test="entity.loadingVolume != null and entity.loadingVolume !='' ">
+                    <![CDATA[ loading_volume = #{entity.loadingVolume}, ]]>
+				</if>
+				<if test="entity.carType != null and entity.carType !='' ">
+                    <![CDATA[ car_type = #{entity.carType}, ]]>
+				</if>
+				<if test="entity.carTypeName != null and entity.carTypeName !='' ">
+                    <![CDATA[ car_type_name = #{entity.carTypeName}, ]]>
+				</if>
+				<if test="entity.isxg != null and entity.isxg !='' ">
+                    <![CDATA[ isxg = #{entity.isxg}, ]]>
+				</if>
+				<if test="entity.ispingcar != null and entity.ispingcar !='' ">
+                    <![CDATA[ ispingcar = #{entity.ispingcar}, ]]>
+				</if>
+				<if test="entity.minVolume != null and entity.minVolume !='' ">
+                    <![CDATA[ min_volume = #{entity.minVolume}, ]]>
+				</if>
+				<if test="entity.maxVolume != null and entity.maxVolume !='' ">
+                    <![CDATA[ max_volume = #{entity.maxVolume}, ]]>
+				</if>
+				<if test="entity.orderTime != null ">
+                    <![CDATA[ order_time = #{entity.orderTime}, ]]>
+				</if>
+				<if test="entity.dateOfArrival != null ">
+                    <![CDATA[ date_of_arrival = #{entity.dateOfArrival}, ]]>
+				</if>
+				<if test="entity.remark != null and entity.remark !='' ">
+                    <![CDATA[ remark = #{entity.remark}, ]]>
+				</if>
+				<if test="entity.createBy != null and entity.createBy !='' ">
+                    <![CDATA[ create_by = #{entity.createBy}, ]]>
+				</if>
+				<if test="entity.createTime != null ">
+                    <![CDATA[ create_time = #{entity.createTime}, ]]>
+				</if>
+				<if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+                    <![CDATA[ last_update_by = #{entity.lastUpdateBy}, ]]>
+				</if>
+				<if test="entity.lastUpdateTime != null ">
+                    <![CDATA[ last_update_time = #{entity.lastUpdateTime}, ]]>
+				</if>
+			</if>
+		</set>
+		WHERE order_id = #{entity.orderId}
+	</update>
+
+	<!-- 修改所有列 -->
+	<update id="updateAllColumnById"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderDTO">
+		UPDATE vehicle_order
+		<set>
+			<if test="entity!=null">
+
+				order_no = #{entity.orderNo,jdbcType=VARCHAR}
+				,type =
+				#{entity.type,jdbcType=VARCHAR}
+				,status =
+				#{entity.status,jdbcType=VARCHAR}
+				,jd_code =
+				#{entity.jdCode,jdbcType=VARCHAR}
+				,jd_name =
+				#{entity.jdName,jdbcType=VARCHAR}
+				,distribution_centre =
+				#{entity.distributionCentre,jdbcType=VARCHAR}
+				,distribution_centre_name =
+				#{entity.distributionCentreName,jdbcType=VARCHAR}
+				,sold_to_code =
+				#{entity.soldToCode,jdbcType=VARCHAR}
+				,sold_to_name =
+				#{entity.soldToName,jdbcType=VARCHAR}
+				,delivery_code =
+				#{entity.deliveryCode,jdbcType=VARCHAR}
+				,delivery_name =
+				#{entity.deliveryName,jdbcType=VARCHAR}
+				,payment_code =
+				#{entity.paymentCode,jdbcType=VARCHAR}
+				,payment_name =
+				#{entity.paymentName,jdbcType=VARCHAR}
+				,total_rebate =
+				#{entity.totalRebate,jdbcType=DECIMAL}
+				,amount =
+				#{entity.amount,jdbcType=DECIMAL}
+				,loading_volume =
+				#{entity.loadingVolume,jdbcType=DECIMAL}
+				,car_type =
+				#{entity.carType,jdbcType=VARCHAR}
+				,car_type_name =
+				#{entity.carTypeName,jdbcType=VARCHAR}
+				,isxg =
+				#{entity.isxg,jdbcType=VARCHAR}
+				,ispingcar =
+				#{entity.ispingcar,jdbcType=VARCHAR}
+				,min_volume =
+				#{entity.minVolume,jdbcType=DECIMAL}
+				,max_volume =
+				#{entity.maxVolume,jdbcType=DECIMAL}
+				,order_time =
+				#{entity.orderTime,jdbcType=DATE}
+				,date_of_arrival =
+				#{entity.dateOfArrival,jdbcType=DATE}
+				,remark =
+				#{entity.remark,jdbcType=VARCHAR}
+				,create_by =
+				#{entity.createBy,jdbcType=VARCHAR}
+				,create_time =
+				#{entity.createTime,jdbcType=DATE}
+				,last_update_by =
+				#{entity.lastUpdateBy,jdbcType=VARCHAR}
+				,last_update_time =
+				#{entity.lastUpdateTime,jdbcType=DATE}
+			</if>
+		</set>
+		WHERE ID = #{entity.id}
+	</update>
+	<select id="selectVehicleExport" resultMap="vehicleExport"
+		parameterType="Map">
+		select cps.status as sapStatus,c.* from  (select entry.status as lbxStatus,b.* from (SELECT
+		a.*, vehicleOrderZqDetails.zq_item_no AS zqItemNo,
+		vehicleOrderZqDetails.vbeln_dn5 as vbelnDn5,
+		vehicleOrderZqDetails.remark as zqRemark,
+	  vehicleOrderZqDetails.status as zqStatus
+		FROM
+		(
+		SELECT
+		vehicleOrder.order_no AS orderNo,
+		vehicleOrder.jd_name AS jdName,
+		vehicleOrder.delivery_code AS deliveryCode,
+		vehicleOrder.delivery_name AS deliveryName,
+		vehicleOrder.distribution_centre AS distributionCentre,
+		vehicleOrder.distribution_centre_name AS distributionCentreName,
+		vehicleOrder.order_time AS orderTime,
+		vehicleOrder.date_of_arrival AS dateOfArrival,
+		vehicleOrderDetails.item_no AS itemNo,
+		vehicleOrderDetails.vbeln_dn1 AS vbelnDn1,
+		vehicleOrderDetails.vbeln_spare AS vbelnSpare,
+		vehicleOrderDetails.lbx,
+		vehicleOrderDetails.zspdt,
+		vehicleOrderDetails.rows,
+		vehicleOrderDetails.status as zkStatus,
+		vehicleOrderDetails.materiel_code AS materielCode,
+		vehicleOrderDetails.materiel_name AS materielName,
+		vehicleOrderDetails.product_group AS productGroup,
+		vehicleOrderDetails.product_group_name AS productGroupName,
+		vehicleOrderDetails.brand,
+		vehicleOrderDetails.qty,
+		vehicleOrderDetails.unit_price AS unitPrice,
+		vehicleOrderDetails.amount,
+		vehicleOrderDetails.volume,
+		vehicleOrderDetails.total_volume AS totalVolume,
+		vehicleOrderDetails.payment_code AS paymentCode,
+		vehicleOrderDetails.payment_name AS paymentName,
+	  vehicleOrderDetails.remark AS zkRemark
+		FROM
+		vehicle_order vehicleOrder
+		LEFT JOIN vehicle_order_details vehicleOrderDetails ON
+		vehicleOrder.order_no = vehicleOrderDetails.order_no
+		WHERE
+		vehicleOrder.order_no in
+		<foreach collection="orderNoList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		) a
+		LEFT JOIN vehicle_order_zq_details vehicleOrderZqDetails ON
+		substring(a.itemNo, 3)
+		= substring(vehicleOrderZqDetails.zq_item_no,3) ) b
+		LEFT JOIN entry_3w_order entry ON b.lbx = entry.entry_order_id
+		AND b.vbelnDn1 = entry.entry_order_code) c
+		LEFT JOIN cn_3w_purchase_stock cps ON
+	    c.itemNo = cps.cn_stock_syncs_id
+		ORDER BY
+		c.orderNo,
+		c.rows
+	</select>
+
+	<select id="getWhCode" parameterType="String" resultType="String">
+		SELECT
+		wh_code FROM `area_center_info` WHERE delivery_to_code = #{code}
+	</select>
+
+</mapper>

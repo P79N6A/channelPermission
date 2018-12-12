@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.GQGYSStockDao">
+	<resultMap id="gQGYSStockResult" type="com.haier.eis.model.GQGYSStock">
+		<result property="id" column="id" />
+		<result property="sku" column="sku" />
+		<result property="productName" column="productName" />
+		<result property="productType" column="productType" />
+		<result property="productCategory" column="productCategory" />
+		<result property="productWeight" column="productWeight" />
+		<result property="returnWeight" column="returnWeight" />
+		<result property="productId" column="productId" />
+	</resultMap>
+	<select id="getAll"  resultMap="gQGYSStockResult">
+		select `id`,`sku`,`productId`
+		from `GQGYSStock`
+	</select>
+	<select id="getBySku"  resultMap="gQGYSStockResult">
+		select `id`,`sku`,`productId`
+		from `GQGYSStock` WHERE 1 = 1
+		<if test="sku != null"> AND sku = #{sku}</if>
+	</select>
+</mapper>

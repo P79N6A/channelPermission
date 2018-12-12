@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvBaseSupplierDao">
+	<resultMap id="invBaseSupplierResult" type="com.haier.stock.model.InvBaseSupplier">
+		<result property="sale_org_id" column="sale_org_id" />
+		<result property="supplier_id" column="supplier_id" />
+		<result property="supplier_name" column="supplier_name" />
+		<result property="shou_da_fang_code" column="shou_da_fang_code" />
+		<result property="legal_customer" column="legal_customer" />
+		<result property="is_enabled" column="is_enabled" />
+	</resultMap>
+	<select id="getAllSuppliperInfoOriginal" parameterType="String"
+		resultMap="invBaseSupplierResult">
+		select
+		sale_org_id,supplier_id,supplier_name,shou_da_fang_code,legal_customer,shou_da_fang_name
+		from inv_base_sale_org_supplier where sale_org_id=#{sale_org_id}
+	</select>
+	<select id="getSuppliperInfo" parameterType="Map"
+		resultMap="invBaseSupplierResult">
+		select
+		sale_org_id,supplier_id,supplier_name,shou_da_fang_code,legal_customer,is_enabled,shou_da_fang_name
+		from inv_base_sale_org_supplier
+		<where>
+			<if test="sale_org_id!=null and sale_org_id!=''">
+				AND sale_org_id=#{sale_org_id}
+			</if>
+			<if test="supplier_id!=null and supplier_id!=''">
+				AND supplier_id=#{supplier_id}
+			</if>
+			<if test="supplier_name!=null and supplier_name!=''">
+				AND supplier_name like #{supplier_name}
+			</if>
+			<if test="shou_da_fang_code!=null and shou_da_fang_code!=''">
+				AND shou_da_fang_code=#{shou_da_fang_code}
+			</if>
+			<if test="legal_customer!=null and legal_customer!=''">
+				AND legal_customer=#{legal_customer}
+			</if>
+			<![CDATA[ AND is_enabled <> 4 ]]>
+		</where>
+		limit #{index},#{rows}
+
+
+	</select>
+	<select id="getSuppliperInfoOriginal" parameterType="String"
+		resultMap="invBaseSupplierResult">
+		select
+		sale_org_id,supplier_id,supplier_name,shou_da_fang_code,legal_customer,shou_da_fang_name
+		from inv_base_sale_org_supplier where sale_org_id=#{sale_org_id} AND
+		is_enabled=0
+	</select>
+	<select id="getInvCount" resultType="Integer">
+		SELECT count(*) from inv_base_sale_org_supplier
+		<where>
+			<if test="sale_org_id!=null and sale_org_id!=''">
+				AND sale_org_id=#{sale_org_id}
+			</if>
+			<if test="supplier_id!=null and supplier_id!=''">
+				AND supplier_id=#{supplier_id}
+			</if>
+			<if test="supplier_name!=null and supplier_name!=''">
+				AND supplier_name=#{supplier_name}
+			</if>
+			<if test="shou_da_fang_code!=null and shou_da_fang_code!=''">
+				AND shou_da_fang_code=#{shou_da_fang_code}
+			</if>
+			<if test="legal_customer!=null and legal_customer!=''">
+				AND legal_customer=#{legal_customer}
+			</if>
+			<![CDATA[ AND is_enabled <> 4 ]]>
+		</where>
+	</select>
+	<update id="updateInvBaseSaleSupplier" parameterType="Map">
+		UPDATE inv_base_sale_org_supplier
+		<set>
+
+			<if test="supplier_id!=null and supplier_id!=''">
+				supplier_id=#{supplier_id},
+			</if>
+			<if test="supplier_name!=null and supplier_name!=''">
+				supplier_name=#{supplier_name},
+			</if>
+			<if test="shou_da_fang_code!=null and shou_da_fang_code!=''">
+				shou_da_fang_code=#{shou_da_fang_code},
+			</if>
+			<if test="legal_customer!=null and legal_customer!=''">
+				legal_customer=#{legal_customer},
+			</if>
+			<if test="is_enabled!=null and is_enabled!=''">
+				is_enabled=#{is_enabled},
+			</if>
+			<if test="shou_da_fang_name!=null and shou_da_fang_name!=''">
+			shou_da_fang_name=#{shou_da_fang_name}
+			</if>
+		</set>
+		where sale_org_id=#{sale_org_id}
+	</update>
+	<insert id="insertInvBaseSaleSupplier">
+		INSERT INTO inv_base_sale_org_supplier
+		(sale_org_id,supplier_id,supplier_name,shou_da_fang_code,legal_customer,is_enabled,shou_da_fang_name)VALUES(#{sale_org_id},
+		#{supplier_id},#{supplier_name},#{shou_da_fang_code},#{legal_customer},0,#{shou_da_fang_name})
+	</insert>
+	<update id="deleteInvBaseSaleSupplierById" parameterType="Map">
+		UPDATE
+		inv_base_sale_org_supplier SET is_enabled=#{is_enabled} where
+		sale_org_id in
+		<foreach collection="deleteList" open="(" separator="," close=")" item="ditem">
+		#{ditem}
+		</foreach>
+	</update>
+	<select id="selectInvBaseSaleSupplierExport" parameterType="Map"
+		resultMap="invBaseSupplierResult">
+		SELECT
+		sale_org_id,supplier_id,supplier_name,shou_da_fang_code,legal_customer,is_enabled,shou_da_fang_name
+		from inv_base_sale_org_supplier
+		<![CDATA[ WHERE is_enabled <> 4 ]]>
+		<if test="exportList!=null">
+			AND sale_org_id in
+			<foreach collection="exportList" item="item" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
+	</select>
+	<select id="checkMainKey" parameterType="Map" resultType="java.lang.Integer">
+		SELECT
+		count(1) from inv_base_sale_org_supplier
+		where sale_org_id =
+		#{sale_org_id}
+	</select>
+</mapper>

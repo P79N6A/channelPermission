@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ~ Copyright (c) 2017 interconn@Haier -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	<!--注册中心发现服务地址 -->
+	<!--<dubbo:registry address="zookeeper://127.0.0.1:2181"/> -->
+	<!-- 生成远程服务代理，可以和本地bean一样使用 -->
+	<!-- <dubbo:reference retries="0" interface="com.haier.vehicle.service.DemoService" 
+		id="demoService" check="false" timeout="10000"/> -->
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseVehicleOrderDetailService"
+		id="purchaseVehicleOrderDetailService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseVehicleOrderZqService"
+		id="purchaseVehicleOrderZqService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseVehicleOrderZqDetailsService"
+		id="purchaseVehicleOrderZqDetailsService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleInsertSaleBillToCRMService"
+		id="vehicleInsertSaleBillToCRMService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseDepartmentInfoService"
+		id="purchaseDepartmentInfoService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseVehicleProductPaymentService"
+		id="purchaseVehicleProductPaymentService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseAreaCenterInfoService"
+		id="purchaseAreaCenterInfoService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseMaterielInfoService"
+		id="purchaseMaterielInfoService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseVehicleOrderService"
+		id="purchaseVehicleOrderService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseVehicleInterfaceLogService"
+		id="purchaseVehicleInterfaceLogService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.purchase.data.service.PurchaseDataDictionaryService"
+		id="purchaseDataDictionaryService" version="1.0.0" timeout="1200000" />
+	<dubbo:reference retries="0" interface="com.haier.system.service.PlanInDateService"
+		id="planInDateService" version="1.0.0" timeout="1200000" />
+    <dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseOesMaterielService"
+        id="purchaseOesMaterielService" version="1.0.0" timeout="1200000"/>
+    <dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseFactoryBaseContrastService"
+         id="purchaseFactoryBaseContrastService" version="1.0.0" timeout="1200000"/>
+    <dubbo:reference retries="0" interface="com.haier.purchase.data.service.PurchaseProductPaymentService"
+         id="purchaseProductPaymentService" version="1.0.0" timeout="1200000"/>
+		
+</beans>

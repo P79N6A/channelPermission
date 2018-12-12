@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderRepairsNewDao">
+    <resultMap id="orderRepairsResult" type="com.haier.shop.model.OrderRepairsNew">
+        <result property="id" column="id" />
+        <result property="siteId" column="siteId" />
+        <result property="addTime" column="addTime" />
+        <result property="memberId" column="memberId" />
+        <result property="orderId" column="orderId" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="paymentStatus" column="paymentStatus" />
+        <result property="paymentTime" column="paymentTime" />
+        <result property="paymentName" column="paymentName" />
+        <result property="receiptStatus" column="receiptStatus" />
+        <result property="receiptTime" column="receiptTime" />
+        <result property="storageStatus" column="storageStatus" />
+        <result property="storageTime" column="storageTime" />
+        <result property="typeExpect" column="typeExpect" />
+        <result property="typeActual" column="typeActual" />
+        <result property="reason" column="reason" />
+        <result property="description" column="description" />
+        <result property="contactName" column="contactName" />
+        <result property="contactMobile" column="contactMobile" />
+        <result property="handleStatus" column="handleStatus" />
+        <result property="handleRemark" column="handleRemark" />
+        <result property="repairSn" column="repairSn" />
+        <result property="count" column="count" />
+        <result property="requestServiceRemark" column="requestServiceRemark" />
+        <result property="requestServiceDate" column="requestServiceDate" />
+        <result property="offlineFlag" column="offlineFlag" />
+        <result property="offlineReason" column="offlineReason" />
+        <result property="offlineAmount" column="offlineAmount" />
+        <result property="offlineRemark" column="offlineRemark" />
+        <result property="offlineConfirmFlag" column="offlineConfirmFlag" />
+        <result property="hpFirstAddTime" column="hpFirstAddTime" />
+        <result property="hpSecondAddTime" column="hpSecondAddTime" />
+        <result property="modified" column="modified" />
+        <result property="finishTime" column="finishTime" />
+        <result property="refundAmount" column="refundAmount" />
+        <result property="ybkExchangeType" column="ybkExchangeType" />
+        <result property="typeFlag" column="typeFlag" />
+        <result property="cOrderSnStatus" column="cOrderSnStatus" />
+        <result property="vomRepairSn" column="vomRepairSn" />
+    </resultMap>
+
+    <select id="get" parameterType="Integer" resultMap="orderRepairsResult">
+    select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn
+    from `OrderRepairs`
+    where `id` = #{id}
+    </select>
+    <select id="getValidByOrderProductId" parameterType="Integer" resultMap="orderRepairsResult">
+        select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn
+        from `OrderRepairs`
+        where `handleStatus` != 5 and `handleStatus` != 6
+        and `orderProductId` = #{orderProductId}
+        order by id desc
+        limit 1
+    </select>
+    
+    <update id="update" parameterType="com.haier.shop.model.OrderRepairsNew">
+		update `OrderRepairs` 
+		<trim prefix="set" suffixOverrides=",">
+		<if test="siteId != null">
+			`siteId`=#{siteId},
+		</if>
+		<if test="addTime != null">
+			`addTime`=#{addTime},
+		</if>
+		<if test="memberId != null">
+			`memberId`=#{memberId},
+		</if>
+		<if test="orderId != null">
+			`orderId`=#{orderId},
+		</if>
+		<if test="orderProductId != null">
+			`orderProductId`=#{orderProductId},
+		</if>
+		<if test="paymentStatus != null">
+			`paymentStatus`=#{paymentStatus},
+		</if>
+		<if test="paymentTime != null">
+			`paymentTime`=#{paymentTime},
+		</if>
+		<if test="paymentName != null">
+			`paymentName`=#{paymentName},
+		</if>
+		<if test="receiptStatus != null">
+			`receiptStatus`=#{receiptStatus},
+		</if>
+		<if test="receiptTime != null">
+			`receiptTime`=#{receiptTime},
+		</if>
+		<if test="storageStatus != null">
+			`storageStatus`=#{storageStatus},
+		</if>
+		<if test="storageTime != null">
+			`storageTime`=#{storageTime},
+		</if>
+		<if test="typeExpect != null">
+			`typeExpect`=#{typeExpect},
+		</if>
+		<if test="typeActual != null">
+			`typeActual`=#{typeActual},
+		</if>
+		<if test="reason != null">
+			`reason`=#{reason},
+		</if>
+		<if test="description != null">
+			`description`=#{description},
+		</if>
+		<if test="contactName != null">
+			`contactName`=#{contactName},
+		</if>
+		<if test="contactMobile != null">
+			`contactMobile`=#{contactMobile},
+		</if>
+		<if test="handleStatus != null">
+			`handleStatus`=#{handleStatus},
+		</if>
+		<if test="handleTime != null">
+			`handleTime`=#{handleTime},
+		</if>
+		<if test="handleRemark != null">
+			`handleRemark`=#{handleRemark},
+		</if>
+		<if test="repairSn != null">
+			`repairSn`=#{repairSn},
+		</if>
+		<if test="count != null">
+			`count`=#{count},
+		</if>
+		<if test="requestServiceRemark != null">
+			`requestServiceRemark`=#{requestServiceRemark},
+		</if>
+		<if test="requestServiceDate != null">
+			`requestServiceDate`=#{requestServiceDate},
+		</if>
+		<if test="offlineFlag != null">
+			`offlineFlag`=#{offlineFlag},
+		</if>
+		<if test="offlineReason != null">
+			`offlineReason`=#{offlineReason},
+		</if>
+		<if test="offlineAmount != null">
+			`offlineAmount`=#{offlineAmount},
+		</if>
+		<if test="offlineRemark != null">
+			`offlineRemark`=#{offlineRemark},
+		</if>
+		<if test="offlineConfirmFlag != null">
+			`offlineConfirmFlag`=#{offlineConfirmFlag},
+		</if>
+		<if test="hpFirstAddTime != null">
+			`hpFirstAddTime`=#{hpFirstAddTime},
+		</if>
+		<if test="hpSecondAddTime != null">
+			`hpSecondAddTime`=#{hpSecondAddTime},
+		</if>
+		<if test="modified != null">
+			`modified`=#{modified},
+		</if>
+		<if test="finishTime != null">
+			`finishTime`=#{finishTime},
+		</if>
+		<if test="refundAmount != null">
+			`refundAmount`=#{refundAmount},
+		</if>
+		<if test="ybkExchangeType != null">
+			`ybkExchangeType`=#{ybkExchangeType},
+		</if>
+		<if test="typeFlag != null">
+			`typeFlag`=#{typeFlag},
+		</if>
+		<if test="cOrderSnStatus != null">
+				`cOrderSnStatus`=#{cOrderSnStatus}
+		</if>
+		</trim>
+		 where `id` = #{id}
+	</update>
+	<select id="queryWaitCloseForCompleteList" resultMap="orderRepairsResult">
+		SELECT `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn 
+		FROM Shop.OrderRepairs WHERE (storageStatus=221 or storageStatus=121 or storageStatus=21) 
+		and (receiptStatus = 4 or receiptStatus = 2) and (paymentStatus = 3 or paymentStatus = 5) and handleStatus = 2 
+		and addTime >= unix_timestamp("2014-12-20") order by id asc limit 50
+	</select>
+	
+	<update id="updateForComplete" parameterType="com.haier.shop.model.OrderRepairsNew">
+		update `OrderRepairs` set `handleStatus`=#{handleStatus},`finishTime`=unix_timestamp()
+		where `id` = #{id}
+	</update>
+	
+	<select id="getByRepairSn" parameterType="Integer" resultMap="orderRepairsResult">
+		select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn 
+		from `OrderRepairs`
+		where `repairSn` = #{repairSn}
+	</select>
+	<update id="updateForRepairSn" parameterType="com.haier.shop.model.OrderRepairsNew">
+		update `OrderRepairs` set `storageStatus`=#{storageStatus}, `storageTime`=unix_timestamp() where `repairSn`=#{repairSn}
+	</update>
+	
+	<select id="getCountByOrderProductId" parameterType="Integer" resultType="Integer">
+		SELECT SUM(s.count) as alreadyCount FROM `OrderRepairs` s
+		WHERE s.handleStatus != 5
+		AND s.handleStatus != 6
+		AND s.orderProductId = #{orderProductId}
+	</select>
+	
+	<select id="getCountRepairSn" parameterType="Integer" resultType="Integer">
+		SELECT count(s.repairSn) as countRepairSn FROM `OrderRepairs` s 
+		where UPPER(s.repairSn) like CONCAT(UPPER(#{cOrderSn}),'%');
+	</select>
+	
+</mapper>

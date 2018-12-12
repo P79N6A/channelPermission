@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--广播注册中心暴露服务地址 -->
+  <!--  <dubbo:registry id="invoiceRegistry" address="zookeeper://127.0.0.1:2181"/>-->
+    <!--  暴露服务 -->
+    <dubbo:service retries="0" interface="com.haier.invoice.service.BatchUpdateEInvoiceService"
+                   ref="batchUpdateEInvoiceServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.BatchUpdateTaxInfoService"
+                   ref="batchUpdateTaxInfoServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.BatchBillEInvoiceService"
+                   ref="batchBillEInvoiceServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.BatchInvalidEInvoiceService"
+                   ref="batchInvalidEInvoiceServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.BatchRebillEInvoiceService"
+                   ref="batchRebillEInvoiceServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.CancelInvoicesService"
+                   ref="cancelInvoicesServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.GetCustomerCodeService"
+                   ref="getCustomerCodeServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.InvalidInvoicesService"
+                   ref="invalidInvoicesServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.InvoiceCommonService"
+                   ref="invoiceCommonServiceImpl" version="1.0.0" timeout="120000"/>
+    <!--<dubbo:service retries="0" interface="com.haier.invoice.service.InvoiceExceptionService"-->
+                   <!--ref="invoiceExceptionServiceImpl" version="1.0.0" timeout="120000"/>-->
+    <dubbo:service retries="0" interface="com.haier.invoice.service.ResendInvoicesService"
+                   ref="resendInvoicesServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.SyncStatusInvoicesService"
+                   ref="syncStatusInvoicesServiceImpl" version="1.0.0" timeout="120000"/>
+</beans>

@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStockAgeDao">
+    <resultMap id="invStockAgeResult" type="com.haier.stock.model.InvStockAge">
+        <result property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="sku" column="sku"/>
+        <result column="brand" property="brand"/>
+        <result property="secCode" column="sec_code"/>
+        <result property="secName" column="sec_name"/>
+        <result property="productName" column="product_name"/>
+        <result property="productTypeName" column="product_type_name"/>
+        <result property="productGroupName" column="product_group_name"/>
+        <result property="channelCode" column="channel_code"/>
+        <result property="channelName" column="channel_name"/>
+        <result property="ageData" column="age_data"/>
+        <result property="waStockQty" column="wa_stock_qty"/>
+        <result property="price" column="price"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="date" column="date"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+ <resultMap id="haierStockExceedCacheResult" type="com.haier.stock.model.HaierStockExceedCacheVO">
+        <result property="materials_id" column="sku" />
+	    <result property="ed_channel_id" column="channel_code" />
+	    <result property="materials_desc" column="product_name" />
+	    <result property="category_id" column="product_type_name" />
+	    <result property="brand_id" column="brand" />
+	    <result property="storage_id" column="sec_code" />
+	    <result property="l_stockAgeData" column="age_data" typeHandler="com.haier.stock.services.helper.StockAgeJSONHandler"/>
+	</resultMap>
+	
+    <resultMap id="haierStockLimitResult" type="com.haier.stock.model.HaierStockExceedCacheVO">
+        <id property="ed_channel_id" column="channel_code"/>
+        <id property="category_id" column="product_type_name"/>
+	    <result property="ed_channel_id" column="channel_code" />
+	    <result property="category_id" column="product_type_name" />
+	    <result property="ageTotal" column="age_data" />
+	    <collection property="ageItems" select="selectSubItems" 
+	        column="{ed_channel_id = channel_code,category_id = product_type_name" 
+	        ofType="com.haier.stock.model.HaierStockExceedCacheVO$AgeItem" />
+	</resultMap>
+	<select id="getStockAgeList" parameterType="Map" resultMap="invStockAgeResult">
+        select
+        `id`,`item_id`,`sku`,`brand`,`sec_code`,`sec_name`,`product_name`,`product_type_name`,`product_group_name`,
+        `channel_code`,`channel_name`,`age_data`,`price`,`update_time`,`date`,`create_time`,`wa_stock_qty`
+        from `inv_stock_age` a
+        <where>
+            age_data is not null
+            <if test="sku != null and sku !=''">
+                and a.sku = #{sku}
+            </if>
+            <if test="sec_code != null and sec_code != ''">
+                and a.sec_code = #{sec_code}
+            </if>
+            <if test="channel_code != null and channel_code != ''">
+                and a.channel_code = #{channel_code}
+            </if>
+            <if test="product_group_name != null and product_group_name != ''">
+                and a.product_group_name = #{product_group_name}
+            </if>
+            <if test="product_type_name != null and product_type_name != ''">
+                and a.product_type_name = #{product_type_name}
+            </if>
+            <if test="product_name != null and product_name != ''">
+                and a.product_name like '%${product_name}%'
+            </if>
+        </where>
+        <if test="size != null and size &gt; 0">
+            limit #{start},#{size}
+        </if>
+    </select>
+    
+    <select id="getCount" resultType="Integer">
+        select count(*)
+        from
+        `inv_stock_age` a
+        <where>
+            age_data is not null
+            <if test="sku != null and sku !=''">
+                and a.sku = #{sku}
+            </if>
+            <if test="sec_code != null and sec_code != ''">
+                and a.sec_code = #{sec_code}
+            </if>
+            <if test="channel_code != null and channel_code != ''">
+                and a.channel_code = #{channel_code}
+            </if>
+            <if test="product_group_name != null and product_group_name != ''">
+                and a.product_group_name = #{product_group_name}
+            </if>
+            <if test="product_type_name != null and product_type_name != ''">
+                and a.product_type_name = #{product_type_name}
+            </if>
+        </where>
+    </select>
+    <select id="countStockGroupBySkuWithChannel" resultType="Map">
+        <!--
+        SELECT
+        product_type_name,
+        product_group_name,
+        a.channel_code,
+        a.channel_name,
+        b.age,
+        sum(quantity) AS quantity,
+        sum(a.price*b.quantity) AS amount
+        FROM
+        (
+        SELECT
+        *
+        FROM
+        inv_stock_age
+        WHERE
+        product_group_name IS NOT NULL
+        AND product_group_name != ''
+        AND channel_code = #{channel}
+        GROUP
+        BY
+        sku
+        ) a
+        INNER JOIN (
+        SELECT
+        sku,
+        age,
+        sum(quantity) AS quantity
+        FROM
+        inv_stock_age_log
+        WHERE
+        date = #{date}
+        AND channel_code = #{channel}
+        GROUP BY
+        sku,
+        age
+        ) b ON a.sku = b.sku
+        GROUP BY
+        product_group_name,
+        age
+        ORDER BY
+        product_type_name,
+        product_group_name,
+        age
+         -->
+        SELECT product_type_name, product_group_name, channel_code, channel_name, age,price,sum(quantity) AS quantity, sum(price*quantity) AS amount
+        FROM
+        (
+        SELECT isa.product_type_name, isa.product_group_name, isa.channel_code, isa.channel_name, isa.price, isal.sku, isal.age, sum(isal.quantity) AS quantity FROM inv_stock_age_log isal, inv_stock_age isa
+        WHERE isal.date = #{date} AND isal.channel_code = #{channel} and isa.sku = isal.sku and isal.channel_code=isa.channel_code and isal.sec_code=isa.sec_code and isa.product_group_name IS NOT NULL AND isa.product_group_name != ''
+        GROUP BY isa.product_type_name, isa.product_group_name, isa.channel_code, isa.channel_name, isa.price,sku, age
+        ) d
+        GROUP BY product_group_name, age
+        ORDER BY product_type_name, product_group_name, age
+    </select>
+
+    <select id="getRowCnt" parameterType="Map" resultType="int">
+		    select FOUND_ROWS();
+	</select>
+
+	<select id="getStockAgeListTo2" parameterType="Map" resultType="Map">
+		select SQL_CALC_FOUND_ROWS age.*,des.lockId,
+			sum(ifnull(des.lockQty,0)) as allLockQty,
+			sum( case when instr(l.sec_code, 'JD') or instr(l.sec_code, 'DK') or instr(l.sec_code, 'SC')
+				or instr(l.sec_code, 'YX') or instr(l.sec_code, 'TB') or instr(l.sec_code,'SHH') then des.lockQty else 0 end) channelLockQty,
+			sum( case when instr(l.sec_code, 'WA') then des.lockQty else 0 end) waLockQty
+			from inv_stock_age age left join inv_stock_lock_des des on (age.sec_code=des.sec_code and age.sku=des.sku and age.channel_code=des.channel and des.status=1) left join inv_stock_lock l
+			 on(l.id=des.lockId and l.lockQty > l.realeaseQty)
+		<where>
+            age_data is not null
+            <if test="sku != null and sku !=''">
+                and age.sku = #{sku}
+            </if>
+            <if test="sec_code != null and sec_code != ''">
+                and age.sec_code = #{sec_code}
+            </if>
+            <if test="channel_code != null and channel_code != ''">
+                and age.channel_code = #{channel_code}
+            </if>
+            <if test="product_group_name != null and product_group_name != ''">
+                and age.product_group_name = #{product_group_name}
+            </if>
+            <if test="product_type_name != null and product_type_name != ''">
+                and age.product_type_name = #{product_type_name}
+            </if>
+        </where>
+			 group by age.sec_code, age.sku, age.channel_code
+			<if test="size != null and size &gt; 0">
+           		 limit #{start},#{size}
+         	</if>
+	</select>
+    <select id="subSumStockGroupToChannelsToProducts" resultType="Map">
+        SELECT channel_code, channel_name, "小计" as product_type_name, age, sum(quantity) AS quantity, sum(price*quantity) AS amount FROM
+        (
+        SELECT b.product_type_name,b.channel_code,b.channel_name, a.age, a.quantity, b.price FROM inv_stock_age_log a
+        JOIN inv_stock_age b ON a.sku = b.sku
+        AND a.sec_code = b.sec_code AND a.channel_code = b.channel_code
+        WHERE a.date between #{startdate} and #{enddate} and product_type_name!=''
+        ) c
+        GROUP BY channel_code, channel_name, age
+        ORDER BY channel_code, channel_name, age
+    </select>
+    <select id="countStockGroupToChannelsToProducts" resultType="Map">
+        SELECT channel_code, channel_name, product_type_name, age, sum(quantity) AS quantity, sum(price*quantity) AS amount FROM
+        (
+        SELECT b.product_type_name,b.channel_code,b.channel_name, a.age, a.quantity, b.price FROM inv_stock_age_log a
+        JOIN inv_stock_age b ON a.sku = b.sku
+        AND a.sec_code = b.sec_code AND a.channel_code = b.channel_code
+        WHERE a.date between #{startdate} and #{enddate} and product_type_name!=''
+        ) c
+        GROUP BY channel_code, channel_name, product_type_name, age
+        ORDER BY channel_code, channel_name, product_type_name, age
+    </select>
+    <select id="totalStockGroupToChannelsToProducts" resultType="Map">
+        SELECT "ZZ" as channel_code, "总计" as channel_name, "小计" as product_type_name, age, sum(quantity) AS quantity, sum(price*quantity) AS amount FROM
+        (
+        SELECT b.product_type_name,b.channel_code,b.channel_name, a.age, a.quantity, b.price FROM inv_stock_age_log a
+        JOIN inv_stock_age b ON a.sku = b.sku
+        AND a.sec_code = b.sec_code AND a.channel_code = b.channel_code
+        WHERE a.date between #{startdate} and #{enddate} and product_type_name!=''
+        ) c
+        GROUP BY age
+        ORDER BY age
+    </select>
+    <select id="countStockGroupToProductsToChannels" resultType="Map">
+        SELECT product_type_name, channel_code, channel_name, age, sum(quantity) AS quantity, sum(price*quantity) AS amount FROM
+        (
+        SELECT b.product_type_name,b.channel_code,b.channel_name, a.age, a.quantity, b.price FROM inv_stock_age_log a
+        JOIN inv_stock_age b ON a.sku = b.sku
+        AND a.sec_code = b.sec_code AND a.channel_code = b.channel_code
+        WHERE a.date between #{startdate} and #{enddate} and product_type_name!=''
+        ) c
+        GROUP BY product_type_name, channel_code, channel_name, age
+        ORDER BY product_type_name, channel_code, channel_name, age
+    </select>
+    <select id="totalStockGroupToProductsToChannels" resultType="Map">
+        SELECT "总计" as product_type_name, "ZZ" as channel_code, "小计" as channel_name, age, sum(quantity) AS quantity, sum(price*quantity) AS amount FROM
+        (
+        SELECT b.product_type_name,b.channel_code,b.channel_name, a.age, a.quantity, b.price FROM inv_stock_age_log a
+        JOIN inv_stock_age b ON a.sku = b.sku
+        AND a.sec_code = b.sec_code AND a.channel_code = b.channel_code
+        WHERE a.date between #{startdate} and #{enddate} and product_type_name!=''
+        ) c
+        GROUP BY age
+        ORDER BY age
+    </select>
+    <select id="subSumStockGroupToProductsToChannels" resultType="Map">
+        SELECT product_type_name, "ZZ" as channel_code, "小计" as channel_name, age, sum(quantity) AS quantity, sum(price*quantity) AS amount FROM
+        (
+        SELECT b.product_type_name,b.channel_code,b.channel_name, a.age, a.quantity, b.price FROM inv_stock_age_log a
+        JOIN inv_stock_age b ON a.sku = b.sku
+        AND a.sec_code = b.sec_code AND a.channel_code = b.channel_code
+        WHERE a.date between #{startdate} and #{enddate} and product_type_name!=''
+        ) c
+        GROUP BY product_type_name, age
+        ORDER BY product_type_name, age
+    </select>
+    <select id="countStockGroupBySku" resultType="Map">
+        SELECT product_type_name, product_group_name, a.channel_code, a.channel_name, a.age, sum(quantity) AS quantity, sum(a.price * a.quantity) AS amount
+        FROM
+        (SELECT isal.sku, isal.sec_code, isal.channel_code, isal.age, sum(isal.quantity) AS quantity,product_type_name, product_group_name,channel_name, price FROM inv_stock_age_log isal,inv_stock_age isa
+        WHERE isal.date = #{date} and isa.product_group_name IS NOT NULL AND isa.product_group_name != '' and isal.sku = isa.sku and isal.sec_code=isa.sec_code and isal.channel_code=isa.channel_code
+        GROUP BY isal.sku,isal.sec_code,isal.channel_code,isal.age
+        ) a
+        GROUP BY product_group_name, age
+        ORDER BY product_type_name, product_group_name, age
+    </select>
+    
+    <select id="sumStockGroupToChannelsToProducts" resultType="Map">
+		SELECT "AA" as channel_code, "总计" as channel_name, product_type_name, age, sum(quantity) AS quantity, sum(price*quantity) AS amount FROM
+			(
+				SELECT b.product_type_name,b.channel_code,b.channel_name, a.age, a.quantity, b.price FROM inv_stock_age_log a
+				JOIN inv_stock_age b ON a.sku = b.sku
+				AND a.sec_code = b.sec_code AND a.channel_code = b.channel_code
+				WHERE a.date between #{startdate} and #{enddate} and product_type_name!=''
+			) c 
+		GROUP BY product_type_name, age
+		ORDER BY product_type_name, age
+	</select>
+    <select id="getBySkuAndSCode" resultMap="invStockAgeResult">
+        SELECT
+        `id`,
+        `item_id`,
+        `sku`,
+        `brand`,
+        `sec_code`,
+        `sec_name`,
+        `product_name`,
+        `product_type_name`,
+        `product_group_name`,
+        `channel_code`,
+        `channel_name`,
+        `age_data`,
+        `price`,
+        `update_time`,
+        `date`,
+        `create_time`,
+        `wa_stock_qty`
+        FROM `inv_stock_age`
+        WHERE sku = #{sku} AND sec_code = #{sec_code}
+    </select>
+    <update id="updateDate" parameterType="com.haier.stock.model.InvStockAge">
+        UPDATE `inv_stock_age`
+        SET
+        `date` = #{date}
+        WHERE
+        `id` = #{id}
+    </update>
+    <insert id="insert" parameterType="com.haier.stock.model.InvStockAge">
+        INSERT INTO
+        `inv_stock_age` (`item_id`, `sku`, `sec_code`, `brand`, `sec_name`, `product_name`,
+        `product_type_name`, `product_group_name`, `channel_code`, `channel_name`, `age_data`, `price`, `update_time`, `date`, `create_time`, `wa_stock_qty`)
+        VALUES (#{itemId}, #{sku}, #{secCode}, #{brand}, #{secName}, #{productName},
+        #{productTypeName}, #{productGroupName}, #{channelCode}, #{channelName}, #{ageData}, #{price},
+        #{updateTime}, #{date}, #{createTime}, #{waStockQty})
+    </insert>
+    <select id="getAll" resultMap="invStockAgeResult">
+        SELECT
+            `sku`,
+            `sec_code`
+        FROM `inv_stock_age`
+        GROUP BY `sku`, `sec_code`
+    </select>
+    <select id="getGroupBySecAndSku" resultMap="invStockAgeResult">
+        SELECT
+            `id`,
+            `sku`,
+            `sec_code`,
+            `date`
+        FROM
+            `inv_stock_age`
+        GROUP BY
+            `sku`,
+            `sec_code`
+        ORDER BY
+            date
+    </select>
+    <select id="get" resultMap="invStockAgeResult">
+        SELECT
+            `id`,
+            `item_id`,
+            `sku`,
+            `brand`,
+            `sec_code`,
+            `sec_name`,
+            `product_name`,
+            `product_type_name`,
+            `product_group_name`,
+            `channel_code`,
+            `channel_name`,
+            `age_data`,
+            `price`,
+            `update_time`,
+            `date`,
+            `create_time`,
+            `wa_stock_qty`
+        FROM `inv_stock_age`
+        WHERE sku = #{sku} AND sec_code = #{sec_code} AND
+              channel_code = #{channel_code}
+        LIMIT 1
+    </select>
+     <select id="getProductGroups" resultType="String">
+        SELECT DISTINCT
+            (`product_group_name`)
+        FROM `inv_stock_age`
+        WHERE `product_group_name` IS NOT NULL AND `product_group_name` != ''
+    </select>
+    <select id="getSecCodes" resultType="String">
+        SELECT DISTINCT
+            (`sec_code`)
+        FROM `inv_stock_age`
+    </select>
+    <select id="findStockTotal" resultMap="haierStockLimitResult">
+        SELECT
+			product_type_name,
+			channel_code
+		FROM
+			inv_stock_age
+		WHERE
+			product_type_name IS NOT NULL
+		AND product_type_name != ''
+		group by product_type_name,channel_code
+    </select>
+    <select id="findStockAgeList" resultMap="haierStockExceedCacheResult">
+		select sku, product_name, channel_code, product_type_name, brand, sec_code, age_data
+		from inv_stock_age t1
+		where age_data is not null
+	</select>
+    <select id="getProductTypes" resultType="java.lang.String">
+        SELECT DISTINCT
+            (product_type_name)
+        FROM inv_stock_age
+        WHERE product_type_name IS NOT NULL AND product_type_name != ''
+    </select>
+    <select id="getProductGroupsByProductType" resultType="String">
+        SELECT DISTINCT
+        (`product_group_name`)
+        FROM `inv_stock_age`
+        <where>
+            `product_group_name` IS NOT NULL AND `product_group_name` != ''
+            <if test="productType != null and productType  !=''">
+                AND product_type_name = #{productType}
+            </if>
+        </where>
+    </select>
+    <select id="getNow" resultType="java.util.Date">
+        SELECT
+            now() now
+    </select>
+    <update id="update" parameterType="com.haier.stock.model.InvStockAge">
+        UPDATE `inv_stock_age`
+        SET
+            `item_id`           = #{itemId}, `sku` = #{sku}, `brand` = #{brand},
+            `sec_code`          = #{secCode}, `sec_name` = #{secName},
+            `product_name`      = #{productName},
+            `product_type_name` = #{productTypeName}, `product_group_name` = #{productGroupName},
+            `channel_code`      = #{channelCode}, `channel_name` = #{channelName},
+            `age_data`          = #{ageData}, `price` = #{price}, `update_time` = #{updateTime},
+            `date`              = #{date}, `create_time` = #{createTime},
+            `wa_stock_qty`      = #{waStockQty}
+        WHERE
+            `id` = #{id}
+    </update>
+    <update id="updatePrice" parameterType="com.haier.stock.model.InvStockAge">
+        UPDATE `inv_stock_age`
+        SET
+            `price`       = #{price},
+            `update_time` = now()
+        WHERE
+            `sku` = #{sku} AND `sec_code` = #{secCode}
+    </update>
+    
+
+     <update id="updateMtlInfoForStockAge" parameterType="com.haier.stock.model.InvStockAge">
+        update `inv_stock_age`
+        <set>
+            <if test="sku != null  and sku != ''">`sku`=#{sku},</if>
+            <if test="brand != null  and brand != ''">`brand`=#{brand},</if>
+            <if test="productName != null  and productName != ''">`product_name`=#{productName},</if>
+            <if test="productTypeName != null  and productTypeName != ''">`product_type_name`=#{productTypeName},</if>
+            <if test="productGroupName != null  and productGroupName != ''">`product_group_name`=#{productGroupName}
+            </if>
+        </set>
+        where
+        `sku` = #{sku}
+    </update>
+</mapper>

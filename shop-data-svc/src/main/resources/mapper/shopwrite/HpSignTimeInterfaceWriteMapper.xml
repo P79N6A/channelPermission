@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.HpSignTimeInterfaceWriteDao" >
+
+    <update id="updateDataStatus" parameterType="com.haier.shop.model.HpSignTimeInterface">
+        update hp_sign_time_interface set data_status = #{dataStatus}, last_time = #{lastTime,jdbcType=VARCHAR}
+        <if test="vomCount != null">,vom_count=#{vomCount}</if>
+        <if test="count != null">,count=#{count}</if>
+        <if test="acceptCount != null">,accept_count=#{acceptCount}</if>
+        where tb_no = #{tbNo} and lbx_no = #{lbxNo}
+        and sku = #{sku}
+    </update>
+    <insert id="insert" parameterType="com.haier.shop.model.HpSignTimeInterface" >
+        insert into hp_sign_time_interface (id, order_sn, status_time,
+        status, row_id, tb_no,
+        www_mark, lbx_no, sku,
+        count, last_time,data_status, vom_count, accept_count)
+        values (#{id,jdbcType=INTEGER}, #{orderSn,jdbcType=VARCHAR}, #{statusTime,jdbcType=VARCHAR},
+        #{status,jdbcType=INTEGER}, #{rowId,jdbcType=VARCHAR}, #{tbNo,jdbcType=VARCHAR},
+        #{wwwMark,jdbcType=VARCHAR}, #{lbxNo,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR},
+        #{count,jdbcType=INTEGER}, #{lastTime,jdbcType=VARCHAR},#{dataStatus,jdbcType=INTEGER},
+        #{vomCount,jdbcType=INTEGER}, #{acceptCount,jdbcType=INTEGER})
+    </insert>
+</mapper>

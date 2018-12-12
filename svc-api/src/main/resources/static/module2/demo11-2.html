@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+    </table>
+</div>
+
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <div>
+        <a href="demo11-1.html" class="easyui-linkbutton" data-options="iconCls:'icon-more',plain:true" style="color: black">CBS库存实时查询</a>
+        <a href="demo11-2.html" class="easyui-linkbutton" data-options="iconCls:'icon-more',plain:true" style="color: black;background:#43a1da">LES库存实时查询</a>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  LES库位编码
+			</span>
+                <input class="easyui-textbox" name="rateM" rateM/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  物料编码
+			</span>
+                <input class="easyui-textbox" name="lyMtd" lyMtd/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure" onclick="searchData()"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMe"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+<table id="backup1" style="display: none">
+    <thead>
+    <tr role="row">
+        <th class="sorting" style="min-width:100px; text-align:center;">库存地点</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">库存地点</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">物料号码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">物料号码(新)</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">批次编号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">实物库存</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">在运库存</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">基本计量单位</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">数量</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">单位</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">开票未提</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">可用库存数</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">物料组</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">实物库存体积</th>
+        <th class="sorting" style="min-width:60px; text-align:center;">单位</th>
+    </tr>
+    </thead>
+    <tbody role="alert" aria-live="polite" aria-relevant="all">
+    <tr>
+        <td style="text-align:center;">BJWA</td>
+        <td style="text-align:center;">BJW</td>
+        <td style="text-align:center;">BS0110B80</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">10</td>
+        <td style="text-align:center;">9.000</td>
+        <td style="text-align:center;">0.000</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">9.000</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">0.000</td>
+        <td style="text-align:center;">9.000</td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">1661383.395</td>
+        <td style="text-align:center;">CCM</td>
+    </tr>
+    <tr>
+        <td style="text-align:center;">BJWA</td>
+        <td style="text-align:center;">BJW</td>
+        <td style="text-align:center;">BS0110B80</td>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">22</td>
+        <td style="text-align:center;">5.000</td>
+        <td style="text-align:center;">0.000</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">5.000</td>
+        <td style="text-align:center;">TAI</td>
+        <td style="text-align:center;">0.000</td>
+        <td style="text-align:center;">5.000</td>
+        <td style="text-align:center;">106</td>
+        <td style="text-align:center;">922990.775</td>
+        <td style="text-align:center;">CCM</td>
+    </tr>
+    </tbody>
+</table>
+<script type="application/javascript">
+    var tableHead = ''
+
+    var detailTh = 'WP订单号 \n' +
+        'PO编号 \n' +
+        '销售单号 \n' +
+        '提单时间 \n' +
+        'SO \n' +
+        'DN \n' +
+        '渠道 \n' +
+        '品类 \n' +
+        '产品组 \n' +
+        '物料编号 \n' +
+        '型号 \n' +
+        '数量 \n' +
+        '样表单价 \n' +
+        '样表金额 \n' +
+        '采购价格 \n' +
+        '采购金额 \n' +
+        'WA库位码 \n' +
+        'WA库位名称 \n' +
+        '状态 \n' +
+        '出日日顺库时间 \n' +
+        '入库时间 '
+
+    var detail = {
+        fit: true,
+        fitColumns: false,
+        singleSelect: true,
+        columns: covertColumns(detailTh),
+        rownumbers: true
+    };
+
+    function searchData() {
+        var town = $("[rateM]")
+        var channel = $("[lyMtd]")
+        if (!town.val() || town.val() == 0 || !channel.val()) {
+            alert("物料编码和LES库存编码为必填项！");
+            return
+        }
+        searchBackUp(1)
+    }
+    function searchBackUp(num) {
+        $("#dg").empty()
+        $("#dg").html($("#backup" + num).html())
+        var ths = $("#backup" + num + " thead")[0].innerText;
+        $("#dg").datagrid({
+            fit: true,
+            fitColumns: true,
+            toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure',
+            striped: true,
+            columns: covertColumns(ths),
+            pagination: true,
+            pageSize: 20,
+            pageList: [10, 20, 30, 40, 50],
+            rownumbers: true
+        })
+    }
+
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>

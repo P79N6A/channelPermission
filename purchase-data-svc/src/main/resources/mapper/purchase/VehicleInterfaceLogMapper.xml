@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.vehcile.VehicleInterfaceLogDao">
+    <insert id="insertLog" parameterType="String">
+		insert into vehicle_interface_log(interface_name,interface_message)
+		VALUES (#{interfaceName},#{interfaceMessage})
+	</insert>
+
+	<resultMap id="InterfaceLogResult" type="com.haier.purchase.data.model.vehcile.InterfaceLog">
+		<result property="rowId" column="row_id" />
+		<result property="interfaceDate" column="interface_date" />
+		<result property="interfaceName" column="interface_name" />
+		<result property="interfaceMessage" column="interface_message" />
+	</resultMap>
+
+	<sql id="findInterfaceLogSQLCond">
+		FROM
+		vehicle_interface_log
+		WHERE 1 = 1
+
+		<if test="startTime  !=null and startTime != ''">
+			<![CDATA[
+				and interface_date >= #{startTime}
+			]]>
+		</if>
+
+		<if test="endTime  !=null and endTime != ''">
+			<![CDATA[
+				and interface_date <= #{endTime}
+			]]>
+		</if>
+
+		<if test="logName !=null and logName != ''">
+			AND UPPER(interface_name) LIKE
+			CONCAT(CONCAT('%',UPPER(#{logName})),'%')
+		</if>
+
+		<if test="logMessage !=null and logMessage != ''">
+			AND UPPER(interface_message) LIKE
+			CONCAT(CONCAT('%',UPPER(#{logMessage})),'%')
+		</if>
+	</sql>
+
+	<select id="findInterfaceLog" parameterType="Map" resultMap="InterfaceLogResult">
+		select
+		row_id,interface_date,interface_name,interface_message
+		<include refid="findInterfaceLogSQLCond"></include>
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+
+	<select id="getInterfaceLogRow" resultType="int">
+		SELECT COUNT(1)
+		<include refid="findInterfaceLogSQLCond" />
+	</select>
+
+</mapper>

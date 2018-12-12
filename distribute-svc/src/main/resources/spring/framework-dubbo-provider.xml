@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--广播注册中心暴露服务地址 -->
+    <!--  <dubbo:registry ref="demoRegistry" address="zookeeper://127.0.0.1:2181"/>-->
+    <!--  暴露服务 -->
+
+   <dubbo:service retries="0" interface="com.haier.distribute.service.DistributeCenterAdjustService"
+                     ref="distributeCenterAdjustServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.distribute.service.DistributeCenterCommissionProductService"
+                     ref="distributeCenterCommissionProductServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.distribute.service.DistributeCenterCommissionTargetService"
+                     ref="distributeCenterCommissionTargetServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.distribute.service.DistributeCenterPopOrderService"
+                     ref="distributeCenterPopOrderServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.distribute.service.DistributeCenterPopProductService"
+                     ref="distributeCenterPopProductServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.distribute.service.DistributeCenterWareHouseService"
+                     ref="distributeCenterWareHouseServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.distribute.service.DistributeCenterOrderCommissionService"
+                     ref="distributeCenterOrderCommissionServiceImpl" version="1.0.0" timeout="1200000" />
+    <dubbo:service retries="0" interface="com.haier.distribute.service.DistributeCenterProductTimingService"
+                     ref="distributeCenterProductTimingServiceImpl" version="1.0.0" timeout="1200000" />
+</beans>

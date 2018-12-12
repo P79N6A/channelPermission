@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.MemStockLockDao">
+
+	<select id="getLastMemStockLock" resultType="com.haier.stock.model.InvStockLock">
+		select id, sku, sec_code secCode, refno, lockQty,  lock_time lockTime , release_time releaseTime, opt_user optUser from inv_stock_lock l where refno like 'SD%' ORDER BY l.lock_time desc, l.id desc LIMIT 1 
+	</select>
+	<select id="queryMemStockLockList" parameterType="com.haier.stock.model.InvStockLockEx" resultType="com.haier.stock.model.InvStockLockEx">
+		SELECT SQL_CALC_FOUND_ROWS sku, l.id as id, refno ,s.sec_code secCode, s.sec_name secName, s.channel_code channelCode, channel, lockQty lockQty, realeaseQty realeaseQty, opt_user optUser,l.lock_time lockTime  
+		FROM inv_stock_lock l, inv_section s where l.sec_code = s.sec_code and lockQty &lt;&gt; realeaseQty
+		<if test="stockLock.sku != null and stockLock.sku !=''">
+				and l.sku like '%${stockLock.sku}%'
+		</if>
+		<if test="stockLock.secCode != null and stockLock.secCode !=''">
+				and l.sec_code like  '%${stockLock.secCode}%'
+		</if>
+		<if test="stockLock.refno != null and stockLock.refno !=''">
+				and l.refno like '${stockLock.refno}%'
+		</if>
+		<if test="stockLock.optUser != null and stockLock.optUser !='' ">
+				and l.opt_user like '%${stockLock.optUser}%'
+		</if>
+		<if test="stockLock.lockQty != null">
+				and l.lockQty = ${stockLock.lockQty}
+		</if>
+		<if test="stockLock.startLockTime != null and stockLock.startLockTime !=''">
+				and DATE_FORMAT(l.lock_time,"%Y-%m-%d") <![CDATA[>=]]> #{stockLock.startLockTime}
+		</if>
+		<if test="stockLock.endLockTime != null and stockLock.endLockTime !=''">
+				and DATE_FORMAT(l.lock_time,"%Y-%m-%d") <![CDATA[<=]]>#{stockLock.endLockTime}
+		</if>
+		and l.refno like 'SD%' 
+		<if test="pager.pageSize != null and pager.pageSize &gt; 0">limit #{pager.pageIndex},#{pager.pageSize}</if> 
+	</select>
+	
+	<select id="queryMemStockWDLockList" parameterType="com.haier.stock.model.InvStockLockEx" resultType="com.haier.stock.model.InvStockLockEx">
+		SELECT SQL_CALC_FOUND_ROWS sku, l.id as id, refno ,s.sec_code secCode, s.sec_name secName, s.channel_code channelCode, channel, lockQty lockQty, realeaseQty realeaseQty, opt_user optUser, lock_time lockTime  
+		FROM inv_stock_lock l, inv_section s where l.sec_code = s.sec_code and lockQty &lt;&gt; realeaseQty
+		<if test="stockLock.sku != null and stockLock.sku !=''">
+				and l.sku like '%${stockLock.sku}%'
+		</if>
+		<if test="stockLock.secCode != null and stockLock.secCode !=''">
+				and l.sec_code like  '%${stockLock.secCode}%'
+		</if>
+		<if test="stockLock.refno != null and stockLock.refno !=''">
+				and l.refno like '${stockLock.refno}%'
+		</if>
+		<if test="stockLock.optUser != null and stockLock.optUser !='' ">
+				and l.opt_user like '%${stockLock.optUser}%'
+		</if>
+		<if test="stockLock.lockQty != null and stockLock.lockQty !='' ">
+				and l.lockQty = ${stockLock.lockQty}
+		</if>
+		<if test="stockLock.startLockTime != null and stockLock.startLockTime !=''">
+				and l.lock_time &gt;#{stockLock.startLockTime}
+		</if>
+		<if test="stockLock.endLockTime != null and stockLock.endLockTime !=''">
+				and l.lock_time &lt;=#{stockLock.endLockTime}
+		</if>
+		and l.refno like 'WD%'  order by  lock_time desc
+		<if test="pager.pageSize != null and pager.pageSize &gt; 0">limit #{pager.pageIndex},#{pager.pageSize}</if> 
+	</select>
+	<select id="getMemStockLock" parameterType="com.haier.stock.model.InvStockLockEx" resultType="com.haier.stock.model.InvStockLockEx">
+		select lockQty, realeaseQty realeaseQty  from inv_stock_lock l where l.id=#{stockLock.id} and lockQty > realeaseQty
+	</select>
+	
+	<update id="updateStockLock" parameterType="com.haier.stock.model.InvStockLockEx">
+		update inv_stock_lock set channel=#{stockLock.channelCode} where id=#{stockLock.id}
+	</update>
+	
+	<select id="getRowCnt" resultType="int">
+		    select FOUND_ROWS();
+	</select>
+</mapper>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+        <thead>
+        <tr>
+            <th field="field0">库存地点</th>
+            <th field="field1">库存地点</th>
+            <th field="field2">物流号码</th>
+            <th field="field3">物流号码(新)</th>
+            <th field="field4">批次编号</th>
+            <th field="field5">实物库存</th>
+            <th field="field6">在途库存</th>
+            <th field="field7">基本计量单位</th>
+            <th field="field8">数量</th>
+            <th field="field9">单位</th>
+            <th field="field10">开票未提</th>
+            <th field="field11">可用库存数</th>
+            <th field="field12">物料组</th>
+            <th field="field13">实物库存体积</th>
+            <th field="field14">单位</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>HFWA</td>
+            <td>HFW</td>
+            <td>BA09X6B9M</td>
+            <td></td>
+            <td>10</td>
+            <td>0.000</td>
+            <td>0.000</td>
+            <td>TAI</td>
+            <td>0.000</td>
+            <td>TAI</td>
+            <td>0.000</td>
+            <td>0.000</td>
+            <td>106</td>
+            <td>0.000</td>
+            <td>CCM</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  更新开始时间
+			</span>
+                <input class="easyui-datebox" name="periodCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  结束时间
+			</span>
+                <input class="easyui-datebox" name="periodCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  库位编码
+			</span>
+                <input class="easyui-textbox" name="rateM"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  物料编码
+			</span>
+                <input class="easyui-textbox" name="lyMtd"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	实际库存大于
+			</span>
+                <input class="easyui-textbox" name="raiseM"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  可用库存大于
+			</span>
+                <input class="easyui-textbox" name="tyLm"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  商品属性
+			</span>
+                <select class="easyui-combobox" name="xwCode" style="width: 174px;">
+                    <option>全部</option>
+                    <option value="AA">正品</option>
+                    <option value="AB">不良品</option>
+                    <option value="DA">开箱正品</option>
+                    <option value="DA">样品</option>
+                    <option value="DA">夺宝机</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  品类
+			</span>
+                <select class="easyui-combobox" name="platformCode" style="width: 174px;">
+                    <option>全部</option>
+                    <option value="AA">AA-冰箱</option>
+                    <option value="AB">AB-冷柜</option>
+                    <option value="DA">DA-波轮洗衣机</option>
+                    <option value="DB">DB-滚筒洗衣机</option>
+                    <option value="CA">CA-家用空调</option>
+                    <option value="BA">BA-中央空调</option>
+                    <option value="BB">BB-商用空调</option>
+                    <option value="FA">FA-电热水器</option>
+                    <option value="FB">FB-燃气热水器</option>
+                    <option value="FC">FC-太阳热水器</option>
+                    <option value="FD">FD-微波炉</option>
+                    <option value="GA">GA-洗碗机</option>
+                    <option value="GB">GB-燃气灶</option>
+                    <option value="GC">GC-吸排油烟机</option>
+                    <option value="GD">GD-消毒柜</option>
+                    <option value="EA">EA-平板电视</option>
+                    <option value="GF">GF-烤箱</option>
+                    <option value="BD">BD-商用柜嵌空调</option>
+                    <option value="GE">GE-电风扇</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  产品型号
+			</span>
+                <input class="easyui-textbox" name="tgtTyYtd"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" onclick="searchBackUp(1)"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMe"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+<div id="detailDialog" data-options="title:'',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:860px;height:300px;"
+     closed="true" buttons="#dlg-buttons_detail">
+    <div id="detailDiv" class="easyui-panel"
+         style="width:100%;height:100%;"
+         data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+        <table id="detailgrid">
+
+        </table>
+    </div>
+    <div id="dlg-buttons_detail">
+        <!--<a href="#" class="easyui-linkbutton" onclick="createData()" iconCls="icon-ok">确认</a>-->
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#detailDialog').dialog('close')">关闭</a>
+    </div>
+</div>
+<script type="application/javascript">
+    var tableHead = ''
+
+    var detailTh = '序号\n' +
+        '                物料编号\n' +
+        '                品类\n' +
+        '                产品型号\n' +
+        '                LES库位编码\n' +
+        '                库位编码\n' +
+        '                库位名称\n' +
+        '                实际库存\n' +
+        '                占用库存\n' +
+        '                批次\n' +
+        '                创建时间\n' +
+        '                更新时间\n' +
+        '                操作'
+
+    var detail = {
+        fit: true,
+        fitColumns: true,
+        singleSelect: true,
+        rownumbers: true
+    };
+    function queryLesStock(){
+        var ths = $("#backup2 thead")[0].innerText;
+        $("#detailgrid").html($("#backup2").html())
+        $('#detailgrid').datagrid({
+            fit: true,
+            fitColumns: true,
+            singleSelect: true,
+            striped: true,
+            columns: covertColumns(ths),
+            rownumbers: true
+        });
+        $('#detailDialog').dialog({'title': 'LES库存查询'});
+        $('#detailDialog').dialog('open');
+    }
+    function searchBackUp(num) {
+        $("#dg").empty()
+        $("#dg").html($("#backup" + num).html())
+        var ths = $("#backup"+num+" thead")[0].innerText;
+        $("#dg").datagrid({
+            fit: true,
+            fitColumns: true,
+            toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure',
+            striped: true,
+            columns: covertColumns(ths),
+            pagination: true,
+            pageSize: 20,
+            pageList: [10, 20, 30, 40, 50],
+            rownumbers: true
+        })
+    }
+
+
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>

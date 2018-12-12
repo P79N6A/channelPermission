@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+
+
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    </meta>
+</head>
+
+<body class="iframe-body">
+<div style="height:100%;width:100%;overflow:auto">
+    <div id="orderDetail_div" style="padding-bottom: 20px;">
+        <div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px ">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;">
+            网单信息
+        </span>
+        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+                   value="返回" onclick="goback()"
+                   style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;float: right;"/>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+
+                    <div class="search-row_padd10" style="width: 300px;" >
+                        <span class="search-row-label_detail" style="float: left">网单号：</span>
+                        <span class=""><input id ='cOrderSn' style="border: none;" readonly="readonly" value="$!vo.cOrderSn"/> </span>
+                        #if($orderSn=='')
+                            <a href="#" id="addBtn_orderForecastGoal" style="color: red;font-size:3px;">(申请退换货)</a>
+                        #end
+
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">网单状态：</span>
+                        <span>$!vo.statusTs</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">发货时间：</span>
+                        <span>$!vo.shippingTimeTs</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">TB单号：</span>
+                        <span>TB126(暂时没找到)</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">支付状态：</span>
+                        <span>$!vo.paymentStatus</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">付款时间：</span>
+                        <span>$!vo.cpayTimeTs</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="order_detail_1" style="padding-bottom: 20px;">
+            <div id="order_detail_option" class="param-form" style="background-color:#d2e0f0;height: 45px ">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;">
+            订单信息
+        </span>
+            </div>
+            <div class="detail_content">
+                <form class="param-form">
+                    <div class="search-panel">
+
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">订单号：</span>
+                            <span class="">$!vo.orderSn</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">外部订单号：</span>
+                            <span>$!vo.sourceOrderSn</span>
+                        </div>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" style="float: left;">交易流水号：</span>
+                            <span>$!vo.tradeSn</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">下单人：</span>
+                            <span>(目前没找到此字段)</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">下单时间：</span>
+                            <span>(目前没找到此字段)</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">订单状态：</span>
+                            <span>$!vo.orderStatus</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">支付方式：</span>
+                            <span>$!vo.paymentName</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">付款时间：</span>
+                            <span>$!vo.payTimeMin</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">支付状态：</span>
+                            <span>$!vo.paymentStatus</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">订单来源：</span>
+                            <span>$!vo.source</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">预警时间：</span>
+                            <span>&nbsp; $!vo.noticetime</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">备注：</span>
+                            <span>$!vo.remark=</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="productInfo" class="param-form"
+                 style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+        <span style="padding-left: 15px;">
+            商品信息
+        </span>
+            </div>
+
+            <div style="width: 100%;height: 100px;overflow: auto">
+                <table id="datagrid_orderForecastLogs"></table>
+            </div>
+            <div class="search-panel"
+                 style="margin-left: 16px;color: red;margin-right: 26px;margin-top: 10px;margin-bottom: 10px;">
+                订单总金额:￥1889.00元 网单优惠分摊:￥0.00元 网单积分分摊:0
+                优惠券号码: H码: 店铺优惠: 平台优惠:
+                钻石:0.00 海贝积分:0.00 金融积分:0.00
+            </div>
+
+
+            <div id="receipt" class="param-form"
+                 style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+                <span style="padding-left: 15px;">发票信息</span>
+            </div>
+            <div class="detail_content">
+                <form class="param-form">
+                    <div class="search-panel">
+
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">发票类型：</span>
+                            <span class="">$!vo.type</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">审核状态：</span>
+                            <span>$!vo.istate</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">发票抬头：</span>
+                            <span>$!vo.invoiceTitle</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">是否电子发票：</span>
+                            <span>$!vo.electricFlag</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">开票类型：</span>
+                            <span>$!vo.makereceipttype</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">开票状态：</span>
+                            <span>$!vo.ismakereceipt</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">发票号码：</span>
+                            <span>$!vo.receiptNum</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">开票时间：</span>
+                            <span>$!vo.receiptaddtime</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">发票代码：</span>
+                            <span>(没找到此字段)</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail" style="float: left">发票校验码：</span>
+                            <span>$!vo.checkCode</span>
+                        </div>
+                        <span style="color: red;">用电子钱包所购买商品只开具一分钱发票，作为维修凭证</span>
+                    </div>
+                </form>
+            </div>
+
+
+            <div id="operateHistory" class="param-form"
+                 style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+                <span style="padding-left: 15px;">操作历史</span>
+            </div>
+            <div class="detail_content" style="padding-left: 10px;padding-top:10px;">
+                <table width="100%">
+                    <tbody>
+                    <tr>
+                        <th width="10%" style="text-align: center;">操作时间</th>
+                        <th width="10%" style="text-align: center;">订单号</th>
+                        <th width="20%" style="text-align: center;">操作人</th>
+                        <th width="20%" style="text-align: center;">更改内容</th>
+                        <th width="15%" style="text-align: center;">备注</th>
+                    </tr>
+                    <tr style="align-content: center;">
+                        <td>2017-08-17 18:46:27</td>
+                        <td>
+                            WD170817233445
+                        </td>
+                        <td>电子发票系统</td>
+                        <td>发票状态更改</td>
+                        <td>发票状态变更为:“已开票”。税控码：C6BA99F7DE593166F1C4</td>
+                    </tr>
+                    <tr style="align-content: center;">
+                        <td>2017-08-17 18:40:10</td>
+                        <td>
+                            WD170817233445
+                        </td>
+                        <td>系统</td>
+                        <td>已经插入到推送金税表，等待一分钟后推送金税。</td>
+                        <td>发票创建通知</td>
+                    </tr>
+                    <tr style="align-content: center;">
+                        <td>2017-08-17 18:39:08</td>
+                        <td>
+                            WD170817233445
+                        </td>
+                        <td>系统</td>
+                        <td>创建发票队列</td>
+                        <td>添加网单到发票队列完成</td>
+                    </tr>
+                    <tr style="align-content: center;">
+                        <td>2017-08-17 18:39:08</td>
+                        <td>
+                            WD170817233445
+                        </td>
+                        <td>系统</td>
+                        <td>CAINIAO出库</td>
+                        <td>CAINIAO出库成功,出库凭证号:2991610420;快递公司:菜鸟物流</td>
+                        <!-- <td> <input id='voCommodity'  value="$!voCommodity"></input></td> -->
+                    </tr>
+                    <tr style="align-content: center;">
+                        <td>2017-08-17 00:02:00</td>
+                        <td>
+                            WD170817233445
+                        </td>
+                        <td>CBS系统</td>
+                        <td>订单处理方式选择</td>
+                        <td>获取标建成功，自动处理</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <div style="text-align: center;height: 35px;background-color:#e8e8e8;padding-top: 10px;">Powered by PEC</div>
+    <div id="addDlg_orderForecastGoal" data-options="title:'退换货信息申请',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:600px;height:350px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>退/换货类型<span style="color: red;">*</span></label>
+            <select name="typeFlag" id="typeFlag" class="easyui-combobox">
+                <option value="">请选择</option>
+                <option value="1">退货退款</option>
+                <option value="2">退货不退款</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>网单号<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" id="cOrderSnId" value="$!vo.cOrderSn" name="cOrderSnId" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>联系人<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="contactName" id="contactName" value="$!vo.consignee" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>手机<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="contactMobile"  id="contactMobile" value="$!vo.mobile" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>数量<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" name="count" id="count" value="$!vo.number" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>退换货原因<span style="color: red;">*</span></label>
+            <select name="reason" id="reason"  class="easyui-combobox">
+                <option value="">请选择</option>
+                <option value="价格问题">价格问题</option>
+                <option value="大小尺寸">大小尺寸</option>
+                <option value="颜色款式">颜色款式</option>
+                <option value="质量问题">质量问题</option>
+                <option value="安装问题">安装问题</option>
+                <option value="发票问题">发票问题</option>
+                <option value="配送问题">配送问题</option>
+                <option value="库存问题">库存问题</option>
+                <option value="地址问题">地址问题</option>
+                <option value="七天无理由">七天无理由</option>
+                <option value="其他">其他</option>
+            </select>
+        </div>
+        <div class="fitem" style="width: 300px;">
+            <label>退换货描述<span style="color: red;">*</span></label>
+            <textarea name="description" id="description" required="true" style="height: 50px;float: right;width: 200px;"></textarea>
+        </div>
+        <div style="padding-left:43%;padding-top:30px">
+	        <table>
+	    	    <tr>
+	    	    <td > <input type="button" onclick="save();" value="保存退换货信息"></<input></td>
+	    	    </tr>
+	        </table>
+        </div>
+    </form>
+</div>
+   <script src="../static/js/order/norderDetail.js"></script>
+</body>
+
+</html>

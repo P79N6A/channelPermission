@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.CnT2PurchaseStockDao">
+
+	<insert id="addPurchaseStock">
+		INSERT INTO
+		cn_t2_purchase_stock
+		(id,cn_stock_syncs_id,push_data,return_data,status,message,add_time,process_time)
+		VALUES
+		(#{id},#{cnStockSyncsId},#{pushData},#{returnData},#{status},
+		#{message},#{addTime},#{processTime})
+	</insert>
+
+	<update id="updateCnT2PurchaseStock" parameterType="String">
+		UPDATE
+		cn_t2_purchase_stock
+		<set>
+			<if test="pushData != null ">
+                <![CDATA[ push_data = #{pushData}, ]]>
+			</if>
+			<if test="returnData != null ">
+                <![CDATA[ return_data = #{returnData}, ]]>
+			</if>
+			<if test="status != null">
+                <![CDATA[ status = #{status}, ]]>
+			</if>
+			<if test="message != null">
+                <![CDATA[ message = #{message}, ]]>
+			</if>
+			<!-- <if test="addTime != null addTime !='' "> -->
+			<!-- <![CDATA[ add_time = #{addTime}, ]]> -->
+			<!-- </if> -->
+			<if test="processTime != null">
+                <![CDATA[ process_time = #{processTime}, ]]>
+			</if>
+
+		</set>
+		WHERE cn_stock_syncs_id = #{cnStockSyncsId}
+	</update>
+
+	<select id="queryCnT2PurchaseStock" parameterType="String"
+		resultType="com.haier.purchase.data.model.CnT2PurchaseStock">
+		select
+		id,cn_stock_syncs_id as cnStockSyncsId,push_data as pushData,return_data as returnData,status,message,add_time as addTime,process_time as processTime
+		from cn_t2_purchase_stock
+		where 1=1
+		<if test="cnStockSyncsId != null and cnStockSyncsId !='' ">
+                <![CDATA[ and cn_stock_syncs_id = #{cnStockSyncsId} ]]>
+		</if>
+		<if test="status != null  ">
+                <![CDATA[ and status = #{status} ]]>
+		</if>
+
+	</select>
+
+</mapper>

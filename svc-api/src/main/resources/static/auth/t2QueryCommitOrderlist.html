@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+
+  <link rel="stylesheet" href="/static/css/common.css">
+  <title>purchaseOrder</title>
+  <script src="/static/third/jquery-1.8.3.min.js"></script>
+  <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+<!--   <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script> -->
+  <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <!-- <script src="/static/js/utils.js"></script> -->
+ <!--  <script src="/static/js/easyui-extention.js"></script> -->
+<!--   <script src="/static/js/customConfig.js"></script> -->
+</head>
+<body class="iframe-body">
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'north',title:'查询条件',border:false" style="height: 120px;overflow: auto;" align="left">
+		<form id="filterForm" action="#">
+	    	<table>
+	    		<tr>
+	    			<td>提报周</td>
+	    			<td><input id="report_year_week" name="report_year_week" class="txt" readonly="readonly"  style="background-color: #EEEEEE"/></td>
+	    			<td>渠道</td>
+	    			<td><input id="channel"  name="channel"  class="easyui-combobox" ></input></td>
+	    			<td>品类</td>
+	       			<td><input id="cbsCategory" name="cbsCategory" class="easyui-combobox" ></td>
+	    			<td>产品组</td>
+	    			<td>
+	    				<input id="product_group" name="product_group" class="easyui-combobox" ></input>
+	    			</td>
+	    			<td>订单号</td>
+	    			<td><input id="order_id"  name="order_id" class="txt"/></td>
+	    		</tr>
+	    		<tr>
+	    			<td>物料号</td>
+	    			<td><input id="materials_id"  name="materials_id" class="txt"/></td>
+	    			<td>库位</td>
+	    			<td><input id="storage_id"  name="storage_id" class="txt"/></td>
+	    			<td>状态</td>
+	    			<td>
+	    			<input id="flow_flag" name="flow_flag" class="easyui-combobox"></input>
+					<td>订单类别</td>
+	    			<td>
+                    <input id="order_category" name="order_category" class="easyui-combobox"></input></td>
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<td colspan="10">
+		    			<a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+		    			<a id='import' href="#" class="easyui-linkbutton" iconCls="icon-edit">导入</a>
+		    			<a id='commit'' href="#" class="easyui-linkbutton" iconCls="icon-ok">提交</a>
+		    			<a id='commitall'' href="#" class="easyui-linkbutton" iconCls="icon-ok">全部提交</a>
+		    			<a id='delete'' href="#" class="easyui-linkbutton" iconCls="icon-cancel">删除</a>
+		    			<a id='export'' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
+		    			<a id='exportall'' href="#" class="easyui-linkbutton" iconCls="icon-save">全部导出</a>
+		    			<a id='downloadtmp' href="#" class="easyui-linkbutton" iconCls="icon-save">下载模板</a>
+	    			</td>
+	    		</tr>
+	    	</table>
+			<!-- 下面隐藏控件用来存放点击查询后的数据 -->
+			<input id="product_group_id_save" name="product_group_id_save" type="hidden">
+			<input id="ed_channel_id_save" name="ed_channel_id_save" type="hidden">
+			<input id="cbsCategory_save" name="cbsCategory_save" type="hidden">
+			<input id="order_id_save" name="order_id_save" type="hidden"/>
+			<input id="materials_id_save" name="materials_id_save" type="hidden"/>
+			<input id="storage_id_save" name="storage_id_save" type="hidden"/>
+			<input id="flow_flag_save" name="flow_flag_save" type="hidden"/>
+			<input id="order_category_save" name="order_category_save" type="hidden"/>
+			<!-- 下面隐藏控件用来存放点击导出后的数据 -->
+			<input id="exportData" name="exportData" type="hidden"/>
+	    </form>
+    </div>
+    <div data-options="region:'center',title:'T+2订单填报查询结果',border:false" style="display:none">
+		    <table id="dataGrid"></table>
+		    <div id="msgMask"></div>
+			<div id="msg">正在处理，请稍待。。。</div>
+	</div>
+</div>
+
+<script src="/static/js/auth/purchaseOrderIndex.js">
+
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvBaseStockLogDao">
+	<resultMap id="invBaseStockLogResult" type="com.haier.stock.model.InvBaseStockLog">
+		<result property="id" column="id" />
+		<result property="sku" column="sku" />
+		<result property="lesSecCode" column="les_sec_code" />
+		<result property="secCode" column="sec_code" />
+		<result property="oldStockQty" column="old_stock_qty" />
+		<result property="oldFrozenQty" column="old_frozen_qty" />
+		<result property="newStockQty" column="new_stock_qty" />
+		<result property="newFrozenQty" column="new_frozen_qty" />
+		<result property="billType" column="bill_type" />
+		<result property="refNo" column="ref_no" />
+		<result property="mark" column="mark" />
+		<result property="createTime" column="create_time" />
+		<result property="productName" column="product_name" />
+		<result property="secName" column="sec_name" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="invBaseStockLogResult">
+		select `id`,`sku`,`les_sec_code`,`sec_code`,`old_stock_qty`,`old_frozen_qty`,`new_stock_qty`,`new_frozen_qty`,`bill_type`,`ref_no`,`mark`,`create_time`
+		from `inv_base_stock_log`
+		where `id` = #{id}
+	</select>
+	<insert id="insert" parameterType="com.haier.stock.model.InvBaseStockLog">
+		insert into `inv_base_stock_log`(`sku`,`les_sec_code`,`sec_code`,`old_stock_qty`,`old_frozen_qty`,`new_stock_qty`,`new_frozen_qty`,`bill_type`,`ref_no`,`mark`,`create_time`,`product_name`,`sec_name`)
+		values(#{sku},#{lesSecCode},#{secCode},#{oldStockQty},#{oldFrozenQty},#{newStockQty},#{newFrozenQty},#{billType},#{refNo},#{mark},#{createTime},#{productName},#{secName})
+	</insert>
+	<update id="update" parameterType="com.haier.stock.model.InvBaseStockLog">
+		update `inv_base_stock_log` set `sku`=#{sku},`les_sec_code`=#{lesSecCode},`sec_code`=#{secCode},`old_stock_qty`=#{oldStockQty},`old_frozen_qty`=#{oldFrozenQty},`new_stock_qty`=#{newStockQty},`new_frozen_qty`=#{newFrozenQty},`bill_type`=#{billType},`ref_no`=#{refNo},`mark`=#{mark},`create_time`=#{createTime}
+		where `id` = #{id}
+	</update>
+	<!--log-->
+	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+	<sql id="where_fragement_log">
+		WHERE
+		1=1
+		<if test="log!=null">
+			<if test="log.secCode != null and log.secCode !=''">
+				<![CDATA[ and log.sec_Code LIKE CONCAT('%', #{log.secCode} ,'%') ]]>
+			</if>
+			<if test="log.sku != null and log.sku !=''">
+				and log.sku = #{log.sku}
+			</if>
+			<if test="log.refNo != null and log.refNo !=''">
+				and log.ref_no = #{log.refNo}
+			</if>
+			<if test="log.startCreateDate != null ">
+				and log.create_time &gt;= #{log.startCreateDate}
+			</if>
+			<if test="log.endCreateDate != null">
+				and log.create_time &lt;= #{log.endCreateDate}
+			</if>
+			<if test="log.billType != null and log.billType !=''">
+				and log.bill_type = #{log.billType}
+			</if>
+			<if test="log.mark != null and log.mark !=''">
+				and log.mark = #{log.mark}
+			</if>
+			order by log.create_time desc
+		</if>
+	</sql>
+	<select id="getLogPageByCondition" resultMap="invBaseStockLogResult">
+		SELECT
+		log.sku ,
+		log.product_name ,
+		log.les_sec_code ,
+		log.sec_code,
+		log.old_stock_qty ,
+		log.old_frozen_qty ,
+		log.new_stock_qty,
+		log.new_frozen_qty ,
+		log.bill_type ,
+		log.ref_no ,
+		log.mark ,
+		log.create_time ,
+		log.sec_name
+		FROM
+		inv_base_stock_log log
+		<include refid="where_fragement_log"/>
+		<include refid="pagination"/>
+	</select>
+	<select id="getLogPagerCount" resultType="long" parameterType="com.haier.stock.model.InvBaseStockLog">
+		select count(1) FROM
+		inv_base_stock_log log
+		<include refid="where_fragement_log"/>
+	</select>
+	
+	
+</mapper>

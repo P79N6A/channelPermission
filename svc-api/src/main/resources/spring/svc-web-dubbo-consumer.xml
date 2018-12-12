@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015 杭州端点网络科技有限公司
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--
+        &lt;!&ndash; 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 &ndash;&gt;
+        <dubbo:application name="notify-web"/>
+
+        &lt;!&ndash; 使用multicast广播注册中心暴露发现服务地址 &ndash;&gt;
+        <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    -->
+
+    <!--    <dubbo:reference retries="0" interface="com.haier.interconn.monitor.notify.gw.message.services.NotifyService"
+                         id="notifyService" check="false"/>-->
+    <!--<dubbo:iderence retries="0" interface="com.haier.alm.service.PsServiceAlmInfoService"
+                     id="psServiceAlmInfoService" check="false"/>-->
+    <!--     <dubbo:reference retries="0" interface="com.haier.interconn.monitor.notify.gw.message.services.NotifyService" -->
+    <!--                      id="notifyService" check="false" timeout="10000"/> -->
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.T2OrderService"
+                     id="t2OrderService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.logistics.service.OrderService"
+                     id="orderService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.logistics.service.OrderInterfaceDataLogService"
+                     id="orderInterfaceDataLogService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.distribute.service.DistributeCenterAdjustService"
+                     id="distributeCenterAdjustService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.distribute.service.DistributeCenterCommissionProductService"
+                     id="distributeCenterCommissionProductService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.distribute.service.DistributeCenterPopOrderService"
+                     id="distributeCenterPopOrderService" version="1.0.0" timeout="1200000" check="false"/>
+
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.DataDictionaryService"
+                     id="dataDictionaryService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.GateService"
+                     id="gateService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.PurchaseBaseCommonService"
+                     id="purchaseBaseCommonService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.PurchaseCommonService"
+                     id="purchaseCommonService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.ItemService"
+                     id="itemService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.LogAuditService"
+                     id="logAuditService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.T2OrderQueryService"
+                     id="t2OrderQueryService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.OrderOperationService"
+                     id="orderOperationService" version="1.0.0" timeout="1200000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.job.service.JobService"
+                     id="jobService" version="1.0.0" timeout="120000" check="false"/>
+
+
+    <!-- invoice -->
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.BatchUpdateEInvoiceService"
+                     id="batchUpdateEInvoiceService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.BatchUpdateTaxInfoService"
+                     id="batchUpdateTaxInfoService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.BatchBillEInvoiceService"
+                     id="batchBillEInvoiceService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.BatchInvalidEInvoiceService"
+                     id="batchInvalidEInvoiceService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.BatchRebillEInvoiceService"
+                     id="batchRebillEInvoiceService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.CancelInvoicesService"
+                     id="cancelInvoicesService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.GetCustomerCodeService"
+                     id="getCustomerCodeService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.InvalidInvoicesService"
+                     id="invalidInvoicesService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.InvoiceCommonService"
+                     id="invoiceCommonService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.ResendInvoicesService"
+                     id="resendInvoicesService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.invoice.service.SyncStatusInvoicesService"
+                     id="syncStatusInvoicesService" version="1.0.0" timeout="120000" check="false"/>
+    <!-- invoice end -->
+
+
+    <dubbo:reference retries="0" interface="com.haier.afterSale.service.OperationAreaService"
+                     id="operationAreaService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.logistics.service.EisInterfaceDataLogApiService"
+                     id="eisInterfaceDataLogApiService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.logistics.service.OrderRebackService"
+                     id="orderRebackService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.distribute.service.DistributeCenterOrderCommissionService"
+                     id="distributeCenterOrderCommissionService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.distribute.service.DistributeCenterPopProductService"
+                     id="distributeCenterPopProductService" version="1.0.0" timeout="120000" check="false"/>
+
+    <!--<dubbo:reference retries="0" interface="com.haier.svc.api.service.pop.VOMInformationReceiverServiceImpl"-->
+    <!--id="vomInformationReceiverServiceImpl" version="1.0.0" timeout="120000" check="false"/>-->
+
+    <dubbo:reference retries="0" interface="com.haier.distribute.service.DistributeCenterWareHouseService"
+                     id="distributeCenterWareHouseService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SystemCenterService"
+                     id="systemCenterService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SystemCenterBaseErrService"
+                     id="systemCenterBaseErrService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.order.service.OrderCenterOrderOperationService"
+                     id="orderCenterOrderOperationService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.purchase.data.service.PurchaseProductLimitGateService"
+                     id="purchaseProductLimitGateService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockPurchaseBaseCommonService"
+                     id="stockPurchaseBaseCommonService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.purchase.data.service.PurchaseProductPaymentService"
+                     id="purchaseProductPaymentService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockAgeService"
+                     id="stockAgeService" version="1.0.0" timeout="120000" check="false"/>
+
+    <!--<dubbo:reference retries="0" interface="com.haier.svc.api.service.CommPurchase"-->
+    <!--id="commPurchase" version="1.0.0" timeout="120000" check="false"/>-->
+
+    <dubbo:reference retries="0" interface="com.haier.logistics.service.EisVOMService"
+                     id="eisVOMService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.service.DistributeCenterCommissionTargetService"
+                     id="distributeCenterCommissionTargetService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockCenterInvWareHouseService"
+                     id="stockCenterInvWareHouseService" version="1.0.0" timeout="120000" check="false"/>
+
+    <!--<dubbo:reference retries="0" interface="com.haier.orderthird.service.OrderThirdCenterSkuStockRelationService"-->
+    <!--id="orderThirdCenterSkuStockRelationService" version="1.0.0" timeout="120000" check="false"/>-->
+    <dubbo:reference retries="0" interface="com.haier.shop.service.InvoicesService"
+                     id="invoicesService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.logistics.service.LogisticsInvoicesService"
+                     id="logisticsInvoicesService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.eop.service.EopCenterStocksyncproductsService"
+                     id="eopCenterStocksyncproductsService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.eop.service.EopCenterStocksyncProstorageService"
+                     id="eopCenterStocksyncProstorageService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.eop.service.EopCenterStocksynCstorageService"
+                     id="eopCenterStocksynCstorageService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockService"
+                     id="stockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.MemStockLockService"
+                     id="memStockLockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvTransferLineService"
+                     id="invTransferLineService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockCommonService"
+                     id="stockCommonService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.OrderService"
+                     id="OrderService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockinvStockAgeLogService"
+                     id="stockinvStockAgeLogService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockInvStockAgeService"
+                     id="stockInvStockAgeService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.TransferLineService"
+                     id="transferLineService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockReservedService"
+                     id="stockReservedService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockReservedConfigService"
+                     id="stockReservedConfigService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvStockLockDesService"
+                     id="invStockLockDesService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.shop.service.BigStoragesRelaService"
+                     id="bigStoragesRelaService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.shop.service.StoragesService"
+                     id="storagesService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockInvStockLockService"
+                     id="stockInvStockLockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockInvSectionService"
+                     id="stockInvSectionService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockInvMachineSetService"
+                     id="stockInvMachineSetService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockInvBaseStockService"
+                     id="stockInvBaseStockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.shop.service.StockChangeQueueService"
+                     id="stockChangeQueueService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockCenterItemService"
+                     id="stockCenterItemService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockInvStockChannelService"
+                     id="stockInvStockChannelService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvStockChangeService"
+                     id="invStockChangeService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockInvStockBatchService"
+                     id="stockInvStockBatchService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvStockService"
+                     id="invStockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvBaseStockLogService"
+                     id="invBaseStockLogService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvLesStockService"
+                     id="invLesStockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.shop.service.StorageProductsService"
+                     id="storageProductsService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvSgStockService"
+                     id="invSgStockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvStock2ChannelService"
+                     id="invStock2ChannelService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvDbmBaseService"
+                     id="invDbmBaseService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvStockQtyDifLogService"
+                     id="invStockQtyDifLogService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.shop.service.SgRealtimeStockService"
+                     id="sgRealtimeStockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvDbmBaseSendAddressService"
+                     id="invDbmBaseSendAddressService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.SgFlagShipStoreAuthorizationService"
+                     id="sgFlagShipStoreAuthorizationService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvBaseStockDiffService"
+                     id="invBaseStockDiffService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockCenterLESService"
+                     id="stockCenterLESService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvBaseStockDiffLogService"
+                     id="invBaseStockDiffLogService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvBaseStockMgtService"
+                     id="invBaseStockMgtService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.InvParamService"
+                     id="invParamService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleJobService"
+                     id="vehicleJobService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleAppService"
+                     id="vehicleAppService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleGetPriceFromCRMService"
+                     id="vehicleGetPriceFromCRMService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleInsertOrderToOMSService"
+                     id="vehicleInsertOrderToOMSService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleInsertSaleBillToCRMService"
+                     id="vehicleInsertSaleBillToCRMService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleInterfaceLogService"
+                     id="vehicleInterfaceLogService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleLogInService"
+                     id="vehicleLogInService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleOrderService"
+                     id="vehicleOrderService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleOrderDetailService"
+                     id="vehicleOrderDetailService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleProductPaymentService"
+                     id="vehicleProductPaymentService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.MaterielInfoService"
+                     id="materielInfoService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.AreaCenterInfoService"
+                     id="areaCenterInfoService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.DepartmentInfoService"
+                     id="departmentInfoService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleOrderZqService"
+                     id="vehicleOrderZqService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleOrderZqDetailsService"
+                     id="vehicleOrderZqDetailsService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.vehicle.service.VehicleDataDictionaryService"
+                     id="vehicleDataDictionaryService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.shop.service.ShopItemAttributeService"
+                     id="shopItemAttributeService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.eop.service.EopCenterStockSyncLogService"
+                     id="eopCenterStockSyncLogService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.eop.service.EopCenterSalesettingsService"
+                     id="eopCenterSalesettingsService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockTransactionWriteService"
+                     id="stockTransactionWriteService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.eis.service.EisLesStockTransQueueService"
+                     id="eisLesStockTransQueueService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockCenterEISStockService"
+                     id="stockCenterEISStockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.StockInvStockTransactionService"
+                     id="stockInvStockTransactionService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.system.service.SystemCenterPageLoadService"
+                     id="systemCenterPageLoadService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.SvcInvBaseStockService"
+                     id="svcInvBaseStockService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.stock.service.LESService"
+                     id="lESService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.afterSale.service.ReportDataCenterService"
+                     id="reportDataCenterService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.purchase.data.service.vechile.PurchaseVehicleOrderDetailService"
+                     id="purchaseVehicleOrderDetailService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.logistics.service.EisNewVOMService"
+                     id="eisNewVOMService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.shop.service.ShopOperationAreaService"
+                     id="shopOperationAreaService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.traderate.service.TopTradeRateService"
+                     id="topTradeRateService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.order.service.MdmService"
+                     id="mdmService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.logistics.service.HpDispatchService"
+                     id="hpDispatchService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.CrmOrderManualService"
+                     id="crmOrderManualService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.HaierInRrsItemService"
+                     id="haierInRrsItemService" version="1.0.0" timeout="120000" check="false"/>
+
+    <dubbo:reference retries="0" interface="com.haier.svc.service.ProductPaymentService"
+                     id="productPaymentService" version="1.0.0" timeout="120000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.service.DistributeCenterProductTimingService"
+                     id="distributeCenterProductTimingService" version="1.0.0" timeout="120000" check="false"/>
+</beans>

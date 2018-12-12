@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.ShippingStatusSyncLogsReadDao">
+    <resultMap id="shippingStatusSyncLogsResult" type="com.haier.shop.model.ShippingStatusSyncLogs">
+        <result property="id" column="id" />
+        <result property="orderId" column="orderId" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="shippingNum" column="shippingNum" />
+        <result property="customerCode" column="customerCode" />
+        <result property="customerName" column="customerName" />
+        <result property="addTime" column="addTime" />
+        <result property="httpStatus" column="httpStatus" />
+        <result property="count" column="count" />
+        <result property="requestData" column="requestData" />
+        <result property="requestXmlData" column="requestXmlData" />
+        <result property="lastRequestTime" column="lastRequestTime" />
+    </resultMap>
+    <select id="getByOrderProductId" parameterType="Integer" resultMap="shippingStatusSyncLogsResult">
+        select `id`,`orderId`,`orderProductId`,`shippingNum`,`customerCode`,`customerName`,`addTime`,`httpStatus`,`count`,`requestData`,`requestXmlData`,`lastRequestTime`
+        from `ShippingStatusSyncLogs`
+        where `orderProductId` = #{orderProductId} limit 1
+    </select>
+    <select id="getByOrderId" parameterType="Integer" resultMap="shippingStatusSyncLogsResult">
+        select `id`,`orderId`,`orderProductId`,`shippingNum`,`customerCode`,`customerName`,`addTime`,`httpStatus`,`count`,`requestData`,`requestXmlData`,`lastRequestTime`
+        from `ShippingStatusSyncLogs`
+        where `orderId` = #{orderId} limit 1
+    </select>
+</mapper>

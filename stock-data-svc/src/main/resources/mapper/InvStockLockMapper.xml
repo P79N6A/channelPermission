@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStockLockDao">
+    <resultMap id="invStockLockResult" type="com.haier.stock.model.InvStockLock">
+        <result property="id" column="id"/>
+        <result property="sku" column="sku"/>
+        <result property="secCode" column="sec_code"/>
+        <result property="refno" column="refno"/>
+        <result property="lockQty" column="lockQty"/>
+        <result property="realeaseQty" column="realeaseQty"/>
+        <result property="lockTime" column="lock_time"/>
+        <result property="releaseTime" column="release_time"/>
+        <result property="channel" column="channel"/>
+    </resultMap>
+    <select id="getLast" resultMap="invStockLockResult">
+        SELECT
+            `id`,
+            `sku`,
+            `sec_code`,
+            `refno`,
+            `lockQty`,
+            `realeaseQty`,
+            `lock_time`,
+            `release_time`
+        FROM `inv_stock_lock`
+        WHERE `refno` = #{refNo} AND `sku` = #{sku} AND `sec_code` = #{sec_code}
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+    <select id="getNotReleased" resultMap="invStockLockResult">
+    	<![CDATA[
+        SELECT
+            `id`,
+            `sku`,
+            `sec_code`,
+            `refno`,
+            `lockQty`,
+            `realeaseQty`,
+            `lock_time`,
+            `release_time`
+        FROM `inv_stock_lock`
+        WHERE `refno` = #{refNo} AND `sku` = #{sku} AND `sec_code` = #{sec_code} AND `lockQty` > `realeaseQty`
+        LIMIT 1
+        ]]>
+    </select>
+    <select id="getNotReleasedByRefNo" resultMap="invStockLockResult">
+   		 <![CDATA[
+        SELECT
+            `id`,
+            `sku`,
+            `sec_code`,
+            `refno`,
+            `channel`,
+            `lockQty`,
+            `realeaseQty`,
+            `lock_time`,
+            `release_time`
+        FROM `inv_stock_lock`
+        WHERE `refno` = #{refNo} AND `lockQty` > `realeaseQty`
+        ]]>
+    </select>
+    <select id="getNotReleasedByRefNoSku" resultMap="invStockLockResult">
+    	 <![CDATA[
+        SELECT
+            `id`,
+            `sku`,
+            `sec_code`,
+            `refno`,
+            `lockQty`,
+            `realeaseQty`,
+            `lock_time`,
+            `release_time`
+        FROM `inv_stock_lock`
+        WHERE `refno` = #{refNo} AND `sku` = #{sku} AND `lockQty` > `realeaseQty`
+        ]]>
+    </select>
+    <select id="getNotReleaseBySkuAndWh" resultMap="invStockLockResult">
+     	<![CDATA[
+        SELECT
+            `id`,
+            `sku`,
+            l.`sec_code`,
+            `refno`,
+            `lockQty`,
+            `realeaseQty`,
+            `lock_time`,
+            `release_time`,
+            `channel`
+        FROM `inv_stock_lock` l, inv_section s
+        WHERE l.sec_code = s.sec_code AND `sku` = #{sku} AND s.wh_code = #{whCode} AND l.channel = #{channelCode}
+              AND `lockQty` > `realeaseQty`
+        ORDER BY lock_time
+        ]]>
+    </select>
+    <select id="getProcessStockLock" resultMap="invStockLockResult">
+    	<![CDATA[
+        SELECT
+            `id`,
+            `sku`,
+            l.`sec_code`,
+            `refno`,
+            `lockQty`,
+            `realeaseQty`,
+            `lock_time`,
+            `release_time`,
+            `channel`
+        FROM `inv_stock_lock` l, inv_section s
+        WHERE l.sec_code = s.sec_code AND `lockQty` > `realeaseQty` AND s.item_property = 10
+              AND s.channel_code IN ('WA', 'SC', 'TB', 'DKH', 'JD', 'YX')
+        ORDER BY lock_time
+        ]]>
+    </select>
+    <select id="getByRefNoAndSku" resultMap="invStockLockResult">
+        SELECT
+            `id`,
+            `sku`,
+            `sec_code`,
+            `refno`,
+            `lockQty`,
+            `realeaseQty`,
+            `lock_time`,
+            `release_time`
+        FROM `inv_stock_lock`
+        WHERE `refno` = #{refNo} AND sku = #{sku}
+    </select>
+    <insert id="insert" parameterType="com.haier.stock.model.InvStockLock">
+    	<![CDATA[
+        INSERT INTO `inv_stock_lock` (`sku`, `sec_code`, `refno`, `lockQty`, `realeaseQty`, `lock_time`, `release_time`, `channel`, `opt_user`)
+            SELECT
+                #{sku},
+                #{secCode},
+                #{refno},
+                #{lockQty},
+                #{realeaseQty},
+                #{lockTime},
+                #{releaseTime},
+                #{channel},
+                #{optUser}
+            FROM dual
+            WHERE NOT exists
+            (
+                    SELECT 1
+                    FROM `inv_stock_lock` l
+                    WHERE
+                        l.sku = #{sku} AND l.refno = #{refno} AND l.sec_code = #{secCode} AND `lockQty` > `realeaseQty`
+            )
+        ]]>
+    </insert>
+    <update id="update" parameterType="com.haier.stock.model.InvStockLock">
+        UPDATE `inv_stock_lock`
+        SET
+            `sku`         = #{sku}, `sec_code` = #{secCode}, `refno` = #{refno}, `lockQty` = #{lockQty},
+            `realeaseQty` = #{realeaseQty}, `lock_time` = #{lockTime}, `release_time` = #{releaseTime}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateReleaseQty" parameterType="Map">
+	<![CDATA[
+        UPDATE `inv_stock_lock`
+        SET `realeaseQty` = `realeaseQty` + #{releaseQty}, `release_time` = now(), opt_user = #{optUser}
+        WHERE `id` = #{id} AND `lockQty` >= (`realeaseQty` + #{releaseQty})
+        ]]>
+	</update>
+	
+	<select id="getNoReleaseByLockTime" resultMap="invStockLockResult">
+       <![CDATA[ SELECT 
+        	`id`,
+            `sku`,
+            `sec_code`,
+            `refno`,
+            `lockQty`,
+            `realeaseQty`,
+            `lock_time`,
+            `release_time`
+        FROM inv_stock_lock k 
+        WHERE k.lockQty > k.realeaseQty 
+        AND lock_time <= #{lockTime}
+        ORDER BY k.id 
+        ]]>
+        <if test="topx != null ">
+        LIMIT #{topx}
+        </if>
+	</select>
+	
+</mapper>

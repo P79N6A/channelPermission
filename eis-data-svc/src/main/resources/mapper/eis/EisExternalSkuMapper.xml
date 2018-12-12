@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.EisExternalSkuDao">
+	<resultMap id="eisExternalSkuResult" type="com.haier.eis.model.EisExternalSku">
+		<result property="id" column="id" />
+		<result property="sku" column="sku" />
+		<result property="externalSku" column="external_sku" />
+		<result property="status" column="status" />
+		<result property="type" column="type" />
+		<result property="addtime" column="addtime" />
+		<result property="updatetime" column="updatetime" />
+		<result property="createor" column="createor" />
+		<result property="modifier" column="modifier" />
+	</resultMap>
+	<select id="getBySku" resultMap="eisExternalSkuResult">
+		select `id`,`sku`,`external_sku`,`status`,`type`,`addtime`,`updatetime`,`createor`,`modifier`
+		from `eis_external_sku`
+		where `sku` = #{sku} and `status` = 1
+	</select>
+	<select id="getBySkuType" resultMap="eisExternalSkuResult">
+		select `id`,`sku`,`external_sku`,`status`,`type`,`addtime`,`updatetime`,`createor`,`modifier`
+		from `eis_external_sku`
+		where `sku` = #{sku} and `type` = #{type} and `status` = 1
+		limit 1
+	</select>
+	<select id="getByExternalSku" resultMap="eisExternalSkuResult">
+		select `id`,`sku`,`external_sku`,`status`,`type`,`addtime`,`updatetime`,`createor`,`modifier`
+		from `eis_external_sku`
+		where `external_sku` = #{externalSku} and `status` = 1
+		limit 1
+	</select>
+<!-- 	<insert id="insert" parameterType="com.haier.eis.model.EisExternalSku"> -->
+<!-- 		insert into `eis_external_sku`(`sku`,`external_sku`,`status`,`type`,`addtime`,`updatetime`,`createor`,`modifier`) -->
+<!-- 		values(#{sku},#{externalSku},#{status},#{type},#{addtime},#{updatetime},#{createor},#{modifier}) -->
+<!-- 	</insert> -->
+<!-- 	<update id="update" parameterType="com.haier.eis.model.EisExternalSku"> -->
+<!-- 		update `eis_external_sku` set `sku`=#{sku},`external_sku`=#{externalSku},`status`=#{status},`type`=#{type},`addtime`=#{addtime},`updatetime`=#{updatetime},`createor`=#{createor},`modifier`=#{modifier} -->
+<!-- 		where `id` = #{id} -->
+<!-- 	</update> -->
+	<select id="queryAllExternalSku" resultMap="eisExternalSkuResult">
+		select `id`,`sku`,`external_sku`,`status`,`type`,`addtime`,`updatetime`,`createor`,`modifier`
+		from `eis_external_sku`
+	</select>
+</mapper>

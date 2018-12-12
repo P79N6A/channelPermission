@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.InvoiceElectricSyncLogsReadDao">
+
+    <resultMap id="invoiceElectricSyncLogsResult" type="com.haier.shop.model.InvoiceElectricSyncLogs">
+        <result property="id" column="id" />
+        <result property="siteId" column="siteId" />
+        <result property="addTime" column="addTime" />
+        <result property="orderId" column="orderId" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="cOrderSn" column="cOrderSn" />
+        <result property="orderSource" column="orderSource" />
+        <result property="invoiceNumber" column="invoiceNumber" />
+        <result property="fiscalCode" column="fiscalCode" />
+        <result property="viewUrl" column="viewUrl" />
+        <result property="downloadUrl" column="downloadUrl" />
+        <result property="pushData" column="pushData" />
+        <result property="returnData" column="returnData" />
+        <result property="success" column="success" />
+        <result property="count" column="count" />
+        <result property="lastMessage" column="lastMessage" />
+        <result property="successTime" column="successTime" />
+        <result property="statusType" column="statusType" />
+        <result property="pdfUrl" column="pdfUrl" />
+        <result property="operateTime" column="operateTime" />
+        <result property="amount" column="amount" />
+    </resultMap>
+
+    <select id="getByCOrderSnAngStatusType"  resultMap="invoiceElectricSyncLogsResult">
+        select `siteId`,`addTime`,`orderId`,`orderProductId`,`cOrderSn`,`orderSource`,`invoiceNumber`,`fiscalCode`,`viewUrl`,`downloadUrl`,`pushData`,`returnData`,`success`,`count`,`lastMessage`,`successTime`,`statusType`,`operateTime`,`pdfUrl`,`amount`
+        from `InvoiceElectricSyncLogs`
+        where `cOrderSn` = #{cOrderSn} and `statusType` = #{statusType}
+    </select>
+    <select id="getByCOrderSn" parameterType="String" resultMap="invoiceElectricSyncLogsResult">
+        select `siteId`,`addTime`,`orderId`,`orderProductId`,`cOrderSn`,`orderSource`,`invoiceNumber`,`fiscalCode`,`viewUrl`,`downloadUrl`,`pushData`,`returnData`,`success`,`count`,`lastMessage`,`successTime`,`statusType`,`operateTime`,`pdfUrl`,`amount`
+        from `InvoiceElectricSyncLogs`
+        where `cOrderSn` = #{cOrderSn}
+    </select>
+
+</mapper>

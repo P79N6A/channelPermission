@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.2.RELEASE</version>
+    </parent>
+
+    <groupId>com.haier</groupId>
+    <artifactId>svc</artifactId>
+    <packaging>pom</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+    <modules>
+        <module>distribute-data-api</module>
+        <module>distribute-data-svc</module>
+        <module>purchase-data-api</module>
+        <module>purchase-data-svc</module>
+        <module>eis-data-api</module>
+        <module>eis-data-svc</module>
+        <module>shop-data-api</module>
+        <module>shop-data-svc</module>
+        <module>stock-data-api</module>
+        <module>stock-data-svc</module>
+        <module>dbconfig-data-api</module>
+        <module>dbconfig-data-svc</module>
+        <module>system-data-api</module>
+        <module>system-data-svc</module>
+        <module>eop-data-api</module>
+        <module>eop-data-svc</module>
+        <module>distribute-api</module>
+        <module>distribute-svc</module>
+        <module>stock-api</module>
+        <module>stock-svc</module>
+        <module>logistics-api</module>
+        <module>logistics-svc</module>
+        <module>invoice-api</module>
+        <module>invoice-svc</module>
+        <module>traderate-api</module>
+        <module>traderate-svc</module>
+        <module>order-api</module>
+        <module>order-svc</module>
+        <module>system-api</module>
+        <module>system-svc</module>
+        <module>after-sale-api</module>
+        <module>after-sale-svc</module>
+        <module>eop-api</module>
+        <module>eop-svc</module>
+        <module>svc-service</module>
+        <module>svc-svc</module>
+        <module>vehicle-api</module>
+        <module>vehicle-svc</module>
+        
+        <module>svc-job-api</module>
+        <module>svc-job-svc</module>
+        <module>svc-api</module>
+    </modules>
+
+    <properties>
+    </properties>
+
+    <!-- <distributionManagement>
+
+        <repository>
+            <id>releases</id>
+            <name>releases</name>
+            <url>http://repo.haier.net/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>snapshots</name>
+            <url>http://repo.haier.net/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement> -->
+
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>com.haier</groupId>
+            <artifactId>svc-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.haier</groupId>
+            <artifactId>svc-job-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+		</dependency>
+<!--         <dependency> -->
+<!--             <groupId>com.haier</groupId> -->
+<!--             <artifactId>haier-common</artifactId> -->
+<!--             <version>4.1.4</version> -->
+<!--         </dependency> -->
+        
+		<dependency>
+            <groupId>com.haier</groupId>
+            <artifactId>haier-common</artifactId>
+            <version>4.1.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+	</dependencies>
+</dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>public</id>
+            <url>http://repo.haier.net/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <url>http://repo.haier.net/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgument>-parameters</compilerArgument>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

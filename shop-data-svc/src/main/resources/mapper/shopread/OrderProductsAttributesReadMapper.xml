@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderProductsAttributesReadDao">
+
+	<resultMap id="orderProductsAttributesResult" type="com.haier.shop.model.OrderProductsAttributes">
+		<result property="id" column="id" />
+		<result property="orderProductId" column="order_product_id" />
+		<result property="orderId" column="order_id" />
+		<result property="commissionProportion" column="commission_proportion" />
+		<result property="platformProportion" column="platform_proportion" />
+		<result property="oid" column="oid" />
+		<result property="isNofrozenstock" column="is_nofrozenstock" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="tbOrderSn" column="tb_order_sn" />
+		<result property="isTz" column="is_tz" />
+		<result property="tzSku" column="tz_sku" />
+		<result property="isSelfSell" column="is_self_sell" />
+		<result property="customerId" column="customer_id" />
+		<result property="isCd" column="is_cd" />
+		<result property="isDispatching" column="is_dispatching" />		
+		<result property="diamondCount" column="diamond_count" />
+		<result property="diamondAmt" column="diamond_amt" />
+		<result property="diamondCommiSettle" column="diamond_commi_settle" />
+		<result property="diamondPaymentSettle" column="diamond_payment_settle" />
+		<result property="diamondBilling" column="diamond_billing" />
+		<result property="seashellCount" column="seashell_count" />
+		<result property="seashellAmt" column="seashell_amt" />
+		<result property="seashellCommiSettle" column="seashell_commi_settle" />
+		<result property="seashellPaymentSettle" column="seashell_payment_settle" />
+		<result property="seashellBilling" column="seashell_billing" />
+		<result property="insuranceCount" column="insurance_count" />
+		<result property="insuranceAmt" column="insurance_amt" />
+		<result property="insuranceCommiSettle" column="insurance_commi_settle" />
+		<result property="insurancePaymentSettle" column="insurance_payment_settle" />
+		<result property="insuranceBilling" column="insurance_billing" />
+	</resultMap>
+
+	<select id="get" resultMap="orderProductsAttributesResult">
+		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
+		from OrderProductsAttributes where `id`=#{id} 
+	</select>
+
+	<select id="getByOrderProductId" resultMap="orderProductsAttributesResult">
+		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
+		from OrderProductsAttributes where `order_product_id`=#{orderProductId} 
+	</select>
+	
+	<select id="getByOrderIdAndOid" resultMap="orderProductsAttributesResult">
+		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
+		from OrderProductsAttributes where `order_id`=#{orderId} and `oid`=#{oid} 
+	</select>
+	
+	<select id="getByCondition" parameterType="Map" resultMap="orderProductsAttributesResult">
+		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
+		from OrderProductsAttributes 
+		where 1=1 
+		<if test="orderId != null">
+		and `order_id`=#{orderId} 
+		</if>
+		<if test="oid != null and oid != ''">
+		and `oid`=#{oid} 
+		</if>
+		<if test="tbOrderSn != null and tbOrderSn != ''">
+		and `tb_order_sn`=#{tbOrderSn}
+		</if>
+	</select>
+
+	<select id="isSelfSellByOrderSn" resultType="Integer">
+		SELECT oa.`is_self_sell` FROM OrderProducts o , OrderProductsAttributes oa
+		WHERE o.`id` = oa.`order_product_id`
+		and o.`cOrderSn` = #{orderSn}
+	</select>
+	
+	<select id="getByOrderOrderId" resultMap="orderProductsAttributesResult">
+		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
+		from OrderProductsAttributes where `order_id`=#{orderId} 
+	</select>
+
+</mapper>

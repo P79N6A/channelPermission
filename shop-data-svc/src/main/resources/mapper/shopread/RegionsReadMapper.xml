@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.RegionsReadDao">
+    <resultMap id="BaseResultMap" type="com.haier.shop.model.Regions">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="parentId" property="parentId" jdbcType="INTEGER"/>
+        <result column="regionName" property="regionName" jdbcType="VARCHAR"/>
+        <result column="parentPath" property="parentPath" jdbcType="VARCHAR"/>
+        <result column="firstLetter" property="firstLetter" jdbcType="CHAR"/>
+        <result column="regionType" property="regionType" jdbcType="BIT"/>
+        <result column="shippingTime" property="shippingTime" jdbcType="VARCHAR"/>
+        <result column="visible" property="visible" jdbcType="TINYINT"/>
+        <result column="rowId" property="rowId" jdbcType="VARCHAR"/>
+        <result column="testNum" property="testNum" jdbcType="TINYINT"/>
+        <result column="standardRegionId" property="standardRegionId" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="activeFlag" property="activeFlag" jdbcType="TINYINT"/>
+        <result column="hasRead" property="hasRead" jdbcType="TINYINT"/>
+        <result column="isSupportCod" property="isSupportCod" jdbcType="BIT"/>
+        <result column="addTime" property="addTime" jdbcType="VARCHAR"/>
+        <result column="modified" property="modified" jdbcType="TIMESTAMP"/>
+        <result column="zipCode" property="zipCode" jdbcType="VARCHAR"/>
+        <result column="receivingTime" property="receivingTime" jdbcType="INTEGER"/>
+        <result column="shippingDistance" property="shippingDistance" jdbcType="VARCHAR"/>
+        <result column="isOto" property="isOto" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, parentId, regionName, parentPath, firstLetter, regionType, shippingTime, visible, 
+    rowId, testNum, standardRegionId, code, activeFlag, hasRead, isSupportCod, addTime, 
+    modified, zipCode, receivingTime, shippingDistance, isOto
+  </sql>
+    <select id="get" parameterType="Integer" resultMap="BaseResultMap">
+        select `id`,`parentId`,`regionName`,`parentPath`,`firstLetter`,`regionType`,`shippingTime`,`visible`,`rowId`,`testNum`,`standardRegionId`,`code`,`activeFlag`,`hasRead`,`isSupportCod`,`isOto`
+        from `Regions`
+        where `id` = #{id}
+    </select>
+    <select id="getRegionsAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from Regions where regionType &lt; 4
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from Regions
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from Regions
+        where parentId = #{parentId,jdbcType=INTEGER} and regionType !=4
+    </select>
+    <!--根据id查询上级-->
+    <select id="selectByParentPatchId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from Regions
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectPatchId"  resultType="java.lang.String">
+    select 
+    parentPath
+    from Regions
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectregionName" resultType="java.lang.String" >
+    select 
+    regionName
+    from Regions
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <!-- 根据id查询省下的所有县 -->
+    <select id="selectregionprovince" resultMap="BaseResultMap" >
+  select t1.regionName as col01,
+  t2.regionName as col02,
+  t3.regionName as col03,
+  t3.id
+   from Regions 
+   t1 INNER JOIN Regions t2 on t2.parentId = t1.id  
+   INNER JOIN Regions t3 on t3.parentId = t2.id 
+  where t1.id = #{id,jdbcType=INTEGER} and t1.regionType !='4'
+  
+  </select>
+    <!-- 根据id查询市下的所有县 -->
+    <select id="selectregioncity" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+ select 
+ 	t1.regionName as col01,
+  	t2.regionName as col02,
+    t2.id
+    from Regions t1 
+	INNER JOIN Regions t2 on t2.parentId = t1.id  
+  	where t1.id = #{id,jdbcType=INTEGER} 
+  	and 	
+  	t1.regionType !='4'
+  
+  </select>
+
+    <!-- 根据县 -->
+    <select id="selectregioncounty" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	select id ,regionName from Regions where id= #{id,jdbcType=INTEGER} 
+  
+  </select>
+    <select id="getRegionType" resultType="Integer">
+  select regionType from Regions where id = #{id}
+  </select>
+
+    <select id="getByIds" resultMap="BaseResultMap">
+        select `id`,`parentId`,`regionName`,`parentPath`,`firstLetter`,`regionType`,`shippingTime`,`visible`,`rowId`,`testNum`,`standardRegionId`,`code`,`activeFlag`,`hasRead`,`isSupportCod`,`isOto`
+        from `Regions`
+        where `id` in (${ids})
+    </select>
+    <resultMap id="regionResult" type="com.haier.shop.model.Regions">
+        <result property="id" column="id" />
+        <result property="parentId" column="parentId" />
+        <result property="regionName" column="regionName" />
+        <result property="parentPath" column="parentPath" />
+        <result property="firstLetter" column="firstLetter" />
+        <result property="regionType" column="regionType" />
+        <result property="shippingTime" column="shippingTime" />
+        <result property="visible" column="visible" />
+        <result property="rowId" column="rowId" />
+        <result property="testNum" column="testNum" />
+        <result property="standardRegionId" column="standardRegionId" />
+        <result property="code" column="code" />
+        <result property="activeFlag" column="activeFlag" />
+        <result property="hasRead" column="hasRead" />
+        <result property="isSupportCod" column="isSupportCod" />
+        <result property="addTime" column="addTime" />
+        <result property="modified" column="modified" />
+        <result property="zipCode" column="zipCode" />
+        <result property="receivingTime" column="receivingTime" />
+    </resultMap>
+    <select id="getRegions" parameterType="map" resultMap="regionResult">
+		select
+		`id`,`parentId`,`regionName`,`parentPath`,`firstLetter`,`regionType`,`shippingTime`,`visible`,`rowId`,`testNum`,`standardRegionId`,`code`,`activeFlag`,`hasRead`,
+		`isSupportCod`,`addTime`,`modified`,`zipCode`,`receivingTime` 
+		from `Regions`
+		where 1=1
+		<if test="id != null">
+        	AND `id` = #{id}
+		</if>
+		<if test="parentId != null">
+        	AND parentId=#{parentId}
+		</if>
+		<if test="regionName != null and regionName !=''">
+        	AND regionName=#{regionName}
+		</if>
+		</select>
+</mapper>

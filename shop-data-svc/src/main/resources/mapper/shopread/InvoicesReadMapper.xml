@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.InvoicesReadDao">
+    <resultMap id="invoiceResult" type="com.haier.shop.model.Invoices">
+        <result property="id" column="id"/>
+        <result property="isOld" column="isOld"/>
+        <result property="isReInvoice" column="isReInvoice"/>
+        <result property="orderProductId" column="orderProductId"/>
+        <result property="cOrderType" column="cOrderType"/>
+        <result property="diffId" column="diffId"/>
+        <result property="cOrderSn" column="cOrderSn"/>
+        <result property="memberInvoiceId" column="memberInvoiceId"/>
+        <result property="customerCode" column="customerCode"/>
+        <result property="invoiceTitle" column="invoiceTitle"/>
+        <result property="taxPayerNumber" column="taxPayerNumber"/>
+        <result property="registerAddressAndPhone" column="registerAddressAndPhone"/>
+        <result property="bankNameAndAccount" column="bankNameAndAccount"/>
+        <result property="remark" column="remark"/>
+        <result property="cOrderAddTime" column="cOrderAddTime"/>
+        <result property="sku" column="sku"/>
+        <result property="productName" column="productName"/>
+        <result property="productCateName" column="productCateName"/>
+        <result property="unit" column="unit"/>
+        <result property="number" column="number"/>
+        <result property="price" column="price"/>
+        <result property="amount" column="amount"/>
+        <result property="nonTaxPrice" column="nonTaxPrice"/>
+        <result property="nonTaxAmount" column="nonTaxAmount"/>
+        <result property="taxAmount" column="taxAmount"/>
+        <result property="taxRate" column="taxRate"/>
+        <result property="type" column="type"/>
+        <result property="isTogether" column="isTogether"/>
+        <result property="state" column="state"/>
+        <result property="lessOrderSn" column="lessOrderSn"/>
+        <result property="paymentName" column="paymentName"/>
+        <result property="sCode" column="sCode"/>
+        <result property="orderType" column="orderType"/>
+        <result property="invoiceNumber" column="invoiceNumber"/>
+        <result property="billingTime" column="billingTime"/>
+        <result property="eaiWriteTime" column="eaiWriteTime"/>
+        <result property="drawer" column="drawer"/>
+        <result property="eaiWriteState" column="eaiWriteState"/>
+        <result property="invalidTime" column="invalidTime"/>
+        <result property="firstPushTime" column="firstPushTime"/>
+        <result property="lastModifyTime" column="lastModifyTime"/>
+        <result property="internalSettlement" column="internalSettlement"/>
+        <result property="branchOfficeCode" column="branchOfficeCode"/>
+        <result property="orderLineNumber" column="orderLineNumber"/>
+        <result property="backupFieldA" column="backupFieldA"/>
+        <result property="backupFieldB" column="backupFieldB"/>
+        <result property="integralAmount" column="integralAmount"/>
+        <result property="energySavingAmount" column="energySavingAmount"/>
+        <result property="energySavingRemark" column="energySavingRemark"/>
+        <result property="statusType" column="statusType"/>
+        <result property="success" column="success"/>
+        <result property="addTime" column="addTime"/>
+        <result property="tryNum" column="tryNum"/>
+        <result property="electricFlag" column="electricFlag"/>
+        <result property="invalidReason" column="invalidReason"/>
+        <result property="eInvViewUrl" column="eInvViewUrl"/>
+        <result property="fiscalCode" column="fiscalCode"/>
+    </resultMap>
+
+    <!-- 开票列表 -->
+    <resultMap id="invoiceMakeOutResult" type="com.haier.shop.model.InvoicesDispItem">
+        <result property="id" column="id"/>
+        <result property="corderSn" column="cOrderSn"/>
+        <result property="corderType" column="cOrderType"/>
+        <result property="sku" column="sku"/>
+        <result property="productName" column="productName"/>
+        <result property="productCateName" column="productCateName"/>
+        <result property="number" column="number"/>
+        <result property="price" column="price"/>
+        <result property="amount" column="amount"/>
+        <result property="taxPayerNumber" column="taxPayerNumber"/>
+        <result property="invoiceNumber" column="invoiceNumber"/>
+        <result property="fiscalCode" column="fiscalCode"/>
+        <result property="type" column="type"/>
+        <result property="electricFlag" column="electricFlag"/>
+        <result property="state" column="state"/>
+        <result property="isTogether" column="isTogether"/>
+        <result property="writeAddTime" column="writeAddTime"/>
+        <result property="firstPushTime" column="firstPushTime"/>
+        <result property="billingTime" column="billingTime"/>
+        <result property="invalidTime" column="invalidTime"/>
+        <result property="statusType" column="statusType"/>
+        <result property="success" column="success"/>
+        <result property="tryNum" column="tryNum"/>
+        <result property="writeAddTime" column="writeAddTime"/>
+        <result property="eaiWriteState" column="eaiWriteState"/>
+    </resultMap>
+    <resultMap id="invoicesResult2" type="com.haier.shop.model.Invoices">
+        <result property="id" column="id"/>
+        <result property="isOld" column="isOld"/>
+        <result property="isReInvoice" column="isReInvoice"/>
+        <result property="orderProductId" column="orderProductId"/>
+        <result property="cOrderType" column="cOrderType"/>
+        <result property="diffId" column="diffId"/>
+        <result property="cOrderSn" column="cOrderSn"/>
+        <result property="memberInvoiceId" column="memberInvoiceId"/>
+        <result property="customerCode" column="customerCode"/>
+        <result property="invoiceTitle" column="invoiceTitle"/>
+        <result property="taxPayerNumber" column="taxPayerNumber"/>
+        <result property="registerAddressAndPhone" column="registerAddressAndPhone"/>
+        <result property="bankNameAndAccount" column="bankNameAndAccount"/>
+        <result property="remark" column="remark"/>
+        <result property="cOrderAddTime" column="cOrderAddTime"/>
+        <result property="sku" column="sku"/>
+        <result property="productName" column="productName"/>
+        <result property="productCateName" column="productCateName"/>
+        <result property="unit" column="unit"/>
+        <result property="number" column="number"/>
+        <result property="price" column="price"/>
+        <result property="amount" column="amount"/>
+        <result property="nonTaxPrice" column="nonTaxPrice"/>
+        <result property="nonTaxAmount" column="nonTaxAmount"/>
+        <result property="taxAmount" column="taxAmount"/>
+        <result property="taxRate" column="taxRate"/>
+        <result property="type" column="type"/>
+        <result property="isTogether" column="isTogether"/>
+        <result property="state" column="state"/>
+        <result property="lessOrderSn" column="lessOrderSn"/>
+        <result property="paymentName" column="paymentName"/>
+        <result property="sCode" column="sCode"/>
+        <result property="orderType" column="orderType"/>
+        <result property="invoiceNumber" column="invoiceNumber"/>
+        <result property="billingTime" column="billingTime"/>
+        <result property="eaiWriteTime" column="eaiWriteTime"/>
+        <result property="drawer" column="drawer"/>
+        <result property="eaiWriteState" column="eaiWriteState"/>
+        <result property="invalidTime" column="invalidTime"/>
+        <result property="firstPushTime" column="firstPushTime"/>
+        <result property="lastModifyTime" column="lastModifyTime"/>
+        <result property="internalSettlement" column="internalSettlement"/>
+        <result property="branchOfficeCode" column="branchOfficeCode"/>
+        <result property="orderLineNumber" column="orderLineNumber"/>
+        <result property="backupFieldA" column="backupFieldA"/>
+        <result property="backupFieldB" column="backupFieldB"/>
+        <result property="integralAmount" column="integralAmount"/>
+        <result property="energySavingAmount" column="energySavingAmount"/>
+        <result property="energySavingRemark" column="energySavingRemark"/>
+        <result property="statusType" column="statusType"/>
+        <result property="success" column="success"/>
+        <result property="addTime" column="addTime"/>
+        <result property="tryNum" column="tryNum"/>
+        <result property="electricFlag" column="electricFlag"/>
+        <result property="invalidReason" column="invalidReason"/>
+    </resultMap>
+
+    <resultMap id="invoicesResult" type="com.haier.shop.model.Invoices">
+        <result property="id" column="id"/>
+        <result property="isOld" column="isOld"/>
+        <result property="isReInvoice" column="isReInvoice"/>
+        <result property="orderProductId" column="orderProductId"/>
+        <result property="cOrderType" column="cOrderType"/>
+        <result property="diffId" column="diffId"/>
+        <result property="cOrderSn" column="cOrderSn"/>
+        <result property="memberInvoiceId" column="memberInvoiceId"/>
+        <result property="customerCode" column="customerCode"/>
+        <result property="invoiceTitle" column="invoiceTitle"/>
+        <result property="taxPayerNumber" column="taxPayerNumber"/>
+        <result property="registerAddressAndPhone" column="registerAddressAndPhone"/>
+        <result property="bankNameAndAccount" column="bankNameAndAccount"/>
+        <result property="remark" column="remark"/>
+        <result property="cOrderAddTime" column="cOrderAddTime"/>
+        <result property="sku" column="sku"/>
+        <result property="productName" column="productName"/>
+        <result property="productCateName" column="productCateName"/>
+        <result property="unit" column="unit"/>
+        <result property="number" column="number"/>
+        <result property="price" column="price"/>
+        <result property="amount" column="amount"/>
+        <result property="nonTaxPrice" column="nonTaxPrice"/>
+        <result property="nonTaxAmount" column="nonTaxAmount"/>
+        <result property="taxAmount" column="taxAmount"/>
+        <result property="taxRate" column="taxRate"/>
+        <result property="type" column="type"/>
+        <result property="isTogether" column="isTogether"/>
+        <result property="state" column="state"/>
+        <result property="lessOrderSn" column="lessOrderSn"/>
+        <result property="paymentName" column="paymentName"/>
+        <result property="sCode" column="sCode"/>
+        <result property="orderType" column="orderType"/>
+        <result property="invoiceNumber" column="invoiceNumber"/>
+        <result property="billingTime" column="billingTime"/>
+        <result property="eaiWriteTime" column="eaiWriteTime"/>
+        <result property="drawer" column="drawer"/>
+        <result property="eaiWriteState" column="eaiWriteState"/>
+        <result property="invalidTime" column="invalidTime"/>
+        <result property="firstPushTime" column="firstPushTime"/>
+        <result property="lastModifyTime" column="lastModifyTime"/>
+        <result property="internalSettlement" column="internalSettlement"/>
+        <result property="branchOfficeCode" column="branchOfficeCode"/>
+        <result property="orderLineNumber" column="orderLineNumber"/>
+        <result property="backupFieldA" column="backupFieldA"/>
+        <result property="backupFieldB" column="backupFieldB"/>
+        <result property="integralAmount" column="integralAmount"/>
+        <result property="energySavingAmount" column="energySavingAmount"/>
+        <result property="energySavingRemark" column="energySavingRemark"/>
+        <result property="statusType" column="statusType"/>
+        <result property="success" column="success"/>
+        <result property="addTime" column="addTime"/>
+        <result property="tryNum" column="tryNum"/>
+        <result property="electricFlag" column="electricFlag"/>
+        <result property="invalidReason" column="invalidReason"/>
+        <result property="fiscalCode" column="fiscalCode"/>
+        <result property="eInvViewUrl" column="eInvViewUrl"/>
+        <result property="checkCode" column="checkCode"/>
+    </resultMap>
+
+    <sql id="invoiceQueryCondition">
+        <if test="corder_sn !=null and corder_sn != ''">
+            AND cOrderSn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="invoice_title !=null and invoice_title != ''">
+            AND UPPER(invoiceTitle) LIKE CONCAT('%',UPPER(#{invoice_title}),'%')
+        </if>
+        <if test="tax_payer_number !=null and tax_payer_number != ''">
+            AND UPPER(taxPayerNumber) LIKE CONCAT('%',UPPER(#{tax_payer_number}),'%')
+        </if>
+        <if test="register_address_and_phone !=null and register_address_and_phone != ''">
+            AND UPPER(registerAddressAndPhone) LIKE CONCAT('%',UPPER(#{register_address_and_phone}),'%')
+        </if>
+        <if test="bank_name_and_account !=null and bank_name_and_account != ''">
+            AND UPPER(bankNameAndAccount) LIKE CONCAT('%',UPPER(#{bank_name_and_account}),'%')
+        </if>
+        <if test="energy_saving !=null and energy_saving !='' and energy_saving==1">
+            AND energySavingAmount>0
+        </if>
+        <if test="energy_saving !=null and energy_saving !='' and energy_saving==0">
+            AND energySavingAmount=0
+        </if>
+        <if test="is_reinvoice !=null and is_reinvoice !='' and is_reinvoice != '-1' or is_reinvoice==0">
+            AND isReInvoice=#{is_reinvoice}
+        </if>
+        <if test="type !=null and type !='' and type != '-1' or type==0">
+            AND type=#{type}
+        </if>
+        <if test="state !=null and state !='' and state != '-1' or state==0">
+            AND state=#{state}
+        </if>
+        <if test="electric_flag !=null and electric_flag !='' and electric_flag != '-1' or electric_flag==0">
+            AND electricFlag=#{electric_flag}
+        </if>
+        <if test="try_num !=null and try_num != ''">
+            AND tryNum=#{try_num}
+        </if>
+        <if test="billing_time_start !=null and billing_time_start != ''">
+            AND billingTime>=UNIX_TIMESTAMP(#{billing_time_start})
+        </if>
+        <if test="billing_time_end !=null and billing_time_end != ''">
+            AND billingTime&lt;=UNIX_TIMESTAMP(#{billing_time_end})
+        </if>
+        <if test="invalid_time_start !=null and invalid_time_start != ''">
+            AND invalidTime>=UNIX_TIMESTAMP(#{invalid_time_start})
+        </if>
+        <if test="invalid_time_end !=null and invalid_time_end != ''">
+            AND invalidTime&lt;=UNIX_TIMESTAMP(#{invalid_time_end})
+        </if>
+        <if test="status_type !=null and status_type !='' and status_type != '-1' or status_type==0">
+            AND statusType=#{status_type}
+        </if>
+        <if test="success !=null and success !='' and success != '-1' or success==0">
+            AND success=#{success}
+        </if>
+        <if test="corder_add_time_start !=null and corder_add_time_start != ''">
+            AND cOrderAddTime>=UNIX_TIMESTAMP(#{corder_add_time_start})
+        </if>
+        <if test="corder_add_time_end !=null and corder_add_time_end != ''">
+            AND cOrderAddTime&lt;=UNIX_TIMESTAMP(#{corder_add_time_end})
+        </if>
+        <if test="timeA !=null and timeA !='' and timeA != '-1'">
+            AND firstPushTime&lt;=UNIX_TIMESTAMP(DATE_SUB(NOW(),INTERVAL #{timeA} minute))
+            AND state = 0
+        </if>
+        <if test="is_together !=null and is_together !='' and is_together != '-1'">
+            AND isTogether=#{is_together}
+        </if>
+        <if test="timeB !=null and timeB !='' and timeB != '-1'">
+            AND billingTime&lt;=UNIX_TIMESTAMP(DATE_SUB(NOW(),INTERVAL #{timeB} minute))
+            AND state = 1
+        </if>
+        <if test="corder_type !=null and corder_type !='' and corder_type != '-1'">
+            AND cOrderType=#{corder_type}
+        </if>
+        <if test="invoice_number !=null and invoice_number != ''">
+            AND UPPER(invoiceNumber) LIKE CONCAT('%',UPPER(#{invoice_number}),'%')
+        </if>
+    </sql>
+    <sql id="invoiceExportQueryCondition">
+        <if test="corder_sn !=null and corder_sn != ''">
+            AND inv.cOrderSn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="invoice_title !=null and invoice_title != ''">
+            AND UPPER(invoiceTitle) LIKE CONCAT('%',UPPER(#{invoice_title}),'%')
+        </if>
+        <if test="tax_payer_number !=null and tax_payer_number != ''">
+            AND UPPER(taxPayerNumber) LIKE CONCAT('%',UPPER(#{tax_payer_number}),'%')
+        </if>
+        <if test="register_address_and_phone !=null and register_address_and_phone != ''">
+            AND UPPER(registerAddressAndPhone) LIKE CONCAT('%',UPPER(#{register_address_and_phone}),'%')
+        </if>
+        <if test="bank_name_and_account !=null and bank_name_and_account != ''">
+            AND UPPER(bankNameAndAccount) LIKE CONCAT('%',UPPER(#{bank_name_and_account}),'%')
+        </if>
+        <if test="energy_saving !=null and energy_saving !='' and energy_saving==1">
+            AND energySavingAmount>0
+        </if>
+        <if test="energy_saving !=null and energy_saving !='' and energy_saving==0">
+            AND energySavingAmount=0
+        </if>
+        <if test="is_reinvoice !=null and is_reinvoice !='' and is_reinvoice != '-1' or is_reinvoice==0">
+            AND isReInvoice=#{is_reinvoice}
+        </if>
+        <if test="type !=null and type !='' and type != '-1' or type==0">
+            AND type=#{type}
+        </if>
+        <if test="state !=null and state !='' and state != '-1' or state==0">
+            AND state=#{state}
+        </if>
+        <if test="electric_flag !=null and electric_flag !='' and electric_flag != '-1' or electric_flag==0">
+            AND electricFlag=#{electric_flag}
+        </if>
+        <if test="try_num !=null and try_num != ''">
+            AND tryNum=#{try_num}
+        </if>
+        <if test="billing_time_start !=null and billing_time_start != ''">
+            AND billingTime>=UNIX_TIMESTAMP(#{billing_time_start})
+        </if>
+        <if test="billing_time_end !=null and billing_time_end != ''">
+            AND billingTime&lt;=UNIX_TIMESTAMP(#{billing_time_end})
+        </if>
+        <if test="invalid_time_start !=null and invalid_time_start != ''">
+            AND invalidTime>=UNIX_TIMESTAMP(#{invalid_time_start})
+        </if>
+        <if test="invalid_time_end !=null and invalid_time_end != ''">
+            AND invalidTime&lt;=UNIX_TIMESTAMP(#{invalid_time_end})
+        </if>
+        <if test="status_type !=null and status_type !='' and status_type != '-1' or status_type==0">
+            AND statusType=#{status_type}
+        </if>
+        <if test="success !=null and success !='' and success != '-1' or success==0">
+            AND success=#{success}
+        </if>
+        <if test="corder_add_time_start !=null and corder_add_time_start != ''">
+            AND cOrderAddTime>=UNIX_TIMESTAMP(#{corder_add_time_start})
+        </if>
+        <if test="corder_add_time_end !=null and corder_add_time_end != ''">
+            AND cOrderAddTime&lt;=UNIX_TIMESTAMP(#{corder_add_time_end})
+        </if>
+        <if test="timeA !=null and timeA !='' and timeA != '-1'">
+            AND firstPushTime&lt;=UNIX_TIMESTAMP(DATE_SUB(NOW(),INTERVAL #{timeA} minute))
+            AND state = 0
+        </if>
+        <if test="is_together !=null and is_together !='' and is_together != '-1'">
+            AND isTogether=#{is_together}
+        </if>
+        <if test="timeB !=null and timeB !='' and timeB != '-1'">
+            AND billingTime&lt;=UNIX_TIMESTAMP(DATE_SUB(NOW(),INTERVAL #{timeB} minute))
+            AND state = 1
+        </if>
+        <if test="corder_type !=null and  corder_type !='' and corder_type != '-1' or corder_type==0">
+            AND cOrderType=#{corder_type}
+        </if>
+        <if test="invoice_number !=null and invoice_number != ''">
+            AND UPPER(invoiceNumber) LIKE CONCAT('%',UPPER(#{invoice_number}),'%')
+        </if>
+    </sql>
+
+    <select id="getInvoicesByCOrderSn" parameterType="String" resultMap="invoicesResult2">
+        select
+        `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
+        from `Invoices`
+        where `cOrderSn` = #{cOrderSn}
+    </select>
+
+    <select id="getInvoiceMakeOutList" parameterType="Map" resultMap="invoiceMakeOutResult">
+        SELECT SQL_CALC_FOUND_ROWS
+        id,cOrderSn,cOrderType,sku,productName,productCateName,number,price,amount,taxPayerNumber,invoiceNumber,fiscalCode,type,electricFlag,state,isTogether,CASE
+        WHEN firstPushTime= 0 THEN '' ELSE FROM_UNIXTIME(firstPushTime) END firstPushTime,
+        CASE WHEN billingTime=0 THEN '' ELSE FROM_UNIXTIME(billingTime) END billingTime,
+        CASE WHEN invalidTime = 0 THEN '' ELSE FROM_UNIXTIME(invalidTime) END invalidTime,
+        statusType,success,tryNum,eaiWriteState
+        FROM Invoices
+        WHERE 1=1
+        <include refid="invoiceQueryCondition"/>
+        Order By id DESC
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getRowCnts" resultType="int">
+        select
+        FOUND_ROWS();
+    </select>
+
+    <select id="getExportInvoiceMakeOutList" parameterType="Map" resultType="Map">
+        SELECT inv.cOrderSn
+        ,inv.customerCode
+        ,inv.invoiceTitle
+        ,inv.taxPayerNumber
+        ,inv.registerAddressAndPhone
+        ,inv.bankNameAndAccount
+        ,inv.remark
+        ,Orders.receiptConsignee
+        ,Orders.receiptAddress
+        ,Orders.receiptZipcode
+        ,Orders.receiptMobile
+        ,CASE WHEN inv.cOrderAddTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.cOrderAddTime) END cOrderAddTime
+        ,inv.sku
+        ,inv.productName
+        ,inv.productCateName
+        ,inv.unit
+        ,inv.number
+        ,inv.price
+        ,inv.amount
+        ,inv.nonTaxPrice
+        ,inv.nonTaxAmount
+        ,inv.taxAmount
+        ,inv.taxRate
+        ,inv.energySavingAmount
+        ,inv.type
+        ,inv.isTogether
+        ,inv.state
+        ,inv.paymentName
+        ,CASE WHEN inv.billingTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.billingTime) END billingTime
+        ,inv.drawer
+        ,inv.eaiWriteState
+        ,CASE WHEN inv.invalidTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.invalidTime) END invalidTime
+        ,CASE WHEN inv.firstPushTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.firstPushTime) END firstPushTime
+        ,CASE WHEN inv.lastModifyTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.lastModifyTime) END lastModifyTime
+        ,Orders.consignee
+        ,Orders.regionName
+        ,Orders.address
+        ,Orders.mobile
+        ,Orders.phone
+        ,Orders.remark orderRemark
+        ,inv.invoiceNumber
+        FROM Invoices inv LEFT OUTER JOIN OrderProducts ON inv.orderProductId=OrderProducts.id
+        LEFT OUTER JOIN Orders ON OrderProducts.orderId=Orders.id
+        WHERE 1=1
+        <include refid="invoiceExportQueryCondition"/>
+        <if test="ids != null and ids != ''">
+            AND inv.id in (${ids})
+        </if>
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getUsableByOrderProductId" parameterType="Integer" resultType="com.haier.shop.model.Invoices">
+        SELECT
+        id,
+        state,
+        isTogether
+        FROM
+        Invoices
+        WHERE
+        orderProductId = #{id}
+        AND state in (0, 1)
+        LIMIT 1
+    </select>
+
+    <select id="getById" parameterType="Integer" resultMap="invoicesResult">
+        select
+        `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
+        from `Invoices`
+        where `id` = #{id}
+    </select>
+    <select id="searchInvoicesInfoByCOrderSn" resultType="java.util.Map">
+        select
+        `cOrderSn`,`invoiceTitle`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`state`,`paymentName`,`invoiceNumber`,`billingTime`,`drawer`,`eaiWriteState`,`invalidTime`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
+        from `Invoices`
+        where `cOrderSn` = #{cOrderSn} and `electricFlag`=1
+    </select>
+    <select id="getByOrderProductId" parameterType="Integer" resultMap="invoicesResult">
+        select
+        `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
+        from `Invoices`
+        where `orderProductId` = #{orderProductId}
+    </select>
+
+    <select id="getSyncInvoiceList" parameterType="Integer" resultMap="invoicesResult">
+        <![CDATA[
+		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
+		from `Invoices`
+		where `success` = 0 and `tryNum` < 20
+		order by `id` desc
+		limit #{topX}
+		]]>
+    </select>
+    <select id="getInvoiceInvalidNotEndList" parameterType="Integer" resultMap="invoicesResult">
+        <![CDATA[
+		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
+		from `Invoices`
+		where invalidTime=0 and statusType=4 and success=1 and electricFlag=1 and type=2 and tryNum < 30 and addTime >= 1427817600
+		order by `id` desc
+		limit #{topX}
+		]]>
+    </select>
+    <select id="showInvoiceInfo" parameterType="Integer" resultMap="invoiceMakeOutResult">
+        SELECT *
+        FROM Invoices
+        WHERE id=#{id}
+    </select>
+</mapper>

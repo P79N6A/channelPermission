@@ -1,0 +1,568 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>SAP接口监控</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">
+                  网单编号
+                </span>
+                <input class="easyui-textbox" id="cOrderSn" name="cOrderSn"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  推送次数
+                </span>
+                <input class="easyui-textbox" id="count" name="count"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  网单ID
+                </span>
+                <input class="easyui-textbox" id="orderProductId" name="orderProductId"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  错误信息
+                </span>
+                <input class="easyui-textbox" id="lastMessage" name="lastMessage"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              是否成功
+            </span>
+                <select class="easyui-combobox" id="success"  name="success" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">成功</option>
+                    <option value="0">失败</option>
+                </select>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              开票类型
+            </span>
+                <select class="easyui-combobox" id="pushType"  name="pushType" style="width: 174px;">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">普通开票</option>
+                    <option value="2">作废/冲红</option>
+                    <option value="3">二次开票</option>
+                </select>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              记录起始时间
+            </span>
+                <input class="easyui-datebox" id="addTimeMin"  name="addTimeMin"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              记录截止时间
+            </span>
+                <input class="easyui-datebox" id="addTimeMax"  name="addTimeMax"/>
+            </div>
+
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <!-- <a href="#" class="easyui-linkbutton" id="import"
+           data-options="iconCls:'icon-save',plain:true">导出</a> -->
+    </form>
+
+</div>
+
+<div id="dialog-message" title="网单发票信息" style="line-height:200%;display:none;" closed="true">
+<form id="dialog-form">
+	<table cellpadding="0" cellspacing="0" width="100%" class="">
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>发票ID：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-id" name="id" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>发票号：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-invoiceNumber" name="invoiceNumber" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>网单ID：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-orderProductId" name="orderProductId" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>网单号：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-corderSn" name="corderSn" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>发票类型：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-type" name="type" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>网单类型：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-corderType" name="corderType" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>发票状态：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-state" name="state" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>产品数量：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-number" name="number" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>含税单价：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-price" name="price" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>含税金额：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-amount" name="amount" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>开票时间：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-billingTime" name="billingTime" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>开票状态：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-eaiWriteState" name="eaiWriteState" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>发票抬头：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-invoiceTitle" name="invoiceTitle" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>发票类别：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-electricFlag" name="electricFlag" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>重新开票：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-isReInvoice" name="isReInvoice" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>发票作废时间：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-invalidTime" name="invalidTime" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>推送状态：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-statusType" name="statusType" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>是否推送成功：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-success" name="success" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>推送次数：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-tryNum" name="tryNum" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>首次推送时间：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-firstPushTime" name="firstPushTime" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>写入时间：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-addTime" name="addTime" readonly="readonly"/>
+			</td>
+			<td style="width:20%;padding-left:18px;">
+				<label>最后更新时间：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-lastModifyTime" name="lastModifyTime" readonly="readonly"/>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;padding-left:18px;">
+				<label>差异网单ID：</label>
+			</td>
+			<td style="width:30%;">
+				<input type="text" id="dialog-form-diffId" name="diffId" readonly="readonly"/>
+			</td>
+		</tr>
+    </table>
+</form>
+</div>
+
+<script type="text/javascript">
+    var datagrid;
+    var queryParameters;
+    $(function () {
+        datagrid = {
+            fit: true,
+            fitColumns: true,
+            toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure',
+            striped: true,
+            singleSelect: true,
+            pagination: true,
+            columns: [[
+                {title: "序号", field: "id", hidden: true},
+                {title: "操作", field: "caozuo", sortable: true},
+                {title: "网单号", field: "cOrderSn", sortable: true},
+                {title: "发票ID", field: "invoiceId", sortable: true},
+                {title: "网单ID", field: "orderProductId", sortable: true},
+                {title: "差异/专项 ID", field: "diffId", sortable: true},
+                {title: "网单类型", field: "cOrderType", sortable: true},
+                {title: "开票类型", field: "pushType", sortable: true},
+                {title: "记录时间", field: "addTime", sortable: true},
+                {title: "是否成功", field: "success", sortable: true},
+                {title: "次数", field: "count", sortable: true},
+                {title: "最后推送时间", field: "lastTime", sortable: true},
+                {title: "提示信息", field: "lastMessage",sortable: true}
+            ]],
+            pageSize: 50,
+            pageList: [50,100,200],
+            rownumbers: true
+        }
+
+        $('#datagrid').datagrid(datagrid);
+    });
+
+var buttons = $.extend([], $.fn.datetimebox.defaults.buttons);
+buttons.splice(1, 0, {
+	text: '清除',
+	handler: function(target){
+		$(target).datetimebox('setValue', '');
+		$(target).combo("hidePanel");
+	}
+});
+
+//$('#addTimeMin').datetimebox({ buttons: buttons});
+//$('#addTimeMax').datetimebox({ buttons: buttons});
+
+//点击查询
+$('#search').click(function () {
+	// 记录时间期间校验
+	if($('#addTimeMin').datetimebox('getValue') && $('#addTimeMax').datetimebox('getValue')){
+		if($('#addTimeMin').datetimebox('getValue') > $('#addTimeMax').datetimebox('getValue')){
+			$.messager.alert('错误','记录时间期间不正确','error');
+			return false;
+		}
+	}
+	// 获得输入信息
+	queryParameters ={
+			 cOrderSn:$("#cOrderSn").val(),
+			 count:$("#count").val(),
+			 orderProductId:$("#orderProductId").val(),
+			 pushType:$('#pushType').combobox("getValue"),
+			 success:$("#success").combobox("getValue"),
+			 addTimeMin:$('#addTimeMin').datetimebox('getValue'),
+			 addTimeMax:$('#addTimeMax').datetimebox('getValue'),
+			 lastMessage:$('#lastMessage').val()
+	 }; 
+	 //检索列表构筑
+	// if(datagrid){
+	// 	//grid刷新
+	//     $('#datagrid').datagrid('load',queryParameters);
+	// }else{
+		//生成grid
+		datagrid = $('#datagrid').datagrid({
+			url: "/invoice/findInvoiceSapLogList",
+			fit: true,
+			fitColumns:false,
+	        pagination: true,
+	        singleSelect: false,
+	        checkOnSelect:true,
+            pageSize: 50,
+            pageList: [50,100,200],
+	        nowrap: true,
+	        rownumbers: true,
+	        queryParams: queryParameters,
+
+	         columns: [
+				[
+					{
+	                     field: 'id',
+	                     title: '序号',
+	                     width: 10,
+                         sortable:true,
+	                     align: 'center',
+	                     hidden:true
+	                },
+					{
+						 field: 'caozuo',
+						 title: '操作',
+						 width: 100,
+                        sortable:true,
+						 align: 'center',
+						 formatter:function(value,rowData,rowIndex){
+							 if(value=='0' && rowData.count=='0') return "待推送";
+							 if(value=='0') return "<a href='javascript:void(0);' onclick='pushAgain("+'"'+value+'","'+rowData.id+'","'+rowData.cOrderSn+'"'+");return false;'>重新推送</a>";
+							 if(value=='1') return '推送成功';
+							 return value;
+						 }
+                    },
+					{
+						 field: 'cOrderSn',
+						 title: '网单号',
+						 width: 150,
+                        sortable:true,
+						 align: 'center',
+						 formatter:function(value,rowData,rowIndex){
+							 return "<a href='javascript:void(0);' onclick='showInvoiceInfo("+'"'+value+'","'+rowData.id+'","'+rowData.invoiceId+'"'+");return false;'>"+value+"</a>";
+						 }
+                    },
+					{
+	                     field: 'invoiceId',
+	                     title: '发票ID',
+	                     width: 100,
+                        sortable:true,
+	                     align: 'center'
+	                },
+					{
+	                     field: 'orderProductId',
+	                     title: '网单ID',
+	                     width: 100,
+                        sortable:true,
+	                     align: 'center'
+	                },
+					{
+	                     field: 'diffId',
+	                     title: '差异/专项 ID',
+	                     width: 150,
+                        sortable:true,
+	                     align: 'center'
+	                },
+					{
+						 field: 'cOrderType',
+						 title: '网单类型',
+						 width: 130,
+                        sortable:true,
+						 align: 'center',
+						 formatter:function(value,rowData,rowIndex){
+								if(value=='1') return '普通网单';
+								if(value=='2') return '差异网单';
+								if(value=='3') return '专项开票';
+								return value;
+						 }
+					 },
+					 {
+						 field: 'pushType',
+						 title: '开票类型',
+						 width: 130,
+                         sortable:true,
+						 align: 'center',
+						 formatter:function(value,rowData,rowIndex){
+								if(value=='1') return '普通开票';
+								if(value=='2') return '作废/冲红';
+								if(value=='3') return '二次开票';
+								return value;
+						 }
+                     },
+					 {
+						 field: 'addTime',
+						 title: '记录时间',
+						 width: 200,
+                         sortable:true,
+						 align: 'center'
+                     },
+					 {
+ 	                     field: 'success',
+ 	                     title: '是否成功',
+ 	                     width: 120,
+                         sortable:true,
+ 	                     align: 'center',
+						 formatter:function(value,rowData,rowIndex){
+								if(value=='1') return '成功';
+								if(value=='0' && rowData.count=='0') return '待推送';
+								if(value=='0') return '失败';
+								return value;
+						 }
+ 	                },
+					 {
+	                     field: 'count',
+	                     title: '次数',
+	                     width: 80,
+                         sortable:true,
+	                     align: 'center'
+	                },
+					 {
+						 field: 'lastTime',
+						 title: '最后推送时间',
+						 width: 160,
+                         sortable:true,
+						 align: 'center'
+                    },
+					{
+	                     field: 'lastMessage',
+	                     title: '提示信息',
+	                     width: 400,
+                        sortable:true,
+	                     align: 'left'
+	                }
+				]
+			]
+
+		});
+	//}
+});
+
+
+function pushAgain(type,id,cOrderSn){
+	
+	jQuery.ajax({
+        url: "/invoice/pushAgainInvoiceSap",
+        data:{
+        	"id": id
+        },
+        type: "GET",
+        success: function (result) {
+        	if(result.success == true){
+				alert("重置成功！！");
+				$('#search').click();
+			}else
+				alert("重置失败" + result.message);
+		}
+	});
+}
+
+function showInvoiceInfo(cOrderSn,id,invoiceId){
+	jQuery.getJSON("/invoice/showInvoiceInfo?invoiceId="+invoiceId, function(result){
+		var data = result.data;
+		
+		jQuery( "#dialog-form-id" ).val(data.id );
+		jQuery( "#dialog-form-state" ).val(data.state );
+		jQuery( "#dialog-form-type" ).val(data.type );
+		jQuery( "#dialog-form-number" ).val(data.number );
+		jQuery( "#dialog-form-isReInvoice" ).val(data.isReInvoice );
+		jQuery( "#dialog-form-orderProductId" ).val(data.orderProductId );
+		jQuery( "#dialog-form-corderType" ).val(data.corderType );
+		jQuery( "#dialog-form-diffId" ).val(data.diffId );
+		jQuery( "#dialog-form-corderSn" ).val(data.corderSn );
+		jQuery( "#dialog-form-invoiceTitle" ).val(data.invoiceTitle );
+		jQuery( "#dialog-form-price" ).val(data.price );
+		jQuery( "#dialog-form-amount" ).val(data.amount );
+		jQuery( "#dialog-form-invoiceNumber" ).val(data.invoiceNumber );
+		jQuery( "#dialog-form-billingTime" ).val(data.billingTime );
+		jQuery( "#dialog-form-eaiWriteState" ).val(data.eaiWriteState );
+		jQuery( "#dialog-form-invalidTime" ).val(data.invalidTime );
+		jQuery( "#dialog-form-firstPushTime" ).val(data.firstPushTime );
+		jQuery( "#dialog-form-lastModifyTime" ).val(data.lastModifyTime );
+		jQuery( "#dialog-form-statusType" ).val(data.statusType );
+		jQuery( "#dialog-form-success" ).val(data.success );
+		jQuery( "#dialog-form-addTime" ).val(data.addTime );
+		jQuery( "#dialog-form-tryNum" ).val(data.tryNum );
+		jQuery( "#dialog-form-electricFlag" ).val(data.electricFlag );
+		
+		jQuery( "#dialog-message" ).dialog( "open" );
+	});
+}
+
+$(function(){
+	$( "#dialog-message" ).dialog({
+	 	autoOpen: false,
+		modal: true,
+		closeOnEscape: false,
+		resizable: false,
+		width:850,		
+		title: '网单发票信息',
+		close: function( event, ui ) {
+			$( "#dialog-message" ).dialog( "close" );
+		}
+	});
+});
+</script>
+
+</body>

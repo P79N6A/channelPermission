@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderWorkflowsReadDao">
+    <resultMap id="orderWorkflowsResult" type="com.haier.shop.model.OrderWorkflows">
+        <result property="id" column="id"/>
+        <result property="orderId" column="orderId"/>
+        <result property="orderProductId" column="orderProductId"/>
+        <result property="addTime" column="addTime"/>
+        <result property="payTime" column="payTime"/>
+        <result property="confirmTime" column="confirmTime"/>
+        <result property="confirmPeople" column="confirmPeople"/>
+        <result property="sendHpTime" column="sendHpTime"/>
+        <result property="hpAllotNetPointTime" column="hpAllotNetPointTime"/>
+        <result property="lesShipping" column="lesShipping"/>
+        <result property="lesShipTime" column="lesShipTime"/>
+        <result property="netPointAcceptTime" column="netPointAcceptTime"/>
+        <result property="netPointRefuseTime" column="netPointRefuseTime"/>
+        <result property="netPointShipTime" column="netPointShipTime"/>
+        <result property="userAcceptTime" column="userAcceptTime"/>
+        <result property="userRefuseTime" column="userRefuseTime"/>
+        <result property="receiptTime" column="receiptTime"/>
+        <result property="finishTime" column="finishTime"/>
+        <result property="finishPeople" column="finishPeople"/>
+        <result property="cancelTime" column="cancelTime"/>
+        <result property="cancelPeople" column="cancelPeople"/>
+        <result property="mustHpAllotNetPointTime" column="mustHpAllotNetPointTime"/>
+        <result property="ewHpAllotNetPointTime" column="ewHpAllotNetPointTime"/>
+        <result property="mustLesShipping" column="mustLesShipping"/>
+        <result property="ewLesShipping" column="ewLesShipping"/>
+        <result property="mustNetPointAcceptTime" column="mustNetPointAcceptTime"/>
+        <result property="ewNetPointAcceptTime" column="ewNetPointAcceptTime"/>
+        <result property="mustUserAcceptTime" column="mustUserAcceptTime"/>
+        <result property="ewUserAcceptTime" column="ewUserAcceptTime"/>
+        <result property="shippingMode" column="shippingMode"/>
+        <result property="shippingTime" column="shippingTime"/>
+        <result property="isTimeoutFree" column="isTimeoutFree"/>
+        <result property="netPointArriveTime" column="netPointArriveTime"/>
+        <result property="mustConfirmTime" column="mustConfirmTime"/>
+        <result property="ewConfirmTime" column="ewConfirmTime"/>
+    </resultMap>
+    <select id="get" parameterType="Integer" resultMap="orderWorkflowsResult">
+        SELECT
+            `id`,
+            `orderId`,
+            `orderProductId`,
+            `addTime`,
+            `payTime`,
+            `confirmTime`,
+            `confirmPeople`,
+            `sendHpTime`,
+            `hpAllotNetPointTime`,
+            `lesShipping`,
+            `lesShipTime`,
+            `netPointAcceptTime`,
+            `netPointRefuseTime`,
+            `netPointShipTime`,
+            `userAcceptTime`,
+            `userRefuseTime`,
+            `receiptTime`,
+            `finishTime`,
+            `finishPeople`,
+            `cancelTime`,
+            `cancelPeople`,
+            `mustHpAllotNetPointTime`,
+            `ewHpAllotNetPointTime`,
+            `mustLesShipping`,
+            `ewLesShipping`,
+            `mustNetPointAcceptTime`,
+            `ewNetPointAcceptTime`,
+            `mustUserAcceptTime`,
+            `ewUserAcceptTime`,
+            `shippingMode`,
+            `shippingTime`,
+            `isTimeoutFree`,
+            `netPointArriveTime`,
+            `mustConfirmTime`,
+            `ewConfirmTime`
+        FROM `OrderWorkflows`
+        WHERE `id` = #{id}
+    </select>
+
+    <select id="getByOrderProductId" parameterType="Integer" resultMap="orderWorkflowsResult">
+        SELECT
+            `id`,
+            `orderId`,
+            `orderProductId`,
+            `addTime`,
+            `payTime`,
+            `confirmTime`,
+            `confirmPeople`,
+            `sendHpTime`,
+            `hpAllotNetPointTime`,
+            `lesShipping`,
+            `lesShipTime`,
+            `netPointAcceptTime`,
+            `netPointRefuseTime`,
+            `netPointShipTime`,
+            `userAcceptTime`,
+            `userRefuseTime`,
+            `receiptTime`,
+            `finishTime`,
+            `finishPeople`,
+            `cancelTime`,
+            `cancelPeople`,
+            `mustHpAllotNetPointTime`,
+            `ewHpAllotNetPointTime`,
+            `mustLesShipping`,
+            `ewLesShipping`,
+            `mustNetPointAcceptTime`,
+            `ewNetPointAcceptTime`,
+            `mustUserAcceptTime`,
+            `ewUserAcceptTime`,
+            `shippingMode`,
+            `shippingTime`,
+            `isTimeoutFree`,
+            `netPointArriveTime`,
+            `mustConfirmTime`,
+            `ewConfirmTime`
+        FROM `OrderWorkflows`
+        WHERE `orderProductId` = #{orderProductId}
+        LIMIT 1
+    </select>
+
+    <select id="getConfirmList" resultType="java.util.Map">
+        SELECT
+            cOrderSn,
+            isCod,
+            addTime,
+            payTime,
+            convert(codConfirmState, SIGNED) AS codConfirmState,
+            codConfirmTime,
+            os.regionName,
+            os.consignee,
+            os.isNotConfirm
+        FROM Orders os INNER JOIN OrderProducts op ON os.id = op.orderId
+        WHERE os.city = 173 AND os.orderStatus = 200 AND (os.orderType = 0 OR os.orderType = 3) AND
+              os.firstConfirmTime = 0 AND op.status != 110;
+    </select>
+
+    <select id="getHpList" resultType="java.util.Map">
+        SELECT
+            op.cOrderSn,
+            ow.sendHpTime,
+            os.regionName,
+            os.consignee
+        FROM OrderWorkflows ow INNER JOIN Orders os
+            INNER JOIN OrderProducts op ON ow.orderId = os.id AND ow.orderProductId = op.id
+        WHERE os.city = 173 AND (os.orderType = 0 OR os.orderType = 3) AND os.orderStatus = 201 AND op.status = 2
+              AND (op.shippingMode = '' OR op.shippingMode = 'B2B2C');
+    </select>
+
+    <select id="getNetpointList" resultType="java.util.Map">
+        SELECT
+            op.cOrderSn,
+            ow.lesShipping,
+            ow.shippingTime,
+            os.regionName,
+            os.consignee
+        FROM OrderWorkflows ow INNER JOIN Orders os
+            INNER JOIN OrderProducts op ON ow.orderId = os.id AND ow.orderProductId = op.id
+        WHERE os.city = 173 AND (os.orderType = 0 OR os.orderType = 3) AND
+              (op.shippingMode = '' OR op.shippingMode = 'B2B2C')
+              AND (op.status = 8 OR op.status = 10) AND op.tsCode = '';
+    </select>
+
+    <select id="getUserList" resultType="java.util.Map">
+        SELECT
+            op.id,
+            op.cOrderSn,
+            ow.netPointArriveTime,
+            ow.netPointAcceptTime,
+            op.hpReservationDate,
+            ow.shippingTime,
+            os.regionName,
+            os.consignee,
+            os.mobile
+        FROM OrderWorkflows ow INNER JOIN Orders os
+            INNER JOIN OrderProducts op ON ow.orderId = os.id AND ow.orderProductId = op.id
+        WHERE os.city = 173 AND (os.orderType = 0 OR os.orderType = 3) AND
+              (op.shippingMode = '' OR op.shippingMode = 'B2B2C')
+              AND (op.status = 40 OR op.status = 70);
+    </select>
+
+    <select id="getRepairList" resultType="java.util.Map">
+        SELECT op.cOrderSn
+        FROM OrderProducts op INNER JOIN OrderRepairs ors
+            INNER JOIN Orders os ON op.id = ors.orderProductId AND op.orderId = os.id
+        WHERE os.city = 173 AND (os.orderType = 0 OR os.orderType = 3) AND
+              (op.shippingMode = '' OR op.shippingMode = 'B2B2C')
+              AND (op.status = 8 OR op.status = 10 OR op.status = 40 OR op.status = 70);
+    </select>
+
+    <select id="getHpCancelByOrderProductId" parameterType="Long" resultType="Integer">
+        SELECT count(1) AS cancelCount
+        FROM `OrderOperateLogs`
+        WHERE orderProductId = #{orderProductId} AND changeLog = '手动触发作废HP网单'
+    </select>
+    <!--
+    <select id="getOntimeRate" parameterType="java.util.Map" resultType="java.util.Map">
+        select op.cOrderSn,op.status,op.productType,op.sCode,os.isCod,convert(os.codConfirmState,SIGNED) as codConfirmState,os.orderStatus,
+            os.province,os.city,os.region,os.regionName,ow.shippingTime,os.addTime,os.smManualTime,os.codConfirmTime,os.confirmTime,
+            os.payTime,op.hpFinishDate,ow.hpAllotNetPointTime,ow.lesShipping,ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime,
+            rs.date,from_unixtime(rs.time,'%H:%i:%s') as time,op.hpReservationDate
+        from OrderWorkflows ow inner join OrderProducts op on ow.orderProductId = op.id inner join Orders os on ow.orderId = os.id
+            left join ReservationShipping rs on ow.orderId = rs.orderId
+        where os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate}
+             and os.isBook = 0 and op.status != 110 and (os.orderType = 0 or os.orderType = 3) and (op.shippingMode ='' or op.shippingMode = 'B2B2C')
+        <if test="nodeType eq 'netpoint'.toString()">and op.status &gt;= 8</if>
+        <if test="nodeType eq 'user'.toString()">and op.status &gt;= 40</if>
+        <if test="shippingTime != ''"> and ow.shippingTime = #{shippingTime}</if>
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+    </select>
+     -->
+    <select id="getOntimeRate" parameterType="java.util.Map" resultType="java.util.Map">
+        select op.cOrderSn,op.status,op.productType,op.sCode,os.isCod,convert(os.codConfirmState,SIGNED) as
+        codConfirmState,os.orderStatus,
+        os.province,os.city,os.region,os.regionName,ors.id as
+        repairsFlag,ow.shippingTime,os.addTime,os.smManualTime,os.codConfirmTime,os.confirmTime,
+        os.payTime,op.hpFinishDate,ow.hpAllotNetPointTime,ow.lesShipping,ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime,
+        rs.date,from_unixtime(rs.time,'%H:%i:%s') as time,op.hpReservationDate
+        from OrderWorkflows ow inner join OrderProducts op on ow.orderProductId = op.id inner join Orders os on
+        ow.orderId = os.id
+        left join ReservationShipping rs on ow.orderId = rs.orderId left join OrderRepairs ors on os.id = ors.orderId
+        where
+        <if test="nodeType eq 'netpoint'.toString()">ow.mustNetPointAcceptTime &gt; #{startDate} and
+            ow.mustNetPointAcceptTime &lt; #{endDate} and op.status &gt;= 8
+        </if>
+        <if test="nodeType eq 'user'.toString()">ow.mustUserAcceptTime &gt; #{startDate} and ow.mustUserAcceptTime &lt;
+            #{endDate} and op.status &gt;= 40
+        </if>
+        <if test="nodeType eq 'owfUser'.toString()">ow.mustUserAcceptTime &gt; #{startDate} and ow.mustUserAcceptTime
+            &lt; #{endDate}
+        </if>
+        <if test="shippingTime != ''">and ow.shippingTime = #{shippingTime}</if>
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        and os.isBook = 0 and op.status != 110 and (os.orderType = 0 or os.orderType = 3) and (op.shippingMode ='' or
+        op.shippingMode = 'B2B2C')
+    </select>
+
+
+    <select id="getRepairListByDate" resultType="java.util.Map">
+        SELECT op.cOrderSn
+        FROM OrderProducts op INNER JOIN OrderRepairs ors
+            INNER JOIN Orders os ON op.id = ors.orderProductId AND op.orderId = os.id
+        WHERE os.addTime &gt; #{startDate} AND os.addTime &lt; #{endDate}
+    </select>
+
+    <select id="getRegions" resultType="java.util.Map">
+        SELECT
+            id,
+            regionName
+        FROM Regions
+        WHERE parentId = #{parent}
+    </select>
+
+    <select id="getOntimeRateDetailCount" parameterType="java.util.Map" resultType="Integer">
+        select count(*)
+        from OrderWorkflows ow inner join OrderProducts op on ow.orderProductId = op.id inner join Orders os on
+        ow.orderId = os.id
+        where op.cOrderSn in
+        <foreach collection="cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
+            #{cOrderSn}
+        </foreach>
+    </select>
+
+    <select id="getOntimeRateDetail" resultType="java.util.Map">
+        select op.cOrderSn,op.number,op.price,op.status,os.source,op.productName,'' as area,'' as
+        trade,op.sCode,np.netPointName,
+        os.province,os.city,os.region,os.regionName,os.consignee,os.mobile,ow.shippingTime,os.addTime,os.payTime,os.smManualTime,
+        os.codConfirmTime,os.confirmTime,op.hpFinishDate,ow.hpAllotNetPointTime,ow.lesShipping,ow.lesShipTime,ow.netPointAcceptTime,
+        ow.netPointArriveTime,ow.userAcceptTime
+        from OrderWorkflows ow inner join OrderProducts op on ow.orderProductId = op.id inner join Orders os on
+        ow.orderId = os.id
+        left join NetPoints np on op.netPointId=np.id
+        where op.cOrderSn in
+        <foreach collection="cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
+            #{cOrderSn}
+        </foreach>
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+
+    <select id="getShippingTimeByRegionId" resultType="Integer">
+        SELECT shippingTime
+        FROM Regions
+        WHERE id = #{id}
+    </select>
+
+    <select id="getStorages" resultType="java.util.Map">
+        SELECT
+            code AS id,
+            name AS storageName
+        FROM Storages
+    </select>
+
+    <select id="queryById" parameterType="Integer" resultMap="orderWorkflowsResult">
+        SELECT
+            `id`,
+            `orderId`,
+            `orderProductId`,
+            `addTime`,
+            `payTime`,
+            `confirmTime`,
+            `confirmPeople`,
+            `sendHpTime`,
+            `hpAllotNetPointTime`,
+            `lesShipping`,
+            `lesShipTime`,
+            `netPointAcceptTime`,
+            `netPointRefuseTime`,
+            `netPointShipTime`,
+            `userAcceptTime`,
+            `userRefuseTime`,
+            `receiptTime`,
+            `finishTime`,
+            `finishPeople`,
+            `cancelTime`,
+            `cancelPeople`,
+            `mustHpAllotNetPointTime`,
+            `ewHpAllotNetPointTime`,
+            `mustLesShipping`,
+            `ewLesShipping`,
+            `mustNetPointAcceptTime`,
+            `ewNetPointAcceptTime`,
+            `mustUserAcceptTime`,
+            `ewUserAcceptTime`,
+            `shippingMode`,
+            `shippingTime`,
+            `isTimeoutFree`,
+            `netPointArriveTime`,
+            `mustConfirmTime`,
+            `ewConfirmTime`
+        FROM `OrderWorkflows`
+        WHERE `id` > #{id}
+        LIMIT 1000
+    </select>
+
+    <select id="getTelephoneInfo" parameterType="java.util.Map" resultType="java.util.Map">
+        select `id`,`department_name`,`mobile`,`name`
+        from `ord_wf_address_list`
+        where
+        <if test="smsPoint != null and smsPoint != ''">`department_level` = #{smsPoint}</if>
+        <if test="smsDeptName != null and smsDeptName != ''">and `department_name` like #{smsDeptName}</if>
+    </select>
+
+    <select id="getTradeInfo" resultType="java.util.Map">
+        SELECT
+            DISTINCT `gm_name`
+        FROM
+            `ord_wf_region`
+        WHERE
+            gm_name != ''
+    </select>
+
+    <select id="getCenterInfo" resultType="java.util.Map">
+        SELECT
+            DISTINCT `sec_name`
+        FROM
+            `ord_wf_region`
+        WHERE
+            sec_name != ''
+    </select>
+
+    <select id="getShippingTimeInfo" resultType="java.util.Map">
+        SELECT
+            id,
+            shippingTime
+        FROM Regions
+        WHERE regionType = 3
+    </select>
+
+    <select id="getListByOrderSn" parameterType="String" resultMap="orderWorkflowsResult">
+        SELECT
+            owf.`id`,
+            owf.`orderId`,
+            owf.`orderProductId`,
+            owf.`addTime`,
+            owf.`payTime`,
+            owf.`confirmTime`,
+            owf.`confirmPeople`,
+            owf.`sendHpTime`,
+            owf.`hpAllotNetPointTime`,
+            owf.`lesShipping`,
+            owf.`lesShipTime`,
+            owf.`netPointAcceptTime`,
+            owf.`netPointRefuseTime`,
+            owf.`netPointShipTime`,
+            owf.`userAcceptTime`,
+            owf.`userRefuseTime`,
+            owf.`receiptTime`,
+            owf.`finishTime`,
+            owf.`finishPeople`,
+            owf.`cancelTime`,
+            owf.`cancelPeople`,
+            owf.`mustHpAllotNetPointTime`,
+            owf.`ewHpAllotNetPointTime`,
+            owf.`mustLesShipping`,
+            owf.`ewLesShipping`,
+            owf.`mustNetPointAcceptTime`,
+            owf.`ewNetPointAcceptTime`,
+            owf.`mustUserAcceptTime`,
+            owf.`ewUserAcceptTime`,
+            owf.`shippingMode`,
+            owf.`shippingTime`,
+            owf.`isTimeoutFree`,
+            owf.`netPointArriveTime`,
+            owf.`mustConfirmTime`,
+            owf.`ewConfirmTime`
+        FROM `OrderWorkflows` owf INNER JOIN Orders os ON owf.orderId = os.id
+        WHERE os.`orderSn` = #{orderSn}
+    </select>
+</mapper>

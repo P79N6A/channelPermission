@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+
+
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    </meta>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_WwwHpRecords"></table>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+	<div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <h3>HP拒收逆向单匹配异常列表</h3>
+            <h5>您可以在这里查看HP拒收逆向单匹配匹配异常相关信息。<a href="/operationArea/select_orderrepairtcs">点击返回退换货列表</a></h5>
+            <h5 style="color: red;margin-right: 26px;margin-top: 10px;margin-bottom: 10px;">温馨提示:系统默认每三分钟匹配一次HP回传的拒信息。由于天猫退货信息未接入,菜鸟,售后,物流等系统数据差异导致的首次匹配失败,系统每隔十分钟重新匹配20次,仍然失败的需要人工处理。</h5>
+            <div class="search-row_nowidth">
+                <input id="hpTbSn" class="easyui-textbox" prompt="TB单号"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <input id="cOrderSn" class="easyui-textbox" prompt="网单号"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <select name="success" id="success" class="easyui-combobox">
+                    <option value="4">匹配状态</option>
+                    <option value="0" selected="true">失败</option>
+                    <option value="1">成功</option>
+                    <option value="2">待匹配</option>
+                    <option value="3">带重新匹配</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <input id="addTimeMin" class="easyui-datebox" prompt="开始时间"></input>--
+                <input id="addTimeMax" class="easyui-datebox" prompt="结束时间"></input>
+            </div>
+           
+        </div>
+         <div class="search-row_nowidth">
+                <a href="#" class="easyui-linkbutton" id="search">确定搜索</a>
+                <a href="#" class="easyui-linkbutton" id="export_Excel">导出报表</a>
+                <a href="#" class="easyui-linkbutton" id="exceptional_point">重置异常</a>
+            </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_WwwHpRecords').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/order/hpRejectable.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.OrderOperationLogDao">
+	<resultMap id="orderOperationLogResult"
+		type="com.haier.purchase.data.model.OrderOperationLog">
+		<result property="Id" column="Id" />
+		<result property="order_id" column="order_id" />
+		<result property="sub_order_id" column="sub_order_id" />
+		<result property="type" column="type" />
+		<result property="is_sucess" column="is_sucess" />
+		<result property="content" column="content" />
+		<result property="remark" column="remark" />
+		<result property="log_time" column="log_time" />
+		<result property="operate_user" column="operate_user" />
+		<result property="system" column="system" />
+	</resultMap>
+	<select id="getOrderOperationLogInfo" parameterType="Map"
+		resultMap="orderOperationLogResult">
+		select
+		`Id`,`order_id`,`sub_order_id`,`type`,`is_sucess`,`content`,`remark`,`log_time`,`operate_user`,`system`
+		from `order_operation_log_t`
+		where
+		1=1
+		<if test="order_id != null and order_id != ''">
+			AND order_id = #{order_id}
+		</if>
+		<if test="sub_order_id != null and sub_order_id != ''">
+			AND sub_order_id = #{sub_order_id}
+		</if>
+	</select>
+	<!--单条插入 -->
+	<insert id="createOrderOperationLog" parameterType="Map">
+		INSERT INTO
+		order_operation_log_t (
+		order_id,
+		sub_order_id,
+		type,
+		is_sucess,
+		content,
+		remark,
+		log_time,
+		operate_user,
+		system
+		)
+		VALUES(
+		#{order_id},
+		#{sub_order_id},
+		#{type},
+		#{is_sucess},
+		#{content},
+		#{remark},
+		CURRENT_TIMESTAMP(),
+		#{operate_user},
+		#{system}
+		);
+	</insert>
+	<!--多条插入 -->
+	<insert id="insertOrderOperationLog" parameterType="java.util.List">
+		INSERT INTO
+		order_operation_log_t (
+		order_id,sub_order_id,type,is_sucess,content,remark,log_time,operate_user,system)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.order_id},#{item.sub_order_id},#{item.type},#{item.is_sucess},#{item.content},
+			#{item.remark},CURRENT_TIMESTAMP(),#{item.operate_user},#{item.system})
+		</foreach>
+	</insert>
+</mapper>

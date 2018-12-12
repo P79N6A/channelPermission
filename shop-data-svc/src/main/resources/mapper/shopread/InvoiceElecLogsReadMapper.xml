@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.InvoiceElectricLogsReadDao">
+
+    <resultMap id="InvoiceElectricLogDispItem" type="com.haier.shop.model.InvoiceElectricLogDispItem">
+        <result property="cOrderSn" column="cOrderSn"/>
+        <result property="type" column="type"/>
+        <result property="success" column="success"/>
+        <result property="addTimeMin" column="addTime"/>
+        <result property="addTimeMax" column="addTime"/>
+        <result property="addTime" column="addTime"/>
+    </resultMap>
+
+    <resultMap id="invoiceElectricLogsResult" type="com.haier.shop.model.InvoiceElectricLogs">
+        <result property="id" column="id" />
+        <result property="addTime" column="addTime" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="cOrderSn" column="cOrderSn" />
+        <result property="invoiceId" column="invoiceId" />
+        <result property="type" column="type" />
+        <result property="pushData" column="pushData" />
+        <result property="returnData" column="returnData" />
+        <result property="analysisResult" column="analysisResult" />
+        <result property="verifyResult" column="verifyResult" />
+        <result property="success" column="success" />
+        <result property="count" column="count" />
+        <result property="lastTime" column="lastTime" />
+        <result property="lastMessage" column="lastMessage" />
+        <result property="smsFlag" column="smsFlag" />
+    </resultMap>
+
+
+    <select id="getElectronicInvoiceLogsList" parameterType="Map" resultMap="InvoiceElectricLogDispItem">
+        select SQL_CALC_FOUND_ROWS  iel.cOrderSn,iel.type,
+        CASE WHEN iel.addTime=0 THEN '' ELSE from_unixtime(iel.addTime) END as addTime,iel.success,iel.count,iel.lastMessage from InvoiceElectricLogs  iel,Invoices ins
+        where 1=1 and iel.invoiceId=ins.id
+        <if test="cOrderSn !=null and cOrderSn != ''">
+            and ins.cOrderSn = #{cOrderSn}
+        </if>
+        <if test="type !=null and type != '-1'">
+            and iel.type=#{type}
+        </if>
+        <if test="success !=null and success != '-1'">
+            and iel.success=#{success}
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            and iel.addTime &gt;= UNIX_TIMESTAMP(#{addTimeMin})
+        </if>
+        <if test="addTimeMax !=null and addTimeMax != ''">
+            and iel.addTime &lt;= UNIX_TIMESTAMP(#{addTimeMax})
+        </if>
+        order by iel.id desc
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getRowCnts" resultType="int">
+        SELECT
+        FOUND_ROWS();
+    </select>
+
+    <select id="getByInvoiceIdAndType"  parameterType="Integer" resultMap="invoiceElectricLogsResult">
+        SELECT `id`,`addTime`,`orderProductId`,`cOrderSn`,`invoiceId`,`type`,`pushData`,`returnData`,`analysisResult`,`verifyResult`,`success`,`count`,`lastTime`,`lastMessage`,`smsFlag`
+        FROM `InvoiceElectricLogs`
+        where  `invoiceId`=#{invoiceId} and `type`=#{type}
+        limit 1
+    </select>
+
+    <select id="getByInvoiceIdAndTypeList"  parameterType="Integer" resultMap="invoiceElectricLogsResult">
+        SELECT `id`,`addTime`,`orderProductId`,`cOrderSn`,`invoiceId`,`type`,`pushData`,`returnData`,`analysisResult`,`verifyResult`,`success`,`count`,`lastTime`,`lastMessage`,`smsFlag`
+        FROM `InvoiceElectricLogs`
+        where  `invoiceId`=#{invoiceId} and `type`=#{type}
+        order by addTime desc
+    </select>
+</mapper>

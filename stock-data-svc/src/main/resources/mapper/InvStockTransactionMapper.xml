@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStockTransactionDao">
+    <resultMap id="invStockTransactionResult" type="com.haier.stock.model.InvStockTransaction">
+        <result property="id" column="id"/>
+        <result property="sku" column="sku"/>
+        <result property="externalSecCode" column="external_sec_code"/>
+        <result property="secCode" column="sec_code"/>
+        <result property="corderSn" column="corder_sn"/>
+        <result property="channelCode" column="channel_code"/>
+        <result property="quantity" column="quantity"/>
+        <result property="mark" column="mark"/>
+        <result property="itemProperty" column="item_property"/>
+        <result property="billType" column="bill_type"/>
+        <result property="billTime" column="bill_time"/>
+        <result property="isFrozen" column="is_froze"/>
+        <result property="isRelease" column="is_release"/>
+        <result property="processStatus" column="process_status"/>
+        <result property="lastProcessTime" column="last_process_time"/>
+        <result property="isDelay" column="delay"/>
+        <result property="businessProcessStatus" column="business_process_status"/>
+        <result property="businessProcessTime" column="business_process_time"/>
+        <result property="addTime" column="add_time"/>
+        <result property="message" column="message"/>
+    </resultMap>
+    <select id="getNotProcessBusiness" resultMap="invStockTransactionResult">
+        SELECT
+            `id`,
+            `sku`,
+            `external_sec_code`,
+            `sec_code`,
+            `corder_sn`,
+            `channel_code`,
+            `quantity`,
+            `mark`,
+            `item_property`,
+            `bill_type`,
+            `bill_time`,
+            `is_froze`,
+            `is_release`,
+            `process_status`,
+            `last_process_time`,
+            `delay`,
+            `business_process_status`,
+            `business_process_time`,
+            `add_time`
+        FROM `inv_stock_transaction`
+        WHERE `business_process_status` = 0
+        LIMIT 1000
+    </select>
+    <select id="getByProcessStatus" resultMap="invStockTransactionResult">
+        SELECT
+            `id`,
+            `sku`,
+            `external_sec_code`,
+            `sec_code`,
+            `corder_sn`,
+            `channel_code`,
+            `quantity`,
+            `mark`,
+            `item_property`,
+            `bill_type`,
+            `bill_time`,
+            `is_froze`,
+            `is_release`,
+            `process_status`,
+            `last_process_time`,
+            `delay`,
+            `business_process_status`,
+            `business_process_time`,
+            `add_time`
+        FROM `inv_stock_transaction`
+        WHERE `process_status` = ${processStatus} AND `delay` = '0'
+        LIMIT 1000
+    </select>
+    <select id="getByIsDelay" resultMap="invStockTransactionResult">
+        SELECT
+            `id`,
+            `sku`,
+            `external_sec_code`,
+            `sec_code`,
+            `corder_sn`,
+            `channel_code`,
+            `quantity`,
+            `mark`,
+            `item_property`,
+            `bill_type`,
+            `bill_time`,
+            `is_froze`,
+            `is_release`,
+            `process_status`,
+            `last_process_time`,
+            `delay`,
+            `business_process_status`,
+            `business_process_time`,
+            `add_time`
+        FROM `inv_stock_transaction`
+        WHERE `delay` = #{isDelay}
+        LIMIT 1000
+    </select>
+    <select id="get" parameterType="Integer" resultMap="invStockTransactionResult">
+        SELECT
+            `id`,
+            `sku`,
+            `external_sec_code`,
+            `sec_code`,
+            `corder_sn`,
+            `channel_code`,
+            `quantity`,
+            `mark`,
+            `item_property`,
+            `bill_type`,
+            `bill_time`,
+            `is_froze`,
+            `is_release`,
+            `process_status`,
+            `last_process_time`,
+            `delay`,
+            `business_process_status`,
+            `business_process_time`,
+            `add_time`
+        FROM `inv_stock_transaction`
+        WHERE `id` = #{id}
+    </select>
+    <select id="getByRefNo" resultMap="invStockTransactionResult">
+        SELECT
+            `id`,
+            `sku`,
+            `external_sec_code`,
+            `sec_code`,
+            `corder_sn`,
+            `channel_code`,
+            `quantity`,
+            `mark`,
+            `item_property`,
+            `bill_type`,
+            `bill_time`,
+            `is_froze`,
+            `is_release`,
+            `process_status`,
+            `last_process_time`,
+            `delay`,
+            `business_process_status`,
+            `business_process_time`,
+            `add_time`
+        FROM `inv_stock_transaction`
+        WHERE `corder_sn` = #{corderSn} AND `process_status` = 0
+    </select>
+    <insert id="insert" parameterType="com.haier.stock.model.InvStockTransaction">
+        INSERT INTO `inv_stock_transaction` (`sku`, `sec_code`, `external_sec_code`, `corder_sn`, `channel_code`, `quantity`, `mark`, `item_property`, `bill_type`, `bill_time`, `is_froze`, `is_release`, `process_status`, `last_process_time`, `delay`, `business_process_status`, `business_process_time`, `add_time`)
+        VALUES (#{sku}, #{secCode}, #{externalSecCode}, #{corderSn}, #{channelCode}, #{quantity}, #{mark},
+                #{itemProperty}, #{billType},
+                #{billTime}, #{isFrozen}, #{isRelease}, #{processStatus}, #{lastProcessTime}, #{isDelay},
+                #{businessProcessStatus},
+                #{businessProcessTime}, #{addTime})
+    </insert>
+    <insert id="insertAll" parameterType="java.util.List">
+        INSERT INTO `inv_stock_transaction` (`sku`, `sec_code`,`external_sec_code`, `corder_sn`, `channel_code`,
+        `quantity`, `mark`,
+        `item_property`, `bill_type`, `bill_time`, `is_froze`,`is_release`, `process_status`,
+        `last_process_time`,`delay`,
+        `business_process_status`, `business_process_time`, `add_time`)
+        VALUES
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (#{item.sku}, #{item.secCode},#{item.externalSecCode}, #{item.corderSn}, #{item.channelCode},
+            #{item.quantity},
+            #{item.mark},
+            #{item.itemProperty}, #{item.billType},
+            #{item.billTime}, #{item.isFrozen}, #{item.isRelease},#{item.processStatus},
+            #{item.lastProcessTime},#{item.isDelay},
+            #{item.businessProcessStatus},
+            #{item.businessProcessTime}, #{item.addTime})
+        </foreach>
+    </insert>
+    <update id="updateBusinessProcessStatus" parameterType="com.haier.stock.model.InvStockTransaction">
+        UPDATE `inv_stock_transaction`
+        SET
+            `business_process_status` = #{businessProcessStatus},
+            `business_process_time`   = NOW()
+        WHERE `id` = #{id}
+        LIMIT 1000
+    </update>
+    <update id="updateProcessStatus" parameterType="com.haier.stock.model.InvStockTransaction">
+        UPDATE `inv_stock_transaction`
+        SET
+            `process_status`    = #{processStatus},
+            `delay`             = #{isDelay},
+            `message`           = #{message},
+            `last_process_time` = NOW()
+        WHERE `id` = #{id} AND `process_status` = #{oldProcessStatus}
+    </update>
+    <update id="updateToDelay" parameterType="com.haier.stock.model.InvStockTransaction">
+        UPDATE `inv_stock_transaction`
+        SET
+            `delay`   = #{isDelay},
+            `message` = #{message}
+        WHERE `id` = #{id}
+    </update>
+    <update id="update" parameterType="com.haier.stock.model.InvStockTransaction">
+        UPDATE `inv_stock_transaction`
+        SET `sku`                     = #{sku}, `sec_code` = #{secCode}, `corder_sn` = #{corderSn},
+            `channel_code`            = #{channelCode}, `quantity` = #{quantity}, `mark` = #{mark},
+            `item_property`           = #{itemProperty}, `bill_type` = #{billType}, `bill_time` = #{billTime},
+            `is_froze`                = #{isFrozen}, `is_release` = `#{isRelease}, process_status` = #{processStatus},
+            `last_process_time`       = #{lastProcessTime}, `delay` = #{isDelay},
+            `business_process_status` = #{businessProcessStatus},
+            `business_process_time`   = #{businessProcessTime}, `add_time` = #{addTime}
+        WHERE `id` = #{id}
+    </update>
+    
+    <select id="queryData" resultMap="invStockTransactionResult">
+        SELECT
+            `id`,
+            `sku`,
+            `external_sec_code`,
+            `sec_code`,
+            `corder_sn`,
+            `channel_code`,
+            `quantity`,
+            `mark`,
+            `item_property`,
+            `bill_type`,
+            `bill_time`,
+            `is_froze`,
+            `is_release`,
+            `process_status`,
+            `last_process_time`,
+            `delay`,
+            `business_process_status`,
+            `business_process_time`,
+            `add_time`
+        FROM `inv_stock_transaction`
+        WHERE id >= #{id}
+        order by id 
+        LIMIT #{num}
+    </select>
+    
+      <insert id="insertSelective" parameterType="com.haier.stock.model.InvStockTransaction" >
+    insert into inv_stock_transaction
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sku != null" >
+        sku,
+      </if>
+      <if test="externalSecCode != null" >
+        external_sec_code,
+      </if>
+      <if test="secCode != null" >
+        sec_code,
+      </if>
+      <if test="corderSn != null" >
+        corder_sn,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="mark != null" >
+        mark,
+      </if>
+      <if test="itemProperty != null" >
+        item_property,
+      </if>
+      <if test="billType != null" >
+        bill_type,
+      </if>
+      <if test="billTime != null" >
+        bill_time,
+      </if>
+      <if test="isFrozen != null" >
+        is_froze,
+      </if>
+      <if test="isRelease != null" >
+        is_release,
+      </if>
+      <if test="processStatus != null" >
+        process_status,
+      </if>
+      <if test="lastProcessTime != null" >
+        last_process_time,
+      </if>
+      <if test="businessProcessStatus != null" >
+        business_process_status,
+      </if>
+      <if test="businessProcessTime != null" >
+        business_process_time,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="isDelay != null" >
+        delay,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sku != null" >
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="externalSecCode != null" >
+        #{externalSecCode,jdbcType=VARCHAR},
+      </if>
+      <if test="secCode != null" >
+        #{secCode,jdbcType=VARCHAR},
+      </if>
+      <if test="corderSn != null" >
+        #{corderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="mark != null" >
+        #{mark,jdbcType=VARCHAR},
+      </if>
+      <if test="itemProperty != null" >
+        #{itemProperty,jdbcType=VARCHAR},
+      </if>
+      <if test="billType != null" >
+        #{billType,jdbcType=VARCHAR},
+      </if>
+      <if test="billTime != null" >
+        #{billTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isFrozen != null" >
+        #{isFrozen,jdbcType=INTEGER},
+      </if>
+      <if test="isRelease != null" >
+        #{isRelease,jdbcType=INTEGER},
+      </if>
+      <if test="processStatus != null" >
+        #{processStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lastProcessTime != null" >
+        #{lastProcessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessProcessStatus != null" >
+        #{businessProcessStatus,jdbcType=INTEGER},
+      </if>
+      <if test="businessProcessTime != null" >
+        #{businessProcessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDelay != null" >
+        #{isDelay,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+   <select id="queryList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT 
+        `id`,
+        `sku`,
+        `external_sec_code`,
+        `sec_code`,
+        `corder_sn`,
+        trans.`channel_code`,
+        `quantity`,
+        `mark`,
+        `item_property`,
+        `bill_type`,
+        `bill_time`,
+        `is_froze`,
+        `process_status`,
+        `last_process_time`,
+        `delay`,
+        `business_process_status`,
+        `business_process_time`,
+        `add_time`,
+        `message`,
+        channel.name AS channel_name
+        FROM `inv_stock_transaction` trans INNER JOIN `inv_stock_channel` channel
+        ON trans.channel_code = channel.channel_code
+        WHERE 1=1   and  (trans.bill_type ='SDCR' or  trans.bill_type ='SDCC' )
+        <if test="process_status != null and process_status !=''">
+            and trans.process_status = #{process_status}
+        </if>
+        <if test="corder_sn != null and corder_sn !=''">
+            and trans.corder_sn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="sku != null and sku !=''">
+            and trans.sku = #{sku}
+        </if>
+        <if test="sec_code != null and sec_code !=''">
+            and trans.sec_code LIKE CONCAT(#{sec_code},'%')
+        </if>
+        <if test="bill_type != null and bill_type !=''">
+            and trans.bill_type = #{bill_type}
+        </if>
+        <if test="mark != null and mark !=''">
+            and trans.mark = #{mark}
+        </if>
+        <if test="item_property != null and item_property !=''">
+            and trans.item_property = #{item_property}
+        </if>
+        <if test="bill_time_s != null and bill_time_s !=''">
+            and trans.bill_time &gt;= #{bill_time_s}
+        </if>
+        <if test="bill_time_e != null and bill_time_e !=''">
+            and trans.bill_time &lt;= #{bill_time_e}
+        </if>
+        ORDER BY bill_time DESC
+         <if test="size != null and size &gt; 0"> LIMIT #{start},#{size}</if>
+    </select>
+  <select id="getListRowCnt" parameterType="Map" resultType="int">
+         SELECT  count(1)   FROM `inv_stock_transaction` trans INNER JOIN `inv_stock_channel` channel
+        ON trans.channel_code = channel.channel_code  WHERE 1=1 and  (trans.bill_type ='SDCR' or  trans.bill_type ='SDCC' )
+        <if test="process_status != null and process_status !=''">
+            and trans.process_status = #{process_status}
+        </if>
+        <if test="corder_sn != null and corder_sn !=''">
+            and trans.corder_sn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="sku != null and sku !=''">
+            and trans.sku = #{sku}
+        </if>
+        <if test="sec_code != null and sec_code !=''">
+            and trans.sec_code LIKE CONCAT(#{sec_code},'%')
+        </if>
+        <if test="bill_type != null and bill_type !=''">
+            and trans.bill_type = #{bill_type}
+        </if>
+        <if test="mark != null and mark !=''">
+            and trans.mark = #{mark}
+        </if>
+        <if test="item_property != null and item_property !=''">
+            and trans.item_property = #{item_property}
+        </if>
+        <if test="bill_time_s != null and bill_time_s !=''">
+            and trans.bill_time &gt;= #{bill_time_s}
+        </if>
+        <if test="bill_time_e != null and bill_time_e !=''">
+            and trans.bill_time &lt;= #{bill_time_e}
+        </if>
+    </select>
+    
+    <select id="queryStockTransList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT 
+        `id`,
+        `sku`,
+        `external_sec_code`,
+        `sec_code`,
+        `corder_sn`,
+        `channel_code`,
+        `quantity`,
+        `mark`,
+        `item_property`,
+        `bill_type`,
+        `bill_time`,
+        `is_froze`,
+        `process_status`,
+        `last_process_time`,
+        `delay`,
+        `business_process_status`,
+        `business_process_time`,
+        `add_time`,
+        `message`
+        FROM `inv_stock_transaction` trans 
+        WHERE 1=1   and  (trans.bill_type ='SDCR' or  trans.bill_type ='SDCC' )
+        <if test="process_status != null and process_status !=''">
+            and trans.process_status = #{process_status}
+        </if>
+        <if test="corder_sn != null and corder_sn !=''">
+            and trans.corder_sn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="sku != null and sku !=''">
+            and trans.sku = #{sku}
+        </if>
+        <if test="sec_code != null and sec_code !=''">
+            and trans.sec_code LIKE CONCAT(#{sec_code},'%')
+        </if>
+        <if test="bill_type != null and bill_type !=''">
+            and trans.bill_type = #{bill_type}
+        </if>
+        <if test="mark != null and mark !=''">
+            and trans.mark = #{mark}
+        </if>
+        <if test="item_property != null and item_property !=''">
+            and trans.item_property = #{item_property}
+        </if>
+        <if test="bill_time_s != null and bill_time_s !=''">
+            and trans.bill_time &gt;= #{bill_time_s}
+        </if>
+        <if test="bill_time_e != null and bill_time_e !=''">
+            and trans.bill_time &lt;= #{bill_time_e}
+        </if>
+        ORDER BY bill_time DESC
+         <if test="size != null and size &gt; 0"> LIMIT #{start},#{size}</if>
+    </select>
+    
+     <select id="getStockTransListRowCnt" parameterType="Map" resultType="int">
+         SELECT  count(1)   FROM `inv_stock_transaction` trans  WHERE 1=1 and  (trans.bill_type ='SDCR' or  trans.bill_type ='SDCC' )
+        <if test="process_status != null and process_status !=''">
+            and trans.process_status = #{process_status}
+        </if>
+        <if test="corder_sn != null and corder_sn !=''">
+            and trans.corder_sn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="sku != null and sku !=''">
+            and trans.sku = #{sku}
+        </if>
+        <if test="sec_code != null and sec_code !=''">
+            and trans.sec_code LIKE CONCAT(#{sec_code},'%')
+        </if>
+        <if test="bill_type != null and bill_type !=''">
+            and trans.bill_type = #{bill_type}
+        </if>
+        <if test="mark != null and mark !=''">
+            and trans.mark = #{mark}
+        </if>
+        <if test="item_property != null and item_property !=''">
+            and trans.item_property = #{item_property}
+        </if>
+        <if test="bill_time_s != null and bill_time_s !=''">
+            and trans.bill_time &gt;= #{bill_time_s}
+        </if>
+        <if test="bill_time_e != null and bill_time_e !=''">
+            and trans.bill_time &lt;= #{bill_time_e}
+        </if>
+    </select>
+    
+     <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT SQL_CALC_FOUND_ROWS
+        `id`,
+        `sku`,
+        `external_sec_code`,
+        `sec_code`,
+        `corder_sn`,
+        trans.`channel_code`,
+        `quantity`,
+        `mark`,
+        `item_property`,
+        `bill_type`,
+        `bill_time`,
+        `is_froze`,
+        `process_status`,
+        `last_process_time`,
+        `delay`,
+        `business_process_status`,
+        `business_process_time`,
+        `add_time`,
+        `message`,
+        channel.`name` AS channel_name
+        FROM `inv_stock_transaction` trans INNER JOIN `inv_stock_channel` channel
+        ON trans.channel_code = channel.channel_code
+        WHERE 1=1
+        <if test="process_status != null and process_status !=''">
+            and trans.process_status = #{process_status}
+        </if>
+        <if test="corder_sn != null and corder_sn !=''">
+            and trans.corder_sn LIKE CONCAT('%',#{corder_sn},'%')
+        </if>
+        <if test="sku != null and sku !=''">
+            and trans.sku = #{sku}
+        </if>
+        <if test="sec_code != null and sec_code !=''">
+            and trans.sec_code LIKE CONCAT('%',#{sec_code},'%')
+        </if>
+        <if test="bill_type != null and bill_type !=''">
+            and trans.bill_type = #{bill_type}
+        </if>
+        <if test="mark != null and mark !=''">
+            and trans.mark = #{mark}
+        </if>
+        <if test="item_property != null and item_property !=''">
+            and trans.item_property = #{item_property}
+        </if>
+        <if test="bill_time_s != null and bill_time_s !=''">
+            and  DATE_FORMAT(trans.bill_time,"%Y-%m-%d") &gt;= #{bill_time_s}
+        </if>
+        <if test="bill_time_e != null and bill_time_e !=''">
+            and DATE_FORMAT(trans.bill_time,"%Y-%m-%d") &lt;= #{bill_time_e}
+        </if>
+        ORDER BY ID DESC
+        <if test="size != null and size &gt; 0"> LIMIT #{start},#{size}</if>
+       
+    </select>
+     <!-- 计算列表数量 -->
+    <select id="getRowCnt" parameterType="Map" resultType="int">
+        SELECT FOUND_ROWS();
+    </select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.LesRRSOutDao">
+	 <resultMap id="outInfoResult" type="com.haier.purchase.data.model.ZWDTABLEEntity">
+        <result property="bstkd" column="bstkd"/>
+        <result property="gvsso" column="gvsso"/>
+        <result property="kunnr" column="kunnr"/>
+        <result property="kunwe" column="kunwe"/>
+        <result property="add4" column="add4"/>
+        <result property="erdat" column="erdat"/>
+        <result property="erzet" column="erzet"/>
+        <result property="ad1" column="ad1"/>
+        <result property="ad2" column="ad2"/>
+        <result property="ad3" column="ad3"/>
+    </resultMap>
+	 <insert id="insertOutInfo" parameterType="com.haier.purchase.data.model.ZWDTABLEEntity">
+	  insert into `les_rrs_out_t`(`bstkd`,`gvsso`,`kunnr`,`kunwe`,`add4`,`erdat`,`erzet`,`ad1`,`ad2`,`ad3`)
+		values(#{bstkd}, #{gvsso}, #{kunnr}, #{kunwe}, #{add4}, #{erdat}, #{erzet}, #{ad1}, #{ad2}, #{ad3});
+	</insert>
+	
+	<select id="isExist" parameterType="com.haier.purchase.data.model.ZWDTABLEEntity" resultType="Integer">
+		select count(1) from `les_rrs_out_t` where `bstkd`=#{bstkd}
+	</select>
+	
+	<select id="findOutInfoBySO" parameterType="Map" resultMap="outInfoResult">
+		select `bstkd`,`gvsso`,`kunnr`,`kunwe`,`add4`,`erdat`,`erzet`,`ad1`,`ad2`,`ad3` from `les_rrs_out_t`
+		 where `gvsso` in
+		 <foreach item="item" index="index" collection="list"  open="(" separator="," close=")">
+               #{item}
+         </foreach>
+	</select>
+</mapper>

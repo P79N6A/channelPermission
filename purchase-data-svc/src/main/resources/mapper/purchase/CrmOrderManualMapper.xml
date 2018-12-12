@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.CrmOrderManualDao">
+	<resultMap id="crmOrderManualResult"
+		type="com.haier.purchase.data.model.CrmOrderManualDetailItem">
+		<result property="wp_order_id" column="wp_order_id" />
+		<result property="ed_channel_id" column="ed_channel_id" />
+		<result property="corpCode" column="CorpCode" />
+		<result property="regionId" column="RegionId" />
+		<result property="billType" column="BillType" />
+		<result property="sap_flow_num" column="sap_flow_num" />
+		<result property="custCode" column="CustCode" />
+		<result property="destCode" column="DestCode" />
+		<result property="whCode" column="WhCode" />
+		<result property="custMgr" column="CustMgr" />
+		<result property="porMgr" column="PorMgr" />
+		<result property="proDputy" column="ProDputy" />
+		<result property="isKPO" column="IsKPO" />
+		<result property="budgetSort" column="BudgetSort" />
+		<result property="budgetOrg" column="BudgetOrg" />
+		<result property="budgetOrgName" column="BudgetOrg_name" />
+		<result property="saleOrgCode" column="SaleOrgCode" />
+		<result property="maker" column="Maker" />
+		<result property="releBillCode" column="ReleBillCode" />
+		<result property="les_regionId" column="les_regionId" />
+		<result property="materials_id" column="materials_id" />
+		<result property="materials_desc" column="materials_desc" />
+		<result property="brand_id" column="brand_id" />
+		<result property="invState" column="InvState" />
+		<result property="sumMoney" column="SumMoney" />
+		<result property="qty" column="Qty" />
+		<result property="unitPrice" column="UnitPrice" />
+		<result property="stockPrice" column="StockPrice" />
+		<result property="retailPrice" column="RetailPrice" />
+		<result property="actPrice" column="ActPrice" />
+		<result property="bateRate" column="BateRate" />
+		<result property="bateMoney" column="BateMoney" />
+		<result property="proLossMoney" column="ProLossMoney" />
+		<result property="lossRate" column="LossRate" />
+		<result property="isFL" column="IsFL" />
+		<result property="planindate_display" column="planindate_display" />
+		<result property="destCenter" column="DestCenter" />
+		<result property="product_group_id" column="product_group_id" />
+		<result property="po_id" column="po_id" />
+		<result property="estorge_id" column="estorge_id" />
+		<result property="estorge_name" column="estorge_name" />
+		<result property="corpName" column="corpName" />
+		<result property="industry_trade_desc" column="industry_trade_desc" />
+		<result property="payment_name" column="payment_name" />
+		<result property="esale_name" column="esale_name" />
+		<result property="rrs_distribution_name" column="rrs_distribution_name" />
+		<result property="error_msg" column="error_msg" />
+		<result property="source_order_id" column="source_order_id" />
+		<result property="billOrderId" column="bill_order_id" />
+	</resultMap>
+	<insert id="insertCRMOrderManual" parameterType="com.haier.purchase.data.model.CrmOrderManualItem">
+		INSERT INTO crm_order_manual_t (
+		wp_order_id,
+		estorge_id,
+		estorge_name,
+		corpName,
+		industry_trade_desc,
+		payment_name,
+		esale_name,
+		rrs_distribution_name,
+		CorpCode,
+		RegionId,
+		BillType,
+		sap_flow_num,
+		CustCode,
+		DestCode,
+		WhCode,
+		CustMgr,
+		PorMgr,
+		ProDputy,
+		BudgetSort,
+		BudgetOrg,
+		BudgetOrg_name,
+		SaleOrgCode,
+		Maker,
+		ReleBillCode,
+		SysFlag,
+		DestCenter,
+		stock_type,
+		les_regionId,
+		create_user,
+		create_time,
+		delete_flag,
+		flow_flag,
+		error_msg,
+		source_order_id
+		)
+		VALUES
+		(
+		#{wp_order_id},
+		#{estorge_id},
+		#{estorge_name},
+		#{corpName},
+		#{industry_trade_desc},
+		#{payment_name},
+		#{esale_name},
+		#{rrs_distribution_name},
+		#{corpCode},
+		#{regionId},
+		#{billType},
+		#{sap_flow_num},
+		#{custCode},
+		#{destCode},
+		#{whCode},
+		#{custMgr},
+		#{porMgr},
+		#{proDputy},
+		#{budgetSort},
+		#{budgetOrg},
+		#{budgetOrgName},
+		#{saleOrgCode},
+		#{maker},
+		#{releBillCode},
+		#{sysFlag},
+		#{destCenter},
+		#{stock_type},
+		#{les_regionId},
+		#{create_user},
+		CURRENT_TIMESTAMP(),
+		0,
+		0,
+		#{error_msg},
+		#{source_order_id}
+		)
+	</insert>
+	<insert id="insertCRMOrderManualDetail"
+		parameterType="com.haier.purchase.data.model.CrmOrderManualDetailItem">
+		INSERT INTO crm_order_manual_detail_t (
+		wp_order_id,
+		materials_id,
+		materials_desc,
+		product_group_id,
+		ed_channel_id,
+		brand_id,
+		category_id,
+		InvState,
+		Qty,
+		UnitPrice,
+		SumMoney,
+		StockPrice,
+		ActPrice,
+		RetailPrice,
+		BateRate,
+		BateMoney,
+		ProLossMoney,
+		LossRate,
+		IsFL,
+		IsKPO,
+		so_id,
+		dn_id,
+		create_user,
+		create_time,
+		error_msg
+		)
+		VALUES
+		(
+		#{wp_order_id},
+		#{materials_id},
+		#{materials_desc},
+		#{product_group_id},
+		#{ed_channel_id},
+		#{brand_id},
+		#{category_id},
+		#{invState},
+		#{qty},
+		#{unitPrice},
+		#{sumMoney},
+		#{stockPrice},
+		#{actPrice},
+		#{retailPrice},
+		#{bateRate},
+		#{bateMoney},
+		#{proLossMoney},
+		#{lossRate},
+		#{isFL},
+		#{isKPO},
+		#{so_id},
+		#{dn_id},
+		#{create_user},
+		CURRENT_TIMESTAMP(),
+		#{error_msg}
+		)
+	</insert>
+	<update id="updateCRMOrderManual" parameterType="com.haier.purchase.data.model.CrmOrderManualItem">
+		UPDATE crm_order_manual_t
+		SET CorpCode = #{corpCode},
+		estorge_id =
+		#{estorge_id},
+		estorge_name = #{estorge_name},
+		corpName = #{corpName},
+		industry_trade_desc = #{industry_trade_desc},
+		payment_name =
+		#{payment_name},
+		esale_name = #{esale_name},
+		rrs_distribution_name =
+		#{rrs_distribution_name},
+		RegionId = #{regionId},
+		BillType =
+		#{billType},
+		sap_flow_num = #{sap_flow_num},
+		CustCode = #{custCode},
+		DestCode = #{destCode},
+		WhCode = #{whCode},
+		CustMgr = #{custMgr},
+		PorMgr
+		= #{porMgr},
+		ProDputy = #{proDputy},
+		BudgetSort = #{budgetSort},
+		BudgetOrg = #{budgetOrg},
+		BudgetOrg_name = #{budgetOrgName},
+		SaleOrgCode = #{saleOrgCode},
+		Maker = #{maker},
+		ReleBillCode =
+		#{releBillCode},
+		SysFlag = #{sysFlag},
+		DestCenter = #{destCenter},
+		stock_type = #{stock_type},
+		les_regionId = #{les_regionId},
+		modify_user
+		= #{modify_user},
+		modify_time = CURRENT_TIMESTAMP(),
+		error_msg =
+		#{error_msg}
+		WHERE
+		wp_order_id = #{wp_order_id}
+	</update>
+	<update id="updateCRMOrderManualDetail"
+		parameterType="com.haier.purchase.data.model.CrmOrderManualDetailItem">
+		UPDATE crm_order_manual_detail_t
+		SET materials_id = #{materials_id},
+		materials_desc = #{materials_desc},
+		product_group_id =
+		#{product_group_id},
+		ed_channel_id = #{ed_channel_id},
+		brand_id =
+		#{brand_id},
+		category_id = #{category_id},
+		InvState = #{invState},
+		Qty =
+		#{qty},
+		UnitPrice = #{unitPrice},
+		SumMoney = #{sumMoney},
+		StockPrice =
+		#{stockPrice},
+		ActPrice=#{actPrice},
+		RetailPrice = #{retailPrice},
+		BateRate = #{bateRate},
+		BateMoney = #{bateMoney},
+		ProLossMoney =
+		#{proLossMoney},
+		LossRate = #{lossRate},
+		IsFL = #{isFL},
+		IsKPO =
+		#{isKPO},
+		so_id= #{so_id},
+		dn_id=#{dn_id},
+		modify_user = #{modify_user},
+		modify_time = CURRENT_TIMESTAMP(),
+		error_msg = #{error_msg}
+		WHERE
+		wp_order_id = #{wp_order_id}
+	</update>
+	<update id="commitCRMOrderManual" parameterType="Map">
+		UPDATE crm_order_manual_t
+		SET flow_flag = 10
+		WHERE
+		delete_flag = 0
+		AND flow_flag = 0
+		AND wp_order_id IN
+		<foreach collection="commitList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="commitCRMOrderManualForCRM" parameterType="com.haier.purchase.data.model.CrmOrderManualItem">
+		UPDATE crm_order_manual_t
+		SET flow_flag = #{flow_flag}, error_msg =
+		#{error_msg},PlanInDate = #{planInDateStr}
+		<if test="whCode != null and whCode != ''">
+			, WhCode = #{whCode}
+		</if>
+		WHERE
+		delete_flag = 0
+		AND flow_flag = 0
+		AND wp_order_id = #{wp_order_id}
+	</update>
+	<update id="updateStatusFromCRM" parameterType="com.haier.purchase.data.model.CrmOrderManualItem">
+		UPDATE crm_order_manual_t
+		SET flow_flag = #{flow_flag}
+		<if test="error_msg != null and error_msg != ''">
+			, error_msg = #{error_msg}
+		</if>
+		WHERE
+		delete_flag = 0
+		<![CDATA[AND ((flow_flag >= 0 AND flow_flag <= ${flow_flag}) or (flow_flag > 0 and ${flow_flag} < 0))]]>
+		<if test="so_id != null and so_id != ''">
+			AND wp_order_id = (select wp_order_id from
+			crm_order_manual_detail_t where so_id=#{so_id}
+			<if test="mustHaveDNorSO != null">
+			AND ((so_id is not null and TRIM(so_id) != '') OR (dn_id is not null and TRIM(dn_id) != ''))
+			</if>
+			)
+		</if>
+		<if test="dn_id != null and dn_id != ''">
+			AND wp_order_id = (select wp_order_id from
+			crm_order_manual_detail_t where dn_id=#{dn_id}
+			<if test="mustHaveDNorSO != null">
+			AND ((so_id is not null and TRIM(so_id) != '') OR (dn_id is not null and TRIM(dn_id) != ''))
+			</if>
+			)
+		</if>
+		<if test="wp_order_id != null and wp_order_id != ''">
+			AND wp_order_id = #{wp_order_id}
+		</if>
+	</update>
+	<update id="updateTimeFromCRM" parameterType="java.util.Map">
+		UPDATE crm_order_t
+		<set>
+			<if test="rrs_out_time != null and rrs_out_time != ''">
+				rrs_out_time = str_to_date(#{rrs_out_time}, '%Y-%m-%d
+				%H:%i:%s')
+			</if>
+			<if test="wa_in_time != null and wa_in_time != ''">
+				wa_in_time = str_to_date(#{wa_in_time}, '%Y-%m-%d
+				%H:%i:%s')
+			</if>
+			<if test="rrs_in_time != null and rrs_in_time != ''">
+				rrs_in_time = str_to_date(#{rrs_in_time}, '%Y-%m-%d
+				%H:%i:%s')
+			</if>
+			<if test="wa_in_num != null and wa_in_num != ''">
+				,wa_in_num = #{wa_in_num}
+			</if>
+		</set>
+		where
+		<if test="so_id != null and so_id != ''">
+			so_id = #{so_id}
+		</if>
+		<if test="dn_id != null and dn_id != ''">
+			dn_id = #{dn_id}
+		</if>
+	</update>
+	<update id="updateCRMOrderManualDetailForCRM"
+		parameterType="com.haier.purchase.data.model.CrmOrderManualDetailItem">
+		UPDATE crm_order_manual_detail_t
+		SET po_id = #{po_id},
+		so_id= #{so_id},
+		dn_id=#{dn_id}
+		WHERE
+		wp_order_id = #{wp_order_id} and materials_id = #{materials_id}
+	</update>
+	<update id="deleteCRMOrderManual" parameterType="Map">
+		UPDATE crm_order_manual_t
+		SET flow_flag = -10,
+		delete_user=#{delete_user},
+		delete_time=CURRENT_TIMESTAMP(),
+		delete_flag=1
+		WHERE
+		delete_flag = 0
+		AND flow_flag = 0
+		AND wp_order_id IN
+		<foreach collection="deleteList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<sql id="findCrmOrderManualsSQLCond">
+		FROM
+			crm_order_manual_t AS m force index(ix_crm_order_manual_t_flag1),
+			crm_order_manual_detail_t AS d
+		LEFT JOIN crm_order_t crm ON d.so_id = crm.so_id
+		AND crm.so_id IS NOT NULL
+		AND TRIM(crm.so_id) != ''
+		WHERE
+		d.wp_order_id = m.wp_order_id and m.delete_flag = 0
+		<if test="planInDate_start  !=null and planInDate_start  != ''">
+	        	<![CDATA[
+					and crm.bill_time >= #{planInDate_start}
+				]]>
+		</if>
+		<if test="planInDate_end  !=null and planInDate_end  != ''">
+	         	<![CDATA[
+					and crm.bill_time < #{planInDate_end}
+				]]>
+		</if>
+		<if test="so_id !=null and so_id != ''">
+			AND UPPER(d.so_id) LIKE CONCAT(CONCAT('%',UPPER (#{so_id})),'%')
+		</if>
+		<if test="dn_id !=null and dn_id != ''">
+			AND UPPER(d.dn_id) LIKE CONCAT(CONCAT('%',UPPER (#{dn_id})),'%')
+		</if>
+		<if test="channel !=null and channel != ''">
+			AND d.ed_channel_id in
+			<foreach item="item" index="index" collection="channel" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="product_group_id !=null and product_group_id != ''">
+			AND d.product_group_id in
+			<foreach item="item" index="index" collection="product_group_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="bill_type !=null and bill_type != ''">
+			AND m.BillType = #{bill_type}
+		</if>
+		<if test="order_id !=null and order_id != ''">
+			AND UPPER(d.wp_order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{order_id})),'%')
+		</if>
+		<if test="corpCode !=null and corpCode != ''">
+			AND UPPER(m.CorpCode) LIKE CONCAT(CONCAT('%',UPPER (#{corpCode})),'%')
+		</if>
+		<if test="flow_flag !=null and flow_flag != ''">
+			AND m.flow_flag in
+			<foreach item="item" index="index" collection="flow_flag"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="materials_id !=null and materials_id != ''">
+			AND UPPER(d.materials_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_id})),'%')
+		</if>
+		<if test="whCode !=null and whCode != ''">
+			AND UPPER(m.estorge_id) LIKE CONCAT(CONCAT('%',UPPER (#{whCode})),'%')
+		</if>
+		<if test="brand_id !=null and brand_id != ''">
+			AND d.brand_id = #{brand_id}
+		</if>
+		<if test="category_id !=null and category_id != ''">
+			AND d.category_id in
+			<foreach item="item" index="index" collection="category_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="materials_desc !=null and materials_desc != ''">
+			AND UPPER(d.materials_desc) LIKE CONCAT(CONCAT('%',UPPER
+			(#{materials_desc})),'%')
+		</if>
+		<if test="order_id_list !=null and order_id_list != ''">
+			AND d.wp_order_id in
+			<foreach item="item" index="index" collection="order_id_list"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="source_order_id !=null and source_order_id != ''">
+			AND UPPER(m.source_order_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{source_order_id})),'%')
+		</if>
+		GROUP BY
+		d.wp_order_id
+	</sql>
+	<select id="findCrmOrderManuals" parameterType="Map"
+		resultMap="crmOrderManualResult">
+		SELECT d.wp_order_id,
+		d.po_id,
+		d.materials_id,
+		d.product_group_id,
+		d.brand_id,
+		d.InvState,
+		d.Qty,
+		d.UnitPrice,
+		d.SumMoney,
+		d.StockPrice,
+		d.RetailPrice,
+		d.BateRate,
+		d.BateMoney,
+		d.ProLossMoney,
+		d.LossRate,
+		d.IsFL,
+		d.IsKPO,
+		m.flow_flag,
+		d.materials_desc,
+		d.ed_channel_id,
+		d.category_id,
+		d.ActPrice,
+		m.source_order_id,
+		m.CorpCode,
+		m.RegionId,
+		m.BillType,
+		m.les_regionId,
+		m.stock_type,
+		m.DestCenter,
+		m.SysFlag,
+		m.ReleBillCode,
+		m.Maker,
+		m.SaleOrgCode,
+		m.BudgetOrg_name,
+		m.BudgetOrg,
+		m.BudgetSort,
+		m.wp_order_id,
+		CASE m.PlanInDate WHEN DEFAULT(m.PlanInDate) THEN '' ELSE
+		date_format(m.PlanInDate,'%Y-%m-%d') END as planindate_display,
+		m.ProDputy,
+		m.PorMgr,
+		m.CustMgr,
+		m.WhCode,
+		m.DestCode,
+		m.CustCode,
+		m.sap_flow_num,
+		m.budgetsort,
+		m.estorge_id,
+		m.estorge_name,
+		m.corpName,
+		m.industry_trade_desc,
+		m.payment_name,
+		m.esale_name,
+		m.rrs_distribution_name,
+		m.error_msg,
+		d.so_id,
+		d.dn_id,
+		date_format(crm.bill_time,'%Y-%m-%d %H:%i:%S') as bill_time_display,
+		date_format(crm.rrs_out_time,'%Y-%m-%d %H:%i:%S') as
+		rrs_out_time_display,
+		date_format(crm.wa_in_time,'%Y-%m-%d %H:%i:%S') as wa_in_time_display,
+		crm.bill_order_id
+		<include refid="findCrmOrderManualsSQLCond" />
+		ORDER BY
+		d.wp_order_id
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+	<select id="findCrmOrderManualsCNT" resultType="int">
+		SELECT COUNT(1)
+		FROM (SELECT d.wp_order_id
+		<include refid="findCrmOrderManualsSQLCond" />
+		) CNT
+	</select>
+</mapper>

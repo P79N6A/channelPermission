@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStockAgeLogDao">
+    <resultMap id="invStockAgeLogResult" type="com.haier.stock.model.InvStockAgeLog">
+        <result property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="sku" column="sku"/>
+        <result property="secCode" column="sec_code"/>
+        <result property="channelCode" column="channel_code"/>
+        <result property="createTime" column="create_time"/>
+        <result property="age" column="age"/>
+        <result property="quantity" column="quantity"/>
+        <result property="waStockQty" column="wa_stock_qty"/>
+        <result property="amount" column="amount"/>
+        <result property="note" column="note"/>
+        <result property="date" column="date"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.haier.stock.model.InvStockAgeLog">
+        INSERT INTO
+            `inv_stock_age_log` (`item_id`, `sku`, `sec_code`, `channel_code`, `create_time`, `age`, `quantity`, `wa_stock_qty`, `amount`, `note`, `date`)
+        VALUES (#{itemId}, #{sku}, #{secCode}, #{channelCode}, #{createTime}, #{age}, #{quantity}, #{waStockQty},
+                #{amount}, #{note},
+                #{date})
+    </insert>
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO
+        `inv_stock_age_log` (`item_id`, `sku`, `sec_code`, `channel_code`, `create_time`, `age`, `quantity`,
+        `wa_stock_qty`, `amount`, `note`, `date`)
+        VALUES
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (#{item.itemId}, #{item.sku}, #{item.secCode}, #{item.channelCode}, #{item.createTime}, #{item.age}, #{item.quantity}, #{item.waStockQty},
+            #{item.amount}, #{item.note},
+            #{item.date})
+        </foreach>
+    </insert>
+    <select id="get" resultMap="invStockAgeLogResult">
+        SELECT
+            `id`,
+            `item_id`,
+            `sku`,
+            `sec_code`,
+            `channel_code`,
+            `create_time`,
+            `age`,
+            `quantity`,
+            `wa_stock_qty`,
+            `amount`,
+            `note`,
+            `date`
+        FROM
+            `inv_stock_age_log`
+        WHERE
+            `sec_code` = #{sec_code}
+            AND `sku` = #{sku}
+            AND `channel_code` = #{channel_code}
+            AND `date` = #{date}
+        ORDER BY age
+    </select>
+    <select id="getGroupByDate" resultMap="invStockAgeLogResult">
+        SELECT
+            `id`,
+            `item_id`,
+            `sku`,
+            `sec_code`,
+            `channel_code`,
+            `create_time`,
+            `age`,
+            `quantity`,
+            `wa_stock_qty`,
+            `amount`,
+            `note`,
+            `date`
+        FROM
+            `inv_stock_age_log`
+        WHERE
+            `sec_code` = #{sec_code}
+            AND `sku` = #{sku}
+            AND `date` = #{date}
+        ORDER BY age
+    </select>
+    <update id="delete" parameterType="com.haier.stock.model.InvStockAgeLog">
+        DELETE FROM
+            `inv_stock_age_log`
+        WHERE
+            `sec_code` = #{sec_code}
+            AND `sku` = #{sku}
+            AND `channel_code` = #{channel_code}
+            AND `date` = #{date}
+    </update>
+    <update id="deleteBySkuSecCode" parameterType="com.haier.stock.model.InvStockAgeLog">
+        DELETE FROM
+            `inv_stock_age_log`
+        WHERE
+            `sec_code` = #{sec_code}
+            AND `sku` = #{sku}
+            AND `date` = #{date}
+    </update>
+
+    <select id="getStockLstGreaterThanAge" resultMap="invStockAgeLogResult">
+		<![CDATA[
+        SELECT
+            sku,
+            sec_code,
+            sum(quantity) AS quantity
+        FROM
+            inv_stock_age_log
+        WHERE
+            date = (
+                SELECT
+                    MAX(date)
+                FROM
+                    inv_stock_age_log
+            )
+            AND
+            age >= #{age}
+        GROUP BY
+            sku,
+            sec_code
+        ]]>
+	</select>
+
+    <select id="getLatestInvStockLst" resultMap="invStockAgeLogResult">
+		<![CDATA[
+        SELECT
+            t.`id`,
+            t.`sku`,
+            t.`sec_code`,
+            t.`channel_code`,
+            t.`age`,
+            t.quantity
+        FROM
+            `inv_stock_age_log` t
+        WHERE t.`age` >= #{age}
+              AND t.`date` =
+                  (SELECT
+                       MAX(`date`)
+                   FROM
+                       `inv_stock_age_log`)
+        ]]>
+	</select>
+    <select id="countStockGroupByChannel" resultMap="invStockAgeLogResult">
+        SELECT
+        channel_code,
+        age,
+        sum(quantity) AS quantity,
+        sum(quantity * price) AS amount
+        FROM
+        (
+        SELECT
+        a.channel_code,
+        a.age,
+        a.quantity,
+        b.price
+        FROM
+        inv_stock_age_log a
+        JOIN inv_stock_age b ON a.sku = b.sku
+        AND a.sec_code = b.sec_code
+        AND
+        a.channel_code = b.channel_code
+        WHERE
+        a.date = #{date}
+        ) t
+        GROUP BY
+        channel_code,
+        age
+        ORDER BY
+        channel_code,
+        age
+    </select>
+
+    <select id="countStockGroupByChannelWhthSku" resultMap="invStockAgeLogResult">
+        SELECT
+        channel_code,
+        age,
+        sum(quantity) AS quantity,
+        sum(quantity*price) AS amount
+        FROM
+        (
+        SELECT
+        a.channel_code,
+        a.age,
+        a.quantity,
+        b.price
+        FROM
+        inv_stock_age_log a
+        INNER JOIN inv_stock_age b ON a.sku =
+        b.sku
+        AND a.sec_code =
+        b.sec_code
+        AND a.channel_code = b.channel_code
+        WHERE
+        a.date = #{date}
+        AND b.product_group_name = #{productGroupName}
+        ) c
+        GROUP BY
+        channel_code,
+        age
+        ORDER BY
+        channel_code,
+        age
+    </select>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.ProductActivitiesReadDao">
+	<resultMap id="productActivitiesResult" type="com.haier.shop.model.ProductActivities">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="activityName" column="activityName" />
+		<result property="activityDesc" column="activityDesc" />
+		<result property="activityRemark" column="activityRemark" />
+		<result property="partType" column="partType" />
+		<result property="virtualSaleNum" column="virtualSaleNum" />
+		<result property="startTime" column="startTime" />
+		<result property="endTime" column="endTime" />
+		<result property="productId" column="productId" />
+		<result property="activityCateId" column="activityCateId" />
+		<result property="activityCatePath" column="activityCatePath" />
+		<result property="marketPrice" column="marketPrice" />
+		<result property="price" column="price" />
+		<result property="stock" column="stock" />
+		<result property="firstBookAmount" column="firstBookAmount" />
+		<result property="firstBookStartTime" column="firstBookStartTime" />
+		<result property="firstBookEndTime" column="firstBookEndTime" />
+		<result property="lastBookStartTime" column="lastBookStartTime" />
+		<result property="lastBookEndTime" column="lastBookEndTime" />
+		<result property="sortNum" column="sortNum" />
+		<result property="isBest" column="isBest" />
+		<result property="limitCityIds" column="limitCityIds" />
+		<result property="activityState" column="activityState" />
+		<result property="activityType" column="activityType" />
+		<result property="extensions" column="extensions" />
+		<result property="state" column="state" />
+		<result property="modifiedFields" column="modifiedFields" />
+		<result property="rejectReason" column="rejectReason" />
+		<result property="imageId" column="imageId" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="productActivitiesResult">
+		select `id`,`siteId`,`activityName`,`activityDesc`,`activityRemark`,`partType`,`virtualSaleNum`,`startTime`,`endTime`,`productId`,`activityCateId`,`activityCatePath`,`marketPrice`,`price`,`stock`,`firstBookAmount`,`firstBookStartTime`,`firstBookEndTime`,`lastBookStartTime`,`lastBookEndTime`,`sortNum`,`isBest`,`limitCityIds`,`activityState`,`activityType`,`extensions`,`state`,`modifiedFields`,`rejectReason`,`imageId`
+		from `ProductActivities`
+		where `id` = #{id}
+	</select>
+</mapper>

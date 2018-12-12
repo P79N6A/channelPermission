@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.stock.dao.stock.PopInvWarehouseDao" >
+  <resultMap id="BaseResultMap" type="com.haier.stock.model.PopInvWarehouse" >
+    <id column="wh_code" property="whCode" jdbcType="CHAR" />
+    <result column="wh_name" property="whName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="center_code" property="centerCode" jdbcType="VARCHAR" />
+    <result column="support_cod" property="supportCod" jdbcType="TINYINT" />
+    <result column="supported_delivery_mode" property="supportedDeliveryMode" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="les_five_yard" property="lesFiveYard" jdbcType="VARCHAR" />
+    <result column="les_wh_code" property="lesWhCode" jdbcType="VARCHAR" />
+    <result column="les_accepter" property="lesAccepter" jdbcType="VARCHAR" />
+    <result column="rrs_deliver_code" property="rrsDeliverCode" jdbcType="VARCHAR" />
+    <result column="crm_area_code" property="crmAreaCode" jdbcType="VARCHAR" />
+    <result column="ehaier_payer" property="ehaierPayer" jdbcType="VARCHAR" />
+    <result column="itc_code" property="itcCode" jdbcType="VARCHAR" />
+    <result column="mo_code" property="moCode" jdbcType="VARCHAR" />
+    <result column="estorge_id" property="estorgeId" jdbcType="VARCHAR" />
+    <result column="estorge_name" property="estorgeName" jdbcType="VARCHAR" />
+    <result column="transmit_id" property="transmitId" jdbcType="VARCHAR" />
+    <result column="transmit_desc" property="transmitDesc" jdbcType="VARCHAR" />
+    <result column="les_OE_id" property="lesOeId" jdbcType="VARCHAR" />
+    <result column="custom_id" property="customId" jdbcType="VARCHAR" />
+    <result column="custom_desc" property="customDesc" jdbcType="VARCHAR" />
+    <result column="industry_trade_id" property="industryTradeId" jdbcType="VARCHAR" />
+    <result column="industry_trade_desc" property="industryTradeDesc" jdbcType="VARCHAR" />
+    <result column="graininess_id" property="graininessId" jdbcType="VARCHAR" />
+    <result column="net_management_id" property="netManagementId" jdbcType="VARCHAR" />
+    <result column="esale_id" property="esaleId" jdbcType="VARCHAR" />
+    <result column="esale_name" property="esaleName" jdbcType="VARCHAR" />
+    <result column="sale_org_id" property="saleOrgId" jdbcType="VARCHAR" />
+    <result column="branch" property="branch" jdbcType="VARCHAR" />
+    <result column="payment_id" property="paymentId" jdbcType="VARCHAR" />
+    <result column="payment_name" property="paymentName" jdbcType="VARCHAR" />
+    <result column="area_id" property="areaId" jdbcType="VARCHAR" />
+    <result column="rrs_distribution_id" property="rrsDistributionId" jdbcType="VARCHAR" />
+    <result column="rrs_distribution_name" property="rrsDistributionName" jdbcType="VARCHAR" />
+    <result column="rrs_sale_id" property="rrsSaleId" jdbcType="VARCHAR" />
+    <result column="rrs_sale_name" property="rrsSaleName" jdbcType="VARCHAR" />
+    <result column="oms_rrs_payment_id" property="omsRrsPaymentId" jdbcType="VARCHAR" />
+    <result column="oms_rrs_payment_name" property="omsRrsPaymentName" jdbcType="VARCHAR" />
+    <result column="sap_customer_code" property="sapCustomerCode" jdbcType="VARCHAR" />
+    <result column="sap_customer_name" property="sapCustomerName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    wh_code, wh_name, status, center_code, support_cod, supported_delivery_mode, create_user, 
+    create_time, update_user, update_time, les_five_yard, les_wh_code, les_accepter, 
+    rrs_deliver_code, crm_area_code, ehaier_payer, itc_code, mo_code, estorge_id, estorge_name, 
+    transmit_id, transmit_desc, les_OE_id, custom_id, custom_desc, industry_trade_id, 
+    industry_trade_desc, graininess_id, net_management_id, esale_id, esale_name, sale_org_id, 
+    branch, payment_id, payment_name, area_id, rrs_distribution_id, rrs_distribution_name, 
+    rrs_sale_id, rrs_sale_name, oms_rrs_payment_id, oms_rrs_payment_name, sap_customer_code, 
+    sap_customer_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from inv_warehouse
+    where wh_code = #{whCode,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from inv_warehouse
+    where wh_code = #{whCode,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.haier.stock.model.PopInvWarehouse" >
+    insert into inv_warehouse (wh_code, wh_name, status, 
+      center_code, support_cod, supported_delivery_mode, 
+      create_user, create_time, update_user, 
+      update_time, les_five_yard, les_wh_code, 
+      les_accepter, rrs_deliver_code, crm_area_code, 
+      ehaier_payer, itc_code, mo_code, 
+      estorge_id, estorge_name, transmit_id, 
+      transmit_desc, les_OE_id, custom_id, 
+      custom_desc, industry_trade_id, industry_trade_desc, 
+      graininess_id, net_management_id, esale_id, 
+      esale_name, sale_org_id, branch, 
+      payment_id, payment_name, area_id, 
+      rrs_distribution_id, rrs_distribution_name, 
+      rrs_sale_id, rrs_sale_name, oms_rrs_payment_id, 
+      oms_rrs_payment_name, sap_customer_code, sap_customer_name
+      )
+    values (#{whCode,jdbcType=CHAR}, #{whName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{centerCode,jdbcType=VARCHAR}, #{supportCod,jdbcType=TINYINT}, #{supportedDeliveryMode,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{lesFiveYard,jdbcType=VARCHAR}, #{lesWhCode,jdbcType=VARCHAR}, 
+      #{lesAccepter,jdbcType=VARCHAR}, #{rrsDeliverCode,jdbcType=VARCHAR}, #{crmAreaCode,jdbcType=VARCHAR}, 
+      #{ehaierPayer,jdbcType=VARCHAR}, #{itcCode,jdbcType=VARCHAR}, #{moCode,jdbcType=VARCHAR}, 
+      #{estorgeId,jdbcType=VARCHAR}, #{estorgeName,jdbcType=VARCHAR}, #{transmitId,jdbcType=VARCHAR}, 
+      #{transmitDesc,jdbcType=VARCHAR}, #{lesOeId,jdbcType=VARCHAR}, #{customId,jdbcType=VARCHAR}, 
+      #{customDesc,jdbcType=VARCHAR}, #{industryTradeId,jdbcType=VARCHAR}, #{industryTradeDesc,jdbcType=VARCHAR}, 
+      #{graininessId,jdbcType=VARCHAR}, #{netManagementId,jdbcType=VARCHAR}, #{esaleId,jdbcType=VARCHAR}, 
+      #{esaleName,jdbcType=VARCHAR}, #{saleOrgId,jdbcType=VARCHAR}, #{branch,jdbcType=VARCHAR}, 
+      #{paymentId,jdbcType=VARCHAR}, #{paymentName,jdbcType=VARCHAR}, #{areaId,jdbcType=VARCHAR}, 
+      #{rrsDistributionId,jdbcType=VARCHAR}, #{rrsDistributionName,jdbcType=VARCHAR}, 
+      #{rrsSaleId,jdbcType=VARCHAR}, #{rrsSaleName,jdbcType=VARCHAR}, #{omsRrsPaymentId,jdbcType=VARCHAR}, 
+      #{omsRrsPaymentName,jdbcType=VARCHAR}, #{sapCustomerCode,jdbcType=VARCHAR}, #{sapCustomerName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.stock.model.PopInvWarehouse" >
+    insert into inv_warehouse
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="whCode != null" >
+        wh_code,
+      </if>
+      <if test="whName != null" >
+        wh_name,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="centerCode != null" >
+        center_code,
+      </if>
+      <if test="supportCod != null" >
+        support_cod,
+      </if>
+      <if test="supportedDeliveryMode != null" >
+        supported_delivery_mode,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="lesFiveYard != null" >
+        les_five_yard,
+      </if>
+      <if test="lesWhCode != null" >
+        les_wh_code,
+      </if>
+      <if test="lesAccepter != null" >
+        les_accepter,
+      </if>
+      <if test="rrsDeliverCode != null" >
+        rrs_deliver_code,
+      </if>
+      <if test="crmAreaCode != null" >
+        crm_area_code,
+      </if>
+      <if test="ehaierPayer != null" >
+        ehaier_payer,
+      </if>
+      <if test="itcCode != null" >
+        itc_code,
+      </if>
+      <if test="moCode != null" >
+        mo_code,
+      </if>
+      <if test="estorgeId != null" >
+        estorge_id,
+      </if>
+      <if test="estorgeName != null" >
+        estorge_name,
+      </if>
+      <if test="transmitId != null" >
+        transmit_id,
+      </if>
+      <if test="transmitDesc != null" >
+        transmit_desc,
+      </if>
+      <if test="lesOeId != null" >
+        les_OE_id,
+      </if>
+      <if test="customId != null" >
+        custom_id,
+      </if>
+      <if test="customDesc != null" >
+        custom_desc,
+      </if>
+      <if test="industryTradeId != null" >
+        industry_trade_id,
+      </if>
+      <if test="industryTradeDesc != null" >
+        industry_trade_desc,
+      </if>
+      <if test="graininessId != null" >
+        graininess_id,
+      </if>
+      <if test="netManagementId != null" >
+        net_management_id,
+      </if>
+      <if test="esaleId != null" >
+        esale_id,
+      </if>
+      <if test="esaleName != null" >
+        esale_name,
+      </if>
+      <if test="saleOrgId != null" >
+        sale_org_id,
+      </if>
+      <if test="branch != null" >
+        branch,
+      </if>
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="paymentName != null" >
+        payment_name,
+      </if>
+      <if test="areaId != null" >
+        area_id,
+      </if>
+      <if test="rrsDistributionId != null" >
+        rrs_distribution_id,
+      </if>
+      <if test="rrsDistributionName != null" >
+        rrs_distribution_name,
+      </if>
+      <if test="rrsSaleId != null" >
+        rrs_sale_id,
+      </if>
+      <if test="rrsSaleName != null" >
+        rrs_sale_name,
+      </if>
+      <if test="omsRrsPaymentId != null" >
+        oms_rrs_payment_id,
+      </if>
+      <if test="omsRrsPaymentName != null" >
+        oms_rrs_payment_name,
+      </if>
+      <if test="sapCustomerCode != null" >
+        sap_customer_code,
+      </if>
+      <if test="sapCustomerName != null" >
+        sap_customer_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="whCode != null" >
+        #{whCode,jdbcType=CHAR},
+      </if>
+      <if test="whName != null" >
+        #{whName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="centerCode != null" >
+        #{centerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supportCod != null" >
+        #{supportCod,jdbcType=TINYINT},
+      </if>
+      <if test="supportedDeliveryMode != null" >
+        #{supportedDeliveryMode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lesFiveYard != null" >
+        #{lesFiveYard,jdbcType=VARCHAR},
+      </if>
+      <if test="lesWhCode != null" >
+        #{lesWhCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lesAccepter != null" >
+        #{lesAccepter,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsDeliverCode != null" >
+        #{rrsDeliverCode,jdbcType=VARCHAR},
+      </if>
+      <if test="crmAreaCode != null" >
+        #{crmAreaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ehaierPayer != null" >
+        #{ehaierPayer,jdbcType=VARCHAR},
+      </if>
+      <if test="itcCode != null" >
+        #{itcCode,jdbcType=VARCHAR},
+      </if>
+      <if test="moCode != null" >
+        #{moCode,jdbcType=VARCHAR},
+      </if>
+      <if test="estorgeId != null" >
+        #{estorgeId,jdbcType=VARCHAR},
+      </if>
+      <if test="estorgeName != null" >
+        #{estorgeName,jdbcType=VARCHAR},
+      </if>
+      <if test="transmitId != null" >
+        #{transmitId,jdbcType=VARCHAR},
+      </if>
+      <if test="transmitDesc != null" >
+        #{transmitDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="lesOeId != null" >
+        #{lesOeId,jdbcType=VARCHAR},
+      </if>
+      <if test="customId != null" >
+        #{customId,jdbcType=VARCHAR},
+      </if>
+      <if test="customDesc != null" >
+        #{customDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="industryTradeId != null" >
+        #{industryTradeId,jdbcType=VARCHAR},
+      </if>
+      <if test="industryTradeDesc != null" >
+        #{industryTradeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="graininessId != null" >
+        #{graininessId,jdbcType=VARCHAR},
+      </if>
+      <if test="netManagementId != null" >
+        #{netManagementId,jdbcType=VARCHAR},
+      </if>
+      <if test="esaleId != null" >
+        #{esaleId,jdbcType=VARCHAR},
+      </if>
+      <if test="esaleName != null" >
+        #{esaleName,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrgId != null" >
+        #{saleOrgId,jdbcType=VARCHAR},
+      </if>
+      <if test="branch != null" >
+        #{branch,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentName != null" >
+        #{paymentName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsDistributionId != null" >
+        #{rrsDistributionId,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsDistributionName != null" >
+        #{rrsDistributionName,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsSaleId != null" >
+        #{rrsSaleId,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsSaleName != null" >
+        #{rrsSaleName,jdbcType=VARCHAR},
+      </if>
+      <if test="omsRrsPaymentId != null" >
+        #{omsRrsPaymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="omsRrsPaymentName != null" >
+        #{omsRrsPaymentName,jdbcType=VARCHAR},
+      </if>
+      <if test="sapCustomerCode != null" >
+        #{sapCustomerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sapCustomerName != null" >
+        #{sapCustomerName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.stock.model.PopInvWarehouse" >
+    update inv_warehouse
+    <set >
+      <if test="whName != null" >
+        wh_name = #{whName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="centerCode != null" >
+        center_code = #{centerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supportCod != null" >
+        support_cod = #{supportCod,jdbcType=TINYINT},
+      </if>
+      <if test="supportedDeliveryMode != null" >
+        supported_delivery_mode = #{supportedDeliveryMode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lesFiveYard != null" >
+        les_five_yard = #{lesFiveYard,jdbcType=VARCHAR},
+      </if>
+      <if test="lesWhCode != null" >
+        les_wh_code = #{lesWhCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lesAccepter != null" >
+        les_accepter = #{lesAccepter,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsDeliverCode != null" >
+        rrs_deliver_code = #{rrsDeliverCode,jdbcType=VARCHAR},
+      </if>
+      <if test="crmAreaCode != null" >
+        crm_area_code = #{crmAreaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ehaierPayer != null" >
+        ehaier_payer = #{ehaierPayer,jdbcType=VARCHAR},
+      </if>
+      <if test="itcCode != null" >
+        itc_code = #{itcCode,jdbcType=VARCHAR},
+      </if>
+      <if test="moCode != null" >
+        mo_code = #{moCode,jdbcType=VARCHAR},
+      </if>
+      <if test="estorgeId != null" >
+        estorge_id = #{estorgeId,jdbcType=VARCHAR},
+      </if>
+      <if test="estorgeName != null" >
+        estorge_name = #{estorgeName,jdbcType=VARCHAR},
+      </if>
+      <if test="transmitId != null" >
+        transmit_id = #{transmitId,jdbcType=VARCHAR},
+      </if>
+      <if test="transmitDesc != null" >
+        transmit_desc = #{transmitDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="lesOeId != null" >
+        les_OE_id = #{lesOeId,jdbcType=VARCHAR},
+      </if>
+      <if test="customId != null" >
+        custom_id = #{customId,jdbcType=VARCHAR},
+      </if>
+      <if test="customDesc != null" >
+        custom_desc = #{customDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="industryTradeId != null" >
+        industry_trade_id = #{industryTradeId,jdbcType=VARCHAR},
+      </if>
+      <if test="industryTradeDesc != null" >
+        industry_trade_desc = #{industryTradeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="graininessId != null" >
+        graininess_id = #{graininessId,jdbcType=VARCHAR},
+      </if>
+      <if test="netManagementId != null" >
+        net_management_id = #{netManagementId,jdbcType=VARCHAR},
+      </if>
+      <if test="esaleId != null" >
+        esale_id = #{esaleId,jdbcType=VARCHAR},
+      </if>
+      <if test="esaleName != null" >
+        esale_name = #{esaleName,jdbcType=VARCHAR},
+      </if>
+      <if test="saleOrgId != null" >
+        sale_org_id = #{saleOrgId,jdbcType=VARCHAR},
+      </if>
+      <if test="branch != null" >
+        branch = #{branch,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentId != null" >
+        payment_id = #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentName != null" >
+        payment_name = #{paymentName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsDistributionId != null" >
+        rrs_distribution_id = #{rrsDistributionId,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsDistributionName != null" >
+        rrs_distribution_name = #{rrsDistributionName,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsSaleId != null" >
+        rrs_sale_id = #{rrsSaleId,jdbcType=VARCHAR},
+      </if>
+      <if test="rrsSaleName != null" >
+        rrs_sale_name = #{rrsSaleName,jdbcType=VARCHAR},
+      </if>
+      <if test="omsRrsPaymentId != null" >
+        oms_rrs_payment_id = #{omsRrsPaymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="omsRrsPaymentName != null" >
+        oms_rrs_payment_name = #{omsRrsPaymentName,jdbcType=VARCHAR},
+      </if>
+      <if test="sapCustomerCode != null" >
+        sap_customer_code = #{sapCustomerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sapCustomerName != null" >
+        sap_customer_name = #{sapCustomerName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where wh_code = #{whCode,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.stock.model.PopInvWarehouse" >
+    update inv_warehouse
+    set wh_name = #{whName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      center_code = #{centerCode,jdbcType=VARCHAR},
+      support_cod = #{supportCod,jdbcType=TINYINT},
+      supported_delivery_mode = #{supportedDeliveryMode,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      les_five_yard = #{lesFiveYard,jdbcType=VARCHAR},
+      les_wh_code = #{lesWhCode,jdbcType=VARCHAR},
+      les_accepter = #{lesAccepter,jdbcType=VARCHAR},
+      rrs_deliver_code = #{rrsDeliverCode,jdbcType=VARCHAR},
+      crm_area_code = #{crmAreaCode,jdbcType=VARCHAR},
+      ehaier_payer = #{ehaierPayer,jdbcType=VARCHAR},
+      itc_code = #{itcCode,jdbcType=VARCHAR},
+      mo_code = #{moCode,jdbcType=VARCHAR},
+      estorge_id = #{estorgeId,jdbcType=VARCHAR},
+      estorge_name = #{estorgeName,jdbcType=VARCHAR},
+      transmit_id = #{transmitId,jdbcType=VARCHAR},
+      transmit_desc = #{transmitDesc,jdbcType=VARCHAR},
+      les_OE_id = #{lesOeId,jdbcType=VARCHAR},
+      custom_id = #{customId,jdbcType=VARCHAR},
+      custom_desc = #{customDesc,jdbcType=VARCHAR},
+      industry_trade_id = #{industryTradeId,jdbcType=VARCHAR},
+      industry_trade_desc = #{industryTradeDesc,jdbcType=VARCHAR},
+      graininess_id = #{graininessId,jdbcType=VARCHAR},
+      net_management_id = #{netManagementId,jdbcType=VARCHAR},
+      esale_id = #{esaleId,jdbcType=VARCHAR},
+      esale_name = #{esaleName,jdbcType=VARCHAR},
+      sale_org_id = #{saleOrgId,jdbcType=VARCHAR},
+      branch = #{branch,jdbcType=VARCHAR},
+      payment_id = #{paymentId,jdbcType=VARCHAR},
+      payment_name = #{paymentName,jdbcType=VARCHAR},
+      area_id = #{areaId,jdbcType=VARCHAR},
+      rrs_distribution_id = #{rrsDistributionId,jdbcType=VARCHAR},
+      rrs_distribution_name = #{rrsDistributionName,jdbcType=VARCHAR},
+      rrs_sale_id = #{rrsSaleId,jdbcType=VARCHAR},
+      rrs_sale_name = #{rrsSaleName,jdbcType=VARCHAR},
+      oms_rrs_payment_id = #{omsRrsPaymentId,jdbcType=VARCHAR},
+      oms_rrs_payment_name = #{omsRrsPaymentName,jdbcType=VARCHAR},
+      sap_customer_code = #{sapCustomerCode,jdbcType=VARCHAR},
+      sap_customer_name = #{sapCustomerName,jdbcType=VARCHAR}
+    where wh_code = #{whCode,jdbcType=CHAR}
+  </update>
+  <sql id="where_fragement">
+    where 1=1
+    <if test="entity!=null">
+      <if test="entity.whCode != null and entity.whCode !='' ">
+        <![CDATA[ and wh_code LIKE CONCAT('%', #{entity.whCode} ,'%') ]]>
+      </if>
+      <if test="entity.whName != null and entity.whName !='' ">
+        <![CDATA[ and wh_name LIKE CONCAT('%', #{entity.whName} ,'%') ]]>
+      </if>
+      <if test="entity.centerCode != null and entity.centerCode !='' ">
+        <![CDATA[ and center_code LIKE CONCAT('%', #{entity.centerCode} ,'%') ]]>
+      </if>
+    </if>
+  </sql>
+  <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+  <!-- 查询page -->
+  <select id="getPageByCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from inv_warehouse
+    <include refid="where_fragement" />
+    order by create_time desc
+    <include refid="pagination" />
+  </select>
+  <!-- 导出 -->
+  <select id="exportWarehouse" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from inv_warehouse
+    <include refid="where_fragement" />
+    order by create_time desc
+  </select>
+  <!--分页count -->
+  <select id="getPagerCount" resultType="long"
+          parameterType="com.haier.stock.model.PopInvWarehouse">
+    select count(1) from inv_warehouse
+    <include refid="where_fragement" />
+  </select>
+  <select id="checkCodeSame" resultType="long" parameterType="com.haier.stock.model.PopInvWarehouse">
+  select count(1) from inv_warehouse where wh_code = #{whCode}
+  </select>
+  <select id="checkNameSame" resultType="long" parameterType="com.haier.stock.model.PopInvWarehouse">
+    select count(1) from inv_warehouse where wh_name = #{whName}
+  </select>
+</mapper>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>3w发票待人工处理列表</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+    <div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+         style="width:100%;height:100%;"
+         data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    		collapsible:false">
+        <table id="datagrid_invoice3wLogs"></table>
+    </div>
+<div id="datagridToolbar_invoice3wLogs">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+            <span class="search-row-label">
+              来源订单号
+            </span>
+                <input id="sourceSn" class="easyui-textbox" />
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              处理状态
+            </span>
+                <select class="easyui-combobox" id="success" style="width: 174px;">
+                    <option value="" selected="true">全部</option>
+                    <option value="1">已处理</option>
+                    <option value="0">待处理</option>
+                    <option value="2">无需处理</option>
+                </select>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              订单来源
+            </span>
+                <select class="easyui-combobox" id="source" style="width: 174px;">
+                    <option value="" selected="true">全部</option>
+                    <option value="TBSC">淘宝海尔官方旗舰店</option>
+                    <option value="TOPDHSC">海尔生活家电旗舰店</option>
+                    <option value="TOPFENXIAO">淘宝海尔官方旗舰店分销平台</option>
+                    <option value="TOPFENXIAODHSC">淘宝海尔生活家电旗舰店分销平台</option>
+                    <option value="TOPBUYBANG">淘宝海尔买帮专卖店</option>
+                    <option value="TOPBOILER">淘宝海尔热水器专卖店</option>
+                    <option value="TOPSHJD">淘宝海尔生活电器专卖店</option>
+                    <option value="TOPMOBILE">淘宝海尔手机专卖店</option>
+                    <option value="TONGSHUAI">统帅日日顺乐家专卖店</option>
+                    <option value="TONGSHUAIFX">统帅日日顺分销平台</option>
+                    <option value="TOPXB">海尔新宝旗舰店</option>
+                    <option value="TOPFENXIAOXB">淘宝海尔新宝旗舰店分销平台</option>
+                    <option value="WASHER">海尔洗衣机官方旗舰店</option>
+                    <option value="FRIDGE">海尔冰冷官方旗舰店</option>
+                    <option value="AIR">淘宝空调旗舰店</option>
+                    <option value="TMMKFX">天猫模卡分销</option>
+                    <option value="GQGYS">天猫分销</option>
+                    <option value="TBCT">淘宝村淘</option>
+                    <option value="TBQYG">天猫企业购</option>
+                    <option value="TMST">天猫生态</option>
+                    <option value="FLW">商城PC-返利网</option>
+                    <option value="YHDQWZY">电商平台-1号店全网自营</option>
+                    <option value="TMKSD">卡萨帝官方旗舰店</option>
+                    <option value="TMTV">天猫海尔电视</option>
+                    <option value="TBCFDD">淘宝海尔厨房大电旗舰店</option>
+                    <option value="TBXCR">天猫小超人旗舰店</option>
+                    <option value="TMMK">mooka模卡官方旗舰店</option>
+                </select>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              开始时间
+            </span>
+                <input class="easyui-datebox" id="addTimeMin"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              结束时间
+            </span>
+                <input class="easyui-datebox" id="addTimeMax"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_invoice3wLogs"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="exportBtn_invoice3wLogs"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+        <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+        <input id="exportData" name="exportData" type="hidden"/>
+    </form>
+</div>
+<div id="handleResultDetail" style="display:none" title="结果">
+<div id="memberInvoiceDetail" style="display:none" title="编辑或查看发票信息">
+</div>
+</div>
+
+<script src="../static/js/invoice/invoicesWwwLogsOperate.js"></script>
+</body>
+</html>

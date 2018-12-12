@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+
+<body class="iframe-body">
+<div style="height:100%;width:100%;overflow:auto">
+    <div id="orderDetail_div" style="padding-bottom: 20px;">
+        <div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px ">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;">
+            基本信息
+        </span>
+            <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+                   value="返回" onclick="goback()"
+                   style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;float: right;"/>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">订单编号：</span>
+                        <span class=""><a href="orderDetails.html">$!vo.orderSn</a></span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">网单编号：</span>
+                        <a href="/operationArea/ProductView?cOrderSn=$!vo.cOrderSnId">$!vo.cOrderSnId</a><span
+                            style="color: red;font-size: 11px;">WWW揽收</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">申请单号：</span>
+                        <span>$!vo.id</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">申请时间：</span>
+                        <span>$!vo.addTimeTs</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">联系人：</span>
+                        <span>$!vo.contactName</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">手机：</span>
+                        <span>$!vo.contactMobile</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">退换货类型：</span>
+                        <span>退货不退款___ $!vo.typeFlag</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">销售金额：</span>
+                        <span>￥$!vo.price元</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">退款金额：</span>
+                        <span>￥$!vo.offlineamount元</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">原因：</span>
+                        <span>$!vo.reason</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">描述：</span>
+                        <span>$!vo.description</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">退换货单号：</span>
+                        <span style="color: red;">	$!vo.repairsn</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">退货数量：</span>
+                        <span>$!vo.count</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">退款方式：</span>
+                        <span>修改退款方式 (目前没找到当前字段)</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">要求服务完毕时间：</span>
+                        <span>2017-08-24 23:54:00 （目前没找到此字段）</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">要求描述：</span>
+                        <span>$!vo.requetServiceRemark</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">是否线下退款：</span>
+                        <span>否</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">要求线下退款原因：</span>
+                        <span>1</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">线下退款金额：</span>
+                        <span class="">￥0.00元</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">线下退款金额备注：</span>
+                        <span>1</span>
+                    </div>
+                    <div class="search-row_padd10" style="width: 700px">
+                        <span class="search-row-label_detail" style="float: left">受理状态：</span>
+                        <span class="">$!vo.status</span>
+                        <input type="button" onclick="Toexamines('tg');" style="width:60px;height:25px;border-radius:8px;" value="审核通过"/>
+                        <input type="button" onclick="Toexamines('btg');" style="width:75px;height:25px;border-radius:8px;" value="审核不通过"/>
+                        <span style="color: red;font-size: 11px;">请确认该订单是否存在关联订单</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="recepitAddress" class="param-form"
+             style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+        <span style="padding-left: 15px;">
+            款、票、货状态
+        </span>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">当前付款状态：</span>
+                        <span class="">$!vo.paymentStatusTS</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">当前发票状态：</span>
+                        <span>$!vo.receiptStatusTS</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">当前货物状态：</span>
+                        <span>$!vo.storageStatusTS</span>
+                        <input id="addBtn_orderForecastGoal" type="button" value="修改推送HP信息"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="receipt" class="param-form" style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="margin-left: 15px;">HP退货工单状态</span>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+
+                    <table style="margin-left: 15px;padding-right: 5px;">
+                        <tr>
+                            <th style="width: 10%">HP退货工单状态</th>
+                            <th style="width: 10%">生成工单备注</th>
+                            <th style="width: 10%">质检类型</th>
+                            <th style="width: 10%">工单生成时间</th>
+                            <th style="width: 5%">工单号</th>
+                            <th style="width: 15%">鉴定结果回传时间</th>
+                            <th style="width: 5%">网点代码</th>
+                            <th style="width: 5%">机编代码</th>
+                            <th style="width: 5%">检验结果</th>
+                            <th style="width: 5%">二次鉴定结果</th>
+                            <th style="width: 5%">破损责任方</th>
+                            <th style="width: 5%">原因</th>
+                        </tr>
+                        <tr>
+                        <td>HP退货工单状态(未找到)</td>
+                            <td>$!hpRecords.hporderremark</td>
+                            <td >$!hpRecords.checktype</td>
+                            <td>$!hpRecords.addTimeTs</td>
+                            <td >$!hpRecords.woid</td>
+                            <td>鉴定结果回传时间(未找到)</td>
+                            <td>$!hpRecords.netpointcode</td>
+                            <td>$!hpRecords.machinenum</td>
+                            <td>$!hpRecords.checkresult</td>
+                            <td>二次鉴定结果(未找到)</td>
+                            <td>破损责任方(未找到)</td>
+                            <td>原因(未找到)</td>
+                        
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <div id="receip1t" class="param-form" style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">出入库状态</span>
+        </div>
+                                 <input type="button" value="终止逆向单" onclick="RepairsTermination();"/>
+                                 <input type="button" value="22库转41库" onclick="StockTransfer();"/>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+                 <table id="gridViewFp" class="easyui-datagrid" style="width:100%;height:auto" 
+                   data-options="singleSelect:true,region:'center',remoteSort:false,rownumbers: true,showFooter: true">
+                <thead>
+                <tr>
+                    <th data-options="field:'addtimeTss',width:200">提交时间</th>
+                    <th data-options="field:'cOrderSn',width:160">操作</th>
+                    <th data-options="field:'operator',width:120">批次</th>
+                    <th data-options="field:'operate',width:180">提单号</th>
+                    <th data-options="field:'remark',width:120">提单状态</th>
+                    <th data-options="field:'operate',width:200">开提单时间</th>
+                    <th data-options="field:'remark',width:200">出入库凭证号</th>
+                    <th data-options="field:'operate',width:200">回传时间</th>
+                    <th data-options="field:'remark',width:160">操作</th>
+                </tr>
+                </thead>
+            </table>
+                </div>
+            </form>
+        </div>
+
+
+        <div id="operateHistory" class="param-form"
+             style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">操作历史</span>
+        </div>
+        <div class="detail_content" style="padding-left: 10px;padding-top:10px;">
+                <table id="gridView" class="easyui-datagrid" style="width:100%;height:auto" 
+                   data-options="singleSelect:true,region:'center',remoteSort:false,rownumbers: true,showFooter: true">
+                <thead>
+                <tr>
+                    <th data-options="field:'addTimeTss',width:200">操作时间</th>
+                    <th data-options="field:'cOrderSn',width:200">网单号</th>
+                    <th data-options="field:'operator',width:200">操作人</th>
+                    <th data-options="field:'operate',width:200">更改内容</th>
+                    <th data-options="field:'remark',width:300">备注</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+		
+		
+    </div>
+    <div id="addDlg_areapeoplemanage" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:360px;height:525px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_orderForecastGoal" method="post">
+        <input name="id" type="text" style="display:none;"/>
+        <input __actType type="hidden"/>
+          <div class="fitem">
+            <label>要求服务器完毕时间<span style="color: red;">*</span></label>
+            <input id="requeStservieDateTS" name="requeStservieDateTS"
+								class="easyui-datetimebox" style="width: 90%;"></input>
+           (必填)
+        </div>
+          <div class="fitem">
+            <label> 要求描述<span style="color: red;">*</span></label>
+            <textarea id="requestServiceRemark" name="requestServiceRemark"
+			class="easyui-validatebox" 
+			style="width: 99%"></textarea>(必填)
+        </div>
+          <div class="fitem">
+            <label>是否线下退款<span style="color: red;">*</span></label>
+            <input name="offlineFlag" id="offlineFlag"
+										value="" class="easyui-combobox"
+										data-options="
+			                  		    editable:false,
+			                  		    required:true,
+			                  		    panelHeight : 'auto',
+			                  			valueField:'id',
+			                  			textField:'text',
+			                  			data:[
+			                  				{'id':'1','text':'是'},
+			                  				{'id':'2','text':'否'}
+			                  			]
+			                  		">
+        </div>
+          <div class="fitem">
+            <label>线下退款原因<span style="color: red;">*</span></label>
+            <textarea id="offlineReason" name="offlineReason"
+			class="easyui-validatebox" 
+			style="width: 99%"></textarea>
+        </div>
+          <div class="fitem">
+            <label>线下退款金额<span style="color: red;">*</span></label>
+            <input class="easyui-textbox" id="offlineAmount" name="offlineAmount" required="true"/>
+        </div>
+          <div class="fitem">
+            <label>退款金额备注<span style="color: red;">*</span></label>
+           <textarea id="offlineRemark" name="offlineRemark"
+			class="easyui-validatebox"
+			style="width: 99%"></textarea>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderForecastGoal" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_areapeoplemanage').dialog('close')">取消</a>
+    </div>
+</div>
+    <div style="text-align: center;height: 35px;background-color:#e8e8e8;padding-top: 10px;">Powered by PEC</div>
+</div>
+<script>
+var flog = "";
+    var goback = function () {
+        window.history.back();
+    };
+    
+    $(function () {
+    	//给操作日志datagrid 赋值
+    	var datagridDataRz = {
+      		    'data': {
+      		        'records':
+      		        	$!list
+      		            }
+    	  }
+    	$("#gridView").datagrid('loadData', datagridDataRz);
+    	//给出入库datagrid 赋值
+    	var datagridDataFp = {
+      		    'data': {
+      		        'records':
+      		        	$!repairlist
+      		            }
+    	  }
+    	$("#gridViewFp").datagrid('loadData', datagridDataFp);
+    	
+    	
+    	   $("#addBtn_orderForecastGoal").on('click', function (event) {
+    	        $('#addForm_orderForecastGoal').form('reset');
+    	        $('#addForm_orderForecastGoal').find('[__actType]').val('add');
+    	        $('#addDlg_areapeoplemanage').dialog({'title': '新增'});
+    	        $('#addDlg_areapeoplemanage').dialog('open');
+    	    });
+    	   //推送Hp信息
+    	   $("#addDlgSaveBtn_orderForecastGoal").click(function(){
+    		   ModifyPushHP();
+           });   
+    	
+    })
+    function Toexamines(falg){
+    	var title= "";
+    	var status = ""; //通过 和不通过
+    	if(falg=='tg'){
+    		title ='审核通过';
+    		status ="2";
+    	}else {
+    		title ='审核通过';
+    		status ="5";
+    	}
+		$.messager.prompt(title, '确认开始受理退款申请吗？', function(r){
+			if (r!=undefined){
+				  $.ajax({
+				         url      : "/operationArea/Toexamine",
+				         type     : 'POST',
+				         dataType : 'json',
+				          data     : {
+				        	  	id : "$!vo.id",
+				        	  	status :status,
+				        	    handleRemark :r
+				         }, 
+				         success  : function(data) {
+				        	 $.messager.progress('close');
+				                $.messager.alert('提示', data.msg, 'info', function(){
+				                    if(data.success){
+				                    }
+				                });
+				         }
+				});
+			}
+		});
+	}
+    
+    function  ModifyPushHP(){
+    	var params = $('#addForm_orderForecastGoal').serializeObject();
+    	params.id ="$!vo.id";
+    	params.cOrderSnId="$!vo.cOrderSnId";
+    	$.messager.confirm("提示", '确认推送HP？', function(r){
+			if (r){
+				  $.ajax({
+				         url      : "/operationArea/ModifyPushHP",
+				         type     : 'POST',
+				         dataType : 'json',
+				         contentType : "application/json;charset=utf-8",
+				         data        : JSON.stringify(params),
+				         success  : function(data) {
+				        	 $.messager.progress('close');
+				                $.messager.alert('提示', data.msg, 'info', function(){
+				                    if(data.success){
+				                    }
+				                });
+				         }
+				});
+			}
+		});
+    }
+    
+    function RepairsTermination(){
+    	$.messager.prompt('提示', '确认要终止退货单？请填写终止原因:', function(r){
+			if (r){
+				  $.ajax({
+				         url      : "/operationArea/RepairsTermination",
+				         type     : 'POST',
+				         dataType : 'json',
+				          data     : {
+				        	  	id : "$!vo.id",
+				        	  	handleRemark :r
+				         }, 
+				         success  : function(data) {
+				        	 $.messager.progress('close');
+				                $.messager.alert('提示', data.msg, 'info', function(){
+				                    if(data.success){
+				                    }
+				                });
+				         }
+				});
+			}else {
+				 $.messager.alert('请填写终止原因');	
+			}
+		});
+    	
+    }
+    function StockTransfer(){
+    	$.messager.prompt('提示', '确认进行此操作？请填写原因:', function(r){
+			if (r){
+				  $.ajax({
+				         url      : "/operationArea/RepairsTermination",
+				         type     : 'POST',
+				         dataType : 'json',
+				          data     : {
+				        	  	id : "$!vo.id",
+				        	  	handleRemark :r
+				         }, 
+				         success  : function(data) {
+				        	 $.messager.progress('close');
+				                $.messager.alert('提示', data.msg, 'info', function(){
+				                    if(data.success){
+				                    	window.location.reload();
+				                    }
+				                });
+				         }
+				});
+			}else {
+				 $.messager.alert('请填写原因');	
+			}
+		});
+    	
+    }
+</script>
+</body>
+</html>

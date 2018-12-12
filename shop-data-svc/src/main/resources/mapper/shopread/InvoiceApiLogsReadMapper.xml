@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.InvoiceApiLogsReadDao">
+
+    <!-- 纸质发票日志展示类 -->
+    <resultMap id="InvoiceApiLogsDispItem" type="com.haier.shop.model.InvoiceApiLogDispItem">
+        <result property="cOrderSn" column="cOrderSn"/>
+        <result property="type" column="type"/>
+        <result property="isSuccess" column="isSuccess"/>
+        <result property="addTimeMin" column="addTime"/>
+        <result property="addTimeMax" column="addTime"/>
+        <result property="addTime" column="addTime"/>
+    </resultMap>
+
+    <resultMap id="invoiceApiLogsResult" type="com.haier.shop.model.InvoiceApiLogs">
+        <result property="id" column="id" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="cOrderSn" column="cOrderSn" />
+        <result property="invoiceId" column="invoiceId" />
+        <result property="type" column="type" />
+        <result property="pushData" column="pushData" />
+        <result property="returnData" column="returnData" />
+        <result property="receiveData" column="receiveData" />
+        <result property="addTime" column="addTime" />
+        <result property="isSuccess" column="isSuccess" />
+        <result property="lastTime" column="lastTime" />
+        <result property="countNum" column="countNum" />
+    </resultMap>
+
+    <select id="getInvoiceApiLogs" parameterType="Map" resultMap="InvoiceApiLogsDispItem">
+        select SQL_CALC_FOUND_ROWS ial.cOrderSn,ial.type,
+        CASE WHEN ial.addTime=0 THEN '' ELSE from_unixtime(ial.addTime) END as addTime,ial.isSuccess,ial.countNum,ial.lastMessage from InvoiceApiLogs ial,Invoices ins
+        where 1=1 AND ial.invoiceId = ins.id
+        <if test="cOrderSn !=null and cOrderSn != ''">
+            and ins.cOrderSn = #{cOrderSn}
+        </if>
+        <if test="type !=null and type != '-1'">
+            and ial.type=#{type}
+        </if>
+        <if test="isSuccess !=null and isSuccess != '-1'">
+            and ial.isSuccess=#{isSuccess}
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            and ial.addTime &gt;= UNIX_TIMESTAMP(#{addTimeMin})
+        </if>
+        <if test="addTimeMax !=null and addTimeMax != ''">
+            and ial.addTime &lt;= UNIX_TIMESTAMP(#{addTimeMax})
+        </if>
+        order by ial.id desc
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getRowCnts" resultType="int">
+        SELECT
+        FOUND_ROWS();
+    </select>
+
+    <select id="get" parameterType="Integer" resultMap="invoiceApiLogsResult">
+        select `id`,`orderProductId`,`cOrderSn`,`invoiceId`,`type`,`pushData`,`returnData`,`receiveData`,`addTime`,`isSuccess`,`lastTime`,`countNum`
+        from `InvoiceApiLogs`
+        where `id`=#{id}
+    </select>
+
+    <select id="getByInvoiceIdAndType" parameterType="Integer" resultMap="invoiceApiLogsResult">
+        select `id`,`orderProductId`,`cOrderSn`,`invoiceId`,`type`,`pushData`,`returnData`,`receiveData`,`addTime`,`isSuccess`,`lastTime`,`countNum`
+        from `InvoiceApiLogs`
+        where `invoiceId`=#{invoiceId} and `type`=#{type}
+        order by id desc limit 1
+    </select>
+</mapper>

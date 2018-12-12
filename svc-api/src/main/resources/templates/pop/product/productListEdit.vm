@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>可售商品表</title>
+    <script src="/static/third/easyui/jquery.min2.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+    <script src="/static/third/easyui/glo.js"></script>
+    <script src="/static/third/easyui/comm.js"></script>
+    <script src="/static/third/easyui/commgrid.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+
+</head>
+
+<body class="easyui-layout">
+<style>
+    label {
+        font-weight: 700;
+    }
+
+    .fitem {
+        width: 100%;
+    }
+
+    .fitem input {
+        margin: 0 auto;
+    }
+</style>
+<div id="p" data-options="region:'north'" style="width:100%;height:120px;padding:0px;font-size:13px">
+    <div style="width: 100%;height: 40px;overflow-x: hidden;overflow-y: hidden">
+        <a href="#" style="height:30px" class="easyui-linkbutton" onclick="SaveMasterUnit()"
+           data-options="iconCls:'icon-save',plain:true">保存</a>
+        <a href="#" style="height:30px" class="easyui-linkbutton" onclick="go_delete_sku()"
+           data-options="iconCls:'icon-cancel',plain:true">删除商品</a>
+        <a href="#" style="height:30px;float: right" class="easyui-linkbutton" onclick="fan()"
+           data-options="iconCls:'icon-back',plain:true">返回</a>
+    </div>
+    <table style="width: 100%; ">
+        <tr>
+            <td>
+                <span style="text-align: right;display: block">渠道&nbsp;&nbsp;</span>
+            </td>
+            <td>
+                <input id="channelId" name="dept" value="" name="productType">
+            </td>
+            <td>
+                <span class="search-row-label_80">物料编码</span>
+                <input id="sku" class="text" data-options="prompt:'物料编码'"
+                       ondblclick="Open()" style="height:19px;" readonly>
+                <a href="#" class="easyui-linkbutton" onclick="Open()"
+                   data-options="iconCls:'icon-add',plain:true"></a>
+            </td>
+            <td>
+                <span class="search-row-label_80">品类</span>
+                <input id="productTypeId" style="height:19px;" class="text" disabled hidden>
+                <input id="productTypeName" style="height:19px;" class="text" disabled>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="text-align: right;display: block">产品组</span>
+            </td>
+            <td>
+                <input id="departmentName" style="height:19px;width: 170px" class="text" disabled>
+            </td>
+            <td>
+                <span class="search-row-label_80">商品编码</span>
+                <input id="productCode" class="text" style="height:19px;" maxlength="60">
+            </td>
+            <td>
+                <span class="search-row-label_80">是否上架</span>
+                <select id="onSale" class="easyui-combobox" name="onSale" style="width:173px;">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div data-options="region:'center'">
+    <div class="easyui-layout" style="width:100%;height:100%;font-size:13px">
+        <div id="toolbar_comm" data-options="region:'north'" height="40px">
+            <a href="#" class="easyui-linkbutton" onclick="editGrdViewBcode11()"
+               data-options="iconCls:'icon-add',plain:true">增加</a>
+            <a href="#" class="easyui-linkbutton" onclick="Edit()"
+               data-options="iconCls:'icon-edit',plain:true">修改</a>
+            <a href="#" class="easyui-linkbutton" onclick="Deletes()"
+               data-options="iconCls:'icon-remove',plain:true">删除</a>
+            <a href="#" class="easyui-linkbutton" onclick="Copy()"
+               data-options="iconCls:'icon-copy',plain:true">复制</a>
+            <span style="float: right">
+                <input id="start_time" class="easyui-datetimebox" data-options="prompt:'价格适用开始时间'"
+                       style="height:24px;width: 176px;margin-right: 40px">
+                <input id="end_time" class="easyui-datetimebox" data-options="prompt:'价格适用结束时间'"
+                       style="height:24px;width: 176px;margin-right: 40px">
+            	<input id="zcounty" type="text" placeholder="请输入区域信息" onkeydown="onEnter()" style="height:18px;">&nbsp;
+				<a href="#" class="easyui-linkbutton" onclick="SearchCounty()"
+                   data-options="iconCls:'icon-search',plain:true">查询</a>
+                <a href="#" class="easyui-linkbutton" onclick="SearchClear()"
+                   data-options="iconCls:'icon-redo',plain:true">重置</a>
+        	</span>
+        </div>
+        <div style="margin:0px 0;font-size:13px" data-options="region:'center'" border="true">
+            <table id="gridView" class="easyui-datagrid" style="width:50%;height:auto" toolbar="toolbar_list" fit="true"
+                   data-options="singleSelect:true,region:'center',remoteSort:false,rownumbers: true,showFooter: true">
+                <thead>
+                <tr>
+                    <th data-options="field:'province',width:80 ,sortable:true">省</th>
+                    <th data-options="field:'city',width:80 ,sortable:true">市</th>
+                    <th data-options="field:'county',width:90 ,sortable:true">区域</th>
+                    <th data-options="field:'supplyprice',width:120, ">供货价格</th>
+                    <th data-options="field:'saleprice',width:120,">销售价格</th>
+                    <th data-options="field:'limitprice',width:120,">限制价格</th>
+                    <th data-options="field:'pricestarttime',width:220,">价格适用开始时间</th>
+                    <th data-options="field:'priceendtime',width:220,">价格适用结束时间</th>
+                    <th data-options="field:'saleid',width:220,editor:'text'" hidden>主表id</th>
+                    <th data-options="field:'regionid',width:220,editor:'text'" hidden>区域主键</th>
+                    <th data-options="field:'id',width:220,editor:'text'" hidden>id</th>
+                    <th data-options="field:'rowstatus',width:120,editor:'text'" hidden>行状态</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<input id="status" type="text" value="0" hidden>
+<input id="skuName" type="text" hidden>
+<input id="id" type="hidden" value=$gloid>
+
+<!-- 表格外按钮div -->
+<div id="oDialog" class="easyui-dialog" title="物料选择"
+     style="width: 500px; height: 440px; padding: 0px 0px; center:true;font-size:13px"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div data-options="region:'north'" style="height:40px">
+
+                <span class="search-row-label_80">物料编码</span>
+                <input id="sku1" style="width:100px" type="text" data-options="prompt:'物料编码'">
+                <span class="search-row-label_80">物料名称</span>
+                <input id="productName" style="width:100px" type="text" data-options="prompt:'物料名称'">
+                <a href="#" class="easyui-linkbutton" onclick="product()"
+                   data-options="plain:true">查找</a>
+            </div>
+
+            <div data-options="region:'center'">
+                <table class="easyui-datagrid" id="code" style="width:600px;height:auto" fit="true"
+                       data-options="singleSelect:true,region:'center'">
+                    <thead>
+                    <tr>
+                        <th data-options="field:'ck',checkbox:true ,width:50,
+                        checkOnSelect: true,
+                        selectOnCheck :true">选择
+                        </th>
+                        <th data-options="field:'sku',width:200">物料编码</th>
+                        <th data-options="field:'productName',width:200">物料名称</th>
+                        <th data-options="field:'productTypeid',width:200" hidden>品类的id</th>
+                        <th data-options="field:'productTypeid1',width:200" hidden>品类的id</th>
+                    
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div id="dlg-buttons1" data-options="region:'south'" style="height:35px" align="right">
+                <a href="javascript:void(0)" class="easyui-linkbutton"
+                   onclick="javascript:SetSelectSkuValue()" iconcls="icon-ok">确定</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+                   onclick="javascript:$('#oDialog').dialog('close')"
+                   iconcls="icon-cancel">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 表格内tree -->
+<div id="oDialog1" class="easyui-dialog" title="区域选择"
+     style="width: 500px; height: 440px;font-size:13px; padding: 0px 0px; center:true"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+        <div data-options="region:'center'">
+            <div region="west" class="west" title="导航菜单">
+                <ul id="tree" data-options="animate:true"></ul>
+            </div>
+        </div>
+
+        <div id="dlg-buttons" data-options="region:'south'" style="height:40px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetCodeValue1()" iconcls="icon-ok">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript:$('#oDialog1').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+
+    </div>
+</div>
+
+<!--区域选择-->
+<div id="oDialog2" class="easyui-dialog" title="区域选择"
+     style="width: 500px; height: 440px;font-size:13px; padding: 0px 0px; center:true"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+        <div data-options="region:'center'">
+            <div region="west" class="west" title="导航菜单">
+                <ul id="tree1" data-options="animate:true"></ul>
+            </div>
+        </div>
+
+        <div id="dlg-buttons4" data-options="region:'south'" style="height:40px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetCodeValue2()" iconcls="icon-ok">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript:$('#oDialog2').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+
+    </div>
+</div>
+
+<!--表格内输入框-->
+<div id="oDialog3" class="easyui-dialog" title="价格信息"
+     style="width: 400px; height: 300px;font-size:13px; padding: 0px 0px;overflow-y: hidden"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+        <div data-options="region:'center'" style="width:100%;height:100%;">
+            &numsp;&numsp;
+            <label>供货价格<span style="color: red;">*</span></label>
+            &numsp;&numsp; &numsp;&numsp; &numsp;&numsp;&numsp;
+            <input id="supplyprice" type="text" class="easyui-numberbox"
+                   style="height:24px;width: 175px;margin-right: 20px" data-options="min:0,precision:2"
+                   required="true">
+            <br/>
+            <br/>
+            &numsp;&numsp;
+            <label>销售价格<span style="color: red;">*</span></label>
+            &numsp;&numsp; &numsp;&numsp; &numsp;&numsp;&numsp;
+            <input id="saleprice" class="easyui-numberbox"
+                   style="height:24px;width: 175px" data-options="min:0,precision:2" required="true"/>
+            <br/>
+            <br/>
+            &numsp;&numsp;
+            <label>限制价格<span style="color: red;">*</span></label>
+            &numsp;&numsp; &numsp;&numsp; &numsp;&numsp;&numsp;
+            <input id="limitprice" class="easyui-numberbox"
+                   style="height:24px;width: 175px" data-options="min:0,precision:2" required="true"/>
+            <br/>
+            <br/>
+            &numsp;&numsp;
+            <label>价格适用开始时间<span style="color: red;">*</span></label>
+            &numsp;
+            <input id="pricestarttime" class="easyui-datetimebox" style="height:24px;width: 176px;margin-right: 40px"
+                   required="true">
+            <br/>
+            <br/>
+            &numsp;&numsp;
+            <label>价格适用结束时间<span style="color: red;">*</span></label>
+            &numsp;
+            <input id="priceendtime" class="easyui-datetimebox" style="height:24px;width: 176px;" required="true">
+        </div>
+        <div id="dlg-buttons5" data-options="region:'south'" style="height:40px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetCodeValue3()" iconcls="icon-ok">确定</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript:close3()"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+
+    </div>
+</div>
+<!-- 修改表格 -->
+<div id="oDialog4" class="easyui-dialog" title="信息修改"
+     style="width: 350px; height: 350px;font-size:13px; padding: 0px 0px;overflow-y: hidden"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;display: block">
+        <div data-options="region:'center'" style="width:100%;height:100%;">
+            <br/>
+            &numsp;&numsp;
+            <label>区域名称<span style="color: red;">*</span></label>
+            &numsp;&numsp; &numsp;&numsp; &numsp;&numsp;&numsp;
+            <input id="ucounty" name="county" style="height:20px;width: 174px"/>
+            <br/>
+            <br/>
+            &numsp;&numsp;
+            <label>供货价格<span style="color: red;">*</span></label>
+            &numsp;&numsp; &numsp;&numsp; &numsp;&numsp;&numsp;
+            <input id="usupplyprice" type="text" class="easyui-numberbox"
+                   style="height:24px;width: 175px;margin-right: 20px" data-options="min:0,precision:2"
+                   required="true">
+
+            <br/>
+            <br/>
+            &numsp;&numsp;
+            <label>销售价格<span style="color: red;">*</span></label>
+            &numsp;&numsp; &numsp;&numsp; &numsp;&numsp;&numsp;
+            <input id="usaleprice" class="easyui-numberbox"
+                   style="height:24px;width: 175px" data-options="min:0,precision:2" required="true"/>
+
+            <br/>
+            <br/>
+            &numsp;&numsp;
+            <label>限制价格<span style="color: red;">*</span></label>
+            &numsp;&numsp; &numsp;&numsp; &numsp;&numsp;&numsp;
+            <input id="ulimitprice" class="easyui-numberbox"
+                   style="height:24px;width: 175px" data-options="min:0,precision:2" required="true"/>
+
+
+            <br/>
+            <br/>
+            &numsp;&numsp;
+            <label>价格适用开始时间<span style="color: red;">*</span></label>
+            &numsp;
+            <input id="upricestarttime" class="easyui-datetimebox" style="height:24px;width: 174px;margin-right: 40px"
+                   required="true">
+
+            <br/>
+            <br/>
+            &numsp;&numsp;
+
+            <label>价格适用结束时间<span style="color: red;">*</span></label>
+            &numsp;
+            <input id="upriceendtime" class="easyui-datetimebox" style="height:24px;width: 174px;" required="true">
+
+
+            <input id="uid" type="text" hidden>
+            <input id="uregionid" type="text" hidden>
+            <input id="uprovince" type="text" hidden>
+            <input id="ucity" type="text" hidden>
+        </div>
+
+        <div id="dlg-buttons6" data-options="region:'south'" style="height:40px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetCodeValue4()" iconcls="icon-ok">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript: $('#oDialog4').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+    </div>
+</div>
+<script src="/static/js/pop/common/pop.js"></script>
+<script src="/static/js/pop/product/ProductListEdit.js"></script>
+</body>
+</html>

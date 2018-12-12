@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>角色管理</title>
+	<link rel="stylesheet" href="../../static/css/jqueryui/base/jquery.ui.all.css"/>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../../static/css/msg.css"></link>
+    <link rel="stylesheet" type="text/css" href="../../static/third/easyui/themes/gray/easyui.css"/>
+    <link rel="stylesheet" href="../../static/css/reset.css"></link>
+	<script src="../../static/third/jquery-1.8.3.min.js"></script>
+    <script src="../../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+
+<body>
+<div id="panel" class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 120px;overflow: auto;" align="left" class="new-form-box">
+		<form id="filterForm" action="#">
+	    	<table>
+	    		<tr>
+	    			<td>角色名称</td>
+	    			<td><input id="name"  name="name" class="easyui-textbox" style="width:173px"/></td>
+	    			<td>状态</td>
+	    			<td>
+	    			<input id="status" name="status" class="easyui-combobox" style="width:173px"></input>
+	    		</tr>
+	    		<tr>
+	    			<td colspan="10">
+	    				<a id='create' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-add">创建</a>
+		    			<a id='search' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-search">查询</a>
+		    			<a id='import' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-edit">保存</a>
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </form>
+    </div>
+    <div data-options="region:'center',title:'角色查询结果',border:false">
+		    <table id="dataGrid"></table>
+		    <div id="msgMask"></div>
+			<div id="msg">正在处理，请稍待。。。</div>
+	</div>
+</div>
+
+<div id="add_Role" class="easyui-dialog" style="display:none;width:450px;height:200px;" title="创建角色" modal="true">
+	<form id="addRoleForm" method="post">
+		<table>
+			<tr>
+				<td>角色名称:</td>
+				<td><input id="role_Name" class="easyui-textbox" style="width:160px" required="true"></input></td>
+				<td>状态:</td>
+				<td><input id="role_Status" name="role_Status" class="easyui-combobox" style="width:160px"></input></td>
+			</tr>
+			<tr>
+				<td>备注:</td>
+				<td><input id="role_Remark" class="easyui-textbox" style="width:160px" required="true"></input></td>
+			</tr>
+			<tr>
+				<td>创建人:</td>
+				<td><input id="founder" disabled="disabled" class="easyui-textbox" style="width:160px"></input></td>
+				<td>创建时间:</td>
+				<td><input id="" disabled="disabled" class="easyui-textbox" style="width:160px"></input></td>
+			</tr>
+			<tr>
+				<td>最后更新人:</td>
+				<td><input id="updateUser" disabled="disabled" class="easyui-textbox" style="width:160px"></input></td>
+				<td>最后更新时间:</td>
+				<td><input id="updateTime" disabled="disabled" class="easyui-textbox" style="width:160px"></input></td>
+			</tr>
+			<tr>
+				<td><a id="role_Pre" class="easyui-linkbutton">保存</a></td>
+				<td><a id="role_Close" class="easyui-linkbutton">关闭</a></td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+<script type="application/javascript">
+
+var dataList;
+jQuery.getJSON("/sys/user/getStatus",function(result){
+    dataList = result.data;
+});
+
+//点击查询
+$('#search').click(function () {
+	var status;
+	if($("#status").val()=="ALL"){
+		status = "";
+	}else{
+		status = $("#status").val();
+	}
+	//检索列表构筑
+	if(datagrid){
+		//grid刷新
+	    $('#dataGrid').datagrid('load',
+	    		{
+	    	     name:$("#name").val(),
+	    	     status:status
+	   	 });
+	}else{
+		//生成grid
+	    $('#dataGrid').datagrid({
+	       url: "/sys/role/find",
+	        fit: true,
+	        pagination: true,
+	        singleSelect: true,
+	        checkOnSelect:true,
+	        onDblClickCell:onDblClickCell,
+	        //onAfterEdit:onAfterEdit,
+	        pageSize: 100,
+	        pageList: [1,2,100,200,300],
+	        nowrap: false,
+	        rownumbers: true,
+	        queryParams: {
+	    	     name:$("#name").val(),
+	    	     status:status
+	        },
+	        columns: [
+	            [
+	            	{field:'roleId', title:'角色ID', width:'100', align:'center'},
+			        {field:'roleName', title:'角色名称', width:'100', align:'center',editor:'text'},
+			        {field:'status', title:'状态', width:'100', align:'center',editor:{type:'combobox',
+			        options:{valueField:'value',textField:'value_meaning',data:dataList,required:true}},
+	                    formatter : function(value) {
+	                    	if(value == 1){
+	                    		return "有效";
+	                    	}
+	                    	if(value == 0){
+	                    		return "禁用";
+	                    	}
+	                    	if(value == -1){
+	                    		return "删除";
+	                    	}
+	                    }
+			        },
+			        {field:'remark', title:'备注', width:'100', align:'center',editor:'text'},
+			        {field:'updateUser', title:'最后更新人', width:'100', align:'center'},
+			        {field:'updateTime', title:'最后更新时间', width:'100', align:'center',
+	                    formatter : function(value) {
+	                        var date = new Date(value);
+	                        var year = date.getFullYear().toString();
+	                        var month = (date.getMonth() + 1);
+	                        var day = date.getDate().toString();
+	                        var hour = date.getHours().toString();
+	                        var minutes = date.getMinutes().toString();
+	                        var seconds = date.getSeconds().toString();
+	                        if (month < 10) {
+	                            month = "0" + month;
+	                        }
+	                        if (day < 10) {
+	                            day = "0" + day;
+	                        }
+	                        if (hour < 10) {
+	                            hour = "0" + hour;
+	                        }
+	                        if (minutes < 10) {
+	                            minutes = "0" + minutes;
+	                        }
+	                        if (seconds < 10) {
+	                            seconds = "0" + seconds;
+	                        }
+	                        return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+	                    }
+			        },
+			        {field:'createUser', title:'创建人', width:'100', align:'center'},
+			        {field:'createTime', title:'创建时间', width:'100', align:'center',
+	                    formatter : function(value) {
+	                        var date = new Date(value);
+	                        var year = date.getFullYear().toString();
+	                        var month = (date.getMonth() + 1);
+	                        var day = date.getDate().toString();
+	                        var hour = date.getHours().toString();
+	                        var minutes = date.getMinutes().toString();
+	                        var seconds = date.getSeconds().toString();
+	                        if (month < 10) {
+	                            month = "0" + month;
+	                        }
+	                        if (day < 10) {
+	                            day = "0" + day;
+	                        }
+	                        if (hour < 10) {
+	                            hour = "0" + hour;
+	                        }
+	                        if (minutes < 10) {
+	                            minutes = "0" + minutes;
+	                        }
+	                        if (seconds < 10) {
+	                            seconds = "0" + seconds;
+	                        }
+	                        return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+	                    }
+			        }
+	            ]
+	        ]
+	    });
+	}
+    $('#dataGrid').parent().find("div.datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+});
+
+var editIndex = undefined;
+function onDblClickCell(index,field,value){
+	//启用单元格编辑
+	//$("#dataGrid").datagrid('beginEdit', index);
+	//var ed = $("#dataGrid").datagrid('getEditor', {index:index,field:field});
+	
+    if(endEdit()){
+    	//给editIndex对象赋值，index为当前行的索引
+        editIndex = index;  
+        var selectRow = $('#dataGrid').datagrid('selectRow', editIndex);
+        //启用单元格编辑  
+        selectRow.datagrid('beginEdit', editIndex);  
+    }
+}
+
+function endEdit() {
+	//对editIndex进行判断单元格是否可以编辑
+    if(editIndex == undefined) {
+    	return true;
+    }
+      
+    if($('#dataGrid').datagrid('validateRow',editIndex)) {
+    	//结束当前行编辑
+        $('#dataGrid').datagrid('endEdit',editIndex);
+        editIndex = undefined;   
+        return true;//重置编辑行索引对象，返回true，允许编辑  
+     }  
+    else {  
+        return false;  
+    }
+}
+
+$("#panel").click(function () {
+    $('#dataGrid').datagrid('endEdit',editIndex);
+    editIndex = undefined;   
+    return true;//重置编辑行索引对象，返回true，允许编辑 
+});
+
+var datagrid;
+$(function () {
+	getStatus();
+	$('#add_Role').dialog('close');
+});
+$("#role_Close").click(function () {
+	$('#add_Role').panel('close');
+});
+function getStatus(){
+	//取得状态
+	jQuery.getJSON("/sys/user/getStatus", function(result){
+		var count = result.totalCount;
+		var dataList = result.data;
+		//添加全部
+		dataList.unshift( {value:'ALL',value_meaning:'全部'});
+		$("#status").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+		$("#role_Status").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+	});
+}
+
+//创建角色
+$('#create').click(function(){
+	$("#role_Name").textbox('setValue',"");
+	$("#role_Remark").textbox('setValue',"");
+	$("#role_Status").combobox('setValue',"ALL");
+	$("#add_Role").dialog('open');
+});
+$("#role_Pre").click(function (){
+	
+	if($("#role_Name").val() == null || $("#role_Name").val() == ""){
+		$.messager.alert('提示', '请输入角色名称', 'err');
+	} else 	if($("#role_Remark").val() == null || $("#role_Remark").val() == ""){
+		$.messager.alert('提示', '请输入角色备注', 'err');
+	} else 	if($("#role_Status").val() == "ALL"){
+		$.messager.alert('提示', '请选择有效状态', 'err');
+	} else {
+		create();
+	}
+	
+});
+function create(){
+	jQuery.ajax({
+	    url: "/sys/role/create",
+	    type: "POST",
+	    data: {
+	    		"roleName": $("#role_Name").val(),
+	    		"roleStatus": $("#role_Status").val(),
+	    		"roleRemark": $("#role_Remark").val()
+	    	},
+		    success: function (data) {
+		    	$('#add_Role').dialog('close');
+		        $.messager.alert('提示', '角色创建成功', 'info');
+			    $('#dataGrid').datagrid('load',
+			    		{
+			    	     name:$("#name").val(),
+			    	     status:status
+			   	});
+		    },
+		    error: function (data) {
+		    	$('#add_Role').dialog('close');
+		    	$.messager.alert('提示', '角色创建失败', 'err');
+		    }
+	});
+}
+
+$("#import").click(function(){
+	var row = $('#dataGrid').datagrid('getSelected');
+	
+	jQuery.ajax({
+	    url: "/sys/role/update",
+	    type: "POST",
+	    data: {
+	    		"roleId": row.roleId,
+	    		"roleName": row.roleName,
+	    		"roleStatus": row.status,
+	    		"roleRemark": row.remark
+	    	},
+		    success: function (data) {
+		    	$('#add_Role').dialog('close');
+		        $.messager.alert('提示', '角色修改成功', 'info');
+			    $('#dataGrid').datagrid('load',
+			    		{
+			    	     name:$("#name").val(),
+			    	     status:status
+			   	});
+		    },
+		    error: function (data) {
+		    	$('#add_Role').dialog('close');
+		    	$.messager.alert('提示', '角色修改失败', 'err');
+		    }
+	});
+});
+
+</script>
+</body>
+</html>

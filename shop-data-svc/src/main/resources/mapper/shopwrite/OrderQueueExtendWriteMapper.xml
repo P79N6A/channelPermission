@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderQueueExtendWriteDao">
+	<!-- 更新传财务状态 -->
+	<update id="updateSapStatus">
+		UPDATE `OrderQueueExtend` SET finance_status=#{status}, sap_message=#{sapMessage} WHERE cordersn=#{cOrderSn}
+	</update>
+	<!-- 更新发票状态 -->
+	<update id="updateInvoiceStatus">
+		UPDATE `OrderQueueExtend` SET invoice_status=#{status}, invoice_message=#{invoiceMessage} WHERE cordersn=#{cOrderSn}
+	</update>
+	<insert id="insert" parameterType="com.haier.shop.model.OrderQueueExtend">
+	        INSERT INTO `OrderQueueExtend` (
+	        <if test="cordersn != null and cordersn !=''">
+				`cordersn`,
+			</if>
+			<if test="sku != null and sku != ''">
+				`sku`,
+			</if>
+			<if test="secCode != null and secCode != ''">
+				`secCode`,
+			</if>
+			<if test="source != null and source != ''">
+				`source`,
+			</if>
+			<if test="qty != null">
+				`qty`,
+			</if>
+			<if test="status != null">
+				`status`,
+			</if>
+			<if test="cancelStatus != null ">
+				`cancel_status`,
+			</if>
+			<if test="syncOrderStatus != null">
+				`sync_order_status`,
+			</if>
+			<if test="financeStatus != null">
+				`finance_status`,
+			</if>
+			<if test="errorMessage != null and errorMessage != ''">
+				`error_message`,
+			</if>
+			<if test="deliveryTime != null and deliveryTime != ''">
+				`delivery_time`,
+			</if>
+			<if test="expressCompany != null and expressCompany != ''">
+				`express_company`,
+			</if>
+			<if test="expressNumber != null and expressNumber != ''">
+				`express_number`,
+			</if>
+			<if test="outping != null and outping != ''">
+				`outping`,
+			</if>
+			<if test="netpointCode != null and netpointCode != ''">
+				`netpoint_code`,
+			</if>
+			<if test="netpointName != null and netpointName != ''">
+				`netpoint_name`,
+			</if>
+			<if test="netpointTel != null and netpointTel != ''">
+				`netpoint_tel`,
+			</if>
+			<if test="dnNumber != null and dnNumber != ''">
+				`dn_number`,
+			</if>
+				`add_time`	
+	        )
+	            SELECT
+	                <if test="cordersn != null and cordersn !=''">
+						#{cordersn},
+					</if>
+					<if test="sku != null and sku !=''">
+						#{sku},
+					</if>
+					<if test="secCode != null and secCode !=''">
+						#{secCode},
+					</if>
+					<if test="source != null and source !=''">
+						#{source},
+					</if>	
+					<if test="qty != null">
+						#{qty},
+					</if>
+					<if test="status != null">
+						#{status},
+					</if>
+					<if test="cancelStatus != null ">
+						#{cancelStatus},
+					</if>
+					<if test="syncOrderStatus != null ">
+						#{syncOrderStatus},
+					</if>
+					<if test="financeStatus != null">
+						#{financeStatus},
+					</if>	
+					<if test="errorMessage != null and errorMessage !=''">
+						#{errorMessage},
+					</if>
+					
+					<if test="deliveryTime != null and deliveryTime !=''">
+						#{deliveryTime},
+					</if>
+					<if test="expressCompany != null and expressCompany !=''">
+						#{expressCompany},
+					</if>
+					<if test="expressNumber != null and expressNumber !=''">
+						#{expressNumber},
+					</if>
+					<if test="outping != null and outping != ''">
+						#{outping},
+					</if>
+					<if test="netpointCode != null and netpointCode != ''">
+						#{netpointCode},
+					</if>
+					<if test="netpointName != null and netpointName != ''">
+						#{netpointName},
+					</if>
+					<if test="netpointTel != null and netpointTel != ''">
+						#{netpointTel},
+					</if>
+					<if test="dnNumber != null and dnNumber != ''">
+						#{dnNumber},
+					</if>
+					now()
+	            FROM dual
+	            WHERE NOT exists
+	            (
+	                    SELECT
+	                        1
+	                    FROM `OrderQueueExtend` ext
+	                    WHERE
+	                        ext.cordersn = #{cordersn} 
+	            )
+        
+	</insert>
+	<!-- 取消网单 -->
+	<update id="cancelOrderExt" parameterType="com.haier.shop.model.OrderQueueExtend">
+		update `OrderQueueExtend`
+		  <trim prefix="set" suffixOverrides=","> 
+		  		cancel_time = now(),
+		  		<if test="cancelStatus != null and cancelStatus !=''">
+					`cancel_status`=1,
+				</if>
+		  </trim>
+		  where 
+			 <choose>
+				<when test="orderSn != null and orderSn !=''">
+					 `cordersn` = #{orderSn}
+				</when>
+				<otherwise>
+					1=0
+				</otherwise>
+			</choose>
+	</update>
+	<update id="update" parameterType="com.haier.shop.model.OrderQueueExtend">
+		update `OrderQueueExtend`  
+			<trim prefix="set" suffixOverrides=","> 
+				update_time = now(),
+				<if test="cordersn != null and cordersn !=''">
+					`cordersn`=#{cordersn},
+				</if>
+				<if test="sku != null and sku !=''">
+					`sku`=#{sku},
+				</if>
+				<if test="secCode != null and secCode !=''">
+					`secCode`=#{secCode},
+				</if>
+				<if test="source != null and source !=''">
+					`source`=#{source},
+				</if>
+				<if test="qty != null and qty !=''">
+					`qty`=#{qty},
+				</if>
+				<if test="status != null and status !=''">
+					`status`=#{status},
+				</if>
+				<if test="cancelStatus != null and cancelStatus !=''">
+					`cancel_status`=#{cancelStatus},
+				</if>
+				<if test="syncOrderStatus != null and syncOrderStatus !=''">
+					`sync_order_status`=#{syncOrderStatus},
+				</if>
+				<if test="financeStatus != null and financeStatus !=''">
+					`finance_status`=#{financeStatus},
+				</if>
+				<if test="errorMessage != null and errorMessage !=''">
+					`error_message`=#{errorMessage},
+				</if>
+				<if test="addTime != null and addTime !=''">
+					`add_time`=#{addTime},
+				</if>
+				<if test="deliveryTime != null and deliveryTime !=''">
+					`delivery_time`=#{deliveryTime},
+				</if>
+				<if test="expressCompany != null and expressCompany !=''">
+					`express_company`=#{expressCompany},
+				</if>
+				<if test="expressNumber != null and expressNumber !=''">
+					`express_number`=#{expressNumber},
+				</if>
+				<if test="outping != null and outping != ''">
+					`outping`=#{outping},
+				</if>
+				<if test="netpointCode != null and netpointCode != ''">
+					`netpoint_code`=#{netpointCode},
+				</if>
+				<if test="netpointName != null and netpointName != ''">
+					`netpoint_name`=#{netpointName},
+				</if>
+				<if test="netpointTel != null and netpointTel != ''">
+					`netpoint_tel`=#{netpointTel},
+				</if>
+				<if test="dnNumber != null and dnNumber != ''">
+					`dn_number`=#{dnNumber}
+				</if>
+			</trim>
+			where 
+			 <choose>
+				<when test="id != null and id !=''">
+					 `id` = #{id}
+				</when>
+				<when test="cordersn != null and cordersn !=''">
+					`cordersn`=#{cordersn}
+				</when>
+				<otherwise>
+					1=0
+				</otherwise>
+			</choose>
+	</update>
+</mapper>

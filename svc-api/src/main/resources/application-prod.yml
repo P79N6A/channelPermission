@@ -1,0 +1,36 @@
+server:
+  port: 8081
+ 
+interconn:
+ project: 3W-CBS
+ app: svc-api
+
+spring:
+  mvc:
+    view:
+      suffix: .vm
+
+#spring.dubbo:
+#  application.name: consumer
+#  registry.address: zookeeper://10.162.162.43:2181?backup=10.162.162.44:2181,10.162.162.45:2181
+#  registry.address: zookeeper://127.0.0.1:2181
+#  timeout: 10000
+#  threads: 100
+#  heartBeats: 10000
+#  scan: com.haier.svc
+  
+dubbo:
+  registry: 10.138.8.223:2181,10.138.8.224:2181,10.138.8.225:2181
+  port: 20880     #服务提供者服务端口，默认-1
+  threads: 100    #服务线程池大小(固定大小)，默认为2
+  heartBeats: 10000 #心跳间隔，检查连接是否已断开，默认30000
+  serialization: hessian2    #协议序列化方式（可选配置，Dubbo有默认值）;
+  
+jsondoc:
+  version: 1.0
+  basePath: http://localhost:8081
+  #APIzaina nimeide zenmxiede 
+  packages: com.haier.svc.api.controller
+# optional configuration
+  playgroundEnabled: true
+  displayMethodAs: SUMMARY

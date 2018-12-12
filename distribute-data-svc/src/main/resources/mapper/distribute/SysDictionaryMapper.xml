@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.distribute.data.dao.distribute.SysDictionaryDao">
+
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+	<resultMap id="SysDictionaryMap" type="com.haier.distribute.data.model.SysDictionary">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="value" property="value" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- =========================================================== -->
+	<!-- 公共变量定义 -->
+	<!-- =========================================================== -->
+	<!-- oracle 分页头部 -->
+	<sql id="pagination_Head">
+    <![CDATA[
+        select * from ( select row_.*, rownum rownum_ from (
+        ]]>
+	</sql>
+	<!-- oracle 分页尾部 -->
+	<sql id="pagination_Tail">
+    <![CDATA[
+        ) row_ where rownum < (#{pager.page} * #{pager.rows} +1) ) where rownum_ >= ((#{pager.page} -1) * #{pager.rows} +1)
+        ]]>
+	</sql>
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+    <![CDATA[
+        select count(1) from (
+        ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+    <![CDATA[
+        )
+        ]]>
+	</sql>
+	<sql id="pagination_OrderBy">
+		<if test="pager.sort != null and pager.sort !=''">
+			ORDER BY ${pager.sort} ${pager.order}
+		</if>
+	</sql>
+
+	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id
+		,type
+		,code
+		,value
+		,sort
+		,remark
+	</sql>
+
+	<!-- 查询条件 -->
+	<sql id="where_fragement">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id  = #{entity.id} ]]>
+			</if>
+			<if test="entity.type != null and entity.type !='' ">
+                <![CDATA[ and type = #{entity.type} ]]>
+			</if>
+			<if test="entity.code != null and entity.code !='' ">
+                <![CDATA[ and code  LIKE '%' || #{entity.code} ||'%']]>
+			</if>
+		</if>
+	</sql>
+
+	<!-- 相等查询条件 -->
+	<sql id="where_fragement_equals">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id  = #{entity.id} ]]>
+			</if>
+			<if test="entity.orderSn != null and entity.orderSn !='' ">
+                <![CDATA[ and SysDictionaryn  = #{entity.orderSn} ]]>
+			</if>
+			<if test="entity.code != null and entity.code !='' ">
+                <![CDATA[ and code  = #{entity.code} ]]>
+			</if>
+		</if>
+	</sql>
+
+	<!-- =========================================================== -->
+	<!-- Mapper中的基本增删改查方法 -->
+	<!-- =========================================================== -->
+	<!-- 根据id查询 -->
+	<select id="getOneById" resultMap="SysDictionaryMap" parameterType="Long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_dictionary
+		WHERE order_id = #{id}
+	</select>
+
+	<!-- 根据Condition查询 -->
+	<select id="getOneByCondition" resultMap="SysDictionaryMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_dictionary
+		<include refid="where_fragement_equals" />
+	</select>
+
+	<!-- 查询page -->
+	<select id="getPageByCondition" resultMap="SysDictionaryMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_dictionary
+		<include refid="where_fragement" />
+		<include refid="pagination" />
+	</select>
+	<!--分页count -->
+	<select id="getPagerCount" resultType="long"
+		parameterType="com.haier.distribute.data.model.SysDictionary">
+		select count(1) FROM sys_dictionary
+		<include refid="where_fragement" />
+	</select>
+
+	<!--查询总条数 -->
+	<select id="countByCondition" parameterType="com.haier.distribute.data.model.SysDictionary"
+		resultType="long">
+		<include refid="count_Start_Head" />
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_dictionary
+		<include refid="where_fragement" />
+		<include refid="count_Start_Tail" />
+	</select>
+
+	<!-- 查询list -->
+	<select id="getListByCondition" resultMap="SysDictionaryMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_dictionary
+		<include refid="where_fragement" />
+	</select>
+<select id="selectOrderCancelFlag" resultMap="SysDictionaryMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sys_dictionary
+        WHERE id=19
+    </select>
+</mapper>

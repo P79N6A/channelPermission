@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.MsLinkageReadDao">
+	<resultMap id="msLinkageResult" type="com.haier.shop.model.MsLinkage">
+		<result property="id" column="id"/>
+		<result property="sku" column="sku"/>
+		<result property="orderSource" column="order_source"/>
+	</resultMap>
+
+	<select id="getMsLinkage" parameterType="String" resultMap="msLinkageResult">
+		select id from ms_linkage where sku=#{sku} and order_source=#{orderSource} limit 1
+	</select>
+</mapper>

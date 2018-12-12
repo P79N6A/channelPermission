@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrdersReadDao">
+
+    <resultMap id="ordersResult" type="com.haier.shop.model.Orders">
+    <result property="id" column="id" jdbcType="VARCHAR"/>
+    <result property="isTest" column="isTest"/>
+    <result property="isBackend" column="isBackend"/>
+    <result property="isBook" column="isBook"/>
+    <result property="isCod" column="isCod"/>
+    <result property="notAutoConfirm" column="notAutoConfirm"/>
+    <result property="orderSn" column="orderSn"/>
+    <result property="relationOrderSn" column="relationOrderSn"/>
+    <result property="memberId" column="memberId"/>
+    <result property="memberEmail" column="memberEmail"/>
+    <result property="addTime" column="addTime"/>
+    <result property="syncTime" column="syncTime"/>
+    <result property="orderStatus" column="orderStatus"/>
+    <result property="payTime" column="payTime"/>
+    <result property="paymentStatus" column="paymentStatus"/>
+    <result property="receiptConsignee" column="receiptConsignee"/>
+    <result property="receiptAddress" column="receiptAddress"/>
+    <result property="receiptZipcode" column="receiptZipcode"/>
+    <result property="receiptMobile" column="receiptMobile"/>
+    <result property="productAmount" column="productAmount"/>
+    <result property="orderAmount" column="orderAmount"/>
+    <result property="paidAmount" column="paidAmount"/>
+    <result property="shippingAmount" column="shippingAmount"/>
+    <result property="totalEsAmount" column="totalEsAmount"/>
+    <result property="paymentCode" column="paymentCode"/>
+    <result property="payBankCode" column="payBankCode"/>
+    <result property="paymentName" column="paymentName"/>
+    <result property="consignee" column="consignee"/>
+    <result property="originRegionName" column="originRegionName"/>
+    <result property="originAddress" column="originAddress"/>
+    <result property="province" column="province"/>
+    <result property="city" column="city"/>
+    <result property="region" column="region"/>
+    <result property="street" column="street"/>
+    <result property="regionName" column="regionName"/>
+    <result property="address" column="address"/>
+    <result property="zipcode" column="zipcode"/>
+    <result property="mobile" column="mobile"/>
+    <result property="phone" column="phone"/>
+    <result property="receiptInfo" column="receiptInfo"/>
+    <result property="delayShipTime" column="delayShipTime"/>
+    <result property="remark" column="remark"/>
+    <result property="bankCode" column="bankCode"/>
+    <result property="agent" column="agent"/>
+    <result property="confirmTime" column="confirmTime"/>
+    <result property="firstConfirmTime" column="firstConfirmTime"/>
+    <result property="firstConfirmPerson" column="firstConfirmPerson"/>
+    <result property="finishTime" column="finishTime"/>
+    <result property="tradeSn" column="tradeSn"/>
+    <result property="signCode" column="signCode"/>
+    <result property="source" column="source"/>
+    <result property="sourceOrderSn" column="sourceOrderSn"/>
+    <result property="onedayLimit" column="onedayLimit"/>
+    <result property="orderType" column="orderType"/>
+    <result property="memberInvoiceId" column="memberInvoiceId"/>
+    <result property="taobaoGroupId" column="taobaoGroupId"/>
+    <result property="tradeType" column="tradeType"/>
+    <result property="stepTradeStatus" column="stepTradeStatus"/>
+    <result property="stepPaidFee" column="stepPaidFee"/>
+    <result property="depositAmount" column="depositAmount"/>
+    <result property="balanceAmount" column="balanceAmount"/>
+    <result property="autoCancelDays" column="autoCancelDays"/>
+    <result property="isNoLimitStockOrder" column="isNoLimitStockOrder"/>
+    <result property="autoConfirmNum" column="autoConfirmNum"/>
+    <result property="smConfirmStatus" column="smConfirmStatus"/>
+    <result property="smConfirmTime" column="smConfirmTime"/>
+    <result property="smManualTime" column="smManualTime"/>
+    <result property="smManualRemark" column="smManualRemark"/>
+    <result property="isTogether" column="isTogether"/>
+    <result property="isNotConfirm" column="isNotConfirm"/>
+    <result property="points" column="points"/>
+    <result property="isProduceDaily" column="isProduceDaily"/>
+    <result property="tailPayTime" column="tailPayTime"/>
+    <result property="ckCode" column="ckCode"/>
+    </resultMap>
+    <resultMap id="QueryOrderParameterResult" type="com.haier.shop.model.QueryOrderParameter">
+        <result property="smConfirmStatus" column="smConfirmStatus" />
+        <result property="isCod" column="isCod" />
+        <result property="orderSn" column="orderSn" />
+        <result property="sourceOrderNo" column="sourceOrderSn" />
+        <result property="mobile" column="mobile" />
+        <result property="consignee" column="consignee" />
+        <result property="productName" column="productName" />
+        <result property="source" column="source" />
+        <result property="orderStatus" column="orderStatus" />
+        <result property="paymentName" column="paymentName" />
+        <result property="paymentStatus" column="paymentStatus" />
+        <result property="paymentCode" column="paymentCode" />
+        <result property="orderType" column="orderType" />
+        <result property="invoiceType" column="invoiceType" />
+        <result property="firstConfirmTime" column="firstConfirmTime" />
+        <result property="payTime" column="payTime" />
+        <result property="autoConfirmNum" column="autoConfirmNum" />
+        <result property="isProduceDaily" column="isProduceDaily" />
+        <result property="provinceId" column="province" />
+        <result property="orderMoney" column="orderAmount" />
+        <result property="orderAddTime" column="orderAddTime" />
+		<result property="orderModified" column="orderModified" />
+    </resultMap>
+
+    <select id="get" parameterType="Integer" resultMap="ordersResult">
+        SELECT
+        `id`,
+        `isTest`,
+        `isBackend`,
+        `isBook`,
+        `isCod`,
+        `notAutoConfirm`,
+        `orderSn`,
+        `relationOrderSn`,
+        `memberId`,
+        `memberEmail`,
+        `addTime`,
+        `syncTime`,
+        `orderStatus`,
+        `payTime`,
+        `paymentStatus`,
+        `receiptConsignee`,
+        `receiptAddress`,
+        `receiptZipcode`,
+        `receiptMobile`,
+        `productAmount`,
+        `orderAmount`,
+        `paidAmount`,
+        `shippingAmount`,
+        `totalEsAmount`,
+        `paymentCode`,
+        `payBankCode`,
+        `paymentName`,
+        `consignee`,
+        `originRegionName`,
+        `originAddress`,
+        `province`,
+        `city`,
+        `region`,
+        `street`,
+        `regionName`,
+        `address`,
+        `zipcode`,
+        `mobile`,
+        `phone`,
+        `receiptInfo`,
+        `delayShipTime`,
+        `remark`,
+        `bankCode`,
+        `agent`,
+        `confirmTime`,
+        `firstConfirmTime`,
+        `firstConfirmPerson`,
+        `finishTime`,
+        `tradeSn`,
+        `signCode`,
+        `source`,
+        `sourceOrderSn`,
+        `onedayLimit`,
+        `orderType`,
+        `memberInvoiceId`,
+        `taobaoGroupId`,
+        `tradeType`,
+        `stepTradeStatus`,
+        `stepPaidFee`,
+        `depositAmount`,
+        `balanceAmount`,
+        `autoCancelDays`,
+        `isNoLimitStockOrder`,
+        `autoConfirmNum`,
+        `smConfirmStatus`,
+        `smConfirmTime`,
+        `smManualTime`,
+        `smManualRemark`,
+        `isTogether`,
+        `isNotConfirm`,
+        `points`,
+        `isProduceDaily`,
+        `tailPayTime`,
+        `ckCode`
+        FROM `Orders`
+        WHERE `id` = #{id}
+    </select>
+
+    <select id="getByOrderSn" parameterType="String" resultMap="ordersResult">
+        SELECT
+        `id`,
+        `isTest`,
+        `isBackend`,
+        `isBook`,
+        `isCod`,
+        `notAutoConfirm`,
+        `orderSn`,
+        `relationOrderSn`,
+        `memberId`,
+        `memberEmail`,
+        `addTime`,
+        `syncTime`,
+        `orderStatus`,
+        `payTime`,
+        `paymentStatus`,
+        `receiptConsignee`,
+        `receiptAddress`,
+        `receiptZipcode`,
+        `receiptMobile`,
+        `productAmount`,
+        `orderAmount`,
+        `paidAmount`,
+        `shippingAmount`,
+        `totalEsAmount`,
+        `paymentCode`,
+        `payBankCode`,
+        `paymentName`,
+        `consignee`,
+        `originRegionName`,
+        `originAddress`,
+        `province`,
+        `city`,
+        `region`,
+        `street`,
+        `regionName`,
+        `address`,
+        `zipcode`,
+        `mobile`,
+        `phone`,
+        `receiptInfo`,
+        `delayShipTime`,
+        `remark`,
+        `bankCode`,
+        `agent`,
+        `confirmTime`,
+        `firstConfirmTime`,
+        `firstConfirmPerson`,
+        `finishTime`,
+        `tradeSn`,
+        `signCode`,
+        `source`,
+        `sourceOrderSn`,
+        `onedayLimit`,
+        `orderType`,
+        `memberInvoiceId`,
+        `taobaoGroupId`,
+        `tradeType`,
+        `stepTradeStatus`,
+        `stepPaidFee`,
+        `depositAmount`,
+        `balanceAmount`,
+        `autoCancelDays`,
+        `isNoLimitStockOrder`,
+        `autoConfirmNum`,
+        `smConfirmStatus`,
+        `smConfirmTime`,
+        `smManualTime`,
+        `smManualRemark`,
+        `isTogether`,
+        `isNotConfirm`,
+        `ckCode`
+        FROM `Orders`
+        WHERE `orderSn` = #{orderSn}
+    </select>
+
+    <select id="getFindQueryOrderList" parameterType="com.haier.shop.model.QueryOrderParameter" resultMap="QueryOrderParameterResult">
+        select
+        o.smConfirmStatus,o.isCod,o.orderSn,o.sourceOrderSn,o.mobile,o.consignee,
+        o.source,o.orderAmount,o.paymentCode,o.orderStatus,o.paymentName,o.paymentStatus,
+        FROM_UNIXTIME(o.addTime, '%Y-%m-%d %H:%i:%S') as orderAddTime,
+		date_format(o.modified, '%Y-%m-%d %H:%i:%S') as orderModified,o.autoConfirmNum,op.productName,m.invoiceType,
+        FROM_UNIXTIME(o.firstConfirmTime, '%Y-%m-%d %H:%i:%S') as firstConfirmTime,
+        FROM_UNIXTIME(o.payTime, '%Y-%m-%d %H:%i:%S') as payTime,
+        FROM_UNIXTIME(o.syncTime, '%Y-%m-%d %H:%i:%S') as syncTime,
+        o.modified,o.orderType,o.province,o.isProduceDaily
+        from (Orders o left join MemberInvoices m on o.id=m.orderId ) LEFT JOIN OrderProducts op  on o.id=op.orderId
+        where 1=1
+        <if test="smConfirmStatus  != null and smConfirmStatus ==3">
+            and o.smConfirmStatus=#{smConfirmStatus}
+        </if>
+        <if test="smConfirmStatus  != null and smConfirmStatus ==-1">
+            and o.smConfirmStatus != 3
+        </if>
+        <if test="isCod  != null and isCod !=-1">
+            and o.isCod=#{isCod}
+        </if>
+        <if test="orderSn  != null and orderSn !=''">
+            and o.orderSn=#{orderSn}
+        </if>
+        <if test="sourceOrderNo  != null and sourceOrderNo !=''">
+            and o.sourceOrderSn=#{sourceOrderNo}
+        </if>
+        <if test="mobile  != null and mobile !=''">
+            and o.mobile=#{mobile}
+        </if>
+        <if test="consignee  != null and consignee !=''">
+            and o.consignee=#{consignee}
+        </if>
+        <if test="source  != null and source !=''">
+            and o.source=#{source}
+        </if>
+        <if test="orderStatus  != null and orderStatus !=-1">
+            and o.orderStatus=#{orderStatus}
+        </if>
+        <if test="paymentStatus  != null and paymentStatus !=-1">
+            and o.paymentStatus=#{paymentStatus}
+        </if>
+        <if test="paymentCode  != null and paymentCode !=''">
+            and o.paymentCode=#{paymentCode}
+        </if>
+        <if test="addTimeBegine != null and addTimeBegine != ''">
+            and o.addTime >= unix_timestamp(#{addTimeBegine})
+        </if>
+        <if test="addTimeEnd != null and addTimeEnd != ''">
+            and  o.addTime <![CDATA[  <= ]]>  unix_timestamp(#{addTimeEnd})
+        </if>
+        <if test="modifiedBegine != null and modifiedBegine != ''">
+            and o.modified >= #{modifiedBegine}
+        </if>
+        <if test="modifiedEnd != null and modifiedEnd != ''">
+            and  o.modified <![CDATA[  <= ]]>  #{modifiedEnd}
+        </if>
+        <if test="orderType != null and orderType !=-1">
+            and o.orderType=#{orderType}
+        </if>
+        <if test="isUsePoint != null and isUsePoint ==1">
+            and o.points &gt; 0
+        </if>
+        <if test="isUsePoint != null and isUsePoint ==0">
+            and o.points = 0
+        </if>
+        <if test="isProduceDaily != null and isProduceDaily !=-1">
+            and o.isProduceDaily = #{isProduceDaily}
+        </if>
+        <if test="productName  != null and productName !=''">
+            and op.productName=#{productName}
+        </if>
+        <if test="invoiceType  != null and invoiceType !=-1">
+            and m.invoiceType=#{invoiceType}
+        </if>
+        <if test="payTimeSort  != null and payTimeSort =='desc'">
+            order by payTime desc
+        </if>
+        <if test="payTimeSort  != null and payTimeSort =='asc'">
+            order by payTime asc
+        </if>
+        <if test="page  != null and rows  != null">
+            Limit #{page} , #{rows}
+        </if>
+    </select>
+    <select id="getFindQueryOrderListCount" parameterType="com.haier.shop.model.QueryOrderParameter" resultType="Integer">
+        select
+        count(*)
+        from (Orders o left join MemberInvoices m on o.id=m.orderId ) LEFT JOIN OrderProducts op  on m.id=op.orderId
+        where 1=1
+        <if test="smConfirmStatus  != null and smConfirmStatus ==3">
+            and o.smConfirmStatus=#{smConfirmStatus}
+        </if>
+        <if test="smConfirmStatus  != null and smConfirmStatus ==-1">
+            and o.smConfirmStatus != 3
+        </if>
+        <if test="isCod  != null and isCod !=-1">
+            and o.isCod=#{isCod}
+        </if>
+        <if test="orderSn  != null and orderSn !=''">
+            and o.orderSn=#{orderSn}
+        </if>
+        <if test="sourceOrderNo  != null and sourceOrderNo !=''">
+            and o.sourceOrderSn=#{sourceOrderNo}
+        </if>
+        <if test="mobile  != null and mobile !=''">
+            and o.mobile=#{mobile}
+        </if>
+        <if test="consignee  != null and consignee !=''">
+            and o.consignee=#{consignee}
+        </if>
+        <if test="source  != null and source !=''">
+            and o.source=#{source}
+        </if>
+        <if test="orderStatus  != null and orderStatus !=-1">
+            and o.orderStatus=#{orderStatus}
+        </if>
+        <if test="paymentStatus  != null and paymentStatus !=-1">
+            and o.paymentStatus=#{paymentStatus}
+        </if>
+        <if test="paymentCode  != null and paymentCode !=''">
+            and o.paymentCode=#{paymentCode}
+        </if>
+        <if test="addTimeBegine != null and addTimeBegine != ''">
+            and o.addTime >= unix_timestamp(#{addTimeBegine})
+        </if>
+        <if test="addTimeEnd != null and addTimeEnd != ''">
+            and  o.addTime <![CDATA[  <= ]]>  unix_timestamp(#{addTimeEnd})
+        </if>
+        <if test="modifiedBegine != null and modifiedBegine != ''">
+            and o.modified >= #{modifiedBegine}
+        </if>
+        <if test="modifiedEnd != null and modifiedEnd != ''">
+            and  o.modified <![CDATA[  <= ]]>  #{modifiedEnd}
+        </if>
+        <if test="orderType != null and orderType !=-1">
+            and o.orderType=#{orderType}
+        </if>
+        <if test="isUsePoint != null and isUsePoint ==1">
+            and o.points &gt; 0
+        </if>
+        <if test="isUsePoint != null and isUsePoint ==0">
+            and o.points = 0
+        </if>
+        <if test="isProduceDaily != null and isProduceDaily !=-1">
+            and o.isProduceDaily = #{isProduceDaily }
+        </if>
+        <if test="productName  != null and productName !=''">
+            and op.productName=#{productName}
+        </if>
+        <if test="invoiceType  != null and invoiceType !=-1">
+            and m.invoiceType=#{invoiceType}
+        </if>
+    </select>
+    <select  id="queryVOMTransMission" parameterType="com.haier.shop.model.QueryOrderParameter" resultType="com.haier.shop.model.OrdersVo">
+        SELECT
+        o.orderSn,
+        o.sourceOrderSn,
+        o.confirmTime,
+        p.sCode,
+        o.province,
+        o.city,
+        o.region,
+        o.address,
+        o.consignee,
+        o.mobile,
+        o.phone,
+        o.zipcode,
+        o.orderAmount,
+        o.relationOrderSn,
+        o.shippingAmount,
+        o.paymentStatus,
+        o.paymentCode,
+         date_format(o.payTime,'%Y-%m-%d') payTimeStr,
+        o.paymentName,
+        p.isReceipt,
+        i.type,
+        i.invoiceTitle,
+        i.taxPayerNumber,
+        i.registerAddressAndPhone,
+        i.bankNameAndAccount,
+        o.remark
+        FROM
+        OrderProducts p,
+        Orders o ,
+        Invoices i
+        where
+        o.id =p.orderId
+        and i.orderProductId = p.id
+        and p.id =#{id,jdbcType=VARCHAR}
+    </select>
+</mapper>

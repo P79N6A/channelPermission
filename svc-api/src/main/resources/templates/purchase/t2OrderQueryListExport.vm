@@ -1,0 +1,202 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="simpleList" border="1">
+    <thead>
+    <tr>
+    	<th>T+2订单综合查询<th>
+    </tr>
+    <tr role="row">
+        <th class="sorting" style="min-width:100px; text-align:center;">编号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">状态</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">WP单号</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">渠道提交时间</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">渠道提交人</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">审核时间</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">审核人</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">手工关单时间</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">手工关单人</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">OMS订单号</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">客户名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">售达方</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">送达方</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">提报年</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">提报周</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">到货年</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">到货周</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">工贸</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">渠道</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">品类</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">产品组</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">品牌</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">物料编号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">型号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">订单类型</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">数量</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">样表单价</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">样表金额</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">WA库位码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">WA库位名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">日日顺库位名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">系列</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">OMS状态</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">最晚到货日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">计划发货日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">承诺到货日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">实际发货日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">预计到货日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">工贸收货日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">工贸签收日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">工贸返单日期</th>       
+        <th class="sorting" style="min-width:100px; text-align:center;">最晚离基地日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">发运工厂编码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">发运工厂名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">一次发运单号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">工贸签收数量</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">OMS拒单原因</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">GVS订单号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">日日顺DN号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">客户订单号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">提交日期</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">定制</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">满足方式</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">已入WA库数量</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">备注</th>
+
+    </tr>
+    </thead>
+    <tbody role="alert" aria-live="polite" aria-relevant="all">
+        #set($count=0)
+        #foreach($row in $!rowList)
+            #if($count%2==0)
+            <tr>
+            #else
+            <tr class="tr-bg">
+            #end
+            #set($count=$count+1)
+            <td style="text-align:center;">$!{count}</td>
+            <td style="text-align:center;">$!{row.flow_flag_name}</td>
+            <td style="text-align:center;">$!{row.order_id}</td>
+            <td style="text-align:center;">$!{row.channel_commit_time_display}</td>
+            <td style="text-align:center;">$!{row.channel_commit_user}</td>
+	    <td style="text-align:center;">$!{row.audit_time_display}</td>
+            <td style="text-align:center;">$!{row.audit_user}</td>
+            <td style="text-align:center;">$!{row.order_close_time_display}</td>
+            <td style="text-align:center;">$!{row.order_close_user}</td>
+            <td style="text-align:center;">$!{row.oms_order_id}</td>
+            <td style="text-align:center;">$!{row.custom_desc}</td>
+            <td style="text-align:center;">重庆新日日顺家电销售有限公司</td>
+            <td style="text-align:center;">$!{row.transmit_desc}</td>
+            <td style="text-align:center;">$!{row.report_year_week}</td>
+            <td style="text-align:center;">$!{row.report_year_week_display}</td>
+            <td style="text-align:center;">$!{row.arrive_year_week}</td>
+            <td style="text-align:center;">$!{row.arrive_year_week_display}</td>
+            <td style="text-align:center;">$!{row.industry_trade_desc}</td>
+            <td style="text-align:center;">$!{row.ed_channel_name}</td>
+            <td style="text-align:center;">$!{row.category_id}</td>
+            <td style="text-align:center;">$!{row.product_group_name}</td>
+            <td style="text-align:center;">$!{row.brand_id}</td>
+            <td style="text-align:center;">$!{row.materials_id}</td>
+            <td style="text-align:center;">$!{row.materials_desc}</td>
+            <td style="text-align:center;">$!{row.order_type_name}</td>
+            <td style="text-align:center;">$!{row.t2_delivery_prediction}</td>
+            <td style="text-align:center;">$!{row.price}</td>
+            <td style="text-align:center;">$!{row.amount}</td>
+            <td style="text-align:center;">$!{row.storage_id}</td>
+            <td style="text-align:center;">$!{row.storage_name}</td>
+            <td style="text-align:center;">$!{row.arrival_storage_desc}</td>
+            <td style="text-align:center;">$!{row.series_id}</td>
+            <td style="text-align:center;">$!{row.status}</td>
+            <td style="text-align:center;">$!{row.latest_arrive_date_display}</td>
+            <td style="text-align:center;">$!{row.plan_deliver_date_display}</td>
+            <td style="text-align:center;">$!{row.promise_arrive_date_display}</td>
+            <td style="text-align:center;">$!{row.actual_deliver_date_display}</td>
+            <td style="text-align:center;">$!{row.predict_arrive_date_display}</td>
+            <td style="text-align:center;">$!{row.industry_trade_take_date_display}</td>
+            <td style="text-align:center;">$!{row.custom_sign_date_display}</td>
+            <td style="text-align:center;">$!{row.return_order_date_display}</td>     
+            <td style="text-align:center;">$!{row.latest_leave_base_date_display}</td>
+            <td style="text-align:center;">$!{row.factory_id}</td>
+            <td style="text-align:center;">$!{row.factory_name}</td>
+            <td style="text-align:center;">$!{row.shipment_combination_id}</td>
+            <td style="text-align:center;">$!{row.sign_num}</td>
+            <td style="text-align:center;">$!{row.no_pass_reason}</td>
+            <td style="text-align:center;">$!{row.gvs_order_id}</td>
+            <td style="text-align:center;">$!{row.dn_id}</td>
+            <td style="text-align:center;">$!{row.custpodetailcode}</td>
+            <td style="text-align:center;">$!{row.commit_time_display}</td>
+            <td style="text-align:center;">$!{row.customization_name}</td>
+            <td style="text-align:center;">$!{row.satisfy_type_name}</td>
+            <td style="text-align:center;">$!{row.WAqty}</td>
+            <td style="text-align:center;">$!{row.error_msg}</td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#if($!havePo==1)
+<table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="simpleList1" border="1">
+    <thead>
+    <tr>
+    </tr>
+    <tr>
+    	<th><b>PO详情<b><th>
+    </tr>
+    <tr role="row">
+        <th class="sorting" style="min-width:100px; text-align:center;">WP订单号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">PO编号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">销售单号</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">提单时间</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">SO</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">DN</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">渠道</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">品类</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">产品组</th>
+        <th class="sorting" style="min-width:300px; text-align:center;">物料编号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">型号</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">数量</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">样表单价</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">样表金额</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">采购价格</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">采购金额</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">WA库位码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">WA库位名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">状态</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">出日日顺库时间</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">入库时间</th>
+    </tr>
+    </thead>
+    <tbody role="alert" aria-live="polite" aria-relevant="all">
+        #set($count=0)
+        #foreach($row in $!rowList1)
+            #if($count%2==0)
+            <tr>
+            #else
+            <tr class="tr-bg">
+            #end
+            #set($count=$count+1)
+            <td style="text-align:center;">$!{row.order_id}</td>
+            <td style="text-align:center;">$!{row.po_id}</td>
+            <td style="text-align:center;">$!{row.bill_order_id}</td>
+            <td style="text-align:center;">$!{row.bill_time_display}</td>
+            <td style="text-align:center;">$!{row.so_id}</td>
+            <td style="text-align:center;">$!{row.dn_id}</td>
+            <td style="text-align:center;">$!{row.ed_channel_name}</td>
+            <td style="text-align:center;">$!{row.category_id}</td>
+            <td style="text-align:center;">$!{row.product_group_name}</td>
+            <td style="text-align:center;">$!{row.materials_id}</td>
+            <td style="text-align:center;">$!{row.materials_desc}</td>
+            <td style="text-align:center;">$!{row.qty}</td>
+            <td style="text-align:center;">$!{row.price}</td>
+            <td style="text-align:center;">$!{row.t2_amount}</td>
+            <td style="text-align:center;">$!{row.amount}</td>
+            <td style="text-align:center;">$!{row.total}</td>
+            <td style="text-align:center;">$!{row.storage_id}</td>
+            <td style="text-align:center;">$!{row.storage_name}</td>
+            <td style="text-align:center;">$!{row.flow_flag_name}</td>
+            <td style="text-align:center;">$!{row.rrs_out_time_display}</td>
+            <td style="text-align:center;">$!{row.wa_in_time_display}</td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#end

@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>导出网单信息</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script type="text/javascript">
+
+        function onExport(){
+            $('#filterForm').attr("action","/invoice/exportOrderProductsInfo");
+            $('#filterForm').submit();
+        }
+
+        //打开dialog-message
+        function onQuery(pageIndex){
+            var cOrderSns = $("#cOrderSns").val().trim();
+            if(cOrderSns == null || cOrderSns==""){
+                alert("请提交网单编号!!!");
+                $("#cOrderSns").val("");
+                return;
+            }
+            jQuery( "#dialog-message" ).dialog( "open" );
+
+            $('#pageIndex').val(pageIndex);
+            $("#list").html("<div style='width:100%;height:100%;text-align:center;'><br/><br/>数据正在加载，请稍后。。。<br/><br/><div id='timecount' style='width:100%;height:20px;text-align:center;font-size:10pt;font-family:Arial,Helvetica,sans-serif;'></div><br/></div>");
+
+            jQuery.ajax({
+                url: "/invoice/queryOrderProductsInfo",
+                data: $('#filterForm').serialize(),
+                type: "GET",
+                success: function(data) {
+                    $("#list").html(data);
+                }
+            });
+        }
+        $(function(){
+            $( "#dialog-message" ).dialog({
+                autoOpen: false,
+                modal: false,
+                closeOnEscape: false,
+                resizable: true,
+                minHeight:180,
+                width:900,
+                title: '网单信息列表',
+                close: function( event, ui ) {
+                    $( "#dialog-message" ).dialog( "close" );
+                }
+            });
+        });
+    </script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;" title="导出网单信息"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label" style="font-weight:bold;font-size:16px;">
+			  网单类型
+			</span>
+                <select class="easyui-combobox" name="orderProductsType" id="orderProductsType"  style="width: 174px;">
+                    <option value="1" selected="true">普通网单</option>
+                   <!-- <option value="2">差异网单</option>
+                    <option value="3">专项网单</option>
+                    -->
+                </select>
+            </div><div class="clearfix"></div>
+            <div class="search-row" style="width: 100%">
+			<span class="search-row-label" style="float:left;font-weight:bold;font-size:16px;">
+			  网单编号
+			</span>
+                <textarea rows="18" name="cOrderSns" id="cOrderSns" style="resize: none;width:600px;"></textarea>
+                <div style="margin-left:150px">
+                    <span style="color: red">在提交推送的网单号。</span><br/>
+                    <span style="color: red">每行一条子订单编号，多条用回车分割。</span>
+                    <div class="clearfix"></div>
+                    <input name="pageIndex" id="pageIndex" type="hidden" value="1"/>
+                    <div>
+                        <a href="#" id="searchButton" class="easyui-linkbutton" iconCls="icon-ok" onClick="onQuery(1)">查询</a>
+                        <a href="#" id="submitButton" class="easyui-linkbutton" iconCls="icon-save" onClick="onExport()">导出</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="dialog-message" title="网单信息列表" closed="true" style="display:none;">
+    <div id="list" class="list2" style="background:#ffffff;overflow-x:auto;overflow-y:auto;">
+    </div>
+</div>
+</body>
+</html>

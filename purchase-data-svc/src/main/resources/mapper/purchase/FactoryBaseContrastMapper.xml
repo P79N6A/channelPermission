@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.vehcile.FactoryBaseContrastDao">
+	<select id="findFactoryBaseContrastList"
+		resultType="com.haier.purchase.data.model.vehcile.FactoryBaseContrastDTO">
+		SELECT
+		 id,factory_code as factoryCode,base_code as baseCode,base_name as baseName
+		From factory_base_contrast
+		where 1 = 1
+		<if test="factoryCode != null and factoryCode != ''">
+			and factory_code = #{factoryCode}
+		</if>
+		<if test="baseCode != null and baseCode != ''">
+			and base_code = #{baseCode}
+		</if>
+	</select>
+</mapper>

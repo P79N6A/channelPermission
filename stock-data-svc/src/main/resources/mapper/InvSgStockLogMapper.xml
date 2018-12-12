@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvSgStockLogDao">
+	<resultMap id="InvSgStockLogResult" type="com.haier.stock.model.InvSgStockLogEntity">
+	<result property="id" column="id" />
+	<result property="storeCode" column="store_code" />
+	<result property="scode" column="scode" />
+	<result property="oldStockQty" column="old_stock_qty" />
+	<result property="newStockQty" column="new_stock_qty" />
+	<result property="changeQty" column="change_qty" />
+	<result property="oldFrozenQty" column="old_frozen_qty" />
+	<result property="newFrozenQty" column="new_frozen_qty" />
+	<result property="billType" column="bill_type" />
+	<result property="mARK" column="MARK" />
+	<result property="refNo" column="ref_no" />
+	<result property="modifyTime" column="modify_time" />
+	<result property="modifyUser" column="modify_user" />
+	</resultMap>
+
+	<sql id="selectAllColumns">
+		<![CDATA[
+		select
+		id,store_code,scode,old_stock_qty,new_stock_qty,change_qty,old_frozen_qty,new_frozen_qty,bill_type,MARK,ref_no,modify_time,modify_user
+		from inv_sg_stock_log
+		]]>
+	</sql>
+
+	<insert id="insertInvSgStockLog" parameterType="com.haier.stock.model.InvSgStockLogEntity" >
+	<![CDATA[
+		insert into inv_sg_stock_log(id,sku,store_code,scode,old_stock_qty,new_stock_qty,change_qty,old_frozen_qty,new_frozen_qty,bill_type,MARK,ref_no,modify_time,modify_user)
+		values(
+		#{id},#{sku},#{storeCode},#{scode},#{oldStockQty},#{newStockQty},#{changeQty},#{oldFrozenQty},#{newFrozenQty},#{billType},#{mARK},#{refNo},now(),#{modifyUser}
+		)
+	]]>
+	</insert>
+</mapper>

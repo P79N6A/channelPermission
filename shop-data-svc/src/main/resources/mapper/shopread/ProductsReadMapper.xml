@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.ProductsReadDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.Products" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="siteId" property="siteId" jdbcType="INTEGER" />
+    <result column="productName" property="productName" jdbcType="VARCHAR" />
+    <result column="stockToTaotao" property="stockToTaotao" jdbcType="BIT" />
+    <result column="lastSyncTime" property="lastSyncTime" jdbcType="INTEGER" />
+    <result column="taobaoId" property="taobaoId" jdbcType="VARCHAR" />
+    <result column="wlbItemId" property="wlbItemId" jdbcType="VARCHAR" />
+    <result column="productActivityInfo" property="productActivityInfo" jdbcType="VARCHAR" />
+    <result column="productTitle" property="productTitle" jdbcType="VARCHAR" />
+    <result column="productTags" property="productTags" jdbcType="VARCHAR" />
+    <result column="brandId" property="brandId" jdbcType="INTEGER" />
+    <result column="defaultImageFileId" property="defaultImageFileId" jdbcType="VARCHAR" />
+    <result column="detailImageFileId" property="detailImageFileId" jdbcType="VARCHAR" />
+    <result column="sceneImageFileId" property="sceneImageFileId" jdbcType="VARCHAR" />
+    <result column="productTypeId" property="productTypeId" jdbcType="INTEGER" />
+    <result column="addTime" property="addTime" jdbcType="INTEGER" />
+    <result column="lastModify" property="lastModify" jdbcType="INTEGER" />
+    <result column="productCateId" property="productCateId" jdbcType="INTEGER" />
+    <result column="productCatePath" property="productCatePath" jdbcType="VARCHAR" />
+    <result column="onSale" property="onSale" jdbcType="TINYINT" />
+    <result column="isStar" property="isStar" jdbcType="BIT" />
+    <result column="isHot" property="isHot" jdbcType="BIT" />
+    <result column="isBest" property="isBest" jdbcType="BIT" />
+    <result column="isNew" property="isNew" jdbcType="BIT" />
+    <result column="isSpecial" property="isSpecial" jdbcType="BIT" />
+    <result column="isDelete" property="isDelete" jdbcType="BIT" />
+    <result column="bookable" property="bookable" jdbcType="BIT" />
+    <result column="bookDays" property="bookDays" jdbcType="INTEGER" />
+    <result column="isForbidArrivalNotice" property="isForbidArrivalNotice" jdbcType="BIT" />
+    <result column="supplyPrice" property="supplyPrice" jdbcType="DECIMAL" />
+    <result column="packagePrice" property="packagePrice" jdbcType="DECIMAL" />
+    <result column="saleGuidePrice" property="saleGuidePrice" jdbcType="DECIMAL" />
+    <result column="energySubsidyAmount" property="energySubsidyAmount" jdbcType="DECIMAL" />
+    <result column="energySubsidyProductName" property="energySubsidyProductName" jdbcType="VARCHAR" />
+    <result column="internalPrice" property="internalPrice" jdbcType="DECIMAL" />
+    <result column="rankPrice" property="rankPrice" jdbcType="DECIMAL" />
+    <result column="rankGroups" property="rankGroups" jdbcType="VARCHAR" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="storageType" property="storageType" jdbcType="BIT" />
+    <result column="memberRanks" property="memberRanks" jdbcType="VARCHAR" />
+    <result column="similarProductIds" property="similarProductIds" jdbcType="VARCHAR" />
+    <result column="rejectReason" property="rejectReason" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="TINYINT" />
+    <result column="saleNum" property="saleNum" jdbcType="INTEGER" />
+    <result column="virtualSaleNum" property="virtualSaleNum" jdbcType="INTEGER" />
+    <result column="commentNum" property="commentNum" jdbcType="INTEGER" />
+    <result column="gradeAvg" property="gradeAvg" jdbcType="DECIMAL" />
+    <result column="heroitteCommentNum" property="heroitteCommentNum" jdbcType="INTEGER" />
+    <result column="heroitteAvg" property="heroitteAvg" jdbcType="DECIMAL" />
+    <result column="shippingMode" property="shippingMode" jdbcType="VARCHAR" />
+    <result column="giftCardType" property="giftCardType" jdbcType="TINYINT" />
+    <result column="giftCardAmount" property="giftCardAmount" jdbcType="INTEGER" />
+    <result column="isVirtual" property="isVirtual" jdbcType="TINYINT" />
+    <result column="isNoLimitStockProduct" property="isNoLimitStockProduct" jdbcType="BIT" />
+    <result column="sCode" property="sCode" jdbcType="VARCHAR" />
+    <result column="isNotConfirm" property="isNotConfirm" jdbcType="BIT" />
+    <result column="packageId" property="packageId" jdbcType="INTEGER" />
+    <result column="specailPrice" property="specailPrice" jdbcType="DECIMAL" />
+    <result column="multiStorage" property="multiStorage" jdbcType="BIT" />
+    <result column="inspectType" property="inspectType" jdbcType="TINYINT" />
+    <result column="limitedPrice" property="limitedPrice" jdbcType="DECIMAL" />
+    <result column="isNotPromotion" property="isNotPromotion" jdbcType="BIT" />
+    <result column="productO2OType" property="productO2OType" jdbcType="TINYINT" />
+    <result column="isGift" property="isGift" jdbcType="BIT" />
+    <result column="conTaxCode" property="conTaxCode" jdbcType="VARCHAR" />
+  </resultMap>
+    <resultMap id="BaseResultMap1" type="com.haier.shop.model.ProductsNew" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="siteId" property="siteId" jdbcType="INTEGER" />
+        <result column="productName" property="productName" jdbcType="VARCHAR" />
+        <result column="stockToTaotao" property="stockToTaotao" jdbcType="BIT" />
+        <result column="lastSyncTime" property="lastSyncTime" jdbcType="INTEGER" />
+        <result column="taobaoId" property="taobaoId" jdbcType="VARCHAR" />
+        <result column="wlbItemId" property="wlbItemId" jdbcType="VARCHAR" />
+        <result column="productActivityInfo" property="productActivityInfo" jdbcType="VARCHAR" />
+        <result column="productTitle" property="productTitle" jdbcType="VARCHAR" />
+        <result column="productTags" property="productTags" jdbcType="VARCHAR" />
+        <result column="brandId" property="brandId" jdbcType="INTEGER" />
+        <result column="defaultImageFileId" property="defaultImageFileId" jdbcType="VARCHAR" />
+        <result column="detailImageFileId" property="detailImageFileId" jdbcType="VARCHAR" />
+        <result column="sceneImageFileId" property="sceneImageFileId" jdbcType="VARCHAR" />
+        <result column="productTypeId" property="productTypeId" jdbcType="INTEGER" />
+        <result column="addTime" property="addTime" jdbcType="INTEGER" />
+        <result column="lastModify" property="lastModify" jdbcType="INTEGER" />
+        <result column="productCateId" property="productCateId" jdbcType="INTEGER" />
+        <result column="productCatePath" property="productCatePath" jdbcType="VARCHAR" />
+        <result column="onSale" property="onSale" jdbcType="TINYINT" />
+        <result column="isStar" property="isStar" jdbcType="BIT" />
+        <result column="isHot" property="isHot" jdbcType="BIT" />
+        <result column="isBest" property="isBest" jdbcType="BIT" />
+        <result column="isNew" property="isNew" jdbcType="BIT" />
+        <result column="isSpecial" property="isSpecial" jdbcType="BIT" />
+        <result column="isDelete" property="isDelete" jdbcType="BIT" />
+        <result column="bookable" property="bookable" jdbcType="BIT" />
+        <result column="bookDays" property="bookDays" jdbcType="INTEGER" />
+        <result column="isForbidArrivalNotice" property="isForbidArrivalNotice" jdbcType="BIT" />
+        <result column="supplyPrice" property="supplyPrice" jdbcType="DECIMAL" />
+        <result column="packagePrice" property="packagePrice" jdbcType="DECIMAL" />
+        <result column="saleGuidePrice" property="saleGuidePrice" jdbcType="DECIMAL" />
+        <result column="energySubsidyAmount" property="energySubsidyAmount" jdbcType="DECIMAL" />
+        <result column="energySubsidyProductName" property="energySubsidyProductName" jdbcType="VARCHAR" />
+        <result column="internalPrice" property="internalPrice" jdbcType="DECIMAL" />
+        <result column="rankPrice" property="rankPrice" jdbcType="DECIMAL" />
+        <result column="rankGroups" property="rankGroups" jdbcType="VARCHAR" />
+        <result column="sku" property="sku" jdbcType="VARCHAR" />
+        <result column="storageType" property="storageType" jdbcType="BIT" />
+        <result column="memberRanks" property="memberRanks" jdbcType="VARCHAR" />
+        <result column="similarProductIds" property="similarProductIds" jdbcType="VARCHAR" />
+        <result column="rejectReason" property="rejectReason" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="TINYINT" />
+        <result column="saleNum" property="saleNum" jdbcType="INTEGER" />
+        <result column="virtualSaleNum" property="virtualSaleNum" jdbcType="INTEGER" />
+        <result column="commentNum" property="commentNum" jdbcType="INTEGER" />
+        <result column="gradeAvg" property="gradeAvg" jdbcType="DECIMAL" />
+        <result column="heroitteCommentNum" property="heroitteCommentNum" jdbcType="INTEGER" />
+        <result column="heroitteAvg" property="heroitteAvg" jdbcType="DECIMAL" />
+        <result column="shippingMode" property="shippingMode" jdbcType="VARCHAR" />
+        <result column="giftCardType" property="giftCardType" jdbcType="TINYINT" />
+        <result column="giftCardAmount" property="giftCardAmount" jdbcType="INTEGER" />
+        <result column="isVirtual" property="isVirtual" jdbcType="TINYINT" />
+        <result column="isNoLimitStockProduct" property="isNoLimitStockProduct" jdbcType="BIT" />
+        <result column="sCode" property="sCode" jdbcType="VARCHAR" />
+        <result column="isNotConfirm" property="isNotConfirm" jdbcType="BIT" />
+        <result column="packageId" property="packageId" jdbcType="INTEGER" />
+        <result column="specailPrice" property="specailPrice" jdbcType="DECIMAL" />
+        <result column="multiStorage" property="multiStorage" jdbcType="BIT" />
+        <result column="inspectType" property="inspectType" jdbcType="TINYINT" />
+        <result column="limitedPrice" property="limitedPrice" jdbcType="DECIMAL" />
+        <result column="isNotPromotion" property="isNotPromotion" jdbcType="BIT" />
+        <result column="productO2OType" property="productO2OType" jdbcType="TINYINT" />
+        <result column="isGift" property="isGift" jdbcType="BIT" />
+        <result column="conTaxCode" property="conTaxCode" jdbcType="VARCHAR" />
+    </resultMap>
+ 	<resultMap id="productBaseResult" type="com.haier.shop.model.ProductBase">
+		<result property="id" column="id" />
+		<result property="productName" column="productName" />
+		<result property="brandId" column="brandId" />
+		<result property="productTypeId" column="productTypeId" />
+		<result property="addTime" column="addTime" />
+		<result property="lastModify" column="lastModify" />
+		<result property="productCateId" column="productCateId" />
+		<result property="sku" column="sku" />
+		<result property="scode" column="scode"/>
+		<result property="multiStorage" column="multiStorage" />
+		<result property="shippingMode" column="shippingMode" />
+		<result property="onSale" column="onSale" />
+	</resultMap>
+  <sql id="Base_Column_List" >
+    id, siteId, productName, stockToTaotao, lastSyncTime, taobaoId, wlbItemId, productActivityInfo, 
+    productTitle, productTags, brandId, defaultImageFileId, detailImageFileId, sceneImageFileId, 
+    productTypeId, addTime, lastModify, productCateId, productCatePath, onSale, isStar, 
+    isHot, isBest, isNew, isSpecial, isDelete, bookable, bookDays, isForbidArrivalNotice, 
+    supplyPrice, packagePrice, saleGuidePrice, energySubsidyAmount, energySubsidyProductName, 
+    internalPrice, rankPrice, rankGroups, sku, storageType, memberRanks, similarProductIds, 
+    rejectReason, state, saleNum, virtualSaleNum, commentNum, gradeAvg, heroitteCommentNum, 
+    heroitteAvg, shippingMode, giftCardType, giftCardAmount, isVirtual, isNoLimitStockProduct, 
+    sCode, isNotConfirm, packageId, specailPrice, multiStorage, inspectType, limitedPrice, 
+    isNotPromotion, productO2OType, isGift, conTaxCode
+  </sql>
+ 
+  <select id="selectProducts" resultMap="BaseResultMap"  >
+    select 
+   
+    <include refid="Base_Column_List" />
+    from Products
+    where 1=1
+    and sku like #{sku,jdbcType=VARCHAR} 
+    and productName	like #{productName,jdbcType=VARCHAR}
+  </select>
+	<select id="selectProducts1" resultMap="BaseResultMap" >
+		select
+	
+		<include refid="Base_Column_List" />
+		from Products
+		where 1=1
+		<if test="sku != null and sku !='' ">
+        <![CDATA[ and sku  like #{sku, jdbcType=VARCHAR}]]>
+      </if>
+      </select>
+  <select id="getBySku" parameterType="String" resultMap="BaseResultMap">
+    select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
+    from `Products`
+    where `sku` = #{sku} limit 1
+  </select>
+    <select id="getBySku1" parameterType="String" resultMap="BaseResultMap1">
+        select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
+        from `Products`
+        where `sku` = #{sku} limit 1
+    </select>
+ <select id="getAllSkusListBySale" parameterType="map" resultMap="productBaseResult">
+		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`
+		from `Products`
+		where 1=1 
+		<if test="onSale != null and onSale !=''">
+			and `onSale`= #{onSale}
+		</if>
+	</select>
+	
+	<select id="getAllProductsBysCode" parameterType="String" resultMap="productBaseResult">
+		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`, scode, `multiStorage`,`shippingMode` 
+		from Products 
+		where 
+		scode is not null and scode !='' and onSale=1 
+		<if test="sCode != null and sCode !=''">
+			and scode =#{sCode}
+		</if>
+	</select>
+		<select id="getBaseBySku" parameterType="String" resultMap="productBaseResult">
+		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`, `scode`,`productO2OType`
+		from `Products`
+		where `sku` = #{sku} order by id desc limit 1
+	</select>
+	<select id="get" parameterType="Integer" resultMap="BaseResultMap">
+		select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
+		from `Products`
+		where `id` = #{id}
+	</select>
+	<select id="getAllProductInfo" resultMap="BaseResultMap">
+		select `id`,`productName`,`productCateId`,`productCatePath`,`sku`
+		from `Products`
+	</select>
+	
+	<select id="getListBySkus" parameterType="map" resultMap="productBaseResult">
+		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`
+		from `Products`
+		where `onSale`=1 
+			and `sku` in
+			<foreach collection="skuList" index="index" item="sku" open="("
+						separator="," close=")">
+						#{sku}
+			</foreach>
+	
+	</select>
+    <!-- 先解决 与Products 类似的问题-->
+    <resultMap id="productsResult1" type="com.haier.shop.model.ProductsNew">
+        <result property="id" column="id" />
+        <result property="siteId" column="siteId" />
+        <result property="productName" column="productName" />
+        <result property="stockToTaotao" column="stockToTaotao" />
+        <result property="lastSyncTime" column="lastSyncTime" />
+        <result property="taobaoId" column="taobaoId" />
+        <result property="wlbItemId" column="wlbItemId" />
+        <result property="productActivityInfo" column="productActivityInfo" />
+        <result property="productTitle" column="productTitle" />
+        <result property="productTags" column="productTags" />
+        <result property="brandId" column="brandId" />
+        <result property="defaultImageFileId" column="defaultImageFileId" />
+        <result property="detailImageFileId" column="detailImageFileId" />
+        <result property="sceneImageFileId" column="sceneImageFileId" />
+        <result property="productTypeId" column="productTypeId" />
+        <result property="sellingPoint" column="sellingPoint" />
+        <result property="productDetail" column="productDetail" />
+        <result property="productBlockDetail" column="productBlockDetail" />
+        <result property="productDetail2" column="productDetail2" />
+        <result property="addTime" column="addTime" />
+        <result property="lastModify" column="lastModify" />
+        <result property="productCateId" column="productCateId" />
+        <result property="productCatePath" column="productCatePath" />
+        <result property="onSale" column="onSale" />
+        <result property="isStar" column="isStar" />
+        <result property="isHot" column="isHot" />
+        <result property="isBest" column="isBest" />
+        <result property="isNew" column="isNew" />
+        <result property="isSpecial" column="isSpecial" />
+        <result property="isDelete" column="isDelete" />
+        <result property="bookable" column="bookable" />
+        <result property="bookDays" column="bookDays" />
+        <result property="isForbidArrivalNotice" column="isForbidArrivalNotice" />
+        <result property="supplyPrice" column="supplyPrice" />
+        <result property="packagePrice" column="packagePrice" />
+        <result property="saleGuidePrice" column="saleGuidePrice" />
+        <result property="energySubsidyAmount" column="energySubsidyAmount" />
+        <result property="energySubsidyProductName" column="energySubsidyProductName" />
+        <result property="internalPrice" column="internalPrice" />
+        <result property="rankPrice" column="rankPrice" />
+        <result property="rankGroups" column="rankGroups" />
+        <result property="sku" column="sku" />
+        <result property="storageType" column="storageType" />
+        <result property="memberRanks" column="memberRanks" />
+        <result property="similarProductIds" column="similarProductIds" />
+        <result property="modifiedFields" column="modifiedFields" />
+        <result property="rejectReason" column="rejectReason" />
+        <result property="state" column="state" />
+        <result property="keywords" column="keywords" />
+        <result property="description" column="description" />
+        <result property="cities" column="cities" />
+        <result property="saleNum" column="saleNum" />
+        <result property="virtualSaleNum" column="virtualSaleNum" />
+        <result property="commentNum" column="commentNum" />
+        <result property="gradeAvg" column="gradeAvg" />
+        <result property="heroitteCommentNum" column="heroitteCommentNum" />
+        <result property="heroitteAvg" column="heroitteAvg" />
+        <result property="shippingMode" column="shippingMode" />
+        <result property="giftCardType" column="giftCardType" />
+        <result property="giftCardAmount" column="giftCardAmount" />
+        <result property="isVirtual" column="isVirtual" />
+        <result property="isNoLimitStockProduct" column="isNoLimitStockProduct" />
+        <result property="sCode" column="sCode" />
+        <result property="limitCityIds" column="limitCityIds" />
+        <result property="isNotConfirm" column="isNotConfirm" />
+        <result property="packageId" column="packageId" />
+        <result property="specailPrice" column="specailPrice" />
+        <result property="multiStorage" column="multiStorage" />
+        <result property="inspectType" column="inspectType" />
+        <result property="limitedPrice" column="limitedPrice" />
+        <result property="isGift" column="isGift" />
+        <result property="conTaxCode" column="conTaxCode"/>
+    </resultMap>
+    <select id="get1" parameterType="Integer" resultMap="productsResult1">
+        select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
+        from `Products`
+        where `id` = #{id}
+    </select>
+	<select id="getOnSaleBigProducts" resultMap="BaseResultMap">
+		select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
+		from `Products` s
+		where s.shippingMode = 'B2B2C' and s.productO2OType=1
+	</select>
+	
+	<select id="getAllSkusList" parameterType="java.util.Map" resultMap="productBaseResult">
+		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`,`onSale`
+		from `Products`
+		where 1=1 
+		<if test="onSale != null and onSale !=''">
+			and `onSale`= #{onSale}
+		</if>
+		<if test="startTime != null and startTime !=''">
+			and `addTime` &gt;= #{startTime}
+		</if>
+		<if test="endTime != null and endTime !=''">
+			and `addTime` &lt;= #{endTime}
+		</if>
+		
+		<if test="(startTime != null and startTime !='') or (endTime != null and endTime !='')">
+		union
+			select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`,`onSale`
+			from `Products`
+			where 1=1 
+			<if test="onSale != null and onSale !=''">
+				and `onSale`= #{onSale}
+			</if>
+			<if test="startTime != null and startTime !=''">
+				and `lastModify` &gt;= #{startTime}
+			</if>
+			<if test="endTime != null and endTime !=''">
+				and `lastModify` &lt;= #{endTime}
+			</if>
+		</if>
+	</select>
+</mapper>

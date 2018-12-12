@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderRepairTcRecordsReadDao">
+	<resultMap id="orderRepairTcRecordsResult" type="com.haier.shop.model.OrderRepairTcRecords">
+		<result property="id" column="id" />
+		<result property="addTime" column="addTime" />
+		<result property="vomTcSn" column="vomTcSn" />
+		<result property="sku" column="sku" />
+		<result property="num" column="num" />
+		<result property="sCode" column="sCode" />
+		<result property="scodeName" column="scodeName" />
+		<result property="orderRepairTcId" column="orderRepairTcId" />
+		<result property="productName" column="productName" />
+		<result property="orderRepairId" column="orderRepairId"/>
+        <result property="orderRepairSn" column="orderRepairSn" />
+		<result property="relationSn" column="relationSn" />
+		<result property="lesOrderSn" column="lesOrderSn" />
+		<result property="lesOrderSnTime" column="lesOrderSnTime" />
+	    <result property="lesOutPing" column="lesOutPing" />
+	    <result property="lesOutPingTime" column="lesOutPingTime" />
+	    <result property="hpCheckResult" column="hpCheckResult" />
+	    <result property="caiNiaoCheckResult" column="caiNiaoCheckResult" />
+	    <result property="isTj" column="isTj" />
+	    <result property="success" column="success" />
+	    <result property="hpCheckType" column="hpCheckType" />
+	    <result property="wwwScode" column="wwwScode" />
+	    <result property="wwwSku" column="wwwSku" />
+	    <result property="realNum" column="realNum" />
+	    <result property="vomNum" column="vomNum" />
+	</resultMap>
+
+	<select id="getOrderRepairByVomTcSnAndSku" resultType="com.haier.shop.model.OrderRepairTcRecords">
+		select 
+		id,addTime,orderRepairTcId,vomTcSn,sku,num,sCode,scodeName,productName,orderRepairId,
+		orderRepairSn,relationSn,lesOrderSn,lesOrderSnTime,lesOutPing,lesOutPingTime,hpCheckResult,
+		caiNiaoCheckResult,isTj,success,hpCheckType,wwwScode,wwwSku,realNum,machineNum 
+		from OrderRepairTcRecords where 
+		orderRepairSn=#{orderRepairSn} and sku=#{sku}
+	</select>
+
+	<select id="getByRecordSn" parameterType="map" resultMap="orderRepairTcRecordsResult">
+		select `id`,`addTime`,`vomTcSn`,`sku`,`num`,`sCode`,`scodeName`,`orderRepairTcId`,`productName`,`orderRepairId`,`orderRepairSn`,`relationSn`,
+		`lesOrderSn`,`lesOrderSnTime`,`lesOutPing`,`lesOutPingTime`,`hpCheckResult`,`caiNiaoCheckResult`,`isTj`,`success`,`hpCheckType`,`wwwScode`,`wwwSku`,`realNum`,`vomNum`
+		from `OrderRepairTcRecords`
+		where `vomTcSn` = #{recordSn} 
+		order by id desc
+		limit 1
+	</select>
+	
+	<select id="queryByOrderRepairTcId" parameterType="map" resultMap="orderRepairTcRecordsResult">
+		select `id`,`addTime`,`vomTcSn`,`sku`,`num`,`sCode`,`scodeName`,`orderRepairTcId`,`productName`,`orderRepairId`,`orderRepairSn`,`relationSn`,
+		`lesOrderSn`,`lesOrderSnTime`,`lesOutPing`,`lesOutPingTime`,`hpCheckResult`,`caiNiaoCheckResult`,`isTj`,`success`,`hpCheckType`,`wwwScode`,`wwwSku`,`realNum`,`vomNum`
+		from `OrderRepairTcRecords`
+		where `orderRepairTcId` = #{orderRepairTcId}
+		order by id desc
+	</select>
+
+</mapper>

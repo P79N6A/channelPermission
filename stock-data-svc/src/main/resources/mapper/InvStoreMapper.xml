@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvStoreDao">
+    <resultMap id="invStoreResult" type="com.haier.stock.model.InvStore">
+        <result property="id" column="id"/>
+        <result property="sku" column="sku"/>
+        <result property="itemProperty" column="item_property"/>
+        <result property="storeCode" column="store_code"/>
+        <result property="stockQty" column="stock_qty"/>
+        <result property="storeTs" column="store_ts"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="productName" column="product_name"/>
+        <result property="productTypeName" column="product_type_name"/>
+        <result property="productGroupName" column="product_group_name"/>
+        <result property="storeName" column="store_name"/>
+    </resultMap>
+    <select id="getByStoreCodeAndSku" parameterType="map" resultMap="invStoreResult">
+		select `id`,`sku`,`item_property`,`store_code`,`stock_qty`,`store_ts`,`create_time`,`update_time`,`product_name`,`product_type_name`,`product_group_name`,`store_name` 
+		from `inv_store` where `sku`=#{sku} and `store_code`=#{storeCode} and `item_property`=#{itemProperty}
+	</select>
+    <select id="getEStoreBySkuAndStoreCodeList" parameterType="map" resultMap="invStoreResult">
+        select
+        `id`,`sku`,`item_property`,`store_code`,`stock_qty`,`store_ts`,`create_time`,`update_time`,`product_name`,`product_type_name`,`product_group_name`,`store_name`
+        from `inv_store`
+        where `item_property`=#{itemProperty}
+        <if test="sku != null and sku !=''">
+            and `sku`=#{sku}
+        </if>
+        <if test="storeCode != null and storeCode !=''">
+            and `store_code` in (${storeCode})
+        </if>
+    </select>
+    <select id="getEStoreBySkuListAndStoreCode" parameterType="map" resultMap="invStoreResult">
+        select
+        `id`,`sku`,`item_property`,`store_code`,`stock_qty`,`store_ts`,`create_time`,`update_time`,`product_name`,`product_type_name`,`product_group_name`,`store_name`
+        from `inv_store`
+        where `item_property`=#{itemProperty}
+        <if test="sku != null and sku !=''">
+            and `sku` in (${sku})
+        </if>
+        <if test="storeCode != null and storeCode !=''">
+            and `store_code`=#{storeCode}
+        </if>
+    </select>
+    <select id="getChangedStockQty" parameterType="map" resultMap="invStoreResult">
+        SELECT vs.sku,vs.item_property, vs.store_code, vs.stock_qty, vs.update_time from inv_store vs where
+        <if test="beginTime != null and beginTime !=''">
+            vs.update_time <![CDATA[>=]]>#{beginTime}
+        </if>
+    </select>
+    <select id="getByStoreCodesAndSku" parameterType="map" resultMap="invStoreResult">
+		select `id`,`sku`,`item_property`,`store_code`,`stock_qty`,`store_ts`,`create_time`,`update_time`,`product_name`,`product_type_name`,`product_group_name`,`store_name` 
+		from `inv_store` where `sku`=#{sku} and `store_code`in (${storeCodeList}) and `item_property`=#{itemProperty}
+	</select>
+    <select id="getForUpdate" parameterType="map" resultMap="invStoreResult">
+		select `id`,`sku`,`item_property`,`store_code`,`stock_qty`,`store_ts`,`create_time`,`update_time`,`product_name`,`product_type_name`,`product_group_name`,`store_name` 
+		from `inv_store` where sku=#{sku} and `store_code`=#{storeCode}  FOR UPDATE
+	</select>
+    <update id="updateQty" parameterType="com.haier.stock.model.InvStore">
+		update `inv_store` set `stock_qty`=#{stockQty},`store_ts`=#{storeTs},`update_time`=now() where `id` = #{id}
+	</update>
+    <update id="updateInvStore" parameterType="com.haier.stock.model.InvStore">
+        update `inv_store`
+        <set>
+            <if test="stockQty != null">
+                `stock_qty`=#{stockQty},
+            </if>
+            <if test="storeTs != null">
+                `store_ts`=#{storeTs},
+            </if>
+            <if test="productName != null and productName != ''">
+                `product_name` = #{productName},
+            </if>
+            <if test="productTypeName != null and productTypeName != ''">
+                `product_type_name` = #{productTypeName},
+            </if>
+            <if test="productGroupName != null and productGroupName != ''">
+                `product_group_name` = #{productGroupName},
+            </if>
+            <if test="storeName != null and storeName != ''">
+                `store_name` = #{storeName},
+            </if>
+            `update_time`=now(),
+        </set>
+        where `id` = #{id}
+    </update>
+    <select id="get" parameterType="Integer" resultMap="invStoreResult">
+		select `id`,`sku`,`item_property`,`store_code`,`stock_qty`,`store_ts`,`create_time`,`update_time`,`product_name`,`product_type_name`,`product_group_name`,`store_name` 
+		from `inv_store`
+		where `id` = #{id}
+	</select>
+    <insert id="insert" parameterType="com.haier.stock.model.InvStore">
+		insert into `inv_store`(`sku`,`item_property`,`store_code`,`stock_qty`,`store_ts`,`create_time`,`update_time`,`product_name`,`product_type_name`,`product_group_name`,`store_name`)
+		values(#{sku},#{itemProperty},#{storeCode},#{stockQty},#{storeTs},now(),now(),#{productName},#{productTypeName},#{productGroupName},#{storeName})
+	</insert>
+    <update id="update" parameterType="com.haier.stock.model.InvStore">
+		update `inv_store` set `sku`=#{sku},`item_property`=#{itemProperty},`store_code`=#{storeCode},`stock_qty`=#{stockQty},`store_ts`=#{storeTs},`create_time`=#{createTime},`update_time`=#{updateTime},
+		`product_name`=#{productName},`product_type_name`=#{productTypeName},`product_group_name`=#{productGroupName},`store_name`=#{storeName}
+		where `id` = #{id}
+	</update>
+    <select id="getByStoreCode" resultMap="invStoreResult">
+		select `id`,`sku`,`item_property`,`store_code`,`stock_qty`,`store_ts`,`create_time`,`update_time`,`product_name`,`product_type_name`,`product_group_name`,`store_name` 
+		from `inv_store` 
+		where `stock_qty` > 0 
+		and `store_code` in (${storeCodes}) 
+		and `item_property`=#{itemProperty}
+	</select>
+
+    <select id="getBySecCodeAndSku" parameterType="java.lang.String" resultMap="invStoreResult">
+        select
+        `sto_id`,`sku`,`sec_code`,`stock_qty`,`frozen_qty`,`crm_frozen_qty`,`virtual_qty`,`create_time`,`update_time`
+        from `inv_stock`
+        where `sku` = #{sku} and `sec_code`=#{secCode}
+    </select>
+
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+    <sql id="where_fragement">
+        WHERE
+        1=1
+        <if test="store!=null">
+            <if test="store.storeSku != null and store.storeSku !=''">
+                and store.sku like CONCAT(CONCAT('%', #{store.storeSku}),'%')
+            </if>
+            <if test="store.storeCode != null and store.storeCode !='' ">
+                and store.store_code like CONCAT(CONCAT('%', #{store.storeCode}),'%')
+            </if>
+            <if test="store.productTypeName != null and store.productTypeName !='' ">
+                and store.product_type_name like CONCAT(CONCAT('%', #{store.productTypeName}),'%')
+            </if>
+            <if test="store.productName != null and store.productName !='' ">
+                and store.product_name like CONCAT(CONCAT('%', #{store.productName}),'%')
+            </if>
+            <if test="store.stockqty != null and store.stockqty != '' " >
+                and store.stock_qty > #{store.stockqty}
+            </if>
+            order by store.update_time desc
+        </if>
+    </sql>
+    <select id="getStorePageByCondition" resultMap="invStoreResult">
+        SELECT
+        store.id AS id,
+        store.sku AS storeSku,
+        store.item_property AS itemProperty,
+        store.store_code AS storeCode,
+        store.stock_qty AS stockqty,
+        store.store_name AS storeName,
+        store.product_type_name AS cbsCategory,
+        store.product_name AS productName,
+        FROM_UNIXTIME(store.store_ts) AS storeTs,
+        store.create_time AS createTime,
+        store.update_time AS updateTime
+        FROM
+        inv_store store
+        <include refid="where_fragement"/>
+        <include refid="pagination"/>
+    </select>
+    <select id="getStorePagerCount" resultType="long" parameterType="com.haier.stock.model.InvStore">
+        select count(1) FROM
+        inv_store store
+        <include refid="where_fragement"/>
+    </select>
+
+    <update id="addSaleSubMachines" parameterType="String">
+        INSERT INTO inv_stock(sku, sec_code, stock_qty, create_time, update_time, crm_frozen_qty)
+        SELECT sku, sec_code, stock_qty-frozen_qty,now(), now(),0 FROM inv_base_stock
+        WHERE not exists ( SELECT 1 FROM inv_stock s WHERE s.sku=#{sku}) and sku=#{sku}
+    </update>
+    
+    
+     <select id="getStockQtyByWhCodesAndSkus" parameterType="map" resultMap="invStoreResult">
+        SELECT
+        sku,
+        b.sec_code,
+        les_sec_code,
+        b.wh_code,
+        case when b.channel_code !='RRS' AND b.channel_code !='GD' AND b.channel_code !='HAIP' AND b.channel_code !='JINS' then 'WA'
+        else b.channel_code end as channel_code ,
+        a.update_time,
+        sum(stock_qty) as stock_qty
+        FROM
+        inv_stock a
+        INNER JOIN inv_section b ON a.sec_code = b.sec_code
+        WHERE 1=1 AND b.item_property=10
+        <if test="skus != null and skus !=''">
+            AND a.sku IN (${skus})
+        </if>
+        <if test="whCodes != null and whCodes !=''">
+            AND b.wh_code IN (${whCodes})
+        </if>
+        <if test="channelCodes != null and channelCodes !=''">
+            AND b.channel_code IN (${channelCodes})
+        </if>
+        <!-- order by部分需要把WA和RRS在排序上分开，把相同les_sec_code放一起， stock_qty取日日顺的最大库存 -->
+        group by sku,les_sec_code
+    </select>
+</mapper>

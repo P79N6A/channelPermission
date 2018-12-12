@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderQueuesReadDao">
+    <resultMap id="orderQueuesResult" type="com.haier.shop.model.OrderQueues">
+        <result property="id" column="id" />
+        <result property="orderProductId" column="order_product_id" />
+        <result property="action" column="action" />
+        <result property="sendLesSuccess" column="send_les_success" />
+        <result property="count" column="count" />
+        <result property="addTime" column="add_time" />
+        <result property="lastMessage" column="last_message" />
+        <result property="isLock" column="is_lock" />
+        <result property="isStop" column="is_stop" />
+        <result property="successTime" column="success_time" />
+        <result property="lastTryTime" column="last_try_time" />
+    </resultMap>
+    <select id="getByOrderProductId" parameterType="Integer" resultMap="orderQueuesResult">
+        select `id`,`order_product_id`,`action`,`send_les_success`,`count`,`add_time`,`last_message`,`is_lock`,`is_stop`,`success_time`,`last_try_time`
+        from order_queues
+        where `order_product_id` = #{orderProductId}
+    </select>
+</mapper>

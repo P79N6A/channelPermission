@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.InvoicesWriteDao">
+     <update id="updateInvoices" parameterType="com.haier.shop.model.Invoices">
+          update `Invoices`
+          <trim prefix="set" suffixOverrides=",">
+               `lastModifyTime`=UNIX_TIMESTAMP(now()),
+               <if test="statusType != null">
+                    `statusType`=#{statusType},
+               </if>
+               <if test="tryNum != null">
+                    `tryNum`=#{tryNum},
+               </if>
+               <if test="state != null">
+                    `state` = #{state},
+               </if>
+               <if test="eaiWriteState != null">
+                    `eaiWriteState`=#{eaiWriteState},
+               </if>
+               <if test="drawer != null and drawer != ''">
+                    `drawer`=#{drawer},
+               </if>
+               <if test="invoiceNumber != null and invoiceNumber!=''">
+                    `invoiceNumber` =#{invoiceNumber},
+               </if>
+               <if test="backupFieldA != null and backupFieldA !=''">
+                    `backupFieldA` = #{backupFieldA},
+               </if>
+               <if test="billingTime != null and billingTime != ''">
+                    `billingTime`=#{billingTime},
+               </if>
+               <if test="eaiWriteTime != null and eaiWriteTime != ''">
+                    `eaiWriteTime`=#{eaiWriteTime},
+               </if>
+               <if test="invalidTime != null and invalidTime != ''">
+                    `invalidTime`=#{invalidTime},
+               </if>
+               <if test="success != null">
+                    `success`=#{success},
+               </if>
+               <if test="invalidReason != null and invalidReason != ''">
+                    `invalidReason`=#{invalidReason},
+               </if>
+               <if test="electricFlag != null and electricFlag != ''">
+                    `electricFlag`=#{electricFlag},
+               </if>
+               <if test="firstPushTime != null and firstPushTime != ''">
+                    `firstPushTime`=#{firstPushTime},
+               </if>
+               <if test="fiscalCode != null and fiscalCode != ''">
+                    `fiscalCode`=#{fiscalCode},
+               </if>
+               <if test="eInvViewUrl != null and eInvViewUrl != ''">
+                    `eInvViewUrl`=#{eInvViewUrl},
+               </if>
+               <if test="checkCode != null and checkCode != ''">
+                    `checkCode`=#{checkCode},
+               </if>
+          </trim>
+          where `id` = #{id}
+     </update>
+
+     <update id="eInvoiceBatchInvalid" parameterType="java.util.Map" statementType="PREPARED">
+          update `Invoices` set success=0,tryNum=0,statusType=4
+          where
+          cOrderSn in
+          <foreach collection="cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
+               #{cOrderSn}
+          </foreach>
+          and electricFlag = 1
+          and state=4
+          and eaiWriteState=''
+          and statusType in(1,3)
+          and success=1
+
+          --           and electricFlag = 1
+--           and ((statusType=1 and success=1) or statusType=4)
+
+
+     </update>
+
+     <update id="eInvoiceBatchReBilling" parameterType="java.util.Map" statementType="PREPARED">
+          update `Invoices` set success=0,tryNum=0
+          where
+          cOrderSn in
+          <foreach collection="cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
+               #{cOrderSn}
+          </foreach>
+          and electricFlag=1 and statusType=1
+     </update>
+
+     <insert id="insertInvoice" parameterType="com.haier.shop.model.Invoices">
+          insert into `Invoices`(`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`)
+          values(#{isOld},#{isReInvoice},#{orderProductId},#{cOrderType},#{diffId},#{cOrderSn},#{memberInvoiceId},#{customerCode},#{invoiceTitle},#{taxPayerNumber},#{registerAddressAndPhone},#{bankNameAndAccount},#{remark},#{cOrderAddTime},#{sku},#{productName},#{productCateName},#{unit},#{number},#{price},#{amount},#{nonTaxPrice},#{nonTaxAmount},#{taxAmount},#{taxRate},#{type},#{isTogether},#{state},#{lessOrderSn},#{paymentName},#{sCode},#{orderType},#{invoiceNumber},#{billingTime},#{eaiWriteTime},#{drawer},#{eaiWriteState},#{invalidTime},#{firstPushTime},#{lastModifyTime},#{internalSettlement},#{branchOfficeCode},#{orderLineNumber},#{backupFieldA},#{backupFieldB},#{integralAmount},#{energySavingAmount},#{energySavingRemark},#{statusType},#{success},#{addTime},#{tryNum},#{electricFlag},#{invalidReason})
+     </insert>
+
+     <update id="invoiceBatchModify" parameterType="java.util.Map" statementType="PREPARED">
+          update `Invoices`
+          <set>
+               <if test="invoiceTitle !=null and invoiceTitle != '不变'.toString() " >
+                    invoiceTitle = #{invoiceTitle},
+               </if>
+               <if test="productName !=null and productName != '不变'.toString() " >
+                    productName = #{productName},
+               </if>
+               <if test="productCateName !=null and productCateName != '不变'.toString() " >
+                    productCateName = #{productCateName},
+               </if>
+               <if test="taxPayerNumber !=null and taxPayerNumber != '不变'.toString() " >
+                    taxPayerNumber = #{taxPayerNumber},
+               </if>
+          </set>
+          where cOrderSn in
+          <foreach collection="cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
+               #{cOrderSn}
+          </foreach>
+     </update>
+</mapper>

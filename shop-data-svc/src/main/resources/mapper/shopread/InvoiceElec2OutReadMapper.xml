@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.InvoiceElectric2OutReadDao">
+
+    <resultMap id="invoiceElectric2OutResult" type="com.haier.shop.model.InvoiceElectric2Out">
+        <result property="id" column="id" />
+        <result property="invoiceId" column="invoice_id" />
+        <result property="success" column="success" />
+        <result property="count" column="count" />
+        <result property="addTime" column="add_time" />
+        <result property="processTime" column="process_time" />
+        <result property="lastMessage" column="last_message" />
+        <result property="sendType" column="send_type" />
+    </resultMap>
+
+    <select id="get" parameterType="Integer" resultMap="invoiceElectric2OutResult">
+        select `id`,`invoice_id`,`success`,`count`,`add_time`,`process_time`,`last_message`,`send_type`
+        from `invoice_electric_2_out`
+        where `id` = #{id}
+    </select>
+
+    <select id="getByInvoiceIdAndSendType" parameterType="com.haier.shop.model.InvoiceElectric2Out" resultMap="invoiceElectric2OutResult">
+        select `id`,`invoice_id`,`success`,`count`,`add_time`,`process_time`,`last_message`,`send_type`
+        from `invoice_electric_2_out`
+        where `invoice_id` = #{invoiceId} and `send_type` = #{sendType}
+    </select>
+    <select id="getSendToHpList" parameterType="Integer" resultMap="invoiceElectric2OutResult">
+        <![CDATA[
+		select `id`,`invoice_id`,`success`,`count`,`add_time`,`process_time`,`last_message`,`send_type`
+		from `invoice_electric_2_out`
+		where `success` = 0 and `send_type` = 'HP' and `count` < 20
+		limit #{topX}
+		]]>
+    </select>
+    <select id="getSendToSapList" parameterType="Integer" resultMap="invoiceElectric2OutResult">
+        <![CDATA[
+		select `id`,`invoice_id`,`success`,`count`,`add_time`,`process_time`,`last_message`,`send_type`
+		from `invoice_electric_2_out`
+		where `success` = 0 and `send_type` = 'SAP' and `count` < 20
+		limit #{topX}
+		]]>
+    </select>
+
+</mapper>

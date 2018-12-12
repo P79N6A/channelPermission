@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.AllotNetPointReadDao">
+
+	<resultMap id="allotNetPointResult" type="com.haier.shop.model.AllotNetPoint">
+		<result property="id" column="id" />
+		<result property="CUSTOMER_CODE" column="customerCode" />
+		<result property="ORDER_NO" column="orderNo" />
+		<result property="CREATED_DATE" column="createdDate" />
+		<result property="PROC_REMARK" column="procRemark" />
+		<result property="ENTER_TIME" column="enterTime" />
+		<result property="SB_DATE" column="sbDate" />
+		<result property="ASSIGN_DATE" column="assignDate" />
+		<result property="status" column="status" />
+		<result property="apiLogsId" column="apiLogs_id" />
+		<result property="message" column="message" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<select id="getByStatus" resultMap="allotNetPointResult">
+		select `id`,`customerCode`,`orderNo`,`createdDate`,`procRemark`,`enterTime`,`sbDate`,`assignDate`,`status`,`apiLogs_id`,`message`,`create_time`,`update_time` from AllotNetPoint 
+		where `status` = #{status} 
+		limit #{rowNum}
+	</select>
+
+	<select id="getNetPoints" resultType="java.util.Map">
+		select `netPointN8` from `NetPoints`
+	</select>
+	
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvSgStockLockDao">
+	<resultMap id="invStockLockResult"
+		type="com.haier.stock.model.InvSgStockLockEntity">
+		<result property="id" column="id" />
+		<result property="sku" column="sku" />
+		<result property="itemProperty" column="item_property" />
+		<result property="storeCode" column="store_code" />
+		<result property="scode" column="scode" />
+		<result property="refNo" column="ref_no" />
+		<result property="source" column="source" />
+		<result property="lockQty" column="lock_qty" />
+		<result property="releaseQty" column="release_qty" />
+		<result property="lockTime" column="lock_time" />
+		<result property="lockUser" column="lock_user" />
+		<result property="releaseTime" column="release_time" />
+		<result property="releaseUser" column="release_user" />
+	</resultMap>
+
+	<sql id="selectAllColumns">
+		select
+		id,sku,item_property,store_code,scode,ref_no,source,lock_qty,release_qty,lock_time,lock_user,release_time,release_user
+		from inv_sg_stock_lock
+	</sql>
+
+	<select id="findSgStockLockByRefNo" parameterType="String"
+		resultMap="invStockLockResult">
+		<include refid="selectAllColumns" />
+		where ref_no = #{refNo}
+	</select>
+
+	<update id="updateReleaseSgStockLock" parameterType="com.haier.stock.model.InvSgStockLockEntity">
+		update inv_sg_stock_lock
+		set release_time = now(),
+		<if test="releaseQty != null and releaseQty != ''">
+			release_qty = #{releaseQty},
+		</if>
+		release_user = #{releaseUser}
+		where ref_no = #{refNo}
+	</update>
+
+	<select id="findSgStockLockBySkuRefNoStoreCode" parameterType="String"
+		resultType="Integer">
+		<include refid="selectAllColumns" />
+		where ref_no = #{refNo} and sku = #{sku} and store_code = #{storeCode}
+	</select>
+
+	<insert id="insertInvSgStockLock">
+		insert into inv_sg_stock_lock(sku,item_property,store_code,scode,ref_no,source,lock_qty,release_qty,lock_time,lock_user)
+		values(#{sku},#{itemProperty},#{storeCode},#{scode},#{refNo},#{source},#{lockQty},#{releaseQty},now(),#{lockUser})
+	</insert>
+</mapper>

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="TransBadGoodsInfoFromGVSToEHAIER" targetNamespace="http://www.example.org/TransBadGoodsInfoFromGVSToEHAIER/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/TransBadGoodsInfoFromGVSToEHAIER/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/TransBadGoodsInfoFromGVSToEHAIER/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/TransBadGoodsInfoFromGVSToEHAIER/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="TransBadGoodsInfoFromGVSToEHAIER">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="SYSNAME" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="T_ZMMS0008" type="tns:ZMM_INBOUND_010_IN"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TransBadGoodsInfoFromGVSToEHAIERResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="tns:outType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ZMM_INBOUND_010_IN">
+        <xsd:sequence>
+          <xsd:element name="ZOUNB" type="xsd:string"/>
+          <xsd:element name="VBELN" type="xsd:string"/>
+          <xsd:element name="POSNR" type="xsd:string"/>
+          <xsd:element name="ZSPDT" type="xsd:string"/>
+          <xsd:element name="LIFNR" type="xsd:string"/>
+          <xsd:element name="MATNR" type="xsd:string"/>
+          <xsd:element name="MENGE" type="xsd:decimal"/>
+          <xsd:element name="LGORT" type="xsd:string"/>
+          <xsd:element name="ZFGLG" type="xsd:string"/>
+          <xsd:element name="ZLSGI" type="xsd:string"/>
+          <xsd:element name="ZWBDR" type="xsd:string"/>
+          <xsd:element name="STAT" type="xsd:string"/>
+          <xsd:element name="BZ1" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMM_INBOUND_010_OUT">
+        <xsd:sequence>
+          <xsd:element name="VBELN" type="xsd:string"/>
+          <xsd:element name="ZOUNB" type="xsd:string"/>
+          <xsd:element name="TYPE" type="xsd:string"/>
+          <xsd:element name="MESSAGE" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="outType">
+        <xsd:sequence>
+          <xsd:element name="EX_SUBRC" type="xsd:int"/>
+          <xsd:element maxOccurs="unbounded" minOccurs="0" name="T_MSG" type="tns:ZMM_INBOUND_010_OUT">
+      		</xsd:element>
+          <xsd:element name="FLAG" type="xsd:string"/>
+          <xsd:element name="FAULT" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="TransBadGoodsInfoFromGVSToEHAIERRequest">
+    <WL5G3N0:part element="WL5G3N1:TransBadGoodsInfoFromGVSToEHAIER" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="TransBadGoodsInfoFromGVSToEHAIERResponse">
+    <WL5G3N0:part element="WL5G3N1:TransBadGoodsInfoFromGVSToEHAIERResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="TransBadGoodsInfoFromGVSToEHAIER">
+    <WL5G3N0:operation name="TransBadGoodsInfoFromGVSToEHAIER">
+      <WL5G3N0:input message="WL5G3N1:TransBadGoodsInfoFromGVSToEHAIERRequest"/>
+      <WL5G3N0:output message="WL5G3N1:TransBadGoodsInfoFromGVSToEHAIERResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="TransBadGoodsInfoFromGVSToEHAIERSOAP" type="WL5G3N1:TransBadGoodsInfoFromGVSToEHAIER">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="TransBadGoodsInfoFromGVSToEHAIER">
+      <WL5G3N2:operation soapAction="http://www.example.org/TransBadGoodsInfoFromGVSToEHAIER/TransBadGoodsInfoFromGVSToEHAIER"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="TransBadGoodsInfoFromGVSToEHAIERSOAPQSService">
+    <WL5G3N0:port binding="WL5G3N1:TransBadGoodsInfoFromGVSToEHAIERSOAP" name="TransBadGoodsInfoFromGVSToEHAIERSOAPQSPort">
+      <WL5G3N2:address location="http://58.56.128.10:19001/EAI/service/GVS/TransBadGoodsInfoFromGVSToEHAIER/TransBadGoodsInfoFromGVSToEHAIER?INT_CODE=EAI_INT_2189"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

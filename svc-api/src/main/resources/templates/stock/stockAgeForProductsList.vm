@@ -1,0 +1,145 @@
+<!--列表数据-->
+
+<link rel="stylesheet" type="text/css" href="../static/css/orderworkflow.css"/>
+<style>
+.list td {
+	padding:5px;
+	min-width:5px;
+	text-align:center;
+	border-bottom:1px solid #c5c5c5;
+	border-right:1px solid #c5c5c5;
+}
+.list th {
+	background:#d3d3d3 url("http://ebs.ehaier.com/resources/js/ext-4.1.1a/resources/themes/images/default/grid/column-header-bg.gif") repeat-x;
+	padding:4px 5px 4px 8px;
+	text-align:center;
+	line-height:1.2em;
+	font-weight:normal;
+	color:#000000;
+	border-top:1px solid #99bce8;
+	border-bottom:1px solid #c5c5c5;
+	border-right:1px solid #c5c5c5;
+	min-width:30px;
+}
+</style>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+		<tr>
+			<th rowspan='2'style="min-width:50px;">品类</th>     
+			<th rowspan='2'style="min-width:70px;">产品组</th>     
+            <th colspan='2'>1-7天</th>      
+            <th colspan='2'>8-14天</th>	
+            <th colspan='2'>15-21天</th>
+            <th colspan='2'>22-30天</th>
+            <th colspan='2'>31-44天</th>
+            <th colspan='2'>45-60天</th>
+            <th colspan='2'>61-75天</th>
+            <th colspan='2'>75-90天</th>
+            <th colspan='2'>3-4月</th>  
+            <th colspan='2'>4-6月</th>  
+            <th colspan='2'>6-12月</th> 
+            <th colspan='2'>1年以上</th>  
+			<th colspan='2'>正常库龄小计</th>  
+            <th colspan='2'>超期库龄小计</th>  
+            <th colspan='2'>合计</th>  
+            <th colspan='2'>超期占比</th> 
+		</tr>
+		<tr>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>	 
+			   <th>数量</th>	 
+			   <th>金额</th>	
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+        </tr>
+	 <tr>
+        <td><font color="red">总计</font></td>
+		<td><font color="red"></font></td>
+			#set($n=0)
+			#foreach($ageData in ${total.ageDatas})
+				#set($quantity = $number.format('###,###.##',$!{ageData.stockQuantity}))
+				#set($value = $number.format('###,###.##',$!{ageData.value}))
+				#if($!{ageData.age} == -1004)
+					<td style="text-align:right">$!{ageData.stockQuantity}%</td>
+				#else
+					<td style="text-align:right">$!{quantity}</td>
+				#end
+				#if($n==7)
+					<td style="text-align:right;border-right: 0.1cm solid red;" >$!{value}</td>
+				#else
+					#if($!{ageData.age} == -1004)
+						<td style="text-align:right">$!{ageData.value.intValue()}%</td>
+					#else
+						<td style="text-align:right">$!{value}</td>
+					#end
+				#end
+				#set($n=$n+1)
+    		#end
+	</tr>
+    #set($count=1)
+    #foreach($map in $!datas.entrySet())
+		#foreach($age in ${map.value})
+			#if($count%2==0)
+				<tr>
+			#else
+				<tr class="tr-bg">
+			#end
+			
+			#set($count=$count+1)
+			    <td>${map.key}</td>
+			#if($!show==1)
+                <td>$!{age.stockAge.productGroupName}</td>
+			#else
+				<td><a href='javascript:void(0)' onClick='onShowDetail("$!{age.stockAge.productGroupName}","$!{age.stockAge.productGroupName}");return false'>$!{age.stockAge.productGroupName}</a></td>	
+			#end
+			#set($n=0)
+            #foreach($ageData in ${age.ageDatas})
+				#set($quantity = $number.format('###,###.##',$!{ageData.stockQuantity}))
+				#set($value = $number.format('###,###.##',$!{ageData.value}))
+				#if($!{ageData.age} == -1004)
+					<td style="text-align:right">$!{ageData.stockQuantity}%</td>
+				#else
+					<td style="text-align:right">$!{quantity}</td>
+				#end
+				#if($n==7)
+					<td style="text-align:right;border-right: 0.1cm solid red;" >$!{value}</td>
+				#else
+					#if($!{ageData.age} == -1004)
+						<td style="text-align:right">$!{ageData.value.intValue()}%</td>
+					#else
+						<td style="text-align:right">$!{value}</td>
+					#end
+				#end
+				#set($n=$n+1)
+    		#end
+			</tr>
+		#end
+    #end	
+    </table>
+
+	

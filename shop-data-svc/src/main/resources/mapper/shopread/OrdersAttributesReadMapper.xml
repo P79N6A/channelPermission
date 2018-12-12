@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrdersAttributesReadDao">
+    <resultMap id="ordersAttributesResult" type="com.haier.shop.model.OrdersAttributes">
+        <result property="id" column="id" />
+        <result property="iswww" column="iswww" />
+        <result property="orderId" column="order_id" />
+        <result property="lbx" column="lbx" />
+        <result property="sourceOrderSn" column="source_order_sn" />
+        <result property="orderYwType" column="order_yw_type" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+    <select id="getByOrderId" resultMap="ordersAttributesResult">
+        select `id`,`iswww`,`order_id`,`lbx`,`source_order_sn`,`order_yw_type`,`create_time`,`update_time` from OrdersAttributes
+        where `order_id`=#{orderId} limit 1
+    </select>
+</mapper>

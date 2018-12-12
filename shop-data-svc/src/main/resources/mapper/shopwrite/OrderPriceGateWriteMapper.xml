@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderPriceGateWriteDao">
+
+	<insert id="batchInsert" parameterType="com.haier.shop.model.OrderPriceGate">
+		insert into order_price_gate(`order_source`,`channel_code`,`industry_code`,`product_group`,`corder_sn`,`order_sn`,`sku`,`cate_id`,`cate_name`,`brand_id`,`brand_name`,`order_product_price`,`coupon_amount`,`platform_coupon_amount`,`order_product_amount`,`order_product_number`,`guarantee_price`,`subduction_price`,`order_add_time`,`create_time`,`lock_reason`,`operator`,`responsible_person`,`unlock_reason`,`unlock_time`,`gate_status`,`gate_type`,`update_time`)values
+		<foreach collection="list" item="item" index="index"  separator=",">
+		(#{item.orderSource},#{item.channelCode},#{item.industryCode},#{item.productGroup},#{item.corderSn},#{item.orderSn},#{item.sku},#{item.cateId},#{item.cateName},#{item.brandId},#{item.brandName},#{item.orderProductPrice},#{item.couponAmount},#{item.platformCouponAmount},#{item.orderProductAmount},#{item.orderProductNumber},#{item.guaranteePrice},#{item.subductionPrice},#{item.orderAddTime},#{item.createTime},#{item.lockReason},#{item.operator},#{item.responsiblePerson},#{item.unlockReason},#{item.unlockTime},#{item.gateStatus},#{item.gateType},#{item.updateTime})
+		</foreach>
+	</insert>
+
+	<update id="unLockOrderPriceGatebyOrderSn" >
+		update 
+			order_price_gate 
+		set 
+			gate_status=0,operator=#{operator},responsible_person=#{responsiblePerson},unlock_reason=#{unlockReason},unlock_time=now(),update_time=now() 
+		where
+			order_sn = #{orderSn} and gate_status=1
+	</update>
+
+</mapper>

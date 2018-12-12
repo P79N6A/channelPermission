@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.InvoicesWwwLogsReadDao">
+
+	<resultMap id="invoicesWwwLogsResult" type="com.haier.shop.model.InvoicesWwwLogs">
+		<result property="id" column="id" />
+		<result property="orderProductId" column="order_product_id" />
+		<result property="orderId" column="order_id" />
+		<result property="orderSn" column="order_sn" />
+		<result property="sourceSn" column="source_sn" />
+		<result property="source" column="source" />
+		<result property="success" column="success" />
+		<result property="flag" column="flag" />
+		<result property="addTime" column="add_time" />
+		<result property="processTime" column="process_time" />
+		<result property="lastMessage" column="last_message" />
+	</resultMap>
+
+	<!-- 3w发票待人工处理 -->
+	<resultMap id="invoicesWwwLogDispItemResult" type="com.haier.shop.model.InvoicesWwwLogDispItem">
+		<result property="id" column="id" />
+		<result property="orderProductId" column="order_product_id" />
+		<result property="orderId" column="order_id" />
+		<result property="orderSn" column="order_sn" />
+		<result property="sourceSn" column="source_sn" />
+		<result property="source" column="source" />
+		<result property="success" column="success" />
+		<result property="flag" column="flag" />
+		<result property="addTime" column="add_time" />
+		<result property="processTime" column="process_time" />
+		<result property="lastMessage" column="last_message" />
+	</resultMap>
+
+	<select id="get" parameterType="Integer" resultMap="invoicesWwwLogsResult">
+		select `id`,`order_product_id`,`order_id`,`order_sn`,`source_sn`,`source`,`success`,`flag`,`add_time`,`process_time`,`last_message` 
+		from InvoicesWwwLogs
+		where order_product_id = #{orderProductId}
+	</select>
+
+	<select id="getByOrderId" parameterType="Integer" resultMap="invoicesWwwLogsResult">
+		select `id`,`order_product_id`,`order_id`,`order_sn`,`source_sn`,`source`,`success`,`flag`,`add_time`,`process_time`,`last_message`
+		from InvoicesWwwLogs
+		where order_id = #{orderId}
+	</select>
+
+	<select id="findInvoiceWwwLogList" parameterType="Map" resultMap="invoicesWwwLogDispItemResult">
+		select
+		SQL_CALC_FOUND_ROWS
+		order_product_id,order_id,order_sn,source,source_sn,success,
+		CASE WHEN add_time=0 THEN '' ELSE FROM_UNIXTIME(add_time) END as add_time,
+		CASE WHEN process_time=0 THEN '' ELSE FROM_UNIXTIME(process_time) END as process_time
+		from `InvoicesWwwLogs`
+		where 1=1
+		<if test="sourceSn !=null and sourceSn != ''">
+			and source_sn = #{sourceSn}
+		</if>
+		<if test="source !=null and source != ''">
+			and source=#{source}
+		</if>
+		<if test="success !=null and success != ''">
+			and success=#{success}
+		</if>
+		<if test="addTimeMin != null and addTimeMin != ''">
+			and add_time &gt;= UNIX_TIMESTAMP(#{addTimeMin})
+		</if>
+		<if test="addTimeMax !=null and addTimeMax != ''">
+			and add_time &lt;= UNIX_TIMESTAMP(#{addTimeMax})
+		</if>
+		order by id desc
+		<if test="m!=null and n!=null">
+			Limit ${m},${n}
+		</if>
+	</select>
+
+	<select id="getRowCnts" resultType="int">
+		SELECT
+		FOUND_ROWS();
+	</select>
+
+</mapper>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>orderPriceSourceChannel</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/easyui-extention.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderPriceSourceChannel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+  <table id="datagrid_orderPriceSourceChannel"></table>
+</div>
+
+<div id="datagridToolbar_orderPriceSourceChannel">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="paramForm_orderPriceSourceChannel" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">渠道名称</span>
+        <select id="channelCode" class="easyui-combobox"  style="width: 178px;">
+          <option value="请选择">请选择</option>
+          <option value="天猫">天猫</option>
+          <option value="天猫分销">天猫分销</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">订单来源</span>
+        <select name="source" id="source" class="easyui-combobox"  style="width: 178px;">
+          <option value="">订单来源</option>
+          <option value="1">商城PC</option>
+          <option value="DXS">商城PC_O2O</option>
+          <option value="TBSC" selected="true">淘宝海尔官方旗舰店</option>
+          <option value="TOPDHSC">海尔生活家电旗舰店</option>
+          <option value="TOPFENXIAO">淘宝海尔官方旗舰店分销平台</option>
+          <option value="TOPFENXIAODHSC">淘宝海尔生活家电旗舰店分销平台</option>
+          <option value="TOPBUYBANG">淘宝海尔买帮专卖店</option>
+          <option value="TOPBOILER">淘宝海尔热水器专卖店</option>
+          <option value="TOPSHJD">淘宝海尔生活电器专卖店</option>
+          <option value="TOPMOBILE">淘宝海尔手机专卖店</option>
+          <option value="TONGSHUAI">统帅日日顺乐家专卖店</option>
+          <option value="CCBSC">企业订单_建行龙卡商城订单</option>
+          <option value="CCBSR">企业订单_建行善融商城订单</option>
+          <option value="95533">企业内购-建行</option>
+          <option value="CORPORATE">企业订单</option>
+          <option value="CORPORATE_SJMG">企业订单_四季沐歌</option>
+          <option value="YIHAODIAN">企业订单_1号店订单</option>
+          <option value="DALOU">商城PC_文化展体验店</option>
+          <option value="113">企业订单_内购</option>
+          <option value="114">企业订单_集采</option>
+          <option value="115">企业订单_B2B</option>
+          <option value="ZPTH">正品退货</option>
+          <option value="TOPPAD">淘宝海尔PAD专卖店</option>
+          <option value="HPB2B">海朋转TC订单</option>
+          <option value="TOPXB">海尔新宝旗舰店</option>
+          <option value="TOPFENXIAOXB">淘宝海尔新宝旗舰店分销平台</option>
+          <option value="C2BWASHER">C2B滚筒洗衣机订单</option>
+          <option value="MOBILE">商城移动</option>
+          <option value="ICBC">平台大客户-工商银行</option>
+          <option value="YHD">平台大客户-1号店</option>
+          <option value="TONGSHUAIFX">统帅分销</option>
+          <option value="COS">商城PC_样品机</option>
+          <option value="RRS">日日顺</option>
+          <option value="CK">顺逛PC</option>
+          <option value="CK_MOBILE">顺逛wap</option>
+          <option value="GMZX">国美在线</option>
+          <option value="DBJ">商城PC_夺宝机</option>
+          <option value="TMMK">mooka模卡官方旗舰店</option>
+          <option value="JDMK">京东模卡</option>
+          <option value="SQXW">商圈小微</option>
+          <option value="YMX">亚马逊</option>
+          <option value="ZSH">平台大客户-中石化</option>
+          <option value="TSMOBILE">统帅商城移动</option>
+          <option value="TSPC">统帅商城PC</option>
+          <option value="YHDZY">电商平台-1号店自营</option>
+          <option value="SNYG">电商平台-苏宁易购旗舰店</option>
+          <option value="DDW">电商平台-当当网</option>
+          <option value="BLPHH">商城PC_不良品换货</option>
+          <option value="YLW">电商平台-邮乐网</option>
+          <option value="DCYH">电商平台-地产用户</option>
+          <option value="PCNEW">商城PC_新品</option>
+          <option value="WASHER">海尔洗衣机官方旗舰店</option>
+          <option value="FRIDGE">海尔冰冷官方旗舰店</option>
+          <option value="MSTORE">顺逛app</option>
+          <option value="HBSC">商城PC_海贝</option>
+          <option value="S_MOBILE">商城移动_app</option>
+          <option value="YJYD">商城移动_优家</option>
+          <option value="AIR">淘宝空调旗舰店</option>
+          <option value="YHDTS">一号店统帅官方旗舰店</option>
+          <option value="TMMKFX">天猫模卡分销店铺</option>
+          <option value="GMTSZYCW">国美统帅自营_厨卫电器</option>
+          <option value="GMTSZYKT">国美统帅自营_空调</option>
+          <option value="GMTSZYBX">国美统帅自营_冰箱</option>
+          <option value="GMTSZYXYJ">国美统帅自营_洗衣机</option>
+          <option value="GMTSZYYY">国美统帅自营_电视家庭影音</option>
+          <option value="SCHD">商城PC_恒大</option>
+          <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
+          <option value="GQGYS">生态授权店</option>
+          <option value="TBCT">淘宝村淘</option>
+          <option value="TBQYG">天猫企业购</option>
+          <option value="TMST">天猫生态</option>
+          <option value="FLW">商城PC_返利网</option>
+          <option value="YHDQWZY">电商平台-1号店全网自营</option>
+          <option value="TMKSD">卡萨帝官方旗舰店</option>
+          <option value="TMTV">天猫海尔电视</option>
+          <option value="TBCFDD">淘宝海尔厨房大电旗舰店</option>
+          <option value="TBXCR">天猫小超人旗舰店</option>
+          <option value="GMZXTS">国美统帅官方旗舰店</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">闸口状态</span>
+        <select id="u441_input" class="easyui-combobox"  style="width: 178px;">
+          <option value="请选择">请选择</option>
+          <option value="生效">生效</option>
+          <option value="失效">失效</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">闸口类型</span>
+        <select id="u443_input" class="easyui-combobox" style="width: 178px;">
+          <option value="请选择">请选择</option>
+          <option value="短信">短信</option>
+          <option value="邮件">邮件</option>
+          <option value="短信和邮件">短信和邮件</option>
+          <option value="不通知">不通知</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">负责人</span>
+        <input class="easyui-textbox" name="responseMan">
+      </div>
+
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn_orderPriceSourceChannel" data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_orderPriceSourceChannel" data-options="iconCls:'icon-redo',plain:true">重置</a>
+    <a href="#" class="easyui-linkbutton" id="addBtn_orderPriceSourceChannel" data-options="iconCls:'icon-add',plain:true">增加</a>
+    <a href="#" class="easyui-linkbutton" id="editBtn_orderPriceSourceChannel" data-options="iconCls:'icon-edit',plain:true">修改</a>
+    <a href="#" class="easyui-linkbutton" id="deleteBtn_orderPriceSourceChannel" data-options="iconCls:'icon-remove',plain:true">删除</a>
+  </form>
+</div>
+<div id="addDlg_orderPriceSourceChannel" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:420px;height:420px;"
+     closed="true" buttons="#dlg-buttons_orderPriceSourceChannel">
+  <form id="addForm_orderPriceSourceChannel" method="post">
+    <input name="id" type="text" style="display:none;"/>
+    <input __actType type="hidden"/>
+    <div class="fitem">
+      <label>渠道名称<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="channelCodeName" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>订单来源名称<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="orderSourceName" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>闸口状态<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="restrictStatus" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>闸口类型<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="restrictType" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>负责人<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="responsePerson" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>手机号码<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="mobile" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>电子邮件<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="email" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>发送类型<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="sendType" required="true"/>
+    </div>
+  </form>
+  <div id="dlg-buttons_orderPriceSourceChannel">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderPriceSourceChannel" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_orderPriceSourceChannel').dialog('close')">取消</a>
+  </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderPriceSourceChannel').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/order/orderPriceSourceChannelIndex.js"></script>
+</body>
+</html>

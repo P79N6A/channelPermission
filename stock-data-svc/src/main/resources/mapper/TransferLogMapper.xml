@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.TransferLogDao">
+	<resultMap id="InvTransferLogResult" type="com.haier.stock.model.InvTransferLog">
+		<result property="logId" column="log_id" />
+		<result property="lineId" column="line_id" />
+		<result property="logType" column="log_type" />
+		<result property="logTime" column="log_time" />
+		<result property="optTime" column="opt_time" />
+		<result property="logUser" column="log_user" />
+		<result property="logRemark" column="log_remark" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="InvTransferLogResult">
+		select `log_id`,`line_id`,`log_type`,`log_time`,`opt_time`,`log_user`,`log_remark`
+		from `inv_transfer_log`
+		where `log_id` = #{logId}
+	</select>
+	<select id="getByLineId" parameterType="Integer" resultMap="InvTransferLogResult">
+		select `log_id`,`line_id`,`log_type`,`log_time`,`opt_time`,`log_user`,`log_remark`
+		from `inv_transfer_log`
+		where `line_id` = #{lineId} order by `log_id` desc
+	</select>
+	<insert id="insert" parameterType="com.haier.stock.model.InvTransferLog">
+		insert into `inv_transfer_log`(`line_id`,`log_type`,`log_time`,`opt_time`,`log_user`,`log_remark`)
+		values(#{lineId},#{logType},#{logTime},#{optTime},#{logUser},#{logRemark})
+	</insert>
+	<update id="update" parameterType="com.haier.stock.model.InvTransferLog">
+		update `inv_transfer_log` set `line_id`=#{lineId},`log_type`=#{logType},`log_time`=#{logTime},`opt_time`=#{optTime},`log_user`=#{logUser},`log_remark`=#{logRemark}
+		where `log_id` = #{logId}
+	</update>
+</mapper>

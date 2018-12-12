@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>materialsAccRateGateT</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/easyui-extention.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_materialsAccRateGateT" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+  <table id="datagrid_materialsAccRateGateT"></table>
+</div>
+
+<div id="datagridToolbar_materialsAccRateGateT">
+  <!--<div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>-->
+  <form id="paramForm_materialsAccRateGateT" class="param-form">
+    <!--<div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          渠道
+        </span>
+          <input class="easyui-textbox" name="edChannelId"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          品类
+        </span>
+          <input class="easyui-textbox" name="categoryId"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          备料准确率闸口
+        </span>
+          <input class="easyui-textbox" name="accRate"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          备注
+        </span>
+          <input class="easyui-textbox" name="remark"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          0：禁用 1：启用
+        </span>
+          <input class="easyui-textbox" name="isEnabled"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          
+        </span>
+          <input class="easyui-textbox" name="modifyUser"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          
+        </span>
+          <input class="easyui-datebox" name="modifyTime"/>
+      </div>
+    </div>-->
+    <!--<a href="#" class="easyui-linkbutton" id="searchBtn_materialsAccRateGateT" data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_materialsAccRateGateT" data-options="iconCls:'icon-redo',plain:true">重置</a>-->
+    <a href="#" class="easyui-linkbutton" id="addBtn_materialsAccRateGateT" data-options="iconCls:'icon-add',plain:true">增加</a>
+    <a href="#" class="easyui-linkbutton" id="saveBtn_materialsAccRateGateT" data-options="iconCls:'icon-save',plain:true">保存</a>
+    <a href="#" class="easyui-linkbutton" id="deleteBtn_materialsAccRateGateT" data-options="iconCls:'icon-remove',plain:true">删除</a>
+  </form>
+</div>
+<div id="addDlg_materialsAccRateGateT" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_materialsAccRateGateT">
+  <form id="addForm_materialsAccRateGateT" method="post">
+    <input name="id" type="text" style="display:none;"/>
+    <input __actType type="hidden"/>
+    <div class="fitem">
+      <label>渠道<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="edChannelId" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>品类<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="categoryId" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>备料准确率闸口<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="accRate" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>备注<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="remark" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>0：禁用 1：启用<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="isEnabled" required="true"/>
+    </div>
+    <div class="fitem">
+      <label><span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="modifyUser" required="true"/>
+    </div>
+    <div class="fitem">
+      <label><span style="color: red;">*</span></label>
+        <input class="easyui-datebox" name="modifyTime" required="true"/>
+    </div>
+  </form>
+  <div id="dlg-buttons_materialsAccRateGateT">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_materialsAccRateGateT" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_materialsAccRateGateT').dialog('close')">取消</a>
+  </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_materialsAccRateGateT').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/auth/materialsAccRateGateTIndex.js"></script>
+</body>
+</html>

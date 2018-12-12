@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="QueryOrderStaToEstore" targetNamespace="http://www.example.org/QueryOrderStaToEstore/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/QueryOrderStaToEstore/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/QueryOrderStaToEstore/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/QueryOrderStaToEstore/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="QueryOrderStaToEstore_wsdl">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="in" type="tns:InputType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="QueryOrderStaToEstore_wsdlResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="out" type="tns:OutputType"/>
+            <xsd:element name="flag" type="xsd:string"/>
+            <xsd:element name="message" type="xsd:string"/>
+            <xsd:element name="error_detail" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="InputType">
+        <xsd:sequence>
+          <xsd:element name="BSTNK" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="OutputType">
+        <xsd:sequence>
+          <xsd:element name="BSTNK" type="xsd:string"/>
+          <xsd:element name="VBELN" type="xsd:string"/>
+          <xsd:element name="VBELN_DN1" type="xsd:string"/>
+          <xsd:element name="DELI_RI" type="xsd:string"/>
+          <xsd:element name="PSTIME" type="xsd:string"/>
+          <xsd:element name="STATUS" type="xsd:string"/>
+          <xsd:element name="ABGRU" type="xsd:string"/>
+          <xsd:element name="PDATE1" type="xsd:string"/>
+          <xsd:element name="PDATE2" type="xsd:string"/>
+          <xsd:element name="BUDAT_SJ" type="xsd:string"/>
+          <xsd:element name="LFIMG_DN3" type="xsd:decimal"/>
+          <xsd:element name="PLANT" type="xsd:string"/>
+          <xsd:element name="JDDM" type="xsd:string"/>
+          <xsd:element name="DATE_GM" type="xsd:string"/>
+          <xsd:element name="BUDAT" type="xsd:string"/>
+          <xsd:element name="ERDAT" type="xsd:string"/>
+          <xsd:element name="ERDAT1" type="xsd:string"/>
+          <xsd:element name="FDQSSL" type="xsd:decimal"/>
+          <xsd:element name="PODAT" type="xsd:string"/>
+          <xsd:element name="ADD1" type="xsd:string"/>
+          <xsd:element name="ADD2" type="xsd:string"/>
+          <xsd:element name="ADD3" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="QueryOrderStaToEstore_wsdlRequest">
+    <WL5G3N0:part element="WL5G3N1:QueryOrderStaToEstore_wsdl" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="QueryOrderStaToEstore_wsdlResponse">
+    <WL5G3N0:part element="WL5G3N1:QueryOrderStaToEstore_wsdlResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="QueryOrderStaToEstore">
+    <WL5G3N0:operation name="QueryOrderStaToEstore_wsdl">
+      <WL5G3N0:input message="WL5G3N1:QueryOrderStaToEstore_wsdlRequest"/>
+      <WL5G3N0:output message="WL5G3N1:QueryOrderStaToEstore_wsdlResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="QueryOrderStaToEstoreSOAP" type="WL5G3N1:QueryOrderStaToEstore">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="QueryOrderStaToEstore_wsdl">
+      <WL5G3N2:operation soapAction="http://www.example.org/QueryOrderStaToEstore/QueryOrderStaToEstore_wsdl"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="QueryOrderStaToEstore">
+    <WL5G3N0:port binding="WL5G3N1:QueryOrderStaToEstoreSOAP" name="QueryOrderStaToEstoreSOAP">
+      <WL5G3N2:address location="http://58.56.128.84:9001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=HNM_INT_HGVS_1"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

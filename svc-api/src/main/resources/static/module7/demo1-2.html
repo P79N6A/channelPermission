@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dgt">
+        <thead>
+        <tr>
+            <th field="field0" data-options="formatter:showWhat"> 库位码</th>
+            <th field="field1">商品SKU</th>
+            <th field="field2">实际库存</th>
+            <th field="field3">自有库存</th>
+            <th field="field4">占用库存</th>
+            <th field="field5">可用库存</th>
+            <th field="field6">淘宝预留</th>
+            <th field="field7">商城预留</th>
+            <th field="field8">企业预留</th>
+            <th field="field9">共享预留</th>
+            <th field="field10">更新时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="first"> &nbsp;</td>
+            <td>
+                YHWA
+            </td>
+            <td>BB0A0108Y</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0
+            </td>
+            <td>0
+            </td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="first"> &nbsp;</td>
+            <td>LGWA</td>
+            <td>BB0A0108Y</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0
+            </td>
+            <td>0
+            </td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="first"> &nbsp;</td>
+            <td>ZZWA</td>
+            <td>AB91SF06N</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0
+            </td>
+            <td>0
+            </td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row" style="width:100%;">
+                <a href="demo1.html">点这里返回库位列表</a>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	库位码
+			</span>
+                <input class="easyui-textbox" name="raiseM"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  	商品SKU
+			</span>
+                <input class="easyui-textbox" name="raiseM"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure" onclick="createData()"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMeasure"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+
+<div id="addDlg_dmmtlPbcsMtlMeasure" data-options="title:'',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_dmmtlPbcsMtlMeasure">
+    <form id="addForm_dmmtlPbcsMtlMeasure" method="post">
+        <input name="id" type="text" style="display:none;">
+        <input __acttype="" type="hidden" value="add">
+        <div class="fitem" style="width: 100%">
+            <label style="width:150px;">淘宝预留</label>
+            <input class="easyui-textbox" name="field0" required="true">
+        </div>
+        <div class="fitem" style="width: 100%">
+            <label style="width:150px;">商城预留</label>
+            <input class="easyui-textbox" name="field1" required="true">
+        </div>
+        <div class="fitem" style="width: 100%">
+            <label style="width:150px;">企业预留</label>
+            <input class="easyui-textbox" name="field2" required="true">
+        </div>
+        <div class="fitem" style="width: 100%">
+            <label style="width:150px;">共享</label>
+            <input class="easyui-textbox" name="field3" required="true">
+        </div>
+    </form>
+    <div id="dlg-buttons_dmmtlPbcsMtlMeasure">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_dmmtlPbcsMtlMeasure" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_dmmtlPbcsMtlMeasure').dialog('close')">关闭</a>
+    </div>
+</div>
+<script type="application/javascript">
+    var tableHead = '库位码\n' +
+        '商品SKU\n' +
+        '实际库存\n' +
+        '自有库存\n' +
+        '占用库存\n' +
+        '可用库存\n' +
+        '淘宝预留\n' +
+        '商城预留\n' +
+        '企业预留\n' +
+        '共享预留\n' +
+        '更新时间'
+
+    var detailTh = 'WP订单号 \n' +
+        'PO编号 \n' +
+        '销售单号 \n' +
+        '提单时间 \n' +
+        'SO \n' +
+        'DN \n' +
+        '渠道 \n' +
+        '品类 \n' +
+        '产品组 \n' +
+        '物料编号 \n' +
+        '型号 \n' +
+        '数量 \n' +
+        '样表单价 \n' +
+        '样表金额 \n' +
+        '采购价格 \n' +
+        '采购金额 \n' +
+        'WA库位码 \n' +
+        'WA库位名称 \n' +
+        '状态 \n' +
+        '出日日顺库时间 \n' +
+        '入库时间 '
+
+    var detail = {
+        fit: true,
+        fitColumns: false,
+        singleSelect: true,
+        columns: covertColumns(detailTh),
+        rownumbers: true
+    };
+
+    function showWhat(val, row, index) {
+        var text = "['快速编辑']"
+        return val +
+            '<p style="width: 220px;height: 30px;padding-top: 10px" onmouseenter="showThisDiv(this,' + text + ')" onmouseleave="hideThisDiv(this)">' +
+            '</p>'
+    }
+
+    function showThisDiv(obj, text) {
+        if ($(obj).find(div).length == 0) {
+            var div = '<div>' +
+                '<span><a href="#" onclick="funcText(\'' + text[0] + '\',this)">' + text[0] + '</a></span>' +
+                '</div>'
+            $(obj).html(div)
+        } else {
+            $(obj).find("div").show()
+        }
+    }
+
+    function funcText(text, obj) {
+        if ('删除' == text) {
+            confirm("确认删除吗？")
+        }
+        if ('快速编辑' == text) {
+            getConfig(obj)
+        }
+    }
+
+    function getConfig(obj) {
+        $('#addForm_dmmtlPbcsMtlMeasure').form('reset');
+        $('#addForm_dmmtlPbcsMtlMeasure').find('[__actType]').val('add');
+        $('#addDlg_dmmtlPbcsMtlMeasure').dialog({'title': '快速编辑'});
+        $('#addDlg_dmmtlPbcsMtlMeasure').dialog('open');
+    }
+
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>

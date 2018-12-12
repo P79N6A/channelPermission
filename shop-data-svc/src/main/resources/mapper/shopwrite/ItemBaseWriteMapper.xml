@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.ItemBaseWriteDao">
+	<update id="update" parameterType="com.haier.shop.model.ItemBase">
+		update `item_base` set 
+			`id`= #{id},
+			`row_id`= #{rowId},
+			`material_code`= #{materialCode},
+			`material_description`= #{materialDescription},
+			`material_type`= #{materialType},
+			`industry`= #{industry},
+			`mtl_group_code`= #{mtlGroupCode},
+			`primary_uom`= #{primaryUom},
+			`department`= #{department},
+			`delete_flag`= #{deleteFlag},
+			`created`= #{created},
+			`last_upd`= #{lastUpd},
+			`kind_one`= #{kindOne},
+			`kind_add`= #{kindAdd},
+			`pro_type`= #{proType},
+			`type_disc`= #{typeDisc},
+			`is_viliage_product`= #{isViliageProduct},
+			`mark_flag`= #{markFlag},
+			`pro_band`= #{proBand},
+			`length_number`= #{lengthNumber},
+			`width_number`= #{widthNumber},
+			`high_number`= #{highNumber},
+			`store_layer_number`= #{storeLayerNumber},
+			`gross_weight_number`= #{grossWeightNumber},
+			`weight_unit`= #{weightUnit},
+			`is_crust_flag`= #{isCrustFlag},
+			`rebate_rate`= #{rebateRate},
+			`sale_char`= #{saleChar},
+			`created_by`= #{createdBy},
+			`product_list`= #{productList},
+			`status`= #{status},
+			`is_auto_update`= #{isAutoUpdate},
+			`product_type`= #{productType},
+			`modifier`= #{modifier}
+		where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.haier.shop.model.ItemBase" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `item_base`(
+				
+				`row_id`,
+				`material_code`,
+				`material_description`,
+				`material_type`,
+				`industry`,
+				`mtl_group_code`,
+				`primary_uom`,
+				`department`,
+				`delete_flag`,
+				`created`,
+				`last_upd`,
+				`kind_one`,
+				`kind_add`,
+				`pro_type`,
+				`type_disc`,
+				`is_viliage_product`,
+				`mark_flag`,
+				`pro_band`,
+				`length_number`,
+				`width_number`,
+				`high_number`,
+				`store_layer_number`,
+				`gross_weight_number`,
+				`weight_unit`,
+				`is_crust_flag`,
+				`rebate_rate`,
+				`sale_char`,
+				`created_by`,
+				`product_list`,
+				`status`,
+				`is_auto_update`,
+				`product_type`,
+				`modifier`,
+				`price`
+		)
+		values(
+				
+				#{rowId},
+				#{materialCode},
+				#{materialDescription},
+				#{materialType},
+				#{industry},
+				#{mtlGroupCode},
+				#{primaryUom},
+				#{department},
+				#{deleteFlag},
+				#{created},
+				#{lastUpd},
+				#{kindOne},
+				#{kindAdd},
+				#{proType},
+				#{typeDisc},
+				#{isViliageProduct},
+				#{markFlag},
+				#{proBand},
+				#{lengthNumber},
+				#{widthNumber},
+				#{highNumber},
+				#{storeLayerNumber},
+				#{grossWeightNumber},
+				#{weightUnit},
+				#{isCrustFlag},
+				#{rebateRate},
+				#{saleChar},
+				#{createdBy},
+				#{productList},
+				#{status},
+				#{isAutoUpdate},
+				#{productType},
+				#{modifier},
+				#{price}
+		)
+	</insert>
+
+	<update id="updateNotNull" parameterType="com.haier.shop.model.ItemBase">
+        update `item_base` 
+    	<set>
+				<if test="rowId != null and rowId != ''">`row_id`= #{rowId},</if>
+				<if test="materialCode != null and materialCode != ''">`material_code`= #{materialCode},</if>
+				<if test="materialDescription != null and materialDescription != ''">`material_description`= #{materialDescription},</if>
+				<if test="materialType != null and materialType != ''">`material_type`= #{materialType},</if>
+				<if test="industry != null and industry != ''">`industry`= #{industry},</if>
+				<if test="mtlGroupCode != null and mtlGroupCode != ''">`mtl_group_code`= #{mtlGroupCode},</if>
+				<if test="primaryUom != null and primaryUom != ''">`primary_uom`= #{primaryUom},</if>
+				<if test="department != null and department != ''">`department`= #{department},</if>
+				<if test="deleteFlag != null">`delete_flag`= #{deleteFlag},</if>
+				<if test="created != null">`created`= #{created},</if>
+				<if test="lastUpd != null">`last_upd`= #{lastUpd},</if>
+				<if test="kindOne != null and kindOne != ''">`kind_one`= #{kindOne},</if>
+				<if test="kindAdd != null and kindAdd != ''">`kind_add`= #{kindAdd},</if>
+				<if test="proType != null and proType != ''">`pro_type`= #{proType},</if>
+				<if test="typeDisc != null and typeDisc != ''">`type_disc`= #{typeDisc},</if>
+				<if test="isViliageProduct != null">`is_viliage_product`= #{isViliageProduct},</if>
+				<if test="markFlag != null">`mark_flag`= #{markFlag},</if>
+				<if test="proBand != null and proBand != ''">`pro_band`= #{proBand},</if>
+				<if test="lengthNumber != null">`length_number`= #{lengthNumber},</if>
+				<if test="widthNumber != null">`width_number`= #{widthNumber},</if>
+				<if test="highNumber != null">`high_number`= #{highNumber},</if>
+				<if test="storeLayerNumber != null">`store_layer_number`= #{storeLayerNumber},</if>
+				<if test="grossWeightNumber != null">`gross_weight_number`= #{grossWeightNumber},</if>
+				<if test="weightUnit != null and weightUnit != ''">`weight_unit`= #{weightUnit},</if>
+				<if test="isCrustFlag != null and isCrustFlag != ''">`is_crust_flag`= #{isCrustFlag},</if>
+				<if test="rebateRate != null">`rebate_rate`= #{rebateRate},</if>
+				<if test="saleChar != null and saleChar != ''">`sale_char`= #{saleChar},</if>
+				<if test="createdBy != null and createdBy != ''">`created_by`= #{createdBy},</if>
+				<if test="productList != null and productList != ''">`product_list`= #{productList},</if>
+				<if test="status != null">`status`= #{status},</if>
+				<if test="isAutoUpdate != null">`is_auto_update`= #{isAutoUpdate},</if>
+				<if test="productType != null and productType != ''">`product_type`= #{productType},</if>
+				<if test="modifier != null">`modifier`= #{modifier},</if>
+				<if test="price != null">`price`= #{price},</if>
+				<if test="id != null">`id`= #{id}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+</mapper>

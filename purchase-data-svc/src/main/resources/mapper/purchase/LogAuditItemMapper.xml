@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.LogAuditDao">
+
+	<insert id="saveAuditLog" parameterType="com.haier.purchase.data.model.LogAuditInfo">
+		insert into operation_log_t(
+		order_id,
+		type,
+		content,
+		log_time,
+		oper_user_id,
+		oper_user_name,
+		jude_way_channel,
+		gate_way_channel,
+		channel,
+		category
+		) values (
+		#{order_id},
+		#{type},
+		#{content},
+		str_to_date(#{log_time}, '%Y-%m-%d %H:%i:%s'),
+		#{oper_user_id},
+		#{oper_user_name},
+		#{jude_way_channel},
+		#{gate_way_channel},
+		#{channel},
+		#{category}
+		)
+	</insert>
+	
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderShippedQueueReadDao">
+    <resultMap id="orderShippedQueueResult" type="com.haier.shop.model.OrderShippedQueue">
+        <result property="id" column="Id" />
+        <result property="orderLineId" column="order_line_id" />
+    </resultMap>
+    <select id="getListToProcess" parameterType="map" resultMap="orderShippedQueueResult">
+        select `Id`,`order_line_id`
+        from `order_shipped_queue`
+        limit #{topX}
+    </select>
+</mapper>

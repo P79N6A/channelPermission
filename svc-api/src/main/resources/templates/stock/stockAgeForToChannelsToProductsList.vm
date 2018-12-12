@@ -1,0 +1,90 @@
+
+    <table #if ($exportFlag=="1") border="1" #else border="0" #end cellpadding="0" cellspacing="0" width="100%">
+		<tr>
+			<th rowspan='2'style="min-width:70px;">渠道</th>     
+			<th rowspan='2'style="min-width:50px;">品类</th>     
+            <th colspan='2'>30天以内</th>      
+            <th colspan='2'>30-60天</th>	
+            <th colspan='2'>2-3月</th>
+            <th colspan='2'>3-4月</th>
+            <th colspan='2'>4月以上</th> 
+            <th colspan='2'>合计</th>
+            <th colspan='2'>超期库龄小计</th>  
+            <th colspan='1'>计提损失</th> 
+            <th colspan='2'>超期占比</th>
+            <th colspan='2'>超期权重</th>
+		</tr>
+		<tr>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>	 
+			   <th>金额</th>	
+			   <th>数量</th>	 
+			   <th>金额</th>
+			   <th>数量</th>	 
+			   <th>金额</th>
+        </tr>
+    #set($count=1)
+    #foreach($map in $!datas.entrySet())
+    	#set($rowspan=$map.value.size())
+    	#set($tr=1)
+		#foreach($age in ${map.value})
+			#if($count%2==0)
+				<tr class="tr-bg">
+			#else
+				<tr>
+			#end
+			
+			#set($count=$count+1)
+			
+			#if($!tr==1)
+    		<td rowspan="${rowspan}" style="background-color: #FFF;">${map.key}</td>
+    		#end
+    		#set($tr=$tr + 1)
+    		
+			#if($!show==1)
+                <td>$!{age.stockAge.productGroupName}</td>
+			#else
+				<td>$!{age.stockAge.productGroupName}</td>
+			#end
+			#set($n=0)
+            #foreach($ageData in ${age.ageDatas})
+				#set($quantity = $number.format('###,###.##',$!{ageData.stockQuantity}))
+				#set($value = $number.format('###,###.##',$!{ageData.value}))
+				#if($!{ageData.age} == -1003)
+					<td style="text-align:right">$!{value}</td>
+				#else
+					#if($!{ageData.age} == -1004 || $!{ageData.age} == -1005)
+						<td style="text-align:right">$!{ageData.stockQuantity}%</td>
+					#else
+						<td style="text-align:right">$!{quantity}</td>
+					#end
+					#if($n==2)
+						<td style="text-align:right;border-right: 0.1cm solid red;" >$!{value}</td>
+					#else
+						#if($!{ageData.age} == -1004 || $!{ageData.age} == -1005)
+							<td style="text-align:right">$!{ageData.value.intValue()}%</td>
+						#else
+							<td style="text-align:right">$!{value}</td>
+						#end
+					#end
+				#end
+				#set($n=$n+1)
+    		#end
+			</tr>
+		#end
+    #end	
+    </table>
+
+	

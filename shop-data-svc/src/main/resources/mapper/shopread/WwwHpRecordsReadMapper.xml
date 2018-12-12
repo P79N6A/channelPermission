@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.WwwHpRecordsReadDao">
+
+	<resultMap id="wwwHpRecordsResult" type="com.haier.shop.model.WwwHpRecords">
+		<result property="id" column="id" />
+		<result property="addTime" column="addTime" />
+		<result property="orderProductId" column="orderProductId" />
+		<result property="orderRepairId" column="orderRepairId" />
+		<result property="sku" column="sku" />
+		<result property="cOrderSn" column="cOrderSn" />
+		<result property="lbxSn" column="lbxSn" />
+		<result property="count" column="count" />
+		<result property="success" column="success" />
+		<result property="flag" column="flag" />
+		<result property="remark" column="remark" />
+		<result property="modifytime" column="modifytime" />
+		<result property="hpTbSn" column="hpTbSn" />
+		<result property="vomRepairSn" column="vomRepairSn" />
+	</resultMap>
+
+	<select id="get" resultMap="wwwHpRecordsResult">
+		select `id`,`addTime`,`orderProductId`,`orderRepairId`,`sku`,`cOrderSn`,`lbxSn`,`count`,`success`,`flag`,`remark`,`modifytime`,`hpTbSn`,`vomRepairSn` from WwwHpRecords
+	</select>
+
+	<select id="getByVomRepairSnAndSku" resultMap="wwwHpRecordsResult">
+		select `id`,`addTime`,`orderProductId`,`orderRepairId`,`sku`,`cOrderSn`,`lbxSn`,`count`,`success`,`flag`,`remark`,`modifytime`,`hpTbSn`,`vomRepairSn` 
+		from WwwHpRecords
+		where `vomRepairSn`=#{vomRepairSn} and `sku`=#{sku} 
+	</select>
+
+</mapper>

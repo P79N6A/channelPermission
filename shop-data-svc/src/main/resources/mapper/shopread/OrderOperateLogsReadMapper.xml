@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderOperateLogsReadDao">
+	<resultMap id="orderOperateLogsResult" type="com.haier.shop.model.OrderOperateLogs">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="orderId" column="orderId" />
+		<result property="orderProductId" column="orderProductId" />
+		<result property="netPointId" column="netPointId" />
+		<result property="operator" column="operator" />
+		<result property="changeLog" column="changeLog" />
+		<result property="remark" column="remark" />
+		<result property="logTime" column="logTime" />
+		<result property="status" column="status" />
+		<result property="paymentStatus" column="paymentStatus" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="orderOperateLogsResult">
+		select `id`,`siteId`,`orderId`,`orderProductId`,`netPointId`,`operator`,`changeLog`,`remark`,`logTime`,`status`,`paymentStatus`
+		from `OrderOperateLogs`
+		where `id` = #{id}
+	</select>
+</mapper>

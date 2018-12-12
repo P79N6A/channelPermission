@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.distribute.data.dao.distribute.PopOrderDao">
+
+    <!-- =========================================================== -->
+    <!-- 定义resultMap -->
+    <!-- =========================================================== -->
+    <resultMap id="popOrderMap" type="com.haier.distribute.data.model.PopOrders">
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="siteId" property="siteId" jdbcType="INTEGER" />
+        <result column="isTest" property="isTest" jdbcType="INTEGER" />
+        <result column="hasSync" property="hasSync" jdbcType="INTEGER" />
+        <result column="isBackend" property="isBackend" jdbcType="INTEGER" />
+        <result column="isBook" property="isBook" jdbcType="INTEGER" />
+        <result column="isCod" property="isCod" jdbcType="INTEGER" />
+        <result column="notAutoConfirm" property="notAutoConfirm" jdbcType="INTEGER" />
+        <result column="isPackage" property="isPackage" jdbcType="INTEGER" />
+        <result column="packageId" property="packageId" jdbcType="INTEGER" />
+        <result column="orderSn" property="orderSn" jdbcType="VARCHAR" />
+        <result column="relationOrderSn" property="relationOrderSn" jdbcType="VARCHAR" />
+        <result column="memberId" property="memberId" jdbcType="INTEGER" />
+        <result column="predictId" property="predictId" jdbcType="INTEGER" />
+        <result column="memberEmail" property="memberEmail" jdbcType="VARCHAR" />
+        <result column="addTime" property="addTime" jdbcType="VARCHAR" />
+        <result column="syncTime" property="syncTime" jdbcType="INTEGER" />
+        <result column="orderStatus" property="orderStatus" jdbcType="VARCHAR" />
+        <result column="payTime" property="payTime" jdbcType="VARCHAR" />
+        <result column="paymentStatus" property="paymentStatus" jdbcType="INTEGER" />
+        <result column="receiptConsignee" property="receiptConsignee" jdbcType="VARCHAR" />
+        <result column="receiptAddress" property="receiptAddress" jdbcType="VARCHAR" />
+        <result column="receiptZipcode" property="receiptZipcode" jdbcType="VARCHAR" />
+        <result column="receiptMobile" property="receiptMobile" jdbcType="VARCHAR" />
+        <result column="productAmount" property="productAmount" jdbcType="DECIMAL" />
+        <result column="orderAmount" property="orderAmount" jdbcType="DECIMAL" />
+        <result column="paidBalance" property="paidBalance" jdbcType="DECIMAL" />
+        <result column="giftCardAmount" property="giftCardAmount" jdbcType="DECIMAL" />
+        <result column="paidAmount" property="paidAmount" jdbcType="DECIMAL" />
+        <result column="shippingAmount" property="shippingAmount" jdbcType="DECIMAL" />
+        <result column="totalEsAmount" property="totalEsAmount" jdbcType="DECIMAL" />
+        <result column="usedCustomerBalanceAmount" property="usedCustomerBalanceAmount" jdbcType="DECIMAL" />
+        <result column="customerId" property="customerId" jdbcType="INTEGER" />
+        <result column="bestShippingTime" property="bestShippingTime" jdbcType="VARCHAR" />
+        <result column="paymentCode" property="paymentCode" jdbcType="VARCHAR" />
+        <result column="payBankCode" property="payBankCode" jdbcType="VARCHAR" />
+        <result column="paymentName" property="paymentName" jdbcType="VARCHAR" />
+        <result column="consignee" property="consignee" jdbcType="VARCHAR" />
+        <result column="originRegionName" property="originRegionName" jdbcType="VARCHAR" />
+        <result column="originAddress" property="originAddress" jdbcType="VARCHAR" />
+        <result column="province" property="province" jdbcType="INTEGER" />
+        <result column="city" property="city" jdbcType="INTEGER" />
+        <result column="region" property="region" jdbcType="INTEGER" />
+        <result column="street" property="street" jdbcType="INTEGER" />
+        <result column="markBuilding" property="markBuilding" jdbcType="INTEGER" />
+        <result column="poiId" property="poiId" jdbcType="VARCHAR" />
+        <result column="poiName" property="poiName" jdbcType="VARCHAR" />
+        <result column="regionName" property="regionName" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="zipcode" property="zipcode" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="receiptInfo" property="receiptInfo" jdbcType="VARCHAR" />
+        <result column="delayShipTime" property="delayShipTime" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="bankCode" property="bankCode" jdbcType="VARCHAR" />
+        <result column="agent" property="agent" jdbcType="VARCHAR" />
+        <result column="confirmTime" property="confirmTime" jdbcType="INTEGER" />
+        <result column="firstConfirmTime" property="firstConfirmTime" jdbcType="INTEGER" />
+        <result column="firstConfirmPerson" property="firstConfirmPerson" jdbcType="VARCHAR" />
+        <result column="finishTime" property="finishTime" jdbcType="INTEGER" />
+        <result column="tradeSn" property="tradeSn" jdbcType="VARCHAR" />
+        <result column="signCode" property="signCode" jdbcType="VARCHAR" />
+        <result column="source" property="source" jdbcType="VARCHAR" />
+        <result column="sourceOrderSn" property="sourceOrderSn" jdbcType="VARCHAR" />
+        <result column="onedayLimit" property="onedayLimit" jdbcType="INTEGER" />
+        <result column="logisticsManner" property="logisticsManner" jdbcType="INTEGER" />
+        <result column="afterSaleManner" property="afterSaleManner" jdbcType="INTEGER" />
+        <result column="personManner" property="personManner" jdbcType="INTEGER" />
+        <result column="visitRemark" property="visitRemark" jdbcType="VARCHAR" />
+        <result column="visitTime" property="visitTime" jdbcType="INTEGER" />
+        <result column="visitPerson" property="visitPerson" jdbcType="VARCHAR" />
+        <result column="sellPeople" property="sellPeople" jdbcType="VARCHAR" />
+        <result column="sellPeopleManner" property="sellPeopleManner" jdbcType="INTEGER" />
+        <result column="orderType" property="orderType" jdbcType="VARCHAR" />
+        <result column="hasReadTaobaoOrderComment" property="hasReadTaobaoOrderComment" jdbcType="INTEGER" />
+        <result column="memberInvoiceId" property="memberInvoiceId" jdbcType="INTEGER" />
+        <result column="taobaoGroupId" property="taobaoGroupId" jdbcType="INTEGER" />
+        <result column="tradeType" property="tradeType" jdbcType="VARCHAR" />
+        <result column="stepTradeStatus" property="stepTradeStatus" jdbcType="VARCHAR" />
+        <result column="stepPaidFee" property="stepPaidFee" jdbcType="DECIMAL" />
+        <result column="depositAmount" property="depositAmount" jdbcType="DECIMAL" />
+        <result column="balanceAmount" property="balanceAmount" jdbcType="DECIMAL" />
+        <result column="autoCancelDays" property="autoCancelDays" jdbcType="INTEGER" />
+        <result column="isNoLimitStockOrder" property="isNoLimitStockOrder" jdbcType="INTEGER" />
+        <result column="ccbOrderReceivedLogId" property="ccbOrderReceivedLogId" jdbcType="INTEGER" />
+        <result column="ip" property="ip" jdbcType="VARCHAR" />
+        <result column="isGiftCardOrder" property="isGiftCardOrder" jdbcType="INTEGER" />
+        <result column="giftCardDownloadPassword" property="giftCardDownloadPassword" jdbcType="VARCHAR" />
+        <result column="giftCardFindMobile" property="giftCardFindMobile" jdbcType="VARCHAR" />
+        <result column="autoConfirmNum" property="autoConfirmNum" jdbcType="INTEGER" />
+        <result column="codConfirmPerson" property="codConfirmPerson" jdbcType="VARCHAR" />
+        <result column="codConfirmTime" property="codConfirmTime" jdbcType="INTEGER" />
+        <result column="codConfirmRemark" property="codConfirmRemark" jdbcType="VARCHAR" />
+        <result column="codConfirmState" property="codConfirmState" jdbcType="INTEGER" />
+        <result column="paymentNoticeUrl" property="paymentNoticeUrl" jdbcType="VARCHAR" />
+        <result column="addressLon" property="addressLon" jdbcType="DECIMAL" />
+        <result column="addressLat" property="addressLat" jdbcType="DECIMAL" />
+        <result column="smConfirmStatus" property="smConfirmStatus" jdbcType="INTEGER" />
+        <result column="smConfirmTime" property="smConfirmTime" jdbcType="INTEGER" />
+        <result column="smManualTime" property="smManualTime" jdbcType="INTEGER" />
+        <result column="smManualRemark" property="smManualRemark" jdbcType="VARCHAR" />
+        <result column="isTogether" property="isTogether" jdbcType="INTEGER" />
+        <result column="isNotConfirm" property="isNotConfirm" jdbcType="INTEGER" />
+        <result column="tailPayTime" property="tailPayTime" jdbcType="INTEGER" />
+        <result column="points" property="points" jdbcType="INTEGER" />
+        <result column="modified" property="modified" jdbcType="DATE" />
+        <result column="channelId" property="channelId" jdbcType="INTEGER" />
+        <result column="isProduceDaily" property="isProduceDaily" jdbcType="INTEGER" />
+        <result column="couponCode" property="couponCode" jdbcType="VARCHAR" />
+        <result column="couponCodeValue" property="couponCodeValue" jdbcType="DECIMAL" />
+        <result column="ckCode" property="ckCode" jdbcType="VARCHAR" />
+        <result column="channelName" property="channelName" jdbcType="VARCHAR" />
+        <result column="expressNo" property="expressNo" jdbcType="VARCHAR" />
+    </resultMap>
+
+	<!-- =========================================================== -->
+	<!-- 公共变量定义 -->
+	<!-- =========================================================== -->
+	<!-- oracle 分页头部 -->
+	<sql id="pagination_Head">
+        <![CDATA[
+        select * from ( select row_.*, rownum rownum_ from (
+        ]]>
+	</sql>
+	<!-- oracle 分页尾部 -->
+	<sql id="pagination_Tail">
+        <![CDATA[
+        ) row_ where rownum < (#{pager.page} * #{pager.rows} +1) ) where rownum_ >= ((#{pager.page} -1) * #{pager.rows} +1)
+        ]]>
+	</sql>
+	<!-- count * from -->
+	<sql id="count_Start_Head">
+        <![CDATA[
+        select count(1) from (
+        ]]>
+	</sql>
+	<sql id="count_Start_Tail">
+        <![CDATA[
+        )
+        ]]>
+	</sql>
+	<sql id="pagination_OrderBy">
+		<if test="pager.sort != null and pager.sort !=''">
+			ORDER BY ${pager.sort} ${pager.order}
+		</if>
+	</sql>
+
+	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id
+		,siteId
+		,isTest
+		,hasSync
+		,isBackend
+		,isBook
+		,isCod
+		,notAutoConfirm
+		,isPackage
+		,packageId
+		,orderSn
+		,relationOrderSn
+		,memberId
+		,predictId
+		,memberEmail
+		,addTime
+		,syncTime
+		,orderStatus
+		,payTime
+		,paymentStatus
+		,receiptConsignee
+		,receiptAddress
+		,receiptZipcode
+		,receiptMobile
+		,productAmount
+		,orderAmount
+		,paidBalance
+		,giftCardAmount
+		,paidAmount
+		,shippingAmount
+		,totalEsAmount
+		,usedCustomerBalanceAmount
+		,customerId
+		,bestShippingTime
+		,paymentCode
+		,payBankCode
+		,paymentName
+		,consignee
+		,originRegionName
+		,originAddress
+		,province
+		,city
+		,region
+		,street
+		,markBuilding
+		,poiId
+		,poiName
+		,regionName
+		,address
+		,zipcode
+		,mobile
+		,phone
+		,receiptInfo
+		,delayShipTime
+		,remark
+		,bankCode
+		,agent
+		,confirmTime
+		,firstConfirmTime
+		,firstConfirmPerson
+		,finishTime
+		,tradeSn
+		,signCode
+		,source
+		,sourceOrderSn
+		,onedayLimit
+		,logisticsManner
+		,afterSaleManner
+		,personManner
+		,visitRemark
+		,visitTime
+		,visitPerson
+		,sellPeople
+		,sellPeopleManner
+		,orderType
+		,hasReadTaobaoOrderComment
+		,memberInvoiceId
+		,taobaoGroupId
+		,tradeType
+		,stepTradeStatus
+		,stepPaidFee
+		,depositAmount
+		,balanceAmount
+		,autoCancelDays
+		,isNoLimitStockOrder
+		,ccbOrderReceivedLogId
+		,ip
+		,isGiftCardOrder
+		,giftCardDownloadPassword
+		,giftCardFindMobile
+		,autoConfirmNum
+		,codConfirmPerson
+		,codConfirmTime
+		,codConfirmRemark
+		,codConfirmState
+		,paymentNoticeUrl
+		,addressLon
+		,addressLat
+		,smConfirmStatus
+		,smConfirmTime
+		,smManualTime
+		,smManualRemark
+		,isTogether
+		,isNotConfirm
+		,tailPayTime
+		,points
+		,modified
+		,channelId
+		,isProduceDaily
+		,couponCode
+		,couponCodeValue
+		,ckCode
+		,oid
+		,cancelStatus
+	</sql>
+
+	<!-- 查询条件 -->
+	<sql id="where_fragement">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and id = #{entity.id} ]]>
+			</if>
+			<if test="entity.orderSn != null and entity.orderSn !='' ">
+                <![CDATA[ and o.orderSn LIKE CONCAT('%', #{entity.orderSn} ,'%') ]]>
+			</if>
+			<if test="entity.sourceOrderSn != null and entity.sourceOrderSn !='' ">
+                <![CDATA[ and o.sourceOrderSn LIKE CONCAT('%', #{entity.sourceOrderSn} ,'%') ]]>
+			</if>
+			<if test="entity.source != null and entity.source !='' ">
+                <![CDATA[ and o.source = #{entity.source} ]]>
+			</if>
+			<if test="entity.orderStatus != null and entity.orderStatus !='' ">
+                <![CDATA[ and o.orderStatus = #{entity.orderStatus} ]]>
+			</if>
+			<!--<if test="entity.paymentStatus != null and entity.paymentStatus !='' 
+				"> <![CDATA[ and o.paymentStatus = #{entity.paymentStatus} ]]> </if> -->
+			<if test="entity.oid != null and entity.oid !='' ">
+                <![CDATA[ and o.oid LIKE CONCAT('%', #{entity.oid} ,'%') ]]>
+			</if>
+			<if test="entity.expressNo != null and entity.expressNo !='' ">
+                <![CDATA[ and l.expressNo LIKE CONCAT('%', #{entity.expressNo} ,'%') ]]>
+			</if>
+			<if test="entity.addTimeStartS != null and entity.addTimeStartS !='' ">
+                <![CDATA[ and o.addTime >= #{entity.addTimeStartS} ]]>
+			</if>
+			<if test="entity.addTimeEndS != null and entity.addTimeEndS !='' ">
+                <![CDATA[ and o.addTime <= #{entity.addTimeEndS} ]]>
+			</if>
+		</if>
+	</sql>
+
+	<!-- 相等查询条件 -->
+	<sql id="where_fragement_equals">
+		where 1=1
+		<if test="entity!=null">
+			<if test="entity.id != null and entity.id !='' ">
+                <![CDATA[ and o.id  = #{entity.id} ]]>
+			</if>
+			<if test="entity.orderSn != null and entity.orderSn !='' ">
+                <![CDATA[ and o.orderSn  = #{entity.orderSn} ]]>
+			</if>
+			<if test="entity.sourceOrderSn != null and entity.sourceOrderSn !='' ">
+                <![CDATA[ and o.sourceOrderSn  = #{entity.sourceOrderSn} ]]>
+			</if>
+		</if>
+	</sql>
+
+	<!-- =========================================================== -->
+	<!-- Mapper中的基本增删改查方法 -->
+	<!-- =========================================================== -->
+	<!-- 根据id查询 -->
+	<select id="getOneById" resultMap="popOrderMap" parameterType="Long">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_orders
+		WHERE order_id = #{id}
+	</select>
+
+	<!-- 根据Condition查询 -->
+	<select id="getOneByCondition" resultMap="popOrderMap">
+		SELECT
+		o.*,l.expressNo
+		FROM t_orders o left join t_order_logistics l on o.orderSn = l.orderSn
+		<include refid="where_fragement_equals" />
+	</select>
+
+	<!-- 查询page -->
+	<select id="getPageByCondition" resultMap="popOrderMap">
+		SELECT o.*,t.channelName,l.expressNo from t_orders o LEFT JOIN
+		t_channels_info t on o.source = t.channelCode
+		left join t_order_logistics l on o.orderSn = l.orderSn
+		<include refid="where_fragement" />
+		order by o.addTime desc
+		<include refid="pagination" />
+	</select>
+	<!-- 导出sql -->
+	<select id="exportlist" resultMap="popOrderMap">
+		SELECT o.*,t.channelName,l.expressNo from t_orders o LEFT JOIN
+		t_channels_info t on o.source = t.channelCode
+		left join t_order_logistics l on o.orderSn = l.orderSn
+		<include refid="where_fragement" />
+		order by o.addTime desc
+	</select>
+	<!--分页count -->
+	<select id="getPagerCount" resultType="long"
+		parameterType="com.haier.distribute.data.model.PopOrders">
+		select count(1) from t_orders o left join t_order_logistics l on
+		o.orderSn = l.orderSn
+		<include refid="where_fragement" />
+	</select>
+
+	<!--查询总条数 -->
+	<select id="countByCondition" parameterType="com.haier.distribute.data.model.PopOrders"
+		resultType="long">
+		<include refid="count_Start_Head" />
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_orders
+		<include refid="where_fragement" />
+		<include refid="count_Start_Tail" />
+	</select>
+
+	<!-- 查询list -->
+	<select id="listByCondition" resultMap="popOrderMap">
+		SELECT o.*,t.channelName,l.expressNo from t_orders o LEFT JOIN
+		t_channels_info t on
+		o.source = t.channelCode left join t_order_logistics l on o.orderSn =
+		l.orderSn
+		<include refid="where_fragement" />
+	</select>
+	<!-- 修改订单状态 -->
+	<update id="orderOpertion">
+		UPDATE t_orders SET status=#{orderStatus} where
+		id=#{Id};
+	</update>
+	<update id="orderOpertionToSure">
+		UPDATE t_orders SET sellPeople=#{sellPeople},
+		orderStatus=#{orderStatus}, oid=#{oId} where id=#{Id};
+	</update>
+	<!-- int updateStatus(@Param("orderStatus") String orderStatus, @Param("Id")String 
+		Id); -->
+	<update id="updateStatus">
+		UPDATE t_orders SET orderStatus = #{orderStatus}
+		where id=#{Id}
+	</update>
+	<update id="addConfirmTime">
+		UPDATE t_orders SET confirmTime =
+		#{confirmTime},firstConfirmTime = #{confirmTime} where id=#{Id}
+	</update>
+	<update id="confirmTime">
+		UPDATE t_orders SET confirmTime = #{confirmTime}
+		where id=#{Id}
+	</update>
+	<update id="updateCancelStatus">
+		UPDATE t_orders SET cancelStatus = #{cancelStatus}
+		where id=#{Id}
+	</update>
+	<update id="editRemark">
+		update t_orders set
+		codConfirmRemark = #{codConfirmRemark}
+		where orderSn = #{orderSn}
+	</update>
+
+	<update id="editOid">
+		update t_orders set
+		oid = #{oid}
+		where orderSn =
+		#{orderSn}
+	</update>
+
+	<update id="editOrigin">
+		update t_orders set
+		consignee = #{consignee},
+		mobile = #{mobile},
+		originRegionName = #{originRegionName},
+		originAddress = #{originAddress}
+		where orderSn = #{orderSn}
+	</update>
+	<select id="checkOid" resultMap="popOrderMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_orders where oid=#{oid}
+		<if test="orderSn != null and orderSn !='' ">
+			and orderSn != #{orderSn}
+		</if>
+	</select>
+	
+	<select id="get" parameterType="Integer" resultMap="popOrderMap">
+        SELECT
+            `id`,
+            `siteId`,
+            `isTest`,
+            `hasSync`,
+            `isBackend`,
+            `isBook`,
+            `isCod`,
+            `notAutoConfirm`,
+            `isPackage`,
+            `packageId`,
+            `orderSn`,
+            `relationOrderSn`,
+            `memberId`,
+            `predictId`,
+            `memberEmail`,
+            `addTime`,
+            `syncTime`,
+            `orderStatus`,
+            `payTime`,
+            `paymentStatus`,
+            `receiptConsignee`,
+            `receiptAddress`,
+            `receiptZipcode`,
+            `receiptMobile`,
+            `productAmount`,
+            `orderAmount`,
+            `paidBalance`,
+            `giftCardAmount`,
+            `paidAmount`,
+            `shippingAmount`,
+            `totalEsAmount`,
+            `usedCustomerBalanceAmount`,
+            `customerId`,
+            `bestShippingTime`,
+            `paymentCode`,
+            `payBankCode`,
+            `paymentName`,
+            `consignee`,
+            `originRegionName`,
+            `originAddress`,
+            `province`,
+            `city`,
+            `region`,
+            `street`,
+            `markBuilding`,
+            `poiId`,
+            `poiName`,
+            `regionName`,
+            `address`,
+            `zipcode`,
+            `mobile`,
+            `phone`,
+            `receiptInfo`,
+            `delayShipTime`,
+            `remark`,
+            `bankCode`,
+            `agent`,
+            `confirmTime`,
+            `firstConfirmTime`,
+            `firstConfirmPerson`,
+            `finishTime`,
+            `tradeSn`,
+            `signCode`,
+            `source`,
+            `sourceOrderSn`,
+            `onedayLimit`,
+            `logisticsManner`,
+            `afterSaleManner`,
+            `personManner`,
+            `visitRemark`,
+            `visitTime`,
+            `visitPerson`,
+            `sellPeople`,
+            `sellPeopleManner`,
+            `orderType`,
+            `hasReadTaobaoOrderComment`,
+            `memberInvoiceId`,
+            `taobaoGroupId`,
+            `tradeType`,
+            `stepTradeStatus`,
+            `stepPaidFee`,
+            `depositAmount`,
+            `balanceAmount`,
+            `autoCancelDays`,
+            `isNoLimitStockOrder`,
+            `ccbOrderReceivedLogId`,
+            `ip`,
+            `isGiftCardOrder`,
+            `giftCardDownloadPassword`,
+            `giftCardFindMobile`,
+            `autoConfirmNum`,
+            `codConfirmPerson`,
+            `codConfirmTime`,
+            `codConfirmRemark`,
+            `codConfirmState`,
+            `paymentNoticeUrl`,
+            `addressLon`,
+            `addressLat`,
+            `smConfirmStatus`,
+            `smConfirmTime`,
+            `smManualTime`,
+            `smManualRemark`,
+            `isTogether`,
+            `isNotConfirm`,
+            `points`,
+            `isProduceDaily`,
+            `tailPayTime`,
+            `ckCode`
+        FROM `Orders`
+        WHERE `id` = #{id}
+    </select>
+	<update id="finishToCancel">
+		update t_orders set
+		orderStatus = 202
+		where orderSn = #{orderSn}
+	</update>
+</mapper>

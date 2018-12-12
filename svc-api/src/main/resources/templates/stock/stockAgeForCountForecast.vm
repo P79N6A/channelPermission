@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>Haier EIS - Enterprise Integration System</title>
+    
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+        <link rel="stylesheet" type="text/css" href="../static/css/orderworkflow.css" />
+	<!-- <link rel="stylesheet" type="text/css" href="../static/css/jquery.ui.all.css" /> -->
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/js/utils.js"></script>
+     <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+#*<script src="../static/js/easyui-extention.js"></script>*#
+    <script src="../static/js/customConfig.js"></script>
+  <!--   <link rel="stylesheet" type="text/css" href="../static/static/css/orderworkflow.css" />
+	<link rel="stylesheet" type="text/css" href="../static/static/css/jquery.ui.all.css" /> -->
+	
+	<style>
+	.list td {
+		padding:5px;
+		min-width:5px;
+		text-align:center;
+		
+		border-bottom:1px solid #c5c5c5;
+		border-right:1px solid #c5c5c5;
+	}
+	.list th {
+		background:#d3d3d3 url("http://ebs.ehaier.com/resources/js/ext-4.1.1a/resources/themes/images/default/grid/column-header-bg.gif") repeat-x;
+		padding:4px 5px 4px 8px;
+		text-align:center;
+		line-height:1.2em;
+		font-weight:normal;
+		color:#000000;
+		border-top:1px solid #99bce8;
+		border-bottom:1px solid #c5c5c5;
+		border-right:1px solid #c5c5c5;
+		min-width:30px;
+	}
+	</style>
+</head>
+<body class="easyui-layout">
+<table id="dataGrid" title="$!title"></table>
+#*<input name="channel_code" id="channel_code" type="hidden" value="$!channel"/>*#
+<div id="tb" style="padding:5px;height:auto">
+
+<fieldset style="line-height:250%">
+			 	<input name="onQueryUrl" id="onQueryUrl" type="hidden" value="$!{onQueryUrl}"/>
+				<input name="onExportUrl" id="onExportUrl" type="hidden" value="$!{onExportUrl}"/>
+				<input name="onQuery" id="onQuery" type="hidden" value="$!{onQuery}"/>
+				<h3 id = "h3">$!{title}</h3>
+        		<form id="filterForm" name="filterForm" border="0" cellpadding="0" cellspacing="0" width="100%" align="left">
+					#*<input type="radio" name="selectType" value="1" id="selectType1" checked="checked"  style="width:20px;" onclick="jumpUrl(this);"/><label for="selectType1">到渠道到产品</label>
+					<input type="radio" name="selectType" value="2" id="selectType2" style="width:20px;" onclick="jumpUrl(this);"/><label for="selectType2">到产品到渠道</label>
+					<input type="radio" name="selectType" value="3" id="selectType3" style="width:20px;" onclick="jumpUrl(this);"/><label for="selectType3">到渠道</label>
+					<input type="radio" name="selectType" value="4" id="selectType4" style="width:20px;" onclick="jumpUrl(this);"/><label for="selectType4">到产品</label><br/>*#
+					    报表日期
+       <!--  <input id="date" name="date" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser"  /> -->
+        
+<input id="date" class="easyui-datebox" value="$!{shijian}">
+        <input name="channel_code" id="channel_code" type="hidden" value="$!channel" class="easyui-textbox"/>
+        <label color="red">金额单位：（人民币）万元 数据类型：正品</label><br/>
+                </form>
+			</fieldset>
+			<div class="toolbar">
+			  <a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search"   onClick="onQuery()">查询</a>
+      		  <a id='export' href="#" class="easyui-linkbutton"  iconCls="icon-save" onClick="onExport()">导出</a>
+			</div>
+			<div id="list" class="list">
+				#parse("/stock/stockAgeForToChannelsToProductsList.vm")
+			</div> 
+			
+</div>
+<script type="text/javascript">
+var by = "product_group_name";
+var query = true;
+var onQueryUrl = '/stock/getStockAgeForToChannelsToSkuList.html';
+var urlExport="";
+var select="$!request.getAttribute('select')";
+$(function(){
+	 function myformatter(date){  
+         var y = date.getFullYear();  
+         var m = date.getMonth()+1;  
+         var d = date.getDate();  
+         return y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);  
+     }  
+       
+     function myparser(s){  
+         if (!s) return new Date();  
+         var ss = (s.split('-'));  
+         var y = parseInt(ss[0],10);  
+         var m = parseInt(ss[1],10);  
+         var d = parseInt(ss[2],10);  
+         if (!isNaN(y) && !isNaN(m) && !isNaN(d)){  
+             return new Date(y,m-1,d);  
+         } else {  
+             return new Date();  
+         }  
+     }  
+
+    //页面加载  
+
+$(function(){  
+
+           //设置时间  
+　　　 var curr_time = new Date();     
+　　　　$("#date").datebox("setValue",myformatter(curr_time));  
+　　　　//获取时间  
+　　　　var beginTime=$("#date").datebox("getValue");  
+
+     });  
+	query =false;/*  $("#onQuery").val(); */
+	onQueryUrl ="/stock/getStockAgeForToChannelsToProductsList.html";/*  $("#onQueryUrl").val(); */
+	urlExport ="/stock/exportStockAgeForToChannelsToProductsList.html"; $("#onExportUrl").val();
+
+	if($(".tool-toggle").length){
+		$(".tool-toggle").toggle(function(){
+			var index=$(".tool-toggle").index(this);
+			$(this).attr("class","tool-toggle tool-toggle-hide");
+			$("fieldset").eq(index).addClass("hidefieldset");
+			$("fieldset form").eq(index).hide();
+		},function(){
+			var index=$(".tool-toggle").index(this);
+			$(this).attr("class","tool-toggle tool-toggle-show");
+			$("fieldset").eq(index).removeClass("hidefieldset");
+			$("fieldset form").eq(index).show();
+		})
+	}
+			
+	function addzero(v) {if (v < 10) return '0' + v;return v.toString();} 
+	$('#body').height($(window).height() - 60);
+	$('#list').height($(window).height() - 155);
+	
+	$('#selectType'+select).attr("checked",true);
+	
+	if(query=='true'){
+		onQuery();
+	}
+	
+});
+
+function onQuery(){
+	$("#list").html("正在查询请稍候...");
+	jQuery.ajax({
+		url: onQueryUrl,   // 提交的页面
+		data: $('#filterForm').serialize(), // 从表单中获取数据
+		type: "GET",                   // 设置请求类型为"POST"，默认为"GET"
+		success: function(data) {
+			$("#list").html(data);
+		}
+	});
+	return false;
+}
+
+function onExport(){
+	$('#filterForm').attr("action",urlExport);
+	$('#filterForm').submit();
+}
+function jumpUrl(obj){
+	var date = $('#date').val();
+	if(obj.value == '1'){//到渠道到产品
+		window.location.href = "/stock/countStockAgesToChannelsToSku.html?date="+date;
+	}else if (obj.value == '2'){//到产品到渠道
+		window.location.href = "/stock/countStockAgesToSkuToChannels.html?date="+date;
+	}else if (obj.value == '3'){//到渠道
+		window.location.href = "/stock/countStockAgesWithChannels.html?date="+date;
+	}else if (obj.value == '4'){//到产品
+		window.location.href = "/stock/countStockAgesWithSku.html?date="+date;
+	}
+}
+</script>
+</body>
+</html>

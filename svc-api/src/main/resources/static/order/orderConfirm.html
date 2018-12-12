@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>orderForecastLogs</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastLogs" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+
+    <table id="datagrid_orderForecastLogs"></table>
+
+</div>
+
+<div id="datagridToolbar_orderForecastLogs">
+
+    <div style="line-height: inherit">
+        <input value="异常" id="mainsheet" class="easyui-linkbutton" style="background-color: #efefef;" readonly="true"
+               onclick="on_tab('main')"/>
+        <input value="预警" id="secsheet" class="easyui-linkbutton" style="background-color: #efefef;" readonly="true"
+               onclick="on_tab('sec')"/>
+        <input value="超时" id="skusheet" class="easyui-linkbutton" style="background-color: #efefef;" readonly="true"
+               onclick="on_tab('sku')"/>
+    </div>
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+
+    <form id="1paramForm_orderForecastLogs" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth">
+                <span class="search-row-label">开始时间</span>
+                <input class="easyui-datebox" name="startTime"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">结束时间</span>
+                <input class="easyui-datebox" name="endTime"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">订单来源</span>
+                <select name="orderSource" class="easyui-combobox">
+                    <option value="全部" selected="">全部</option>
+                    <option value="淘宝海尔官方旗舰店">淘宝海尔官方旗舰店</option>
+                    <option value="淘宝海尔官方旗舰店分销平台">淘宝海尔官方旗舰店分销平台</option>
+                    <option value="淘宝海尔生活家电旗舰店分销平台">淘宝海尔生活家电旗舰店分销平台</option>
+                    <option value="淘宝海尔买帮专卖店">淘宝海尔买帮专卖店</option>
+                    <option value="淘宝海尔生活电器专卖店">淘宝海尔生活电器专卖店</option>
+                    <option value="淘宝海尔手机专卖店">淘宝海尔手机专卖店</option>
+                    <option value="淘宝海尔PAD专卖店">淘宝海尔PAD专卖店</option>
+                    <option value="淘宝新宝旗舰店">淘宝新宝旗舰店</option>
+                    <option value="淘宝海尔新宝旗舰店分销平台">淘宝海尔新宝旗舰店分销平台</option>
+                    <option value="淘宝空调旗舰店">淘宝空调旗舰店</option>
+                    <option value="天猫分销">天猫分销</option>
+                    <option value="淘宝村淘">淘宝村淘</option>
+                    <option value="天猫模卡分销">天猫模卡分销</option>
+                    <option value="天猫分销店">天猫分销店</option>
+                    <option value="天猫企业购">天猫企业购</option>
+                    <option value="天猫生态">天猫生态</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">产品分类</span>
+                <select name="productType" class="easyui-combobox">
+                    <option value="全部" selected="">全部</option>
+                    <option value="冰箱">冰箱</option>
+                    <option value="洗衣机">洗衣机</option>
+                    <option value="---滚筒洗衣机">---滚筒洗衣机</option>
+                    <option value="-----干衣机">-----干衣机</option>
+                    <option value="------洗烘一体">------洗烘一体</option>
+                    <option value="----波轮洗衣机">----波轮洗衣机</option>
+                    <option value="-----免清洗洗衣机">-----免清洗洗衣机</option>
+                    <option value="-----双动力">-----双动力</option>
+                    <option value="----mini洗衣机">----mini洗衣机</option>
+                    <option value="----双缸">----双缸</option>
+                    <option value="冷柜">冷柜</option>
+                    <option value="---冷柜">---冷柜</option>
+                    <option value="---冰吧">---冰吧</option>
+                    <option value="---酒柜">---酒柜</option>
+                    <option value="---展示柜">---展示柜</option>
+                    <option value="空调">空调</option>
+                    <option value="---壁挂式空调">---壁挂式空调</option>
+                    <option value="------高效无频壁挂式空调">------高效无频壁挂式空调</option>
+                    <option value="------无氟变频壁挂式空调">------无氟变频壁挂式空调</option>
+                    <option value="---柜式空调">---柜式空调</option>
+                    <option value="------高效无频壁柜式空调">------高效无频壁柜式空调</option>
+                    <option value="------无氟变频壁柜式空调">------无氟变频壁柜式空调</option>
+                    <option value="---空调附件">---空调附件</option>
+                    <option value="------空调面板">------空调面板</option>
+                    <option value="------空调模块">------空调模块</option>
+                    <option value="---空气盒子">---空气盒子</option>
+                    <option value="---空气类产品">---空气类产品</option>
+                    <option value="家庭保健产品">家庭保健产品</option>
+                    <option value="-----制氧机">-----制氧机</option>
+                    <option value="-----血糖仪">-----血糖仪</option>
+                    <option value="-----胎心仪">-----胎心仪</option>
+                    <option value="-----按摩器">-----按摩器</option>
+                    <option value="-----雾化器">-----雾化器</option>
+                    <option value="-----口罩">-----口罩</option>
+                    <option value="-----耳温计">-----耳温计</option>
+                    <option value="-----医疗小管家">-----医疗小管家</option>
+                    <option value="生活家电">生活家电</option>
+                    <option value="----个人护理">----个人护理</option>
+                    <option value="-----剃须刀">-----剃须刀</option>
+                    <option value="-----电吹风">-----电吹风</option>
+                    <option value="---生活小家电">---生活小家电</option>
+                    <option value="-----吸尘器">-----吸尘器</option>
+                    <option value="-----挂烫机">-----挂烫机</option>
+                    <option value="-----电熨斗">-----电熨斗</option>
+                    <option value="-----空气净化器">-----空气净化器</option>
+                    <option value="-----电暖器">-----电暖器</option>
+                    <option value="-----甲醛检测仪">-----甲醛检测仪</option>
+                    <option value="-----除螨仪">-----除螨仪</option>
+                    <option value="-----蒸汽拖把">-----蒸汽拖把</option>
+                    <option value="-----米桶">-----米桶</option>
+                    <option value="-----智能扫地机">-----智能扫地机</option>
+                    <option value="-----菜多多">-----菜多多</option>
+                    <option value="---厨用小家电">---厨用小家电</option>
+                    <option value="-----搅拌机">-----搅拌机</option>
+                    <option value="-----原汁机">-----原汁机</option>
+                    <option value="咖啡机">咖啡机</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">行政区域</span>
+                <select name="adminArea" class="easyui-combobox">
+                    <option value="全部" selected="">全部</option>
+                    <option value="南区">南区</option>
+                    <option value="东区">东区</option>
+                    <option value="北区">北区</option>
+                    <option value="西区">西区</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">网单号</span>
+                <input class="easyui-textbox" name="netOrderNo">
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">支付状态</span>
+                <select name="payStatus" class="easyui-combobox">
+                    <option value="全部" selected="">全部</option>
+                    <option value="未付款">未付款</option>
+                    <option value="已付款">已付款</option>
+                    <option value="待退款">待退款</option>
+                    <option value="已退款">已退款</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">支付方式</span>
+                <select name="payWays" class="easyui-combobox">
+                    <option value="全部" selected="">全部</option>
+                    <option value="银联支付">银联支付</option>
+                    <option value="电子钱包">电子钱包</option>
+                    <option value="支付宝">支付宝</option>
+                    <option value="微信支付">微信支付</option>
+                    <option value="货到付款">货到付款</option>
+                    <option value="建行网银">建行网银</option>
+                    <option value="客户预付贷款">客户预付贷款</option>
+                    <option value="线下付款">线下付款</option>
+                    <option value="礼品卡支付">礼品卡支付</option>
+                    <option value="余额支付">余额支付</option>
+                    <option value="内部结算单">内部结算单</option>
+                    <option value="支付宝移动商城">支付宝移动商城</option>
+                    <option value="联通支付">联通支付</option>
+                    <option value="快捷通">快捷通</option>
+                    <option value="花呗分期">花呗分期</option>
+                    <option value="建行信用卡分期">建行信用卡分期</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">网单状态</span>
+                <select name="netStatus" class="easyui-combobox">
+                    <option value="全部" selected="">全部</option>
+                    <option value="未处理">未处理</option>
+                    <option value="完成关闭">完成关闭</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">订单状态</span>
+                <select name="orderStatus" class="easyui-combobox">
+                    <option value="全部" selected="">全部</option>
+                    <option value="已确认">已确认</option>
+                    <option value="未确认">未确认</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">是否超时免单</span>
+                <select name="overtimeFree" class="easyui-combobox">
+                    <option value="全部">全部</option>
+                    <option value="是">是</option>
+                    <option value="否">否</option>
+                </select>
+            </div>
+
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderForecastLogs"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastLogs"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn_orderForecastLogs"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+
+    </form>
+</div>
+
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastLogs').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/order/orderConfirm.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.HpNoticeQueuesWriteDao">
+
+
+	<update id="update" parameterType="com.haier.shop.model.HpNoticeQueues" >
+	    update HPNoticeQueues
+	    <set >
+	      <if test="orderProductId != null" >
+	        orderProductId = #{orderProductId},
+	      </if>
+	      <if test="success != null" >
+	        success = #{success},
+	      </if>
+	      <if test="count != null" >
+	        count = #{count},
+	      </if>
+	      <if test="addTime != null" >
+	        addTime = #{addTime},
+	      </if>
+	      <if test="successTime != null" >
+	        successTime = #{successTime},
+	      </if>
+	      <if test="lastTryTime != null" >
+	        lastTryTime = #{lastTryTime},
+	      </if>
+	      <if test="pushData != null" >
+	        pushData = #{pushData},
+	      </if>
+	      <if test="returnData != null" >
+	        returnData = #{returnData},
+	      </if>
+	      <if test="lastMessage != null" >
+	        lastMessage = #{lastMessage},
+	      </if>
+	    </set>
+	    where id = #{id}
+  </update>
+
+	<update id="updateQueuesBySuccessAndOrderProId" >
+	    update HPNoticeQueues
+	    set  count = 0 
+	    where orderProductId=#{orderProductId} and success='0' and count>=30
+  </update>
+</mapper>

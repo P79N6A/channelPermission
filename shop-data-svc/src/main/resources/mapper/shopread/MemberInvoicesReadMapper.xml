@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.MemberInvoicesReadDao">
+
+    <resultMap id="MemberInvoicesResult" type="com.haier.shop.model.MemberInvoices">
+        <result property="id" column="id" />
+        <result property="invoiceType" column="invoiceType" />
+        <result property="memberId" column="memberId" />
+        <result property="memberName" column="memberName" />
+        <result property="invoiceTitle" column="invoiceTitle" />
+        <result property="taxPayerNumber" column="taxPayerNumber" />
+        <result property="registerAddress" column="registerAddress" />
+        <result property="registerPhone" column="registerPhone" />
+        <result property="bankName" column="bankName" />
+        <result property="bankCardNumber" column="bankCardNumber" />
+        <result property="addTime" column="addTime" />
+        <result property="state" column="state" />
+        <result property="auditTime" column="auditTime" />
+        <result property="auditor" column="auditor" />
+        <result property="remark" column="remark" />
+        <result property="isLock" column="isLock" />
+        <result property="orderId" column="orderId" />
+        <result property="electricFlag" column="electricFlag" />
+    </resultMap>
+
+    <!--发票异常队列    -->
+    <resultMap id="InvoiceExceptionResult" type="com.haier.shop.model.InvoiceExceptionDispItem">
+        <result property="orderSn" column="orderSn"/>
+        <result property="sourceOrderSn" column="sourceOrderSn"/>
+        <result property="relationOrderSn" column="relationOrderSn"/>
+        <result property="isBackend" column="isBackend"/>
+        <result property="o2oType" column="o2oType"/>
+        <result property="stockType" column="stockType"/>
+        <result property="cOrderSn" column="cOrderSn"/>
+        <result property="isReceipt" column="isReceipt"/>
+        <result property="status" column="status"/>
+        <result property="cPaymentStatus" column="cPaymentStatus"/>
+        <result property="paymentStatus" column="paymentStatus"/>
+        <result property="paymentCode" column="paymentCode"/>
+        <result property="paidAmount" column="paidAmount"/>
+        <result property="makeReceiptType" column="makeReceiptType"/>
+        <result property="isMakeReceipt" column="isMakeReceipt"/>
+        <result property="receiptConsignee" column="receiptConsignee"/>
+        <result property="receiptAddress" column="receiptAddress"/>
+        <result property="receiptZipcode" column="receiptZipcode"/>
+        <result property="receiptMobile" column="receiptMobile"/>
+        <result property="addTime" column="addTime"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="source" column="source"/>
+        <result property="brandName" column="brandName"/>
+        <result property="cateName" column="cateName"/>
+        <result property="productName" column="productName"/>
+        <result property="sku" column="sku"/>
+        <result property="price" column="price"/>
+        <result property="number" column="number"/>
+        <result property="shippingFee" column="shippingFee"/>
+        <result property="productAmount" column="productAmount"/>
+        <result property="remark" column="remark"/>
+        <result property="username" column="username"/>
+        <result property="originRegionName" column="originRegionName"/>
+        <result property="originAddress" column="originAddress"/>
+        <result property="consignee" column="consignee"/>
+        <result property="mobile" column="mobile"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city" />
+        <result property="region" column="region"/>
+        <result property="street" column="street"/>
+        <result property="regionName" column="regionName"/>
+        <result property="address" column="address"/>
+        <result property="zipcode" column="zipcode"/>
+        <result property="shippingMode" column="shippingMode"/>
+        <result property="sCode" column="sCode"/>
+        <result property="tsCode" column="tsCode"/>
+        <result property="tsShippingTime" column="tsShippingTime"/>
+        <result property="tradeSn" column="tradeSn"/>
+        <result property="points" column="points"/>
+        <result property="payTime" column="payTime"/>
+        <result property="firstConfirmTime" column="firstConfirmTime"/>
+        <result property="firstConfirmPerson" column="firstConfirmPerson" />
+        <result property="agent" column="agent"/>
+        <result property="confirmTime" column="confirmTime"/>
+        <result property="netPointName" column="netPointName"/>
+        <result property="hpFinishDate" column="hpFinishDate"/>
+        <result property="outping" column="outping"/>
+        <result property="invoiceType" column="invoiceType"/>
+        <result property="invoiceTitle" column="invoiceTitle"/>
+        <result property="taxPayerNumber" column="taxPayerNumber"/>
+        <result property="registerPhone" column="registerPhone"/>
+        <result property="registerAddress" column="registerAddress"/>
+        <result property="bankName" column="bankName"/>
+        <result property="bankCardNumber" column="bankCardNumber"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <!--订单开票列表    -->
+    <resultMap id="MemberInvoicesDispItemResult" type="com.haier.shop.model.MemberInvoicesDispItem">
+        <result property="orderId" column="orderId"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="paymentStatus" column="paymentStatus"/>
+        <result property="source" column="source"/>
+        <result property="invoiceType" column="invoiceType"/>
+        <result property="electricFlag" column="electricFlag"/>
+        <result property="memberName" column="memberName"/>
+        <result property="invoiceTitle" column="invoiceTitle"/>
+        <result property="taxPayerNumber" column="taxPayerNumber"/>
+        <result property="registerAddress" column="registerAddress"/>
+        <result property="registerPhone" column="registerPhone"/>
+        <result property="bankName" column="bankName"/>
+        <result property="bankCardNumber" column="bankCardNumber"/>
+        <result property="addTime" column="addTime"/>
+        <result property="addTimeMin" column="addTimeMin"/>
+        <result property="addTimeMax" column="addTimeMax"/>
+        <result property="state" column="state"/>
+        <result property="isLock" column="isLock"/>
+        <result property="auditTime" column="auditTime"/>
+        <result property="auditTimeMin" column="auditTimeMin"/>
+        <result property="auditTimeMax" column="auditTimeMax"/>
+        <result property="auditor" column="auditor"/>
+        <result property="orderSn" column="orderSn"/>
+    </resultMap>
+
+    <!--订单开票列表  query  -->
+    <sql id="memberInvoiceQuery">
+        <if test="orderSn !=null and orderSn != ''">
+            and os.orderSn LIKE CONCAT(#{orderSn},'%')
+        </if>
+        <if test="orderStatus !=null and orderStatus != '' and orderStatus != '-1' or orderStatus==0">
+            and os.orderStatus=#{orderStatus}
+        </if>
+        <if test="paymentStatus !=null and paymentStatus != '' and paymentStatus != '-1' or paymentStatus==0">
+            and os.paymentStatus=#{paymentStatus}
+        </if>
+        <if test="source !=null and  source != '' and source != '-1' or source==0">
+            and os.source=#{source}
+        </if>
+        <if test="invoiceType !=null and invoiceType != '' and invoiceType != '-1' or invoiceType==0">
+            and mi.invoiceType=#{invoiceType}
+        </if>
+        <if test="electricFlag !=null and  electricFlag != '' and electricFlag != '-1' or electricFlag==0">
+            and mi.electricFlag=#{electricFlag}
+        </if>
+        <if test="memberName !=null and memberName != ''">
+            and UPPER(mi.memberName) LIKE CONCAT('%',UPPER(#{memberName}),'%')
+        </if>
+        <if test="invoiceTitle !=null and invoiceTitle != ''">
+            and  UPPER(mi.invoiceTitle) LIKE CONCAT('%',UPPER(#{invoiceTitle}),'%')
+        </if>
+        <if test="taxPayerNumber !=null and taxPayerNumber != ''">
+            and  UPPER(mi.taxPayerNumber) LIKE CONCAT('%',UPPER(#{taxPayerNumber}),'%')
+        </if>
+        <if test="registerAddress !=null and registerAddress != ''">
+            and UPPER(mi.registerAddress) LIKE CONCAT('%',UPPER(#{registerAddress}),'%')
+        </if>
+        <if test="registerPhone !=null and registerPhone != ''">
+            and  UPPER(mi.registerPhone) LIKE CONCAT('%',UPPER(#{registerPhone}),'%')
+        </if>
+        <if test="bankName !=null and bankName != ''">
+            and  UPPER(mi.bankName) LIKE CONCAT('%',UPPER(#{bankName}),'%')
+        </if>
+        <if test="bankCardNumber !=null and bankCardNumber != ''">
+            and UPPER(mi.bankCardNumber) LIKE CONCAT('%',UPPER(#{bankCardNumber}),'%')
+        </if>
+        <if test="addTimeMin !=null and addTimeMin != ''">
+            and mi.addTime &gt;= UNIX_TIMESTAMP(#{addTimeMin})
+        </if>
+        <if test="addTimeMax !=null and addTimeMax != ''">
+            and mi.addTime &lt;= UNIX_TIMESTAMP(#{addTimeMax})
+        </if>
+        <if test="state !=null and state != '' and state != '-1' or state==0">
+            and mi.state=#{state}
+        </if>
+        <if test="auditTimeMin !=null and auditTimeMin != ''">
+            and mi.auditTime &gt;= UNIX_TIMESTAMP(#{auditTimeMin})
+        </if>
+        <if test="auditTimeMax !=null and auditTimeMax != ''">
+            and mi.auditTime &lt;= UNIX_TIMESTAMP(#{auditTimeMax})
+        </if>
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </sql>
+
+    <select id="getByOrderId" parameterType="Integer" resultMap="MemberInvoicesResult">
+        select `id`,`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`electricFlag`
+        from `MemberInvoices`
+        where `orderId` = #{orderId}
+        limit 1
+    </select>
+
+    <select id="getById" parameterType="Integer" resultMap="MemberInvoicesResult">
+        select `id`,`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`electricFlag`
+        from `MemberInvoices`
+        where `id` = #{id}
+    </select>
+
+    <select id="getInvoiceTitleByOrderId" parameterType="Integer" resultType="java.lang.String">
+        select `invoiceTitle`
+        from `MemberInvoices`
+        where `orderId` = #{orderId}
+    </select>
+
+    <!-- 订单发票列表 -->
+    <select id="getMemberInvoicesOrderList" parameterType="Map" resultMap="MemberInvoicesDispItemResult">
+        select SQL_CALC_FOUND_ROWS
+        os.paymentStatus,
+        os.source,
+        os.orderSn,
+        mi.orderId,
+        mi.id,
+        mi.invoiceType,
+        mi.electricFlag,
+        mi.memberName,
+        mi.invoiceTitle,
+        mi.taxPayerNumber,
+        mi.registerAddress,
+        mi.registerPhone,
+        mi.bankName,
+        mi.bankCardNumber,
+        CASE WHEN mi.addTime=0 THEN '' ELSE from_unixtime(mi.addTime) END as addTime,
+        mi.state,
+        mi.isLock,
+        CASE WHEN mi.auditTime=0 THEN '' ELSE from_unixtime(mi.auditTime) END as auditTime,
+        mi.auditor
+        from MemberInvoices mi inner JOIN Orders os on mi.orderId=os.id
+        where 1=1
+
+        <if test="ids != null and ids != ''">
+            AND mi.id in (${ids})
+        </if>
+
+        <include refid="memberInvoiceQuery"/>
+
+
+    </select>
+
+    <select id="getRowCnts" resultType="int">
+        SELECT
+        FOUND_ROWS();
+    </select>
+
+    <select id="getMemberInvoiceByInvoiceTitle" parameterType="String" resultType="com.haier.shop.model.MemberInvoices">
+        SELECT
+        invoiceType,
+        taxPayerNumber,
+        registerAddress,
+        registerPhone,
+        bankName,
+        bankCardNumber
+        FROM
+        MemberInvoices
+        WHERE
+        invoiceType = "1"
+        AND invoiceTitle = #{invoiceTitle}
+        AND state = "1"
+        ORDER BY id ASC
+        LIMIT 1
+    </select>
+
+    <select id="checkPassedValuedInvoice" parameterType="com.haier.shop.model.MemberInvoices" resultMap="MemberInvoicesResult">
+        select `id`,`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`electricFlag`
+        from `MemberInvoices`
+        where `invoiceType` = #{invoiceType}
+        AND `invoiceTitle` = #{invoiceTitle}
+        AND `taxPayerNumber` = #{taxPayerNumber}
+        AND `registerAddress` = #{registerAddress}
+        AND `registerPhone` = #{registerPhone}
+        AND `bankName` = #{bankName}
+        AND `bankCardNumber` = #{bankCardNumber}
+        AND `state` = #{state}
+        order by id ASC
+        limit 1
+    </select>
+
+    <select id="getInvoiceExceptionList"  parameterType="Map"  resultMap="InvoiceExceptionResult">
+        SELECT SQL_CALC_FOUND_ROWS
+        os.orderSn,
+        os.sourceOrderSn,
+        os.relationOrderSn,
+        os.isBackend,
+        op.o2oType,
+        op.stockType,
+        op.cOrderSn,
+        op.isReceipt,
+        op.status,
+        op.cPaymentStatus,
+        os.paymentStatus,
+        os.paymentCode,
+        os.paidAmount,
+        op.makeReceiptType,
+        op.isMakeReceipt,
+        os.receiptConsignee,
+        os.receiptAddress,
+        os.receiptZipcode,
+        os.receiptMobile,
+        os.addTime,
+        os.orderStatus,
+        os.source,
+        b.brandName,
+        pc.cateName,
+        op.productName,
+        op.sku,
+        op.price,
+        op.number,
+        op.shippingFee,
+        op.productAmount,
+        os.remark,
+        m.username,
+        os.originRegionName,
+        os.originAddress,
+        os.consignee,
+        os.mobile,
+        os.province,
+        os.city,
+        os.region,
+        os.street,
+        os.regionName,
+        os.address,
+        os.zipcode,
+        op.shippingMode,
+        op.sCode,
+        op.tsCode,
+        op.tsShippingTime,
+        os.tradeSn,
+        op.points,
+        os.payTime,
+        os.firstConfirmTime,
+        os.firstConfirmPerson,
+        os.agent,
+        os.confirmTime,
+        np.netPointName,
+        op.hpFinishDate,
+        op.outping,
+        mi.invoiceType,
+        mi.invoiceTitle,
+        mi.taxPayerNumber,
+        mi.registerPhone,
+        mi.registerAddress,
+        mi.bankName,
+        mi.bankCardNumber,
+        mi.state
+        FROM
+        OrderProducts op
+        LEFT JOIN Orders os
+        <if test="(orderSn == null or orderSn == '') and (cOrderSn == null or cOrderSn == '')">
+            force index (addTime)
+        </if>
+        ON os.id = op.orderId
+        LEFT JOIN NetPoints np ON np.id = op.netPointId
+        LEFT JOIN Brands b ON b.id = op.brandId
+        LEFT JOIN Products p ON p.id = op.productId
+        LEFT JOIN ProductTypes pt ON pt.id = op.productType
+        LEFT JOIN ProductCates pc ON pc.id = op.cateId
+        LEFT JOIN MemberInvoices mi ON op.orderId = mi.orderId
+        LEFT JOIN Members m ON os.memberId = m.id
+        WHERE
+        <![CDATA[
+				op.stockType NOT IN ('STORE')
+			AND os.paymentCode NOT IN ('insidestatement','giftCard')
+			AND os.source NOT IN ('GMTSZYCW','GMTSZYKT','GMTSZYBX','GMTSZYXYJ',
+				'GMTSZYYY','YHDQWZY','DBJ','HBSC','DALOU','BLPHH')
+			AND op.productAmount >= 1
+			AND op.cateId <> '2842'
+			AND NOT EXISTS (
+				SELECT 1 FROM OrderRepairs ors
+				 WHERE op.id = ors.orderProductId
+				   AND ors.handleStatus IN ( 1, 2, 3, 9 )
+				)
+			]]>
+        <if test="orderSn != null and orderSn != ''">
+            AND os.orderSn = #{orderSn}
+        </if>
+        <if test="cOrderSn != null and cOrderSn != ''">
+            AND op.cOrderSn = #{cOrderSn}
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            <![CDATA[AND os.addTime >= #{addTimeMin}]]>
+        </if>
+        <if test="addTimeMax != null and addTimeMax != ''">
+            <![CDATA[AND os.addTime <= #{addTimeMax}]]>
+        </if>
+        <if test="cPaymentStatus != null and cPaymentStatus != ''">
+            AND op.cPaymentStatus = #{cPaymentStatus}
+        </if>
+        <if test="status != null and status != ''">
+            AND op.status = #{status}
+        </if>
+        <if test="makeReceiptType != null and makeReceiptType != ''">
+            AND op.makeReceiptType = #{makeReceiptType}
+        </if>
+        <if test="isMakeReceipt != null and isMakeReceipt != ''">
+            AND op.isMakeReceipt = #{isMakeReceipt}
+        </if>
+        <if test="state != null and state != ''">
+            AND mi.state = #{state}
+        </if>
+
+        <if test="invoiceType != null and invoiceType == 1">
+            <![CDATA[
+				AND mi.invoiceType = #{invoiceType}
+				AND op.status = 130
+				AND mi.state = 1
+				AND mi.auditTime < #{nowDate}
+				AND op.isMakeReceipt in (1,5,6,9)
+				]]>
+        </if>
+        <if test="invoiceType != null and invoiceType == 2">
+            <![CDATA[
+				AND mi.invoiceType = #{invoiceType}
+				AND op.status > 8
+				AND op.status <> 110
+				AND op.lessShipTime < #{nowDate}
+				AND op.isMakeReceipt in (1,5,6,9)
+				]]>
+        </if>
+
+        <if test="m != null and n != null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getElectricFlag" parameterType="Integer" resultType="Integer">
+        select count(0) from MemberInvoices where orderId=#{orderId} and electricFlag=1
+    </select>
+</mapper>

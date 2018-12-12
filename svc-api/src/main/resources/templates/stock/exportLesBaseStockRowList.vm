@@ -1,0 +1,45 @@
+<head >
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<table border="1" cellpadding="0" class="table table-striped table-bordered bootstrap-datatable datatable dataTable" cellspacing="0" width="100%" >
+		 <thead>
+    		<tr role="row">
+    		    <th class="sorting" style="min-width:50px; text-align:center;">序号</th>
+	    		<th class="sorting" style="min-width:100px; text-align:center;">物料编号</th>
+				<th class="sorting" style="min-width:100px; text-align:center;">品类</th>
+				<th class="sorting" style="min-width:100px; text-align:center;">产品型号</th>
+				<th class="sorting" style="min-width:100px; text-align:center;">LES库位编码</th>
+				<th class="sorting" style="min-width:100px; text-align:center;">库位编码</th>
+				<th class="sorting" style="min-width:100px; text-align:center;">库位名称</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">实际库存</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">占用库存</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">批次</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">创建时间</th>
+				<th class="sorting" style="min-width:60px; text-align:center;">更新时间</th>
+    		</tr>
+         </thead>
+		  <tbody role="alert" aria-live="polite" aria-relevant="all">
+		 #set($count=0)
+		#foreach($row in $!rowList)
+			 #if($count%2==0)
+        		<tr>
+    		#else
+        		<tr class="tr-bg">
+			#end
+			 		#set($count=$count+1)
+				    <td style="text-align:center;">$!count</td>
+					<td style="text-align:center;">$!{row.sku}</td>
+                    <td style="text-align:center;">$!{row.cbsCategory}</td>
+                    <td style="text-align:center;">$!{row.productName}</td>
+                    <td style="text-align:center;">$!{row.lesSecCode}</td>
+				    <td style="text-align:center;">$!{row.secCode}</td>
+					<td style="text-align:center;">$!{row.secName}</td>
+					<td style="text-align:center;">$!{row.stockQty}</td>
+					<td style="text-align:center;">$!{row.frozenQty}</td>
+					<td style="text-align:center;">$!{row.itemProperty}</td>
+					<td style="text-align:center;">$!date.format('yyyy-MM-dd HH:mm:ss',$!{row.createTime})</td>
+					<td style="text-align:center;">$!date.format('yyyy-MM-dd HH:mm:ss',$!{row.updateTime})</td>
+				</tr>
+			#end
+		</tbody>
+	</table>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.eop.data.dao.StocksynCstorageDao" >
+  <resultMap id="BaseResultMap" type="com.haier.eop.data.model.StocksynCstorage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="storageId" property="storageId" jdbcType="INTEGER" />
+    <result column="sCode" property="sCode" jdbcType="VARCHAR" />
+    <result column="sourceStoreCode" property="sourceStoreCode" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, storageId, sCode, sourceStoreCode, source, addTime, updateTime
+  </sql>
+  <select id="Listf" resultMap="BaseResultMap">
+SELECT *
+	FROM stocksyncstorage
+	where 1=1 
+	<if test="entity!=null">
+		<if test="entity.source != null and entity.source !='' ">
+        <![CDATA[ and source = #{entity.source} ]]>
+      </if>
+	  <if test="entity.sourceStoreCode!= null and entity.sourceStoreCode!='' ">
+        <![CDATA[ and sourceStoreCode like #{entity.sourceStoreCode}]]>
+      </if>
+      <if test="entity.sCode != null and entity.sCode !='' ">
+        <![CDATA[ and sCode like #{entity.sCode}]]>
+      </if>
+	</if>
+	<include refid="pagination" />
+  </select>
+  
+   <select id="getPagerCountS" resultType="int">
+		SELECT count(id)
+	FROM stocksyncstorage
+		where 1=1
+		 
+		<if test="entity!=null">
+		<if test="entity.source != null and entity.source !='' ">
+        <![CDATA[ and source = #{entity.source} ]]>
+      </if>
+	  <if test="entity.sourceStoreCode!= null and entity.sourceStoreCode!='' ">
+        <![CDATA[ and sourceStoreCode like #{entity.sourceStoreCode}]]>
+      </if>
+      <if test="entity.sCode != null and entity.sCode !='' ">
+        <![CDATA[ and sCode like #{entity.sCode}]]>
+      </if>
+	</if>
+	</select>
+  <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+  
+  <select id="getId" resultMap="BaseResultMap">
+SELECT id
+	FROM stocksyncstorage
+	where 
+         sCode = #{entity.sCode}
+         and
+         source = #{entity.source}
+  </select>
+  <select id="getsCode" resultMap="BaseResultMap">
+SELECT *
+	FROM stocksyncstorage
+	where 
+         source = #{source,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stocksyncstorage
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.haier.eop.data.model.StocksynCstorage" >
+    insert into stocksyncstorage (id, storageId, sCode, 
+      sourceStoreCode, source, addTime, 
+      updateTime)
+    values (#{id,jdbcType=INTEGER}, #{storageId,jdbcType=INTEGER}, #{sCode,jdbcType=VARCHAR}, 
+      #{sourceStoreCode,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.eop.data.model.StocksynCstorage" >
+    insert into stocksyncstorage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="storageId != null" >
+        storageId,
+      </if>
+      <if test="sCode != null" >
+        sCode,
+      </if>
+      <if test="sourceStoreCode != null" >
+        sourceStoreCode,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="addTime != null" >
+        addTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storageId != null" >
+        #{storageId,jdbcType=INTEGER},
+      </if>
+      <if test="sCode != null" >
+        #{sCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceStoreCode != null" >
+        #{sourceStoreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.eop.data.model.StocksynCstorage" >
+    update stocksyncstorage
+    <set >
+      <if test="storageId != null" >
+        storageId = #{storageId,jdbcType=INTEGER},
+      </if>
+      <if test="sCode != null" >
+        sCode = #{sCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceStoreCode != null" >
+        sourceStoreCode = #{sourceStoreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.eop.data.model.StocksynCstorage" >
+    update stocksyncstorage
+    set storageId = #{storageId,jdbcType=INTEGER},
+      sCode = #{sCode,jdbcType=VARCHAR},
+      sourceStoreCode = #{sourceStoreCode,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      addTime = #{addTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

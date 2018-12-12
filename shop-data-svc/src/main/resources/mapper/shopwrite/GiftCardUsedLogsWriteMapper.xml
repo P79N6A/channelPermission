@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.GiftCardUsedLogsWriteDao">
+
+	<insert id="insert" parameterType="com.haier.shop.model.GiftCardUsedLogs">
+	    insert into giftcardusedlogs (id, siteId, giftCardId, 
+	      giftCardNumberId, memberId, memberName, 
+	      memberEmail, usedType, beforeBalanceAmount, 
+	      amount, afterBalanceAmount, systemRemark, 
+	      addTime, orderProductId, orderSn, 
+	      giftCardStoreId, giftCardStoreCode, remark
+	      )
+	    values (#{id,jdbcType=INTEGER}, #{siteId,jdbcType=INTEGER}, #{giftCardId,jdbcType=INTEGER}, 
+	      #{giftCardNumberId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{memberName,jdbcType=VARCHAR}, 
+	      #{memberEmail,jdbcType=VARCHAR}, #{usedType,jdbcType=BIT}, #{beforeBalanceAmount,jdbcType=DECIMAL}, 
+	      #{amount,jdbcType=DECIMAL}, #{afterBalanceAmount,jdbcType=DECIMAL}, #{systemRemark,jdbcType=VARCHAR}, 
+	      #{addTime,jdbcType=INTEGER}, #{orderProductId,jdbcType=INTEGER}, #{orderSn,jdbcType=VARCHAR}, 
+	      #{giftCardStoreId,jdbcType=INTEGER}, #{giftCardStoreCode,jdbcType=VARCHAR}, #{remark,jdbcType=LONGVARCHAR}
+	      )
+  </insert>
+</mapper>

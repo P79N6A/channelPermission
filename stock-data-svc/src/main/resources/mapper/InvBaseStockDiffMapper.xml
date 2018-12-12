@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvBaseStockDiffDao">
+	<resultMap id="invBaseStockDiffResult" type="com.haier.stock.model.InvBaseStockDiff">
+		<result property="id" column="id" />
+		<result property="sku" column="sku" />
+		<result property="lesSecCode" column="les_sec_code" />
+		<result property="stockQty" column="stock_qty" />
+		<result property="frozenQty" column="frozen_qty" />
+		<result property="productName" column="product_name" />
+		<result property="productTypeName" column="product_type_name" />
+		<result property="productGroupName" column="product_group_name" />
+		<result property="secName" column="sec_name" />
+		<result property="itemProperty" column="item_property" />
+		<result property="diffType" column="diff_type" />
+		<result property="lesClabs" column="les_clabs" />
+		<result property="lesCumlm" column="les_cumlm" />
+		<result property="lesZmenge1" column="les_zmenge1" />
+		<result property="lesMenge1" column="les_menge1" />
+		<result property="lesMenge2" column="les_menge2" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	<select id="queryInvBaseStockDiff" resultMap="invBaseStockDiffResult">
+		<![CDATA[
+		select
+		 `id`,`sku`,`les_sec_code`,`stock_qty`,`frozen_qty`,`product_name`,`product_type_name`,`product_group_name`,`sec_name`,
+		 `item_property`,`diff_type`,`les_clabs`,`les_cumlm`,`les_zmenge1`,`les_menge1`,`les_menge2`,`create_time`,`update_time`
+		  from `inv_base_stock_diff`
+		  where `item_property`='10' and
+		 `id` > ${maxId} limit ${topX}
+		 ]]>
+	</select>
+	
+	<update id="updateInvBaseStockDiff" parameterType="com.haier.stock.model.InvBaseStockDiff">
+		<![CDATA[
+		update `inv_base_stock_diff` set
+		`diff_type`=#{invBaseStockDiff.diffType},`les_clabs`=#{invBaseStockDiff.lesClabs},`les_cumlm`=#{invBaseStockDiff.lesCumlm},`les_zmenge1`=#{invBaseStockDiff.lesZmenge1},`les_menge1`=#{invBaseStockDiff.lesMenge1},`les_menge2`=#{invBaseStockDiff.lesMenge2},`update_time`=now()
+		where `sku` = #{invBaseStockDiff.sku} and `les_sec_code` = #{invBaseStockDiff.lesSecCode} and `item_property`='10'
+	    ]]>
+	</update>
+	
+</mapper>

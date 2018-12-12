@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+
+  <link rel="stylesheet" href="/static/css/common.css">
+  <title>sysUser</title>
+  <script src="/static/third/jquery.js"></script>
+  <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="/static/js/utils.js"></script>
+  <script src="/static/js/easyui-extention.js"></script>
+  <script src="/static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_sysUser" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+  <table id="datagrid_sysUser"></table>
+</div>
+
+<div id="datagridToolbar_sysUser">
+  <form id="paramForm_sysUser" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          登录账户
+        </span>
+          <input class="easyui-textbox" name="loginAccount"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          密码
+        </span>
+          <input class="easyui-textbox" name="password"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          用户名
+        </span>
+          <input class="easyui-textbox" name="userName"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          邮箱地址
+        </span>
+          <input class="easyui-textbox" name="email"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          座机
+        </span>
+          <input class="easyui-textbox" name="phone"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          手机
+        </span>
+          <input class="easyui-textbox" name="mobile"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          头像图片地址
+        </span>
+          <input class="easyui-textbox" name="avatarUrl"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          用户来源
+        </span>
+          <input class="easyui-textbox" name="userSource"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          锁定标志 0-未锁定 1-锁定
+        </span>
+          <input class="easyui-textbox" name="lockFlag"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          最后登录IP
+        </span>
+          <input class="easyui-textbox" name="lastLoginIp"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          最后登录时间
+        </span>
+          <input class="easyui-datebox" name="lastLoginDate"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          最后密码修改时间
+        </span>
+          <input class="easyui-datebox" name="lastPwdUpdDate"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          备注
+        </span>
+          <input class="easyui-textbox" name="remark"/>
+      </div>
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn_sysUser" data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_sysUser" data-options="iconCls:'icon-redo',plain:true">重置</a>
+    <a href="#" class="easyui-linkbutton" id="addBtn_sysUser" data-options="iconCls:'icon-add',plain:true">增加</a>
+    <a href="#" class="easyui-linkbutton" id="editBtn_sysUser" data-options="iconCls:'icon-edit',plain:true">修改</a>
+    <a href="#" class="easyui-linkbutton" id="deleteBtn_sysUser" data-options="iconCls:'icon-remove',plain:true">删除</a>
+  </form>
+</div>
+<div id="addDlg_sysUser" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:300px;"
+     closed="true" buttons="#dlg-buttons_sysUser">
+  <form id="addForm_sysUser" method="post">
+    <input name="id" type="text" style="display:none;"/>
+    <input __actType type="hidden"/>
+    <div class="fitem">
+      <label>登录账户:</label>
+        <input class="easyui-textbox" name="loginAccount" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>密码:</label>
+        <input class="easyui-textbox" name="password" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>用户名:</label>
+        <input class="easyui-textbox" name="userName" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>邮箱地址:</label>
+        <input class="easyui-textbox" name="email" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>座机:</label>
+        <input class="easyui-textbox" name="phone" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>手机:</label>
+        <input class="easyui-textbox" name="mobile" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>头像图片地址:</label>
+        <input class="easyui-textbox" name="avatarUrl" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>用户来源:</label>
+        <input class="easyui-textbox" name="userSource" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>锁定标志 0-未锁定 1-锁定:</label>
+        <input class="easyui-textbox" name="lockFlag" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>最后登录IP:</label>
+        <input class="easyui-textbox" name="lastLoginIp" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>最后登录时间:</label>
+        <input class="easyui-datebox" name="lastLoginDate" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>最后密码修改时间:</label>
+        <input class="easyui-datebox" name="lastPwdUpdDate" required="true"/>
+    </div>
+    <div class="fitem">
+      <label>备注:</label>
+        <input class="easyui-textbox" name="remark" required="true"/>
+    </div>
+  </form>
+  <div id="dlg-buttons_sysUser">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_sysUser" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_sysUser').dialog('close')">取消</a>
+  </div>
+</div>
+
+<script src="/static/js/auth/sysUserIndex.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.HPFailedsReadDao">
+	<resultMap id="hPFailedsResult" type="com.haier.shop.model.HPFaileds">
+		<result property="id" column="id" />
+		<result property="orderProductId" column="orderProductId" />
+		<result property="pushData" column="pushData" />
+		<result property="success" column="success" />
+		<result property="count" column="count" />
+		<result property="addTime" column="addTime" />
+		<result property="lastMessage" column="lastMessage" />
+		<result property="successTime" column="successTime" />
+		<result property="createType" column="createType" />
+		<result property="operator" column="operator" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="hPFailedsResult">
+		select `id`,`orderProductId`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`successTime`,`createType`,`operator`
+		from `HPFaileds`
+		where `id` = #{id}
+	</select>
+	<select id="getByOrderProductId" parameterType="Integer" resultMap="hPFailedsResult">
+		select `id`,`orderProductId`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`successTime`,`createType`,`operator`
+		from `HPFaileds`
+		where `orderProductId` = #{orderProductId}
+		limit 1
+	</select>
+</mapper>

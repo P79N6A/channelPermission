@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.CmtCommentOrderProductsWriteDao">
+    <resultMap id="cmtCommentOrderProductsResult" type="com.haier.shop.model.CmtCommentOrderProducts">
+        <result property="orderProductId" column="order_product_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="commentStatus" column="comment_status"/>
+        <result property="corderSn" column="corder_sn"/>
+        <result property="shareOrderNotify" column="share_order_notify"/>
+        <result property="commentNotify" column="comment_notify"/>
+        <result property="expireStatus" column="expire_status"/>
+        <result property="orderId" column="order_id"/>
+        <result property="closeTime" column="close_time"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.haier.shop.model.CmtCommentOrderProducts">
+        INSERT INTO `cmt_comment_order_products` (`order_product_id`, `member_id`, `comment_status`, `corder_sn`, `share_order_notify`, `comment_notify`, `expire_status`, `order_id`, `close_time`)
+        SELECT
+        #{orderProductId}, #{memberId}, #{commentStatus}, #{corderSn}, #{shareOrderNotify}, #{commentNotify}, 0, #{orderId}, #{closeTime}
+        FROM DUAL
+        WHERE NOT EXISTS
+        (
+        SELECT
+        1
+        FROM cmt_comment_order_products t
+        WHERE t.order_product_id = #{orderProductId}
+        )
+    </insert>
+</mapper>

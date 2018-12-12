@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvWaStreetRefDao">
+	<resultMap id="InvWaStreetRefResult" type="com.haier.stock.model.InvWaStreetRefEntity">
+	<result property="id" column="id" />
+	<result property="wcoce" column="wcoce" />
+	<result property="streetId" column="street_id" />
+	<result property="addTime" column="add_time" />
+	<result property="modifyTime" column="modify_time" />
+	</resultMap>
+
+	<sql id="selectAllColumns">
+		<![CDATA[
+		select
+		id,wcoce,street_id,add_time,modify_time
+		from section_street_ref
+		]]>
+	</sql>
+
+	<!-- 根据街道ID获取库位list-->
+	<select id="findInvWaStreetRefByStreetId" parameterType="java.lang.Integer" resultType="java.lang.String">
+	   	select wcoce
+	   	from section_street_ref
+	    where street_id = #{streetId}
+	</select>
+	
+	
+		<!-- 根据街道ID获取库位list-->
+	<select id="findInvWaStreetRefAll" parameterType="java.lang.Integer" resultMap="InvWaStreetRefResult">
+	   	select
+		id,wcoce,street_id,add_time,modify_time
+		from section_street_ref
+	</select>
+	
+	
+
+</mapper>

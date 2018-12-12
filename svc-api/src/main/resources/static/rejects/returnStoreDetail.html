@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+
+<body class="iframe-body">
+<div style="height:100%;width:100%;overflow:auto">
+    <div id="orderDetail_div" style="padding-bottom: 20px;">
+        <div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px ">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;">
+            基本信息
+        </span>
+            <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+                   value="返回" onclick="goback()"
+                   style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;float: right;"/>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">退仓创建时间：</span>
+                        <span class="">2017-08-21 16:29:21</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">不良品退货单ID：</span>
+                        1699783
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">菜鸟退仓单据ID：</span>
+                        <span>否</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">菜鸟退出仓库：</span>
+                        <span></span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">菜鸟退仓单创建：</span>
+                        <span></span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">菜鸟退仓单创建时间：</span>
+                        <span></span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">期望出库时间：</span>
+                        <span></span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">退仓类型：</span>
+                        <span>非良品</span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">出库单号：</span>
+                        <span></span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">出库时间：</span>
+                        <span></span>
+                    </div>
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" style="float: left">出库单状态：</span>
+                        <span></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="receipt" class="param-form" style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="margin-left: 15px;">退仓入库记录</span>
+        </div>
+        <div class="detail_content">
+            <form class="param-form">
+                <div class="search-panel">
+
+                    <table style="margin-left: 15px;padding-right: 5px;margin-bottom: 8px;">
+                        <tr style="text-align:center;">
+                            <th style="width: 10%">vom退仓单号</th>
+                            <th style="width: 10%">货品编码</th>
+                            <th style="width: 10%">退仓关联单号</th>
+                            <th style="width: 10%">提单号</th>
+                            <th style="width: 5%">开提单成功时间</th>
+                            <th style="width: 15%">出入库凭证号</th>
+                            <th style="width: 5%">回传凭证号时间</th>
+                            <th style="width: 5%">计划退仓数量</th>
+                            <th style="width: 5%"> 物流入库数量</th>
+                        </tr>
+                        <tr style="text-align: center;">
+                            <td style="width: 10%"><a href="../rejects/inStoreDetail.html">WD161111027291TC2</a></td>
+                            <td style="width: 10%">GA0SL201C</td>
+                            <td style="width: 10%">TH0000000000363478</td>
+                            <td style="width: 10%"></td>
+                            <td style="width: 5%"></td>
+                            <td style="width: 15%"></td>
+                            <td style="width: 5%"></td>
+                            <td style="width: 5%">1</td>
+                            <td style="width: 5%"> 0</td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <div id="operateHistory" class="param-form"
+             style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">操作历史</span>
+        </div>
+        <div class="detail_content" style="padding-left: 10px;padding-top:10px;">
+            <table width="100%">
+                <tbody style="text-align: center;">
+                <tr>
+                    <th width="10%" style="text-align: center;">操作时间</th>
+                    <th width="20%" style="text-align: center;">操作人</th>
+                    <th width="20%" style="text-align: center;">操作名称</th>
+                    <th width="15%" style="text-align: center;">备注</th>
+                </tr>
+                <tr>
+                    <td style="padding-left:30px;">2017-08-21 16:29:21</td>
+                    <td>系统</td>
+                    <td>登记</td>
+                    <td>生成退仓单</td>
+                </tr>
+                <tr>
+                    <td style="padding-left:30px;">2017-08-21 17:48:51</td>
+                    <td>系统</td>
+                    <td>登记</td>
+                    <td>退仓数据写入队列成功，待推送菜鸟</td>
+                </tr>
+                <tr>
+                    <td style="padding-left:30px;">2017-08-21 18:44:18</td>
+                    <td>系统</td>
+                    <td>登记</td>
+                    <td>退仓数据写入队列成功，待推送菜鸟</td>
+                </tr>
+                <tr>
+                    <td style="padding-left:30px;">2017-08-21 19:13:15</td>
+                    <td>系统</td>
+                    <td>登记</td>
+                    <td>退仓数据写入队列成功，待推送菜鸟</td>
+                </tr>
+                <tr>
+                    <td style="padding-left:30px;">2017-08-22 15:14:06</td>
+                    <td>系统</td>
+                    <td>登记</td>
+                    <td>退仓数据写入队列成功，待推送菜鸟</td>
+                </tr>
+                <tr>
+                    <td style="padding-left:30px;">2017-08-22 15:29:10</td>
+                    <td>系统</td>
+                    <td>提交菜鸟退仓信息</td>
+                    <td>同步到菜鸟失败，错误信息：origErrorCode=WHC_INVENTORY_DETAIL_NOT_ENOUGH,
+                        origErrorMsg=库存明细表中库存不足scItemId=539120474073
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div style="text-align: center;height: 35px;background-color:#e8e8e8;padding-top: 10px;">Powered by PEC</div>
+</div>
+<script>
+    var goback = function () {
+        window.history.back();
+    };
+</script>
+</body>
+</html>

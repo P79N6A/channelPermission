@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    ~ Copyright (c) 2017 interconn@Haier
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--注册中心发现服务地址-->
+    <!--<dubbo:registry address="zookeeper://127.0.0.1:2181"/>-->
+    <!-- 生成远程服务代理，可以和本地bean一样使用-->
+    <!-- <dubbo:reference retries="0" interface="com.haier.distribute.service.DemoService"
+                      id="demoService" check="false" timeout="10000"/>-->
+
+    <dubbo:reference retries="0" interface="com.haier.shop.service.InvoicesService"
+                     id="invoicesService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TAdjustDataService"
+                     id="TAdjustDataService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.OrderProductsService"
+                     id="orderProductsService" version="1.0.0" timeout="1200000" check="false"/>
+     <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductsService"
+                     id="productsService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.CommissionProductService"
+                     id="commissionProductService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductTypesService"
+                     id="productTypesService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.BrandsService"
+                     id="brandsService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.DistributionInfoService"
+                     id="distributionInfoService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.DepartmentProductTypeService"
+                     id="departmentProductTypeService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.CommissionTargetService"
+                     id="pommissionTargetService" version="1.0.0" timeout="1200000" check="false"/>
+       <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductCatesService"
+                     id="productCatesService" version="1.0.0" timeout="1200000" check="false"/>
+       <dubbo:reference retries="0" interface="com.haier.distribute.data.service.PopOrderService"
+                     id="popOrderService" version="1.0.0" timeout="1200000" check="false"/>
+		<dubbo:reference retries="0" interface="com.haier.distribute.data.service.TChanneclsInfoService"
+                     id="TChanneclsInfoService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.SysDictionaryService"
+                     id="sysDictionaryService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TOrderOperatorLogService"
+                     id="TOrderOperatorLogService" version="1.0.0" timeout="1200000" check="false"/>
+       <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TOrderLogisticsService"
+                     id="TOrderLogisticsService" version="1.0.0" timeout="1200000" check="false"/>
+       <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TOperatorLogService"
+                     id="TOperatorLogService" version="1.0.0" timeout="1200000" check="false"/>
+       <dubbo:reference retries="0" interface="com.haier.distribute.data.service.PopProductService"
+                     id="popProductService" version="1.0.0" timeout="1200000" check="false"/>
+<dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductDetailService"
+                     id="productDetailService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.RegionsService"
+                     id="regionsService" version="1.0.0" timeout="1200000" check="false"/>
+      <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ChannelsService"
+                     id="channelsService" version="1.0.0" timeout="1200000" check="false"/>
+       <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TWarehouseService"
+                     id="TWarehouseService" version="1.0.0" timeout="1200000" check="false"/>
+       <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TWarehouseRegionService"
+                     id="TWarehouseRegionService" version="1.0.0" timeout="1200000" check="false"/>
+       <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TSaleProductStockService"
+                     id="TSaleProductStockService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TSaleProductPriceService"
+                     id="TSaleProductPriceService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.DistributeProductTimingService"
+                     id="distributeProductTimingService" version="1.0.0" timeout="1200000" check="false"/>
+
+</beans>

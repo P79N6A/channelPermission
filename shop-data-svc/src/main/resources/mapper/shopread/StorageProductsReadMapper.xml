@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.StorageProductsReadDao">
+	<resultMap id="storageProductsResult" type="com.haier.shop.model.StorageProducts">
+		<result property="id" column="id" />
+		<result property="sCode" column="sCode" />
+		<result property="storageId" column="storageId" />
+		<result property="sku" column="sku" />
+		<result property="stock" column="stock" />
+		<result property="stockBak" column="stockBak" />
+		<result property="usedStock" column="usedStock" />
+		<result property="productType" column="productType" />
+		<result property="stockUpTime" column="stockUpTime" />
+		<result property="lastAvailableModifyTime" column="lastAvailableModifyTime" />
+		<result property="waitSyncToTaobao" column="waitSyncToTaobao" />
+		<result property="lastSyncToTaobaoTime" column="lastSyncToTaobaoTime" />
+		<result property="addTime" column="addTime" />
+		<result property="locksTB" column="locksTB" />
+		<result property="locksSC" column="locksSC" />
+		<result property="locksQY" column="locksQY" />
+		<result property="shareStock" column="shareStock" />
+		<result property="waQty" column="waQty" />
+	</resultMap>
+	<!-- 先解决 与Products 类似的问题-->
+	<resultMap id="productsResult1" type="com.haier.shop.model.ProductsNew">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="productName" column="productName" />
+		<result property="stockToTaotao" column="stockToTaotao" />
+		<result property="lastSyncTime" column="lastSyncTime" />
+		<result property="taobaoId" column="taobaoId" />
+		<result property="wlbItemId" column="wlbItemId" />
+		<result property="productActivityInfo" column="productActivityInfo" />
+		<result property="productTitle" column="productTitle" />
+		<result property="productTags" column="productTags" />
+		<result property="brandId" column="brandId" />
+		<result property="defaultImageFileId" column="defaultImageFileId" />
+		<result property="detailImageFileId" column="detailImageFileId" />
+		<result property="sceneImageFileId" column="sceneImageFileId" />
+		<result property="productTypeId" column="productTypeId" />
+		<result property="sellingPoint" column="sellingPoint" />
+		<result property="productDetail" column="productDetail" />
+		<result property="productBlockDetail" column="productBlockDetail" />
+		<result property="productDetail2" column="productDetail2" />
+		<result property="addTime" column="addTime" />
+		<result property="lastModify" column="lastModify" />
+		<result property="productCateId" column="productCateId" />
+		<result property="productCatePath" column="productCatePath" />
+		<result property="onSale" column="onSale" />
+		<result property="isStar" column="isStar" />
+		<result property="isHot" column="isHot" />
+		<result property="isBest" column="isBest" />
+		<result property="isNew" column="isNew" />
+		<result property="isSpecial" column="isSpecial" />
+		<result property="isDelete" column="isDelete" />
+		<result property="bookable" column="bookable" />
+		<result property="bookDays" column="bookDays" />
+		<result property="isForbidArrivalNotice" column="isForbidArrivalNotice" />
+		<result property="supplyPrice" column="supplyPrice" />
+		<result property="packagePrice" column="packagePrice" />
+		<result property="saleGuidePrice" column="saleGuidePrice" />
+		<result property="energySubsidyAmount" column="energySubsidyAmount" />
+		<result property="energySubsidyProductName" column="energySubsidyProductName" />
+		<result property="internalPrice" column="internalPrice" />
+		<result property="rankPrice" column="rankPrice" />
+		<result property="rankGroups" column="rankGroups" />
+		<result property="sku" column="sku" />
+		<result property="storageType" column="storageType" />
+		<result property="memberRanks" column="memberRanks" />
+		<result property="similarProductIds" column="similarProductIds" />
+		<result property="modifiedFields" column="modifiedFields" />
+		<result property="rejectReason" column="rejectReason" />
+		<result property="state" column="state" />
+		<result property="keywords" column="keywords" />
+		<result property="description" column="description" />
+		<result property="cities" column="cities" />
+		<result property="saleNum" column="saleNum" />
+		<result property="virtualSaleNum" column="virtualSaleNum" />
+		<result property="commentNum" column="commentNum" />
+		<result property="gradeAvg" column="gradeAvg" />
+		<result property="heroitteCommentNum" column="heroitteCommentNum" />
+		<result property="heroitteAvg" column="heroitteAvg" />
+		<result property="shippingMode" column="shippingMode" />
+		<result property="giftCardType" column="giftCardType" />
+		<result property="giftCardAmount" column="giftCardAmount" />
+		<result property="isVirtual" column="isVirtual" />
+		<result property="isNoLimitStockProduct" column="isNoLimitStockProduct" />
+		<result property="sCode" column="sCode" />
+		<result property="limitCityIds" column="limitCityIds" />
+		<result property="isNotConfirm" column="isNotConfirm" />
+		<result property="packageId" column="packageId" />
+		<result property="specailPrice" column="specailPrice" />
+		<result property="multiStorage" column="multiStorage" />
+		<result property="inspectType" column="inspectType" />
+		<result property="limitedPrice" column="limitedPrice" />
+		<result property="isGift" column="isGift" />
+		<result property="conTaxCode" column="conTaxCode"/>
+	</resultMap>
+	<select id="get1" parameterType="Integer" resultMap="productsResult1">
+		select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
+		from `Products`
+		where `id` = #{id}
+	</select>
+	<select id="get" parameterType="Integer" resultMap="storageProductsResult">
+		select
+		`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
+		from `StorageProducts`
+		where `id` = #{id}
+	</select>
+	<select id="getBySCodeAndSkuForLock" parameterType="Integer"
+		resultMap="storageProductsResult">
+		select
+			`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
+		from `StorageProducts`
+		where `sCode` = #{sCode} and `sku` = #{sku}
+		for update
+	</select>
+	<select id="getBySCodeAndSku" parameterType="map"
+		resultMap="storageProductsResult">
+		select
+		`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
+		from `StorageProducts`
+		where `sCode` = #{sCode} and `sku` = #{sku}
+	</select>
+	<select id="getBySkuAndScodeList" parameterType="map"
+		resultMap="storageProductsResult">
+		select
+		`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
+		from `StorageProducts`
+		where `sku` = #{sku} and `sCode` in 
+		<foreach collection="scodeList" index="index" item="sCode" open="("
+					separator="," close=")">
+					#{sCode}
+		</foreach>
+	</select>
+	<select id="getByScodeList" parameterType="map"
+		resultMap="storageProductsResult">
+		select
+		`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
+		from `StorageProducts`
+		where `sCode` in 
+		<foreach collection="scodeList" index="index" item="sCode" open="("
+					separator="," close=")">
+					#{sCode}
+		</foreach>
+		and `stock`-convert(`usedStock`,SIGNED)>0
+	</select>
+	<select id="getAllEffectiveLocks" resultMap="storageProductsResult">
+		<![CDATA[
+		SELECT 
+		  t.`id`,
+		  t.`sCode`,
+		  t.`sku`,
+		  t.`locksSC`,
+		  t.`locksTB`,
+		  t.`locksQY` 
+		FROM
+		  `StorageProducts` t 
+		WHERE t.`sCode` <> '' 
+		  AND t.`sku` <> '' 
+		  AND (t.`locksSC`>0 OR t.`locksTB`>0 OR t.`locksQY`>0)
+		  ]]>
+  	</select>
+</mapper>

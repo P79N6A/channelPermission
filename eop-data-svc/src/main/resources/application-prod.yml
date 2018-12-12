@@ -1,0 +1,33 @@
+interconn:
+  project: 3W-CBS
+  app: eop-data
+  monitor:
+    url: http://collector.c.haier.net
+    enable: false
+  trace:
+    url: http://collector-trace.c.haier.net
+    sample: 0.1 #抽样率，0：关闭，1：全采样，sample<1：部分采样
+
+dubbo:
+  registry: 10.138.8.223:2181,10.138.8.224:2181,10.138.8.225:2181
+  port: 20894
+  timeout: 10000
+  threads: 100
+  heartBeats: 10000
+
+spring:
+  datasource:
+    eop:
+     url: jdbc:mysql://10.135.30.137:5637/db_eop?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+     username: root
+     password: Haier,123
+     driver-class-name: com.mysql.jdbc.Driver
+     testOnBorrow: true
+     testOnReturn: true
+     testWhileIdle: true
+     validation-query: SELECT 1
+     time-between-eviction-runs-millis: 30000
+     min-evictable-idle-time-millis: 60000
+     max-active: 200
+     max-idle: 10
+

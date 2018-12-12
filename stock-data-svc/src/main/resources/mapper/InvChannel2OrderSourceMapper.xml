@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.InvChannel2OrderSourceDao">
+	    <resultMap id="invChannel2OrderSourceResult" type="com.haier.stock.model.InvChannel2OrderSource">
+		<result property="id" column="id" />
+		<result property="channelCode" column="channel_code" />
+		<result property="orderSource" column="order_source" />
+		<result property="note" column="note" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+    <resultMap id="invChannelResult" type="com.haier.stock.model.InvChannel2OrderSource">
+		<result property="id" column="id" />
+		<result property="channelCode" column="channel_code" />
+		<result property="orderSource" column="order_source" />
+		<result property="note" column="note" />
+		<result property="sapChannelCode" column="sap_channel_code" />
+		<result property="customerCode" column="customer_code" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+	<select id="getBySource" parameterType="String" resultMap="invChannel2OrderSourceResult">
+		select `id`,`channel_code`,`order_source`,`note`,`create_time`
+		from `inv_channel_2_order_source`
+		where `order_source` = #{source}
+	</select>
+	
+	<select id="getAllOrder2ChannelSource" resultMap="invChannel2OrderSourceResult">
+		select `id`,`channel_code`,`order_source`,`note`,`create_time`
+		from `inv_channel_2_order_source`
+	</select>
+	<!-- <select id="getOrdeSourceName" resultType="invChannel2OrderSourceResult">
+		SELECT `order_source`, `note` FROM `inv_channel_2_order_source`
+	</select> -->
+	<!-- 
+	<insert id="insert" parameterType="com.haier.svc.bean.pop.hpDispatch.InvChannel2OrderSource">
+		insert into `inv_channel_2_order_source`(`channel_code`,`order_source`,`note`,`create_time`)
+		values(#{channelCode},#{orderSource},#{note},#{createTime})
+	</insert>
+	<update id="update" parameterType="com.haier.svc.bean.pop.hpDispatch.InvChannel2OrderSource">
+	<insert id="insert" parameterType="com.haier.cbs.stock.entity.InvChannel2OrderSource">
+		insert into `inv_channel_2_order_source`(`channel_code`,`order_source`,`note`,`create_time`)
+		values(#{channelCode},#{orderSource},#{note},#{createTime})
+	</insert>
+	<update id="update" parameterType="com.haier.cbs.stock.entity.InvChannel2OrderSource">
+		update `inv_channel_2_order_source` set `channel_code`=#{channelCode},`order_source`=#{orderSource},`note`=#{note},`create_time`=#{createTime}
+		where `id` = #{id}
+	</update>
+	 -->
+	<select id="getSapChannelCodeAndCustomerCode" parameterType="String" resultMap="invChannelResult">
+		select `id`,`channel_code`,`order_source`,`note`,`sap_channel_code`,`customer_code`,`create_time`
+		from `inv_channel_2_order_source`
+		where `order_source` = #{ordeSourceCode}
+		limit 1
+	</select>
+	<!-- 库位代码与名称  -->
+	<select id="getChannelNames" resultType="java.util.Map">
+		SELECT `order_source`, `note` FROM `inv_channel_2_order_source`
+	</select>
+</mapper>

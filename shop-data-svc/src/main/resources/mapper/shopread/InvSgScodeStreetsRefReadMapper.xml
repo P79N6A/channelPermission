@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.InvSgScodeStreetsRefReadDao">
+	<resultMap id="InvSgScodeStreetsRefResult" type="com.haier.shop.model.InvSgScodeStreetsRefEntity">
+	<result property="id" column="id" />
+	<result property="storeId" column="store_id" />
+	<result property="scode" column="scode" />
+	<result property="streetId" column="street_id" />
+	<result property="addTime" column="add_time" />
+	<result property="modifyTime" column="modify_time" />
+	</resultMap>
+
+	<sql id="selectAllColumns">
+		<![CDATA[
+		select
+		id,store_id,scode,street_id,add_time,modify_time
+		from sg_scode_streets_ref
+		]]>
+	</sql>
+
+
+	<select id="findInvSgScodeStreetsRefById" parameterType="String" resultMap="InvSgScodeStreetsRefResult">
+	    <include refid="selectAllColumns" />
+	    where id = #{id}
+	</select>
+
+	<select id="findScodeByStreetIdAndStoreId"  resultType="String">
+	    select scode
+	    from sg_scode_streets_ref
+	    where 
+	    store_id = #{storeId} 
+	    <!-- 暂时不考虑街道，以后扩展解除注释 -->
+	    <!-- and street_id = #{treetId} -->
+	</select>
+
+</mapper>

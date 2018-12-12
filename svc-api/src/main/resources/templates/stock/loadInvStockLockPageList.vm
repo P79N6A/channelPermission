@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+   <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title> 
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+    </table>
+</div>
+
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div id="datagridToolbar_orderForecastGoal">
+    
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>  
+    </div>
+    <div class="search-panel" style="font-size: 11px;">
+    <form id="filterForm" class="param-form">
+        <div >
+
+			<span class="search-row-label">
+			  占用时间
+			</span>
+                <input class="easyui-datebox" name="startDate" id="startDate" value=""/>-
+                <input class="easyui-datebox" name="endDate" id="endDate" value=""/>
+            
+           
+			<span class="search-row-label">
+			 网单号
+			</span>
+                <input class="easyui-textbox" name="refno" id="refno" rateM/>
+            
+            
+			<span class="search-row-label">
+			  锁定数
+			</span>
+                <input class="easyui-textbox" name="lockQty" id="lockQty" lyMtd/>
+           		
+		       <input name="pageIndex" id="pageIndex" type="hidden" value="1"/>
+			   <input name="secCode" id="secCode" type="hidden" value="$!secCode"/>
+			   <input name="sku" id="sku" type="hidden" value="$!sku"/>
+            
+            
+        </div>
+      </div>
+        <a href="#" class="easyui-linkbutton" id="queryButton" 
+           data-options="iconCls:'icon-search',plain:true" >查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMe"
+           data-options="iconCls:'icon-save',plain:true" onClick="batchRelease()">批量释放</a>
+    </form>
+    
+    <div id="dialog-div" style="font-size:12px;line-height:1.5em;color:#333333;padding-top:18px;">  
+	<form id="dialog-form">  
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" >
+			<tr>
+				<td style="width:20%;padding-left:18px;">
+						<label>释放数量：</label>
+				</td>
+				<td style="width:30%;">
+						<input type="text"  id="numId" style="width:50%;"/>(最大数量:<span id="maxNumId" style="color:red"></span>)
+						<input type="hidden"  id="refnoId" />
+						<input type="hidden"  id="skuId"/>
+						<input type="hidden"  id="secCodeId"/>
+						<input type="hidden"  id="lockQtyId"/>
+						<input type="hidden"  id="realeaseQty"/>
+						<input type="hidden"  id="id" />
+						<input type="hidden"  id="optUserId"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:20%;padding-left:18px;">
+					<label>网单号：</label>
+				</td>
+				<td style="width:30%;">
+					<input type="text"  id="refNo" readonly  style="width:50%;" maxlength="30"/>
+					<input type="checkbox"  style="width:5%;" value="1" onclick="radio1();">
+				</td>
+			</tr>
+			<tr>
+			    <td style="width:20%;padding-left:18px;"></td>
+			    <td style="width:30%;"><div id="span1" style="color:orange;display:none;">请输入网单号，长度不超过30</div></td>
+		    </tr>
+			<tr>
+				<td style="width:30%;color:red" colspan="2">&nbsp;&nbsp;&nbsp;(注：1、锁定数量应大于超卖待释放数量才支持部分释放数量，否则选择全部释放数量操作</br>
+				                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2、此操作为先全部释放数量，再将剩余数量锁定，网单号为要锁定剩余数量的网单号)</td>
+			</tr>
+        </table>
+        
+         <div id="dlg-buttons1" data-options="region:'south'" style="height:35px" align="right">
+                <a href="javascript:void(0)" class="easyui-linkbutton"
+                   onclick="javascript:sureRelease()" iconcls="icon-ok">确定</a>
+          </div>
+	</form>
+</div>
+<input type="button" style="float:right" id="back" class="btn btn-default btn-sm" onclick="back();" value="返回">
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this =
+        $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+                
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);	
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#dg').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/stock/loadInvStockPageList.js"></script>
+</body>
+</html>

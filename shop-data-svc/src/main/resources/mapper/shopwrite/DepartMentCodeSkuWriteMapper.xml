@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.DepartMentCodeSkuWriteDao">
+
+	<insert id="insert" parameterType="com.haier.shop.model.DepartMentCodeSku">
+		insert into departmentcode_sku (id, department_code, sku,
+		department_name, state, update_time
+		)
+		values (#{id,jdbcType=INTEGER}, #{departmentCode,jdbcType=VARCHAR},
+		#{sku,jdbcType=VARCHAR},
+		#{departmentName,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from departmentcode_sku
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.haier.shop.model.DepartMentCodeSku">
+		insert into departmentcode_sku
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="departmentCode != null">
+				department_code,
+			</if>
+			<if test="sku != null">
+				sku,
+			</if>
+			<if test="departmentName != null">
+				department_name,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="departmentCode != null">
+				#{departmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sku != null">
+				#{sku,jdbcType=VARCHAR},
+			</if>
+			<if test="departmentName != null">
+				#{departmentName,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.haier.shop.model.DepartMentCodeSku">
+		update departmentcode_sku
+		<set>
+			<if test="departmentCode != null">
+				department_code = #{departmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sku != null">
+				sku = #{sku,jdbcType=VARCHAR},
+			</if>
+			<if test="departmentName != null">
+				department_name = #{departmentName,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.haier.shop.model.DepartMentCodeSku">
+		update departmentcode_sku
+		set department_code = #{departmentCode,jdbcType=VARCHAR},
+		sku = #{sku,jdbcType=VARCHAR},
+		department_name = #{departmentName,jdbcType=VARCHAR},
+		state = #{state,jdbcType=INTEGER},
+		update_time = #{updateTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

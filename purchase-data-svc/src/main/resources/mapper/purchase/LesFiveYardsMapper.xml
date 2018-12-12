@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.LesFiveYardsDao">
+    <resultMap id="lesFiveYardInfoResult" type="com.haier.purchase.data.model.LesFiveYardInfo">
+		<result property="id" column="id"/>                            
+ 		<result property="siteId" column="siteId"/>                 
+ 		<result property="fiveYard" column="fiveYard"/> 
+ 		<result property="desc" column="desc"/>                   
+ 		<result property="jdeCode" column="jdeCode"/>                             
+ 		<result property="address" column="address"/>               
+ 		<result property="centerName" column="centerName"/>                       
+ 		<result property="centerCode" column="centerCode"/>                           
+ 		<result property="sCode" column="sCode"/> 
+    </resultMap>
+	<select id="selectLesFiveYards"  parameterType="Map"  resultMap="lesFiveYardInfoResult">
+		SELECT `id`, 
+				`siteId`, 
+				`fiveYard`, 
+				`desc`, 
+				`jdeCode`, 
+				`address`, 
+				`centerName`, 
+				`centerCode`, 
+				`sCode` 
+		FROM
+			LesFiveYards
+		WHERE 1=1
+			<if test="sCode !=null and sCode != ''">
+				AND sCode = #{sCode}
+			</if>
+    </select>
+	<select id="get" parameterType="Integer" resultMap="lesFiveYardInfoResult">
+		select `id`,`siteId`,`fiveYard`,`desc`,`jdeCode`,`address`,`centerName`,`centerCode`,`sCode`
+		from `LesFiveYards`
+		where `id` = #{id}
+	</select>
+	<select id="getBySCode" parameterType="String" resultMap="lesFiveYardInfoResult">
+		select `id`,`siteId`,`fiveYard`,`desc`,`jdeCode`,`address`,`centerName`,`centerCode`,`sCode`
+		from `LesFiveYards`
+		where `sCode` = #{sCode}
+	</select>
+    
+</mapper>

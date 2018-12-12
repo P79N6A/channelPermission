@@ -1,0 +1,785 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>T+2订单审核查询</title>
+	<link rel="stylesheet" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css"/>
+	<script src="../static/third/jquery-1.8.3.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+
+
+</head>
+<body>
+<div class="easyui-layout" data-options="fit : true,border : false">
+	 <div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 120px;overflow: auto; " align="left">
+	  <form id="filterForm" action="#"> 
+	    <table>
+	    	<tr>
+	    		<td>提报周</td>
+	         <td><input id="report_year_week" name="report_year_week" class="txt" readonly="readonly"  style="background-color: #EEEEEE"/>
+				</td>
+	    		<td>渠道</td>
+	         <td><input id="channel" name="channel" class="easyui-combobox" style="width:173px"/>
+				</td>
+				<td>品类</td>
+	        <td><input id="cbsCategory" name="cbsCategory" class="easyui-combobox" style="width:173px"/></td>
+	       <td>产品组</td>
+	         <td> <input id="product_group" name="product_group" class="easyui-combobox" style="width:173px"/>
+				</td>
+	          <td>订单号</td>
+	         <td>  <input id="order_id" name="order_id" class="easyui-textbox" style="width:173px"/>   
+				</td>
+	          </tr>      
+	        <tr>
+	          <td>物料号</td>
+	          <td>  <input id="materials_id" name="materials_id" class="easyui-textbox" style="width:173px"/> 
+			  </td>
+	    	 <td>库位</td>
+	          <td> <input id="storage_id" name="storage_id" class="easyui-textbox" style="width:173px"/>
+			  </td>
+	           <td>状态</td>
+	       		<td><input id="flow_flag" name="flow_flag" class="easyui-combobox" style="width:173px"/></td>
+				<td>订单类别</td>
+	    		<td>
+                <input id="order_category" name="order_category" class="easyui-combobox" style="width:173px"/></input></td>
+	          </tr> 
+	  </table>
+       <a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+       <a id='export' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
+		<a id='exportall' href="#" class="easyui-linkbutton" iconCls="icon-save">全部导出</a>
+       <a id='review' href="#" class="easyui-linkbutton" iconCls="icon-edit">审核</a>
+       <a id='reviewall' href="#" class="easyui-linkbutton" iconCls="icon-edit">全部审核</a>
+       <a id='revoke' href="#" class="easyui-linkbutton" iconCls="icon-cancel">撤销</a>
+       
+		<input id="report_year_week_hidden" name="report_year_week_hidden" type="hidden">
+  	    <input id="product_group_id_hidden" name="product_group_id_hidden" type="hidden">
+  	    <input id="cbsCategory_save" name="cbsCategory_save" type="hidden">
+		<input id="ed_channel_id_hidden" name="ed_channel_id_hidden" type="hidden">
+       	<input id="order_id_hidden" name="order_id_hidden" type="hidden">
+      	<input id="materials_id_hidden" name="materials_id_hidden" type="hidden">
+       	<input id="storage_id_hidden" name="storage_id_hidden" type="hidden">
+       	<input id="flow_flag_hidden" name="flow_flag_hidden" type="hidden">
+       
+       <input id="product_group_id_save" name="product_group_id_save" type="hidden">
+		<input id="ed_channel_id_save" name="ed_channel_id_save" type="hidden">
+		<input id="order_id_save" name="order_id_save" type="hidden"/>
+		<input id="materials_id_save" name="materials_id_save" type="hidden"/>
+		<input id="storage_id_save" name="storage_id_save" type="hidden"/>
+		<input id="flow_flag_save" name="flow_flag_save" type="hidden"/>
+		<input id="order_category_save" name="order_category_save" type="hidden"/>
+		<!-- 下面隐藏控件用来存放点击导出后的数据 -->
+		<input id="exportData" name="exportData" type="hidden"/>
+		<!-- 下面隐藏控件用来存放点击审核后的数据 -->
+		
+	</form>
+	</div>
+	<div data-options="region:'center',title:'T+2订单审核查询结果',border:false">
+		    <table id="dataGrid"></table>
+	</div>
+	<div id="modifycountDiv" style="display:none;padding:5px;width:300px;height:150px;" title="修改数量">
+	请输入数量
+	<input id="modifycount" type="text" style=" width:60px !important" maxlength="9"/>
+	</div>
+</div>
+<div id="reviewDiv" title="审核操作" class="easyui-dialog" >
+	<!--  <div data-options="region:'center',title:'T+2订单审核详细页面',border:false" >
+		    <table id="dataGrid" style="height:410px"></table>
+	</div>-->
+	<div data-options="region:'center',border:false" style="height: 220px;overflow: auto; " align="left">
+		<form id="reviewForm" action="#">
+			<table align="left" >
+				<tr>
+					<td>审核意见</td>
+					<td>
+						<input id='audit_remark' name='audit_remark' style="width:250px;height:110px;" autofocus =true style="overflow:auto" class="easyui-validatebox" data-options="validType:'minLength[5]'"validType="maxLength[2000]"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td  width="200px">
+						<a id='passReview' href="#" class="easyui-linkbutton" iconCls="icon-ok" >审核通过</a>
+						&nbsp;
+	    				<a id='nopassReview' href="" class="easyui-linkbutton" iconCls="icon-no">作废</a>
+	    				&nbsp;
+	    				<a id='close' href="#" class="easyui-linkbutton" iconCls="icon-back">返回</a>
+		 			</td>
+				</tr>
+			</table>
+			<!-- 下面隐藏控件用来存放点击审核后的数据 -->
+			<input id="reviewData" name="reviewData" type="hidden"/>
+			<input id="reviewFlag" name="reviewFlag" type="hidden"/>
+			<input id="audit_remark" name="audit_remark" type="hidden"/>
+		</form>
+	</div>
+</div>
+
+<script type="application/javascript">
+var blag = false;
+var dataweek;
+
+//点击查询
+$('#search').click(function () {
+	var product_group = $("#product_group").combobox("getValue");
+	//如果是ALL，产品组设为空
+	if(product_group=="ALL"){
+		product_group="";
+	}
+	var channel = $("#channel").combobox("getValue");
+	//如果是ALL，渠道设为空
+	if(channel=="ALL"){
+		channel="";
+	}
+	var cbsCategoryValue = $("#cbsCategory").combobox("getValue");
+	//如果是ALL，品类设为空
+	if(cbsCategoryValue=="全部"){
+		cbsCategoryValue="";
+	}
+	//产品组保存
+	$("#product_group_id_save").val(product_group);
+	//渠道保存
+    $("#ed_channel_id_save").val(channel);
+    //品类保存
+	$("#cbsCategory_save").val(cbsCategoryValue);
+	//订单号保存
+	$("#order_id_save").val($("#order_id").val());
+	//物料号保存
+	$("#materials_id_save").val($("#materials_id").val());
+	//库位保存
+	$("#storage_id_save").val($("#storage_id").val());
+	//状态保存
+	var flow_flag = $("#flow_flag").combobox("getValues").join(",");
+	//如果包含ALL，设置为空
+	if(flow_flag.indexOf("ALL")>=0){
+		 flow_flag="";
+	}
+	$("#flow_flag_save").val(flow_flag);
+	//订单类别保存
+	var order_category = $("#order_category").combobox("getValues").join(",");
+	//如果包含ALL，设置为空
+	if(order_category.indexOf("ALL")>=0){
+		 order_category="";
+	}
+	$("#order_category_save").val(order_category);
+	if(datagrid){
+	    //grid加载
+	    $('#dataGrid').datagrid('load',
+	    		{
+		    	     report_year_week:$("#report_year_week").val(),
+		    	     channel:channel,
+		    	     product_group:product_group,
+		    	     cbsCategory:$("#cbsCategory_save").val(),
+		    	     order_id:$("#order_id").val(),
+		    	     materials_id:$("#materials_id").val(),
+		    	     storage_id:$("#storage_id").val(),
+		    	     flow_flag:flow_flag,
+					 order_category:order_category
+    	     });
+	}else{
+	    datagrid = $('#dataGrid').datagrid({
+	        url: "/purchase/findT2OrderReviewList",
+	        fit: true,
+	        pagination: true,
+	        singleSelect: true,
+	        pageSize: 100,
+	        pageList: [1,2,10,100,200,300],
+	        nowrap: false,
+	        rownumbers: true,
+	        singleSelect: false,
+			selectOnCheck: true,
+			checkOnSelect: true,
+	        queryParams: {
+	             report_year_week:$("#report_year_week").val(),
+	    	     channel:channel,
+	    	     product_group:product_group,
+	    	     cbsCategory:$("#cbsCategory_save").val(),
+	    	     order_id:$("#order_id").val(),
+	    	     materials_id:$("#materials_id").val(),
+	    	     storage_id:$("#storage_id").val(),
+	    	     flow_flag:flow_flag,
+				 order_category:order_category
+	        },
+	        columns: [
+	            [
+	            	{
+	                    field: 'check',
+	                    title: '全选',
+	                    width: 100,
+	                    align: 'center',
+	                    checkbox:true
+	                },
+					{
+	                    field: 'order_category_name',
+	                    title: '订单类别',
+	                    width: 100,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'ed_channel_name',
+	                    title: '渠道',
+	                    width: 80,
+	                    align: 'center'
+	                },
+	                {
+	                	field:'category_id',
+	                	title:'品类',
+	                	width:100,
+	                	align:'center'
+	                },
+	                {
+	                    field: 'product_group_name',
+	                    title: '产品组',
+	                    width: 80,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'order_id',
+	                    title: '订单号',
+	                    width: 120,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'materials_id',
+	                    title: '物料号',
+	                    width: 100,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 'storage_id',
+	                    title: '库位',
+	                    width: 50,
+	                    align: 'center'
+	                },
+	                {
+	                    field: 't2_delivery_prediction',
+	                    title: '数量',
+	                    width: 50,
+	                    align: 'center'
+	                },
+	                {
+	                	field:'price',
+	                	title:'样表价格',
+	                	width:80,
+	                	align:'center'
+	                },
+	                {
+	                	field:'amount',
+	                	title:'金额',
+	                	width:70,
+	                	align:'center'
+	                },
+	                {
+	                    field: 'materials_desc',
+	                    title: '型号',
+	                    width: 200,
+	                    align: 'center'
+	                },
+	                 {
+	                    field: 'flow_flag_name',
+	                    title: '状态',
+	                    width: 100,
+	                    align: 'center'
+	                },
+	                  {
+	                    field: 'order_type_name',
+	                    title: '订单类型',
+	                    width: 70,
+	                    align: 'center'
+	                },
+	                {
+	                     field: 'channel_commit_user',
+	                     title: '渠道提交人',
+	                     width: 100,
+	                     align: 'center'
+		             },
+		             {
+	                     field: 'channel_commit_time_display',
+	                     title: '渠道提交时间',
+	                     width: 150,
+	                     align: 'center'
+		             },
+					 {
+	                     field: 'audit_depart_user',
+	                     title: '产品部审核人',
+	                     width: 100,
+	                     align: 'center'
+		             },
+		             {
+	                     field: 'audit_depart_time_display',
+	                     title: '产品部审核时间',
+	                     width: 150,
+	                     align: 'center'
+		             },
+		             {
+	                     field: 'audit_user',
+	                     title: '内部审核人',
+	                     width: 150,
+	                     align: 'center'
+		             },
+		             {
+	                     field: 'audit_time_display',
+	                     title: '内部审核时间',
+	                     width: 150,
+	                     align: 'center'
+		             },
+	                {
+	                    field: 'error_msg',
+	                    title: '备注',
+	                    width: 260,
+	                    align: 'left'
+	                },
+	                 {
+	                    field: 'operation',
+	                    title: '操作',
+	                    width: 100,
+	                    align: 'center',
+	                    formatter:function(value,rowData,rowIndex){ 
+	                        //function里面的三个参数代表当前字段值，当前行数据对象，行号（行号从0开始）
+	                        if(rowData.flow_flag==5){
+	                        	//只有状态为待内部审核的行可以修改数量
+		                        return "<a href='javascript:void(0);' onclick='onModifycount("+'"'+rowData.order_id+'"'+','+'"'+rowData.t2_delivery_prediction+'"'+");return false;'>修改数量</a>";  
+	                        }else{
+	                        	return "";
+	                        }
+	                   }
+	                }
+	            ]
+	        ]
+	    });
+	}
+    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+});
+//点击导出
+$('#export').click(function(){
+	if(!datagrid){
+		$.messager.alert('提示','请查询！','info');
+		return;	
+	}
+	//获得选中行
+	var checkedItems = $('#dataGrid').datagrid('getChecked');
+	var exportData = new Array();
+	//将订单号存入Array
+	$.each(checkedItems, function(index, item){
+			exportData.push(item.order_id);
+	});
+	$("#exportData").val(JSON.stringify(exportData));
+	//判断是否都没选中
+	if(exportData==null||exportData.length==0){
+		$.messager.alert('错误','请至少选择一行要导出的行！','error');
+		return;
+	}
+	$.messager.confirm('确认', '确定要导出吗？', function(r){
+		if (r){
+			$('#filterForm').attr("action", '/purchase/exportT2OrderList.export');
+			$('#filterForm').submit();
+		}
+	});
+});
+//点击全部导出
+$('#exportall').click(function(){
+	if(!datagrid){
+		$.messager.alert('提示','请查询！','info');
+		return;	
+	}
+		var checkedItems = $('#dataGrid').datagrid('getRows'); 
+		var exportData = new Array();
+		$.each(checkedItems, function(index, item){
+				exportData.push(item.order_id);
+		});
+		$("#exportData").val(JSON.stringify(exportData));
+	$.messager.confirm('确认','确定要全部导出吗？', function(r){
+		if (r){
+			$('#filterForm').attr("action", '/purchase/exportT2OrderList.export');
+		$('#filterForm').submit();
+		}
+	});
+});
+
+//点击撤销
+$('#revoke').click(function(){
+	if(!datagrid){
+		$.messager.alert('提示','请查询！','info');
+		return;	
+	}
+	//获得选中行
+	var checkedItems = $('#dataGrid').datagrid('getChecked');
+	var revokeData = new Array();
+	$.each(checkedItems, function(index, item){
+		if(item.flow_flag==10||item.flow_flag==15||item.flow_flag==20){
+			//将状态为内部审核通过，OMS已审核和待OES评审的订单号推入数组
+			revokeData.push(item.order_id);
+		}
+	}); 
+	//判断是否选择了内部审核通过OMS已审核和待OES评审的订单
+	if(revokeData==null||revokeData.length==0){
+		$.messager.alert('错误','请至少选择一份状态为内部审核通过或OMS已审核或待OES评审的订单！','error');
+		return;
+	}
+	$.messager.confirm('确认','确定要撤销吗？（只撤销状态为内部审核通过或OMS已审核或待OES评审的订单）', function(r){
+		if (r){
+			 jQuery.ajax({
+	             url: "/purchase/revokeOrderList",   // 撤销的页面
+	             type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+	             data:{"revokeData": JSON.stringify(revokeData)},
+	             success: function (data) {
+	             	$('#dataGrid').datagrid('reload', 
+					             		 {report_year_week:$("#report_year_week").val(),
+					       	    	     channel:$("#ed_channel_id_save").val(),
+					       	    	     product_group:$("#product_group_id_save").val(),
+					       	             cbsCategory:$("#cbsCategory_save").val(),
+					       	    	     order_id:$("#order_id_save").val(),
+					       	    	     materials_id:$("#materials_id_save").val(),
+					       	    	     storage_id:$("#storage_id_save").val(),
+					       	    	     flow_flag:$("#flow_flag_save").val(),
+										 order_category:$("#order_category_save").val()
+										 });
+	             }
+	 		});
+		}
+	});
+});
+
+$(function(){
+	$("#reviewDiv").panel('close');
+});
+
+//部分审核
+var reviewData = new Array();
+$("#review").click(function(){
+	if(datagrid){ 
+		var checkedItems = $('#dataGrid').datagrid('getChecked');
+		$.each(checkedItems, function(index, item){
+		//flow_flag=5 待内部审核
+		if(item.flow_flag==5){
+			reviewData.push(item.order_id);
+		}
+	    });
+		if(reviewData==null||reviewData.length==0){
+		    $.messager.alert('错误','请至少选择一行状态为待内部审核的行！','error');
+		}
+		else{
+			$("#reviewDiv").show();
+		    $("#reviewDiv").panel('open');
+	    }
+	}else{
+		$.messager.alert('提示', "请先查询！", 'info');
+		return;
+	}
+	$("#reviewData").val(JSON.stringify(reviewData));
+});
+
+//点击全部审核
+$("#reviewall").click(function(){
+	if(datagrid){
+		var checkedItems = $('#dataGrid').datagrid('getRows');
+		$.each(checkedItems, function(index, item){
+		//flow_flag=5 待内部审核
+		if(item.flow_flag==5){
+			reviewData.push(item.order_id);
+		}
+	    });
+		if(reviewData==null||reviewData.length==0){
+		    $.messager.alert('错误','不存在状态为待内部审核的行！','error');
+		}
+		else{
+			$("#reviewDiv").show();
+		    $("#reviewDiv").panel('open');
+	    }
+	}else{
+		$.messager.alert('提示', "请先查询！", 'info');
+		return;
+	}
+	$("#reviewData").val(JSON.stringify(reviewData));
+});
+
+//审核通过
+$('#passReview').click(function(){
+	//审核通过FLAG（10:审核通过 -10：作废）
+    var reviewFlag = '0';
+    $("#reviewFlag").val(reviewFlag);
+	$("#reviewData").val(JSON.stringify(reviewData));
+    var audit_remark  = $('#audit_remark').val();
+    $("#audit_remark").val(audit_remark);
+
+
+
+	var flag = true;
+	$('#reviewForm input').each(function () {
+	    if ($(this).attr('validType')) {
+		    if (!$(this).validatebox('isValid')) {
+		        flag = false;
+		        return;
+		    }
+	    }
+	});
+
+	if(flag){    
+		jQuery.ajax({
+	         url: "/purchase/reviewT2OrderReviewDetailList",   // 提交的页面
+	         type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+	         data:{
+	        	 "reviewFlag":$("#reviewFlag").val(),
+	        	 "reviewData": $("#reviewData").val(),
+	        	 "audit_remark": $("#audit_remark").val()
+	        	 },
+        	 beforeSend: function(){  
+		        var win = $.messager.progress({  
+		                title:'请等待',  
+		                msg:'数据保存中...',
+		                text:'处理中',
+		                interval:700
+		            });  
+		      },  
+		      complete: function(){  
+		        //AJAX请求完成时隐藏loading提示  
+		        $.messager.progress('close'); 
+		      },  
+	         success: function (data) {
+	        	 if(data.data != null) {$.messager.alert('错误',data.data,'error');}
+            	 else {
+	        	 var message = data.message;
+	 		 	if(data.message == "success"){
+	 		 		$.messager.alert('提示',"审核通过状态更新成功！",'info',function(r){
+		 		 		onGoBack();
+	 		 		});
+	 		 	}else{
+	 		 		$.messager.alert('提示',"审核通过状态更新失败！",'info');
+	            }
+	         }}
+		 });
+	}else{
+		$.messager.alert('提示',"请输入正确数据",'error');
+	}	 		 
+});
+
+//返回调用画面
+function onGoBack(){
+  var url = '$!url';
+  window.location.href=url;
+ }
+ 
+//返回查询页面
+	$("#close").click(function() {
+		 $("#reviewForm").form("clear");
+		 $("#reviewDiv").window('close');
+		 reviewData=[];
+	});
+ 
+//作废
+$('#nopassReview').click(function(){
+	//审核通过FLAG
+    var reviewFlag = '-3';
+    var audit_remark  = $('#audit_remark').val();
+    $("#audit_remark").val(audit_remark);
+	var flag = true;
+	$('#reviewForm input').each(function () {
+	    if ($(this).attr('validType')) {
+		    if (!$(this).validatebox('isValid')) {
+		        flag = false;
+		        return;
+		    }
+	    }
+	});
+	if(flag){
+		jQuery.ajax({
+	         url: "/purchase/reviewT2OrderReviewDetailList",   // 提交的页面
+	         type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+	         data:{
+	        	 "reviewFlag":reviewFlag,
+				 //作废意见
+				 "audit_remark": $("#audit_remark").val(),
+				 //部分作废的数据
+	        	 "reviewData": JSON.stringify(reviewData),
+				 //作废全部的数据
+	        	 report_year_week:$("#report_year_week").val(),
+				 channel:$("#ed_channel_id_save").val(),
+				 product_group:$("#product_group_id_save").val(),
+				 cbsCategory:$("#cbsCategory_save").val(),
+			     order_id:$("#order_id_save").val(),
+				 materials_id:$("#materials_id_save").val(),
+				 storage_id:$("#storage_id_save").val(),
+				 flow_flag:$("#flow_flag_save").val(),
+				 order_category:$("#order_category_save").val()
+	        	 },
+	         beforeSend: function(){  
+		        var win = $.messager.progress({  
+		                title:'请等待',  
+		                msg:'数据保存中...',
+		                text:'处理中',
+		                interval:700
+		            });  
+		      },  
+		      complete: function(){  
+		        //AJAX请求完成时隐藏loading提示  
+		        $.messager.progress('close'); 
+		      },  
+	         success: function (data) {
+	        	var message = data.message;
+				if(data.data != null) {
+				     $.messager.alert('错误',data.data,'error');
+					 $("#reviewForm").form("clear");
+					 reviewData=[];
+			    }
+				else {
+				     $.messager.alert('提示','作废完成','info');
+				     $("#reviewForm").form("clear");
+					 reviewData=[];
+					 }
+				$("#reviewDiv").window('close');
+				$('#dataGrid').datagrid('reload'); 
+	            $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+			 }
+		 });
+	}else{
+		$.messager.alert('提示',"请输入正确数据",'error');
+	}	 
+});
+
+$.extend($.fn.validatebox.defaults.rules, {
+    maxLength: {
+        validator: function(value, param){
+            return value.length <= param[0];
+        },
+        message: 'Please enter no more than {0} characters.'
+    }
+});
+
+//修改数量
+function onModifycount(order_id,t2_delivery_prediction){
+	$("#modifycount").val(t2_delivery_prediction);
+	$("#modifycountDiv").show();
+	$("#modifycountDiv").dialog({
+		collapsible: true, 
+		minimizable: false, 
+		maximizable: false,
+		buttons: [{ 
+			text: '确定', 
+			iconCls: 'icon-ok', 
+			handler: function() { 
+				if($("#modifycount").val()>0&&$("#modifycount").val()<=200){
+					jQuery.ajax({
+			             url: "/purchase/updateCount",   // 提交的页面
+			             type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+			             data:{"order_id": order_id,"modifycount":$("#modifycount").val(),"t2_delivery_prediction":t2_delivery_prediction},
+			             success: function (data) {
+			            	 if(data.totalCount==1){
+			            		 $.messager.alert('成功','数量修改成功','info');
+			            	 }else{
+			            		 $.messager.alert('错误','数量修改失败,该行状态已被改变','error');
+			            	 }
+			            	 
+			             	$('#dataGrid').datagrid('reload', 
+							             		 {report_year_week:$("#report_year_week").val(),
+							       	    	     channel:$("#ed_channel_id_save").val(),
+							       	    	     product_group:$("#product_group_id_save").val(),
+												 cbsCategory:$("#cbsCategory_save").val(),
+							       	    	     order_id:$("#order_id_save").val(),
+							       	    	     materials_id:$("#materials_id_save").val(),
+							       	    	     storage_id:$("#storage_id_save").val(),
+							       	    	     flow_flag:$("#flow_flag_save").val(),
+												 order_category:$("#order_category_save").val()
+												 });
+			             }
+			 		});
+					$('#modifycountDiv').dialog('close');
+				}else{
+					$.messager.alert('错误','数量必须大于0，小于等于200','error');
+				}
+			} 
+			}, { 
+			text: '取消', 
+			handler: function() { 
+				$('#modifycountDiv').dialog('close');
+			} 
+		}] 
+	});
+}
+
+var datagrid;
+$(function () {
+	//接收当前周
+	$("#report_year_week").val("$!currentweek");
+	//取得流程状态列表
+	var valueSetId = "flow_flag";
+	jQuery.getJSON("/purchase/getByValueSetId"+ "?valueSetId=" + valueSetId, function(result){
+		var count = result.totalCount;
+		var dataList = result.data;
+		//添加全部
+		dataList.unshift( {value:'ALL',value_meaning:'全部'});
+		$("#flow_flag").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+	});
+	jQuery.getJSON("/purchase/getProductGroupByAuth", function(result){
+		var productgroup = result.data;
+		productgroup.unshift({value:'ALL',valueMeaning:'全部'});
+		$("#product_group").combobox({
+			 data:result.data,
+		     valueField:'value',
+			 textField:'valueMeaning',
+			 panelHeight:'300',
+			 editable:false,
+			 value:'ALL'
+		});
+	});
+	//取得渠道列表
+	jQuery.getJSON("/purchase/getChannelsByAuth", function(result){
+		var channel = result.data;
+		//添加全部
+		channel.unshift( {channelCode:'ALL',name:'全部'});
+		$("#channel").combobox({
+			  data:channel,
+			  valueField:'channelCode',
+			  textField:'name',
+			  panelHeight:'auto',
+			  editable:false,
+			  value:'ALL'
+		});
+	});
+	//品类
+	jQuery.getJSON("/purchase/getCbsCategoryByAuth", function(result){
+		var JosnList=[];
+		var cbsCategoryJson = {id: "全部", text: "全部"};
+		JosnList.push(cbsCategoryJson)
+		jQuery.each(result.data,function(i, v){
+			var item={id:v,text:v};
+			JosnList.push(item);
+		});
+		$("#cbsCategory").combobox({
+			 data:JosnList,
+		     valueField:'text',
+			 textField:'text',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'全部'
+		});
+	});
+	//取得订单类别列表
+	var valueSetId = "order_category";
+	jQuery.getJSON("/purchase/getByValueSetId"+ "?valueSetId=" + valueSetId, function(result){
+		var count = result.totalCount;
+		var dataList = result.data;
+		//添加全部
+		dataList.unshift( {value:'ALL',value_meaning:'全部'});
+		$("#order_category").combobox({
+			 data:dataList,
+		     valueField:'value',
+			 textField:'value_meaning',
+			 panelHeight:'auto',
+			 editable:false,
+			 value:'ALL'
+		});
+	});
+});
+
+</script>
+</body>

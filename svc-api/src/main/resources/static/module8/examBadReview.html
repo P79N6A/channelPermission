@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <link rel="stylesheet" href="../static/css/staticHtml.css">
+    <title>差评受理</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+<div style="height:100%;width:100%;overflow:auto">
+    <div id="orderDetail_div" style="margin-bottom: 20px;">
+        <div class="exam_info"  style="margin-bottom: 20px;">
+            <table class="table" title="受理信息" border="1">
+                <caption align="top" style="    font-size: 16px;
+                        padding-left: 20px; font-weight: bold;
+                          background-color: #cfcfd1;">受理信息
+                </caption>
+                <tr><td>审批结果</td><td><input type="radio" name="exam"/><span>通过</span>
+                    <input type="radio" name="exam"/><span>不通过</span></td></tr>
+                <tr><td>备注</td><td><input type="text"/></td></tr>
+                <tr>
+                    <td colspan="2" style="text-align: right;">
+                        <input type="button" class="button-blue" style="cursor: pointer;width: 65px;" value="提交"/>
+                        <input type="button" class="button-grey" style="cursor: pointer;width: 65px;" value="返回"
+                               style="margin-right: 50px;"  onclick="javascript:window.history.back();">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="accept_info"  style="margin-bottom: 20px;">
+            <table class="table" title="受理信息" border="1">
+                <caption align="top" style="    font-size: 16px;
+    padding-left: 20px;
+    font-weight: bold;
+    background-color: #cfcfd1;">受理信息</caption>
+                <tbody>
+                <tr>
+                    <td class="text-bold">平台单号</td>
+                    <td>PJ170623033825</td>
+                    <td class="text-bold">LBX单号</td>
+                    <td>LBX032164884122542</td>
+                    <td class="text-bold">快递单号</td>
+                    <td>6135953420</td>
+                    <td class="text-bold">评价人姓名</td>
+                    <td>华中</td>
+                    <td class="text-bold">评价人电话</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="text-bold">评价内容</td>
+                    <td colspan="9">服务太差，11号下单现在还没收到货！！！</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">评价凭证</td>
+                    <td colspan="9"></td>
+                </tr>
+                <tr>
+                    <td class="text-bold">信息来源渠道</td>
+                    <td>商家</td>
+                    <td class="text-bold">评价次数</td>
+                    <td>1</td>
+                    <td class="text-bold">渠道</td>
+                    <td>天猫</td>
+                    <td class="text-bold">始发仓</td>
+                    <td>南昌</td>
+                    <td class="text-bold">给用户承诺时效</td>
+                    <td>24</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">认责问题大类</td>
+                    <td><select id="u173_input">
+                        <option value="--请选择--">--请选择--</option>
+                        <option value="平台类">平台类</option>
+                        <option value="物流问题">物流问题</option>
+                        <option value="客服问题">客服问题</option>
+                        <option value="售后问题">售后问题</option>
+                        <option value="产品质量问题">产品质量问题</option>
+                        <option value="其他问题">其他问题</option>
+                    </select>
+                    </td>
+                    <td class="text-bold">认责问题小类</td>
+                    <td>
+                        <select id="u174_input">
+                            <option value="--请选择--">--请选择--</option>
+                            <option value="配送延迟">配送延迟</option>
+                            <option value="天气原因">天气原因</option>
+                            <option value="未送货上楼/入户">未送货上楼/入户</option>
+                            <option value="售后问题">售后问题</option>
+                            <option value="车队漏提">车队漏提</option>
+                            <option value="其他问题">其他问题</option>
+                        </select>
+                    </td>
+                    <td class="text-bold">责任方</td>
+                    <td><select id="u184_input">
+                        <option value="--请选择--">--请选择--</option>
+                        <option value="TC仓专员">TC仓专员</option>
+                        <option value="工贸专员">工贸专员</option>
+                        <option value="仓储方">仓储方</option>
+                        <option value="配送方">配送方</option>
+                        <option value="裁判">裁判</option>
+                        <option value="网点">网点</option>
+                    </select></td>
+                    <td class="text-bold">SQM单据状态</td>
+                    <td>待判定</td>
+                    <td class="text-bold">客户评价分数</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">问题反馈</td>
+                    <td colspan="9" style="text-align: left;"><input style="width: 400px;margin-left: 20px;"
+                                                                     type="text"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-bold">反馈凭证</td>
+                    <td colspan="9" style="text-align: left">
+                        <input id="file" name="file" type="file" style="display:none" onchange="document.getElementById('textfield').value=this.value">
+                        <input type="text" readonly="readonly" name="textfield" e="" id="textfield" style="margin-left:20px;width: 300px;">
+                        <a class="easyui-linkbutton" type="button" class="btn" value="选择..." onclick="document.getElementById(&quot;file&quot;).click()">浏览...</a>
+                        <a class="easyui-linkbutton" type="submit" id="submit" name="submit" class="btn" value="导入">上传</a>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-bold">追加好评凭证</td>
+                    <td colspan="9" style="text-align: left">
+                        <input id="file1" name="file" type="file" style="display:none" onchange="document.getElementById('textfield1').value=this.value">
+                        <input type="text" readonly="readonly" name="textfield" e="" id="textfield1" style="margin-left:20px;width: 300px;">
+                        <a class="easyui-linkbutton" type="button" class="btn" value="选择..." onclick="document.getElementById(&quot;file1&quot;).click()">浏览...</a>
+                        <a class="easyui-linkbutton" type="submit" id="submit1" name="submit1" class="btn" value="导入">上传</a>
+
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+        <div class="order_info">
+            <table class="table" title="订单信息" border="1">
+                <caption align="top" style="    font-size: 16px;
+    padding-left: 20px;
+    font-weight: bold;
+    background-color: #cfcfd1;">订单信息
+                </caption>
+                <tbody>
+                <tr>
+                    <td class="text-bold">来源订单号</td>
+                    <td>LBX032164884122542</td>
+                    <td class="text-bold">配送方式</td>
+                    <td>经网点</td>
+                    <td class="text-bold">送达方</td>
+                    <td>新建县瑞祥维修部</td>
+                    <td class="text-bold">送达方描述</td>
+                    <td>新建县瑞祥维修部</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">始发仓</td>
+                    <td>南昌</td>
+                    <td class="text-bold">中转仓</td>
+                    <td></td>
+                    <td class="text-bold">所属仓</td>
+                    <td>南昌</td>
+                    <td class="text-bold">提单号</td>
+                    <td>TB122192985-01-01</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">预约配送</td>
+                    <td>是</td>
+                    <td class="text-bold">拦截标记</td>
+                    <td></td>
+                    <td class="text-bold">应到用户时间</td>
+                    <td>2017-06-12 23:59:59 （延误）</td>
+                    <td class="text-bold">订单时间</td>
+                    <td>2017/6/11 0:33</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">创建时间</td>
+                    <td>2017/6/11 0:33</td>
+                    <td class="text-bold">订单状态</td>
+                    <td>拒收退货单已生成</td>
+                    <td class="text-bold">来源代码 （店铺）</td>
+                    <td>TMALL （天猫物流宝订单）</td>
+                    <td class="text-bold">下单人姓名</td>
+                    <td>蒋大勇</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">下单人电话</td>
+                    <td>15179197789</td>
+                    <td class="text-bold">省</td>
+                    <td>江西省</td>
+                    <td class="text-bold">市</td>
+                    <td>南昌市</td>
+                    <td class="text-bold">区/县</td>
+                    <td>南昌县</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">镇/街道</td>
+                    <td>南新乡</td>
+                    <td class="text-bold">时效标准</td>
+                    <td>24</td>
+                    <td class="text-bold">收货地址</td>
+                    <td>南新乡爱民村蒋埠街黄蒋公路蒋家村</td>
+                    <td class="text-bold">截单时间</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="text-bold">应出库时间</td>
+                    <td>2017-06-11 23:45:00 （延误）</td>
+                    <td class="text-bold">出库考核时间</td>
+                    <td>2017/6/11 23:45</td>
+                    <td class="text-bold">应到网点时间</td>
+                    <td>2017-06-12 09:00:00 （延误）</td>
+                    <td class="text-bold">始发仓出库时间</td>
+                    <td>2017/6/14 21:12</td>
+                </tr>
+                <tr>
+                    <td class="text-bold">快递单号</td>
+                    <td>6135953420</td>
+                    <td class="text-bold">用户签收拒收时间</td>
+                    <td>2017/6/17 16:00</td>
+                    <td class="text-bold">安装结果</td>
+                    <td></td>
+                    <td class="text-bold">安装时间</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="text-bold">取消时间</td>
+                    <td></td>
+                    <td class="text-bold">配送延误具体原因</td>
+                    <td></td>
+                    <td colspan="4"></td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+        <div style="margin-left:20px;width: 100%;height: 150px;overflow: auto">
+            <table id="datagrid_orderForecastLogs" data-options="title:'商品信息'"></table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var datagrid = $('#datagrid_orderForecastLogs').datagrid(datagridOptions_orderForecastLogs);
+        datagrid.datagrid('loadData', datagridData_orderForecastLogs);
+        ('#datagrid_orderForecastLogs').datagrid('setTitle','商品信息');
+    });
+    var datagridOptions_orderForecastLogs = {
+        fit: true,
+        fitColumns: true,
+        singleSelect: true,
+        //url: '/predictive/orderForecastLogs/p',
+        /*frozenColumns: [[{
+         field: 'id', checkbox: true
+         }]],*/
+        columns: [[
+            {title: '订单标识', field: 'secCode', sortable: true,},
+            {title: '产品编码', field: 'secName', sortable: true},
+            {title: '产品描述', field: 'overTimeType', sortable: true},
+            {title: '品牌', field: 'finishTime', sortable: true},
+            {title: '商品品牌', field: 'receivePerson', sortable: true},
+            {title: '品类', field: 'telephone', align: "center"},
+            {title: '订单数量', field: 'location', sortable: true},
+        ]],
+        autoRowHeight: true,
+        nowrap: false,
+//        toolbar: '#datagridToolbar_orderForecastLogs',
+        striped: true,
+        pagination: false,
+        rownumbers: true,
+    };
+    var datagridData_orderForecastLogs = {
+        'data': {
+            'records': [
+                {
+                    'secCode': 'YY,ZS,FL', sortable: true,
+                    'secName': '3TB015980', sortable: true,
+                    'overTimeType': '奥克斯 KFR-35W/BpAY(A1)', sortable: true,
+                    'finishTime': '奥克斯品牌商', sortable: true,
+                    'receivePerson': '奥克斯', sortable: true,
+                    'telephone': '空调', sortable: true,
+                    'location': '1', sortable: true,
+                },
+                {
+                    'secCode': 'YY,ZS,FL', sortable: true,
+                    'secName': '3TB015964', sortable: true,
+                    'overTimeType': '奥克斯 KFR-35G/BpNYA19+1', sortable: true,
+                    'finishTime': '奥克斯品牌商', sortable: true,
+                    'receivePerson': '奥克斯', sortable: true,
+                    'telephone': '空调', sortable: true,
+                    'location': '1', sortable: true,
+                },
+            ], 'totalCount': 2
+        }
+    };
+</script>
+</body>
+</html>

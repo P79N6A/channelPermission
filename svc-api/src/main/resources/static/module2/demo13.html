@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+      <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+    </table>
+</div>
+
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  添加时间
+			</span>
+                <input class="easyui-datebox" name="periodCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  结束时间
+			</span>
+                <input class="easyui-datebox" name="periodCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  物料编码
+			</span>
+                <input class="easyui-textbox" name="rateM" rateM/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  库位编码
+			</span>
+                <input class="easyui-textbox" name="lyMtd" lyMtd/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  总库存
+			</span>
+                <select class="easyui-combobox" style="width:90px">
+                    <option>全部</option>
+                    <option value="AA">大于</option>
+                    <option value="AB">等于</option>
+                    <option value="DA">小于</option>
+                </select>
+                <input class="easyui-textbox" name="lyMtd" style="width:80px"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  冻结库存
+			</span>
+                <select class="easyui-combobox" style="width:90px">
+                    <option>全部</option>
+                    <option value="AA">大于</option>
+                    <option value="AB">等于</option>
+                    <option value="DA">小于</option>
+                </select>
+                <input class="easyui-textbox" name="lyMtd" style="width:80px"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label"></span>
+                <input type="checkbox">
+                <span>超卖库存</span>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure" onclick="searchBackUp(1)"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMe"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+    </form>
+</div>
+<table id="backup1" style="display: none">
+    <thead>
+    <tr>
+        <th class="sorting" style="min-width:70px; text-align:center;">物料编码</th>
+        <th class="sorting" style="min-width:70px; text-align:center;">库位编码</th>
+        <th class="sorting" style="min-width:70px; text-align:center;">LES库位编码</th>
+        <th class="sorting" style="min-width:70px; text-align:center;">总库存量</th>
+        <th class="sorting" style="min-width:70px; text-align:center;">冻结库存数量</th>
+        <th class="sorting" style="min-width:70px; text-align:center;">超卖待释放数量</th>
+        <th class="sorting" style="min-width:70px; text-align:center;">创建时间</th>
+        <th class="sorting" style="min-width:70px; text-align:center;">更新时间</th>
+        <th class="sorting" style="min-width:70px; text-align:center;">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="text-align:center;">BA09X6B9M</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2014-03-04 23:31:06</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('BA09X6B9M','HFWA');">点击执行</a></td>
+    </tr>
+    <tr class="tr-bg">
+        <td style="text-align:center;">BH006104Z</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2015-09-15 19:07:02</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('BH006104Z','HFWA');">点击执行</a></td>
+    </tr>
+    <tr>
+        <td style="text-align:center;">BK004003V</td>
+        <td style="text-align:center;">FSWA</td>
+        <td style="text-align:center;">FSWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2014-05-19 07:07:08</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('BK004003V','FSWA');">点击执行</a></td>
+    </tr>
+    <tr class="tr-bg">
+        <td style="text-align:center;">FB28C7M00</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('FB28C7M00','HFWA');">点击执行</a></td>
+    </tr>
+    <tr>
+        <td style="text-align:center;">B30FZ000N</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2014-07-03 21:26:01</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('B30FZ000N','HFWA');">点击执行</a></td>
+    </tr>
+    <tr class="tr-bg">
+        <td style="text-align:center;">BK004003V</td>
+        <td style="text-align:center;">WHWA</td>
+        <td style="text-align:center;">WHWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2014-06-02 11:10:07</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('BK004003V','WHWA');">点击执行</a></td>
+    </tr>
+    <tr>
+        <td style="text-align:center;">BM0370BA3</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;">HFWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2016-11-14 20:16:02</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('BM0370BA3','HFWA');">点击执行</a></td>
+    </tr>
+    <tr class="tr-bg">
+        <td style="text-align:center;">GA0G9E000</td>
+        <td style="text-align:center;">XMWA</td>
+        <td style="text-align:center;">XMWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('GA0G9E000','XMWA');">点击执行</a></td>
+    </tr>
+    <tr>
+        <td style="text-align:center;">GA0RQD008</td>
+        <td style="text-align:center;">WHWA</td>
+        <td style="text-align:center;">WHWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2015-07-25 19:25:03</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('GA0RQD008','WHWA');">点击执行</a></td>
+    </tr>
+    <tr class="tr-bg">
+        <td style="text-align:center;">BH006104Z</td>
+        <td style="text-align:center;">CQWA</td>
+        <td style="text-align:center;">CQWA</td>
+        <td style="text-align:center;" class="stockQty">0</td>
+        <td style="text-align:center;" class="frozenQty">0</td>
+        <td style="text-align:center;" class="release">0</td>
+        <td style="text-align:center;">2013-11-19 10:41:12</td>
+        <td style="text-align:center;">2015-08-03 15:14:00</td>
+        <td style="text-align:center;"><a href="javascript:void(0);" onclick="execute('BH006104Z','CQWA');">点击执行</a></td>
+    </tr>
+    </tbody>
+</table>
+<script type="application/javascript">
+    var tableHead = ''
+
+    var detailTh = 'WP订单号 \n' +
+        'PO编号 \n' +
+        '销售单号 \n' +
+        '提单时间 \n' +
+        'SO \n' +
+        'DN \n' +
+        '渠道 \n' +
+        '品类 \n' +
+        '产品组 \n' +
+        '物料编号 \n' +
+        '型号 \n' +
+        '数量 \n' +
+        '样表单价 \n' +
+        '样表金额 \n' +
+        '采购价格 \n' +
+        '采购金额 \n' +
+        'WA库位码 \n' +
+        'WA库位名称 \n' +
+        '状态 \n' +
+        '出日日顺库时间 \n' +
+        '入库时间 '
+
+    var detail = {
+        fit: true,
+        fitColumns: false,
+        singleSelect: true,
+        columns: covertColumns(detailTh),
+        rownumbers: true
+    };
+
+
+</script>
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>
