@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.haier.stock.dao.stock.InvWarehouseDao">
-
 	<resultMap id="invWarehouseResult" type="com.haier.stock.model.InvWarehouse">
 		<result column="wh_code" property="whCode" jdbcType="CHAR" />
 		<result column="wh_name" property="whName" jdbcType="VARCHAR" />
@@ -147,4 +146,282 @@
         FROM `inv_warehouse`
         WHERE `center_code` = #{center_code}
     </select>
+
+	<select id="getInvWarehouseInfo" resultMap="invWarehouseResult"
+			parameterType="Map">
+		SELECT
+		*
+		FROM inv_warehouse
+		where
+		1=1
+		<if test="wh_code != null and wh_code != ''">
+			AND wh_code = #{wh_code}
+		</if>
+		<if test="estorge_name != null and estorge_name != ''">
+			AND estorge_name = #{estorge_name}
+		</if>
+		<if test="transmit_id != null and transmit_id != ''">
+			AND transmit_id = #{transmit_id}
+		</if>
+		<if test="transmit_desc != null and transmit_desc != ''">
+			AND transmit_desc like '%${transmit_desc}%'
+		</if>
+		<if test="custom_id != null and custom_id != ''">
+			AND custom_id = #{custom_id}
+		</if>
+		<if test="rrs_distribution_id != null and rrs_distribution_id != ''">
+			AND rrs_distribution_id = #{rrs_distribution_id}
+		</if>
+		<if test="rrs_distribution_name != null and rrs_distribution_name != ''">
+			AND rrs_distribution_name like
+			'%${rrs_distribution_name}%'
+		</if>
+		<![CDATA[ AND is_enabled <> 4 ]]>
+		ORDER BY update_time DESC
+		<if test="rows != null and index != null">
+			LIMIT #{index},#{rows}
+		</if>
+	</select>
+
+
+	<select id="getInvWarehouseCount" resultType="java.lang.Integer">
+		SELECT
+		count(0)
+		FROM
+		inv_warehouse
+		WHERE
+		1=1
+		<if test="wh_code !=null and wh_code != ''">
+			AND wh_code = #{wh_code}
+		</if>
+		<if test="estorge_name !=null and estorge_name != ''">
+			AND estorge_name = #{estorge_name}
+		</if>
+		<if test="transmit_id !=null and transmit_id != ''">
+			AND transmit_id = #{transmit_id}
+		</if>
+		<if test="transmit_desc !=null and transmit_desc != ''">
+			AND transmit_desc like '%${transmit_desc}%'
+		</if>
+		<if test="custom_id !=null and custom_id != ''">
+			AND custom_id = #{custom_id}
+		</if>
+		<if test="rrs_distribution_id !=null and rrs_distribution_id != ''">
+			AND rrs_distribution_id = #{rrs_distribution_id}
+		</if>
+		<if test="rrs_distribution_name !=null and rrs_distribution_name != ''">
+			AND rrs_distribution_name like
+			'%${rrs_distribution_name}%'
+		</if>
+		<![CDATA[ AND is_enabled <> 4 ]]>
+	</select>
+
+	<select id="checkMainKey" parameterType="Map" resultType="java.lang.Integer">
+		SELECT
+		count(1) from inv_warehouse
+		WHERE
+		wh_code = #{wh_code}
+		<![CDATA[ AND is_enabled <> 4 ]]>
+	</select>
+
+	<insert id="createInvWarehouse" parameterType="Map">
+		INSERT INTO
+		inv_warehouse
+		(wh_code, wh_name, status,
+		center_code, support_cod,
+		create_user, create_time, update_user,
+		update_time,
+		les_accepter,
+		estorge_id, estorge_name, transmit_id,
+		transmit_desc, les_OE_id,
+		custom_id,
+		custom_desc, industry_trade_id, industry_trade_desc,
+		graininess_id, net_management_id, esale_id,
+		esale_name, sale_org_id,
+		branch,
+		payment_id, payment_name, area_id,
+		rrs_distribution_id,
+		rrs_distribution_name,
+		rrs_sale_id, rrs_sale_name, oms_rrs_payment_id,
+		oms_rrs_payment_name,city_code,city_desc,
+		is_enabled
+		)
+		VALUES
+		(#{wh_code}, #{wh_name},
+		#{status},
+		#{center_code}, #{support_cod},
+		#{create_user},
+		CURRENT_TIMESTAMP(), #{update_user},
+		CURRENT_TIMESTAMP(),
+		#{les_accepter},
+		#{estorge_id}, #{estorge_name},
+		#{transmit_id},
+		#{transmit_desc},
+		#{les_OE_id}, #{custom_id},
+		#{custom_desc},
+		#{industry_trade_id},
+		#{industry_trade_desc},
+		#{graininess_id},
+		#{net_management_id},
+		#{esale_id},
+		#{esale_name},
+		#{sale_org_id},
+		#{branch},
+		#{payment_id},
+		#{payment_name}, #{area_id},
+		#{rrs_distribution_id},
+		#{rrs_distribution_name},
+		#{rrs_sale_id},
+		#{rrs_sale_name},
+		#{oms_rrs_payment_id},
+		#{oms_rrs_payment_name},
+		#{city_code},
+		#{city_desc},
+		0
+		);
+	</insert>
+
+
+	<update id="updateInvWarehouse" parameterType="Map">
+		UPDATE inv_warehouse
+		<set>
+			<if test="wh_name != null">
+				wh_name = #{wh_name},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="center_code != null">
+				center_code = #{center_code},
+			</if>
+			<if test="support_cod != null">
+				support_cod = #{support_cod},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user},
+			</if>
+			<if test="les_accepter != null">
+				les_accepter = #{les_accepter},
+			</if>
+			<if test="estorge_id != null">
+				estorge_id = #{estorge_id},
+			</if>
+			<if test="estorge_name != null">
+				estorge_name = #{estorge_name},
+			</if>
+			<if test="transmit_id != null">
+				transmit_id = #{transmit_id},
+			</if>
+			<if test="transmit_desc != null">
+				transmit_desc = #{transmit_desc},
+			</if>
+			<if test="les_OE_id != null">
+				les_OE_id = #{les_OE_id},
+			</if>
+			<if test="custom_id != null">
+				custom_id = #{custom_id},
+			</if>
+			<if test="custom_desc != null">
+				custom_desc = #{custom_desc},
+			</if>
+			<if test="industry_trade_id != null">
+				industry_trade_id = #{industry_trade_id},
+			</if>
+			<if test="industry_trade_desc != null">
+				industry_trade_desc = #{industry_trade_desc},
+			</if>
+			<if test="graininess_id != null">
+				graininess_id = #{graininess_id},
+			</if>
+			<if test="net_management_id != null">
+				net_management_id = #{net_management_id},
+			</if>
+			<if test="esale_id != null">
+				esale_id = #{esale_id},
+			</if>
+			<if test="esale_name != null">
+				esale_name = #{esale_name},
+			</if>
+			<if test="sale_org_id != null">
+				sale_org_id = #{sale_org_id},
+			</if>
+			branch = #{branch},
+			<if test="payment_id != null">
+				payment_id = #{payment_id},
+			</if>
+			<if test="payment_name != null">
+				payment_name = #{payment_name},
+			</if>
+			<if test="area_id != null">
+				area_id = #{area_id},
+			</if>
+			<if test="rrs_distribution_id != null">
+				rrs_distribution_id = #{rrs_distribution_id},
+			</if>
+			<if test="rrs_distribution_name != null">
+				rrs_distribution_name = #{rrs_distribution_name},
+			</if>
+			<if test="rrs_sale_id != null">
+				rrs_sale_id = #{rrs_sale_id},
+			</if>
+			<if test="rrs_sale_name != null">
+				rrs_sale_name = #{rrs_sale_name},
+			</if>
+			<if test="oms_rrs_payment_id != null">
+				oms_rrs_payment_id = #{oms_rrs_payment_id},
+			</if>
+			<if test="oms_rrs_payment_name != null">
+				oms_rrs_payment_name = #{oms_rrs_payment_name},
+			</if>
+			<if test="city_code != null">
+				city_code = #{city_code},
+			</if>
+			<if test="city_desc != null">
+				city_desc = #{city_desc},
+			</if>
+			update_time = CURRENT_TIMESTAMP()
+		</set>
+		WHERE wh_code = #{wh_code}
+	</update>
+
+	<update id="deleteInvWareHouse" parameterType="Map">
+		UPDATE inv_warehouse SET is_enabled=4
+		WHERE wh_code in
+		<foreach collection="deleteList" item="item" index="index"
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="openStatusInvWarehouse" parameterType="Map">
+		UPDATE inv_warehouse SET is_enabled=0 WHERE wh_code IN
+		<foreach collection="openList" item="item" index="index" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="closeStatusInvWarehouse" parameterType="Map">
+		UPDATE inv_warehouse SET is_enabled=1 WHERE wh_code IN
+		<foreach collection="closeList" item="item" index="index"
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="getInvWarehouseExport" resultMap="invWarehouseResult"
+			parameterType="Map">
+		SELECT
+		*
+		FROM inv_warehouse
+		<![CDATA[WHERE is_enabled <> 4 ]]>
+		<if test="wh_code != null and wh_code != ''">
+			AND wh_code IN
+			<foreach collection="wh_code" item="item" index="index" open="("
+					 separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY update_time DESC
+	</select>
 </mapper>

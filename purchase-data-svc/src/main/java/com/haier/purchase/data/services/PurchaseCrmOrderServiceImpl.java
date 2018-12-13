@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haier.purchase.data.dao.purchase.CrmOrderDao;
+import com.haier.purchase.data.model.CrmOrderItem;
 import com.haier.purchase.data.model.CrmOrderVO;
 import com.haier.purchase.data.service.PurchaseCrmOrderService;
 
@@ -57,5 +58,20 @@ public class PurchaseCrmOrderServiceImpl implements PurchaseCrmOrderService {
 	@Override
 	public Integer selectCrmOrderCount(String wp_order_id) {
 		return crmOrderDao.selectCrmOrderCount(wp_order_id);
+	}
+
+	@Override
+	public void updateLbxs(CrmOrderItem dto) {
+		crmOrderDao.updateLbxs(dto);		
+	}
+
+	@Override
+	public List<CrmOrderItem> findWaitUpdateLbxList() {
+		return crmOrderDao.findWaitUpdateLbxList();
+	}
+	
+	@Override
+	public List<CrmOrderItem> findWaitToSapList(){
+		return crmOrderDao.findWaitToSapList();
 	}
 }

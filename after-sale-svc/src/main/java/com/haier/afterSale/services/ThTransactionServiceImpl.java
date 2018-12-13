@@ -1,6 +1,8 @@
 package com.haier.afterSale.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -353,4 +355,13 @@ public class ThTransactionServiceImpl implements ThTransactionService {
         this.thTransactionModel = thTransactionModel;
     }
 
+    //调拨残次测试类
+    public static class Test {
+        public static void main(String[] args) {
+            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date=simpleDateFormat.format(new Date());
+            System.out.println(new Date().getTime());
+        }
+
+    }
 }

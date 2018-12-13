@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.StoragesRelaWriteDao">
+  <resultMap id="storagesResult" type="com.haier.shop.model.Storages">
+    <result property="id" column="id" />
+    <result property="isFreightInvoice" column="isFreightInvoice" />
+    <result property="isSupportCod" column="isSupportCod" />
+    <result property="name" column="name" />
+    <result property="code" column="code" />
+    <result property="type" column="type" />
+    <result property="centerCode" column="centerCode" />
+    <result property="taobaoStoreCode" column="taobaoStoreCode" />
+    <result property="centerCity" column="centerCity" />
+    <result property="industryCode" column="industryCode" />
+    <result property="industryName" column="industryName" />
+    <result property="area" column="area" />
+    <result property="limitTime" column="limitTime" />
+    <result property="remark" column="remark" />
+  </resultMap>
+
+  <insert id="createStoragesRela" parameterType="com.haier.shop.model.StoragesRela">
+    insert into storagesrela (
+    siteId,
+    Code,
+    masterCode,
+    centerCode,
+    mulStoreCode,
+    isMaster)
+    VALUES (
+    1,
+    #{code},
+    #{masterCode},
+    #{centerCode},
+    #{mulStoreCode},
+    #{isMaster}
+    )
+  </insert>
+
+  <update id="updateStoragesRela" parameterType="com.haier.shop.model.StoragesRela">
+    update `storagesrela`
+    set
+    <if test="code !=null and code != ''">
+      code = #{code},
+    </if>
+    <if test="masterCode !=null and masterCode != ''">
+      masterCode = #{masterCode},
+    </if>
+    <if test="centerCode !=null and centerCode != ''">
+      centerCode = #{centerCode},
+    </if>
+    <if test="mulStoreCode !=null and mulStoreCode != ''">
+      mulStoreCode = #{mulStoreCode},
+    </if>
+    isMaster = #{isMaster}
+    where `id` = #{id}
+  </update>
+
+</mapper>

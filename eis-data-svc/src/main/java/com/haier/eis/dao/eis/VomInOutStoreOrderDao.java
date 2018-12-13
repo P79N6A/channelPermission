@@ -34,5 +34,18 @@ public interface VomInOutStoreOrderDao {
 
 	List<VomInOutStoreOrder> findInTime();
 	
-	int queryVomInOut(String orderNo);//根据网单号查询VOM是否返回啦出入库信息
+	VomInOutStoreOrder queryVomInOut(String orderNo);//根据网单号查询VOM是否返回啦出入库信息
+	
+	VomInOutStoreOrder 	queryVomInTenlibrary(String orderNo); //根据出入库单号查询入10的入库信息
+	
+	VomInOutStoreOrder queryGetStoreCode(@Param("storageType")String storageType,@Param("busType")String busType,@Param("orderNo")String orderNo);//根据出入库单号查询vomC码
+
+    /**
+     * 查询出入库信息
+     * @param orderNo
+     * @return
+     */
+    VomInOutStoreOrder getByStockInfoByOrderNo(@Param("orderNo")String orderNo);
+	
+	
 }

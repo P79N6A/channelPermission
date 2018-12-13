@@ -26,4 +26,6 @@ public interface VomOrderDao {
 	public String getFlowFlagBySiOuInfo(Map<String, Object> paramMap);
 	//wp_order_id 查询数据
 	public String getFlowFlagByCrmReturnInfo(Map<String, Object> paramMap);
+
+    String getStorageIdByCrmReturnInfo(Map<String, Object> paramMap);
 }

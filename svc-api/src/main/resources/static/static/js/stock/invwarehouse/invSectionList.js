@@ -11,13 +11,13 @@ var datagridOptions_warehouseListGoal = {
     }, {
         title: '库位编码',
         field: 'secCode',
-        sortable: true
+        sortable: false
     }]],
     columns: [[
-        {title: 'LES库位', field: 'lesSecCode', sortable: true},
-        {title: '库位名称', field: 'secName', sortable: true},
+        {title: 'LES库位', field: 'lesSecCode', sortable: false},
+        {title: '库位名称', field: 'secName', sortable: false},
         {
-            title: '状态', field: 'status', sortable: true,
+            title: '状态', field: 'status', sortable: false,
             formatter: function (val, rec) {
                 if (val == "0") {
                     return "未启用";
@@ -26,19 +26,19 @@ var datagridOptions_warehouseListGoal = {
                 }
             }
         },
-        {title: '仓库（TC）代码', field: 'whCode', sortable: true},
-        {title: '库位属性', field: 'sectionProperty', sortable: true},
-        {title: '渠道编码', field: 'channelCode', sortable: true},
-        {title: '批次', field: 'itemProperty', sortable: true},
-        {title: '销售组织编码', field: 'corpCode', sortable: true},
-        {title: '付款方编码', field: 'custCode', sortable: true},
-        {title: '地区编码', field: 'regionCode', sortable: true},
-        {title: '分渠道送达方', field: 'ehaierDeliverCode', sortable: true},
-        {title: '物流OE码', field: 'les0eCode', sortable: true},
-        {title: '创建者', field: 'createUser', sortable: true},
-        {title: '创建时间', field: 'createTime', sortable: true, formatter: formatDatebox},
-        {title: '最后更新人', field: 'updateUser', sortable: true},
-        {title: '最后更新时间', field: 'updateTime', sortable: true, formatter: formatDatebox}
+        {title: '仓库（TC）代码', field: 'whCode', sortable: false},
+        {title: '库位属性', field: 'sectionProperty', sortable: false},
+        {title: '渠道编码', field: 'channelCode', sortable: false},
+        {title: '批次', field: 'itemProperty', sortable: false},
+        {title: '销售组织编码', field: 'corpCode', sortable: false},
+        {title: '付款方编码', field: 'custCode', sortable: false},
+        {title: '地区编码', field: 'regionCode', sortable: false},
+        {title: '分渠道送达方', field: 'ehaierDeliverCode', sortable: false},
+        {title: '物流OE码', field: 'les0eCode', sortable: false},
+        {title: '创建者', field: 'createUser', sortable: false},
+        {title: '创建时间', field: 'createTime', sortable: false, formatter: formatDatebox},
+        {title: '最后更新人', field: 'updateUser', sortable: false},
+        {title: '最后更新时间', field: 'updateTime', sortable: false, formatter: formatDatebox}
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
     striped: true,
@@ -99,10 +99,12 @@ $(function () {
                 var actType = $('#addForm_invSection').find('[__actType]').val();
                 var obj = data;
                 if (obj == "codeIsSame") {
-                    $.messager.alert('提示', '仓库(TC)代码已存在');
+                    $.messager.alert('提示', '库位编码已存在');
+                    return;
                 }
                 if (obj == "nameIsSame") {
                     $.messager.alert('提示', '仓库名称已存在');
+                  return;
                 }
                 if (obj == "success") {
                     $('#datagrid_warehouseListGoal').datagrid('reload');
@@ -114,7 +116,11 @@ $(function () {
                         $.messager.alert('提示', '修改成功');
                     }
                     $('#addDlg_invSection').dialog('close');
+                }else {
+                  $.messager.alert('错误', "保存数据失败，请检查数据格式长度");
+                  return;
                 }
+
             }
         });
     });
@@ -214,13 +220,13 @@ $("#searchBtn").on('click', function (event) {
         }, {
             title: '库位编码',
             field: 'secCode',
-            sortable: true
+            sortable: false
         }]],
         columns: [[
-            {title: 'LES库位', field: 'lesSecCode', sortable: true},
-            {title: '库位名称', field: 'secName', sortable: true},
+            {title: 'LES库位', field: 'lesSecCode', sortable: false},
+            {title: '库位名称', field: 'secName', sortable: false},
             {
-                title: '状态', field: 'status', sortable: true,
+                title: '状态', field: 'status', sortable: false,
                 formatter: function (val, rec) {
                     if (val == "0") {
                         return "未启用";
@@ -229,19 +235,19 @@ $("#searchBtn").on('click', function (event) {
                     }
                 }
             },
-            {title: '仓库（TC）代码', field: 'whCode', sortable: true},
-            {title: '库位属性', field: 'sectionProperty', sortable: true},
-            {title: '渠道编码', field: 'channelCode', sortable: true},
-            {title: '批次', field: 'itemProperty', sortable: true},
-            {title: '销售组织编码', field: 'corpCode', sortable: true},
-            {title: '付款方编码', field: 'custCode', sortable: true},
-            {title: '地区编码', field: 'regionCode', sortable: true},
-            {title: '分渠道送达方', field: 'ehaierDeliverCode', sortable: true},
-            {title: '物流OE码', field: 'les0eCode', sortable: true},
-            {title: '创建者', field: 'createUser', sortable: true},
-            {title: '创建时间', field: 'createTime', sortable: true, formatter: formatDatebox},
-            {title: '最后更新人', field: 'updateUser', sortable: true},
-            {title: '最后更新时间', field: 'updateTime', sortable: true, formatter: formatDatebox}
+            {title: '仓库（TC）代码', field: 'whCode', sortable: false},
+            {title: '库位属性', field: 'sectionProperty', sortable: false},
+            {title: '渠道编码', field: 'channelCode', sortable: false},
+            {title: '批次', field: 'itemProperty', sortable: false},
+            {title: '销售组织编码', field: 'corpCode', sortable: false},
+            {title: '付款方编码', field: 'custCode', sortable: false},
+            {title: '地区编码', field: 'regionCode', sortable: false},
+            {title: '分渠道送达方', field: 'ehaierDeliverCode', sortable: false},
+            {title: '物流OE码', field: 'les0eCode', sortable: false},
+            {title: '创建者', field: 'createUser', sortable: false},
+            {title: '创建时间', field: 'createTime', sortable: false, formatter: formatDatebox},
+            {title: '最后更新人', field: 'updateUser', sortable: false},
+            {title: '最后更新时间', field: 'updateTime', sortable: false, formatter: formatDatebox}
         ]],
     });
 

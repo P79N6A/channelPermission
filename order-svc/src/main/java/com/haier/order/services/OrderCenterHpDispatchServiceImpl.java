@@ -2,6 +2,7 @@ package com.haier.order.services;
 
 import com.haier.common.ServiceResult;
 import com.haier.order.model.HpAllotNetPointModel;
+import com.haier.order.model.HpNewAllotNetPointModel;
 import com.haier.order.service.OrderCenterHpDispatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,9 @@ public class OrderCenterHpDispatchServiceImpl implements OrderCenterHpDispatchSe
     @Autowired
     private HpAllotNetPointModel hpAllotNetPointModel;
 
+    @Autowired
+    private HpNewAllotNetPointModel hpNewAllotNetPointModel;
+
     private static Logger log = LoggerFactory.getLogger(OrderCenterHpDispatchServiceImpl.class);
 
     //    @Scheduled(cron = "0 0/3 * * * ?")
@@ -34,6 +38,22 @@ public class OrderCenterHpDispatchServiceImpl implements OrderCenterHpDispatchSe
             result.setSuccess(false);
             result.setResult(false);
             log.error("接收HP分配网点信息出现异常!", e);
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Boolean> processNewNetPoint() {
+        log.debug("处理从vom回传的hp网点数据定时任务");
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            hpNewAllotNetPointModel.allotNetPoint();
+            result.setSuccess(true);
+            result.setResult(true);
+        } catch (Exception e) {
+            result.setSuccess(false);
+            result.setResult(false);
+            log.error("接收vom回传的HP分配网点信息出现异常!", e);
         }
         return result;
     }

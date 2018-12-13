@@ -1,5 +1,11 @@
 package com.haier.svc.services;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,52 +14,52 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
 
+import com.haier.purchase.data.model.*;
+import com.haier.purchase.data.model.CrmGenuineRejectItem;
+import com.haier.purchase.data.service.*;
+import com.haier.svc.bean.*;
+import com.haier.svc.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.JsonUtil;
 import com.haier.eis.model.EisInterfaceFinance;
-import com.haier.purchase.data.model.CnT2PurchaseStock;
-import com.haier.purchase.data.model.CrmOrderItem;
-import com.haier.purchase.data.model.CrmOrderManualDetailItem;
-import com.haier.purchase.data.model.CrmOrderVO;
-import com.haier.purchase.data.model.RuntimeParametersVO;
-import com.haier.purchase.data.model.T2OrderItem;
-import com.haier.purchase.data.service.CnT2PurchaseStockService;
-import com.haier.purchase.data.service.PurchaseCrmOrderManualService;
-import com.haier.purchase.data.service.PurchaseCrmOrderService;
-import com.haier.purchase.data.service.PurchaseT2OrderService;
-import com.haier.shop.service.ShopOrderRepairLogsService;
-import com.haier.svc.bean.LESOutRRSLedingBillTimeResponse;
-import com.haier.svc.bean.LESOutRRSLedingBillTimeSubResponse;
-import com.haier.svc.bean.ZBSTKD;
+import com.haier.purchase.data.model.vehcile.Entry3wOrder;
+import com.haier.purchase.data.model.vehcile.OrderLines;
+import com.haier.purchase.data.model.vehcile.TmallCAMachineDTO;
 import com.haier.svc.bean.gettidanzwdfromlestoehaier.ZWDTABLE2;
 import com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponseStockTrans;
-import com.haier.svc.model.CRMOrderModel;
-import com.haier.svc.model.CrmOrderManualModel;
-import com.haier.svc.model.LESTransferOrderModel;
-import com.haier.svc.model.OmsSyncModel;
-import com.haier.svc.model.RuntimeParametersModel;
-import com.haier.svc.model.T2OrderModel;
 import com.haier.svc.purchase.purchasefromgvs.ObjectFactory;
 import com.haier.svc.purchase.purchasefromgvs.TransDNInfoFromEHAIERToGVS;
 import com.haier.svc.purchase.purchasefromgvs.TransDNInfoFromEHAIERToGVS_Service;
 import com.haier.svc.purchase.purchasefromgvs.ZMMS0003;
 import com.haier.svc.purchase.purchasefromgvs.ZSDS0002;
+import com.haier.svc.purchase.queryDNFrom.QueryDNFromLEStoAPP;
+import com.haier.svc.purchase.queryDNFrom.QueryDNFromLEStoAPP_Service;
+import com.haier.svc.purchase.queryDNFrom.ZINTWXWTLOG;
 import com.haier.svc.purchase.querywaorderbillfromihs.QueryWAOrderBillFromIHS;
 import com.haier.svc.purchase.querywaorderbillfromihs.QueryWAOrderBillFromIHS_Service;
 import com.haier.svc.purchase.querywaorderbillfromihs.VWWAOrderBillYTJOutput;
+import com.haier.svc.service.T2OrderService;
 import com.haier.svc.service.job.T2OrderTimingService;
+import com.haier.svc.util.CommUtil;
+import com.haier.svc.util.DateCal;
+import com.haier.svc.util.WSUtils;
 //import com.haier.svc.dao.base.BaseErrDao;
+import com.haier.svc.util.XmlUtils2;
 
 //@Configuration
 //@EnableScheduling
@@ -88,6 +94,27 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
     RuntimeParametersModel runtimeParametersModel;
     @Autowired
     CnT2PurchaseStockService cnT2PurchaseStockService;
+    @Autowired
+    private PurchaseTmallCAMachineService tmallCAService;
+    @Autowired
+    private T2OrderService t2OrderService;
+    @Autowired
+    private EaiHandlerModel eaiHandlerModel;
+    @Autowired
+    private EisVOMModel eisVOMModel;
+    @Autowired
+    private EISStockModel eisStockModel;
+    @Autowired
+    private OrderOperationLogService orderOperationLogService;
+    @Autowired
+    private CrmGenuineRejectDataService crmGenuineRejectDataService;
+    @Autowired
+    private PurchaseT2OrderQueryService purchaseT2OrderQueryService;
+	private static String FULFILLED = "FULFILLED";
+	@Value("${entryOrderUrl}")
+	private String entryOrderUrl;
+	@Autowired
+	private GateModel gateModel;
 
 //    @Autowired
 //	  private ShopOrderRepairLogsService shopOrderRepairLogsService;//退货日志  
@@ -275,11 +302,18 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
                     params.put("mustHaveDNorSO", "1");
 
                     purchaseT2OrderService.updateStatus(params);
-                    purchaseCrmOrderManualService.updateStatusFromCRM(params);
+//                    purchaseCrmOrderManualService.updateStatusFromCRM(params);
                 } catch (Exception ex) {
                     log.error("CRM同步采购单发生异常：" + JsonUtil.toJson(info), ex);
                 }
             }
+            try {
+				purchaseCrmOrderManualService.updateCrmOrderManualAfterSync();
+				purchaseT2OrderService.updateStatus80FromLES();
+			} catch (Exception e) {
+				log.warn("更新CRM手工订单出错，程序继续运行。", e);
+				e.printStackTrace();
+			}
             result.setResult(true);
         } catch (Exception e) {
             log.error("从CRM获取采购单时，发生未知异常", e);
@@ -297,10 +331,9 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
      * 同步crmT+2订单状态
      */
 //	@Scheduled(cron = "0 23,53 * * * ? ")
-//	@Scheduled(cron = "0 0/5 * * * ? ")
+//	@Scheduled(cron = "0 1/5 * * * ? ")
     @Override
     public void syncCrmT2Status() {
-        // System.out.println("syncCrmT2Status");
         setCrmT2toOutRRS();
         setCrmT2toInWA();
     }
@@ -308,11 +341,24 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
     private void setCrmT2toOutRRS() {
         // 查询状态为已入日日顺库的订单
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("flow_flag", "60");
-        params.put("flow_flag", "70");
+        params.put("flow_flag", "60,70");
         params.put("addition_condition",
                 " or (rrs_out_time is null and t2.flow_flag = 80)");
         List<String> orders = t2OrderModel.get85DNFromHaierT2(params);
+        
+        params = new HashMap();
+        List flow_flags = new ArrayList();
+        flow_flags.add("60");
+        flow_flags.add("70");
+        params.put("flow_flag", flow_flags);
+        List<CrmOrderManualDetailItem> l = crmOrderManualModel
+                .getCrmOrderManualList(params);
+        if(l != null && l.size() > 0){
+        	for(CrmOrderManualDetailItem c : l){
+        		orders.add(c.getDn_id());
+        	}
+        }
+        
         // System.out.println(JsonUtil.toJson(orders));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HHmmss");
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -329,7 +375,7 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
                 int end = (i + 1) * maxPerRequest > orders.size() ? orders
                         .size() : (i + 1) * maxPerRequest;
                 List<String> subOrders = orders.subList(i * maxPerRequest,
-                        end - 1);
+                        end);
                 for (String order : subOrders) {
                     ZBSTKD zbstkd = new ZBSTKD();
                     zbstkd.setBSTKD(order + "D");
@@ -402,13 +448,7 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
         }
 
         // 更新CRM手工采购表状态
-        params = new HashMap();
-        List flow_flags = new ArrayList();
-        flow_flags.add("60");
-        flow_flags.add("70");
-        params.put("flow_flag", flow_flags);
-        List<CrmOrderManualDetailItem> l = crmOrderManualModel
-                .getCrmOrderManualList(params);
+        
         if (l != null && !l.isEmpty()) {
             List<String> so = new ArrayList<String>();
             for (CrmOrderManualDetailItem item : l) {
@@ -424,7 +464,8 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
                     params.put("flow_flag", "70");
                     params.put("error_msg", "");
                     params.put("so_id", outInfo.getGVSSO());
-
+                    if(org.apache.commons.lang.StringUtils.isBlank(outInfo.getGVSSO()))
+	                    continue;
                     Date date = null;
                     try {
                         crmOrderManualModel.updateStatusFromCRM(params);
@@ -454,6 +495,20 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("flow_flag", "60,70");
         List<String> l_dn = t2OrderModel.get85DNFromHaierT2(params);
+        
+        params = new HashMap();
+        List flow_flags = new ArrayList();
+        flow_flags.add("60");
+        flow_flags.add("70");
+        params.put("flow_flag", flow_flags);
+        List<CrmOrderManualDetailItem> l = crmOrderManualModel
+                .getCrmOrderManualList(params);
+        
+        if(l != null && l.size() > 0){
+        	for(CrmOrderManualDetailItem c : l){
+        		l_dn.add(c.getDn_id());
+        	}
+        }
         // List<T2OrderItem> orders =
         // t2OrderModel.findT2OrderMultipleList(params);
         // System.out.println(JsonUtil.toJson(orders));
@@ -513,13 +568,7 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
         }
 
         // 更新CRM手工采购表状态
-        params = new HashMap();
-        List flow_flags = new ArrayList();
-        flow_flags.add("60");
-        flow_flags.add("70");
-        params.put("flow_flag", flow_flags);
-        List<CrmOrderManualDetailItem> l = crmOrderManualModel
-                .getCrmOrderManualList(params);
+        
         if (l != null && !l.isEmpty()) {
             List<String> so = new ArrayList<String>();
             for (CrmOrderManualDetailItem item : l) {
@@ -546,10 +595,10 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
                     if (StringUtils.isEmpty(normalDN(waInfo.getBSTNK()))) {
                         continue;
                     }
-                    List<CrmOrderVO> l_vo = crmOrderModel.findCRMOrder(params);
-                    if (l_vo.size() == 0) {
-                        continue;
-                    }
+//                    List<CrmOrderVO> l_vo = crmOrderModel.findCRMOrder(params);
+//                    if (l_vo.size() == 0) {
+//                        continue;
+//                    }
 
                     String dn_normal = normalDN(waInfo.getBSTNK());
                     params = new HashMap();
@@ -559,12 +608,13 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
                     params.put("wa_in_time",
                             waInfo.getCPUDT() + " " + waInfo.getCPUTM());
                     crmOrderManualModel.updateStatusFromCRM(params);
-                    // crmOrderManualModel.updateTimeFromCRM(params);
+                     crmOrderManualModel.updateTimeFromCRM(params);
 
                     log.info("CRM手工采购更新入WA库状态:" + JsonUtil.toJson(params));
                 }
             }
         }
+        purchaseT2OrderService.updateStatus80FromLES();
     }
 
     /**
@@ -598,96 +648,255 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
         log.info("All Oms Sync Finished in " + (endTime - startTime) + " millisecondes");
     }
 
+    //任务运行间隔短，设置一个是否正在运行的标志。多实例无效。
+    static Boolean GetInventoryTranFromLesTwoRunning = false;
+
+    @Override
+    public ServiceResult<Calendar> GetInventoryTranFromLesTwo() {
+        ServiceResult<Calendar> res = new ServiceResult<>();
+        if(GetInventoryTranFromLesTwoRunning == true) return null;
+        try{
+            String last_error_time = "";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());
+            Map<String, Object> params=new HashMap<String, Object>();
+            CrmOrderItem crmOrderItem= purchaseT2OrderQueryService.getIsNullWaInTime(params);
+            RuntimeParametersVO vo = runtimeParametersModel.getRuntimeParameterByKey("last_les_sync_time_two");
+            String crmOrderItemTime = crmOrderItem.getRrs_out_time_display();
+            String voTime=vo.getValue();
+            Date nowDate = new Date();
+
+//            Date fDate=sdf2.parse(crmOrderItemTime);
+            Date oDate=sdf.parse(voTime);
+            long min=(nowDate.getTime()-oDate.getTime())/(1000*60);
+
+            if(crmOrderItem.getOrder_id().equals(vo.getWp_order_id())&&min>20){
+                last_error_time = vo.getValue();
+            }else{
+                last_error_time=crmOrderItem.getRrs_out_time_display();
+                RuntimeParametersVO voNew=new RuntimeParametersVO();
+                voNew.setKey("last_les_sync_time_two");
+                voNew.setWp_order_id(crmOrderItem.getOrder_id());
+                voNew.setValue(crmOrderItem.getRrs_out_time_display().replaceAll("-","."));
+                runtimeParametersModel.updateRuntimeWpOrderId(voNew);
+                last_error_time=last_error_time.replaceAll("-",".");
+            }
+
+            Map<String, String> kvMap = new HashMap<String, String>();
+
+            boolean isHasValidTime = true;
+            Calendar begin_cal = Calendar.getInstance();
+            Calendar end_cal = Calendar.getInstance();
+            if (StringUtils.isNotEmpty(last_error_time)) {
+                try {
+                    begin_cal.setTime(sdf.parse(last_error_time));
+//	                end_cal.setTime(begin_cal.getTime());
+//	                end_cal.add(Calendar.MINUTE, 10);
+                } catch (ParseException e) {
+                    log.error("job1__:读取LES最后同步时间出错", e);
+                    isHasValidTime = false;
+                }
+            } else {
+                isHasValidTime = false;
+            }
+            if (!isHasValidTime) {
+                log.warn("job1__:未找到LES最后同步时间,默认为当前时间");
+                try {
+                    String syncTime = lesTransferOrderModel.selectLastSyncTime();
+                    log.info("job1__最后更新时间:" + syncTime);
+                    begin_cal.setTime(sdf2.parse(syncTime));
+//	                end_cal.setTime(begin_cal.getTime());
+//	                end_cal.add(Calendar.MINUTE, 10);
+                } catch (Exception ex) {
+                    log.error("job1__:无法获得最后同步时间", ex);
+                }
+            }
+            begin_cal.set(Calendar.SECOND, 0);
+//	        end_cal.set(Calendar.SECOND, 0);
+
+//	        begin_cal.add(Calendar.MINUTE, -22);
+            //从开始时间一直执行到当前时间
+//	        Long be = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-14 10:45:00").getTime();
+//        	for(Long time = be; time <= be + 30 * 60 * 1000;){
+            for(Long time = begin_cal.getTime().getTime(); time <= end_cal.getTime().getTime();){
+
+                String dateBegin = new SimpleDateFormat("yyyy.MM.dd").format(time);
+                String timeBegin = new SimpleDateFormat("HH:mm:ss").format(time);
+
+                //时间加10分钟
+                time += 10 * 60 * 1000;
+
+                String dateEnd = new SimpleDateFormat("yyyy.MM.dd").format(time);
+                String timeEnd = new SimpleDateFormat("HH:mm:ss").format(time);
+
+                log.info("job1__:dateBegin:" + dateBegin + " dateEnd:" + dateEnd
+                        + " timeBegin:" + timeBegin + " timeEnd:" + timeEnd);
+                String secType = "";
+                // dateBegin = "2014.11.28";
+                // dateEnd = "2014.11.28";
+                // timeBegin = "10:15:00";
+                // timeEnd = "10:40:00";
+
+                res = lesTransferOrderModel
+                        .getInventoryTranFromLes(dateBegin, dateEnd, timeBegin,
+                                timeEnd, secType);
+                if (!res.getSuccess() || res.getResult() == null) {
+                    kvMap.put("last_les_sync_time_two",dateBegin+" "+timeBegin);
+                    runtimeParametersModel.saveRuntimeParameters(kvMap);
+                    return res;
+                }
+
+                purchaseCrmOrderManualService.updateStatus80FromLES();
+                purchaseT2OrderService.updateStatus80FromLES();
+                purchaseCrmOrderManualService.updateTimeInWAFromLES();
+
+                // 更新最后一次同步时间
+
+	        	/*if (end_cal.after(now)) {
+				end_cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
+				end_cal.set(Calendar.MONTH, now.get(Calendar.MONTH));
+				end_cal.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
+				end_cal.set(Calendar.HOUR, now.get(Calendar.HOUR));
+				end_cal.set(Calendar.MINUTE, now.get(Calendar.MINUTE));
+			}*/
+
+                if(end_cal.after(res.getResult())){
+                    end_cal = res.getResult();
+                }
+
+                kvMap.put("last_les_sync_time_two",dateEnd+" "+timeEnd);
+                runtimeParametersModel.saveRuntimeParameters(kvMap);
+            }
+            return res;
+        }catch(Exception e){
+            log.warn(e);
+            res.setMessage(e.getMessage());
+            return res;
+        }finally{
+            GetInventoryTranFromLesTwoRunning = false;
+        }
+    }
+
+
+
+
+    //任务运行间隔短，设置一个是否正在运行的标志。多实例无效。
+    static Boolean GetInventoryTranFromLesRunning = false;
     /**
      * 入WA库信息查询
      * 从LES获取交易数据和库存数据
      */
-//	@Scheduled(cron = "0/5 * * * * ? ")
+//	@Scheduled(cron = "0 1/5 * * * ? ")
     @Override
-    public void GetInventoryTranFromLes() {
-        String last_error_time = "";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
+    public ServiceResult<Calendar> GetInventoryTranFromLes() {
+    	ServiceResult<Calendar> res = new ServiceResult<>();
+    	if(GetInventoryTranFromLesRunning == true) return null;
+    	try{
+	        String last_error_time = "";
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        Calendar now = Calendar.getInstance();
+	        now.setTime(new Date());
+	
+	        RuntimeParametersVO vo = runtimeParametersModel.getRuntimeParameterByKey("last_les_sync_time");
+	
+	        if (vo != null)
+	            last_error_time = vo.getValue();
+	        Map<String, String> kvMap = new HashMap<String, String>();
+	
+	        boolean isHasValidTime = true;
+	        Calendar begin_cal = Calendar.getInstance();
+	        Calendar end_cal = Calendar.getInstance();
+	        if (StringUtils.isNotEmpty(last_error_time)) {
+	            try {
+	                begin_cal.setTime(sdf.parse(last_error_time));
+//	                end_cal.setTime(begin_cal.getTime());
+//	                end_cal.add(Calendar.MINUTE, 10);
+	            } catch (ParseException e) {
+	                log.error("job1__:读取LES最后同步时间出错", e);
+	                isHasValidTime = false;
+	            }
+	        } else {
+	            isHasValidTime = false;
+	        }
+	        if (!isHasValidTime) {
+	            log.warn("job1__:未找到LES最后同步时间,默认为当前时间");
+	            try {
+	                String syncTime = lesTransferOrderModel.selectLastSyncTime();
+	                log.info("job1__最后更新时间:" + syncTime);
+	                begin_cal.setTime(sdf2.parse(syncTime));
+//	                end_cal.setTime(begin_cal.getTime());
+//	                end_cal.add(Calendar.MINUTE, 10);
+	            } catch (Exception ex) {
+	                log.error("job1__:无法获得最后同步时间", ex);
+	            }
+	        }
+	        begin_cal.set(Calendar.SECOND, 0);
+//	        end_cal.set(Calendar.SECOND, 0);
+	
+//	        begin_cal.add(Calendar.MINUTE, -22);
+	        //从开始时间一直执行到当前时间
+//	        Long be = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-14 10:45:00").getTime();
+//        	for(Long time = be; time <= be + 30 * 60 * 1000;){
+    		for(Long time = begin_cal.getTime().getTime(); time <= end_cal.getTime().getTime();){
 
-        RuntimeParametersVO vo = runtimeParametersModel
-                .getRuntimeParameterByKey("last_les_sync_time");
-
-        if (vo != null)
-            last_error_time = vo.getValue();
-        Map<String, String> kvMap = new HashMap<String, String>();
-
-        boolean isHasValidTime = true;
-        Calendar begin_cal = Calendar.getInstance();
-        Calendar end_cal = Calendar.getInstance();
-        if (StringUtils.isNotEmpty(last_error_time)) {
-            try {
-                begin_cal.setTime(sdf.parse(last_error_time));
-                end_cal.setTime(begin_cal.getTime());
-                end_cal.add(Calendar.MINUTE, 10);
-            } catch (ParseException e) {
-                log.error("job1__:读取LES最后同步时间出错", e);
-                isHasValidTime = false;
-            }
-        } else {
-            isHasValidTime = false;
-        }
-        if (!isHasValidTime) {
-            log.warn("job1__:未找到LES最后同步时间,默认为当前时间");
-            try {
-                String syncTime = lesTransferOrderModel.selectLastSyncTime();
-                log.info("job1__最后更新时间:" + syncTime);
-                begin_cal.setTime(sdf2.parse(syncTime));
-                end_cal.setTime(begin_cal.getTime());
-                end_cal.add(Calendar.MINUTE, 10);
-            } catch (Exception ex) {
-                log.error("job1__:无法获得最后同步时间", ex);
-            }
-        }
-        begin_cal.set(Calendar.SECOND, 0);
-        end_cal.set(Calendar.SECOND, 0);
-
-        String dateEnd = new SimpleDateFormat("yyyy.MM.dd").format(end_cal
-                .getTime());
-        String timeEnd = new SimpleDateFormat("HH:mm:ss").format(end_cal
-                .getTime());
-
-        String dateBegin = new SimpleDateFormat("yyyy.MM.dd").format(begin_cal
-                .getTime());
-        String timeBegin = new SimpleDateFormat("HH:mm:ss").format(begin_cal
-                .getTime());
-        log.info("job1__:dateBegin:" + dateBegin + " dateEnd:" + dateEnd
-                + " timeBegin:" + timeBegin + " timeEnd:" + timeEnd);
-        String secType = "";
-        // dateBegin = "2014.11.28";
-        // dateEnd = "2014.11.28";
-        // timeBegin = "10:15:00";
-        // timeEnd = "10:40:00";
-
-        ServiceResult<Calendar> r = lesTransferOrderModel
-                .getInventoryTranFromLes(dateBegin, dateEnd, timeBegin,
-                        timeEnd, secType);
-        if (!r.getSuccess() || r.getResult() == null) {
-            return;
-        }
-
-        // 更新最后一次同步时间
-
-		/*if (end_cal.after(now)) {
-			end_cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
-			end_cal.set(Calendar.MONTH, now.get(Calendar.MONTH));
-			end_cal.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
-			end_cal.set(Calendar.HOUR, now.get(Calendar.HOUR));
-			end_cal.set(Calendar.MINUTE, now.get(Calendar.MINUTE));
-		}*/
-
-        if(end_cal.after(r.getResult())){
-            end_cal = r.getResult();
-        }
-
-        kvMap.put("last_les_sync_time", sdf.format(end_cal.getTime()));
-        runtimeParametersModel.saveRuntimeParameters(kvMap);
+	        	String dateBegin = new SimpleDateFormat("yyyy.MM.dd").format(time);
+	        	String timeBegin = new SimpleDateFormat("HH:mm:ss").format(time);
+	        	
+	        	//时间加10分钟
+	        	time += 10 * 60 * 1000;
+	        	
+	        	String dateEnd = new SimpleDateFormat("yyyy.MM.dd").format(time);
+	        	String timeEnd = new SimpleDateFormat("HH:mm:ss").format(time);
+	        	
+	        	log.info("job1__:dateBegin:" + dateBegin + " dateEnd:" + dateEnd
+	        			+ " timeBegin:" + timeBegin + " timeEnd:" + timeEnd);
+	        	String secType = "";
+	        	// dateBegin = "2014.11.28";
+	        	// dateEnd = "2014.11.28";
+	        	// timeBegin = "10:15:00";
+	        	// timeEnd = "10:40:00";
+	        	
+	        	res = lesTransferOrderModel
+	        			.getInventoryTranFromLes(dateBegin, dateEnd, timeBegin,
+	        					timeEnd, secType);
+	        	if (!res.getSuccess() || res.getResult() == null) {
+                    kvMap.put("last_les_sync_time",dateBegin+" "+timeBegin);
+                    runtimeParametersModel.saveRuntimeParameters(kvMap);
+	        		return res;
+	        	}
+	        	
+	        	purchaseCrmOrderManualService.updateStatus80FromLES();
+	        	purchaseT2OrderService.updateStatus80FromLES();
+	        	purchaseCrmOrderManualService.updateTimeInWAFromLES();
+	        	
+	        	// 更新最后一次同步时间
+	        	
+	        	/*if (end_cal.after(now)) {
+				end_cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
+				end_cal.set(Calendar.MONTH, now.get(Calendar.MONTH));
+				end_cal.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
+				end_cal.set(Calendar.HOUR, now.get(Calendar.HOUR));
+				end_cal.set(Calendar.MINUTE, now.get(Calendar.MINUTE));
+			}*/
+	        	
+	        	if(end_cal.after(res.getResult())){
+	        		end_cal = res.getResult();
+	        	}
+	        	
+	        	kvMap.put("last_les_sync_time",dateEnd+" "+timeEnd);
+	        	runtimeParametersModel.saveRuntimeParameters(kvMap);
+	        }
+    		return res;
+    	}catch(Exception e){
+            log.warn(e);
+    		res.setMessage(e.getMessage());
+    		return res;
+    	}finally{
+    		GetInventoryTranFromLesRunning = false;
+    	}
     }
 
     /**
@@ -696,11 +905,51 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
 //    @Scheduled(cron = "0 25/30 * * * ?")
     @Override
 	public void cnPurchaseStorageToSap() {
-		List<T2OrderItem> t2OrderItemList = purchaseT2OrderService.findT2OrdersToSap();
-		// List<CnT2PurchaseStock> cn3wPurchaseStockList = cn3wPurchaseStockDao
-		// .getPreparedProcessData();
+		List<T2OrderItem> t2OrderItemList =  purchaseT2OrderService.findT2OrdersToSap();
+//		T2OrderItem ti = new T2OrderItem();
+//		try {
+//			ti.setOrder_id("WP0218040048976");
+//			ti.setWaInTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-04-16 19:06:44"));
+//			ti.setMaterials_id("FB28LMM13");
+//			ti.setT2_delivery_prediction(new BigDecimal("20"));
+//			ti.setStorage_id("HSWA");
+//			ti.setDn_id("8573069970");
+//			ti.setMblnr("3131736864");
+//			t2OrderItemList.add(ti);
+//		} catch (Exception e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		
+		//把要推送的CRM手工订单也查出来，一起推送		张铭	
+		try{
+			List<CrmOrderManualDetailItem> crmManualOrderItemList = purchaseCrmOrderManualService.findOrdersToSap();
+			if(t2OrderItemList == null){
+				t2OrderItemList = new ArrayList<>();
+			}
+
+			if(crmManualOrderItemList != null && crmManualOrderItemList.size() > 0){
+				for(CrmOrderManualDetailItem item : crmManualOrderItemList){
+//					if(!"CA".equals(item.getProduct_group_id())) continue;
+					T2OrderItem ti = new T2OrderItem();
+					ti.setOrder_id(item.getWp_order_id());
+					ti.setWaInTime(item.getWa_in_time());
+					ti.setMaterials_id(item.getMaterials_id());
+					ti.setT2_delivery_prediction(new BigDecimal(item.getQty()));
+					ti.setStorage_id(item.getEstorge_id());
+					ti.setDn_id(item.getDn_id());
+					ti.setMblnr(item.getBillOrderId());
+					ti.setProduct_group_id(item.getProduct_group_id());
+
+					t2OrderItemList.add(ti);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		if (t2OrderItemList == null || t2OrderItemList.size() == 0) {
-			log.info("[cnPurchaseStorageToSap]推送SAP,没有需要处理的数据");
+//			log.info("[cnPurchaseStorageToSap]推送SAP,没有需要处理的数据");
 			return;
 		}
 		String[] message = new String[1];
@@ -725,37 +974,89 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
 		if (t2OrderItem == null)
 			return false;
 		boolean flag = true;
-		int rsStatus;
-		String rsMessage;
-		ObjectFactory objectFactory = new ObjectFactory();
-		ZMMS0003 request = objectFactory.createZMMS0003();
-		CnT2PurchaseStock cnT2PurchaseStock = new CnT2PurchaseStock();
-		cnT2PurchaseStock.setCnStockSyncsId(t2OrderItem.getOrder_id());
-		String format = sdf.format(t2OrderItem.getWaInTime());
-		request.setZSPDT(format.substring(0, 10));// 订单入库日期(采购订单如何获取)
-		request.setMATNR(t2OrderItem.getMaterials_id());// 物料编码
-		request.setMENGE(t2OrderItem.getT2_delivery_prediction());// 交货数量
-		request.setLGORT(t2OrderItem.getStorage_id());// 库位
-		request.setVBELN(t2OrderItem.getDn_id());
-		request.setZSPNB("");
-		request.setLIFNR("1");// 供应商
-		request.setZLSGI(t2OrderItem.getMblnr());//出库过账凭证
-		request.setZFGLG("10");// 批次编号
-		request.setPOSNR("1");// 明细号
 		
-		TransDNInfoFromEHAIERToGVS soap = new TransDNInfoFromEHAIERToGVS_Service(
-				getWSDLURL("TransDNInfoFromEHAIERToGVS.wsdl")).getTransDNInfoFromEHAIERToGVSSOAP();
-		Holder<List<ZSDS0002>> tMSG = new Holder<List<ZSDS0002>>();
-		Holder<Integer> exSUBRC = new Holder<Integer>();
-		List<ZMMS0003> tZMMS0003 = new ArrayList<ZMMS0003>();
-		tZMMS0003.add(request);
+		int index = 1;
+		String rsMessage;
+		int rsStatus;
+
+		CnT2PurchaseStock cnT2PurchaseStock = new CnT2PurchaseStock();
+		cnT2PurchaseStock.setProcessTime(new Date());
+		cnT2PurchaseStock.setCnStockSyncsId(t2OrderItem.getOrder_id());
+        cnT2PurchaseStock.setCnStockDnId(t2OrderItem.getDn_id());
+//		
+		String format = sdf.format(t2OrderItem.getWaInTime()).substring(0, 10);
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		//当前月份
+		String now = df.format(new Date()).substring(4, 6);
+		//如果入库日期是本月则填入入库时间，否则填入当前时间
+
+        TransDNInfoFromEHAIERToGVS soap = new TransDNInfoFromEHAIERToGVS_Service(
+                getWSDLURL("TransDNInfoFromEHAIERToGVS.wsdl")).getTransDNInfoFromEHAIERToGVSSOAP();
+        Holder<List<ZSDS0002>> tMSG = new Holder<List<ZSDS0002>>();
+        Holder<Integer> exSUBRC = new Holder<Integer>();
+        List<ZMMS0003> tZMMS0003 = new ArrayList<ZMMS0003>();
+
+		if("CA".equals(t2OrderItem.getProduct_group_id())
+                ||"BB".equals(t2OrderItem.getProduct_group_id())
+                    ||"BA".equals(t2OrderItem.getProduct_group_id())
+                        ||"BD".equals(t2OrderItem.getProduct_group_id())){
+			String mainCode = t2OrderItem.getMaterials_id();
+			if(org.apache.commons.lang.StringUtils.isBlank(mainCode)){
+				log.error("空调产品物料号应为主物料号！");
+				return false;
+			}
+			List<TmallCAMachineDTO> list = tmallCAService.getByMaterialCode(mainCode);
+			if(list == null || list.size() == 0){
+				log.error("根据主物料号[" + mainCode + "]查询天猫CA套机接口失败！");
+				return false;
+			}
+			for(int i = 0; i < list.size(); i++){
+                ObjectFactory objectFactory = new ObjectFactory();
+                ZMMS0003 request = objectFactory.createZMMS0003();
+                if(now.equals(format.substring(5, 7))){
+                    request.setZSPDT(format);// 订单入库日期
+                }else{
+                    df = new SimpleDateFormat("yyyy-MM-dd");
+                    request.setZSPDT(df.format(new Date()));
+                }
+                request.setMATNR(list.get(i).getCGB_SUBGBID());// 物料编码
+                request.setMENGE(t2OrderItem.getT2_delivery_prediction().stripTrailingZeros());// 交货数量
+                request.setLGORT(t2OrderItem.getStorage_id());// 库位
+                request.setVBELN(t2OrderItem.getDn_id());
+                request.setZSPNB("");
+                request.setLIFNR("1");// 供应商
+                request.setZLSGI(t2OrderItem.getMblnr());//出库过账凭证
+                request.setZFGLG("10");// 批次编号
+                request.setPOSNR("000" + index++);// 明细号
+                tZMMS0003.add(request);
+			}
+		}else{
+            ObjectFactory objectFactory = new ObjectFactory();
+            ZMMS0003 request = objectFactory.createZMMS0003();
+            if(now.equals(format.substring(5, 7))){
+                request.setZSPDT(format);// 订单入库日期
+            }else{
+                df = new SimpleDateFormat("yyyy-MM-dd");
+                request.setZSPDT(df.format(new Date()));
+            }
+            request.setMATNR(t2OrderItem.getMaterials_id());// 物料编码
+            request.setMENGE(t2OrderItem.getT2_delivery_prediction().stripTrailingZeros());// 交货数量
+            request.setLGORT(t2OrderItem.getStorage_id());// 库位
+            request.setVBELN(t2OrderItem.getDn_id());
+            request.setZSPNB("");
+            request.setLIFNR("1");// 供应商
+            request.setZLSGI(t2OrderItem.getMblnr());//出库过账凭证
+            request.setZFGLG("10");// 批次编号
+            request.setPOSNR("000" + index);// 明细号
+            tZMMS0003.add(request);
+        }
 
 		Long startTime = System.currentTimeMillis();
-
+		
 		try {
 			soap.transDNInfoFromEHAIERToGVS(tZMMS0003, exSUBRC, tMSG);
 			String msg = JsonUtil.toJson(tMSG.value);
-
+			
 			List<ZSDS0002> results = tMSG.value;
 			if (results == null || results.size() <= 0) {
 				rsStatus = EisInterfaceFinance.STATUS_FAILED;
@@ -769,17 +1070,18 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
 					flag = !"E".equalsIgnoreCase(zsds0002.getTYPE());
 				}
 				cnT2PurchaseStock.setCnStockSyncsId(t2OrderItem.getOrder_id());
-				cnT2PurchaseStock.setAddTime(new Date());
+                cnT2PurchaseStock.setCnStockDnId(t2OrderItem.getDn_id());
+                cnT2PurchaseStock.setAddTime(new Date());
 				cnT2PurchaseStock.setProcessTime(new Date());
 				if (flag) {
 					rsStatus = EisInterfaceFinance.STATUS_SUCCESS;
-					cnT2PurchaseStock.setStatus(1);
+					cnT2PurchaseStock.setStatus(rsStatus);
 					cnT2PurchaseStock.setPushData(JsonUtil.toJson(tZMMS0003));
 					cnT2PurchaseStock.setReturnData(msg);
 					cnT2PurchaseStock.setMessage("处理并向SAP推送数据成功");
 				} else {
 					rsStatus = EisInterfaceFinance.STATUS_FAILED;
-					cnT2PurchaseStock.setStatus(0);
+					cnT2PurchaseStock.setStatus(rsStatus);
 					cnT2PurchaseStock.setPushData(JsonUtil.toJson(tZMMS0003));
 					cnT2PurchaseStock.setReturnData(msg);
 					cnT2PurchaseStock.setMessage("处理并向SAP推送数据失败，需要重新处理");
@@ -790,12 +1092,12 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
 			flag = false;
 			rsStatus = EisInterfaceFinance.STATUS_FAILED;
 			rsMessage = "调用EAI接口失败";
-			cnT2PurchaseStock.setStatus(2);
+			cnT2PurchaseStock.setStatus(rsStatus);
 			cnT2PurchaseStock.setPushData(JsonUtil.toJson(tZMMS0003));
 			cnT2PurchaseStock.setReturnData("");
 			cnT2PurchaseStock
-					.setMessage("V2-处理并向SAP推送数据[菜鸟采购入库]异常失败，停止处理,异常信息："
-							+ e.getMessage());
+			.setMessage("V2-处理并向SAP推送数据[菜鸟采购入库]异常失败，停止处理,异常信息："
+					+ e.getMessage());
 			log.error("调用EAI接口 transReBackInfoFromEHAIERToGVS 失败：", e);
 			// throw new BusinessException("调用EAI接口
 			// transReBackInfoFromEHAIERToGVS 失败");
@@ -804,19 +1106,26 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
 		message[0] = message[0] + rsMessage;
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cnStockSyncsId", t2OrderItem.getOrder_id());
+        map.put("cnStockDnId", t2OrderItem.getOrder_id());
+        if("CA".equals(t2OrderItem.getProduct_group_id())){
+			map.put("pushData", t2OrderItem.getMaterials_id());
+		}
+		
 		List<CnT2PurchaseStock> list = cnT2PurchaseStockService.queryCnT2PurchaseStock(map);
 		if (list != null && list.size() > 0) {
-			cnT2PurchaseStockService.updateCnT2PurchaseStock(cnT2PurchaseStock);
+			cnT2PurchaseStock.setId(list.get(0).getId());
+			cnT2PurchaseStockService.updateCnT2PurchaseStockById(cnT2PurchaseStock);
 		} else {
 			cnT2PurchaseStockService.addPurchaseStock(cnT2PurchaseStock);
 		}
+			
 		return flag;
 	}
 	
 	public URL getWSDLURL(String wsdlFile) {
 		try {
 			URL url = this.getClass().getResource(
-					wsdlLocation + wsdlFile);
+					wsdlLocation + "/" + wsdlFile);
 			return url;
 		} catch (Exception e) {
 			log.error("WSDL文件路径配置错误或WSDL文件不存在：" + wsdlFile);
@@ -824,6 +1133,429 @@ public class T2OrderTimingServiceImpl implements T2OrderTimingService{
 		}
 		return null;
 	}
+	
+	/**
+	 * 更新lbx、入库时间
+	 */
+//	@Scheduled(cron = "0 43 13 ? * *")
+//  @Scheduled(cron = "0 57 17 ? * *")//测试
+	public void addLbx() {
+//		List<VehicleOrderDetailsDTO> orderDetailList = vehicleOrderDetailDao
+//				.selectByWaitUpdateLbx();
+		List<CrmOrderItem> crmOrderList = purchaseCrmOrderService.findWaitUpdateLbxList();
+		if (crmOrderList == null || crmOrderList.size() == 0) {
+			log.info("[addLbx]更新lbx,没有需要处理的数据");
+			return;
+		}
+		for (CrmOrderItem dto : crmOrderList) {
+				Entry3wOrder entry3wOrder = null;
+				try {
+					entry3wOrder = getEntryOrder(dto.getDn_id());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				if (entry3wOrder != null) {
+					dto.setLbx(entry3wOrder.getEntryOrderId());
+					dto.setLbxStatus(entry3wOrder.getStatus());
+					dto.setPushStatus("0");
+					if (FULFILLED.equals(entry3wOrder.getStatus())) {
+//                        SimpleDateFormat sdf = new SimpleDateFormat(
+//                                "yyyy-MM-dd HH:mm:ss");
+                        if (entry3wOrder.getOperateTime() != null
+                                && !"".equals(entry3wOrder.getOperateTime())) {
+                                dto.setInTime(entry3wOrder
+                                        .getOperateTime());
+                        }
+                    }
+					purchaseCrmOrderService.updateLbxs(dto);
+				}
+		}
+	}
+	
+	/**
+	 * 通过dn单号调用接口获取lbx、入库时间
+	 * 
+	 * @throws MalformedURLException
+	 */
+	public Entry3wOrder getEntryOrder(String dnId) throws Exception {
+		String urlPath = new String(entryOrderUrl);
+		String param = "dnId=" + dnId;
+		// 建立连接
+		URL url = new URL(urlPath);
+		HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+		// 设置参数
+		httpConn.setDoOutput(true); // 需要输出
+		httpConn.setDoInput(true); // 需要输入
+		httpConn.setUseCaches(false); // 不允许缓存
+		httpConn.setRequestMethod("POST"); // 设置POST方式连接
+		// 设置请求属性
+		httpConn.setRequestProperty("Content-Type",
+				"application/x-www-form-urlencoded");
+		httpConn.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
+		httpConn.setRequestProperty("Charset", "UTF-8");
+		// 连接,也可以不用明文connect，使用下面的httpConn.getOutputStream()会自动connect
+		// httpConn.connect();
+		// 建立输入流，向指向的URL传入参数
+		DataOutputStream dos = new DataOutputStream(httpConn.getOutputStream());
+		dos.writeBytes(param);
+		dos.flush();
+		dos.close();
+		// 获得响应状态
+		int resultCode = httpConn.getResponseCode();
+		if (HttpURLConnection.HTTP_OK == resultCode) {
+			StringBuffer sb = new StringBuffer();
+			String readLine = new String();
+			BufferedReader responseReader = new BufferedReader(
+					new InputStreamReader(httpConn.getInputStream(), "UTF-8"));
+			while ((readLine = responseReader.readLine()) != null) {
+				sb.append(readLine).append("\n");
+			}
+			responseReader.close();
+			Gson json = new Gson();
+			if (sb != null && !"".equals(sb)) {
+				Map<String, Object> map = XmlUtils2.xmlStrToMap(json
+						.fromJson(sb.toString(), ServiceResult.class)
+						.getResult().toString());
+				if ("success".equals(map.get("flag").toString())) {
+					Entry3wOrder entry3wOrder = (Entry3wOrder) XmlUtils2
+							.mapToBean(XmlUtils2.xmlStrToMap(map.get(
+									"entryOrder").toString()),
+									Entry3wOrder.class);
+					entry3wOrder.setFlag(map.get("flag").toString());
+					entry3wOrder.setCode(json.fromJson(sb.toString(),
+							ServiceResult.class).getCode());
+					entry3wOrder.setMessage(json.fromJson(sb.toString(),
+							ServiceResult.class).getMessage());
+					if (map.get("totalLines") != null) {
+						entry3wOrder.setTotalLines(Integer.parseInt(map.get(
+								"totalLines").toString()));
+					}
+                    String str = map.get("orderLines").toString().replace("<orderLine>","").replace("</orderLine>","");
+                    OrderLines orderLines = (OrderLines) XmlUtils2.xmlStrToBean(str,OrderLines.class);
 
+                    if (orderLines.getItemCode() != null || "".equals(orderLines.getItemCode())){
+                        entry3wOrder.setItemCode(orderLines.getItemCode());
+                    }
+                    if (orderLines.getPlanQty() != null || "".equals(orderLines.getPlanQty())){
+                        entry3wOrder.setPlanQty(Integer.parseInt(orderLines.getPlanQty()));
+                    }
+					return entry3wOrder;
+				} else {
+					Map<String,Object> logMap = new HashMap<>();
+					logMap.put("interfaceName","通过85单号调用接口获取lbx、入库时间接口出参");
+					logMap.put("interfaceCategory","天猫自动款先订单");
+					logMap.put("interfaceDate",new Date());
+					logMap.put("interfaceMessage",JSONObject.toJSON(map.get("message").toString())
+							.toString());
+//					#{interfaceName},#{interfaceCategory},#{interfaceDate},#{interfaceMessage})
+					purchaseT2OrderService.insertT2OrderInterfaceLog(map);
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 物流85和LBX对应关系
+	 */
+//	@Scheduled(cron = "0 46 19 ? * *")
+	public void pushLogistics() {
+		List<CrmOrderItem> crmOrderList = purchaseCrmOrderService.findWaitToSapList();
+		if (crmOrderList == null || crmOrderList.size() == 0) {
+//			log.info("[pushLogistics]物流推送,没有需要处理的数据");
+			return;
+		}
+		URL url = this.getClass().getResource(
+				wsdlLocation + "/QueryDNFromLEStoAPP.wsdl");
+		QueryDNFromLEStoAPP_Service service = new QueryDNFromLEStoAPP_Service(
+				url);
+		QueryDNFromLEStoAPP soap = service.getQueryDNFromLEStoAPPSOAP();
+		for (CrmOrderItem entry : crmOrderList) {
+			com.haier.svc.purchase.queryDNFrom.ObjectFactory objectFactory = new com.haier.svc.purchase.queryDNFrom.ObjectFactory();
+			ZINTWXWTLOG zintwxwtlog = objectFactory.createZINTWXWTLOG();
+			java.util.List<com.haier.svc.purchase.queryDNFrom.ZINTWXWTLOG> input = new ArrayList<com.haier.svc.purchase.queryDNFrom.ZINTWXWTLOG>();
+			zintwxwtlog.setMANDT("700");
+			zintwxwtlog.setBSTNK(entry.getDn_id() + "D");// 85单号
+			zintwxwtlog.setBSTKD(entry.getDn_id() + "D");
+			zintwxwtlog.setPOSNR("ZK");
+			zintwxwtlog.setTKNUM("PC");// 订单类别(整车--ZC 款先拼车--PC T+2--T2)
+			zintwxwtlog.setSOURCE("TMALL");
+			zintwxwtlog.setSOURCESN(entry.getLbx());// lbx
+			Date date = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String dateStr = sdf.format(date);
+			String rqStr = dateStr.replaceAll("-", ".").substring(0, 10);
+			String sjStr = dateStr.substring(10);
+			zintwxwtlog.setCRDAT(rqStr);
+			zintwxwtlog.setCRZET(sjStr);
+			zintwxwtlog.setNAME1("CBS");
+			zintwxwtlog.setMESSAGE("日日顺入3W");
+			input.add(zintwxwtlog);
+			Holder<String> flag = new Holder<String>();
+			Holder<String> message = new Holder<String>();
+			String callcode = "CBS#239";
+			String source = "CBS";
+			soap.queryDNFromLEStoAPP(callcode, source, input, flag, message);
+			Map<String,Object> logMap = new HashMap<>();
+			logMap.put("interfaceName","物流85和LBX对应关系推送入参");
+			logMap.put("interfaceCategory","天猫自动款先订单");
+			logMap.put("interfaceDate",new Date());
+			logMap.put("interfaceMessage",JSONObject.toJSON(input).toString());
+			purchaseT2OrderService.insertT2OrderInterfaceLog(logMap);
+			logMap.put("interfaceName","物流85和LBX对应关系推送出参");
+			logMap.put("interfaceMessage",message.value.toString());
+			purchaseT2OrderService.insertT2OrderInterfaceLog(logMap);
+			if ("S".equals(flag.value)) {
+				// 状态修改为已推送
+				entry.setPushStatus("1");
+				purchaseCrmOrderService.updateLbxs(entry);
+			} else {
+
+			}
+		}
+	}
+	@Override
+	public void t2OrderAutoAudit() {
+		//获取待内部审核状态的订单
+		Map params = new HashMap();
+		params.put("flow_flag", new Integer[]{5});
+		List<T2OrderItem> list = purchaseT2OrderService.findT2Orders(params);
+		
+		//组装参数
+		params.clear();
+		List<String> t2ReviewList = new ArrayList<>();
+		for(T2OrderItem item : list){
+			t2ReviewList.add(item.getOrder_id());
+		}
+		params.put("reviewList", t2ReviewList);
+		params.put("audit_user", "系统自动");
+		params.put("flow_flag", 10);
+		params.put("audit_remark", "系统自动审核");
+		// 订单审核状态更新
+		ServiceResult<Boolean> reviewResult = t2OrderService.reviewT2OrderList(params);
+	}
+
+	@Override
+	public void syncLimitSum() {
+		log.info("总额度滚动");
+		// T+3月份取得
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		String yearWeek = WSUtils.getWeekOfYear_Sunday(
+				sdf2.format(c.getTime()), "yyyy-MM-dd", "0");
+		String endDate = CommUtil.weekToSetDateDay(yearWeek, 4);
+		DateCal dateCal = new DateCal(endDate);
+		Integer reportMonth = Integer.valueOf(dateCal.addWeek(3)
+				.substring(5, 7));
+		Map params = new HashMap();
+		params.put("month", reportMonth);
+		// 总额度自动滚动
+		// 当月总额度取得
+		List<GateLimitSumItem> result = gateModel.findLimitSum(params);
+		GateLimitSumItem nowMonthData = result.get(0);
+		// 已经滚动的场合,退出
+		if (nowMonthData.getUse_flag() == 1) {
+			return;
+		}
+		// 前月总额度取得
+		Integer preMonth;
+		if (reportMonth == 1) {
+			preMonth = 12;
+		} else {
+			preMonth = reportMonth - 1;
+		}
+		params.put("month", preMonth);
+		List<GateLimitSumItem> resultPre = gateModel.findLimitSum(params);
+		GateLimitSumItem preMonthData = resultPre.get(0);
+		// 当月数据更新
+		nowMonthData.setLimit_sum_num(preMonthData.getLimit_sum_num());
+		nowMonthData.setUse_flag(1);
+		gateModel.updateLimitSumByMonth(nowMonthData);
+		// 上月数据更新
+		preMonthData.setUse_flag(0);
+		gateModel.updateLimitSumByMonth(preMonthData);
+		// 个别额度再设定
+		params = new HashMap();
+		params.put("month", reportMonth);
+		// 检索参数params中传入needResult 不检索总计
+		params.put("needResult", "part");
+		// 在DB中检索详细信息
+		List<GateOfLimitItem> gateOfLimitList = gateModel
+				.selectGateOfLimit(params);
+		// 总指标
+		BigDecimal totalTarget = new BigDecimal(0);
+		// 计算总指标
+		for (GateOfLimitItem gateOfLimitItem : gateOfLimitList) {
+			totalTarget = totalTarget.add(new BigDecimal(gateOfLimitItem
+					.getTarget_num()));
+		}
+		// 定义剩余额度
+		BigDecimal remainLimit = nowMonthData.getLimit_sum_num();
+		// 计算指标比例，并分配额度
+		for (Iterator<GateOfLimitItem> it = gateOfLimitList.iterator(); it
+				.hasNext();) {
+			GateOfLimitItem gateOfLimitItem = it.next();
+			// 根据指标计算额度
+			BigDecimal limitNum = nowMonthData.getLimit_sum_num()
+					.multiply(new BigDecimal(gateOfLimitItem.getTarget_num()))
+					.divide(totalTarget, 2, BigDecimal.ROUND_HALF_UP);
+			// 设置修改人
+			gateOfLimitItem.setModify_user("systemAuto");
+			if (it.hasNext()) {
+				gateOfLimitItem.setLimit_num(String.valueOf(limitNum));
+				// 计算剩余额度
+				remainLimit = remainLimit.subtract(limitNum);
+			} else {
+				gateOfLimitItem.setLimit_num(remainLimit.toString());
+			}
+
+		}
+
+		// 更新处理
+		gateModel.updateGateOfLimitById(gateOfLimitList);
+
+	}
+
+    /**
+     * 定时更新信息不全的物料基本信息和库龄表的物料信息(Job触发)
+     * @return
+     */
+    @Override
+//    @Scheduled(cron = "*/60 * * * * ?")
+    public void syncUpdateMtlInfoBySku() {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            eaiHandlerModel.updateMtlInfoBySku();
+            result.setResult(true);
+        } catch (Exception e) {
+            result.setSuccess(false);
+            result.setResult(false);
+            result.setMessage("定时更新信息不全的物料基本信息和库龄表的物料信息时发生未知异常");
+            log.error("定时更新信息不全的物料基本信息和库龄表的物料信息时发生未知异常：" + e);
+        }
+    }
+
+    @Override
+    public ServiceResult<Boolean> processVomReceivedQueueFailStatus() {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            //目前只处理正品退货
+            eisVOMModel.processQualityGoods();
+            result.setResult(true);
+        } catch (Exception e) {
+            result.setResult(false);
+            result.setSuccess(false);
+            result.setMessage("处理正品退货拒单情况下失败的数据出现异常：" + e.getMessage());
+            log.error("处理正品退货拒单情况下失败的数据出现异常：", e);
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Boolean> processStockBusinessQueues() {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            eisStockModel.processStockBusinessQueues();
+        } catch (Exception e) {
+            result.setResult(false);
+            result.setSuccess(false);
+            result.setMessage("处理库存变化关联的业务出现未知异常：" + e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 如果SO单号后面没有S则加上
+     *
+     * @param so
+     * @return
+     */
+    private String suffixSO(String so) {
+        String r = so;
+        if (!so.toLowerCase().endsWith("s")) {
+            r += "S";
+        }
+        return r;
+    }
+
+    @Override
+    public void updateCrmRejectOrderInRRS() {
+
+        // 查询状态为已出wa库的订单
+        Map<String, Object> params = new HashMap<String, Object>();
+        List<String> flag = new ArrayList<String>();
+        flag.add("30");
+        params.put("flow_flag", flag);
+        List<CrmGenuineRejectItem> outWA = crmGenuineRejectDataService
+                .getCrmGenuineRejectList(params);
+        log.info("待同步件数：" + outWA.size());
+        // System.out.println(JsonUtil.toJson(outWA));
+        for (CrmGenuineRejectItem item : outWA) {
+            List<String> bstkd = new ArrayList<String>();
+            bstkd.add(suffixSO(item.getSo_id()));
+            // 查询出RRS库状态
+            LESTransferOutInPutOrderResponse rrsStatus = lesTransferOrderModel
+                    .QueryDNinfoFromLEStoEhaier("1", bstkd);
+            log.info("CRM同步入日日顺时间：" + JsonUtil.toJson(rrsStatus));
+            // System.out.println(JsonUtil.toJson(rrsStatus));
+            if (rrsStatus.getFLAG() == null
+                    || !rrsStatus.getFaultDETAIL().equalsIgnoreCase("S")) {
+                // orderOperationLog(item.getWp_order_id(), 0,
+                // "正品退货更新状态从已出wa库到已入日日顺库失败，查询RRS库状态失败");
+                continue;
+            }
+            List<LESTransferOutInPutOrderSubResponse> list = rrsStatus
+                    .getSubRecords();
+            if (list == null || list.isEmpty()) {
+				/*
+				 * orderOperationLog(item.getWp_order_id(), 0,
+				 * "正品退货更新状态从已出wa库到已入日日顺库失败，中转出入库,入日日顺时间(LES)没有数据");
+				 */
+                continue;
+            }
+            int i = 0;
+            List<CrmGenuineRejectItem> crmItem = new ArrayList<CrmGenuineRejectItem>();
+            for (LESTransferOutInPutOrderSubResponse order : list) {
+                if (!order.getFLAG_RK().equalsIgnoreCase("C")) {
+                    continue;
+                }
+                String timeStr = order.getERZET_RK();
+                if (timeStr.contains(".")) {
+                    timeStr = timeStr.substring(0, timeStr.indexOf("."));
+                }
+                // 更新订单状态为已入日日顺库
+                crmGenuineRejectDataService.updateStatusToInRRS(item.getSo_id(),
+                        order.getERDAT_RK() + " " + timeStr);
+                i++;
+            }
+            if (i > 0) {
+                // TODO 正品退货 更新状态写入日志
+                orderOperationLog(item.getWp_order_id(), 1,
+                        "正品退货更新状态从已出wa库到已入日日顺库成功");
+            }
+        }
+    }
+
+
+    private void orderOperationLog(String order_id, int success, String remark) {
+        Map<String, Object> logMap = new HashMap<String, Object>();
+        logMap.put("order_id", order_id);
+        logMap.put("type", 30);
+        logMap.put("operate_user", "定时任务");
+        logMap.put("is_sucess", success);
+        logMap.put("content", "CRM更新状态从已出wa库到已入日日顺库");
+        logMap.put("remark", remark);
+        logMap.put("system", "采购平台");
+        try {
+            orderOperationLogService.createOrderOperationLog(logMap);
+        } catch (Exception e) {
+            log.error("操作日志写入失败：", e);
+        }
+
+    }
 
 }

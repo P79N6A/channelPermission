@@ -17,8 +17,12 @@ public interface OrderRepairsReadDao {
     List<OrderRepairs> getByOrderProductId(@Param("orderProductId") Integer orderProductId);
 
     String queryRepaiSn(int cOrderId); //查询此网单是否第一次退货
+    
+    OrderRepairsVo queryWhetherRepaiSn(int cOrderId);//查询是否有退货单
 
     OrderRepairsVo queryPairsId(String id);
+
+    List<OrderRepairsVo> selectOrderRepairsNOFinish(String id);
 
     OrderRepairsVo selectPairs(String id); //查询详细信息 推送HP
 
@@ -35,4 +39,5 @@ public interface OrderRepairsReadDao {
     OrderRepairsVo  queryReturnEdit(String id); //查询网单号退货主键
     
     OrderRepairsVo queryRepairsInvoiceId(String repairSn);//根据退货单号查询数据
+    int queryRepairsStats(String id);//查询此退货单是否为非正品需买单
 }

@@ -1,12 +1,31 @@
 package com.haier.svc.api.controller.stock;
 
+import com.haier.common.PagerInfo;
+import com.haier.common.ServiceResult;
 import com.haier.common.util.DateUtil;
 import com.haier.common.util.JsonUtil;
+import com.haier.common.util.StringUtil;
 import com.haier.stock.model.InvStockAge;
+import com.haier.stock.model.InvStockAge.StockAgeData;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.StockAgeHandler;
 import com.haier.stock.model.StockAgeWapped;
 import com.haier.svc.api.controller.stock.mode.StockAgeModel;
+import com.haier.svc.api.controller.util.HttpJsonResult;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import jxl.Workbook;
 import jxl.format.Alignment;
 import jxl.format.Border;
@@ -23,8 +42,22 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.hssf.util.HSSFColor.BLUE;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,20 +65,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping(value = "stock/")
@@ -59,9 +78,9 @@ public class StockAgeController {
     }
     @RequestMapping(value = { "countStockAgesWithChannelsBySku.html" }, method = { RequestMethod.GET })
     ModelAndView countStockAgesWithChannelsBySku(HttpServletRequest request,
-                                                 @RequestParam(required = false) String date,
-                                                 @RequestParam(required = false) String param,
-                                                 @RequestParam(required = false) String title) {
+        @RequestParam(required = false) String date,
+        @RequestParam(required = false) String param,
+        @RequestParam(required = false) String title) {
         ModelAndView mv  = new ModelAndView();
         mv.addObject("shijian",date);
         mv.addObject("channel",param);
@@ -70,19 +89,20 @@ public class StockAgeController {
         mv.addObject("onExportUrl","/stock/exportStockAgeForProductsListWithChannel.html");
         mv.addObject("onQuery",true);
         mv.addObject("select",3);
- 
+
         mv.setViewName("stock/stockAgeForCount");
         return mv;
     }
     @RequestMapping(value = { "findStockAgeGroupByChannel.html" }, method = { RequestMethod.POST })
     public void findGroupByChannel(@RequestParam(required = false) String date,String param,
-                                   HttpServletResponse response, HttpServletRequest request){
+        HttpServletResponse response, HttpServletRequest request){
         try {
             Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
-            if (clearDate == null)
+            if (clearDate == null){
                 clearDate = DateUtil.currentDate();
+            }
             List<StockAgeWapped> countStockGroupByChannel = stockAgeModel
-                    .countStockGroupByChannel(clearDate);
+                .countStockGroupByChannel(clearDate);
             List<Map<String, Object>> retList = new ArrayList<Map<String, Object>>();
             for (StockAgeWapped stockAgeWapped : countStockGroupByChannel) {
                 Map<String, Object> retMap = new HashMap<String, Object>();
@@ -109,15 +129,15 @@ public class StockAgeController {
     }
     @RequestMapping(value = { "/exportStockAgeForChannelsList.html" }, method = { RequestMethod.GET })
     void exportStockAgeForChannels(HttpServletResponse response,
-                                   @RequestParam(required = false) String date){
+        @RequestParam(required = false) String date){
 
         Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
 
-        if (clearDate == null)
+        if (clearDate == null) {
             clearDate = DateUtil.currentDate();
-
+        }
         List<StockAgeWapped> countStockGroupByChannel = stockAgeModel
-                .countStockGroupByChannel(clearDate);
+            .countStockGroupByChannel(clearDate);
 
         ServletOutputStream os = null;
         try {
@@ -127,8 +147,8 @@ public class StockAgeController {
 
                 String fileName = "WA库存-到渠道（" + DateUtil.format(clearDate, "yyyy-MM-dd") + ")";
                 response.setHeader("Content-Disposition", "attachment; filename="
-                        + new String((fileName+ ".xls").getBytes("gb2312"),
-                        "iso-8859-1") );
+                    + new String((fileName+ ".xls").getBytes("gb2312"),
+                    "iso-8859-1") );
                 response.setContentType("application/octet-stream; charset=utf-8");
                 exportStockAgeForChannels("WA库存-到渠道", clearDate, countStockGroupByChannel, os);
             } catch (Exception e) {
@@ -138,16 +158,17 @@ public class StockAgeController {
                 response.getWriter().flush();
                 logger.error("导出excel失败:", e);
             } finally {
-                if (os != null)
+                if (os != null){
                     os.close();
+                }
             }
         } catch (IOException e) {
             logger.error("导出excel失败:", e);
         }
     }
     private void exportStockAgeForChannels(String title, Date clearDate,
-                                           List<StockAgeWapped> datas, OutputStream os)
-            throws Exception{
+        List<StockAgeWapped> datas, OutputStream os)
+        throws Exception{
         WritableWorkbook workbook = Workbook.createWorkbook(os);
         WritableSheet sheet = workbook.createSheet("库龄统计", 0);
         sheet.getSettings().setPaperSize(PaperSize.A2);//设置纸张大小
@@ -157,7 +178,7 @@ public class StockAgeController {
 
         //标题
         WritableFont font = new WritableFont(WritableFont.ARIAL, 13, WritableFont.BOLD, false,
-                UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLUE);
+            UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLUE);
         WritableCellFormat format = new WritableCellFormat(font);
         format.setAlignment(Alignment.LEFT);
         Label l_title = new Label(0, 0, title, format);
@@ -166,20 +187,20 @@ public class StockAgeController {
         sheet.mergeCells(0, 0, 24, 0);
 
         WritableFont fontParam = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD, false,
-                UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.RED);
+            UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.RED);
         WritableCellFormat formatParam = new WritableCellFormat(fontParam);
         //参数
         Label params = new Label(0, 2, "报表日期：" + DateUtil.format(clearDate, "yyyy-MM-dd")
-                + " 金额单位：（人民币）万元 数据类型：正品", formatParam);
+            + " 金额单位：（人民币）万元 数据类型：正品", formatParam);
         sheet.setColumnView(0, 25);
         sheet.addCell(params);
 
         int temp = 4;
         String[] headers = new String[] { "渠道", "1-7天", "8-14天", "15-21天", "22-30天", "31-44天",
-                "45-60天", "61-75天", "75-90天", "3-4月", "4-6月", "6-12月", "1年以上", "正常库龄小计", "超期库龄小计",
-                "合计", "超期占比" };
+            "45-60天", "61-75天", "75-90天", "3-4月", "4-6月", "6-12月", "1年以上", "正常库龄小计", "超期库龄小计",
+            "合计", "超期占比" };
         WritableFont fontHeader = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD,
-                false, UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLUE);
+            false, UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLUE);
         WritableCellFormat formatHeader = new WritableCellFormat(fontHeader);
         formatHeader.setAlignment(Alignment.CENTRE);
         formatHeader.setVerticalAlignment(VerticalAlignment.CENTRE);
@@ -213,7 +234,7 @@ public class StockAgeController {
         //数据
         temp = 6;
         WritableFont font1 = new WritableFont(WritableFont.ARIAL, 9, WritableFont.NO_BOLD, false,
-                UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLACK);
+            UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLACK);
         NumberFormat nf = new NumberFormat("#,##0");
         NumberFormat _nf = new NumberFormat("#,##0.00");
         WritableCellFormat format1 = new WritableCellFormat(font1, nf);
@@ -244,8 +265,9 @@ public class StockAgeController {
 
             sheet.setColumnView(j, 12);
             String channelName = ageWapped.getStockAge().getChannelName();
-            if (m == 0)
+            if (m == 0){
                 channelName = "合计";
+            }
             m++;
 
             sheet.addCell(new Label(j++, temp, channelName, format2));
@@ -263,18 +285,18 @@ public class StockAgeController {
                     stockQuantity = stockQuantity / 100;
                     value = value / 100;
                     sheet.addCell(new Number(j++, temp, stockQuantity, formatP));
-                } else
+                } else {
                     sheet.addCell(new Number(j++, temp, stockQuantity, format1));
-
+                }
                 sheet.setColumnView(j, 8);
-                if (n == 5)
+                if (n == 5) {
                     sheet.addCell(new Number(j++, temp, value, format3));
-                else {
-                    if (ageData.getAge() == -1004)
+                }else {
+                    if (ageData.getAge() == -1004) {
                         sheet.addCell(new Number(j++, temp, value, formatP));
-                    else
+                    }else {
                         sheet.addCell(new Number(j++, temp, value, _format1));
-
+                    }
                 }
                 n++;
             }
@@ -287,15 +309,15 @@ public class StockAgeController {
     }
     @RequestMapping(value = { "/getStockAgeForProductsListWithChannel.html" }, method = { RequestMethod.GET })
     void getStockAgeForProductWithChannel(Map<String, Object> modelMap,HttpServletResponse response,
-                                            @RequestParam(required = false) String date,
-                                            @RequestParam(required = false) String channel) throws Exception{
+        @RequestParam(required = false) String date,
+        @RequestParam(required = false) String channel) throws Exception{
         Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
 
-        if (clearDate == null)
+        if (clearDate == null) {
             clearDate = DateUtil.currentDate();
-
+        }
         Map<String, List<StockAgeWapped>> datas = stockAgeModel.countStockGroupBySkuWithChannel(
-                clearDate, channel);
+            clearDate, channel);
         modelMap.put("total", datas.remove("total").get(0));
         modelMap.put("datas", datas);
         modelMap.put("show", "1");
@@ -310,11 +332,11 @@ public class StockAgeController {
 
         Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
 
-        if (clearDate == null)
+        if (clearDate == null) {
             clearDate = DateUtil.currentDate();
-
+        }
         Map<String, List<StockAgeWapped>> datas = stockAgeModel.countStockGroupBySkuWithChannel(
-                clearDate, channel);
+            clearDate, channel);
 
         ServletOutputStream os = null;
         try {
@@ -332,11 +354,11 @@ public class StockAgeController {
                 }
 
                 String fileName = channelName + "WA库存-到产品（"
-                        + DateUtil.format(clearDate, "yyyy-MM-dd") + ")";
+                    + DateUtil.format(clearDate, "yyyy-MM-dd") + ")";
 
                 response.setHeader("Content-Disposition", "attachment; filename="
-                        + new String((fileName+".xls").getBytes("gb2312"),
-                        "iso-8859-1"));
+                    + new String((fileName+".xls").getBytes("gb2312"),
+                    "iso-8859-1"));
 
                 response.setContentType("application/octet-stream; charset=utf-8");
                 exportStockAgeForProducts(channelName + " WA库存-到产品", clearDate, datas, os);
@@ -347,16 +369,17 @@ public class StockAgeController {
                 response.getWriter().flush();
                 logger.error("导出excel失败:", e);
             } finally {
-                if (os != null)
+                if (os != null){
                     os.close();
+                }
             }
         } catch (IOException e) {
             logger.error("导出excel失败:", e);
         }
     }
     private void exportStockAgeForProducts(String title, Date clearDate,
-                                           Map<String, List<StockAgeWapped>> datas, OutputStream os)
-            throws Exception{
+        Map<String, List<StockAgeWapped>> datas, OutputStream os)
+        throws Exception{
         WritableWorkbook workbook = Workbook.createWorkbook(os);
         WritableSheet sheet = workbook.createSheet("库龄统计", 0);
         sheet.getSettings().setPaperSize(PaperSize.A2);//设置纸张大小
@@ -366,7 +389,7 @@ public class StockAgeController {
 
         //标题
         WritableFont font = new WritableFont(WritableFont.ARIAL, 13, WritableFont.BOLD, false,
-                UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLUE);
+            UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLUE);
         WritableCellFormat format = new WritableCellFormat(font);
         format.setAlignment(Alignment.LEFT);
         Label l_title = new Label(0, 0, title, format);
@@ -375,20 +398,20 @@ public class StockAgeController {
         sheet.mergeCells(0, 0, 25, 0);
 
         WritableFont fontParam = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD, false,
-                UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.RED);
+            UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.RED);
         WritableCellFormat formatParam = new WritableCellFormat(fontParam);
         //参数
         Label params = new Label(0, 2, "报表日期：" + DateUtil.format(clearDate, "yyyy-MM-dd")
-                + " 金额单位：（人民币）万元 数据类型：正品", formatParam);
+            + " 金额单位：（人民币）万元 数据类型：正品", formatParam);
         sheet.setColumnView(0, 25);
         sheet.addCell(params);
 
         int temp = 4;
         String[] headers = new String[] { "品类", "产品组", "1-7天", "8-14天", "15-21天", "22-30天",
-                "31-44天", "45-60天", "61-75天", "75-90天", "3-4月", "4-6月", "6-12月", "1年以上", "正常库龄小计",
-                "超期库龄小计", "总计", "超期占比" };
+            "31-44天", "45-60天", "61-75天", "75-90天", "3-4月", "4-6月", "6-12月", "1年以上", "正常库龄小计",
+            "超期库龄小计", "总计", "超期占比" };
         WritableFont fontHeader = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD,
-                false, UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLUE);
+            false, UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLUE);
         WritableCellFormat formatHeader = new WritableCellFormat(fontHeader);
         formatHeader.setAlignment(Alignment.CENTRE);
         formatHeader.setVerticalAlignment(VerticalAlignment.CENTRE);
@@ -424,7 +447,7 @@ public class StockAgeController {
         //数据
         temp = 6;
         WritableFont font1 = new WritableFont(WritableFont.ARIAL, 9, WritableFont.NO_BOLD, false,
-                UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLACK);
+            UnderlineStyle.NO_UNDERLINE, jxl.format.Colour.BLACK);
         NumberFormat nf = new NumberFormat("#,##0");
         NumberFormat _nf = new NumberFormat("#,##0.00");
         WritableCellFormat format1 = new WritableCellFormat(font1, nf);
@@ -465,16 +488,18 @@ public class StockAgeController {
                 stockQuantity /= 100;
                 _value /= 100;
                 sheet.addCell(new Number(j++, temp, stockQuantity, formatP));
-            } else
+            } else{
                 sheet.addCell(new Number(j++, temp, stockQuantity, format1));
+            }
             sheet.setColumnView(j, 8);
-            if (_n == 5)
+            if (_n == 5) {
                 sheet.addCell(new Number(j++, temp, _value, format3));
-            else {
-                if (ageData.getAge() == -1004)
+            }else {
+                if (ageData.getAge() == -1004) {
                     sheet.addCell(new Number(j++, temp, _value, formatP));
-                else
+                }else{
                     sheet.addCell(new Number(j++, temp, _value, _format1));
+                }
             }
             _n++;
         }
@@ -484,15 +509,15 @@ public class StockAgeController {
             List<StockAgeWapped> value = entry.getValue();
             sheet.setColumnView(0, 12);
             sheet.addCell(new Label(0, temp, key, format2));
-            if (value.size() > 1)
+            if (value.size() > 1) {
                 sheet.mergeCells(0, temp, 0, temp + value.size() - 1);
-
+            }
             for (StockAgeWapped ageWapped : value) {
                 j = 1;
 
                 sheet.setColumnView(j, 8);
                 sheet.addCell(new Label(j++, temp, ageWapped.getStockAge().getProductGroupName(),
-                        format2));
+                    format2));
 
                 List<InvStockAge.StockAgeData> agedatas = ageWapped.getAgeDatas();
                 int n = 0;
@@ -506,16 +531,18 @@ public class StockAgeController {
                         stockQuantity /= 100;
                         _value /= 100;
                         sheet.addCell(new Number(j++, temp, stockQuantity, formatP));
-                    } else
+                    } else{
                         sheet.addCell(new Number(j++, temp, stockQuantity, format1));
+                    }
                     sheet.setColumnView(j, 8);
-                    if (n == 5)
+                    if (n == 5) {
                         sheet.addCell(new Number(j++, temp, _value, format3));
-                    else {
-                        if (ageData.getAge() == -1004)
+                    }else {
+                        if (ageData.getAge() == -1004) {
                             sheet.addCell(new Number(j++, temp, _value, formatP));
-                        else
+                        }else{
                             sheet.addCell(new Number(j++, temp, _value, _format1));
+                        }
                     }
                     n++;
                 }
@@ -533,12 +560,12 @@ public class StockAgeController {
      */
     @RequestMapping(value = { "/countStockAgesToChannelsToSku.html" }, method = { RequestMethod.GET })
     ModelAndView countStockAgesToChannelsToSku(@RequestParam(required = false) String date,
-                                         HttpServletRequest request) {
-    	ModelAndView mv = new ModelAndView();
+        HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView();
         if (date == null || date.trim().equals("")) {
-        	mv.addObject("date", DateUtil.format(new Date(), "yyyy-MM-dd"));
+            mv.addObject("date", DateUtil.format(new Date(), "yyyy-MM-dd"));
         } else {
-        	mv.addObject("date", date);
+            mv.addObject("date", date);
         }
         mv.addObject("title", "WA库存-到渠道到产品汇总");
         mv.addObject("onQueryUrl", "/stock/getStockAgeForToChannelsToProductsList.html");
@@ -557,25 +584,25 @@ public class StockAgeController {
      */
     @RequestMapping(value = { "/getStockAgeForToChannelsToProductsList.html" }, method = { RequestMethod.GET })
     String getStockAgeForToChannelsToProductsList(Map<String, Object> modelMap,
-                                                  @RequestParam(required = false) String date){
+        @RequestParam(required = false) String date){
 
         Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
 
-        if (clearDate == null)
+        if (clearDate == null) {
             clearDate = DateUtil.currentDate();
-
+        }
         try {
             Map<String, List<StockAgeHandler>> datas = stockAgeModel
-                    .countStockGroupToChannelsToProducts(clearDate);
+                .countStockGroupToChannelsToProducts(clearDate);
 
             modelMap.put("datas", datas);
             modelMap.put("show", "0");
 
         } catch (Exception e) {
             logger
-                    .error(
-                            "[stock][StockAgeController_getStockAgeForToChannelsToProductsList]获取预测准确率-到渠道到产品汇总-查询列表时发生未知错误",
-                            e);
+                .error(
+                    "[stock][StockAgeController_getStockAgeForToChannelsToProductsList]获取预测准确率-到渠道到产品汇总-查询列表时发生未知错误",
+                    e);
             e.printStackTrace();
         }
         return "stock/stockAgeForToChannelsToProductsList";
@@ -587,7 +614,7 @@ public class StockAgeController {
      */
     @RequestMapping(value = { "/countStockAgesToSkuToChannels.html" }, method = { RequestMethod.GET })
     String countStockAgesToSkuToChannels(@RequestParam(required = false) String date,
-                                         HttpServletRequest request){
+        HttpServletRequest request){
         if (date == null || date.trim().equals("")) {
             request.setAttribute("date", DateUtil.format(new Date(), "yyyy-MM-dd"));
         } else {
@@ -611,9 +638,9 @@ public class StockAgeController {
      */
     @RequestMapping(value = { "/exportStockAgeForToProductsToChannelsList.html" }, method = { RequestMethod.GET })
     String exportStockAgeForToProductsToChannelsList(@RequestParam(required = false) String date,
-                                                     Map<String, Object> modelMap,
-                                                     HttpServletRequest request,
-                                                     HttpServletResponse response){
+        Map<String, Object> modelMap,
+        HttpServletRequest request,
+        HttpServletResponse response){
 
         String charset = "UTF-8";
         String fileName = "到产品到渠道汇总_" + date;
@@ -634,11 +661,11 @@ public class StockAgeController {
 
             response.setContentType("application/vnd.ms-excel;charset=" + charset);
             response.setHeader("Content-disposition", "attachment; filename=\"" + fileName
-                    + ".xls\"");
+                + ".xls\"");
             modelMap.put("exportFlag", "1");
         } catch (Exception e) {
             logger.error("[stock][StockAgeController_exportStockAgeForToProductsToChannelsList]:"
-                    + fileName + "文件下载失败!", e);
+                + fileName + "文件下载失败!", e);
             e.printStackTrace();
         }
         return "stock/stockAgeForToProductsToChannelsList";
@@ -651,16 +678,16 @@ public class StockAgeController {
      */
     @RequestMapping(value = { "/getStockAgeForToProductsToChannelsList.html" }, method = { RequestMethod.GET })
     String getStockAgeForToProductsToChannelsList(Map<String, Object> modelMap,
-                                                  @RequestParam(required = false) String date){
+        @RequestParam(required = false) String date){
 
         Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
 
-        if (clearDate == null)
+        if (clearDate == null) {
             clearDate = DateUtil.currentDate();
-
+        }
         try {
             Map<String, List<StockAgeHandler>> datas = stockAgeModel
-                    .countStockGroupToProductsToChannels(clearDate);
+                .countStockGroupToProductsToChannels(clearDate);
 
             modelMap.put("datas", datas);
             modelMap.put("show", "0");
@@ -681,9 +708,9 @@ public class StockAgeController {
      */
     @RequestMapping(value = { "/exportStockAgeForToChannelsToProductsList.html" }, method = { RequestMethod.GET })
     String exportStockAgeForToChannelsToProductsList(@RequestParam(required = false) String date,
-                                                     Map<String, Object> modelMap,
-                                                     HttpServletRequest request,
-                                                     HttpServletResponse response){
+        Map<String, Object> modelMap,
+        HttpServletRequest request,
+        HttpServletResponse response){
 
         String charset = "UTF-8";
         String fileName = "到渠道到产品汇总_" + date;
@@ -704,18 +731,18 @@ public class StockAgeController {
 
             response.setContentType("application/vnd.ms-excel;charset=" + charset);
             response.setHeader("Content-disposition", "attachment; filename=\"" + fileName
-                    + ".xls\"");
+                + ".xls\"");
             modelMap.put("exportFlag", "1");
         } catch (Exception e) {
             logger.error("[stock][StockAgeController_exportStockAgeForToChannelsToProductsList]:"
-                    + fileName + "文件下载失败!", e);
+                + fileName + "文件下载失败!", e);
             e.printStackTrace();
         }
         return "stock/stockAgeForToChannelsToProductsList";
     }
     @RequestMapping(value = { "/countStockAgesWithChannels.html" }, method = { RequestMethod.GET })
     ModelAndView countStockAgesWithChannels(@RequestParam(required = false) String date,
-                                      HttpServletRequest request) {
+        HttpServletRequest request) {
         ModelAndView mv=new ModelAndView();
         if (date == null || date.trim().equals("")) {
             mv.addObject("shijian",DateUtil.format(new Date(), "yyyy-MM-dd"));
@@ -733,7 +760,7 @@ public class StockAgeController {
     }
     @RequestMapping(value = { "/countStockAgesWithSku.html" }, method = { RequestMethod.GET })
     String countStockAgesWithSku(@RequestParam(required = false) String date,
-                                 HttpServletRequest request) {
+        HttpServletRequest request) {
         if (date == null || date.trim().equals("")) {
             request.setAttribute("date", DateUtil.format(new Date(), "yyyy-MM-dd"));
         } else {
@@ -750,14 +777,14 @@ public class StockAgeController {
     @ResponseBody
     @RequestMapping(value = { "findStockAgeGroupByProduct.html" }, method = { RequestMethod.POST })
     public void findGroupByProduct(@RequestParam(required = false) String date,String channel,
-                                   HttpServletResponse response, HttpServletRequest request) {
+        HttpServletResponse response, HttpServletRequest request) {
 
         try {
             Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
 
-            if (clearDate == null)
+            if (clearDate == null) {
                 clearDate = DateUtil.currentDate();
-
+            }
             Map<String, List<StockAgeWapped>> datas = stockAgeModel.countStockGroupBySkuWithChannel(clearDate,channel);
             List<Map<String, Object>> retList = new ArrayList<Map<String, Object>>();
             for (Map.Entry<String, List<StockAgeWapped>> stringListEntry : datas.entrySet()) {
@@ -803,14 +830,14 @@ public class StockAgeController {
 
     @RequestMapping(value = { "findStockAgeGroupByProductNew.html" }, method = { RequestMethod.POST })
     public void findGroupByProductNew(@RequestParam(required = false) String date,
-                                   HttpServletResponse response, HttpServletRequest request){
+        HttpServletResponse response, HttpServletRequest request){
 
         try {
             Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
 
-            if (clearDate == null)
+            if (clearDate == null) {
                 clearDate = DateUtil.currentDate();
-
+            }
             Map<String, List<StockAgeWapped>> datas = stockAgeModel.countStockGroupBySku(clearDate);
             List<Map<String, Object>> retList = new ArrayList<Map<String, Object>>();
             for (Map.Entry<String, List<StockAgeWapped>> stringListEntry : datas.entrySet()) {
@@ -850,12 +877,14 @@ public class StockAgeController {
     }
     @RequestMapping(value = { "/countStockAgesWithSkuByChannels.html" }, method = { RequestMethod.GET })
     ModelAndView countStockAgesWithSkuByChannels(HttpServletRequest request,
-                                           @RequestParam(required = false) String date,
-                                           @RequestParam(required = false) String param,
-                                           @RequestParam(required = false) String title){
+        @RequestParam(required = false) String date,
+        @RequestParam(required = false) String param,
+        @RequestParam(required = false) String title){
         ModelAndView mv=new ModelAndView();
         mv.addObject("shijian", date);
+        param = request.getParameter("param");
         mv.addObject("productGroupName", param);
+        title = request.getParameter("title");
         mv.addObject("title", title + " WA库存-到产品");
         mv.addObject("onQueryUrl", "/stock/getStockAgeForChinnelWithProductGroup.html");
         mv.addObject("onExportUrl","/stock/exportStockAgeForChinnelWithProductGroup.html");
@@ -866,16 +895,16 @@ public class StockAgeController {
     }
     @RequestMapping(value = { "/getStockAgeForChinnelWithProductGroup.html" })
     void getStockAgeForChinnelWithProductGroup(Map<String, Object> modelMap,  HttpServletResponse response,
-                                                 @RequestParam(required = false) String date,
-                                                 @RequestParam(required = false) String productGroupName)throws Exception {
+        @RequestParam(required = false) String date,
+        @RequestParam(required = false) String productGroupName)throws Exception {
 
         Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
 
-        if (clearDate == null)
+        if (clearDate == null) {
             clearDate = DateUtil.currentDate();
-
+        }
         List<StockAgeWapped> datas = stockAgeModel.countStockGroupByChannelWithSku(clearDate,
-                productGroupName);
+            productGroupName);
         List<Map<String, Object>> retList = new ArrayList<Map<String, Object>>();
         for (StockAgeWapped stockAgeWapped : datas) {
             Map<String, Object> retMap = new HashMap<String, Object>();
@@ -899,13 +928,13 @@ public class StockAgeController {
     }
     @RequestMapping(value = { "/exportStockAgeForProductsList.html" }, method = { RequestMethod.GET })
     void exportStockAgeForProduct(HttpServletResponse response,
-                                  @RequestParam(required = false) String date){
+        @RequestParam(required = false) String date){
 
         Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
 
-        if (clearDate == null)
+        if (clearDate == null) {
             clearDate = DateUtil.currentDate();
-
+        }
         Map<String, List<StockAgeWapped>> datas = stockAgeModel.countStockGroupBySku(clearDate);
 
         ServletOutputStream os = null;
@@ -916,10 +945,15 @@ public class StockAgeController {
 
                 String fileName = "WA库存-到产品（" + DateUtil.format(clearDate, "yyyy-MM-dd") + ")";
 
-                response.setHeader("Content-Disposition", "attachment; filename="
+                /*response.setHeader("Content-Disposition", "attachment; filename="
                         + new String(fileName.getBytes(),
-                        "iso-8859-1") + ".xls");
-                response.setContentType("application/octet-stream; charset=utf-8");
+                        "utf-8") + ".xls");
+                response.setContentType("application/octet-stream; charset=utf-8");*/
+
+                response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + URLEncoder.encode(fileName,"UTF-8")
+                    + ".xls");
+                response.setContentType("application/octet-stream");
+                response.setCharacterEncoding("UTF-8");
                 exportStockAgeForProducts("WA库存-到产品", clearDate, datas, os);
             } catch (Exception e) {
                 response.reset();
@@ -928,8 +962,9 @@ public class StockAgeController {
                 response.getWriter().flush();
                 logger.error("导出excel失败:", e);
             } finally {
-                if (os != null)
+                if (os != null){
                     os.close();
+                }
             }
         } catch (IOException e) {
             logger.error("导出excel失败:", e);
@@ -937,14 +972,14 @@ public class StockAgeController {
     }
     @RequestMapping(value = { "/exportStockAgeForChinnelWithProductGroup.html" })
     void exportStockAgeForChinnelWithProductGroup(HttpServletResponse response,HttpServletRequest request,
-                                                  @RequestParam(required = false) String date,
-                                                  @RequestParam(required = false) String productGroupName)throws Exception{
+        @RequestParam(required = false) String date,
+        @RequestParam(required = false) String productGroupName)throws Exception{
         Date clearDate = DateUtil.parse(date, "yyyy-MM-dd");
-        if (clearDate == null)
+        if (clearDate == null) {
             clearDate = DateUtil.currentDate();
-
+        }
         List<StockAgeWapped> datas = stockAgeModel.countStockGroupByChannelWithSku(clearDate,
-                productGroupName);
+            productGroupName);
 
         ServletOutputStream os = null;
         try {
@@ -953,11 +988,11 @@ public class StockAgeController {
                 response.reset();
 
                 String fileName = productGroupName + "WA库存-到渠道（"
-                        + DateUtil.format(clearDate, "yyyy-MM-dd") + ")";
+                    + DateUtil.format(clearDate, "yyyy-MM-dd") + ")";
 
                 response.setHeader("Content-Disposition", "attachment; filename="
-                        + new String(fileName.getBytes(),
-                        "iso-8859-1") + ".xls");
+                    + new String(fileName.getBytes(),
+                    "iso-8859-1") + ".xls");
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/octet-stream; charset=utf-8");
                 exportStockAgeForChannels(productGroupName + "WA库存-到渠道", clearDate, datas, os);
@@ -969,12 +1004,428 @@ public class StockAgeController {
                 response.getWriter().flush();
                 logger.error("导出excel失败:", e);
             } finally {
-                if (os != null)
+                if (os != null){
                     os.close();
+                }
             }
         } catch (IOException e) {
             logger.error("导出excel失败:", e);
         }
 
     }
+
+    @RequestMapping(value = { "/getStockAge.html" }, method = { RequestMethod.GET })
+    String getStockAge() {
+        return "stock/stockAge";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = { "/getStockAgeList.html" }, method = { RequestMethod.POST })
+    String getStockAgeList(Map<String, Object> modelMap,
+        @RequestParam(required = false) String sec_code,
+        @RequestParam(required = false) String sku,
+        @RequestParam(required = false) String channel_code,
+        @RequestParam(required = false) String product_group_name,
+        @RequestParam(required = false) String product_type_name,
+        @RequestParam(required = false) String product_name,
+        @RequestParam(required = false) Integer page,
+        @RequestParam(required = false) Integer rows) {
+
+        if (page == null) {
+            page = 1;
+        }
+        if (rows == null) {
+            rows = 20;
+        }
+        PagerInfo pagerInfo = new PagerInfo(rows, page);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("sec_code", sec_code);
+        params.put("sku", sku);
+        params.put("product_name", StringUtil.isEmpty(product_name) ? null : product_name.trim());
+        params.put("start",(page-1)*rows);
+        params.put("size",rows);
+        if (!"ALL".equals(channel_code)){
+            params.put("channel_code", channel_code.trim());
+        }
+        if (!"全部".equals(product_group_name)){
+            params.put("product_group_name", product_group_name);
+        }
+        if (!"全部".equals(product_type_name)) {
+            params.put("product_type_name", product_type_name);
+        }
+        ServiceResult<List<StockAgeWapped>> result = stockAgeModel.getStockAgeList(params);
+        if (!result.getSuccess()) {
+            logger.warn("查询库龄报表数据失败：" + result.getMessage());
+            result.setResult(new ArrayList<>());
+        }
+        modelMap.put("rows", result.getResult());
+        modelMap.put("total", result.getPager().getRowsCount());
+        return JsonUtil.toJson(modelMap);
+    }
+
+    @RequestMapping(value = { "/getProductGroups" }, method = { RequestMethod.GET })
+    @ResponseBody
+    HttpJsonResult<List<String>> getProductGroups(@RequestParam(required = false) String productType) {
+
+        HttpJsonResult<List<String>> result = new HttpJsonResult<List<String>>();
+        List<String> groups = stockAgeModel.getProductGroups(productType);
+        groups.add(0, "全部");
+        result.setData(groups);
+        return result;
+    }
+
+    @RequestMapping(value = { "/exportStockAge" }, method = { RequestMethod.GET })
+    void exportStockAges(@RequestParam(required = false) String sec_code,
+        @RequestParam(required = false) String sku,
+        @RequestParam(required = false) String channel_code,
+        @RequestParam(required = false) String product_group_name,
+        @RequestParam(required = false) String product_type_name,
+        @RequestParam(required = false) String product_name,
+        HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("sec_code", sec_code);
+        params.put("sku", sku);
+        params.put("channel_code", channel_code.trim());
+        params.put("product_group_name", product_group_name);
+        params.put("product_type_name", product_type_name.trim());
+        params.put("product_name", StringUtil.isEmpty(product_name) ? null : product_name.trim());
+        ServletOutputStream os = null;
+        try {
+            try {
+                response.setContentType("application/octet-stream;charset=UTF-8");
+                os = response.getOutputStream();
+                response.reset();
+                response.setHeader("Content-Disposition",
+                    "attachment; filename="+ java.net.URLEncoder
+                        .encode("库龄报表"+ DateUtil.format(new Date(), "yyyy-MM-dd"),"UTF-8")
+                        + ".xls");
+                response.addHeader("Pargam", "no-cache");
+                response.addHeader("Cache-Control", "no-cache");
+                export(os, params);
+            } catch (Exception e) {
+                response.reset();
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().print("导出excel失败，" + e);
+                response.getWriter().flush();
+                logger.error("导出excel失败:", e);
+            } finally {
+                if (os != null){
+                    os.close();
+                }
+            }
+        } catch (IOException e) {
+            logger.error("导出excel失败:", e);
+        }
+    }
+
+    private void export(OutputStream os, Map<String, Object> params) throws Exception {
+        HSSFWorkbook book = new HSSFWorkbook();
+        HSSFSheet sheet = book.createSheet("库龄统计");
+        setExcelTitle(sheet, book);
+        setExcelParams(sheet, book, params);
+        setExcelHeader(sheet, book, params);
+        setExcelBody(sheet, book, params);
+        try {
+            book.write(os);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void setExcelTitle(HSSFSheet sheet,HSSFWorkbook book) throws WriteException {
+        HSSFRow row = sheet.createRow(0);
+        for (int j = 0; j < 34; j++) {
+            HSSFCell hssfCell = row.createCell(j);
+        }
+        CellRangeAddress cellRangeAddress = new CellRangeAddress(0,0,0,33);
+        HSSFCell cell = row.getCell(0);
+        cell.setCellStyle(setTitleFontStyle(book,16, HSSFColor.BLUE.index,true));
+        cell.setCellValue("库龄报表");
+        sheet.addMergedRegion(cellRangeAddress);
+        row.setHeight((short) 400);
+    }
+
+    public void setCellStyle(HSSFCellStyle cellStyle) {
+        cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+        cellStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+    }
+
+    private HSSFCellStyle setTitleFontStyle(HSSFWorkbook workbook,int fontSize,short color,boolean isBold) {
+        HSSFCellStyle cellStyle = workbook.createCellStyle();
+        HSSFFont font = workbook.createFont();
+        font.setFontName("宋体");
+        if(isBold){
+            //粗体显示
+            font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        }
+        font.setFontHeightInPoints((short) fontSize);
+        font.setColor(color);
+        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        cellStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+        //选择需要用到的字体格式
+        cellStyle.setFont(font);
+        return cellStyle;
+    }
+
+    private void setExcelParams(HSSFSheet sheet,HSSFWorkbook book, Map<String, Object> params) {
+        HSSFRow row = sheet.createRow(1);
+        HSSFCellStyle contentStyle = setTitleFontStyle(book,11, HSSFColor.BLUE_GREY.index,false);
+        setCellStyle(contentStyle);
+        String[] names = new String[]{"渠道",(String) params.get("channel_code"),"品类",(String) params.get("product_type_name"),
+            "产品组",(String) params.get("product_group_name"),"库位",(String) params.get("sec_code"),
+            "物料编码",(String) params.get("sku"),"产品型号",(String) params.get("product_name")};
+        for (int i = 0;i < names.length; i++){
+          HSSFCell hssfCell = row.createCell(i);
+          hssfCell.setCellStyle(contentStyle);
+          hssfCell.setCellValue(names[i]);
+        }
+    }
+
+    private void setExcelHeader(HSSFSheet sheet,HSSFWorkbook workbook, Map<String, Object> map) throws Exception {
+        String[] headers = new String[] { "渠道", "库位", "库位名称", "品类", "产品组", "品牌", "物料编码", "型号",
+            "小计", "1-7天", "8-14天", "15-21天", "22-30天", "31-44天", "45-60天", "61-75天", "75-90天",
+            "3-4月", "4-6月", "6-12月", "1年以上" };
+          HSSFRow row = sheet.createRow(3);
+          HSSFCellStyle contentStyle = setTitleFontStyle(workbook,11, HSSFColor.BLUE_GREY.index,true);
+          setCellStyle(contentStyle);
+          for (int i = 0;i < 34; i++){
+            HSSFCell hssfCell = row.createCell(i);
+            hssfCell.setCellStyle(contentStyle);
+              if(i<8){
+                  hssfCell.setCellValue(headers[i]);
+                  /*CellRangeAddress cellRangeAddress = new CellRangeAddress(2,
+                    3, i,i);
+                sheet.addMergedRegion(cellRangeAddress);*/
+            }else if (i % 2 == 0){
+                /*CellRangeAddress cellRangeAddress = new CellRangeAddress(2,
+                    2, i,i+1);
+                sheet.addMergedRegion(cellRangeAddress);*/
+                hssfCell.setCellValue(headers[8 + (i-8) / 2]);
+            }
+          }
+        HSSFRow nextRow = sheet.createRow(4);
+
+        for (int i = 0;i < 34; i++){
+            HSSFCell hssfCell = nextRow.createCell(i);
+            hssfCell.setCellStyle(contentStyle);
+            if (i < 8){
+
+            }else if (i % 2 == 0){
+              hssfCell.setCellValue("數量");
+            }else {
+              hssfCell.setCellValue("金额");
+            }
+        }
+        for (int i = 0;i < 34; i++){
+            if(i < 8){
+                CellRangeAddress cellRangeAddress = new CellRangeAddress(3,
+                    4, i,i);
+                sheet.addMergedRegion(cellRangeAddress);
+            }else {
+                CellRangeAddress cellRangeAddress = new CellRangeAddress(3,
+                    3, i,i + 1);
+                i++;
+                sheet.addMergedRegion(cellRangeAddress);
+            }
+        }
+
+    }
+
+    private void setExcelBody(HSSFSheet sheet,HSSFWorkbook workbook,Map<String, Object> map) throws Exception {
+        HSSFCellStyle contentStyle = setTitleFontStyle(workbook,9, HSSFColor.BLACK.index,false);
+        setCellStyle(contentStyle);
+        List<StockAgeWapped> stockAges = loadStockAgesForExprot(map);
+
+        HSSFCellStyle cellStyle = setTitleFontStyle(workbook,9, HSSFColor.BLACK.index,false);
+        setCellStyle(cellStyle);
+        cellStyle.setBorderRight(CellStyle.BORDER_THICK);
+        cellStyle.setRightBorderColor(HSSFColor.RED.index);
+
+        for (int i = 0; i < stockAges.size(); i++) {
+            int cellNum = 0;
+            HSSFRow row = sheet.createRow(i + 5);
+            HSSFCell hssfCell0 = row.createCell(cellNum);
+            hssfCell0.setCellValue(stockAges.get(i).getStockAge().getChannelName());
+            hssfCell0.setCellStyle(contentStyle);
+
+            HSSFCell hssfCell1 = row.createCell(++cellNum);
+            hssfCell1.setCellValue(stockAges.get(i).getStockAge().getSecCode());
+            hssfCell1.setCellStyle(contentStyle);
+
+            HSSFCell hssfCell2 = row.createCell(++cellNum);
+            hssfCell2.setCellValue(stockAges.get(i).getStockAge().getSecName());
+            hssfCell2.setCellStyle(contentStyle);
+
+            HSSFCell hssfCell3 = row.createCell(++cellNum);
+            hssfCell3.setCellValue(stockAges.get(i).getStockAge().getProductTypeName());
+            hssfCell3.setCellStyle(contentStyle);
+
+            HSSFCell hssfCell4 = row.createCell(++cellNum);
+            hssfCell4.setCellValue(stockAges.get(i).getStockAge().getProductGroupName());
+            hssfCell4.setCellStyle(contentStyle);
+
+            HSSFCell hssfCell5 = row.createCell(++cellNum);
+            hssfCell5.setCellValue(stockAges.get(i).getStockAge().getBrand());
+            hssfCell5.setCellStyle(contentStyle);
+            HSSFCell hssfCell6 = row.createCell(++cellNum);
+            hssfCell6.setCellValue(stockAges.get(i).getStockAge().getSku());
+            hssfCell6.setCellStyle(contentStyle);
+            HSSFCell hssfCell7 = row.createCell(++cellNum);
+            hssfCell7.setCellValue(stockAges.get(i).getStockAge().getProductName());
+            hssfCell7.setCellStyle(contentStyle);
+
+            List<StockAgeData> agedatas = stockAges.get(i).getAgeDatas();
+
+            int n = 0;
+            for (StockAgeData ageData : agedatas) {
+                HSSFCell dataCell = row.createCell(++cellNum);
+                dataCell.setCellValue(ageData.getStockQuantity());
+                dataCell.setCellStyle(contentStyle);
+                if (n == 6){
+                    HSSFCell cell = row.createCell(++cellNum);
+                    cell.setCellValue(ageData.getValue().doubleValue());
+
+                    cell.setCellStyle(cellStyle);
+                }else{
+                    HSSFCell dataCell1 = row.createCell(++cellNum);
+                    dataCell1.setCellValue(ageData.getValue().doubleValue());
+                    dataCell1.setCellStyle(contentStyle);
+                }
+                n++;
+            }
+        }
+
+    }
+
+    private List<StockAgeWapped> loadStockAgesForExprot(Map<String, Object> params) {
+        List<StockAgeWapped> stockAges = new ArrayList<StockAgeWapped>();
+        int page = 1;
+        boolean hasMore = true;
+        int count = 0;
+        while (hasMore) {
+            PagerInfo pagerInfo = new PagerInfo(1000, page);
+            if ("ALL".equals(params.get("channel_code"))) {
+                params.put("channel_code", "");
+            }
+            if ("全部".equals(params.get("product_group_name"))) {
+                params.put("product_group_name", "");
+            }
+            params.put("start",(page-1)*30000);
+            params.put("rows",30000);
+            ServiceResult<List<StockAgeWapped>> rs = stockAgeModel.getStockAgeList(params);
+            if (!rs.getSuccess()){
+                hasMore = false;
+            }
+            count = rs.getResult().size();
+            if (count == 0 || rs.getResult().size() < 30000){
+                hasMore = false;
+            }
+            stockAges.addAll(rs.getResult());
+            page++;
+        }
+        return stockAges;
+    }
+
+    @RequestMapping(value = { "/getChannels" }, method = { RequestMethod.GET })
+    @ResponseBody
+    HttpJsonResult<List<InvStockChannel>> getChannels() {
+        HttpJsonResult<List<InvStockChannel>> result = new HttpJsonResult<List<InvStockChannel>>();
+        List<InvStockChannel> channels = stockAgeModel.getChannels();
+        result.setData(channels);
+        return result;
+    }
+
+    /*@RequestMapping(value = { "/delhistory.html" }, method = { RequestMethod.GET })
+    String calculateHistory() {
+        return "stock/stockAgeHistory";
+    }
+
+    @RequestMapping(value = { "/calByDay/real/danger" }, method = { RequestMethod.GET })
+    @ResponseBody
+    HttpJsonResult calByDay(String startDate,String endDate) {
+        Date start = DateUtil.parse(startDate,"yyyy-MM-dd");
+        Date end = DateUtil.parse(endDate,"yyyy-MM-dd");
+
+//        Date today = DateUtil.truncateTime();//当前日期
+        HttpJsonResult<List<InvStockChannel>> result = new HttpJsonResult<List<InvStockChannel>>();
+        List<Date> dates = getEveryday(start,end);
+        if (dates.size() != 1){
+            result.setMessage("按天统计最多只能统计一天");
+            return result;
+        }
+        StringBuilder stringBuilder =new StringBuilder();
+        for (Date today:dates){
+            ServiceResult<Boolean> result1 = stockAgeModel.calculateStockAgeDayHistory(today);
+            stringBuilder.append(result1.getMessage());
+        }
+//        result.setSuccess(result1.getSuccess());
+        result.setMessage("处理结果:"+stringBuilder.toString());
+        return result;
+    }
+
+    @RequestMapping(value = { "/calByTime/real/danger" }, method = { RequestMethod.GET })
+    @ResponseBody
+    HttpJsonResult calByTime(String startDate,String endDate) {
+        Date start = DateUtil.parse(startDate,"yyyy-MM-dd");
+        Date end = DateUtil.parse(endDate,"yyyy-MM-dd");
+        HttpJsonResult<List<InvStockChannel>> result = new HttpJsonResult<List<InvStockChannel>>();
+        List<Date> dates = getEveryday(start,end);
+        if (dates.size() != 1){
+            result.setMessage("实时统计最多只能统计一天");
+            return result;
+        }
+        StringBuilder stringBuilder =new StringBuilder();
+        for (Date today:dates){
+            ServiceResult<Boolean> result1 = stockAgeModel.calculateStockAgeTimeHistory(today);
+            stringBuilder.append(result1.getMessage());
+        }
+//        result.setSuccess(result1.getSuccess());
+        result.setMessage("处理结果:"+stringBuilder.toString());
+        return result;
+    }
+
+    public    List<Date> getEveryday(Date beginDate , Date endDate){
+        List<Date> results = new ArrayList<>();
+        Calendar startTime =  Calendar.getInstance();
+        startTime.setTime(beginDate);
+        do {
+            results.add(startTime.getTime());
+            startTime.add(Calendar.DATE,1);
+        }while (startTime.getTime().before(endDate));
+        return results;
+    }
+
+    @RequestMapping(value = { "/onToall/real/danger" }, method = { RequestMethod.GET })
+    @ResponseBody
+    String onToall(){
+        logger.warn("开始生产库龄数据");
+        stockAgeModel.processForGenerateStockAgeInOutHistory();
+        logger.warn("生产库龄数据结束");
+        Date start = DateUtil.parse("2018-06-22","yyyy-MM-dd");
+        Date end =  DateUtil.parse("2018-08-15","yyyy-MM-dd");
+        List<Date> dates = getEveryday(start ,end);
+//        StockAgeModel model = (StockAgeModel)SpringContextUtil.getBean("stockAgeModel");
+        for (Date today:dates){
+
+            ServiceResult<Boolean> result1 = stockAgeModel.calculateStockAgeDayHistory(today);
+            logger.warn(today+"按天统计的处理结果为"+result1.getMessage());
+            ServiceResult<Boolean> result2 = stockAgeModel.calculateStockAgeTimeHistory(today);
+            logger.warn(today+"实时统计的处理结果为"+result1.getMessage());
+        }
+        return "zhiximgwanl";
+    }*/
+
 }

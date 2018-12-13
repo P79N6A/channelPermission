@@ -54,4 +54,9 @@ public class PurchaseVomOrderServiceImpl implements PurchaseVomOrderService{
 	public String getFlowFlagByCrmReturnInfo(Map<String, Object> paramMap){
 		return vomOrderDao.getFlowFlagByCrmReturnInfo(paramMap);
 	}
+
+	@Override
+	public String getStorageIdByCrmReturnInfo(Map<String, Object> paramMap) {
+		return vomOrderDao.getStorageIdByCrmReturnInfo(paramMap);
+	}
 }

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>导出TB单号</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script type="text/javascript">
+
+        function onExport(){
+                    var sourceOrderSns = $("#sourceOrderSns").val().trim();
+                    if (sourceOrderSns == null || sourceOrderSns == "") {
+                        $.messager.alert('警告', '请输入来源订单号！', 'warning');
+                        $("#sourceOrderSns").val("");
+                        return;
+                    }
+            $.messager.confirm('确认', '确定要导出吗？', function (r) {
+                if (r) {
+                    $('#filterForm').attr("action", "/order/exporttbOrderSnInfo");
+                    $('#filterForm').submit();
+                }
+            });
+            };
+    </script>
+
+    <style>
+    .panel-header{
+        width: 98% !important;
+        margin: 10px auto;
+        border: 0;
+    }
+    </style>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;" title="导出TB单号"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <form id="filterForm" class="param-form" method="post">
+        <div class="search-panel">
+            <div class="clearfix"></div>
+            <div class="search-row" style="width: 100%">
+			<span class="search-row-label" style="float:left;font-weight:bold;font-size:16px;">
+			  来源订单号
+			</span>
+                <textarea rows="18" name="sourceOrderSns" id="sourceOrderSns" style="resize: none;width:600px;"></textarea>
+                <div style="margin-left:120px">
+                    <span style="color: red;line-height:30px;">在提交推送的来源订单号。</span><br/>
+                    <span style="color: red;line-height:30px;">每行一条子来源订单号，多条用回车分割。</span>
+                    <div class="clearfix"></div>
+                    <input name="pageIndex" id="pageIndex" type="hidden" value="1"/>
+                    <div>
+                        <a href="#" id="submitButton" class="easyui-linkbutton" iconCls="icon-save" onClick="onExport()">导出</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.haier.shop.services;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,5 +74,21 @@ public class OrderRepairLESRecordsServiceImpl implements OrderRepairLESRecordsSe
         // TODO Auto-generated method stub
         return orderRepairLESRecordsWriteDao.updateOpCancelFlag(orderRepairLESRecords);
     }
+
+    public Integer updateRepairLesRecordcn(String id, String recordSn) {
+
+        return orderRepairLESRecordsWriteDao.updateRepairLesRecordcn(id, recordSn);
+    }
+
+    public Integer updateRepairLesRecordcnSuccess(String id, Integer success) {
+
+        return orderRepairLESRecordsWriteDao.updateRepairLesRecordcnSuccess(id, success);
+    }
+
+	@Override
+	public List<OrderRepairLESRecords> queryRecordSn(String operate,String storageType,String orderRepairId) {
+		// TODO Auto-generated method stub
+		return orderRepairLESRecordsReadDao.queryRecordSn(operate, storageType, orderRepairId);
+	}
 
 }

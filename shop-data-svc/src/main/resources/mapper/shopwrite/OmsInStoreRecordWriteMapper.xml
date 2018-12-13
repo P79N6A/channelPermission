@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.OmsInStoreRecordWriteDao" >
+    <insert id="insert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO oms_in_store_records(materialCertification,certificationItem,snCode,purchaseOrderCode,sourceSn,storageLocation,batch,goodsCode,billCnt,orderType,returnSourceOrder,returnSourceSn,orderSourceCode,orderNo,row_id,db,add_time,status,itemId)
+        VALUES
+        <foreach collection="list" item="emp" separator=",">
+            (#{emp.materialCertification},#{emp.certificationItem},#{emp.snCode},#{emp.purchaseOrderCode},#{emp.sourceSn},#{emp.storageLocation},#{emp.batch},#{emp.goodsCode},#{emp.billCnt},#{emp.orderType},#{emp.returnSourceOrder},#{emp.returnSourceSn},#{emp.orderSourceCode},#{emp.orderNo},#{emp.rowId},#{emp.db},#{emp.addTime},#{emp.status},#{emp.itemId})
+        </foreach>
+    </insert>
+    <select id="selectRowId" parameterType="java.util.List" resultType="java.lang.String">
+        SELECT row_id FROM oms_in_store_records WHERE row_id IN
+        <foreach collection="list" item="id" open="(" close=")"
+                 separator=",">
+            #{id}
+        </foreach>
+    </select>
+    <resultMap id="result" type="com.haier.shop.model.OmsInStoreRecords">
+        <result property="id" column="id" />
+        <result property="materialCertification" column="materialCertification" />
+        <result property="certificationItem" column="certificationItem" />
+        <result property="snCode" column="snCode" />
+        <result property="purchaseOrderCode" column="purchaseOrderCode" />
+        <result property="sourceSn" column="sourceSn" />
+        <result property="storageLocation" column="storageLocation" />
+        <result property="batch" column="batch" />
+        <result property="goodsCode" column="goodsCode" />
+        <result property="billCnt" column="billCnt" />
+        <result property="orderType" column="orderType" />
+        <result property="returnSourceOrder" column="returnSourceOrder" />
+        <result property="returnSourceSn" column="returnSourceSn" />
+        <result property="orderSourceCode" column="orderSourceCode" />
+        <result property="orderNo" column="orderNo" />
+        <result property="rowId" column="row_id" />
+        <result property="db" column="db" />
+        <result property="addTime" column="add_time" />
+        <result property="status" column="status" />
+        <result property="orderCode" column="orderCode" />
+        <result property="itemId" column="itemId" />
+        <result property="ADD1" column="ADD1" />
+        <result property="ADD2" column="ADD2" />
+        <result property="vomSn" column="vomSn" />
+        <result property="inSapStatus" column="inSapStatus" />
+        <result property="outSapStatus" column="outSapStatus" />
+    </resultMap>
+    <!--查询没有推送hp并且机编不为空的数据-->
+    <select id="selectByStatus" resultMap="result">
+        SELECT * FROM oms_in_store_records WHERE status=0 and `snCode`is not null and `snCode` != "" limit 200
+    </select>
+    <select id="selectByVomStatus" resultMap="result">
+        SELECT * FROM oms_in_store_records WHERE vomStatus=0
+    </select>
+
+<!--查询推送vom成功没有推送出库sap的数据-->
+    <select id="findForVomStatus" resultMap="result">
+        SELECT * FROM oms_in_store_records WHERE vomStatus=1 and outSapStatus=0
+    </select>
+
+    <!--查询推送vom成功,推送出库sap成功的,推送入库不成功的-->
+    <select id="findForSapStatus" resultMap="result">
+        SELECT * FROM oms_in_store_records WHERE vomStatus=1 and outSapStatus=1 and inSapStatus=0
+    </select>
+
+    <select id="findAllocationRemnant" resultMap="result">
+        SELECT
+        *
+        FROM
+        oms_in_store_records oms
+        WHERE
+        1=1
+        and (purchaseOrderCode like 'TBD%' OR purchaseOrderCode like 'THJ%')
+        <if test="db !=null and db !=''">
+            <![CDATA[ and db LIKE CONCAT('%', #{db} ,'%') ]]>
+        </if>
+        <if test="orderCode !=null and orderCode !=''">
+            <![CDATA[ and orderCode LIKE CONCAT('%', #{orderCode} ,'%') ]]>
+        </if>
+        <if test="purchaseOrderCode !=null and purchaseOrderCode !=''">
+            <![CDATA[ and purchaseOrderCode LIKE CONCAT('%', #{purchaseOrderCode} ,'%') ]]>
+        </if>
+        <if test="goodsCode !=null and goodsCode !=''">
+        <![CDATA[ and goodsCode LIKE CONCAT('%', #{goodsCode} ,'%') ]]>
+        </if>
+        <if test="snCode !=null and snCode !=''">
+            <![CDATA[ and snCode LIKE CONCAT('%', #{snCode} ,'%') ]]>
+        </if>
+        <if test="page!=null and rows!=null">
+            limit ${page},${rows}
+          </if>
+    </select>
+
+    <select id="findAllocationRemnantCount" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM
+        oms_in_store_records oms
+        WHERE
+        1=1
+        and (purchaseOrderCode like 'TBD%' OR purchaseOrderCode like 'THJ%')
+        <if test="db !=null and db !=''">
+            <![CDATA[ and db LIKE CONCAT('%', #{db} ,'%') ]]>
+        </if>
+        <if test="orderCode !=null and orderCode !=''">
+            <![CDATA[ and orderCode LIKE CONCAT('%', #{orderCode} ,'%') ]]>
+        </if>
+        <if test="purchaseOrderCode !=null and purchaseOrderCode !=''">
+            <![CDATA[ and purchaseOrderCode LIKE CONCAT('%', #{purchaseOrderCode} ,'%') ]]>
+        </if>
+        <if test="goodsCode !=null and goodsCode !=''">
+            <![CDATA[ and goodsCode LIKE CONCAT('%', #{goodsCode} ,'%') ]]>
+        </if>
+        <if test="snCode !=null and snCode !=''">
+            <![CDATA[ and snCode LIKE CONCAT('%', #{snCode} ,'%') ]]>
+        </if>
+
+    </select>
+
+
+    <select id="selectForStatus" resultMap="result">
+             SELECT
+             oms.*,hp.ORDERREJECTSN, hp.ADD1, hp.ADD2
+             FROM oms_in_store_records oms, hpidentificationresults hp
+             WHERE oms.status = 1
+             and ((oms.db = hp.ORDERREJECTSN) or (CONCAT(oms.db,'TC') = hp.ORDERREJECTSN))
+             and (orderCode is null or orderCode = "" )
+    </select>
+    <update id="updateByDb" parameterType="java.lang.String">
+        <foreach collection="list" item="id" separator=";">
+        UPDATE  oms_in_store_records SET  status=1  WHERE db =#{id}
+        </foreach>
+    </update>
+
+<!--更改不符合的status为2-->
+    <update id="updateNotDb" parameterType="java.lang.String">
+        <foreach collection="list" item="id" separator=";">
+            UPDATE  oms_in_store_records SET  status=2 WHERE db =#{id}
+        </foreach>
+    </update>
+<!--批量更新db单号-->
+    <update id="updateDb" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            UPDATE  oms_in_store_records SET  db=#{item.db} WHERE id =#{item.id}
+        </foreach>
+    </update>
+<!-- 接收菜鸟返回的orderCode并且放入表中-->
+    <update id="updateForOrderCode" parameterType="com.haier.shop.model.OmsInStoreRecords">
+            UPDATE  oms_in_store_records SET  orderCode=#{orderCode} WHERE id =#{id}
+    </update>
+<!--更改推送vom状态-->
+    <update id="updataVomStatus" parameterType="com.haier.shop.model.OmsInStoreRecords">
+            UPDATE  oms_in_store_records SET  vomStatus=1 ,vomSn = #{vomSn}WHERE id =#{id}
+    </update>
+
+    <update id="updateOutSapStatus" parameterType="com.haier.shop.model.OmsInStoreRecords">
+            UPDATE  oms_in_store_records SET  outSapStatus=1 ,outSapTime = now() WHERE id =#{id}
+    </update>
+
+    <update id="updateInSapStatus" parameterType="com.haier.shop.model.OmsInStoreRecords">
+            UPDATE  oms_in_store_records SET  inSapStatus=1 ,inSapTime = now() WHERE id =#{id}
+    </update>
+</mapper>

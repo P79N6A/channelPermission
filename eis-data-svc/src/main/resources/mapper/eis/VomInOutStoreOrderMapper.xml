@@ -94,10 +94,53 @@
         WHERE `process_status` = #{process_status} AND `delay` = #{delay} AND instr(`order_no`, 'TC' )>0
         LIMIT 500
     </select>
-    
-    <select id="queryVomInOut" resultType="int" parameterType="java.lang.String">
+    <select id="getByStockInfoByOrderNo" parameterType="java.lang.String" resultMap="vomInOutStoreOrderResult">
+        SELECT
+            id,
+            order_no,
+            exp_no,
+            bus_type,
+            out_in_date,
+            certification,
+            add_time
+        FROM `vom_in_out_store_order`
+        WHERE `order_no` = #{orderNo}
+    </select>
+
+    <select id="queryGetStoreCode" parameterType="java.lang.String" resultMap="vomInOutStoreOrderResult">
+      SELECT
+		  o.id,
+		  o.received_id,
+		  o.order_no,
+		  o.exp_no,
+		  o.bus_type,
+		  o.order_type,
+		  o.out_in_date,
+		  o.store_code,
+		  o.is_complete,
+		  o.remark,
+		  o.certification,
+		  o.remark1,
+		  o.remark2,
+		  o.remark3,
+		  o.process_status,
+		  o.delay
+		FROM
+		  vom_in_out_store_order o,
+		  vom_in_out_store_item s
+		WHERE
+		  o.id = s.order_id
+		  AND s.storage_type = #{storageType}
+		  AND o.bus_type = #{busType}
+		  AND order_no = #{orderNo}
+		  LIMIT 0,1
+    </select>
+
+    <select id="queryVomInOut" resultMap="vomInOutStoreOrderResult" parameterType="java.lang.String">
 	SELECT
-		count(*)
+		 o.store_code,
+		 o.id,
+		 bus_type
 	FROM
 		vom_in_out_store_order o,
 		vom_in_out_store_item s
@@ -105,6 +148,23 @@
 		o.id = s.order_id
 		and s.storage_type='22'
 		and o.bus_type='2'
+		and o.order_no =#{orderNo}
+		LIMIT 0,1
+    </select>
+    
+     <select id="queryVomInTenlibrary" resultMap="vomInOutStoreOrderResult" parameterType="java.lang.String">
+	SELECT
+		 o.store_code,
+		 o.id,
+		 bus_type
+	FROM
+		vom_in_out_store_order o,
+		vom_in_out_store_item s
+	WHERE
+		o.id = s.order_id
+		and s.storage_type='10'
+		and o.bus_type='2'
 		and order_no =#{orderNo}
+		LIMIT 0,1
     </select>
 </mapper>

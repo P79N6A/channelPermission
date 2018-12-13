@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+          href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet"
+          href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet"
+          href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet"
+          href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet"
+          href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet"
+          href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet"
+          href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
+
+    <title>区域列表</title>
+    <script src="/static/third/easyui/jquery.min2.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/third/easyui/glo.js"></script>
+    <script src="/static/third/easyui/comm.js"></script>
+    <script src="/static/third/easyui/commgrid.js"></script>
+    <script src="/static/third/easyui/jQuery.Form.js"></script>
+    <script src="/static/js/pop/common/pop.js"></script>
+    <script src="/static/js/bootstrap-datepicker.js"></script>
+    <style type="text/css">
+        body {
+            color: #444444;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        #fontclor {
+            font-color: #660000;
+        }
+        .search-row-label_80{
+            width: 150px;
+        }
+        .datagrid-header-rownumber{
+            width: 50px!important;
+            text-align: center;
+            margin: 0px;
+            padding: 3px 0;
+        }
+        .datagrid-cell-rownumber{
+            width: 50px!important;
+            text-align: center;
+            margin: 0px;
+            padding: 3px 0;
+        }
+    </style>
+</head>
+
+<body style="font-size:14px;">
+<div class="easyui-layout"
+     style="width:100%;height:100%;font-color:red;">
+    <div id="datagridToolbar_orderForecastGoal">
+
+        <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_circle fa fa-map-marker"></div>
+        </div>
+
+        <div class="search-panel" style="font-size: 11px;">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">区域名称</span>
+                <input type="text" class="easyui-textbox" name="regionName" id="regionName" placeholder="区域名称"
+                       value=""/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">区域级别</span>
+                <select id="regionType" editable="false" class="easyui-combobox" name="regionType">
+##                    <option value="">区域级别</option>
+                    <option value="1">省</option>
+                    <option value="2">市</option>
+                    <option value="3">区</option>
+                    <option value="4">街</option>
+                </select>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >首字母</span>
+                <input type="text" class="easyui-textbox" name="firstLetter" id="firstLetter"/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >配送时效</span>
+                <input type="text" class="easyui-textbox" name="shippingTime" id="shippingTime"/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >是否可见</span>
+                <select editable="false" id="visible" class="easyui-combobox" name="visible">
+                    <option value="">是否可见</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >HP地址库映射字段</span>
+                <input type="text" class="easyui-textbox" name="rowId" id="rowId"/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >测试字段</span>
+                <input type="text" class="easyui-textbox" name="testNum" id="testNum"/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >标准地区ID</span>
+                <input type="text" class="easyui-textbox" name="standardRegionId" id="standardRegionId"/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >国标编码</span>
+                <input type="text" class="easyui-textbox" name="code" id="code"/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >活动标志</span>
+                <select editable="false" id="activeFlag" class="easyui-combobox" name="activeFlag">
+                    <option value="">活动标志</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+
+##            <div class="search-row_nowidth mar_r6px" >
+##                <span class="search-row-label_80" >hasRead</span>
+##                <input type="text" class="easyui-textbox" name="hasRead" id="hasRead"/>
+##            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >是否支持货到付款</span>
+                <select editable="false" id="isSupportCod" class="easyui-combobox" name="isSupportCod">
+                    <option value="">是否支持货到付款</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >邮编</span>
+                <input type="text" class="easyui-textbox" name="zipCode" id="zipCode"/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >入库时效（单位：天)</span>
+                <input type="text" class="easyui-textbox" name="receivingTime" id="receivingTime"/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >配送距离</span>
+                <input type="text" class="easyui-textbox" name="shippingDistance" id="shippingDistance"/>
+            </div>
+
+            <div class="search-row_nowidth mar_r6px" >
+                <span class="search-row-label_80" >是否OTO派工</span>
+                <select editable="false" id="isOto" class="easyui-combobox" name="isOto">
+                    <option value="">是否OTO派工</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="font-size:14px;width: 100%">
+            <a href="#" class="easyui-linkbutton" onclick="SearchUnit()"
+               data-options="iconCls:'icon-search',plain:true">查询</a>
+            <a href="#" class="easyui-linkbutton" onclick="Add()" data-options="iconCls:'icon-add',plain:true">增加</a>
+            <a href="#" class="easyui-linkbutton" onclick="list()" data-options="iconCls:'icon-edit',plain:true">修改</a>
+            <a href="#" class="easyui-linkbutton" onclick="Delete()"
+               data-options="iconCls:'icon-remove',plain:true">删除</a>
+            <a href="#" class="easyui-linkbutton" onclick="SearchClear()" data-options="iconCls:'icon-redo',plain:true">重置</a>
+        </div>
+
+    </div>
+    <div data-options="region:'west'" style="width:100%;height: 100%">
+        <table id="gridView" style="width:100%;height: 100%"></table>
+    </div>
+
+
+    <!-- 新建&修改表格 -->
+    <div id="oDialog4" class="easyui-dialog" title="修改"
+         style="width: 800px; height: 600px;font-size:14px; padding: 0px 0px;overflow-y: hidden" closed="true"
+         center="true" modal="true">
+        <br>
+        <div id="regions" class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">区域级别</span>
+            <select id="regionTypes" editable="false" class="easyui-combobox" name="regionTypes">
+                <option value="1">省级</option>
+                <option value="2">市级</option>
+                <option value="3">区级</option>
+                <option value="4">街级</option>
+            </select>
+        </div>
+        <br>
+        <div id="rt1" class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">区域名称</span>
+            <input type="text" class="easyui-textbox" name="regionName1" id="regionName1" placeholder="区域名称" value=""/>
+        </div>
+        <div id="rt2" style="display: none;" class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">区域名称</span>
+            <select id="regionType2" editable="false" class="easyui-combobox"
+                    data-options="valueField:'id', textField:'regionName'">
+                <option value="">省</option>
+            </select>
+            <input type="text" class="easyui-textbox" name="regionName2" id="regionName2" placeholder="区域名称" value=""/>
+        </div>
+        <div id="rt3" style="display: none;" class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">区域名称</span>
+            <select id="regionType3" editable="false" class="easyui-combobox"
+                    data-options="valueField:'id', textField:'regionName'">
+                <option value="">省</option>
+            </select>
+            <select id="regionType33" editable="false" class="easyui-combobox"
+                    data-options="valueField:'id', textField:'regionName'">
+                <option value="">市</option>
+            </select>
+            <input type="text" class="easyui-textbox" name="regionName3" id="regionName3" placeholder="区域名称" value=""/>
+        </div>
+        <div id="rt4" style="display: none;" class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">区域名称</span>
+            <select id="regionType4" editable="false" class="easyui-combobox"
+                    data-options="valueField:'id', textField:'regionName'">
+                <option value="">省</option>
+            </select>
+            <select id="regionType44" editable="false" class="easyui-combobox"
+                    data-options="valueField:'id', textField:'regionName'">
+                <option value="">市</option>
+            </select>
+            <select id="regionType444" editable="false" class="easyui-combobox"
+                    data-options="valueField:'id', textField:'regionName'">
+                <option value="">区</option>
+            </select>
+            <input type="text" class="easyui-textbox" name="regionName4" id="regionName4" placeholder="区域名称" value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">首字母</span>
+            <input type="text" class="easyui-textbox" name="firstLetter0" id="firstLetter0" placeholder="firstLetter"
+                   value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">配送时效</span>
+            <input type="text" class="easyui-textbox" name="shippingTime0" id="shippingTime0" placeholder="配送时效"
+                   value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">是否可见</span>
+            <select id="visible0" editable="false" class="easyui-combobox" name="visible0">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">HP地址库映射字段</span>
+            <input type="text" class="easyui-textbox" name="rowId0" id="rowId0" placeholder="HP地址库映射字段"
+                   value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">测试字段</span>
+            <input type="number" class="easyui-textbox" name="testNum0" id="testNum0" placeholder="测试字段"
+                   value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">标准地区ID</span>
+            <input type="number" class="easyui-textbox" name="standardRegionId0" id="standardRegionId0" placeholder="标准地区ID"
+                   value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">国标编码</span>
+            <input type="text" class="easyui-textbox" name="code0" id="code0" placeholder="国标编码"
+                   value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">活动标志</span>
+            <select id="activeFlag0" editable="false" class="easyui-combobox" name="activeFlag0">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">hasRead</span>
+            <input type="text" class="easyui-textbox" name="hasRead0" id="hasRead0" placeholder="hasRead" value="0"/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">是否支持货到付款</span>
+            <select id="isSupportCod0" editable="false" class="easyui-combobox" name="isSupportCod0">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">邮编</span>
+            <input type="text" class="easyui-textbox" name="zipCode0" id="zipCode0" placeholder="邮编"
+                   value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">入库时效（单位：天)</span>
+            <input type="number" class="easyui-textbox" name="receivingTime0" id="receivingTime0" placeholder="入库时效（单位：天)"
+                   value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">配送距离</span>
+            <input type="text" class="easyui-textbox" name="shippingDistance0" id="shippingDistance0" placeholder="配送距离"
+                   value=""/>
+        </div>
+        <br>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">是否OTO派工</span>
+            <select id="isOto0" editable="false" class="easyui-combobox" name="visible0">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <br>
+        <input id="id" type="hidden">
+        <div id="dlg-buttons6" data-options="region:'south'" style="margin-right:20px;height:40px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetCodeValue4()" iconcls="icon-ok">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript: $('#oDialog4').dialog('close')" iconcls="icon-cancel">关闭</a>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        function slideUpSlideClk(t) {
+            var $this =
+            $(t);
+            if ($this.hasClass('open')) {
+                    $this.removeClass('open');
+                setTimeout(function () {
+                        $this.addClass('close');
+                }, 0);
+                $(".search-panel").slideUp();
+            } else {
+                    $this.removeClass('close');
+                setTimeout(function () {
+                        $this.addClass('open');
+                }, 0);
+                $(".search-panel").slideDown();
+            }
+            setTimeout(function () {
+                $('#gridView').datagrid('resize');
+            }, 500);
+        }
+    </script>
+    <script type="text/javascript">
+
+        var gloid;
+        /***
+         * 自动加载
+         */
+        var myDate = new Date();
+        var near = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
+
+        $('#cpolicyYear').val(near);
+        $('#policyYear').val(near);
+
+
+        $('#gridView').datagrid({
+            striped: true, // 隔行变色
+            rownumbers: true,
+            fit: true,
+            pagination: true,
+            singleSelect: true,
+            fitColunms: true,
+            idField: 'id',
+            remoteSort: false,
+            showFooter: true,
+            columns: [[
+                {
+                    title: 'id',
+                    width: 120,
+                    field: 'id',
+                    align: 'center',
+                    sortable: true,
+                    hidden: true
+                },
+                {
+                    title: '区域名称',
+                    width: 151,
+                    field: 'regionName',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '区域级别',
+                    width: 151,
+                    field: 'regionType',
+                    align: 'center',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        if (value == 1) {
+                            return "省";
+                        } else if (value == 2) {
+                            return "市";
+                        } else if (value == 3) {
+                            return "区";
+                        } else if (value == 4) {
+                            return "街";
+                        } else {
+                            return "";
+                        }
+                    }
+                }, {
+                    title: '上级id',
+                    width: 151,
+                    field: 'parentId',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '路径',
+                    width: 151,
+                    field: 'parentPath',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '首字母',
+                    width: 151,
+                    field: 'firstLetter',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '配送时效',
+                    width: 151,
+                    field: 'shippingTime',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '是否可见',
+                    width: 151,
+                    field: 'visible',
+                    align: 'center',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        if (value == 1){
+                            return "是"
+                        }else {
+                            return "否"
+                        }
+                    }
+                },{
+                    title: 'HP地址库映射字段',
+                    width: 151,
+                    field: 'rowId',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '标准地区ID',
+                    width: 151,
+                    field: 'standardRegionId',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '国标编码',
+                    width: 151,
+                    field: 'code',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '活动标志',
+                    width: 151,
+                    field: 'activeFlag',
+                    align: 'center',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        if (value == 1){
+                            return "是"
+                        }else {
+                            return "否"
+                        }
+                    }
+                }, {
+                    title: '是否支持货到付款',
+                    width: 151,
+                    field: 'isSupportCod',
+                    align: 'center',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        if (value == 1){
+                            return "是"
+                        }else {
+                            return "否"
+                        }
+                    }
+                }, {
+                    title: '添加或导入时间时间',
+                    width: 170,
+                    field: 'addTime',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '最后更新时间',
+                    width: 170,
+                    field: 'modified',
+                    align: 'center',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        var date = new Date(value);
+                        var y = date.getFullYear();
+                        var m = date.getMonth() + 1;
+                        m = m < 10 ? ('0' + m) : m;
+                        var d = date.getDate();
+                        d = d < 10 ? ('0' + d) : d;
+                        var h = date.getHours();
+                        h = h < 10 ? ('0' + h) : h;
+                        var minute = date.getMinutes();
+                        var second = date.getSeconds();
+                        minute = minute < 10 ? ('0' + minute) : minute;
+                        second = second < 10 ? ('0' + second) : second;
+                        return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+                    }
+                }, {
+                    title: '邮编',
+                    width: 151,
+                    field: 'zipCode',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '入库时效（单位：天)',
+                    width: 151,
+                    field: 'receivingTime',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '配送距离',
+                    width: 151,
+                    field: 'shippingDistance',
+                    align: 'center',
+                    sortable: true
+                }, {
+                    title: '是否OTO派工',
+                    width: 151,
+                    field: 'isOto',
+                    align: 'center',
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        if (value == 1){
+                            return "是"
+                        }else {
+                            return "否"
+                        }
+                    }
+                },
+
+
+            ]],
+            toolbar: '#datagridToolbar_orderForecastGoal',
+            onClickRow: function (rowIndex, row) {
+                gloid = row.id;
+            }
+        });
+
+        //表格and分页js加载
+        $(function () {
+            $('#gridView').datagrid('getPager').pagination({
+                total: 0,
+                pageSize: 10,
+                pageList: [50, 100, 200],
+                showRefresh: true,
+                displayMsg: '显示 {from} - {to} 条记录   共 {total} 条记录',
+                onSelectPage: function (pageNo, pageSize) {
+                    var start = (pageNo - 1) * pageSize; //页码分页自增
+                    var regionName = $("#regionName").textbox("getValue");
+                    var regionType = $("#regionType").combobox("getValue");
+                    var firstLetter = $('#firstLetter').textbox('getValue');
+                    var shippingTime = $('#shippingTime').textbox('getValue');
+                    var visible = $('#visible').combobox('getValue');
+                    var rowId = $('#rowId').textbox('getValue');
+                    var testNum = $('#testNum').textbox('getValue');
+                    var standardRegionId = $('#standardRegionId').textbox('getValue');
+                    var code = $('#code').textbox('getValue');
+                    var activeFlag = $('#activeFlag').combobox('getValue');
+                    // var hasRead = $('#hasRead').textbox('getValue');
+                    var isSupportCod = $('#isSupportCod').combobox('getValue');
+                    var isOto = $('#isOto').combobox('getValue');
+                    var zipCode = $('#zipCode').textbox('getValue');
+                    var receivingTime = $('#receivingTime').textbox('getValue');
+                    var shippingDistance = $('#shippingDistance').textbox('getValue');
+
+                    var options = $('#gridView').datagrid('getPager').data("pagination").options;
+                    $.ajax({
+                        type: 'POST',
+                        async: true,
+                        url: '/order/regions/ListF',
+                        data: {
+                            page: options.pageNumber,
+                            rows: options.pageSize,
+                            firstLetter : firstLetter,
+                            regionType : regionType,
+                            shippingTime : shippingTime,
+                            visible : visible,
+                            rowId : rowId,
+                            testNum : testNum,
+                            standardRegionId : standardRegionId,
+                            code : code,
+                            activeFlag : activeFlag,
+                            // hasRead : hasRead,
+                            isSupportCod : isSupportCod,
+                            isOto : isOto,
+                            zipCode : zipCode,
+                            receivingTime : receivingTime,
+                            shippingDistance : shippingDistance,
+                            regionName: regionName,
+
+                        },
+                        success: function (data, textStatus) {
+                            $('#gridView').datagrid('loadData', data);
+                            //页码跟随分页进行-loadData后面执行
+                            var rowNumbers = $('.datagrid-cell-rownumber');
+                            $(rowNumbers).each(function (index) {
+                                var row = parseInt($(rowNumbers[index]).html()) + parseInt(start);
+                                $(rowNumbers[index]).html("");
+                                $(rowNumbers[index]).html(row);
+                            });
+
+                        }
+                    });
+
+                }
+            });
+        });
+
+        function Add() {
+            $("#regions").show();
+            $("#rt1").show();
+            $("#rt2").hide();
+            $("#rt3").hide();
+            $("#rt4").hide();
+            $('#regionTypes').combobox("setValue",1);
+            $('#regionName1').textbox('setValue', "");
+            $('#regionName2').textbox('setValue', "");
+            $('#regionName3').textbox('setValue', "");
+            $('#regionName4').textbox('setValue', "");
+            $('#firstLetter0').textbox('setValue', "");
+            $('#shippingTime0').textbox('setValue', "");
+            $('#visible0').combobox('setValue', 0);
+            $('#rowId0').textbox('setValue', "");
+            $('#testNum0').textbox('setValue', 0);
+            $('#standardRegionId0').textbox('setValue', 0);
+            $('#code0').textbox('setValue', "");
+            $('#activeFlag0').combobox('setValue', 0);
+            $('#hasRead0').textbox('setValue', 0);
+            $('#zipCode0').textbox('setValue', "");
+            $('#receivingTime0').textbox('setValue', 0);
+            $('#shippingDistance0').textbox('setValue', "");
+            $('#isSupportCod0').combobox('setValue', 0);
+            $('#isOto0').combobox('setValue', 0);
+            $("#id").val("");
+
+            $('#oDialog4').dialog('open');
+            $('#oDialog4').panel({
+                title: "新增"
+            });
+        }
+
+        $('#regionTypes').combobox({
+            onSelect: function (record) {
+                var v = $('#regionTypes').combobox("getValue");
+                if (v == 1) {
+                    $("#rt1").show();
+                    $("#rt2").hide();
+                    $("#rt3").hide();
+                    $("#rt4").hide();
+                } else if (v == 2) {
+                    $("#rt1").hide();
+                    $("#rt2").show();
+                    $("#rt3").hide();
+                    $("#rt4").hide();
+                    getregion2();
+                } else if (v == 3) {
+                    $("#rt1").hide();
+                    $("#rt2").hide();
+                    $("#rt3").show();
+                    $("#rt4").hide();
+                    getregion3();
+                } else if (v == 4) {
+                    $("#rt1").hide();
+                    $("#rt2").hide();
+                    $("#rt3").hide();
+                    $("#rt4").show();
+                    getregion4();
+                }
+            }
+        });
+        $('#regionType3').combobox({
+            onSelect:function(record) {
+                $.ajax({
+                    url      : "/order/regions/getRegion",
+                    type     : 'POST',
+                    dataType : 'json',
+                    data     : {
+                        pid : record.id
+                    },
+                    success  : function(data) {
+                        $('#regionType33').combobox('clear');
+                        $('#regionType33').combobox("loadData", data);
+                        $('#regionType33').combobox("setValue",data[0].id);
+                    }
+                });
+            }
+        });
+        $('#regionType4').combobox({
+            onSelect:function(record) {
+                $.ajax({
+                    url      : "/order/regions/getRegion",
+                    type     : 'POST',
+                    dataType : 'json',
+                    data     : {
+                        pid : record.id
+                    },
+                    success  : function(data) {
+                        $('#regionType44').combobox('clear');
+                        $('#regionType44').combobox("loadData", data);
+                        $('#regionType44').combobox("setValue",data[0].id);
+                        getregion44();
+                    }
+                });
+            }
+        });
+        $('#regionType44').combobox({
+            onSelect:function(record) {
+                $.ajax({
+                    url      : "/order/regions/getRegion",
+                    type     : 'POST',
+                    dataType : 'json',
+                    data     : {
+                        pid : record.id
+                    },
+                    success  : function(data) {
+                        $('#regionType444').combobox('clear');
+                        $('#regionType444').combobox("loadData", data);
+                        $('#regionType444').combobox("setValue",data[0].id);
+                        getregion444();
+                    }
+                });
+            }
+        });
+        function getregion2() {
+            $.ajax({
+                url: "/order/regions/getRegion",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    pid : 0
+                },
+                success: function (data) {
+                    $('#regionType2').combobox('clear');
+                    $('#regionType2').combobox("loadData", data);
+                    $('#regionType2').combobox("setValue",data[0].id);
+                }
+            });
+        }
+        function getregion3() {
+            $.ajax({
+                url: "/order/regions/getRegion",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    pid : 0
+                },
+                success: function (data) {
+                    $('#regionType3').combobox('clear');
+                    $('#regionType3').combobox("loadData", data);
+                    $('#regionType3').combobox("setValue",data[0].id);
+                    getregion33();
+                }
+            });
+        }
+        function getregion4() {
+            $.ajax({
+                url: "/order/regions/getRegion",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    pid : 0
+                },
+                success: function (data) {
+                    $('#regionType4').combobox('clear');
+                    $('#regionType4').combobox("loadData", data);
+                    $('#regionType4').combobox("setValue",data[0].id);
+                    getregion44();
+                }
+            });
+        }
+        function getregion33() {
+            $.ajax({
+                url      : "/order/regions/getRegion",
+                type     : 'POST',
+                dataType : 'json',
+                data     : {
+                    pid : $('#regionType3').combobox("getValue")
+                },
+                success  : function(data) {
+                    $('#regionType33').combobox('clear');
+                    $('#regionType33').combobox("loadData", data);
+                    $('#regionType33').combobox("setValue",data[0].id);
+                }
+            });
+        }
+        function getregion44() {
+            $.ajax({
+                url      : "/order/regions/getRegion",
+                type     : 'POST',
+                dataType : 'json',
+                data     : {
+                    pid : $('#regionType4').combobox("getValue")
+                },
+                success  : function(data) {
+                    $('#regionType44').combobox('clear');
+                    $('#regionType44').combobox("loadData", data);
+                    $('#regionType44').combobox("setValue",data[0].id);
+                    getregion444();
+                }
+            });
+        }
+        function getregion444() {
+            $.ajax({
+                url      : "/order/regions/getRegion",
+                type     : 'POST',
+                dataType : 'json',
+                data     : {
+                    pid : $('#regionType44').combobox("getValue")
+                },
+                success  : function(data) {
+                    $('#regionType444').combobox('clear');
+                    $('#regionType444').combobox("loadData", data);
+                    $('#regionType444').combobox("setValue",data[0].id);
+                }
+            });
+        }
+
+        function list() {
+            var rows1 = $('#gridView').datagrid('getSelections');
+            if (rows1 == "") {
+                autoAlt("请选择要修改的单据");
+                return;
+            } else {
+                $('#oDialog4').panel({
+                    title: "修改"
+                });
+                $("#id").val(rows1[0].id);
+
+                $("#regions").hide();
+                $('#regionTypes').combobox("setValue",rows1[0].regionType);
+                var v = rows1[0].regionType;
+                if (v == 1) {
+                    $("#rt1").show();
+                    $("#rt2").hide();
+                    $("#rt3").hide();
+                    $("#rt4").hide();
+                    $('#regionName1').textbox('setValue', rows1[0].regionName);
+                } else if (v == 2) {
+                    $("#rt1").hide();
+                    $("#rt2").show();
+                    $("#rt3").hide();
+                    $("#rt4").hide();
+                    $.ajax({
+                        url: "/order/regions/getRegion",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            pid : 0
+                        },
+                        success: function (data) {
+                            $('#regionType2').combobox('clear');
+                            $('#regionType2').combobox("loadData", data);
+                            $('#regionType2').combobox("setValue",rows1[0].parentId);
+                        }
+                    });
+                    $('#regionName2').textbox('setValue', rows1[0].regionName);
+                } else if (v == 3) {
+                    $("#rt1").hide();
+                    $("#rt2").hide();
+                    $("#rt3").show();
+                    $("#rt4").hide();
+                    var pid = rows1[0].parentPath;
+                    arr=pid.split("/");
+                    $.ajax({
+                        url: "/order/regions/getRegion",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            pid : 0
+                        },
+                        success: function (data) {
+                            $('#regionType3').combobox('clear');
+                            $('#regionType3').combobox("loadData", data);
+                            $('#regionType3').combobox("setValue",arr[1]);
+                            // getregion33();
+                            $.ajax({
+                                    url      : "/order/regions/getRegion",
+                                    type     : 'POST',
+                                    dataType : 'json',
+                                    data     : {
+                                        pid : $('#regionType3').combobox("getValue")
+                                    },
+                                    success  : function(data) {
+                                        $('#regionType33').combobox('clear');
+                                        $('#regionType33').combobox("loadData", data);
+                                        $('#regionType33').combobox("setValue",arr[2]);
+                                        $('#regionName3').textbox('setValue', rows1[0].regionName);
+                                    }
+                            });
+                        }
+                    });
+
+                } else if (v == 4) {
+                    $("#rt1").hide();
+                    $("#rt2").hide();
+                    $("#rt3").hide();
+                    $("#rt4").show();
+                    var pid = rows1[0].parentPath;
+                    arr=pid.split("/");
+                    $.ajax({
+                        url: "/order/regions/getRegion",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            pid : 0
+                        },
+                        success: function (data) {
+                            $('#regionType4').combobox('clear');
+                            $('#regionType4').combobox("loadData", data);
+                            $('#regionType4').combobox("setValue",arr[1]);
+                            // getregion44();
+                            $.ajax({
+                                url      : "/order/regions/getRegion",
+                                type     : 'POST',
+                                dataType : 'json',
+                                data     : {
+                                    pid : $('#regionType4').combobox("getValue")
+                                },
+                                success  : function(data) {
+                                    $('#regionType44').combobox('clear');
+                                    $('#regionType44').combobox("loadData", data);
+                                    $('#regionType44').combobox("setValue",arr[2]);
+                                    // getregion444();
+                                    $.ajax({
+                                        url      : "/order/regions/getRegion",
+                                        type     : 'POST',
+                                        dataType : 'json',
+                                        data     : {
+                                            pid : $('#regionType44').combobox("getValue")
+                                        },
+                                        success  : function(data) {
+                                            $('#regionType444').combobox('clear');
+                                            $('#regionType444').combobox("loadData", data);
+                                            $('#regionType444').combobox("setValue",arr[3]);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    $('#regionName4').textbox('setValue', rows1[0].regionName);
+                }
+
+                $('#firstLetter0').textbox('setValue', rows1[0].firstLetter);
+                $('#shippingTime0').textbox('setValue', rows1[0].shippingTime);
+                $('#visible0').combobox('setValue', rows1[0].visible);
+                $('#rowId0').textbox('setValue', rows1[0].rowId);
+                $('#testNum0').textbox('setValue', rows1[0].testNum);
+                $('#standardRegionId0').textbox('setValue', rows1[0].standardRegionId);
+                $('#code0').textbox('setValue', rows1[0].code);
+                $('#activeFlag0').combobox('setValue', rows1[0].activeFlag);
+                $('#hasRead0').textbox('setValue', rows1[0].hasRead);
+                $('#zipCode0').textbox('setValue', rows1[0].zipCode);
+                $('#receivingTime0').textbox('setValue', rows1[0].receivingTime);
+                $('#shippingDistance0').textbox('setValue', rows1[0].shippingDistance);
+                $('#isSupportCod0').combobox('setValue', rows1[0].isSupportCod);
+                $('#isOto0').combobox('setValue', rows1[0].isOto);
+                $('#oDialog4').dialog('open');
+            }
+        }
+
+        /*新增*/
+        function SetCodeValue4() {
+            var v = $('#regionTypes').combobox("getValue");
+            var regionName = "";
+            var regionType = "";
+            var parentId = "";
+            var parentPath = "";
+            if (v == 1){
+                regionType = 1;
+                regionName = $("#regionName1").textbox("getValue");
+                parentId = 0;
+                parentPath = "/";
+            }else if (v == 2){
+                regionType = 2;
+                regionName = $("#regionName2").textbox("getValue");
+                parentId = $("#regionType2").textbox("getValue");
+                parentPath = "/" + $("#regionType2").textbox("getValue") +"/";
+            }else if (v == 3){
+                regionType = 3;
+                regionName = $("#regionName3").textbox("getValue");
+                parentId = $("#regionType33").textbox("getValue");
+                parentPath = "/" + $("#regionType3").textbox("getValue") +"/"
+                                 + $("#regionType33").textbox("getValue") +"/";
+            }else if (v == 4){
+                regionType = 4;
+                regionName = $("#regionName4").textbox("getValue");
+                parentId = $("#regionType444").textbox("getValue");
+                parentPath = "/" + $("#regionType4").textbox("getValue") +"/"
+                                 + $("#regionType44").textbox("getValue") +"/"
+                                 + $("#regionType444").textbox("getValue") +"/";
+            }
+            if (regionName == ""){
+                autoAlt("请输入区域名称");
+                return false;
+            }
+            var firstLetter = $("#firstLetter0").textbox("getValue");
+            var shippingTime = $("#shippingTime0").textbox("getValue");
+            var visible = $("#visible0").combobox("getValue");
+            var rowId = $("#rowId0").textbox("getValue");
+            var testNum = $("#testNum0").textbox("getValue");
+            var standardRegionId = $("#standardRegionId0").textbox("getValue");
+            var code = $("#code0").textbox("getValue");
+            var activeFlag = $("#activeFlag0").combobox("getValue");
+            var hasRead = $("#hasRead0").textbox("getValue");
+            var isSupportCod = $("#isSupportCod0").combobox("getValue");
+            var zipCode = $("#zipCode0").textbox("getValue");
+            var receivingTime = $("#receivingTime0").textbox("getValue");
+            var shippingDistance = $("#shippingDistance0").textbox("getValue");
+            var isOto = $("#isOto0").combobox("getValue");
+
+
+            if(testNum == null || testNum == ""){
+                autoAlt("测试字段不能为空");
+                return false;
+            }else {
+
+            }
+            if(standardRegionId == null || standardRegionId == ""){
+                autoAlt("标准地区ID不能为空");
+                return false;
+            }
+
+            if(hasRead == null || hasRead == ""){
+                autoAlt("hasRead不能为空");
+                return false;
+            }
+
+            if(receivingTime == null || receivingTime == ""){
+                autoAlt("入库时效不能为空");
+                return false;
+            }
+
+            var id = $("#id").val();
+            var url = "/order/regions/addOneRegion";
+            if (id != null && id != ""){
+                url = "/order/regions/updateOneRegion";
+            }
+            $.ajax({
+                type : 'POST',
+                async : false,
+                url : url,
+                datatype : 'JSON',
+                data : {
+                    id:id,
+                    parentId:parentId,
+                    regionName:regionName,
+                    parentPath:parentPath,
+                    firstLetter:firstLetter,
+                    regionType:regionType,
+                    shippingTime:shippingTime,
+                    visible:visible,
+                    rowId:rowId,
+                    testNum:testNum,
+                    standardRegionId:standardRegionId,
+                    code:code,
+                    activeFlag:activeFlag,
+                    hasRead:hasRead,
+                    isSupportCod:isSupportCod,
+                    isOto:isOto,
+                    zipCode:zipCode,
+                    receivingTime:receivingTime,
+                    shippingDistance:shippingDistance,
+                },
+
+                success : function(data, textStatus) {
+                    if (data.success) {
+                        autoAlt(data.msg);
+                        $('#oDialog4').dialog('close');
+                        SearchUnit();
+                    }else {
+                        autoAlt(data.msg);
+                    }
+                },
+                error : function(data) {
+                    autoAlt("error")
+                }
+            })
+
+        }
+        //删除
+        function Delete() {
+            var rows1 = $('#gridView').datagrid('getSelections');
+            if (rows1 == "") {
+                autoAlt("请选择要删除的单据");
+                return;
+            } else {
+                var type = rows1[0].regionType;
+                if (type == 4){
+                    $.messager.confirm('提示', '您确定要删除这一行吗?', function(b) {
+                        if (b) {
+                            $.ajax({
+                                type: 'POST',
+                                async: false,
+                                url: '/order/regions/deleteOneRegion',
+                                data: {
+                                    id: rows1[0].id
+                                },
+                                success: function (data, textStatus) {
+                                    if (data.success) {
+                                        autoAlt(data.msg);
+                                        SearchUnit();
+                                    } else {
+                                        autoAlt(data.msg);
+                                    }
+
+                                }
+                            });
+                        }
+                    });
+                }else {
+                    var x ="";
+                    if (type == 1){
+                        x = "省"
+                    }else if (type ==2){
+                        x = "市"
+                    }else if (type ==3){
+                        x = "区"
+                    }else {}
+                    $.messager.confirm('提示', '这是一个' + x +'级,将会删除其下辖所有地区,您确定要删除吗?', function(b) {
+                        if (b) {
+                            $.ajax({
+                                type: 'POST',
+                                async: false,
+                                url: '/order/regions/deleteSubordinateRegion',
+                                data: {
+                                    id : rows1[0].id,
+                                    regionType : type
+                                },
+                                success: function (data, textStatus) {
+                                    if (data.success) {
+                                        autoAlt(data.msg);
+                                        SearchUnit();
+                                    } else {
+                                        autoAlt(data.msg);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+
+            }
+        }
+
+
+        //主表查询
+        function SearchUnit() {
+
+            var regionName = $("#regionName").textbox("getValue");
+            if (regionName == '' || regionName == null){
+                autoAlt('区域名称不能为空');
+                return false;
+            }
+            var regionType = $("#regionType").combobox("getValue");
+            var firstLetter = $('#firstLetter').textbox('getValue');
+            var shippingTime = $('#shippingTime').textbox('getValue');
+            var visible = $('#visible').combobox('getValue');
+            var rowId = $('#rowId').textbox('getValue');
+            var testNum = $('#testNum').textbox('getValue');
+            var standardRegionId = $('#standardRegionId').textbox('getValue');
+            var code = $('#code').textbox('getValue');
+            var activeFlag = $('#activeFlag').combobox('getValue');
+            // var hasRead = $('#hasRead').textbox('getValue');
+            var isSupportCod = $('#isSupportCod').combobox('getValue');
+            var isOto = $('#isOto').combobox('getValue');
+            var zipCode = $('#zipCode').textbox('getValue');
+            var receivingTime = $('#receivingTime').textbox('getValue');
+            var shippingDistance = $('#shippingDistance').textbox('getValue');
+
+            var options = $('#gridView').datagrid('getPager').data("pagination").options;
+            options.pageNumber = 1;
+            $.ajax({
+                type: 'POST',
+                async: true,
+                datatype: 'JSON',
+                url: '/order/regions/ListF',
+                data: {
+                    page: options.pageNumber,
+                    rows: options.pageSize,
+                    regionName: regionName,
+                    regionType: regionType,
+                    firstLetter : firstLetter,
+                    shippingTime : shippingTime,
+                    visible : visible,
+                    rowId : rowId,
+                    testNum : testNum,
+                    standardRegionId : standardRegionId,
+                    code : code,
+                    activeFlag : activeFlag,
+                    // hasRead : hasRead,
+                    isSupportCod : isSupportCod,
+                    isOto : isOto,
+                    zipCode : zipCode,
+                    receivingTime : receivingTime,
+                    shippingDistance : shippingDistance,
+                },
+                success: function (data, textStatus) {
+                    $('#gridView').datagrid('getPager').pagination('refresh');
+                    $('#gridView').datagrid('loadData', data);
+                    if (data.rows == "") {
+                        $(".pagination-num").val("0");
+                    } else {
+                        $(".pagination-num").val("1");
+                    }
+                },
+                error: function (e) {
+                    autoAlt("系统内部错误,请联系管理员");
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>添加订单</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+
+    <style>
+        .input_form{
+            width: 60%;
+        }
+        .input_form_short{
+            width: 20%;
+        }
+        .div div span{
+            position:absolute;
+            right:50%;
+        }
+        .radio label{
+            margin-right:15px;
+        }
+        .penel {
+            background: #b5bbc8;
+            color: #404040;
+            border: 1px solid #b5bbc8;
+            filter: none;
+        }
+        .breadcrumb {
+            position: relative;
+            margin-top: 5px;
+            top: 0;
+            right: 0;
+            float: none;
+            background: #b5bbc8;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body >
+<div >
+    <div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px; width:100%;  position: fixed;z-index: 20">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;font-weight: bold;">
+            	添加网点
+        </span>
+        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+               value="返回" onclick="window.history.back()" readonly="readonly"
+               style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+        #*<input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+               value="保存" id="addProduct" readonly="readonly"
+               style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>*#
+    </div>
+    <fieldset >
+        <hr/>
+    </fieldset>
+   <div>
+       <ol class="breadcrumb">
+           <li class="penel">基本信息</li>
+       </ol>
+       <form class="form-horizontal" id="baseInfo">
+           <div class="form-group">
+               <label for="netPointName" class="col-sm-2 control-label">公司名称：</label>
+               <div class="col-sm-10">
+                   <input type="text" class="form-control input_form" name="netPointName" id="netPointName" onBlur="checkNetPointName()" placeholder="公司名称">
+                   <h6 id="netPointNameInfo"></h6>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="netPointCode" class="col-sm-2 control-label">网点代码：</label>
+               <div class="col-sm-10">
+                   <div>
+                        <input type="text" class="form-control input_form" name="netPointCode" id="netPointCode"   onBlur="checkNetPointCode()" placeholder="网点代码"">
+                       <h6 id="netPointNameInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="netPointN8" class="col-sm-2 control-label">8码：</label>
+               <div class="col-sm-10">
+                   <div>
+                        <input type="text" class="form-control input_form" name="netPointN8" id="netPointN8"  onBlur="checkNetPointN8()" placeholder="8码"">
+                       <span style="color: red">8码系统唯一，不能重复。</span>
+                       <h6 id="netPointN8Info" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">所在地区：</label>
+               <div class="col-sm-10">
+                   <input id="province" name="province" v class="easyui-combobox" editable="false"  style="width:180px;" />
+                   <input id="citys" name="citys"  class="easyui-combobox" editable="false" style="width:180px;"/>
+                   <h6 id="provinceInfo"  style="color: red" ></h6>
+               </div>
+           </div>
+
+           <div class="form-group">
+               <label for="contactAddress" class="col-sm-2 control-label">详细地址：</label>
+               <div class="col-sm-10">
+                   <div>
+                       <input type="text" class="form-control input_form" name="contactAddress" id="contactAddress"  onBlur="checkContactAddress()" placeholder="详细地址"">
+                       <h6 id="contactAddressInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="contactAddress" class="col-sm-2 control-label">地标：</label>
+               <div class="col-sm-10">
+                   <div>
+                       <span>经度：</span><input type="text" class="" name="jingDu" id="jingDu"  style="width:100px;" placeholder="经度"">
+                       <span>纬度：</span><input type="text" class="" name="weiDu" id="weiDu"  style="width:100px;" placeholder="维度"">
+                   </div>
+                   <h6 id="contactAddressInfo" style="color: red"></h6>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="contactAddress" class="col-sm-2 control-label">所属库位编码:</label>
+               <div class="col-sm-10">
+                   <div>
+                       <input type="text" class="form-control input_form" name="TCCode" id="TCCode"  onBlur="checkTCCode()" placeholder="所属库位编码"">
+                       <h6 id="contactAddressInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="shippingTimeLimit" class="col-sm-2 control-label">配送时效：</label>
+               <div class="col-sm-10">
+                   <div>
+                       <input type="text" class="form-control input_form_short" name="shippingTimeLimit" id="shippingTimeLimit"  onBlur="checkShippingTimeLimit()" placeholder="(小时)"">
+                       <h6 id="TCCodeInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+
+           <div class="form-group">
+               <label for="shippingDistance" class="col-sm-2 control-label">配送里程：</label>
+               <div class="col-sm-10">
+                   <div>
+                       <input type="text" class="form-control input_form_short" name="shippingDistance" id="shippingDistance"  onBlur="checkShippingDistance()" placeholder="(千米)"">
+                       <h6 id="shippingDistanceInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="logisticsTimeLimit" class="col-sm-2 control-label">物流配送时效：</label>
+               <div class="col-sm-10">
+                   <div>
+                       <input type="text" class="form-control input_form_short" name="logisticsTimeLimit" id="logisticsTimeLimit"  onBlur="checkLogisticsTimeLimit()" placeholder="(小时)"">
+                       <h6 id="logisticsTimeLimitInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+       </form>
+   </div>
+    <div>
+        <ol class="breadcrumb">
+            <li class="penel">联系人信息</li>
+        </ol>
+        <form class="form-horizontal" id="contactInfo">
+            <div class="form-group">
+                <label for="contactName" class="col-sm-2 control-label">姓名：</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="contactName" id="contactName" onBlur="checkUserName()" placeholder="姓名"  ">
+                    <h6 id="contactNameInfo"  style="color: red"></h6>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone" class="col-sm-2 control-label">手机：</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form_short" name="phone" id="phone" onBlur="checkphone()"  placeholder="手机">
+                    <h6 id="phoneInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="areaCode" class="col-sm-2 control-label">区号：</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form_short" name="areaCode" id="areaCode"   onBlur="checkAreaCode()" placeholder="区号">
+                    <span>请输入不超过4位的区号，区号前面的0可省略。</span>
+                    <h6 id="areaCodeInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">电话</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form_short" name="mobile" id="mobile"   placeholder="电话">
+                    <h6 id="mobileInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="userEmail" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <div>
+                        <input type="email" class="form-control input_form" name="userEmail" id="userEmail" onBlur="checkEmsil()" onkeyup="value = value.replace(/[\u4e00-\u9fa5]/g, '')"  placeholder="Email"">
+                        <h6 id="userEmailInfo" style="color: red"></h6>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div>
+            <div style="text-align: center">
+                <a id="saveBtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="onSaveNetPointsInfo()">保存网点信息</a>
+            </div>
+    </div>
+</div>
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+    }
+</style>
+<script src="../static/js/netpointstorage/netPointsAdd.js"></script>
+</body>
+</html>

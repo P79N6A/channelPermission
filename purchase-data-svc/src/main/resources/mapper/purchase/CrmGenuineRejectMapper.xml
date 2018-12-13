@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.CrmGenuineRejectDao">
+    <resultMap id="crmGenuineRejectResult" type="com.haier.purchase.data.model.CrmGenuineRejectItem">
+        <result property="wp_order_id" column="wp_order_id"/>
+        <result property="so_id" column="so_id"/>
+        <result property="request_user" column="request_user"/>
+        <result property="address" column="address"/>
+        <result property="concat_person" column="concat_person"/>
+        <result property="concat_phone" column="concat_phone"/>
+        <result property="brand_id" column="brand_id"/>
+        <result property="category_id" column="category_id"/>
+        <result property="product_group_id" column="product_group_id"/>
+        <result property="materials_id" column="materials_id"/>
+        <result property="model_id" column="model_id"/>
+        <result property="ed_channel_id" column="ed_channel_id"/>
+        <result property="storage_id" column="storage_id"/>
+        <result property="quantity" column="quantity"/>
+        <result property="tax_in_price" column="tax_in_price" jdbcType="FLOAT"/>
+        <result property="warehouse_out_time" column="warehouse_out_time"/>
+        <result property="warehouse_in_time" column="warehouse_in_time"/>
+        <result property="warehouse_out_time_display" column="warehouse_out_time_display"/>
+        <result property="warehouse_in_time_display" column="warehouse_in_time_display"/>
+        <result property="create_user" column="create_user"/>
+        <result property="create_time" column="create_time"/>
+        <result property="modify_user" column="modify_user"/>
+        <result property="modify_time" column="modify_time"/>
+        <result property="delete_user" column="delete_user"/>
+        <result property="delete_time" column="delete_time"/>
+        <result property="delete_flag" column="delete_flag"/>
+        <result property="audit_user" column="audit_user"/>
+        <result property="audit_time" column="audit_time"/>
+        <result property="audit_remark" column="audit_remark"/>
+        <result property="flow_flag" column="flow_flag"/>
+        <result property="error_msg" column="error_msg"/>
+        <result property="commit_time_display" column="commit_time_display"/>
+        <result property="delivery_time_display" column="delivery_time_display"/>
+        <result property="wa_in_time_display" column="wa_in_time_display"/>
+    </resultMap>
+
+    <resultMap id="crmOrderRejectResult" type="com.haier.purchase.data.model.CrmOrderRejectItem">
+        <result property="orderId" column="wp_order_id"/>
+        <result property="sourceOrderId" column="source_order_id"/>
+        <result property="storageId" column="storage_id"/>
+        <result property="materialsId" column="materials_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="quantity" column="quantity"/>
+        <result property="vomReverseInWaNo" column="vom_reverse_in_wa_no"/>
+    </resultMap>
+
+    <update id="updateStatusToInRRS" parameterType="Map">
+        UPDATE 	crm_return_info_t SET warehouse_in_time=#{warehouse_in_time},flow_flag=40
+        WHERE so_id = #{so_id} AND flow_flag = 30
+    </update>
+
+    <sql id="findCrmGenuineRejectListSQLCond">
+        FROM crm_return_info_t
+        WHERE delete_flag = 0
+        <if test="wp_order_id !=null and wp_order_id != ''">
+            AND UPPER(wp_order_id) LIKE CONCAT(CONCAT('%',UPPER (#{wp_order_id})),'%')
+        </if>
+        <if test="request_user !=null and request_user != ''">
+            AND request_user = #{request_user}
+        </if>
+        <if test="flow_flag !=null">
+            AND flow_flag in
+            <foreach item="item" index="index" collection="flow_flag" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="commit_time_start !=null and commit_time_start != ''">
+            AND commit_time >= #{commit_time_start}
+        </if>
+        <if test="commit_time_end !=null and commit_time_end != ''">
+            AND commit_time &lt; #{commit_time_end}
+        </if>
+        <if test="brand !=null and brand != ''">
+            AND brand_id = #{brand}
+        </if>
+        <if test="cbsCategory !=null">
+            AND category_id in
+            <foreach item="item" index="index" collection="cbsCategory" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="product_group_id !=null">
+            AND product_group_id in
+            <foreach item="item" index="index" collection="product_group_id" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="materials_id !=null and materials_id != ''">
+            AND UPPER(materials_id) LIKE CONCAT(CONCAT('%',UPPER (#{materials_id})),'%')
+        </if>
+        <if test="model_id !=null and model_id != ''">
+            AND UPPER(model_id) LIKE CONCAT(CONCAT('%',UPPER (#{model_id})),'%')
+        </if>
+        <if test="channel !=null">
+            AND ed_channel_id in
+            <foreach item="item" index="index" collection="channel" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="storage_id !=null and storage_id != ''">
+            AND UPPER(storage_id) LIKE CONCAT(CONCAT('%',UPPER (#{storage_id})),'%')
+        </if>
+        <if test="wp_order_id_list!=null">
+            AND wp_order_id in
+            <foreach item="item" index="index" collection="wp_order_id_list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="so_id !=null and so_id != ''">
+            AND so_id = #{so_id}
+        </if>
+    </sql>
+
+    <select id="getRejectWdOrderId" parameterType="String" resultMap="crmGenuineRejectResult">
+        select `wp_order_id`
+        from `crm_return_info_t`
+        where `wp_order_id` like CONCAT(#{wpOrderId},'%') order by `wp_order_id` desc
+    </select>
+
+    <select id="getCrmGenuineRejectList" parameterType="Map"  resultMap="crmGenuineRejectResult">
+        SELECT wp_order_id
+        ,flow_flag
+        ,so_id,vom_reverse_in_wa_no,dn_id
+        ,date_format(warehouse_out_time,'%Y-%m-%d %H:%i:%S') as warehouse_out_time_display
+        ,date_format(warehouse_in_time,'%Y-%m-%d %H:%i:%S') as warehouse_in_time_display
+        ,date_format(commit_time,'%Y-%m-%d %H:%i:%S') as commit_time_display
+        ,date_format(syn_vom_time,'%Y-%m-%d %H:%i:%S') as delivery_time_display
+        ,date_format(wa_in_time,'%Y-%m-%d %H:%i:%S') as wa_in_time_display
+        ,date_format(reverse_syn_vom_time,'%Y-%m-%d %H:%i:%S') as reverse_syn_vom_time_display
+        ,date_format(wa_in_time,'%Y-%m-%d %H:%i:%S') as wa_in_time_displays
+        ,request_user, ed_channel_id,brand_id,product_group_id,category_id,
+        materials_id,model_id,storage_id,quantity,tax_in_price,address,concat_person,concat_phone,vbeln,error_msg
+        <include refid="findCrmGenuineRejectListSQLCond"/>
+        order by create_time desc
+        <if test="m!=null and n!=null">
+            limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getCrmGenuineRejectListCNT" resultType="int">
+        SELECT COUNT(1)
+        <include refid="findCrmGenuineRejectListSQLCond"/>
+    </select>
+
+    <select id="checkSoidSame"  parameterType="String"  resultType="int">
+        SELECT
+        COUNT(b.so_id)
+        FROM
+        crm_return_info_t b
+        where
+        b.so_id = #{so_id}and b.flow_flag != '-10' and delete_flag = 0
+    </select>
+
+    <update id="updateCrmGenuineRejectStatus" parameterType="Map" >
+        UPDATE 	crm_return_info_t SET flow_flag=10,commit_time=CURRENT_TIMESTAMP()
+        WHERE delete_flag = 0 AND flow_flag = 0 AND wp_order_id in
+        <foreach collection="commitList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateRemark" parameterType="com.haier.purchase.data.model.CrmGenuineRejectItem" >
+        UPDATE 	crm_return_info_t SET error_msg = #{error_msg}
+        where wp_order_id = #{wp_order_id}
+    </update>
+
+
+    <update id="updateCrmReturnInfo" parameterType="java.util.Map">
+        update crm_return_info_t
+        set flow_flag = #{flow_flag},syn_vom_time = CURRENT_TIMESTAMP()
+        where wp_order_id = #{source_order_id}
+    </update>
+    <!-- add by tie.liu-->
+    <select id="findWAAddressInfo"  parameterType="Map"  resultType="com.haier.purchase.data.model.WAAddressInfo">
+        SELECT a.storage_id as sCode,
+        date_format(a.create_time,'%Y-%m-%d %H:%i:%S') as createTime
+        FROM crm_return_info_t a
+        WHERE a.wp_order_id = #{wp_order_id}
+    </select>
+    <select id="findCrmReturnOrderInfo"  parameterType="Map"  resultType="java.util.Map">
+        SELECT a.materials_id,
+        a.category_id,
+        a.quantity
+        FROM crm_return_info_t a
+        WHERE a.wp_order_id = #{wp_order_id}
+    </select>
+    <insert id="insert" parameterType="com.haier.purchase.data.model.CrmGenuineRejectItem">
+        insert into
+        `crm_return_info_t` (`wp_order_id`,`so_id`,`dn_id`,`request_user`,`brand_id`,`category_id`,`product_group_id`,`materials_id`,`model_id`,`ed_channel_id`,`storage_id`,`quantity`,`tax_in_price`,`create_user`,`create_time`,`delete_flag`,`flow_flag`,`address`,`concat_person`,`concat_phone`)
+        values(#{wp_order_id},#{so_id},#{dn_id},#{request_user},#{brand_id},#{category_id},#{product_group_id},#{materials_id},#{model_id},#{ed_channel_id},UPPER(#{storage_id}),#{quantity},#{tax_in_price},#{create_user},current_timeStamp,'0','0',#{address},#{concat_person},#{concat_phone})
+    </insert>
+
+
+    <update id="deleteCrmGenuineRejectStatus" parameterType="Map">
+        UPDATE 	crm_return_info_t SET delete_flag = 1,delete_user=#{commituser},delete_time=CURRENT_TIMESTAMP()
+        WHERE delete_flag = 0 AND flow_flag = 0 AND wp_order_id in
+        <foreach collection="deleteList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateFlowFlagCancel" parameterType="Map" >
+        UPDATE crm_return_info_t SET flow_flag=-10
+        WHERE delete_flag = 0 AND wp_order_id in
+        <foreach collection="cancelList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND (flow_flag = 20 OR flow_flag = 10 OR flow_flag = 15)
+    </update>
+
+    <update id="updateAfterCommit" parameterType="Map" >
+        UPDATE 	crm_return_info_t
+        <set>
+            <if test="vbeln!=null and vbeln!=''">
+                vbeln=#{vbeln},
+                delivery_time=CURRENT_TIMESTAMP(),
+            </if>
+            <if test="error_msg!=null and error_msg!=''">
+                error_msg=#{error_msg},
+                commit_time=null,
+            </if>
+        </set>
+        WHERE wp_order_id =#{wp_order_id}
+    </update>
+
+    <select id="findCrmOrderRejectList"  parameterType="Map"  resultMap="crmOrderRejectResult">
+        SELECT
+        wp_order_id,
+        storage_id,
+        materials_id,
+        category_id,
+        quantity,
+        vom_reverse_in_wa_no
+        FROM crm_return_info_t
+        where wp_order_id = #{wpOrderId}
+    </select>
+
+    <update id="updateFlowFlagCancelInWa" parameterType="Map" >
+        UPDATE crm_return_info_t SET flow_flag=#{flow_flag}
+        WHERE delete_flag = 0 AND (flow_flag = 35 OR flow_flag = 50) AND wp_order_id = #{source_order_id}
+    </update>
+</mapper>

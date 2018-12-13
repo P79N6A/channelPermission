@@ -10,4 +10,6 @@ public interface MembersReadDao {
     Members get(Integer id);
 
     String getMemberMobile(Integer id);
+
+    Members getMembers(String storeId);
 }

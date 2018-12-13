@@ -3,6 +3,7 @@ package com.haier.vehicle.service;
 import java.util.List;
 import java.util.Map;
 
+import com.haier.common.ServiceResult;
 import com.haier.purchase.data.model.vehcile.Cn3wPurchaseStock;
 import com.haier.purchase.data.model.vehcile.Entry3wOrder;
 
@@ -36,4 +37,9 @@ public interface VehicleJobService {
 	public void updateEntry3wOrder(Entry3wOrder entry3wOrder);
 
 	public List<Entry3wOrder> queryEntry3wOrder(Map<String, Object> map);
+	
+	/**
+	 * 天猫CA套机查询接口
+	 */
+	public ServiceResult<String> getTmallCaMachine();
 }

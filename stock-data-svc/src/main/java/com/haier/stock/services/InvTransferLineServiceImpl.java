@@ -16,4 +16,8 @@ public class InvTransferLineServiceImpl implements InvTransferLineService{
 		return InvTransferLineDao.getTransferLine(refDHNo);
 	}
 
+	@Override
+	public Integer getByLineNum(String lineNum) {
+		return InvTransferLineDao.getByLineNum(lineNum);
+	}
 }

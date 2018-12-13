@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <title>3PL采购导入管理</title>
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+  <link rel="stylesheet" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
+  <script src="../static/third/jquery-1.8.3.min.js"></script>
+  <script src="../static/js/jquery.form.js"></script>
+  <script src="../static/third/adminlte/plugins/jQueryUI/jquery-ui.js"></script>
+  <script src="../static/third/jqueryui/jquery.ui.core.js"></script>
+  <script src="../static/third/jqueryui/jquery.ui.widget.js"></script>
+  <script src="../static/third/jqueryui/jquery.ui.mouse.js"></script>
+  <script src="../static/third/jqueryui/jquery.ui.button.js"></script>
+  <script src="../static/third/jqueryui/jquery.ui.draggable.js"></script>
+  <script src="../static/third/jqueryui/jquery.ui.position.js"></script>
+  <script src="../static/third/jqueryui/jquery.ui.resizable.js"></script>
+  <script src="../static/third/jqueryui/jquery.ui.dialog.js"></script>
+  <style type="text/css">
+    body{
+      margin:10px;
+    }
+    input{ vertical-align:middle; margin:0; padding:0}
+    .file-box{ position:relative;width:100%}
+    .txt{ height:22px; border:1px solid #cdcdcd; width:360px;}
+    .btn{ background-color:#FFF; border:1px solid #CDCDCD;height:24px; width:70px;}
+
+    .layout {
+      display: none;
+      position: absolute;
+      top: 20%;
+      left: 40%;
+      width: 20%;
+      height: 40%;
+      z-index: 1001;
+      text-align:center;
+    }
+  </style>
+</head>
+<body id="body">
+<!--过滤器-->
+<fieldset style="border:0;">
+  <legend ><a href="javascript:void(0)" class="tool-toggle tool-toggle-show"></a></legend>
+  <div class="file-box">
+    <form id="importForm" name="importForm" action="/upload/doUploadInOuts" method="post" enctype="multipart/form-data">
+      <span>采购订单Excel：</span>
+      <input id="file" name="file" type="file" style="display:none" onchange="document.getElementById('textfield').value=this.value" />
+      <input type='text' readonly="readonly" name='textfield'  id='textfield' class='txt' />
+      <input type="button" class="btn" value="选择..." onclick="document.getElementById('file').click()"/>
+      <input type="submit" id="submit" name="submit" class="btn" value="导入" />
+      <input type="button" id="close"  class="btn" value="下载模板" onclick='onDownload()'/>
+    </form>
+  </div>
+  <form id="download" action="/purchaseOrder/downloadInOutTemplate" method="get"> </form>
+</fieldset>
+<div id="list" class="list">
+  <div class="well">
+    <h3>注意</h3>
+    <ul>
+      <li>只支持Excel 2003(<strong>xls</strong>) .</li>
+      <li>上传中请不要关闭浏览器.</li>
+      <li>
+        请下载Excel模板，严格按照模板格式填写，注意:
+      </li>
+      <li>
+        日期格式为yyyy-MM-dd
+      </li>
+      <li>
+        时间格式为HH:mm:ss
+      </li>
+      <li>
+        订单类型为:ZBCR
+      </li>
+      <li>
+        来源渠道需要填写渠道对应的编码， 商城：SC 天猫：TB 大客户：DKH 京东：JD 易迅：YX
+      </li>
+      <li>
+        基本单位为:TAI
+      </li>
+      <li>
+        批次为:10
+      </li>
+      <li>
+        特殊处理标记为:1
+      </li>
+      <li>
+        付款状态为:P1
+      </li>
+      <li>
+        待收欠款可为空，其它字段信息均不能为空。
+      </li>
+    </ul>
+  </div>
+</div>
+<div id="dialog-message" title="处理中">
+  <h2 id="message"></h2>
+  <span id="errMsg"></span>
+  <div>
+    <div id="layout" class="layout">
+      <img src="../static/img/loading.gif" />
+    </div>
+  </div>
+  <div id="result">
+    <ul>
+      <li id="total"></li>
+      <li id="success"></li>
+      <li id="ignore"></li>
+    </ul>
+  </div>
+</div>
+<script src="../static/js/purchase/importPurchaseOrder.js"></script>
+</body>
+</html>

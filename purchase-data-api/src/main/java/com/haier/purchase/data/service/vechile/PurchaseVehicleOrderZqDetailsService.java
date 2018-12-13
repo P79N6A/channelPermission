@@ -17,10 +17,14 @@ public interface PurchaseVehicleOrderZqDetailsService extends BasService<Vehicle
     List<VehicleOrderZqDetailsDTO> listByCondition(VehicleOrderZqDetailsDTO entity);
 
     int updateSelectiveByZqItemNo(VehicleOrderZqDetailsDTO entity);
+    
+    int updateSelectiveByZqOrderNo(VehicleOrderZqDetailsDTO entity);
 
     int updateStatusDetail(String orderNo);
 
     int updateMessageDetail(String orderNo, String mesageg);
 
 	List<VehicleOrderZqDetailsDTO> selectByStatus();
+
+	List<VehicleOrderZqDetailsDTO> getListByOrderNo(String orderNo);
 }

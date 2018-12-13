@@ -35,16 +35,16 @@
              top: 20%;
              left: 40%;
              width: 20%;
-             height: 20%;
+             height: 40%;
              z-index: 1001;
              text-align:center;
          }
 	</style>
 </head>
 <body id="body">
-		<div class="tabbutton">
+		#*<div class="tabbutton">
 			<input name="typeButton" class="cur" style="width:130px" type="button" value="导入" onClick="javascript:void(0);"/>
-		</div>
+		</div>*#
 		<!--过滤器-->
 		<fieldset>
 			<legend ><a href="javascript:void(0)" class="tool-toggle tool-toggle-show"></a></legend>
@@ -55,10 +55,12 @@
         			<input type='text' readonly="readonly" name='textfield'  id='textfield' class='txt' />  
         			<input type="button" class="btn" value="选择..." onclick="document.getElementById('file').click()"/>
         			<input type="submit" id="submit" name="submit" class="btn" value="导入" />
+					<input type="button" id="downloadtmp" name="downloadtmp" class="btn" value="下载模板" />
 					<input type="button" id="close"  class="btn" value="返回" onclick='onGoBack()'/>
 					<input id="report_year_week" name="report_year_week" type="hidden" value="$!report_year_week"/>
 					<input id="url" name="url" type="hidden" value="$!url"/>
         		</form>
+          <form id="download" action="/invwarehouse/downloadTemplate" method="get"> </form>
     		</div>
 		</fieldset>
 		<div id="list" class="list">
@@ -255,6 +257,12 @@
    		  var url = '/invwarehouse/invSection';
    		  window.location.href=url;
    	  }
+
+     //点击下载模板
+     $("#downloadtmp").click(function(){
+       $('#download').submit();
+     });
+
     </script>
 </body>
 </html>

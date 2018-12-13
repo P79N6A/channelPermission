@@ -13,4 +13,18 @@ public interface BatchBillEInvoiceService {
      * @return
      */
     String batchBillEInvoice(String[] totalArray);
+
+    /**
+     * 根据网单id开票
+     * @param orderProductId
+     * @return
+     */
+    String eInvoiceBatchBillingByOrderProductId(String orderProductId);
+
+    /**
+     * 根据网单id重新开票
+     * @param orderProductId
+     * @return
+     */
+    String eInvoiceBatchReBillingByOrderProductId(String orderProductId);
 }

@@ -21,16 +21,16 @@
   <select id="Listf" resultMap="BaseResultMap">
 SELECT  *
 		  FROM salesettings WHERE 1=1
-		  <if test="entity.externalSkus != '' and entity.externalSkus != null">AND externalSkus like #{entity.externalSkus}</if>
-		   <if test="entity.configIds != '' and entity.configIds != null">AND configIds like  #{entity.configIds}</if> 
+		  <if test="entity.externalSkus != '' and entity.externalSkus != null">AND externalSkus = #{entity.externalSkus}</if>
+		   <if test="entity.configIds != '' and entity.configIds != null">AND configIds =  #{entity.configIds}</if>
 		   
 	<include refid="pagination" />
   </select>
 <select id="getPagerCountS" resultType="int">
 		SELECT count(id)
 		  FROM salesettings WHERE 1=1
-		 <if test="entity.externalSkus != '' and entity.externalSkus != null">AND externalSkus like #{entity.externalSkus}</if>
-		   <if test="entity.configIds != '' and entity.configIds != null">AND configIds like  #{entity.configIds}</if> 
+		 <if test="entity.externalSkus != '' and entity.externalSkus != null">AND externalSkus = #{entity.externalSkus}</if>
+		   <if test="entity.configIds != '' and entity.configIds != null">AND configIds =  #{entity.configIds}</if>
 	</select>
 	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -170,4 +170,9 @@ SELECT  *
       effect = #{effect,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="findByWhere"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />  from salesettings
+    where effect=1 and startTime &lt; UNIX_TIMESTAMP()
+    and endTime &gt; UNIX_TIMESTAMP() and externalSkus =#{externalSkus}
+    </select>
 </mapper>

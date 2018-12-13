@@ -17,7 +17,7 @@ import com.haier.afterSale.service.HopStockService;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.JsonUtil;
 import com.haier.common.util.StringUtil;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.stock.model.InvSection;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.InvStockLock;

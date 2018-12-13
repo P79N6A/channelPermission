@@ -29,14 +29,14 @@
 
 	<select id="getOrderCouponsByCOrderSn" resultMap="orderCouponsResult">
 		select `id`,`orderId`,`orderProductId`,`cOrderSn`,`number`,`price`,`productAmount`,`jfbAmount`,`hbAmount`,`dqAmount`,`couponAmount`,`points`,`tyqAmount`,`djqAmount`,`djpzAmount`,`dpxdljAmount`,`dpCouponAmount`,`dphbAmount`,`createTime`,`updateTime`,`kjCode`,lpjCode 
-		from OrderCoupons
+		from ordercoupons
 		where cOrderSn=#{cOrderSn}
 		limit 1
 	</select>
 	
 	<select id="getLpTotalFeeNum" resultType="java.util.Map">
 		select sum(number) as totalNum,sum(price*number) as totalPrice
-		from OrderCoupons
+		from ordercoupons
 		where orderId=#{orderId}
 	</select>
 

@@ -81,4 +81,20 @@ public interface OrdersNewDao {
      */
     OrdersNew getByOrderSn(String orderSn);
 
+    /**
+     * 根据id更新lbx单号
+     * @param orders
+     * @return
+     */
+    Integer updateLbxSn(OrdersNew orders);
+
+    int updateForTailPayTime(OrdersNew orders);
+
+    /**
+     * 根据id将状态为部分缺货更新为未确认
+     * @param orderId
+     * @return
+     */
+    Integer updateStatus(Integer orderId);
+
 }

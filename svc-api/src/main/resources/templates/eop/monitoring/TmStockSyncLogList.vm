@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+   <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
+
+    <title>天猫库存同步日志</title>
+    <script src="/static/third/easyui/jquery.min2.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/third/easyui/glo.js"></script>
+    <script src="/static/third/easyui/comm.js"></script>
+    <script src="/static/third/easyui/commgrid.js"></script>
+    <script src="/static/third/easyui/jQuery.Form.js"></script>
+    <script src="/static/js/pop/common/pop.js"></script>
+    <script src="/static/js/bootstrap-datepicker.js"></script>
+    <style type="text/css">
+	    body{
+	    	color:#444444;
+	    }
+	    label {
+	        font-weight: 600;
+	    }
+	    #fontclor{
+	    	font-color:#660000;
+	    }
+
+	</style>
+</head>
+<body style="font-size:14px">
+## <div class="easyui-layout" style="width:100%;height:100%;">
+<div data-options="region:'west'" style="width:100%;height: 100%" data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,collapsible:false">
+        <table id="gridView" style="width:100%;height: 100%"></table>
+    </div>
+   	<div id="datagridToolbar_orderForecastGoal">
+
+	    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_circle fa fa-map-marker"></div>
+	    </div>
+	    <div class="search-panel" style="font-size: 11px;">
+        <div style="height: 18px"></div>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">店铺</span>
+            <!--<input id="policyYear" class="easyui-numberbox" type="text"/>-->
+            <select id="sse" class="easyui-combobox" name="dept" name="productType" >
+                <option value="">来源店铺</option>
+                <option value="GMZX" >国美海尔官方旗舰店</option>
+                <option value="GMZXTS" >国美统帅官方旗舰店</option>
+                <option value="SNYG" >苏宁统帅官方旗舰店</option>
+                <option value="SNHEGQ" >苏宁海尔官方旗舰店</option>
+                <option value="SNQDZX" >易购渠道中心</option>
+                <option value="DDW" >海尔官方当当旗舰店</option>
+                <option value="GMTSZYYY" >海尔官方国美自营店-电视/家庭影音</option>
+                <option value="JDHEGQ" >京东海尔官方旗舰店</option>
+                <option value="JDHEBXGQ" >京东海尔集团冰箱官方旗舰店</option>
+            </select>
+        </div>
+        <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">物料编码</span>
+                <input id="sku" name="dept"  name="productType"/>
+        </div>
+   <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">库位编码</span>
+            <input id="scode" name="dept" data-options="prompt:'全部'" name="productType"/>
+
+        </div>
+
+         <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">同步结果</span>
+			<select id="stockSyncResult" class="easyui-combobox" name="cchannelType" style="height:24px;width: 140px"
+                    data-options="editable:false,panelHeight:65">
+                <option value="成功">成功</option>
+                <option value="失败">失败</option>
+            </select>
+        </div>
+         <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">开始时间</span>
+            <input id="addTimeStart" class="easyui-datetimebox" style="height:20px;width: 141px;margin-right: 40px"
+                   >
+        </div>
+          <div class="search-row_nowidth mar_r6px">
+            <span class="search-row-label_80">结束时间</span>
+            <input id="addTimeEnd" class="easyui-datetimebox" style="height:20px;width: 141px;margin-right: 40px">
+        </div>
+      </div>
+        <div style="font-size:14px;width: 100%">
+            <a href="#" class="easyui-linkbutton" onclick="SearchUnit()"
+               data-options="iconCls:'icon-search',plain:true">查询</a>
+            <a href="#" class="easyui-linkbutton" onclick="SearchClear()"
+                   data-options="iconCls:'icon-redo',plain:true">重置</a>
+
+        </div>
+    </div>
+
+
+## </div>
+
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this =
+        $(t);
+        if ($this.hasClass('open')) {
+                $this.removeClass('open');
+            setTimeout(function () {
+                    $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+                $this.removeClass('close');
+            setTimeout(function () {
+                    $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#gridView').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="/static/js/eop/TmStockSyncLog.js"></script>
+</body>
+</html>

@@ -86,5 +86,6 @@ public interface OrderRepairsNewService {
      * @return
      */
     Integer updateForStatus(OrderRepairsNew orderRepairs);
-  
+
+    int updateExchange(Integer repairId);
 }

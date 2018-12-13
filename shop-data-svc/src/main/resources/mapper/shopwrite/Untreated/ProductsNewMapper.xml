@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace=" com.haier.shop.dao.shopwrite.Untreated.ProductsNewDao">
+<mapper namespace="com.haier.shop.dao.shopwrite.Untreated.ProductsNewDao">
 
 	<!-- 先解决 与Products 类似的问题-->
 	<resultMap id="productsResult1" type="com.haier.shop.model.ProductsNew">
@@ -106,7 +106,7 @@
 		select `id`,`productName`,`productCateId`,`productCatePath`,`sku`
 		from `Products`
 	</select>
-	<select id="getListBySkus" parameterType="map" resultMap="productBaseResult">
+	<select id="getListBySkus" parameterType="java.util.List" resultMap="productBaseResult">
 		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`
 		from `Products`
 		where `onSale`=1 

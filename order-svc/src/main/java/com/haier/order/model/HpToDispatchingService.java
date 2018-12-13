@@ -4,11 +4,13 @@ import com.haier.common.ServiceResult;
 import com.haier.eis.model.EisInterfaceDataLog;
 import com.haier.order.util.HttpInvokeUtil;
 import com.haier.order.util.HttpServiceUtil;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by Administrator on 2017/12/14 0014.
  */
+@ConfigurationProperties(prefix = "url")
 @Service
 public class HpToDispatchingService {
 
@@ -20,6 +22,9 @@ public class HpToDispatchingService {
         return dispatchingByHPUrl;
     }
 
+    public void setDispatchingByHPUrl(String dispatchingByHPUrl) {
+        this.dispatchingByHPUrl = dispatchingByHPUrl;
+    }
     public ServiceResult<String> sendHpDispatchNew(String foreignKey, String content) {
         try {
             return HttpServiceUtil.executeServiceAndReturnId(foreignKey,

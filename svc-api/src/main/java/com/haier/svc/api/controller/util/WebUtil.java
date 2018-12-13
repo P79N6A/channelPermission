@@ -1,5 +1,7 @@
 package com.haier.svc.api.controller.util;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,8 +29,8 @@ import com.haier.common.util.StringUtil;
 @Component
 public class WebUtil implements ApplicationContextAware {
     private static org.apache.log4j.Logger log                               = org.apache.log4j.LogManager
-                                                                                 .getLogger(WebUtil.class);
-
+                                                                                .getLogger(WebUtil.class);
+    private static final ThreadLocal<String> HttpResponseTextHolder = new ThreadLocal<String>();
     public static final String             CBS_CLIENT_TOKEN_NAME             = "cbs-client-token";
     public static final String             CBS_AUTH_NAME                     = "cbs-auth";
     public static final String             CBS_USER_INFO_NAME                = "cbs-user";
@@ -68,6 +70,12 @@ public class WebUtil implements ApplicationContextAware {
      * @return
      */
     public static int currentUserId(HttpServletRequest request) {
+        if (request.getSession() != null) {
+            Object userId = request.getSession().getAttribute("userId");
+            if (null != userId){
+                return ConvertUtil.toInt(userId.toString(), 0);
+            }
+        }
         //尝试从request属性获取
         if (request.getAttribute(CURRENT_USER_ID) != null) {
             int id = ConvertUtil.toInt(request.getAttribute(CURRENT_USER_ID), 0);
@@ -96,6 +104,13 @@ public class WebUtil implements ApplicationContextAware {
      * @return
      */
     public static String currentUserName(HttpServletRequest request) {
+        //尝试从request属性获取
+        if (request.getSession() != null) {
+            Object userName = request.getSession().getAttribute("userName");
+            if (null != userName){
+                return userName.toString();
+            }
+        }
         //尝试从request属性获取
         if (request.getAttribute(CURRENT_USER_NAME) != null) {
             String name = String.valueOf(request.getAttribute(CURRENT_USER_NAME));
@@ -506,5 +521,32 @@ public class WebUtil implements ApplicationContextAware {
             return null;
         return context.getBean(beanName);
     }
-
+    
+    public static void setJsonRet(HttpServletResponse response,String json,boolean isAjax){
+        OutputStream os = null;
+        try {
+            os = response.getOutputStream();
+            if(isAjax){
+                response.setContentType("application/x-json; charset=utf-8");
+            }else{
+                response.setContentType("application/json; charset=utf-8");
+            }
+            os.write(json.getBytes("utf-8"));
+            os.flush();
+            HttpResponseTextHolder.set(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    public static void setJsonRet(HttpServletResponse response,String json){
+    	setJsonRet(response,json,false);
+    }
 }

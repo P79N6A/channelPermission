@@ -88,7 +88,6 @@
     $('#datagrid').datagrid({
         url: url,
         fit: true,
-        fitColumns: true,
         pagination: true,
         nowrap: true,
         pageSize: 50,
@@ -105,16 +104,19 @@
                 field: "sku",
                 title: '物料',
                 align: 'center',
+                width:150
             },
             {
                 field: "sec_code",
                 title: '库位',
                 align: 'center',
+              width:100
             },
             {
                 field: "corder_sn",
                 title: '单据号',
                 align: 'left',
+              width:200
             },
             {
                 field: "channel_code",
@@ -126,12 +128,14 @@
                     } else {
                         return value;
                     }
-                }
+                },
+              width:200
             },
             {
                 field: "bill_type",
                 title: '交易类型',
                 align: 'center',
+              width:100
             },
             {
                 field: "mark",
@@ -143,7 +147,8 @@
                     } else {
                         return '出库';
                     }
-                }
+                },
+              width:100
             },
             {
                 field: "item_property",
@@ -163,17 +168,20 @@
                     } else {
                         return value;
                     }
-                }
+                },
+              width:100
             },
             {
                 field: "quantity",
                 title: '数量',
                 align: 'right',
+              width:50
             },
             {
                 field: "bill_time",
                 title: '交易时间',
                 align: 'center',
+              width:200
             },
             {
                 field: "is_froze",
@@ -185,7 +193,8 @@
                     } else {
                         return '是';
                     }
-                }
+                },
+              width:100
             },
             {
                 field: "process_status",
@@ -199,22 +208,26 @@
                     } else {
                         return '完成';
                     }
-                }
+                },
+              width:100
             },
             {
                 field: "last_process_time",
                 title: '处理时间',
                 align: 'center',
+              width:200
             },
             {
                 field: "add_time",
                 title: '添加时间',
                 align: 'center',
+              width:200
             },
             {
                 field: "message",
                 title: '处理结果',
                 align: 'center',
+              width:300
             }
         ]],
         toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure'

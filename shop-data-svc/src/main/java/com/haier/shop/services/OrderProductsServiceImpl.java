@@ -82,4 +82,19 @@ public class OrderProductsServiceImpl implements ShopOrderProductsService {
     public List<Map<String, Object>> getOpListByCOrderSn(Map<String, Object> paramMap) {
         return orderProductsReadDao.getOpListByCOrderSn(paramMap);
     }
+
+    @Override
+    public OrderProducts getOrderProductsByTbNo(String tbOrderSn) throws Exception {
+        return orderProductsReadDao.getOrderProductsByTbNo(tbOrderSn);
+    }
+
+    @Override
+    public Integer updateCorderSnById(Integer oPid, String cOrderSn) {
+        return orderProductsWriteDao.updateCorderSnById2(oPid,cOrderSn);
+    }
+
+    @Override
+    public OrderProducts findOPBycOrderSnAndSku(String cOrderSn, String sku) {
+        return orderProductsReadDao.findOPBycOrderSnAndSku(cOrderSn,sku);
+    }
 }

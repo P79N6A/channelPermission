@@ -3,20 +3,20 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.GroupOrdersWriteDao">
 
 	<insert id="insert" parameterType="com.haier.shop.model.GroupOrders">
-		insert into `GroupOrders`(`siteId`,`type`,`tailOrderId`,`depositOrderId`,`tailCOrderSn`,`depositOrderProductId`,`depositCOrderSn`,`status`,`addTime`,`syncHpTime`,`member`,`groupId`,`errorMessage`,`from`,`extensions`,`params`,`hpResult`,`tryCombineNum`,`lastErrorMsg`)
+		insert into `grouporders`(`siteId`,`type`,`tailOrderId`,`depositOrderId`,`tailCOrderSn`,`depositOrderProductId`,`depositCOrderSn`,`status`,`addTime`,`syncHpTime`,`member`,`groupId`,`errorMessage`,`from`,`extensions`,`params`,`hpResult`,`tryCombineNum`,`lastErrorMsg`)
 		values(#{siteId},#{type},#{tailOrderId},#{depositOrderId},#{tailCOrderSn},#{depositOrderProductId},#{depositCOrderSn},#{status},#{addTime},#{syncHpTime},#{member},#{groupId},#{errorMessage},#{from},#{extensions},#{params},#{hpResult},#{tryCombineNum},#{lastErrorMsg})
 	</insert>
 	<update id="updateStatus" parameterType="com.haier.shop.model.GroupOrders">
-		update `GroupOrders` set `status`=#{status}
+		update `grouporders` set `status`=#{status}
 		where `id` = #{id}
 	</update>
 	<update id="updateLesStatus" parameterType="com.haier.shop.model.GroupOrders">
-		update `GroupOrders` set `lesStatus`=#{lesStatus},`lesMessage`=#{lesMessage},`lesLastTime`=#{lesLastTime}
+		update `grouporders` set `lesStatus`=#{lesStatus},`lesMessage`=#{lesMessage},`lesLastTime`=#{lesLastTime}
 		where `id` = #{id}
 	</update>
 
-	<update id="update" parameterType="java.util.Map">
-		update GroupOrders
+	<update id="update" parameterType="com.haier.shop.model.GroupOrders">
+		update grouporders
 		<set>
 			<if test="siteId != null">
 				siteId = #{siteId},

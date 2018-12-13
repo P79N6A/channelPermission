@@ -537,8 +537,8 @@
     </select>
     
      <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
-        SELECT SQL_CALC_FOUND_ROWS
-        `id`,
+        SELECT
+       trans.`id`,
         `sku`,
         `external_sec_code`,
         `sec_code`,
@@ -558,20 +558,28 @@
         `add_time`,
         `message`,
         channel.`name` AS channel_name
-        FROM `inv_stock_transaction` trans INNER JOIN `inv_stock_channel` channel
+        FROM `inv_stock_transaction` trans LEFT JOIN `inv_stock_channel` channel
         ON trans.channel_code = channel.channel_code
         WHERE 1=1
+       AND EXISTS (
+       SELECT
+       t.channel_code
+       FROM
+       inv_stock_channel t
+       WHERE
+       t.channel_code = trans.channel_code
+       )
         <if test="process_status != null and process_status !=''">
             and trans.process_status = #{process_status}
         </if>
         <if test="corder_sn != null and corder_sn !=''">
-            and trans.corder_sn LIKE CONCAT('%',#{corder_sn},'%')
+            and trans.corder_sn LIKE CONCAT(#{corder_sn},'%')
         </if>
         <if test="sku != null and sku !=''">
-            and trans.sku = #{sku}
+            and trans.sku LIKE CONCAT(#{sku},'%')
         </if>
         <if test="sec_code != null and sec_code !=''">
-            and trans.sec_code LIKE CONCAT('%',#{sec_code},'%')
+            and trans.sec_code LIKE CONCAT(#{sec_code},'%')
         </if>
         <if test="bill_type != null and bill_type !=''">
             and trans.bill_type = #{bill_type}
@@ -594,6 +602,37 @@
     </select>
      <!-- 计算列表数量 -->
     <select id="getRowCnt" parameterType="Map" resultType="int">
-        SELECT FOUND_ROWS();
+      SELECT
+      COUNT(1)
+      FROM `inv_stock_transaction` trans
+      INNER JOIN `inv_stock_channel` channel ON trans.channel_code = channel.channel_code
+      WHERE 1=1
+      <if test="process_status != null and process_status !=''">
+        and trans.process_status = #{process_status}
+      </if>
+      <if test="corder_sn != null and corder_sn !=''">
+        and trans.corder_sn LIKE CONCAT(#{corder_sn},'%')
+      </if>
+      <if test="sku != null and sku !=''">
+        and trans.sku LIKE CONCAT(#{sku},'%')
+      </if>
+      <if test="sec_code != null and sec_code !=''">
+        and trans.sec_code LIKE CONCAT(#{sec_code},'%')
+      </if>
+      <if test="bill_type != null and bill_type !=''">
+        and trans.bill_type = #{bill_type}
+      </if>
+      <if test="mark != null and mark !=''">
+        and trans.mark = #{mark}
+      </if>
+      <if test="item_property != null and item_property !=''">
+        and trans.item_property = #{item_property}
+      </if>
+      <if test="bill_time_s != null and bill_time_s !=''">
+        and  DATE_FORMAT(trans.bill_time,"%Y-%m-%d") &gt;= #{bill_time_s}
+      </if>
+      <if test="bill_time_e != null and bill_time_e !=''">
+        and DATE_FORMAT(trans.bill_time,"%Y-%m-%d") &lt;= #{bill_time_e}
+      </if>
     </select>
 </mapper>

@@ -2,12 +2,20 @@ package com.haier.vehicle.services;
 
 import java.util.List;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.haier.purchase.data.model.vehcile.VehicleOrderDTO;
+import com.haier.purchase.data.model.vehcile.VehicleOrderDetailsDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderZqDetailsDTO;
 import com.haier.purchase.data.service.vechile.PurchaseVehicleOrderZqDetailsService;
 import com.haier.vehicle.service.VehicleOrderZqDetailsService;
+import com.haier.vehicle.util.HttpUtils;
 
 /**
  * <p>
@@ -19,11 +27,13 @@ import com.haier.vehicle.service.VehicleOrderZqDetailsService;
  * @version 1.0 Copyright (c) 2016 北京柯莱特科技有限公司 交付部
  */
 @Service
-public class VehicleOrderZqDetailsServiceImpl implements VehicleOrderZqDetailsService{
+public class VehicleOrderZqDetailsServiceImpl implements
+		VehicleOrderZqDetailsService {
 
 	@Autowired
-	PurchaseVehicleOrderZqDetailsService purchaseVehicleOrderZqDetailsService ;
-	
+	PurchaseVehicleOrderZqDetailsService purchaseVehicleOrderZqDetailsService;
+
+
 	@Override
 	public int insertSelective(VehicleOrderZqDetailsDTO entity) {
 		return purchaseVehicleOrderZqDetailsService.insertSelective(entity);
@@ -54,7 +64,8 @@ public class VehicleOrderZqDetailsServiceImpl implements VehicleOrderZqDetailsSe
 	@Override
 	public List<VehicleOrderZqDetailsDTO> getPageByCondition(
 			VehicleOrderZqDetailsDTO entity, int start, int rows) {
-		return purchaseVehicleOrderZqDetailsService.getPageByCondition(entity, start, rows);
+		return purchaseVehicleOrderZqDetailsService.getPageByCondition(entity,
+				start, rows);
 	}
 
 	@Override
@@ -64,7 +75,8 @@ public class VehicleOrderZqDetailsServiceImpl implements VehicleOrderZqDetailsSe
 
 	@Override
 	public VehicleOrderZqDetailsDTO getOneByDeliveryToCode(String deliveryToCode) {
-		return purchaseVehicleOrderZqDetailsService.getOneByDeliveryToCode(deliveryToCode);
+		return purchaseVehicleOrderZqDetailsService
+				.getOneByDeliveryToCode(deliveryToCode);
 	}
 
 	@Override
@@ -75,7 +87,8 @@ public class VehicleOrderZqDetailsServiceImpl implements VehicleOrderZqDetailsSe
 
 	@Override
 	public int updateSelectiveByZqItemNo(VehicleOrderZqDetailsDTO entity) {
-		return purchaseVehicleOrderZqDetailsService.updateSelectiveByZqItemNo(entity);
+		return purchaseVehicleOrderZqDetailsService
+				.updateSelectiveByZqItemNo(entity);
 	}
 
 	@Override
@@ -85,7 +98,20 @@ public class VehicleOrderZqDetailsServiceImpl implements VehicleOrderZqDetailsSe
 
 	@Override
 	public int updateMessageDetail(String orderNo, String mesageg) {
-		return purchaseVehicleOrderZqDetailsService.updateMessageDetail(orderNo, mesageg);
+		return purchaseVehicleOrderZqDetailsService.updateMessageDetail(
+				orderNo, mesageg);
 	}
-	
+
+	@Override
+	public List<VehicleOrderZqDetailsDTO> getListByOrderNo(String orderNo) {
+		return purchaseVehicleOrderZqDetailsService.getListByOrderNo(orderNo);
+	}
+
+	@Override
+	public void updateSelectiveByZqOrderNo(
+			VehicleOrderZqDetailsDTO zqOrderDetail) {
+		purchaseVehicleOrderZqDetailsService
+				.updateSelectiveByZqOrderNo(zqOrderDetail);
+	}
+
 }

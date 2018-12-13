@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haier.common.ServiceResult;
-import com.haier.purchase.data.model.LesFiveYardInfo;
-import com.haier.purchase.data.service.PurchaseLesFiveYardsService;
+import com.haier.shop.model.LesFiveYardInfo;
+import com.haier.shop.service.PurchaseLesFiveYardsService;
 
 @Service
 public class OrderCenterItemServiceImpl {

@@ -27,6 +27,11 @@ dubbo:
   heartBeats: 10000 #心跳间隔，检查连接是否已断开，默认30000
   serialization: hessian2    #协议序列化方式（可选配置，Dubbo有默认值）;
 
+stockget:
+  url: http://report.ehaier.com/api/3w/getskutonum.html
+  appKey: cgxt
+  secretKey: f36521bc54bc4b7a99d928c2b2f2c150
+  wsdlLocation: /wsdl
 
 #spring:
 #  datasource:
@@ -36,86 +41,86 @@ dubbo:
 #    password: Haier,123
 #    driver-class-name: com.mysql.jdbc.Driver
 
-spring:
-  datasource:
-    shop:
-     url: jdbc:mysql://10.135.30.135:5637/shop?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
-     username: root
-     password: Haier,123
-     driver-class-name: com.mysql.jdbc.Driver
-     testOnBorrow: true
-     testOnReturn: true
-     testWhileIdle: true
-     validation-query: SELECT 1
-     time-between-eviction-runs-millis: 30000
-     min-evictable-idle-time-millis: 60000
-     max-active: 200
-     max-idle: 10
-    stock:
-     url: jdbc:mysql://10.135.30.135:5637/db_stock?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
-     username: root
-     password: Haier,123
-     driver-class-name: com.mysql.jdbc.Driver
-     testOnBorrow: true
-     testOnReturn: true
-     testWhileIdle: true
-     validation-query: SELECT 1
-     time-between-eviction-runs-millis: 30000
-     min-evictable-idle-time-millis: 60000
-     max-active: 200
-     max-idle: 10
-    base:
-     url: jdbc:mysql://10.135.30.135:5637/base_system?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
-     username: root
-     password: Haier,123
-     driver-class-name: com.mysql.jdbc.Driver
-     testOnBorrow: true
-     testOnReturn: true
-     testWhileIdle: true
-     validation-query: SELECT 1
-     time-between-eviction-runs-millis: 30000
-     min-evictable-idle-time-millis: 60000
-     max-active: 200
-     max-idle: 10
-    pop:
-     url: jdbc:mysql://10.135.30.135:5637/shop?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
-     username: root
-     password: Haier,123
-     driver-class-name: com.mysql.jdbc.Driver
-     testOnBorrow: true
-     testOnReturn: true
-     testWhileIdle: true 
-     validation-query: SELECT 1
-     time-between-eviction-runs-millis: 30000
-     min-evictable-idle-time-millis: 60000
-     max-active: 200
-     max-idle: 10
-    finance:
-     url: jdbc:mysql://10.135.30.135:5637/shop?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
-     username: root
-     password: Haier,123
-     driver-class-name: com.mysql.jdbc.Driver
-     testOnBorrow: true
-     testOnReturn: true
-     testWhileIdle: true
-     validation-query: SELECT 1
-     time-between-eviction-runs-millis: 30000
-     min-evictable-idle-time-millis: 60000
-     max-active: 200
-     max-idle: 10
-    eis:
-     url: jdbc:mysql://10.135.30.135:5637/db_eis?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
-     username: root
-     password: haier123456
-     driver-class-name: com.mysql.jdbc.Driver
-     testOnBorrow: true
-     testOnReturn: true
-     testWhileIdle: true
-     validation-query: SELECT 1
-     time-between-eviction-runs-millis: 30000
-     min-evictable-idle-time-millis: 60000
-     max-active: 200
-     max-idle: 10
+#spring:
+#  datasource:
+#    shop:
+#     url: jdbc:mysql://10.135.30.135:5637/shop?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+#     username: root
+#     password: Haier,123
+#     driver-class-name: com.mysql.jdbc.Driver
+#     testOnBorrow: true
+#     testOnReturn: true
+#     testWhileIdle: true
+#     validation-query: SELECT 1
+#     time-between-eviction-runs-millis: 30000
+#     min-evictable-idle-time-millis: 60000
+#     max-active: 200
+#     max-idle: 10
+#    stock:
+#     url: jdbc:mysql://10.135.30.135:5637/db_stock?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+#     username: root
+#     password: Haier,123
+#     driver-class-name: com.mysql.jdbc.Driver
+#     testOnBorrow: true
+#     testOnReturn: true
+#     testWhileIdle: true
+#     validation-query: SELECT 1
+#     time-between-eviction-runs-millis: 30000
+#     min-evictable-idle-time-millis: 60000
+#     max-active: 200
+#     max-idle: 10
+#    base:
+#     url: jdbc:mysql://10.135.30.135:5637/base_system?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+#     username: root
+#     password: Haier,123
+#     driver-class-name: com.mysql.jdbc.Driver
+#     testOnBorrow: true
+#     testOnReturn: true
+#     testWhileIdle: true
+#     validation-query: SELECT 1
+#     time-between-eviction-runs-millis: 30000
+#     min-evictable-idle-time-millis: 60000
+#     max-active: 200
+#     max-idle: 10
+#    pop:
+#     url: jdbc:mysql://10.135.30.135:5637/shop?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+#     username: root
+#     password: Haier,123
+#     driver-class-name: com.mysql.jdbc.Driver
+#     testOnBorrow: true
+#     testOnReturn: true
+#     testWhileIdle: true 
+#     validation-query: SELECT 1
+#     time-between-eviction-runs-millis: 30000
+#     min-evictable-idle-time-millis: 60000
+#     max-active: 200
+#     max-idle: 10
+#    finance:
+#     url: jdbc:mysql://10.135.30.135:5637/shop?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+#     username: root
+#     password: Haier,123
+#     driver-class-name: com.mysql.jdbc.Driver
+#     testOnBorrow: true
+#     testOnReturn: true
+#     testWhileIdle: true
+#     validation-query: SELECT 1
+#     time-between-eviction-runs-millis: 30000
+#     min-evictable-idle-time-millis: 60000
+#     max-active: 200
+#     max-idle: 10
+#    eis:
+#     url: jdbc:mysql://10.135.30.135:5637/db_eis?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+#     username: root
+#     password: haier123456
+#     driver-class-name: com.mysql.jdbc.Driver
+#     testOnBorrow: true
+#     testOnReturn: true
+#     testWhileIdle: true
+#     validation-query: SELECT 1
+#     time-between-eviction-runs-millis: 30000
+#     min-evictable-idle-time-millis: 60000
+#     max-active: 200
+#     max-idle: 10
 
 #T+2订单下发CRM
 t2Order:
@@ -128,6 +133,13 @@ t2Order:
 #获取wsdl路径
 t2OrderResponse:
   location: /wsdl
+
+getMtlInfoResponse:
+  location: /wsdl
+
+entryOrderUrl: http://10.135.108.147:81/cainiao/getEntryOrder.html
+
+vomSynOrderUrl: http://10.135.1.110:7001/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=EAI_INT_1353
 
 mybatis:
   typeAliasesPackage: com.haier.svc

@@ -20,37 +20,57 @@
    <select id="selectByProducttypesSku" resultMap="BaseResultMap"  >
     select 
     id,typeName
-    from ProductTypes 
+    from producttypes
     where  id = #{id,jdbcType=INTEGER}
    </select>
    <select id="selectByProducttypes" resultMap="BaseResultMap"  >
     select 
     id,typeName
-    from ProductTypes 
+    from producttypes
     where  supportCod='1'
    </select>
 
    <select id="getById" parameterType="Integer" resultMap="producttypesResult">
     select
     `id`,`siteId`,`attrCateId`,`typeName`,`supportCod`,`codExcludeSkus`
-    from `ProductTypes`
+    from `producttypes`
     where `id` = #{id}
   </select>
 
    <select id="getByIdNew" parameterType="Integer" resultMap="BaseResultMap">
     select
     `id`,`siteId`,`attrCateId`,`typeName`,`supportCod`,`codExcludeSkus`
-    from `ProductTypes`
+    from `producttypes`
     where `id` = #{id}
   </select>
      <select id="findsort"  resultMap="producttypesResult">
-   select pt.typename ,pt.attrCateId from OrderProducts opro
-		left join ProductTypes pt
+   select pt.typename ,pt.attrCateId from orderproducts opro
+		left join producttypes pt
 		on opro.productType = pt.attrCateId
-		LEFT JOIN OrderRepairHPRecords orhp
+		LEFT JOIN orderrepairhprecords orhp
 		on orhp.orderProductId = opro.id
 		where  quality='5' or quality='6'
 		group by productType
   </select>
-  
+  <select id="getProducttypesList" resultType="java.util.Map">
+    select 
+    id,typeName
+    from `producttypes`
+  </select>
+    <select id="getProducttypes" resultType="com.haier.shop.model.Producttypes">
+    select
+    id,typeName
+    from `producttypes`
+     LIMIT 0,100
+  </select>
+
+    <select id="getProductttypesByTypeName" parameterType="string" resultType="java.util.Map">
+    select
+    id,typeName
+    from `producttypes`
+    where 1=1
+        <if test="typeName != null and typeName !='' ">
+            AND typeName like '${typeName}%'
+        </if>
+    </select>
 </mapper>

@@ -106,4 +106,8 @@ public class VehicleOrderDetailModel {
 	public void updateByZqItemNo(VehicleOrderZqDetailsDTO entity) {
 		vehicleOrderZqDetailsService.updateSelectiveByZqItemNo(entity);
 	}
+
+	public void updateEntry3wOrderById(Cn3wPurchaseStock cn3wPurchaseStock) {
+		vehicleOrderDetailDao.updateEntry3wOrderById(cn3wPurchaseStock);		
+	}
 }

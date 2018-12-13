@@ -37,7 +37,7 @@ public class StockReservedModel {
                     params);
                 pager.setRowsCount(stockAgeResult.getPager().getRowsCount());*/
         // pager = stockAgeResult.getPager();
-        params.put("start",pager.getPageIndex());
+        params.put("start",(pager.getPageIndex()-1)*pager.getPageSize());
         params.put("size", pager.getPageSize());
         List<Map<String, Object>> list = stockInvStockAgeService.getStockAgeListTo2(params);
         pager.setRowsCount(stockInvStockAgeService.getRowCnt());
@@ -54,7 +54,7 @@ public class StockReservedModel {
     }
     /**
      * 查询预留配置列表: 总页数
-     * @param config
+     * @param map
      * @return
      */
     public List<Map<String,String>> queryTotalPage(Map<String,Object> map) {

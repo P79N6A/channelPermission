@@ -21,7 +21,8 @@ public class ShopOrderRepairsServiceImpl implements ShopOrderRepairsService {
     OrderRepairsWriteDao orderRepairsWriteDao;
 
     public  int insertSelective(OrderRepairsVo record){
-     return    orderRepairsWriteDao.insertSelective(record);
+    orderRepairsWriteDao.insertSelective(record);
+     return   record.getId();
     }
 
 
@@ -31,6 +32,10 @@ public class ShopOrderRepairsServiceImpl implements ShopOrderRepairsService {
 
     public OrderRepairsVo  queryPairsId(String id){
         return    orderRepairsReadDao.queryPairsId(id);
+    }
+
+    public List<OrderRepairsVo> selectOrderRepairsNOFinish(String id){
+        return  orderRepairsReadDao.selectOrderRepairsNOFinish(id);
     }
 
     public int updataStatus( String id, String status,String handleRemark){
@@ -82,18 +87,34 @@ public class ShopOrderRepairsServiceImpl implements ShopOrderRepairsService {
 
 
 	@Override
-	public int updataPushSap(String id) {
+	public int updataPushSap(String id,String pushSap) {
 		// TODO Auto-generated method stub
-		return orderRepairsWriteDao.updataPushSap(id);
+		return orderRepairsWriteDao.updataPushSap(id,pushSap);
 	}
 
 
 	@Override
-	public int RepairsTermination(String id, String handleRemark) {
+	public int RepairsTermination(String id,String handleStatus, String handleRemark) {
 		// TODO Auto-generated method stub
-		return orderRepairsWriteDao.RepairsTermination(id, handleRemark);
+		return orderRepairsWriteDao.RepairsTermination(id, handleStatus, handleRemark);
 	}
 
+    @Override
+    public int RepairsRminatereverse(String id,String handleStatus, String handleRemark,String terminationReason) {
+        // TODO Auto-generated method stub
+        return orderRepairsWriteDao.RepairsRminatereverse(id, handleStatus, handleRemark,terminationReason);
+    }
+
+    /**
+     *
+     * @param id
+     * @param handleStatus
+     * @return
+     */
+    public int updateHandleStatus(String id,String handleStatus) {
+
+        return orderRepairsWriteDao.updateHandleStatus(id, handleStatus);
+    }
 
 	@Override
 	public OrderRepairsVo queryReturnEdit(String id) {
@@ -106,5 +127,26 @@ public class ShopOrderRepairsServiceImpl implements ShopOrderRepairsService {
 	public OrderRepairsVo queryRepairsInvoiceId(String repairSn) {
 		// TODO Auto-generated method stub
 		return orderRepairsReadDao.queryRepairsInvoiceId(repairSn);
+	}
+
+
+	@Override
+	public int updataOrderRepairsStatus(String receiptStatus, String storageStatus, String id) {
+		// TODO Auto-generated method stub
+		return orderRepairsWriteDao.updataOrderRepairsStatus(receiptStatus, storageStatus, id);
+	}
+
+
+	@Override
+	public int queryRepairsStats(String id) {
+		// TODO Auto-generated method stub
+		return orderRepairsReadDao.queryRepairsStats(id);
+	}
+
+
+	@Override
+	public OrderRepairsVo queryWhetherRepaiSn(int cOrderId) {
+		// TODO Auto-generated method stub
+		return orderRepairsReadDao.queryWhetherRepaiSn(cOrderId);
 	}
 }

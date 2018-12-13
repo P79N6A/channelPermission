@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>3W调拨单列表</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+        collapsible:false">
+    <table id="datagrid">
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  单据号
+			</span>
+                <input class="easyui-textbox" id="transferOrderCode" name="transferOrderCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  调拨出库单号
+			</span>
+                <input class="easyui-textbox" id="transferOutOrderCode" name="transferOutOrderCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  调拨入库单号
+			</span>
+                <input class="easyui-textbox" id="transferInOrderCode" name="transferInOrderCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  物料编码
+			</span>
+                <input class="easyui-textbox" id="scItemCode" name="scItemCode"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              出仓库编码
+            </span>
+                <input class="easyui-textbox" id="fromStoreCode" name="fromStoreCode"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              入仓库编码
+            </span>
+                <input class="easyui-textbox" id="toStoreCode" name="toStoreCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  状态
+			</span>
+            <select class="easyui-combobox" id="orderStatus" name="orderStatus" style="width:178px;" data-options="editable:false">
+                <option value="" selected="true">全部</option>
+                <option value="0">调拨单申请中</option>
+                <option value="30">全部出库</option>
+                <option value="140">全部入库</option>
+                <option value="150">调拨完成,出库推送SAP</option>
+                <option value="100">已推送SAP,关闭</option>
+                <option value="101">同仓调拨,关闭</option>
+                <option value="110">需人工介入</option>
+                <option value="120">创建未请求菜鸟接口</option>
+                <option value="-100">已取消</option>
+            </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  出入库有差异
+			</span>
+                <select class="easyui-combobox" id="difference" name="difference" style="width:178px;" data-options="editable:false,panelHeight:'auto'">
+                    <option value="" selected="true">全部</option>
+                    <option value="0">是</option>
+                    <option value="1">否</option>
+                </select>
+            </div>
+
+            <div class="search-row">
+                <span class="search-row-label">
+                  创建时间
+                </span>
+                    <input class="easyui-datetimebox" id="startTime" name="startTime" editable="false"/>
+                </div>
+                <div class="search-row">
+                <span class="search-row-label">
+                  至
+                </span>
+                <input class="easyui-datetimebox" id="endTime" name="endTime" editable="false"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="syncAll"
+           data-options="iconCls:'icon-reload',plain:true">同步所有</a>
+        <a href="#" class="easyui-linkbutton" id="export"
+        data-options="iconCls:'icon-save',plain:true">导出</a>
+        <input id="exportData" name="exportData" type="hidden"/>
+    </form>
+</div>
+<script src="../static/js/eop/transferOrderList3w.js"></script>
+</body>
+</html>

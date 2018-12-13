@@ -144,4 +144,20 @@ public class VehicleOrderDetailServiceImpl implements VehicleOrderDetailService 
 	public void updateByOrderNo(VehicleOrderDetailsDTO order) {
 		purchaseVehicleOrderDetailService.updateByOrderNo(order);
 	}
+
+	@Override
+	public int updateVbelnSpareByItemNo(String itemNo, String vbelnSpare) {
+		return purchaseVehicleOrderDetailService.updateVbelnSpareByItemNo(itemNo, vbelnSpare);
+	}
+
+	/**
+	 * 是否存在相同的vbeln
+	 * @param itemNo
+	 * @param vbelnSpare
+	 * @return
+	 */
+	@Override
+	public boolean vbelnExists(String itemNo, String vbelnSpare) {
+		return purchaseVehicleOrderDetailService.vbelnExists(itemNo, vbelnSpare);
+	}
 }

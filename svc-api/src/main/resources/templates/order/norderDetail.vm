@@ -40,42 +40,155 @@
         <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;">
             网单信息
         </span>
-        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
-                   value="返回" onclick="goback()"
-                   style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;float: right;"/>
+##        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true" value="返回" onclick="goback()" style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;float: right;"/>
         </div>
         <div class="detail_content">
             <form class="param-form">
                 <div class="search-panel">
 
-                    <div class="search-row_padd10" style="width: 300px;" >
-                        <span class="search-row-label_detail" style="float: left">网单号：</span>
+                    <div class="search-row_padd10"  style="width: 100%">
+                        <span class="search-row-label_detail"   >网单号： </span>
                         <span class=""><input id ='cOrderSn' style="border: none;" readonly="readonly" value="$!vo.cOrderSn"/> </span>
-                        #if($orderSn=='')
-                            <a href="#" id="addBtn_orderForecastGoal" style="color: red;font-size:3px;">(申请退换货)</a>
+
+                        #if($handleStatus!='1' && $handleStatus!='2'&& $handleStatus!='9' && $handleStatus=='6' || $handleStatus==''|| $handleStatus=='5')
+                            <a href="#" id="addBtn_orderForecastGoal" style="color: red;font-size:12px;">(申请退换货)</a>
+                        #end
+##                      #if($handleStatus=='1' && $handleStatus=='2' && $handleStatus!='6' || $handleStatus!='')
+                        #if($handleStatus!='')
+                            #if($handleStatus=='1')
+                                <a href="/operationArea/ReturnEdit?id=$repairsId" style="color: red;font-size:12px;">(退货状态：审核中)</a>
+                            #end
+                            #if($handleStatus=='2')
+                                <a href="/operationArea/ReturnEdit?id=$repairsId"  style="color: red;font-size:12px;">(退货状态：进行中)</a>
+                            #end
+                            #if($handleStatus=='3')
+                                <a href="/operationArea/ReturnEdit?id=$repairsId"  style="color: red;font-size:12px;">(退货状态：受理完成)</a>
+                            #end
+                            #if($handleStatus=='4')
+                                <a href="/operationArea/ReturnEdit?id=$repairsId"  style="color: red;font-size:12px;">(退货状态：已完结)</a>
+                            #end
+                            #if($handleStatus=='7')
+                                <a href="/operationArea/ReturnEdit?id=$repairsId"  style="color: red;font-size:12px;">(退货状态：线下已退款)</a>
+                            #end
+                            #if($handleStatus=='8')
+                                <a href="/operationArea/ReturnEdit?id=$repairsId"  style="color: red;font-size:12px;">(退货状态：等待确认终止)</a>
+                            #end
+                            #if($handleStatus=='9')
+                                <a href="/operationArea/ReturnEdit?id=$repairsId"  style="color: red;font-size:12px;">(退货状态：等待HP确认拒收)</a>
+                            #end
+
                         #end
 
                     </div>
                     <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">网单状态：</span>
-                        <span>$!vo.statusTs</span>
+                        <span class="search-row-label_detail"   >网单状态：</span>
+                        <span>
+                        #if($!vo.status == 0)
+                            初始状态
+                        #elseif($!vo.status == 1)
+                            已占用库存
+                        #elseif($!vo.status == 2)
+                            同步到HP
+                        #elseif($!vo.status == 4)
+                            已分配网点
+                        #elseif($!vo.status == 8)
+                            LES 开提单, 待出库
+                        #elseif($!vo.status == 10)
+                            待审核
+                        #elseif($!vo.status == 40)
+                            待发货
+                        #elseif($!vo.status == 150)
+                            网点拒单
+                        #elseif($!vo.status == 70)
+                            待交付
+                        #elseif($!vo.status == 130)
+                            完成关闭
+                        #elseif($!vo.status == 140)
+                            用户签收
+                        #elseif($!vo.status == 160)
+                            用户拒收
+                        #elseif($!vo.status == 110)
+                            取消关闭
+                        #else
+                            未定义
+                        #end
+                        </span>
                     </div>
                     <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">发货时间：</span>
+                        <span class="search-row-label_detail" >发货时间：</span>
                         <span>$!vo.shippingTimeTs</span>
                     </div>
                     <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">TB单号：</span>
-                        <span>TB126(暂时没找到)</span>
+                        <span class="search-row-label_detail" >TB单号：</span>
+                        <span>$!vo.tbOrderSn</span>
                     </div>
                     <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">支付状态：</span>
-                        <span>$!vo.paymentStatus</span>
+                        <span class="search-row-label_detail" >支付状态：</span>
+                        <span>
+                        #if($!vo.cPaymentStatus ==  200)
+                            未付款
+                        #elseif($!vo.cPaymentStatus == 201)
+                            已付款
+                        #elseif($!vo.cPaymentStatus == 206)
+                            待退款
+                        #elseif($!vo.cPaymentStatus == 207)
+                            已退款
+                        #else
+                            $!vo.cPaymentStatus
+                        #end
+                        </span>
                     </div>
                     <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">付款时间：</span>
+                        <span class="search-row-label_detail" >付款时间：</span>
                         <span>$!vo.cpayTimeTs</span>
                     </div>
+
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" >受理状态：</span>
+                        <span>
+                            #if($!handleStatus ==  '-1')
+                                受理状态
+                            #elseif($!handleStatus == '1')
+                                审核中
+                            #elseif($!handleStatus == '2')
+                                进行中
+                            #elseif($!handleStatus == '3')
+                                受理完成
+                            #elseif($!handleStatus == '4')
+                                已完结
+                            #elseif($!handleStatus == '5')
+                                已驳回
+                            #elseif($!handleStatus == '6')
+                                已终止
+                            #elseif($!handleStatus == '7')
+                                线下已退款
+                            #elseif($!handleStatus == '8')
+                                等待确认终止
+                            #elseif($!handleStatus == '9')
+                                等待HP确认拒收
+                            #else
+                                $handleStatus
+                            #end
+
+                        </span>
+                    </div>
+                    #if($!vo.sCode == 'JS01' )
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" >净水物流模式：</span>
+                        <span>
+                            #if($!vo.isSAorZP == 'sa' || $!vo.isSAorZP == 'SA')
+                                送安一体
+                            #elseif($!vo.isSAorZP == '' || $!vo.isSAorZP == 'null')
+
+                            #else
+                                直发用户
+                            #end
+                        </span>
+                    </div>
+                    #else
+
+                    #end
+
                 </div>
             </form>
         </div>
@@ -89,53 +202,133 @@
                 <form class="param-form">
                     <div class="search-panel">
 
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">订单号：</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >订单号：</span>
                             <span class="">$!vo.orderSn</span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">外部订单号：</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >外部订单号：</span>
                             <span>$!vo.sourceOrderSn</span>
                         </div>
                         <div class="search-row_padd10" style="width: 360px;">
-                            <span class="search-row-label_detail" style="float: left;">交易流水号：</span>
+                            <span class="search-row-label_detail" >交易流水号：</span>
                             <span>$!vo.tradeSn</span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">下单人：</span>
-                            <span>(目前没找到此字段)</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >下单人：</span>
+                            <span>$!vo.consignee</span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">下单时间：</span>
-                            <span>(目前没找到此字段)</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >下单时间：</span>
+                            <span>$!vo.addTimeMin</span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">订单状态：</span>
-                            <span>$!vo.orderStatus</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >订单状态：</span>
+                            <span>
+                            #if($!vo.orderStatus ==  200)
+                                订单未确认
+                            #elseif($!vo.orderStatus == 201)
+                                订单已确认
+                            #elseif($!vo.orderStatus == 202)
+                                订单取消
+                            #elseif($!vo.orderStatus == 203)
+                                订单完成
+                            #else
+                                $!vo.orderStatus
+                            #end
+                            </span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">支付方式：</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >支付方式：</span>
                             <span>$!vo.paymentName</span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">付款时间：</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >付款时间：</span>
                             <span>$!vo.payTimeMin</span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">支付状态：</span>
-                            <span>$!vo.paymentStatus</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >支付状态：</span>
+                            <span>
+                            #if($!vo.paymentStatus ==  100)
+                                未付款
+                            #elseif($!vo.paymentStatus == 101)
+                                买家已付款
+                            #elseif($!vo.paymentStatus == 102)
+                                待退款
+                            #elseif($!vo.paymentStatus == 103)
+                                已退款
+                            #else
+                                $!vo.paymentStatus
+                            #end
+                            </span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">订单来源：</span>
-                            <span>$!vo.source</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >订单来源：</span>
+                            <span>
+                            #if($!vo.source =='TBSC')
+                                海尔官方淘宝旗舰店
+                            #elseif($!vo.source =='TOPBOILER')
+                                海尔热水器专卖店
+                            #elseif($!vo.source =='TONGSHUAI')
+                                淘宝网统帅日日顺乐家专卖店
+                            #elseif($!vo.source =='TONGSHUA#elseifX')
+                                统帅品牌商
+                            #elseif($!vo.source =='TOPXB')
+                                海尔新宝旗舰店
+                            #elseif($!vo.source =='MOOKA')
+                                mooka模卡官方旗舰店
+                            #elseif($!vo.source =='WASHER')
+                                海尔洗衣机旗舰店
+                            #elseif($!vo.source =='FRIDGE')
+                                海尔冰冷旗舰店
+                            #elseif($!vo.source =='AIR')
+                                海尔空调旗舰店
+                            #elseif($!vo.source =='TBCT')
+                                村淘海尔商家
+                            #elseif($!vo.source =='GQGYS')
+                                生态授权店
+                            #elseif($!vo.source =='TMKSD')
+                                天猫卡萨帝旗舰店
+                            #elseif($!vo.source =='TMTV')
+                                海尔电视旗舰店
+                            #elseif($!vo.source =='TBCFDD')
+                                海尔厨房大电旗舰店
+                            #elseif($!vo.source =='TBXCR')
+                                天猫小超人旗舰店
+                            #elseif($!vo.source =='TOPSHJD')
+                                海尔生活电器专卖店
+                            #elseif($!vo.source =='TOPDHSC')
+                                海尔生活家电旗舰店
+                            #elseif($!vo.source =='GMZX')
+                                国美海尔官方旗舰店
+                            #elseif($!vo.source =='GMZXTS')
+                                国美统帅官方旗舰店
+                            #elseif($!vo.source =='SNYG')
+                                苏宁统帅官方旗舰店
+                            #elseif($!vo.source =='SNHEGQ')
+                                苏宁海尔官方旗舰店
+                            #elseif($!vo.source =='SNQDZX')
+                                苏宁渠道中心
+                            #elseif($!vo.source =='DDW')
+                                当当
+                            #elseif($!vo.source =='JDHEBXGQ')
+                                京东海尔集团冰箱官方旗舰店
+                            #elseif($!vo.source =='JDHEGQ')
+                                京东海尔官方旗舰店
+                            #elseif($!vo.source =='TMMK')
+                                模卡淘宝旗舰店
+                            #else
+                                $!vo.source
+                            #end
+                            </span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">预警时间：</span>
+                        <div class="search-row_padd10" style="width: 360px;">
+                            <span class="search-row-label_detail" >预警时间：</span>
                             <span>&nbsp; $!vo.noticetime</span>
                         </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">备注：</span>
-                            <span>$!vo.remark=</span>
+                        <div class="search-row_padd10"  style="width: 1080px;">
+                            <span class="search-row-label_detail">备注：</span>
+                            <span>$!vo.remark</span>
                         </div>
                     </div>
                 </form>
@@ -146,17 +339,65 @@
         <span style="padding-left: 15px;">
             商品信息
         </span>
+                <span style="padding-left: 35px;">
+            <a href="#" class="easyui-linkbutton" id="addBtn_wa" data-options="iconCls:'icon-add',plain:true">WA拆单</a>
+            #if(($!vo.lockedNumber == 123456789 || $!vo.lockedNumber == 0  ) && $!vo.orderStatus ==  200 )
+                <a href="#" class="easyui-linkbutton" onclick="javascript: $('#oDialog4').dialog('open')" data-options="iconCls:'icon-edit',plain:true">修改库位</a>
+            #else
+
+            #end
+                </span>
+        <div id="oDialog4" class="easyui-dialog" title="修改"
+                     style="width: 430px; height: 190px;font-size:14px; padding: 0px 0px;overflow-y: hidden" closed="true"
+                     center="true" modal="true">
+            <br>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">当前库位</span>
+                <span class="search-row-label_80">$!vo.sCode</span>
+            </div>
+            <br>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">更改库位</span>
+                <input type="text" class="easyui-textbox" name="newsCode" id="newsCode" placeholder="更改库位"
+                       value=""/>
+                <br>
+                <span  style="color:red;margin-right:5px;display:inline-block;width: 185px;text-align: right; ">更改库位需慎重,后果自负</span>
+            </div>
+
+            <div id="dlg-buttons6" data-options="region:'south'" style="margin-right:20px;height:40px" align="right">
+                <a href="javascript:void(0)" class="easyui-linkbutton"
+                    onclick="javascript:upsCode()" iconcls="icon-ok">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+                    onclick="javascript: $('#oDialog4').dialog('close')" iconcls="icon-cancel">关闭</a>
+            </div>
+        </div>
+
+
+            </div>
+
+            <div id="addDlg_tbgroupbuy" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:235px;"
+                 closed="true" buttons="#dlg-buttons_tbgroupbuy">
+                <form id="addForm_tbgroupbuy" method="post">
+                    <div class="fitem">
+                        <label>退货单数量<span style="color: red;">*</span></label>
+                        <input id="num" class="easyui-textbox" name="num" required="true" />
+                    </div>
+                </form>
+                <div id="dlg-buttons_tbgroupbuy">
+                    <a href="#" class="easyui-linkbutton" id="update_wa" iconCls="icon-ok">保存</a>
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_tbgroupbuy').dialog('close')">取消</a>
+                </div>
             </div>
 
             <div style="width: 100%;height: 100px;overflow: auto">
-                <table id="datagrid_orderForecastLogs"></table>
+                <table width="100%" id="datagrid_orderForecastLogs"></table>
             </div>
-            <div class="search-panel"
+        <!--     <div class="search-panel"
                  style="margin-left: 16px;color: red;margin-right: 26px;margin-top: 10px;margin-bottom: 10px;">
                 订单总金额:￥1889.00元 网单优惠分摊:￥0.00元 网单积分分摊:0
                 优惠券号码: H码: 店铺优惠: 平台优惠:
                 钻石:0.00 海贝积分:0.00 金融积分:0.00
-            </div>
+            </div> -->
 
 
             <div id="receipt" class="param-form"
@@ -168,58 +409,125 @@
                     <div class="search-panel">
 
                         <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">发票类型：</span>
-                            <span class="">$!vo.type</span>
+                            <span class="search-row-label_detail" >发票类型：</span>
+                            <span class="">
+                                #if($!bitMap.invoiceType == 1)
+                                    增票
+                                #elseif($!bitMap.invoiceType == 2)
+                                    普票
+                                #end
+                            </span>
                         </div>
                         <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">审核状态：</span>
-                            <span>$!vo.istate</span>
+                            <span class="search-row-label_detail" >审核状态：</span>
+                            <span>
+                                #if($!bitMap.Mstate == 0)
+                                    待审核
+                                #elseif($!bitMap.Mstate == 1)
+                                    审核通过
+                                #elseif($!bitMap.Mstate == 2)
+                                    拒绝
+                                #elseif($!bitMap.Mstate == 3)
+                                    需人工审核
+                                #end
+                            </span>
                         </div>
                         <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">发票抬头：</span>
-                            <span>$!vo.invoiceTitle</span>
+                            <span class="search-row-label_detail" >发票抬头：</span>
+                            <span>$!bitMap.invoiceTitle</span>
                         </div>
                         <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">是否电子发票：</span>
-                            <span>$!vo.electricFlag</span>
+                            <span class="search-row-label_detail" >是否电子发票：</span>
+                            <span>
+                                #if($!bitMap.electricFlag == 0)
+                                    纸质发票
+                                #elseif($!bitMap.electricFlag == 1)
+                                    电子发票
+                                #end
+
+                            </span>
                         </div>
                         <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">开票类型：</span>
-                            <span>$!vo.makereceipttype</span>
+                            <span class="search-row-label_detail"   >开票类型：</span>
+                            <span>$!vo.makeReceiptTypeStatus</span>
                         </div>
                         <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">开票状态：</span>
-                            <span>$!vo.ismakereceipt</span>
+                            <span class="search-row-label_detail"   >开票状态：</span>
+                            <span>$!vo.IsMakeReceiptStatus</span>
                         </div>
                         <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">发票号码：</span>
+                            <span class="search-row-label_detail"   >税控码：</span>
+                            <span>$!vo.fiscalCode</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail"   >开票时间：</span>
+                            <span>$!vo.receiptAddTime</span>
+                        </div>
+                        <div class="search-row_padd10">
+                            <span class="search-row-label_detail"   >发票号：</span>
                             <span>$!vo.receiptNum</span>
                         </div>
                         <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">开票时间：</span>
-                            <span>$!vo.receiptaddtime</span>
-                        </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">发票代码：</span>
-                            <span>(没找到此字段)</span>
-                        </div>
-                        <div class="search-row_padd10">
-                            <span class="search-row-label_detail" style="float: left">发票校验码：</span>
+                            <span class="search-row-label_detail"   >发票校验码：</span>
                             <span>$!vo.checkCode</span>
                         </div>
-                        <span style="color: red;">用电子钱包所购买商品只开具一分钱发票，作为维修凭证</span>
+                       
                     </div>
                 </form>
             </div>
 
+            <div id="oDialogclo" class="easyui-dialog" title="网单关闭" style="width: 400px; height: 250px;font-size:14px; padding: 0px 0px;overflow-y: hidden" closed="true" center="true" modal="true">
+                <div class="easyui-layout" style="width:100%;height:100%;display: block">
+                    <div class="search-row_padd10">
+                        <span class="search-row-label_detail" >网单关闭理由：</span>
+                        <br>
+                        <div style="margin-left: 15px">
+                        <input type="text" data-options="multiline:true" style="width:360px;height:100px"  class="easyui-textbox" name="mark" id="mark"  value="" />
+                        </div>
+                    </div>
+                    <div id="dlg-buttons1" data-options="region:'south'" style="height:35px" align="right">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:closeOrder()" iconcls="icon-ok">确定</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel" onclick="javascript:$('#oDialogclo').dialog('close')">关闭</a>
+                    </div>
+                </div>
+            </div>
 
             <div id="operateHistory" class="param-form"
                  style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
                 <span style="padding-left: 15px;">操作历史</span>
+                <input type="hidden" id="sCode" value="$!vo.sCode">
             </div>
             <div class="detail_content" style="padding-left: 10px;padding-top:10px;">
-                <table width="100%">
-                    <tbody>
+                #if($!vo.status !=  110&&$!vo.status !=  130)
+                    <div class="search-row_padd10" style="width: 100px" >&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="opencloseOrder()">关闭网单</a></div>
+                #end
+                <div style="padding-bottom: 10px;width: 200px;display: inline-block">
+                    <span>物流名称：</span>
+                    <span>$vo.expressName</span>
+                </div>
+                #if($!vo.invoicenumber =='' )
+                    <div style="padding-bottom: 10px;width: 200px;display: inline-block">
+                        <span >运单号：</span>
+                        <span>$vo.invoiceExpressNumber</span>
+                    </div>
+                #else
+                    <div style="padding-bottom: 10px;width: 200px;display: inline-block">
+                        <span >运单号：</span>
+                        <span>$!vo.invoicenumber</span>
+                    </div>
+                #end
+                #if($!expressCompany == '' || $!expressNumber =='')
+                #else
+                    <div style="padding-bottom: 10px;width: 350px;display: inline-block">
+                        <span >快递公司：</span>
+                        <span>$!expressCompany</span>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        <span >运单号：</span>
+                        <span>$!expressNumber</span>
+                    </div>
+                #end
+                <table width="100%" id="OperationHistory">
+                   <!--  <tbody>
                     <tr>
                         <th width="10%" style="text-align: center;">操作时间</th>
                         <th width="10%" style="text-align: center;">订单号</th>
@@ -263,7 +571,7 @@
                         <td>CAINIAO出库</td>
                         <td>CAINIAO出库成功,出库凭证号:2991610420;快递公司:菜鸟物流</td>
                         <!-- <td> <input id='voCommodity'  value="$!voCommodity"></input></td> -->
-                    </tr>
+                   <!--  </tr>
                     <tr style="align-content: center;">
                         <td>2017-08-17 00:02:00</td>
                         <td>
@@ -273,7 +581,7 @@
                         <td>订单处理方式选择</td>
                         <td>获取标建成功，自动处理</td>
                     </tr>
-                    </tbody>
+                    </tbody> --> 
                 </table>
             </div>
 
@@ -297,6 +605,7 @@
         <div class="fitem">
             <label>网单号<span style="color: red;">*</span></label>
             <input class="easyui-textbox" id="cOrderSnId" value="$!vo.cOrderSn" name="cOrderSnId" required="true"/>
+            <input  type="hidden" id="opId"  value="$!vo.id"/>
         </div>
         <div class="fitem">
             <label>联系人<span style="color: red;">*</span></label>

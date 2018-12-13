@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
+    <title>批量重新开票</title>
+
+    <style type="text/css">
+
+    </style>
+
+</head>
+<body class="iframe-body">
+
+
+<div data-original-title="" class="box-header well">
+    <h2>批量重新开票</h2>
+</div>
+
+
+<form  class="param-form" >
+    <div class="search-panel">
+        <div class="search-row" style="width: 100%">
+                <span class="search-row-label" style="float:left;font-weight:bold;font-size:16px;">
+                  网单号:
+                </span>
+            <textarea rows="18" name="cOrderSns" id="cOrderSns" style="resize: none;width:600px;"></textarea>
+            <div style="margin-left:120px">
+
+                <span style="color: red">每行一条网单号，多条用回车分割。</span>
+                <div class="clearfix"></div>
+                <input type="button" value="提交" id="submitButton" onClick="onSend()"
+                       style="margin-left:515px;padding: 5px 20px;border: 0;border-radius: 4px;">
+            </div>
+        </div>
+    </div>
+</form>
+
+<div id="show" class="easyui-panel"  data-options="border:false" style="overflow-y: auto;height: 300px;color: red;
+    margin-left: 120px;overflow-x: auto;">
+    <p id="msg"></p>
+</div>
+<script>
+
+    function onSend() {
+        var cOrderSns = $('#cOrderSns').val();
+        if (cOrderSns == '') {
+            alert("网单号不能为空");
+            return false;
+        }
+
+        $.ajax({
+            type : 'POST',
+            dataType : 'json',
+            url : '/invoice/doBatchReopeningInvoice',
+            data : {
+                cOrderSns : cOrderSns
+            },
+            success : function(data) {
+                $("#msg").html(data.message);
+            },
+            error : function(e) {
+                $.messager.alert(e);
+            }
+        });
+    }
+</script>
+
+<!-- 需引入的js -->
+<script src="/static/third/easyui/jquery.min2.js"></script>
+<script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+<script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script src="/static/third/easyui/glo.js"></script>
+<script src="/static/third/easyui/comm.js"></script>
+<script src="/static/third/easyui/commgrid.js"></script>
+<script src="/static/third/easyui/jQuery.Form.js"></script>
+<script src="/static/js/pop/common/pop.js"></script>
+<script src="/static/js/bootstrap-datepicker.js"></script>
+</body>
+</html>

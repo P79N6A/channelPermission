@@ -210,86 +210,91 @@
 
     <sql id="invoiceQueryCondition">
         <if test="corder_sn !=null and corder_sn != ''">
-            AND cOrderSn LIKE CONCAT(#{corder_sn},'%')
+            AND inv.cOrderSn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="sourceorder_sn !=null and sourceorder_sn != ''">
+            AND o.sourceOrderSn =  #{sourceorder_sn}
         </if>
         <if test="invoice_title !=null and invoice_title != ''">
-            AND UPPER(invoiceTitle) LIKE CONCAT('%',UPPER(#{invoice_title}),'%')
+            AND UPPER(inv.invoiceTitle) LIKE CONCAT('%',UPPER(#{invoice_title}),'%')
         </if>
         <if test="tax_payer_number !=null and tax_payer_number != ''">
-            AND UPPER(taxPayerNumber) LIKE CONCAT('%',UPPER(#{tax_payer_number}),'%')
+            AND UPPER(inv.taxPayerNumber) LIKE CONCAT('%',UPPER(#{tax_payer_number}),'%')
         </if>
         <if test="register_address_and_phone !=null and register_address_and_phone != ''">
-            AND UPPER(registerAddressAndPhone) LIKE CONCAT('%',UPPER(#{register_address_and_phone}),'%')
+            AND UPPER(inv.registerAddressAndPhone) LIKE CONCAT('%',UPPER(#{register_address_and_phone}),'%')
         </if>
         <if test="bank_name_and_account !=null and bank_name_and_account != ''">
-            AND UPPER(bankNameAndAccount) LIKE CONCAT('%',UPPER(#{bank_name_and_account}),'%')
+            AND UPPER(inv.bankNameAndAccount) LIKE CONCAT('%',UPPER(#{bank_name_and_account}),'%')
         </if>
         <if test="energy_saving !=null and energy_saving !='' and energy_saving==1">
-            AND energySavingAmount>0
+            AND inv.energySavingAmount>0
         </if>
         <if test="energy_saving !=null and energy_saving !='' and energy_saving==0">
-            AND energySavingAmount=0
+            AND inv.energySavingAmount=0
         </if>
         <if test="is_reinvoice !=null and is_reinvoice !='' and is_reinvoice != '-1' or is_reinvoice==0">
-            AND isReInvoice=#{is_reinvoice}
+            AND inv.isReInvoice=#{is_reinvoice}
         </if>
         <if test="type !=null and type !='' and type != '-1' or type==0">
-            AND type=#{type}
+            AND inv.type=#{type}
         </if>
         <if test="state !=null and state !='' and state != '-1' or state==0">
-            AND state=#{state}
+            AND inv.state=#{state}
         </if>
         <if test="electric_flag !=null and electric_flag !='' and electric_flag != '-1' or electric_flag==0">
-            AND electricFlag=#{electric_flag}
+            AND inv.electricFlag=#{electric_flag}
         </if>
         <if test="try_num !=null and try_num != ''">
-            AND tryNum=#{try_num}
+            AND inv.tryNum=#{try_num}
         </if>
         <if test="billing_time_start !=null and billing_time_start != ''">
-            AND billingTime>=UNIX_TIMESTAMP(#{billing_time_start})
+            AND inv.billingTime>=UNIX_TIMESTAMP(#{billing_time_start})
         </if>
         <if test="billing_time_end !=null and billing_time_end != ''">
-            AND billingTime&lt;=UNIX_TIMESTAMP(#{billing_time_end})
+            AND inv.billingTime&lt;=UNIX_TIMESTAMP(#{billing_time_end})
         </if>
         <if test="invalid_time_start !=null and invalid_time_start != ''">
-            AND invalidTime>=UNIX_TIMESTAMP(#{invalid_time_start})
+            AND inv.invalidTime>=UNIX_TIMESTAMP(#{invalid_time_start})
         </if>
         <if test="invalid_time_end !=null and invalid_time_end != ''">
-            AND invalidTime&lt;=UNIX_TIMESTAMP(#{invalid_time_end})
+            AND inv.invalidTime&lt;=UNIX_TIMESTAMP(#{invalid_time_end})
         </if>
         <if test="status_type !=null and status_type !='' and status_type != '-1' or status_type==0">
-            AND statusType=#{status_type}
+            AND inv.statusType=#{status_type}
         </if>
         <if test="success !=null and success !='' and success != '-1' or success==0">
-            AND success=#{success}
+            AND inv.success=#{success}
         </if>
         <if test="corder_add_time_start !=null and corder_add_time_start != ''">
-            AND cOrderAddTime>=UNIX_TIMESTAMP(#{corder_add_time_start})
+            AND inv.cOrderAddTime>=UNIX_TIMESTAMP(#{corder_add_time_start})
         </if>
         <if test="corder_add_time_end !=null and corder_add_time_end != ''">
-            AND cOrderAddTime&lt;=UNIX_TIMESTAMP(#{corder_add_time_end})
+            AND inv.cOrderAddTime&lt;=UNIX_TIMESTAMP(#{corder_add_time_end})
         </if>
-        <if test="timeA !=null and timeA !='' and timeA != '-1'">
-            AND firstPushTime&lt;=UNIX_TIMESTAMP(DATE_SUB(NOW(),INTERVAL #{timeA} minute))
-            AND state = 0
+        <if test="eai_write_state !=null and eai_write_state != '-1'">
+            AND inv.eaiWriteState = #{eai_write_state}
         </if>
         <if test="is_together !=null and is_together !='' and is_together != '-1'">
-            AND isTogether=#{is_together}
+            AND inv.isTogether=#{is_together}
         </if>
         <if test="timeB !=null and timeB !='' and timeB != '-1'">
-            AND billingTime&lt;=UNIX_TIMESTAMP(DATE_SUB(NOW(),INTERVAL #{timeB} minute))
-            AND state = 1
+            AND inv.billingTime&lt;=UNIX_TIMESTAMP(DATE_SUB(NOW(),INTERVAL #{timeB} minute))
+            AND inv.state = 1
         </if>
         <if test="corder_type !=null and corder_type !='' and corder_type != '-1'">
-            AND cOrderType=#{corder_type}
+            AND inv.cOrderType=#{corder_type}
         </if>
         <if test="invoice_number !=null and invoice_number != ''">
-            AND UPPER(invoiceNumber) LIKE CONCAT('%',UPPER(#{invoice_number}),'%')
+            AND UPPER(inv.invoiceNumber) LIKE CONCAT('%',UPPER(#{invoice_number}),'%')
         </if>
     </sql>
     <sql id="invoiceExportQueryCondition">
         <if test="corder_sn !=null and corder_sn != ''">
             AND inv.cOrderSn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="order_sn !=null and order_sn != ''">
+            AND o.orderSn =  #{order_sn}
         </if>
         <if test="invoice_title !=null and invoice_title != ''">
             AND UPPER(invoiceTitle) LIKE CONCAT('%',UPPER(#{invoice_title}),'%')
@@ -366,22 +371,113 @@
             AND UPPER(invoiceNumber) LIKE CONCAT('%',UPPER(#{invoice_number}),'%')
         </if>
     </sql>
+    <sql id="getTianMaoFiscalCodeListCondition">
+        <if test="corder_sn !=null and corder_sn != ''">
+            AND inv.cOrderSn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="sourceOrderSn !=null and sourceOrderSn != ''">
+            AND o.sourceOrderSn =  #{sourceOrderSn}
+        </if>
+        <if test="invoice_title !=null and invoice_title != ''">
+            AND UPPER(inv.invoiceTitle) LIKE CONCAT('%',UPPER(#{invoice_title}),'%')
+        </if>
+        <if test="tax_payer_number !=null and tax_payer_number != ''">
+            AND UPPER(inv.taxPayerNumber) LIKE CONCAT('%',UPPER(#{tax_payer_number}),'%')
+        </if>
+        <if test="type !=null and type !='' and type != '-1' or type==0">
+            AND inv.type=#{type}
+        </if>
+        <if test="state !=null and state !='' and state != '-1' or state==0">
+            AND inv.state=#{state}
+        </if>
+        <if test="billing_time_start !=null and billing_time_start != ''">
+            AND inv.billingTime>=UNIX_TIMESTAMP(#{billing_time_start})
+        </if>
+        <if test="billing_time_end !=null and billing_time_end != ''">
+            AND inv.billingTime&lt;=UNIX_TIMESTAMP(#{billing_time_end})
+        </if>
+        <if test="corder_add_time_start !=null and corder_add_time_start != ''">
+            AND inv.cOrderAddTime>=UNIX_TIMESTAMP(#{corder_add_time_start})
+        </if>
+        <if test="corder_add_time_end !=null and corder_add_time_end != ''">
+            AND inv.cOrderAddTime&lt;=UNIX_TIMESTAMP(#{corder_add_time_end})
+        </if>
+    </sql>
 
+    <sql id="exportTianMaoFiscalCodeListCondition">
+        <if test="corder_sn !=null and corder_sn != ''">
+            AND inv.cOrderSn LIKE CONCAT(#{corder_sn},'%')
+        </if>
+        <if test="sourceOrderSn !=null and sourceOrderSn != ''">
+            AND orders.sourceOrderSn =  #{sourceOrderSn}
+        </if>
+        <if test="invoice_title !=null and invoice_title != ''">
+            AND UPPER(inv.invoiceTitle) LIKE CONCAT('%',UPPER(#{invoice_title}),'%')
+        </if>
+        <if test="tax_payer_number !=null and tax_payer_number != ''">
+            AND UPPER(inv.taxPayerNumber) LIKE CONCAT('%',UPPER(#{tax_payer_number}),'%')
+        </if>
+        <if test="type !=null and type !='' and type != '-1' or type==0">
+            AND inv.type=#{type}
+        </if>
+        <if test="state !=null and state !='' and state != '-1' or state==0">
+            AND inv.state=#{state}
+        </if>
+        <if test="billing_time_start !=null and billing_time_start != ''">
+            AND inv.billingTime>=UNIX_TIMESTAMP(#{billing_time_start})
+        </if>
+        <if test="billing_time_end !=null and billing_time_end != ''">
+            AND inv.billingTime&lt;=UNIX_TIMESTAMP(#{billing_time_end})
+        </if>
+        <if test="corder_add_time_start !=null and corder_add_time_start != ''">
+            AND inv.cOrderAddTime>=UNIX_TIMESTAMP(#{corder_add_time_start})
+        </if>
+        <if test="corder_add_time_end !=null and corder_add_time_end != ''">
+            AND inv.cOrderAddTime&lt;=UNIX_TIMESTAMP(#{corder_add_time_end})
+        </if>
+    </sql>
+    <select id="queryDataByOrderId" parameterType="Integer" resultMap="invoicesResult">
+		SELECT  
+				i.id,i.isOld,i.isReInvoice,i.orderProductId,i.cOrderType,i.diffId,i.cOrderSn,i.memberInvoiceId,i.customerCode,i.invoiceTitle,
+				i.taxPayerNumber,i.registerAddressAndPhone,i.bankNameAndAccount,i.remark,i.cOrderAddTime,i.sku,i.productName,
+				i.productCateName,i.unit,i.number,i.price,i.amount,i.nonTaxPrice,i.nonTaxAmount,i.taxAmount,i.taxRate,i.type,
+				i.isTogether,i.state,i.lessOrderSn,i.paymentName,i.sCode,i.orderType,i.invoiceNumber,i.billingTime,i.eaiWriteTime,
+				i.drawer,i.eaiWriteState,i.invalidTime,i.firstPushTime,i.lastModifyTime,i.internalSettlement,i.branchOfficeCode,
+				i.orderLineNumber,i.backupFieldA,i.backupFieldB,i.integralAmount,i.energySavingAmount,i.energySavingRemark,
+				i.statusType,i.success,i.addTime,i.tryNum,i.electricFlag,i.invalidReason
+		FROM
+        invoices i,orderproducts op
+		where 
+			i.orderProductId=op.id AND op.orderId=#{orderId}
+	</select>
+ <select id="selectInvoiceView" parameterType="java.lang.String" resultMap="invoicesResult">
+    SELECT
+		electricFlag,
+		type,
+		isTogether,
+		invoiceTitle,
+		id
+	FROM
+     invoices
+	WHERE
+		orderProductId =#{productId}
+    </select>
     <select id="getInvoicesByCOrderSn" parameterType="String" resultMap="invoicesResult2">
         select
         `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
-        from `Invoices`
+        from `invoices`
         where `cOrderSn` = #{cOrderSn}
     </select>
 
     <select id="getInvoiceMakeOutList" parameterType="Map" resultMap="invoiceMakeOutResult">
         SELECT SQL_CALC_FOUND_ROWS
-        id,cOrderSn,cOrderType,sku,productName,productCateName,number,price,amount,taxPayerNumber,invoiceNumber,fiscalCode,type,electricFlag,state,isTogether,CASE
+        inv.id,inv.cOrderSn,inv.cOrderType,inv.sku,inv.productName,inv.productCateName,inv.number,inv.price,inv.amount,inv.taxPayerNumber,inv.invoiceNumber,inv.fiscalCode,inv.type,inv.electricFlag,inv.state,inv.isTogether,CASE
         WHEN firstPushTime= 0 THEN '' ELSE FROM_UNIXTIME(firstPushTime) END firstPushTime,
         CASE WHEN billingTime=0 THEN '' ELSE FROM_UNIXTIME(billingTime) END billingTime,
         CASE WHEN invalidTime = 0 THEN '' ELSE FROM_UNIXTIME(invalidTime) END invalidTime,
         statusType,success,tryNum,eaiWriteState
-        FROM Invoices
+        FROM invoices inv left join orderproducts op on op.id = inv.orderProductId
+        left join orders o on o.id = op.orderId
         WHERE 1=1
         <include refid="invoiceQueryCondition"/>
         Order By id DESC
@@ -403,10 +499,10 @@
         ,inv.registerAddressAndPhone
         ,inv.bankNameAndAccount
         ,inv.remark
-        ,Orders.receiptConsignee
-        ,Orders.receiptAddress
-        ,Orders.receiptZipcode
-        ,Orders.receiptMobile
+        ,orders.receiptConsignee
+        ,orders.receiptAddress
+        ,orders.receiptZipcode
+        ,orders.receiptMobile
         ,CASE WHEN inv.cOrderAddTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.cOrderAddTime) END cOrderAddTime
         ,inv.sku
         ,inv.productName
@@ -430,15 +526,15 @@
         ,CASE WHEN inv.invalidTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.invalidTime) END invalidTime
         ,CASE WHEN inv.firstPushTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.firstPushTime) END firstPushTime
         ,CASE WHEN inv.lastModifyTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.lastModifyTime) END lastModifyTime
-        ,Orders.consignee
-        ,Orders.regionName
-        ,Orders.address
-        ,Orders.mobile
-        ,Orders.phone
-        ,Orders.remark orderRemark
+        ,orders.consignee
+        ,orders.regionName
+        ,orders.address
+        ,orders.mobile
+        ,orders.phone
+        ,orders.remark orderRemark
         ,inv.invoiceNumber
-        FROM Invoices inv LEFT OUTER JOIN OrderProducts ON inv.orderProductId=OrderProducts.id
-        LEFT OUTER JOIN Orders ON OrderProducts.orderId=Orders.id
+        FROM invoices inv LEFT OUTER JOIN orderproducts ON inv.orderProductId=orderproducts.id
+        LEFT OUTER JOIN orders ON orderproducts.orderId=orders.id
         WHERE 1=1
         <include refid="invoiceExportQueryCondition"/>
         <if test="ids != null and ids != ''">
@@ -455,7 +551,7 @@
         state,
         isTogether
         FROM
-        Invoices
+        invoices
         WHERE
         orderProductId = #{id}
         AND state in (0, 1)
@@ -465,26 +561,26 @@
     <select id="getById" parameterType="Integer" resultMap="invoicesResult">
         select
         `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
-        from `Invoices`
+        from `invoices`
         where `id` = #{id}
     </select>
     <select id="searchInvoicesInfoByCOrderSn" resultType="java.util.Map">
         select
         `cOrderSn`,`invoiceTitle`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`state`,`paymentName`,`invoiceNumber`,`billingTime`,`drawer`,`eaiWriteState`,`invalidTime`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
-        from `Invoices`
+        from `invoices`
         where `cOrderSn` = #{cOrderSn} and `electricFlag`=1
     </select>
     <select id="getByOrderProductId" parameterType="Integer" resultMap="invoicesResult">
         select
         `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
-        from `Invoices`
+        from `invoices`
         where `orderProductId` = #{orderProductId}
     </select>
 
     <select id="getSyncInvoiceList" parameterType="Integer" resultMap="invoicesResult">
         <![CDATA[
 		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
-		from `Invoices`
+		from `invoices`
 		where `success` = 0 and `tryNum` < 20
 		order by `id` desc
 		limit #{topX}
@@ -493,7 +589,7 @@
     <select id="getInvoiceInvalidNotEndList" parameterType="Integer" resultMap="invoicesResult">
         <![CDATA[
 		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
-		from `Invoices`
+		from `invoices`
 		where invalidTime=0 and statusType=4 and success=1 and electricFlag=1 and type=2 and tryNum < 30 and addTime >= 1427817600
 		order by `id` desc
 		limit #{topX}
@@ -501,7 +597,115 @@
     </select>
     <select id="showInvoiceInfo" parameterType="Integer" resultMap="invoiceMakeOutResult">
         SELECT *
-        FROM Invoices
+        FROM invoices
         WHERE id=#{id}
+    </select>
+
+    <select id="getTianMaoFiscalCodeList" parameterType="Map" resultMap="invoiceMakeOutResult">
+        SELECT SQL_CALC_FOUND_ROWS
+        inv.id,inv.cOrderSn,inv.cOrderType,inv.sku,inv.productName,inv.productCateName,inv.number,inv.price,inv.amount,inv.taxPayerNumber,inv.invoiceNumber,inv.fiscalCode,inv.type,inv.electricFlag,inv.state,inv.isTogether,CASE
+        WHEN firstPushTime= 0 THEN '' ELSE FROM_UNIXTIME(firstPushTime) END firstPushTime,
+        CASE WHEN billingTime=0 THEN '' ELSE FROM_UNIXTIME(billingTime) END billingTime,
+        CASE WHEN invalidTime = 0 THEN '' ELSE FROM_UNIXTIME(invalidTime) END invalidTime,
+        statusType,success,tryNum,eaiWriteState
+        FROM invoices inv left join orderproducts op on op.id = inv.orderProductId
+        left join orders o on o.id = op.orderId
+        WHERE 1=1
+        <include refid="getTianMaoFiscalCodeListCondition"/>
+        Order By id DESC
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getExportTianMaoFiscalCodeList" parameterType="Map" resultType="Map">
+        SELECT inv.cOrderSn
+        ,inv.customerCode
+        ,inv.invoiceTitle
+        ,inv.taxPayerNumber
+        ,inv.registerAddressAndPhone
+        ,inv.bankNameAndAccount
+        ,inv.remark
+        ,orders.receiptConsignee
+        ,orders.receiptAddress
+        ,orders.receiptZipcode
+        ,orders.receiptMobile
+        ,CASE WHEN inv.cOrderAddTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.cOrderAddTime) END cOrderAddTime
+        ,inv.sku
+        ,inv.productName
+        ,inv.productCateName
+        ,inv.unit
+        ,inv.number
+        ,inv.price
+        ,inv.amount
+        ,inv.nonTaxPrice
+        ,inv.nonTaxAmount
+        ,inv.taxAmount
+        ,inv.taxRate
+        ,inv.energySavingAmount
+        ,inv.type
+        ,inv.isTogether
+        ,inv.state
+        ,inv.paymentName
+        ,CASE WHEN inv.billingTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.billingTime) END billingTime
+        ,inv.drawer
+        ,inv.eaiWriteState
+        ,CASE WHEN inv.invalidTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.invalidTime) END invalidTime
+        ,CASE WHEN inv.firstPushTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.firstPushTime) END firstPushTime
+        ,CASE WHEN inv.lastModifyTime= 0 THEN '' ELSE FROM_UNIXTIME(inv.lastModifyTime) END lastModifyTime
+        ,orders.consignee
+        ,orders.regionName
+        ,orders.address
+        ,orders.mobile
+        ,orders.phone
+        ,orders.remark orderRemark
+        ,inv.invoiceNumber
+        FROM invoices inv LEFT OUTER JOIN orderproducts ON inv.orderProductId=orderproducts.id
+        LEFT OUTER JOIN orders ON orderproducts.orderId=orders.id
+        WHERE 1=1
+        <include refid="exportTianMaoFiscalCodeListCondition"/>
+        <if test="ids != null and ids != ''">
+            AND inv.id in (${ids})
+        </if>
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+    <select id="getFiscalCodeList" parameterType="Map" resultType="com.haier.shop.model.InvoicesDispItem">
+        SELECT SQL_CALC_FOUND_ROWS
+        inv.cOrderSn,inv.fiscalCode
+        FROM invoices inv left join orderproducts op on op.id = inv.orderProductId
+        left join orders o on o.id = op.orderId
+        WHERE 1=1
+        <if test="sourceOrderSn !=null and sourceOrderSn != ''">
+            AND o.sourceOrderSn =  #{sourceOrderSn}
+        </if>
+        Order By inv.id DESC
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+    <select id="getByDiffId" parameterType="Integer" resultMap="invoicesResult">
+        select
+        `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
+        from `invoices`
+        where `diffId` = #{diffId}
+    </select>
+
+    <select id="getLatestInvoicesByCOrderSn" parameterType="String" resultMap="invoicesResult">
+        SELECT
+            cOrderSn,
+            electricFlag,
+            state,
+            eaiWriteState,
+            statusType,
+            success
+        FROM
+	    `invoices`
+        WHERE
+	    orderProductId = ( SELECT orderProductId FROM `invoices` WHERE cOrderSn = #{cOrderSn} )
+        ORDER BY
+	    id DESC
+	    LIMIT 0,1
     </select>
 </mapper>

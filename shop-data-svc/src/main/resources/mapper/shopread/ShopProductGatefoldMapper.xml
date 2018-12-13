@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.ShopProductGatefoldDao" >
+    <resultMap id="resultMap" type="com.haier.shop.model.ProductGatefoldsDTO">
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="productId" property="productId" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="displayName" property="displayName" jdbcType="VARCHAR" />
+        <result column="fileId" property="fileId" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="selectByProductId" parameterType="java.lang.Integer" resultMap="resultMap">
+        SELECT * FROM t_product_gatefolds WHERE productId=#{id}
+    </select>
+    <insert id="insertBath" parameterType="com.haier.shop.model.ProductGatefoldsDTO">
+        INSERT INTO t_product_gatefolds(productId,name,url,displayName,fileId) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.productId}, #{item.name}, #{item.url}, #{item.displayName}, #{item.fileId})
+        </foreach>
+    </insert>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM t_product_gatefolds WHERE productId=#{id}
+    </delete>
+</mapper>

@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haier.purchase.data.dao.purchase.PurchaseOrderDao">
-    <resultMap id="purchaseOrderResult" type="com.haier.purchase.data.model.PurchaseOrder">
-        <result property="poId" column="po_id"/>
-        <result property="poNo" column="po_no"/>
-        <result property="channelCode" column="channel_code"/>
-        <result property="suplier" column="suplier"/>
-        <result property="soldTo" column="sold_to"/>
-        <result property="deliveryTo" column="delivery_to"/>
-        <result property="amount" column="amount"/>
-        <result property="type" column="type"/>
-        <result property="receiver" column="receiver"/>
-        <result property="mobile" column="mobile"/>
-        <result property="telephone" column="telephone"/>
-        <result property="province" column="province"/>
-        <result property="city" column="city"/>
-        <result property="county" column="county"/>
-        <result property="address" column="address"/>
-        <result property="status" column="status"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="poType" column="po_type"/>
-        <result property="deliveryToName" column="delivery_to_name"/>
-    </resultMap>
-    
-    
-     <select id="get" parameterType="Integer" resultMap="purchaseOrderResult">
+  <resultMap id="purchaseOrderResult" type="com.haier.purchase.data.model.PurchaseOrder">
+    <result property="poId" column="po_id"/>
+    <result property="poNo" column="po_no"/>
+    <result property="channelCode" column="channel_code"/>
+    <result property="suplier" column="suplier"/>
+    <result property="soldTo" column="sold_to"/>
+    <result property="deliveryTo" column="delivery_to"/>
+    <result property="amount" column="amount"/>
+    <result property="type" column="type"/>
+    <result property="receiver" column="receiver"/>
+    <result property="mobile" column="mobile"/>
+    <result property="telephone" column="telephone"/>
+    <result property="province" column="province"/>
+    <result property="city" column="city"/>
+    <result property="county" column="county"/>
+    <result property="address" column="address"/>
+    <result property="status" column="status"/>
+    <result property="createTime" column="create_time"/>
+    <result property="updateTime" column="update_time"/>
+    <result property="poType" column="po_type"/>
+    <result property="deliveryToName" column="delivery_to_name"/>
+  </resultMap>
+
+
+  <select id="get" parameterType="Integer" resultMap="purchaseOrderResult">
         SELECT
             `po_id`,
             `po_no`,
@@ -50,53 +50,161 @@
         FROM `purchase_order`
         WHERE `po_id` = #{poId}
     </select>
-     <select id="getOrderInfoByDnSi" parameterType="Map" resultType="com.haier.purchase.data.model.PurchaseOrderInfoItem">
-        SELECT
-			t1.order_id,
-			t1.ed_channel_id,
-			t1.materials_id,
-			t1.storage_id
-		FROM
-			haier_t2_order_t t1,
-			crm_order_t t2
-		WHERE
-			t1.order_id = t2.source_order_id
-			and t2.dn_id in 
-			<foreach item="item" index="index" collection="si_dn_ids" open="(" separator="," close=")">  
-  				#{item}  
-  			</foreach>
-		UNION
-			SELECT
-				t2.source_order_id as order_id,
-				t1.ed_channel_id,
-				t2.mdm_partsCode as materials_id,
-				t1.storage_id
-			FROM
-				leader_nb_t2_order_t t1,
-				si_ou_info_t t2
-			WHERE
-				t1.order_id = t2.source_order_id
-			and t2.si_ou_slipNo in
-			<foreach item="item" index="index" collection="si_dn_ids" open="(" separator="," close=")">  
-  				#{item}  
-  			</foreach>
-  		UNION
-			SELECT
-				t2.source_order_id as order_id,
-				t1.ed_channel_id,
-				t1.materials_id,
-				t3.estorge_id as storage_id
-			FROM
-				crm_order_manual_detail_t t1,
-				crm_order_t t2,
-				crm_order_manual_t t3
-			WHERE
-				t1.wp_order_id = t2.source_order_id
-				and t1.wp_order_id=t3.wp_order_id
-				and t2.dn_id in 
-			<foreach item="item" index="index" collection="si_dn_ids" open="(" separator="," close=")">  
-  				#{item}  
-  			</foreach>
-    </select>
-    
-    </mapper>
+  <select id="getOrderInfoByDnSi" parameterType="Map" resultType="com.haier.purchase.data.model.PurchaseOrderInfoItem">
+    SELECT
+    t1.order_id,
+    t1.ed_channel_id,
+    t1.materials_id,
+    t1.storage_id
+    FROM
+    haier_t2_order_t t1,
+    crm_order_t t2
+    WHERE
+    t1.order_id = t2.source_order_id
+    and t2.dn_id in
+    <foreach item="item" index="index" collection="si_dn_ids" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    UNION
+    SELECT
+    t2.source_order_id as order_id,
+    t1.ed_channel_id,
+    t2.mdm_partsCode as materials_id,
+    t1.storage_id
+    FROM
+    leader_nb_t2_order_t t1,
+    si_ou_info_t t2
+    WHERE
+    t1.order_id = t2.source_order_id
+    and t2.si_ou_slipNo in
+    <foreach item="item" index="index" collection="si_dn_ids" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    UNION
+    SELECT
+    t2.source_order_id as order_id,
+    t1.ed_channel_id,
+    t1.materials_id,
+    t3.estorge_id as storage_id
+    FROM
+    crm_order_manual_detail_t t1,
+    crm_order_t t2,
+    crm_order_manual_t t3
+    WHERE
+    t1.wp_order_id = t2.source_order_id
+    and t1.wp_order_id=t3.wp_order_id
+    and t2.dn_id in
+    <foreach item="item" index="index" collection="si_dn_ids" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <insert id="insert" parameterType="com.haier.purchase.data.model.PurchaseOrder">
+    insert into
+    `purchase_order`(`po_no`,`channel_code`,`suplier`,`sold_to`,`delivery_to`,`amount`,`type`,`receiver`,`mobile`,`telephone`,`province`,`city`,`county`,`address`,`status`,`create_time`,`update_time`,`po_type`,`delivery_to_name`)
+    values(#{poNo},#{channelCode},#{suplier},#{soldTo},#{deliveryTo},#{amount},#{type},#{receiver},#{mobile},#{telephone},#{province},#{city},#{county},#{address},100,#{createTime},#{updateTime},#{poType},#{deliveryToName})
+    <selectKey resultType="java.lang.Integer" order="AFTER"
+      keyProperty="poId" statementType="STATEMENT">SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <update id="updatePoNo" parameterType="com.haier.purchase.data.model.PurchaseOrder">
+    UPDATE `purchase_order`
+    SET `po_no` = #{poNo}
+    WHERE `po_id` = #{poId}
+  </update>
+
+  <select id="findPurchaseOrder" resultMap="purchaseOrderResult">
+    select SQL_CALC_FOUND_ROWS
+    `po_id`,`po_no`,`channel_code`,`suplier`,`sold_to`,`po_type`,`delivery_to_name`,`delivery_to`,`amount`,`type`,`receiver`,`mobile`,`telephone`,`province`,`city`,`county`,`address`,`status`,`create_time`,`update_time`
+    from `purchase_order`
+    where (po_type='3PL' or po_type = '' or po_type = null) and
+    <choose>
+      <when test="poNo != null and poNo !='' ">
+        `po_no`=#{poNo}
+      </when>
+      <otherwise>
+        <![CDATA[
+						`create_time` >= #{startTime} and `create_time` < #{endTime}
+					]]>
+        <if test="status != 0">
+          and `status`=#{status}
+        </if>
+        <if test="pager != null">
+          limit #{pager.start},#{pager.pageSize}
+        </if>
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="getRowCnts" resultType="int">
+    SELECT
+    FOUND_ROWS();
+  </select>
+
+  <update id="updatePurchaseOrderStatus" parameterType="com.haier.purchase.data.model.PurchaseOrder">
+    <![CDATA[
+        UPDATE `purchase_order`
+        SET `status` = #{status}, `update_time` = #{updateTime}
+        WHERE `po_id` = #{poId} AND `status` <> 200
+        ]]>
+  </update>
+
+  <select id="getConfirmOrder" parameterType="Integer" resultMap="purchaseOrderResult">
+    SELECT
+    `po_id`,
+    `po_no`,
+    `channel_code`,
+    `suplier`,
+    `sold_to`,
+    `po_type`,
+    `delivery_to_name`,
+    `delivery_to`,
+    `amount`,
+    `type`,
+    `receiver`,
+    `mobile`,
+    `telephone`,
+    `province`,
+    `city`,
+    `county`,
+    `address`,
+    `status`,
+    `create_time`,
+    `update_time`
+    FROM `purchase_order`
+    WHERE `po_id` = #{poId} AND `status` = 110
+  </select>
+
+  <update id="update" parameterType="com.haier.purchase.data.model.PurchaseOrder">
+    UPDATE `purchase_order`
+    SET
+    `suplier` = #{suplier},
+    `sold_to`  = #{soldTo},
+    `delivery_to` = #{deliveryTo},
+    `amount`= #{amount},
+    `receiver` = #{receiver},
+    `delivery_to_name` = #{deliveryToName},
+    `update_time` = #{updateTime},
+    `delivery_to_name` = #{deliveryToName}
+    WHERE `po_id` = #{poId}
+  </update>
+
+  <select id="getNum" resultType="java.lang.Integer">
+    select number from purchase_use_number
+    where date = #{date} and type = #{type}
+  </select>
+
+  <insert id="insertNum">
+    insert into purchase_use_number
+    (date,type,number,create_time,update_time)
+    values (#{date},#{type},2,now(),now())
+  </insert>
+
+  <update id="updateNum">
+    update purchase_use_number
+    set number = number + 1,
+    update_time = now()
+    where date = #{date} and type = #{type}
+  </update>
+</mapper>

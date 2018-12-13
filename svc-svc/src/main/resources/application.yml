@@ -11,9 +11,8 @@ dubbo:
   threads: 100    #服务线程池大小(固定大小)，默认为2
   heartBeats: 10000 #心跳间隔，检查连接是否已断开，默认30000
   serialization: hessian2    #协议序列化方式（可选配置，Dubbo有默认值）;
-
-
-
+#  host: 192.168.1.108
+#tscl@btte.net
 #T+2订单下发CRM
 t2Order:
   wsdl:
@@ -22,12 +21,23 @@ t2Order:
   kxPath: 
    priceUrl: http://10.138.40.168:8001/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=EAI_INT_1020
    crm_int_oms_4: http://10.138.40.168:8001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=CRM_INT_OMS_4
-   
+
+stockget:
+  url: http://report.ehaier.com/api/3w/getskutonum.html
+  appKey: cgxt
+  secretKey: f36521bc54bc4b7a99d928c2b2f2c150
+  wsdlLocation: /wsdl_test
 
 #获取wsdl路径
 t2OrderResponse:
   location: /wsdl_test
 
+getMtlInfoResponse:
+  location: /wsdl
+
+entryOrderUrl: http://10.135.108.147:81/cainiao/getEntryOrder.html
+
+vomSynOrderUrl: http://10.138.40.168:8001/EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM
 
 #mybatis:
 #  typeAliasesPackage: com.haier.svc

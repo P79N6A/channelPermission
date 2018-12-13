@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="GetMTLInfoMDM2SHC_Mine" targetNamespace="http://www.example.org/GetMTLInfoMDM2SHC_Mine/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/GetMTLInfoMDM2SHC_Mine/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/GetMTLInfoMDM2SHC_Mine/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/GetMTLInfoMDM2SHC_Mine/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="GetMTLInfoMDM2SHC_Mine">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="materialCode" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetMTLInfoMDM2SHC_MineResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="tns:OutType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="OutType">
+        <xsd:sequence>
+          <xsd:element name="materialDesc" type="xsd:string"/>
+          <xsd:element name="primaryUom" type="xsd:string"/>
+          <xsd:element name="department" type="xsd:string"/>
+          <xsd:element name="proBrand" type="xsd:string"/>
+          <xsd:element name="kindOne" type="xsd:string"/>
+          <xsd:element name="kindAd" type="xsd:string"/>
+          <xsd:element name="productList" type="xsd:string"/>
+          <xsd:element name="productLineCode" type="xsd:string"/>
+          <xsd:element name="proType" type="xsd:string"/>
+          <xsd:element name="cirChar" type="xsd:string"/>
+          <xsd:element name="flag1010" type="xsd:string"/>
+          <xsd:element name="retcode" type="xsd:string"/>
+          <xsd:element name="retmsg" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="GetMTLInfoMDM2SHC_MineRequest">
+    <WL5G3N0:part element="WL5G3N1:GetMTLInfoMDM2SHC_Mine" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="GetMTLInfoMDM2SHC_MineResponse">
+    <WL5G3N0:part element="WL5G3N1:GetMTLInfoMDM2SHC_MineResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="GetMTLInfoMDM2SHC_Mine">
+    <WL5G3N0:operation name="GetMTLInfoMDM2SHC_Mine">
+      <WL5G3N0:input message="WL5G3N1:GetMTLInfoMDM2SHC_MineRequest"/>
+      <WL5G3N0:output message="WL5G3N1:GetMTLInfoMDM2SHC_MineResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="GetMTLInfoMDM2SHC_MineSOAP" type="WL5G3N1:GetMTLInfoMDM2SHC_Mine">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="GetMTLInfoMDM2SHC_Mine">
+      <WL5G3N2:operation soapAction="http://www.example.org/GetMTLInfoMDM2SHC_Mine/GetMTLInfoMDM2SHC_Mine"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="GetMTLInfoMDM2SHC_Mine">
+    <WL5G3N0:port binding="WL5G3N1:GetMTLInfoMDM2SHC_MineSOAP" name="GetMTLInfoMDM2SHC_MineSOAP">
+      <WL5G3N2:address location="http://58.56.128.10:19001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EHAIER_INT_MDM_2"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

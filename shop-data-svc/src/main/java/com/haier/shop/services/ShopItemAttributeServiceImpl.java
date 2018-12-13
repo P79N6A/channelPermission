@@ -3,6 +3,7 @@ package com.haier.shop.services;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +58,17 @@ public class ShopItemAttributeServiceImpl implements ShopItemAttributeService {
     public List<ItemAttribute> queryItemAttributeWithLike(ItemAttribute itemAttribute){
         return itemAttributeReadDao.queryItemAttributeWithLike(itemAttribute);
     }
+
+    @Override
+    public JSONObject queryItemAttribute(ItemAttribute itemAttribute) {
+        JSONObject result = new JSONObject();
+        itemAttribute.setStart((itemAttribute.getPage()-1)*100);
+        itemAttribute.setSize(itemAttribute.getRows());
+        result.put("total", itemAttributeReadDao.countItemAttributeWithLike(itemAttribute));
+        result.put("rows", itemAttributeReadDao.queryItemAttributeWithLike(itemAttribute));
+        return result;
+    }
+
     @Override
     public  List<ItemAttribute> queryProductGroupByCbsCategory(String cbsCategory){
         return itemAttributeReadDao.queryProductGroupByCbsCategory(cbsCategory);

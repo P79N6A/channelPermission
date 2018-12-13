@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
@@ -15,6 +16,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
@@ -36,36 +39,37 @@ import com.haier.stock.util.CommUtil;
 import com.haier.stock.util.DateFormatUtil;
 import com.haier.stock.util.Httpclient;
 import com.haier.stock.util.ObjectUtil;
+@ConfigurationProperties(prefix = "url")
 @Service
 public class VOMOrderModel {
-//	EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM
-	protected static final String VOM_SYN_ORDER_URL = "http://58.56.128.84:9001/EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM";
-//	protected final String		 VOM_SYN_ORDER_URL = "/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=EAI_INT_1353";
+	//	EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM
+//	protected static final String VOM_SYN_ORDER_URL = "http://58.56.128.84:9001/EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM";
+	//正式地址
+//	protected final String		 VOM_SYN_ORDER_URL = "http://10.135.1.185:7001/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=EAI_INT_1353";
+//	private String vomSynOrderUrl;
+	protected String vomSynOrderEaiUrl; 
+	
+	public String getVomSynOrderEaiUrl() {
+		return vomSynOrderEaiUrl;
+	}
+
+	public void setVomSynOrderEaiUrl(String vomSynOrderEaiUrl) {
+		this.vomSynOrderEaiUrl = vomSynOrderEaiUrl;
+	}
 
 	private Logger				 logger			   = LogManager.getLogger(VOMOrderModel.class);
 
-	private String				 eaiUrl			   = null;
 	@Autowired
 	public PurchaseVomOrderService			 purchaseVomOrderService;
+
 	@Autowired
 	private OrderOperationLogService orderOperationLogService;
 
-	public PurchaseVomOrderService getPurchaseVomOrderService() {
-		return purchaseVomOrderService;
-	}
-
-	public void setPurchaseVomOrderService(PurchaseVomOrderService purchaseVomOrderService) {
-		this.purchaseVomOrderService = purchaseVomOrderService;
-	}
 
 	private DataSourceTransactionManager transactionManager;
 
 	public void setTransactionManager(DataSourceTransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
-	}
-
-	public void setEaiUrl(String eaiUrl) {
-		this.eaiUrl = eaiUrl;
 	}
 
 	/**
@@ -84,7 +88,7 @@ public class VOMOrderModel {
 		try {
 			interXml = getVomInterXml(contentXml, sb.toString());
 			logger.info("-------------------调用VOM逆向入库接口interXml：" + interXml);
-			String responseStr = Httpclient.send(VOM_SYN_ORDER_URL, interXml,"text/html; charset=utf-8");
+			String responseStr = Httpclient.send(vomSynOrderEaiUrl, interXml,"text/html; charset=utf-8");
 			logger.info("-------------------调用VOM逆向入库接口返回参数responseStr：" + responseStr);
 			vomOrderResponse = getVomRequestResult(responseStr);
 		} catch (Exception e) {
@@ -111,7 +115,7 @@ public class VOMOrderModel {
 		try {
 			interXml = getVomFInterXml(contentXml, sb.toString());
 			logger.info("-------------------调用VOM取消订单接口interXml：" + interXml);
-			String responseStr = Httpclient.send(eaiUrl + VOM_SYN_ORDER_URL, interXml,
+			String responseStr = Httpclient.send(vomSynOrderEaiUrl, interXml,
 				"text/html; charset=utf-8");
 			logger.info("-------------------调用VOM取消订单接口返回参数responseStr：" + responseStr);
 			vomOrderResponse = getVomRequestResult(responseStr);
@@ -142,7 +146,7 @@ public class VOMOrderModel {
 		sb.append("<sourcesn>" + vomSynOrderRequire.getSourceSn() + "</sourcesn>");// 订单号
 		sb.append("<ordertype>" + vomSynOrderRequire.getOrderType() + "</ordertype>");// 订单类型
 		sb.append("<bustype>" + vomSynOrderRequire.getBusType() + "</bustype>");// 业务类型
-		sb.append("<expno></expno>");// 快递单号
+//		sb.append("<expno></expno>");// 快递单号
 		sb.append("<orderdate>" + vomSynOrderRequire.getOrderDate() + "</orderdate>");// 订单时间（格式：YYYY-MM-DD HH:MM:SS）
 		sb.append("<storecode>" + vomSynOrderRequire.getStoreCode() + "</storecode>");// scode转
 																					  // 中心代码
@@ -150,14 +154,16 @@ public class VOMOrderModel {
 		sb.append("<province>" + vomSynOrderRequire.getProvince() + "</province>");// 收货人所在省
 		sb.append("<city>" + vomSynOrderRequire.getCity() + "</city>");// 收货人所在市
 		sb.append("<county>" + vomSynOrderRequire.getCounty() + "</county>");// 收货人所在县/区
-		sb.append("<addr><![CDATA[" + vomSynOrderRequire.getAddr() + "]]></addr>");// 详细地址
+//		sb.append("<addr><![CDATA[" + vomSynOrderRequire.getAddr() + "]]></addr>");// 详细地址
+		sb.append("<addr>" + vomSynOrderRequire.getAddr() + "</addr>");// 详细地址
 		sb.append("<gbcode>" + vomSynOrderRequire.getGbCode() + "</gbcode>");// 国标码
-		sb.append("<name><![CDATA[" + vomSynOrderRequire.getName() + "]]></name>");// 送达方姓名：收货人姓名
+//		sb.append("<name><![CDATA[" + vomSynOrderRequire.getName() + "]]></name>");// 送达方姓名：收货人姓名
+		sb.append("<name>" + vomSynOrderRequire.getName() + "</name>");// 送达方姓名：收货人姓名
 		sb.append("<mobile>" + vomSynOrderRequire.getMobile() + "</mobile>");// 联系电话
 		sb.append("<tel>" + vomSynOrderRequire.getTel() + "</tel>");// 固定电话
 		sb.append("<postcode>" + vomSynOrderRequire.getPostCode() + "</postcode>");// 邮政编码
-		sb.append("<deldate>" + vomSynOrderRequire.getDelDate() + "</deldate>");// 预约时间：预约送货时间
-		sb.append("<insdate>" + vomSynOrderRequire.getInsDate() + "</insdate>");// 预约时间：预约安装时间
+//		sb.append("<deldate>" + vomSynOrderRequire.getDelDate() + "</deldate>");// 预约时间：预约送货时间
+//		sb.append("<insdate>" + vomSynOrderRequire.getInsDate() + "</insdate>");// 预约时间：预约安装时间
 		sb.append("<reorder>" + vomSynOrderRequire.getReorder() + "</reorder>");// 前续订单号：关联单号
 		sb.append("<freight>" + vomSynOrderRequire.getFreight() + "</freight>");// 运费
 		sb.append("<billsum>" + vomSynOrderRequire.getBillSum() + "</billsum>");// 订单总金额
@@ -169,47 +175,57 @@ public class VOMOrderModel {
 		sb.append("<invtype>" + vomSynOrderRequire.getInvType() + "</invtype>");// 发票类型
 		if (!"".equals(vomSynOrderRequire.getInvRise())
 			&& vomSynOrderRequire.getInvRise() != null) {
-			sb.append("<invrise><![CDATA[" + vomSynOrderRequire.getInvRise() + "]]></invrise>");// 发票抬头
+//			sb.append("<invrise><![CDATA[" + vomSynOrderRequire.getInvRise() + "]]></invrise>");// 发票抬头
+			sb.append("<invrise>" + vomSynOrderRequire.getInvRise() + "</invrise>");// 发票抬头
 		} else {
 			sb.append("<invrise></invrise>");
 		}
-		sb.append("<taxbearer>" + vomSynOrderRequire.getTaxBearer() + "</taxbearer>");// 纳税人登记号
-		if (!"".equals(vomSynOrderRequire.getRecAddr())
-			&& vomSynOrderRequire.getRecAddr() != null) {
-			sb.append("<recaddr><![CDATA[" + vomSynOrderRequire.getRecAddr() + "]]></recaddr>");// 发票地址
-		} else {
-			sb.append("<recaddr></recaddr>");
-		}
-		sb.append("<recacc>" + vomSynOrderRequire.getRecAcc() + "</recacc>");// 发票开户行帐号
-		if (!"".equals(vomSynOrderRequire.getRecBank())
-			&& vomSynOrderRequire.getRecBank() != null) {
-			sb.append("<recbank><![CDATA[" + vomSynOrderRequire.getRecBank() + "]]></recbank>");// 发票开户行
-		} else {
-			sb.append("<recbank></recbank>");
-		}
-		sb.append("<sname>" + vomSynOrderRequire.getSname() + "</sname>");// 发货人姓名
-		sb.append("<sprovince>" + vomSynOrderRequire.getSprovince() + "</sprovince>");// 发货人所在省
-		sb.append("<scity>" + vomSynOrderRequire.getScity() + "</scity>");// 发货人所在市
-		sb.append("<scounty>" + vomSynOrderRequire.getScounty() + "</scounty>");// 发货人所在县/区
-		sb.append("<saddr>" + vomSynOrderRequire.getSaddr() + "</saddr>");// 发货人详细地址
-		sb.append("<smobile>" + vomSynOrderRequire.getSmobile() + "</smobile>");// 发货人联系电话
-		sb.append("<stel>" + vomSynOrderRequire.getStel() + "</stel>");// 发货人固定电话
-		sb.append("<busflag>" + vomSynOrderRequire.getBusFlag() + "</busflag>");// 订单标记 1送装一体 2.只配送 3.开箱验货
+//		sb.append("<taxbearer>" + vomSynOrderRequire.getTaxBearer() + "</taxbearer>");// 纳税人登记号
+//		if (!"".equals(vomSynOrderRequire.getRecAddr())
+//			&& vomSynOrderRequire.getRecAddr() != null) {
+////			sb.append("<recaddr><![CDATA[" + vomSynOrderRequire.getRecAddr() + "]]></recaddr>");// 发票地址
+//			sb.append("<recaddr>" + vomSynOrderRequire.getRecAddr() + "</recaddr>");// 发票地址
+//		} else {
+//			sb.append("<recaddr></recaddr>");
+//		}
+//		sb.append("<recacc>" + vomSynOrderRequire.getRecAcc() + "</recacc>");// 发票开户行帐号
+//		if (!"".equals(vomSynOrderRequire.getRecBank())
+//			&& vomSynOrderRequire.getRecBank() != null) {
+////			sb.append("<recbank><![CDATA[" + vomSynOrderRequire.getRecBank() + "]]></recbank>");// 发票开户行
+//			sb.append("<recbank>" + vomSynOrderRequire.getRecBank() + "</recbank>");// 发票开户行
+//		} else {
+//			sb.append("<recbank></recbank>");
+//		}
+//		sb.append("<sname>" + vomSynOrderRequire.getSname() + "</sname>");// 发货人姓名
+//		sb.append("<sprovince>" + vomSynOrderRequire.getSprovince() + "</sprovince>");// 发货人所在省
+//		sb.append("<scity>" + vomSynOrderRequire.getScity() + "</scity>");// 发货人所在市
+//		sb.append("<scounty>" + vomSynOrderRequire.getScounty() + "</scounty>");// 发货人所在县/区
+//		sb.append("<saddr>" + vomSynOrderRequire.getSaddr() + "</saddr>");// 发货人详细地址
+//		sb.append("<smobile>" + vomSynOrderRequire.getSmobile() + "</smobile>");// 发货人联系电话
+//		sb.append("<stel>" + vomSynOrderRequire.getStel() + "</stel>");// 发货人固定电话
+//		sb.append("<busflag>" + vomSynOrderRequire.getBusFlag() + "</busflag>");// 订单标记 1送装一体 2.只配送 3.开箱验货
 
 		if (!"".equals(vomSynOrderRequire.getRemark()) && vomSynOrderRequire.getRemark() != null) {
-			sb.append("<remark><![CDATA[" + vomSynOrderRequire.getRemark() + "]]></remark>");// 备注
+//			sb.append("<remark><![CDATA[" + vomSynOrderRequire.getRemark() + "]]></remark>");// 备注
+			sb.append("<remark>" + vomSynOrderRequire.getRemark() + "</remark>");// 备注
 		} else {
 			sb.append("<remark></remark>");
 		}
-		sb.append("<attributes></attributes>");// 属性备注
-		sb.append("<remark1></remark1>");// 备用字段 --不填
-		sb.append("<remark2></remark2>");// 备用字段 --不填
-		sb.append("<remark3></remark3>");// 备用字段 --不填
-		sb.append("<remark4></remark4>");// 备用字段 --不填
-		sb.append("<remark5></remark5>");// 备用字段 --不填
-		sb.append("<remark6></remark6>");// 备用字段 --不填
-		sb.append("<remark7></remark7>");// 备用字段 --不填
-		sb.append("<remark8></remark8>");// 备用字段 --不填
+		if (StringUtils.isNotBlank(vomSynOrderRequire.getNetPointCode())){
+
+            sb.append("<attributes><shcode>"+vomSynOrderRequire.getNetPointCode()+"</shcode></attributes>");// 属性备注 86码
+
+        }
+		sb.append("<remark1>HB</remark1>");// 备用字段 --不填
+//		sb.append("<remark2></remark2>");// 备用字段 --不填
+//		sb.append("<remark3></remark3>");// 备用字段 --不填
+//		sb.append("<remark4></remark4>");// 备用字段 --不填
+        if (StringUtils.isNotBlank(vomSynOrderRequire.getRemark5())){
+            sb.append("<remark5>").append(vomSynOrderRequire.getRemark5()).append("</remark5>");// 备用字段 --不填
+        }
+//		sb.append("<remark6></remark6>");// 备用字段 --不填
+//		sb.append("<remark7></remark7>");// 备用字段 --不填
+		sb.append("<remark8>1</remark8>");// 备用字段 --不填
 
 		// 子订单
 		sb.append("<items>");
@@ -254,7 +270,6 @@ public class VOMOrderModel {
 
 		return sb.toString();
 	}
-
 	public static String getVomInterXml(String content, String notifyId) throws Exception {
 		VomInterData vomInterData = new VomInterData();
 		List<VomInterData> list = new ArrayList<VomInterData>();
@@ -281,7 +296,7 @@ public class VOMOrderModel {
 		// 接口方法名
 		vomInterData.setButype("rrs_order");
 		// 根据系统区分来源
-		vomInterData.setSource("HAIERSC");
+		vomInterData.setSource("HAIERSC"); //老系统 HAIERSC
 		// 报文格式
 		vomInterData.setType("xml");
 
@@ -312,13 +327,14 @@ public class VOMOrderModel {
 		String dateStr = DateFormatUtil.getCurrentDateWithFormat("yyyy-MM-dd HH:mm:ss");
 		vomInterData.setNotifytime(dateStr);
 		// content
-		String aesContent = AESUtil.Decrypt(content, "KeLy8g7qjmnbgWP1").replaceAll("\n", "");
+		String aesContent = AESUtil.encrypt(content,"KeLy8g7qjmnbgWP1").replaceAll("\n", "");
+//		String aesContent = AESUtil.Decrypt(content, "KeLy8g7qjmnbgWP1").replaceAll("\n", "");
 		String encodeContent = URLEncoder.encode(aesContent, "utf-8");
 		vomInterData.setContent(encodeContent);
 		// sign
 		//String md5Str = MD5util.encrypt(content + "RRS,123");//测试秘钥：Haier,123  生产环境秘钥：RRS,123
 		//String base64Str = Base64Util.encode(md5Str.getBytes()).replaceAll("\r\n", "");
-		String base64Str=Base64.encodeBase64String(DigestUtils.md5Hex(content + "RRS,123 ").getBytes());
+		String base64Str=Base64.encodeBase64String(DigestUtils.md5Hex(content+"RRS,123").getBytes());
 		vomInterData.setSign(base64Str);
 		// 接口方法名
 		vomInterData.setButype("rrs_cancel");
@@ -345,8 +361,8 @@ public class VOMOrderModel {
 
 		if (!"".equals(cancelOrderRequire.getCancelExplain())
 			&& cancelOrderRequire.getCancelExplain() != null) {//取消说明
-			sb.append("<cancelexplain><![CDATA[" + cancelOrderRequire.getCancelExplain()
-					  + "]]></cancelexplain>");
+			sb.append("<cancelexplain>" + cancelOrderRequire.getCancelExplain()
+					  + "</cancelexplain>");
 		} else {
 			sb.append("<cancelexplain></cancelexplain>");
 		}
@@ -377,23 +393,25 @@ public class VOMOrderModel {
 				} else {
 					paramMap.put("source_order_id", orderNo);
 				}
+				String storageId =purchaseVomOrderService.getStorageIdByCrmReturnInfo(paramMap);
 
-				flow_flag = purchaseVomOrderService.getFlowFlagByCrmReturnInfo(paramMap);
-				if (iStatus == 140) {
-					if ("15".equals(flow_flag)) {
-						status = "20";
-						paramMap.put("deliveryTime", "yes");
-					} else if ("35".equals(flow_flag)) {
-						status = "50";
+					flow_flag = purchaseVomOrderService.getFlowFlagByCrmReturnInfo(paramMap);
+					if (iStatus == 140) {
+						if ("15".equals(flow_flag)) {
+							status = "20";
+							paramMap.put("deliveryTime", "yes");
+						} else if ("35".equals(flow_flag)) {
+							status = "50";
+						}
+					} else if (iStatus == -120) {
+						status = flow_flag;
+						paramMap.put("error_msg", error_msg);
 					}
-				} else if (iStatus == -120) {
-					status = flow_flag;
-					paramMap.put("error_msg", error_msg);
-				}
-				paramMap.put("flow_flag", status);
-				count = purchaseVomOrderService.updateCrmReturnInfo(paramMap);
+					paramMap.put("flow_flag", status);
+					count = purchaseVomOrderService.updateCrmReturnInfo(paramMap);
 				/*serviceResult.setResult(true);
 				serviceResult.setMessage("订单处理成功");*/
+
 			} else if ("WD2".equals(prefix)) {//CGO
 				Map<String, Object> paramMap = new HashMap<String, Object>();
 				if (orderNo.indexOf("T") > 0) {

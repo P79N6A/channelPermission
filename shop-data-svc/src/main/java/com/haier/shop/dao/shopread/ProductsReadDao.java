@@ -71,5 +71,23 @@ public interface ProductsReadDao {
      * @return
      */
     List<ProductBase> getAllSkusList(Map<String, Object> paramMap);
+    
+    
+    List<Map<String,Object>> queryProductList(Map<String,Object> map);
+    
+    Integer queryProductListCount(Map<String,Object> map);
+    
+    List<Map<String,Object>> getOnSaleProductIds();
+    
+    Map<String,Object> findProductBySku(String sku);
+    
+    Map<String,Object> findProductByName(String name);
 
+    List<String> seletSkuAll();
+
+    Products selectBySku(String sku);
+
+    int updateProductBySku(String sku);
+
+    Products getBySku2(String sku);
 }

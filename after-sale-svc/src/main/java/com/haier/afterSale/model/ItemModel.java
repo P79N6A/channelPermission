@@ -19,7 +19,6 @@ import com.haier.shop.model.ProductBase;
 import com.haier.shop.model.ProductTypesNew;
 import com.haier.shop.model.ProductsNew;
 
-import com.haier.shop.model.Regions;
 import com.haier.shop.service.NetPointsService;
 import com.haier.shop.service.PaymentsService;
 import com.haier.shop.service.ProductTypesService;
@@ -36,8 +35,8 @@ import com.haier.common.BusinessException;
 import com.haier.common.util.StringUtil;
 import com.haier.eis.model.EisExternalSku;
 import com.haier.eis.service.EisExternalSkuService;
-import com.haier.purchase.data.model.LesFiveYardInfo;
-import com.haier.purchase.data.service.PurchaseLesFiveYardsService;
+import com.haier.shop.model.LesFiveYardInfo;
+import com.haier.shop.service.PurchaseLesFiveYardsService;
 import com.haier.shop.model.ItemAttribute;
 import com.haier.shop.model.ItemBase;
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.eop.data.dao.TmStockSyncLogDao" >
+	<resultMap id="BaseResultMap" type="com.haier.eop.data.model.TmStockSyncLog" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+		<result column="sse" property="sse" jdbcType="CHAR" />
+		<result column="sku" property="sku" jdbcType="VARCHAR" />
+		<result column="scode" property="scode" jdbcType="VARCHAR" />
+		<result column="channel_stock_num" property="channelStockNum" jdbcType="INTEGER" />
+		<result column="ehaier_stock_num" property="ehaierStockNum" jdbcType="INTEGER" />
+		<result column="unconfirm_stock_num" property="unconfirmStockNum" jdbcType="INTEGER" />
+		<result column="final_stock_num" property="finalStockNum" jdbcType="INTEGER" />
+		<result column="stock_sync_result" property="stockSyncResult" jdbcType="CHAR" />
+		<result column="system_info" property="systemInfo" jdbcType="VARCHAR" />
+		<result column="text_info" property="textInfo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="TmListf" resultMap="BaseResultMap">
+		SELECT id,add_time,sse,sku,scode,channel_stock_num,ehaier_stock_num,
+		unconfirm_stock_num,final_stock_num,stock_sync_result,system_info,text_info
+		FROM stock_sync_log
+		<where>
+			<if test="sse != '' and sse != null">sse = #{sse}</if>
+			<if test="sku != '' and sku != null">AND sku = #{sku}</if>
+			<if test="scode != '' and scode != null">AND scode = #{scode}</if>
+			<if test="stockSyncResult != ''and  stockSyncResult != null">AND stock_sync_result = #{stockSyncResult}</if>
+			AND add_time &gt;= #{addTimeStart}
+			AND add_time &lt;= #{addTimeEnd}
+		</where>
+		order by id asc
+		<include refid="pagination" />
+	</select>
+	<select id="getTmPagerCountS" resultType="int">
+		SELECT count(id)
+		FROM stock_sync_log
+		<where>
+			<if test="sse != '' and sse != null">sse = #{sse}</if>
+			<if test="sku != '' and sku != null">AND sku = #{sku}</if>
+			<if test="scode != '' and scode != null">AND scode = #{scode}</if>
+			<if test="stockSyncResult != ''and  stockSyncResult != null">AND stock_sync_result = #{stockSyncResult}</if>
+			AND add_time &gt;= #{addTimeStart}
+			AND add_time &lt;= #{addTimeEnd}
+		</where>
+	</select>
+
+	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+</mapper>

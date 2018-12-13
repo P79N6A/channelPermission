@@ -38,8 +38,8 @@ public class EisNewVOMServiceImpl implements EisNewVOMService {
 	 * 处理VOM出入库记录 （定时任务）
 	 *
 	 */
-//    @Override
 //    @Scheduled(cron="0 0/1 * * * ?")
+	@Override
 	public ServiceResult<Boolean> reprocessingContent() {
 		ServiceResult<Boolean> result = new ServiceResult<Boolean>();
 		try {
@@ -55,6 +55,7 @@ public class EisNewVOMServiceImpl implements EisNewVOMService {
 
 	//  @Override
 //  @Scheduled(cron = "0 0/1 * * * ?")
+	@Override
 	public ServiceResult<Boolean> processOutInStoreForGenerateStockTransaction() {
 		ServiceResult<Boolean> result = new ServiceResult<Boolean>();
 		try {
@@ -126,6 +127,7 @@ public class EisNewVOMServiceImpl implements EisNewVOMService {
 		return result;
 	}
 
+	@Override
 	public void test() {
 		System.out.println("测试定时任务，当前时间："+ new Date());
 	}

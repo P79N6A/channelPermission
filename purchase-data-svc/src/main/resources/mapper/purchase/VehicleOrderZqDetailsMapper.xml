@@ -413,6 +413,17 @@
 		<include refid="where_fragement_equals" />
 		order by rows asc
 	</select>
+	<!-- 根据orderNo获取zq子表信息 -->
+	<select id="getListByOrderNo" resultMap = "vehicleOrderZqDetailsMap" parameterType="String">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM vehicle_order_zq_details
+		where zq_order_no = (
+			SELECT zq_order_no from vehicle_order_zq
+			where order_no = #{orderNo}
+		)
+	
+	</select>
 	<!-- 根据状态查询list -->
 	<select id="selectByStatus" resultMap="vehicleOrderZqDetailsMap">
 		SELECT zq_item_no
@@ -943,6 +954,132 @@
 			</if>
 		</set>
 		WHERE zq_item_no = #{entity.zqItemNo}
+	</update>
+	
+	<update id="updateSelectiveByZqOrderNo"
+		parameterType="com.haier.purchase.data.model.vehcile.VehicleOrderZqDetailsDTO">
+		UPDATE vehicle_order_zq_details
+		<set>
+			<if test="entity!=null">
+				<if test="entity.zqItemNo != null and entity.zqItemNo !='' ">
+                    <![CDATA[ zq_item_no = #{entity.zqItemNo}, ]]>
+				</if>
+				<if test="entity.rows != null and entity.rows !='' ">
+                    <![CDATA[ rows = #{entity.rows}, ]]>
+				</if>
+				<if test="entity.zqOrderNo != null and entity.zqOrderNo !='' ">
+                    <![CDATA[ zq_order_no = #{entity.zqOrderNo}, ]]>
+				</if>
+				<if test="entity.status != null and entity.status !='' ">
+                    <![CDATA[ status = #{entity.status}, ]]>
+				</if>
+				<if test="entity.materielCode != null and entity.materielCode !='' ">
+                    <![CDATA[ materiel_code = #{entity.materielCode}, ]]>
+				</if>
+				<if test="entity.productGroup != null and entity.productGroup !='' ">
+                    <![CDATA[ product_group = #{entity.productGroup}, ]]>
+				</if>
+				<if
+					test="entity.productGroupName != null and entity.productGroupName !='' ">
+                    <![CDATA[ product_group_name = #{entity.productGroupName}, ]]>
+				</if>
+				<if test="entity.brand != null and entity.brand !='' ">
+                    <![CDATA[ brand = #{entity.brand}, ]]>
+				</if>
+				<if test="entity.qty != null and entity.qty !='' ">
+                    <![CDATA[ qty = #{entity.qty}, ]]>
+				</if>
+				<if test="entity.unitPrice != null and entity.unitPrice !='' ">
+                    <![CDATA[ unit_price = #{entity.unitPrice}, ]]>
+				</if>
+				<if test="entity.sumMoney != null and entity.sumMoney !='' ">
+                    <![CDATA[ sum_money = #{entity.sumMoney}, ]]>
+				</if>
+				<if test="entity.stockPrice != null and entity.stockPrice !='' ">
+                    <![CDATA[ stock_price = #{entity.stockPrice}, ]]>
+				</if>
+				<if test="entity.retailPrice != null and entity.retailPrice !='' ">
+                    <![CDATA[ retail_price = #{entity.retailPrice}, ]]>
+				</if>
+				<if test="entity.actPrice != null and entity.actPrice !='' ">
+                    <![CDATA[ act_price = #{entity.actPrice}, ]]>
+				</if>
+				<if test="entity.bateRate != null and entity.bateRate !='' ">
+                    <![CDATA[ bate_rate = #{entity.bateRate}, ]]>
+				</if>
+				<if test="entity.bateMoney != null and entity.bateMoney !='' ">
+                    <![CDATA[ bate_money = #{entity.bateMoney}, ]]>
+				</if>
+				<if test="entity.verCode != null and entity.verCode !='' ">
+                    <![CDATA[ ver_code = #{entity.verCode}, ]]>
+				</if>
+				<if test="entity.verMoney != null and entity.verMoney !='' ">
+                    <![CDATA[ ver_money = #{entity.verMoney}, ]]>
+				</if>
+				<if test="entity.proLossMoney != null and entity.proLossMoney !='' ">
+                    <![CDATA[ pro_loss_money = #{entity.proLossMoney}, ]]>
+				</if>
+				<if test="entity.lossRate != null and entity.lossRate !='' ">
+                    <![CDATA[ loss_rate = #{entity.lossRate}, ]]>
+				</if>
+				<if test="entity.isfl != null and entity.isfl !='' ">
+                    <![CDATA[ Isfl = #{entity.isfl}, ]]>
+				</if>
+				<if test="entity.iskpo != null and entity.iskpo !='' ">
+                    <![CDATA[ Iskpo = #{entity.iskpo}, ]]>
+				</if>
+				<if test="entity.amount != null and entity.amount !='' ">
+                    <![CDATA[ amount = #{entity.amount}, ]]>
+				</if>
+				<if test="entity.volume != null and entity.volume !='' ">
+                    <![CDATA[ volume = #{entity.volume}, ]]>
+				</if>
+				<if test="entity.totalVolume != null and entity.totalVolume !='' ">
+                    <![CDATA[ total_volume = #{entity.totalVolume}, ]]>
+				</if>
+				<if test="entity.paymentCode != null and entity.paymentCode !='' ">
+                    <![CDATA[ payment_code = #{entity.paymentCode}, ]]>
+				</if>
+				<if test="entity.paymentName != null and entity.paymentName !='' ">
+                    <![CDATA[ payment_name = #{entity.paymentName}, ]]>
+				</if>
+				<if
+					test="entity.relevantOrderNo1 != null and entity.relevantOrderNo1 !='' ">
+                    <![CDATA[ relevant_order_no1 = #{entity.relevantOrderNo1}, ]]>
+				</if>
+				<if
+					test="entity.relevantOrderNo2 != null and entity.relevantOrderNo2 !='' ">
+                    <![CDATA[ relevant_order_no2 = #{entity.relevantOrderNo2}, ]]>
+				</if>
+				<if
+					test="entity.relevantOrderNo3 != null and entity.relevantOrderNo3 !='' ">
+                    <![CDATA[ relevant_order_no3 = #{entity.relevantOrderNo3}, ]]>
+				</if>
+				<if
+					test="entity.relevantOrderNo4 != null and entity.relevantOrderNo4 !='' ">
+                    <![CDATA[ relevant_order_no4 = #{entity.relevantOrderNo4}, ]]>
+				</if>
+				<if test="entity.remark != null and entity.remark !='' ">
+                    <![CDATA[ remark = #{entity.remark}, ]]>
+				</if>
+				<if test="entity.createBy != null and entity.createBy !='' ">
+                    <![CDATA[ create_by = #{entity.createBy}, ]]>
+				</if>
+				<if test="entity.createTime != null ">
+                    <![CDATA[ create_time = #{entity.createTime}, ]]>
+				</if>
+				<if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+                    <![CDATA[ last_update_by = #{entity.lastUpdateBy}, ]]>
+				</if>
+				<if test="entity.lastUpdateTime != null ">
+                    <![CDATA[ last_update_time = #{entity.lastUpdateTime}, ]]>
+				</if>
+				<if test="entity.vbelnDn5 != null and entity.vbelnDn5 !=''  ">
+                    <![CDATA[ vbeln_dn5 = #{entity.vbelnDn5}, ]]>
+				</if>
+			</if>
+		</set>
+		WHERE zq_order_no = #{entity.zqOrderNo}
 	</update>
 	<!-- 修改所有列 -->
 	<update id="updateAllColumnById"

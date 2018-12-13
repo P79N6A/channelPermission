@@ -8,6 +8,13 @@ import java.io.Serializable;
 * 2017/12/19
 * */
 public class OrderRepairLESRecords implements Serializable {
+    /**
+     * 开单成功时间
+     */
+    private long lesOrderSnTime;
+
+    private String lesOrderSnTimeTS;//用来转译中文格式的日期
+
     /** Comment for <code>serialVersionUID</code> */
     private static final long serialVersionUID              = -7266140184630642105L;
 
@@ -59,9 +66,23 @@ public class OrderRepairLESRecords implements Serializable {
     private Integer           id;
     private int pushFailNumber;//推送失败次数
     private String repairSn;
-    
-    
-    
+    private Integer success;
+    private String successStatus;
+    private String sCode;
+    private Long lesOutPingTime;
+    private String lesOutPingTimeTs;//转成时间格式
+    private String lesOutPing;
+    private String lesOrderSn;
+    private Integer storageType;
+    private Integer operate;
+    private String operateStatus;//用来转中文
+    private Integer orderRepairId;
+
+    private Integer opCancelFlag;
+    private Integer orderProductId;
+
+
+
     public String getRepairSn() {
 		return repairSn;
 	}
@@ -111,77 +132,6 @@ public class OrderRepairLESRecords implements Serializable {
 		this.productName = productName;
 	}
 
-	public static Integer getSTORAGE_TYPE_GOOD() {
-		return STORAGE_TYPE_GOOD;
-	}
-
-	public static void setSTORAGE_TYPE_GOOD(Integer sTORAGE_TYPE_GOOD) {
-		STORAGE_TYPE_GOOD = sTORAGE_TYPE_GOOD;
-	}
-
-	public static Integer getSTORAGE_TYPE_OPENED() {
-		return STORAGE_TYPE_OPENED;
-	}
-
-	public static void setSTORAGE_TYPE_OPENED(Integer sTORAGE_TYPE_OPENED) {
-		STORAGE_TYPE_OPENED = sTORAGE_TYPE_OPENED;
-	}
-
-	public static Integer getSTORAGE_TYPE_BAD() {
-		return STORAGE_TYPE_BAD;
-	}
-
-	public static void setSTORAGE_TYPE_BAD(Integer sTORAGE_TYPE_BAD) {
-		STORAGE_TYPE_BAD = sTORAGE_TYPE_BAD;
-	}
-
-	public static Integer getSTORAGE_TYPE_SAMPLE() {
-		return STORAGE_TYPE_SAMPLE;
-	}
-
-	public static void setSTORAGE_TYPE_SAMPLE(Integer sTORAGE_TYPE_SAMPLE) {
-		STORAGE_TYPE_SAMPLE = sTORAGE_TYPE_SAMPLE;
-	}
-
-	public static Integer getSTORAGE_TYPE_SAMPLE_SHOP() {
-		return STORAGE_TYPE_SAMPLE_SHOP;
-	}
-
-	public static void setSTORAGE_TYPE_SAMPLE_SHOP(Integer sTORAGE_TYPE_SAMPLE_SHOP) {
-		STORAGE_TYPE_SAMPLE_SHOP = sTORAGE_TYPE_SAMPLE_SHOP;
-	}
-
-	public static Integer getOPERATE_NETPOINT_DONOTINSPECT() {
-		return OPERATE_NETPOINT_DONOTINSPECT;
-	}
-
-	public static void setOPERATE_NETPOINT_DONOTINSPECT(Integer oPERATE_NETPOINT_DONOTINSPECT) {
-		OPERATE_NETPOINT_DONOTINSPECT = oPERATE_NETPOINT_DONOTINSPECT;
-	}
-
-	public static Integer getOPERATE_NETPOINT_INSPECT() {
-		return OPERATE_NETPOINT_INSPECT;
-	}
-
-	public static void setOPERATE_NETPOINT_INSPECT(Integer oPERATE_NETPOINT_INSPECT) {
-		OPERATE_NETPOINT_INSPECT = oPERATE_NETPOINT_INSPECT;
-	}
-
-	public static Integer getOPERATE_CHANGE_OUT() {
-		return OPERATE_CHANGE_OUT;
-	}
-
-	public static void setOPERATE_CHANGE_OUT(Integer oPERATE_CHANGE_OUT) {
-		OPERATE_CHANGE_OUT = oPERATE_CHANGE_OUT;
-	}
-
-	public static Integer getOPERATE_CHANGE_IN() {
-		return OPERATE_CHANGE_IN;
-	}
-
-	public static void setOPERATE_CHANGE_IN(Integer oPERATE_CHANGE_IN) {
-		OPERATE_CHANGE_IN = oPERATE_CHANGE_IN;
-	}
 
 	public String getProductId() {
 		return productId;
@@ -267,8 +217,6 @@ public class OrderRepairLESRecords implements Serializable {
         this.addTime = value;
     }
 
-    private Integer orderProductId;
-
     /**
      * 获取 网单ID。
      */
@@ -284,10 +232,6 @@ public class OrderRepairLESRecords implements Serializable {
     public void setOrderProductId(Integer value) {
         this.orderProductId = value;
     }
-
-    private Integer orderRepairId;
-
-    private Integer opCancelFlag;
 
     /**
      * 获取 退货申请单ID。
@@ -323,9 +267,16 @@ public class OrderRepairLESRecords implements Serializable {
         this.recordSn = value;
     }
 
-    private Integer operate;
+    
+    public String getOperateStatus() {
+		return operateStatus;
+	}
 
-    /**
+	public void setOperateStatus(String operateStatus) {
+		this.operateStatus = operateStatus;
+	}
+
+	/**
      * 获取 操作，1=出库；2=入库。
      */
     public Integer getOperate() {
@@ -341,7 +292,6 @@ public class OrderRepairLESRecords implements Serializable {
         this.operate = value;
     }
 
-    private Integer storageType;
 
     /**
      * 获取 批次，22；21；10。
@@ -359,7 +309,7 @@ public class OrderRepairLESRecords implements Serializable {
         this.storageType = value;
     }
 
-    private String lesOrderSn;
+
 
     /**
      * 获取 LES提单号。
@@ -377,7 +327,6 @@ public class OrderRepairLESRecords implements Serializable {
         this.lesOrderSn = value;
     }
 
-    private String lesOutPing;
 
     /**
      * 获取 LES出入库凭证号。
@@ -395,9 +344,20 @@ public class OrderRepairLESRecords implements Serializable {
         this.lesOutPing = value;
     }
 
-    private Long lesOutPingTime;
 
-    /**
+
+
+
+
+    public String getLesOutPingTimeTs() {
+		return lesOutPingTimeTs;
+	}
+
+	public void setLesOutPingTimeTs(String lesOutPingTimeTs) {
+		this.lesOutPingTimeTs = lesOutPingTimeTs;
+	}
+
+	/**
      * 获取 LES回传凭证号时间。
      */
     public Long getLesOutPingTime() {
@@ -413,7 +373,6 @@ public class OrderRepairLESRecords implements Serializable {
         this.lesOutPingTime = value;
     }
 
-    private String sCode;
 
     /**
      * 获取 库位编码。
@@ -431,9 +390,17 @@ public class OrderRepairLESRecords implements Serializable {
         this.sCode = value;
     }
 
-    private Integer success;
 
-    /**
+
+    public String getSuccessStatus() {
+		return successStatus;
+	}
+
+	public void setSuccessStatus(String successStatus) {
+		this.successStatus = successStatus;
+	}
+
+	/**
      * 获取 是否成功。
      */
     public Integer getSuccess() {
@@ -449,12 +416,18 @@ public class OrderRepairLESRecords implements Serializable {
         this.success = value;
     }
 
-    /**
-     * 开单成功时间
-     */
-    private long lesOrderSnTime;
 
-    public long getLesOrderSnTime() {
+    
+
+    public String getLesOrderSnTimeTS() {
+		return lesOrderSnTimeTS;
+	}
+
+	public void setLesOrderSnTimeTS(String lesOrderSnTimeTS) {
+		this.lesOrderSnTimeTS = lesOrderSnTimeTS;
+	}
+
+	public long getLesOrderSnTime() {
         return lesOrderSnTime;
     }
 

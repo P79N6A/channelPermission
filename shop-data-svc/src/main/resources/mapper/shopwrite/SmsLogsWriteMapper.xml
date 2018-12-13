@@ -15,12 +15,12 @@
 	</resultMap>
 	<insert id="insertSmsLogs" parameterType="com.haier.shop.model.SmsLogs">
 		insert into
-		`SmsLogs`(`siteId`,`mobile`,`name`,`addTime`,`isSuccess`,`message`,`priority`,`lastTime`,`tryNum`)
+		`smslogs`(`siteId`,`mobile`,`name`,`addTime`,`isSuccess`,`message`,`priority`,`lastTime`,`tryNum`)
 		values(#{siteId},#{mobile},#{name},#{addTime},#{isSuccess},#{message},#{priority},#{lastTime},#{tryNum})
 	</insert>
 	
 	<insert id="batchInsertSmsLogs" parameterType="com.haier.shop.model.SmsLogs">
-		insert into `SmsLogs`(`siteId`,`mobile`,`name`,`addTime`,`isSuccess`,`message`,`priority`,`lastTime`,`tryNum`) values
+		insert into `smslogs`(`siteId`,`mobile`,`name`,`addTime`,`isSuccess`,`message`,`priority`,`lastTime`,`tryNum`) values
 		<foreach collection="smsLogsList" item="item" index="index" separator=",">
 		(#{item.siteId},#{item.mobile},#{item.name},#{item.addTime},#{item.isSuccess},#{item.message},#{item.priority},#{item.lastTime},#{item.tryNum})
 		</foreach>

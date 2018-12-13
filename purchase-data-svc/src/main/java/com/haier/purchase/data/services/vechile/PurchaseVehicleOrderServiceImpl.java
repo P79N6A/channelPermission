@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haier.purchase.data.dao.vehcile.VehicleOrderDao;
+import com.haier.purchase.data.model.vehcile.Cn3wPurchaseStock;
 import com.haier.purchase.data.model.vehcile.ExportVehicleDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderDTO;
+import com.haier.purchase.data.model.vehcile.VehicleOrderHistoryDTO;
+import com.haier.purchase.data.model.vehcile.VehiclePushToSAP;
 import com.haier.purchase.data.service.vechile.PurchaseVehicleOrderService;
 
 /**
@@ -87,6 +90,36 @@ public class PurchaseVehicleOrderServiceImpl implements PurchaseVehicleOrderServ
 	@Override
 	public String getWhCode(String code) {
 		return vehicleOrderDao.getWhCode(code);
+	}
+
+	@Override
+	public List<Cn3wPurchaseStock> findPushToSAPList(Map<String, Object> params) {
+		return vehicleOrderDao.findPushToSAPList(params);
+	}
+
+	@Override
+	public Integer findPushToSAPListCount(Map<String, Object> params) {
+		return vehicleOrderDao.findPushToSAPListCount(params);
+	}
+
+	@Override
+	public List<VehicleOrderHistoryDTO> getChangeDNPageByCondition(VehicleOrderDTO condition, int page, int rows) {
+		return vehicleOrderDao.getChangeDNPageByCondition(condition, page, rows);
+	}
+
+	@Override
+	public Long getChangeDNPagerCount(VehicleOrderDTO condition) {
+		return vehicleOrderDao.getChangeDNPagerCount(condition);
+	}
+
+	@Override
+	public List<VehiclePushToSAP> findPushToSAPList2(Map<String, Object> params) {
+		return vehicleOrderDao.findPushToSAPList2(params);
+	}
+
+	@Override
+	public int findPushToSAPListCount2(Map<String, Object> params) {
+		return vehicleOrderDao.findPushToSAPListCount2(params);
 	}
 
 

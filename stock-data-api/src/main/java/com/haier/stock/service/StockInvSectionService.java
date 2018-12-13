@@ -2,7 +2,9 @@ package com.haier.stock.service;
 
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import com.haier.stock.model.InvSection;
+import com.haier.stock.model.InvStock;
 
 public interface StockInvSectionService<T> {
 	 public  int deleteByPrimaryKey(String secCode);
@@ -55,4 +57,8 @@ public interface StockInvSectionService<T> {
 	 List<T> getPageByCondition(T entity,int start,int rows);
 		
 	 long getPagerCount(T entity);
+
+	JSONObject getInvSectionList(InvSection invSection);
+
+	List<InvSection> queryInvSectionExcel(InvSection invSection);
 }

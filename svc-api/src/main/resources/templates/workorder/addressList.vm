@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>人员责任配置管理</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/report/jquery.form.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+  <script src="../static/js/easyui-extention_ws.js"></script>
+  <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+<body>
+<table id="dg" title="" class="easyui-datagrid" style="width:100%;height:100%;"
+       data-options="toolbar:'#toolbar',pagination:true,rownumbers:true,singleSelect:false,pageList:[50,100,200],pageSize:50,
+            onClickCell: onClickCell">
+  <thead>
+  <tr>
+    <th data-options="field:'ck',checkbox:true"></th>
+    <th field="id" width="150" hidden="true"></th>
+    <!--                 <th field="userid" width="85" >人员Id</th> -->
+    <th field="username" width="85">人员</th>
+    <th field="manageruserid1" width="150" hidden="true"></th>
+    <th field="manageruserid2" width="150" hidden="true"></th>
+    <th field="username1" width="85">一级领导</th>
+    <th field="username2" width="85">二级领导</th>
+    <th field="ordercome" width="150"> 订单来源</th>
+    <th field="question1level1" width="85">责任位一</th>
+    <th field="question1level2" width="85">责任位二</th>
+    <th field="company" width="150">工贸</th>
+  </tr>
+  </thead>
+</table>
+<div id="toolbar">
+  <div id="filter" style="padding:5px">
+    <form id="search" name="search" class="easyui-form" method="get" novalidate>
+      <p>
+        <span style="width:70px;text-align:right;display:inline-block;">人员：</span><input type="text"
+                                                                                         id="username_search"
+                                                                                         name="username_search"
+                                                                                         class="easyui-text"
+                                                                                         size=10
+                                                                                         style="width:180px;"/>
+        <span style="width:70px;text-align:right;display:inline-block;">一级领导：</span><input
+          type="text" id="manageruserId1_search" name="manageruserId1_search" class="easyui-text"
+          size=10 style="width:180px;"/>
+        <span style="width:70px;text-align:right;display:inline-block;">二级领导：</span><input
+          type="text" id="manageruserId2_search" name="manageruserId2_search" class="easyui-text"
+          size=10 style="width:180px;"/>
+      </p>
+      <p>
+        <span style="width:70px;text-align:right;display:inline-block;">工贸：</span><input type="text"
+                                                                                         id="company_search"
+                                                                                         name="company_search"
+                                                                                         class="easyui-text"
+                                                                                         size=10
+                                                                                         style="width:180px;"/>
+        <span style="width:70px;text-align:right;display:inline-block;">订单来源：</span><select
+          class="easyui-combobox" style="width:180px;" id="ordercome_search" name="ordercome_search"
+          data-options="editable:false"></select>
+        <span style="width:70px;text-align:right;display:inline-block;">责任位：</span><select
+          class="easyui-combobox" style="width:125px" id="question1level1_search"
+          name="question1level1_search" data-options="editable:false"></select>
+        <select class="easyui-combobox" style="width:125px" id="question1level2_search"
+                name="question1level2_search"
+                data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+      </p>
+
+      <p>
+
+      </p>
+    </form>
+  </div>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+     onclick="searchReview()">查询</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true"
+     onclick="reset()">重置</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true"
+     onclick="newBackList()">添加</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"
+     onclick="viewPool()">查看</a>
+  <!--<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="audit()">批量审核</a>,parser:w4-->
+  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" plain="true"
+     onclick="deletecontacts()">删除 </a>
+  <a id="dc" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" plain="true"
+     onclick="exp()">导出 </a>
+  <font style="color:#FF0000">每次最大导出条数为20000条</font>
+  <a id="dc" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-in" plain="true"
+     onclick="importOpen()">导入 </a>
+</div>
+<div id="dlg" class="easyui-dialog" style="width:900px;height:630px;padding:10px 20px;"
+     closed="true" modal="true" buttons="#dlg-buttons">
+  <form id="fm" class="easyui-form" method="post" novalidate>
+    <h2>人员责任配置</h2>
+    <!-- <table id="addList" style="width:960px;"> -->
+    <p>
+      <span style="width:16px;text-align:right;display:inline-block;"></span>
+      <span style="width:8px;text-align:right;display:inline-block;"></span>
+      <input id="id" name="id" hidden="true"></input>
+      <span style="width:60px;text-align:right;display:inline-block;">责任人:</span><select
+        class="easyui-combobox" data-options="editable:false" required="true" style="width:150px"
+        id="username" name="userid"></select>
+      <span style="width:60px;text-align:right;display:inline-block;">电话:</span><input id="phone"
+                                                                                   name="phone"
+                                                                                   class="easyui-validatebox textbox"
+                                                                                   style="width:148px;"
+                                                                                   disabled="true"></input>
+      <span style="width:69px;text-align:right;display:inline-block;">邮箱:</span><input id="email"
+                                                                                       name="email"
+                                                                                       class="easyui-validatebox textbox"
+                                                                                       style="width:150px;"
+                                                                                       disabled="true"></input>
+      <a id="updateDutyPeople" href="#" style="margin-left: 30px; height:19px; line-height: 19px;"
+         class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="alertBox();">修改责任人</a>
+    </p>
+    <p>
+      <span style="width:16px;text-align:right;display:inline-block;"></span>
+      <span style="width:8px;text-align:right;display:inline-block;"></span>
+      <span style="width:60px;text-align:right;display:inline-block;">一级领导:</span><select
+        class="easyui-combobox" data-options="editable:false" required="true" style="width:150px"
+        style="width:150px" id="manageruserid1" name="manageruserid1"></select></span>
+      <span style="width:60px;text-align:right;display:inline-block;">电话:</span><input id="phone1"
+                                                                                       name="phone1"
+                                                                                       class="easyui-validatebox textbox"
+                                                                                       style="width:148px;"
+                                                                                       disabled="true"></input>
+      <span style="width:69px;text-align:right;display:inline-block;">邮箱:</span><input id="email1"
+                                                                                       name="email1"
+                                                                                       class="easyui-validatebox textbox"
+                                                                                       style="width:150px;"
+                                                                                       disabled="true"></input>
+      <span style="width:100px;text-align:right;display:inline-block;">发送通知:</span><input
+        type="checkbox" id="issend1" name="issend1" value="1"/></input></span>
+    </p>
+    <p>
+      <span style="width:16px;text-align:right;display:inline-block;"></span>
+      <span style="width:8px;text-align:right;display:inline-block;"></span>
+      <span style="width:60px;text-align:right;display:inline-block;">二级领导:</span><select
+        class="easyui-combobox" data-options="editable:false" required="true" style="width:150px"
+        style="width:150px" id="manageruserid2" name="manageruserid2"></select></span>
+      <span style="width:60px;text-align:right;display:inline-block;">电话:</span><input id="phone2"
+                                                                                       name="phone2"
+                                                                                       class="easyui-validatebox textbox"
+                                                                                       style="width:148px;"
+                                                                                       disabled="true"></input>
+      <span style="width:69px;text-align:right;display:inline-block;">邮箱:</span><input id="email2"
+                                                                                       name="email2"
+                                                                                       class="easyui-validatebox textbox"
+                                                                                       style="width:150px;"
+                                                                                       disabled="true"></input>
+      <span style="width:100px;text-align:right;display:inline-block;">发送通知:</span><input
+        type="checkbox" id="issend2" name="issend2" value="1"/></input></span>
+    </p>
+
+    <table id="box"></table>
+
+    <div id="tb" style="padding:5px;">
+      <div style="margin-bottom:5px;">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="obj.add();">添加</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"
+           onclick="obj.edit();">修改</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"
+           onclick="obj.remove();">删除</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" style="display:none;"
+           id="save" onclick="obj.save();">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" style="display:none;"
+           id="redo" onclick="obj.redo();">取消编辑</a>
+      </div>
+    </div>
+  </form>
+</div>
+<div id="dlg-buttons">
+  <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok"
+     onclick="saveBackList()" style="width:90px">保存</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel()"
+     style="width:90px">取消</a>
+</div>
+
+<div id="dlg2" class="easyui-dialog" style="width:700px;height:180px;padding:10px 20px"
+     closed="true" modal="true" buttons="#dlg-buttons2">
+  <form id="fm2" class="easyui-form" method="post" novalidate>
+    <h2>修改责任人</h2>
+    <p>
+      <input id="id2" name="id" hidden="true"></input>
+      <span style="width:50px;text-align:right;display:inline-block;">责任人:</span><select
+        class="easyui-combobox" data-options="editable:false" required="true" style="width:150px"
+        id="user2" name="userid"></select>
+      <span style="width:40px;text-align:right;display:inline-block;">电话:</span><input id="phone_2"
+                                                                                       name="phone"
+                                                                                       class="easyui-validatebox textbox"
+                                                                                       style="width:148px;"
+                                                                                       disabled="true"></input>
+      <span style="width:40px;text-align:right;display:inline-block;">邮箱:</span><input id="email_2"
+                                                                                       name="email"
+                                                                                       class="easyui-validatebox textbox"
+                                                                                       style="width:150px;"
+                                                                                       disabled="true"></input>
+    </p>
+  </form>
+  <div id="dlg-buttons2">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok"
+       onclick="updateDutyPeople();" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#dlg2').dialog('close')" style="width:90px">取消</a>
+  </div>
+</div>
+
+
+<div id="dlg3" class="easyui-dialog" style="width:850px;height:580px;padding:10px 20px;"
+     closed="true" modal="true" buttons="#dlg-buttons3">
+  <div class="form-group" style="padding-top: 15px;">
+    <form id="importForm" name="importForm" action="" method="post" enctype="multipart/form-data"
+          target="importFormTarget">
+      <div class="col-xs-5 col-md-3">
+        <label for="" class="control-label col-xs-3 col-md-1 text-center">选择文件：</label>
+        <input id="file" name="file" type="file" class="form-control">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-in"
+           onclick="upLoad();" style="width:90px">上传校验</a>
+        <font style="color:#FF0000">注:请先把需要修改的人员责任导出后,再在导出的Excel中修改上传</font>
+      </div>
+    </form>
+    <!-- 		          <button id="upLoad" name="upLoad" class="btn btn-primary"><i class="fa fa-upload"></i> 上传</button> -->
+
+  </div>
+
+
+  <form id="fm4" class="easyui-form" method="post" novalidate>
+    <h2>人员责任导入</h2>
+    <table id="box3"></table>
+    <div id="tb3" style="padding:5px;">
+      <div style="margin-bottom:5px;">
+        <!-- 				<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="obj3.add();">添加</a> -->
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"
+           onclick="obj3.edit();">修改</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"
+           onclick="obj3.remove();">删除</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" style="display:none;"
+           id="save" onclick="obj3.save();">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" style="display:none;"
+           id="redo" onclick="obj3.redo();">取消编辑</a>
+      </div>
+    </div>
+  </form>
+</div>
+<div id="dlg-buttons3">
+  <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-in" onclick="saveExcle()"
+     style="width:90px">导入Excle</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+     onclick="cancelImport();" style="width:90px">取消</a>
+</div>
+<script type="text/javascript" src="../static/js/report/addressList.js"></script>
+<script type="text/javascript" src="../static/js/report/validator.js"></script>
+<!-- <script type="text/javascript" src="/resources/js/jgxLoader.js"></script> -->
+</body>
+</html>

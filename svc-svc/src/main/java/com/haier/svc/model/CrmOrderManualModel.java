@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-@Service
+@Service("crmOrderManualModel")
 public class CrmOrderManualModel {
 	private static org.apache.log4j.Logger log = org.apache.log4j.LogManager
 			.getLogger(CrmOrderManualModel.class);
@@ -205,5 +205,15 @@ public class CrmOrderManualModel {
         }
         //返回执行成功
         return true;
+    }
+
+    public CrmOrderManualItem getCrmOrderManualItem(String s) {
+       return purchaseCrmOrderManualService.getCrmOrderManualItem(s);
+    }
+
+
+    public List<CrmOrderManualDetailItem> getcrmOrderManualDetailItem(String s) {
+        return purchaseCrmOrderManualService.getcrmOrderManualDetailItem(s);
+
     }
 }

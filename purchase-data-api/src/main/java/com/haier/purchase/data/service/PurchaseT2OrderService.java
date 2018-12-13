@@ -3,10 +3,7 @@ package com.haier.purchase.data.service;
 import java.util.List;
 import java.util.Map;
 
-import com.haier.purchase.data.model.CrmOrderItem;
-import com.haier.purchase.data.model.HaierLimitHistoryItem;
-import com.haier.purchase.data.model.T2OrderInterfaceLog;
-import com.haier.purchase.data.model.T2OrderItem;
+import com.haier.purchase.data.model.*;
 
 /**
  * Created by 黄俊 on 2014/7/8.
@@ -414,4 +411,8 @@ public interface PurchaseT2OrderService {
     public List<T2OrderInterfaceLog> findPurchaseLog(Map<String,Object> map);
 
     public int getPurchaseLogRow(Map<String, Object> map);
+
+	public void updateStatus80FromLES();
+
+    List<T2OrderItem> getT2WdOrderId(Map<String, Object> params);
 }

@@ -190,6 +190,87 @@ public class DateUtil {
 		}
 		return cal.getTime();
 	}
+	
+	public static Date getArrivalDate2(int dateNum) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.DATE, cal.get(Calendar.DATE) + dateNum);
+		String[] weekDays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+		int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+		cal.setFirstDayOfWeek(Calendar.THURSDAY);// 设置一个星期的第一天
+		int day = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天
+		cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);// 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
+//		cal.add(Calendar.DATE, 5);
+		if (w < 0)
+			w = 0;
+		if (!("星期一".equals(weekDays[w]) || "星期二".equals(weekDays[w]) || "星期三"
+				.equals(weekDays[w]))) {
+			cal.set(Calendar.DATE, cal.get(Calendar.DATE) + 7);
+		}
+		
+		return cal.getTime();
+	}
+	
+	/**
+	 * 整车直发历史订单取消订单
+	 * 1、当前日期是星期一、星期二群天以及星期三12:00:00之前可取消
+	 * 2、下单时间在上周四0点之前
+	 * 要满足以上两个条件可以取消，否则不可取消
+	 * @param dateNum
+	 * @return
+	 */
+	public static boolean getCancelOrder(Date createDate){
+		Calendar cal = Calendar.getInstance();
+		int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+		if (w < 0){
+			w = 0;
+		}
+		//当前时间如果是周一周二全天、周三12点之前
+		if(w == 1 || w == 2 || (w == 3 && cal.get(Calendar.HOUR_OF_DAY)<12)){
+			//获取当前是第几周
+			Date date = new Date();
+			cal.setFirstDayOfWeek(Calendar.MONDAY);  
+			cal.setTime(date);
+			
+			int weekOfMonth = cal.get(Calendar.WEEK_OF_YEAR);
+			//获取订单创建时间是第几周
+			cal.setTime(createDate);
+			int cweekOfMonth = cal.get(Calendar.WEEK_OF_YEAR);
+			if(weekOfMonth == cweekOfMonth+1){
+				//获取订单创建时间是周几,如果是周四之前则不可取消,周四之后可以取消
+				cal.setTime(createDate);
+				int createWeek = cal.get(Calendar.DAY_OF_WEEK) - 1;      
+				if (createWeek < 0){        
+				   	createWeek = 0;      
+				} 
+				if((createWeek == 3 && cal.get(Calendar.HOUR_OF_DAY)>=12) ||createWeek>=4 || createWeek == 0){
+					return true;
+				}else
+					return false;
+			}else if(weekOfMonth == cweekOfMonth){
+				return true;
+			}else{
+				//如果当前周不等于订单创建周并且也不等于订单创建周+1则不可取消
+				return false;
+			}
+		} else if((w == 3 && cal.get(Calendar.HOUR_OF_DAY)>=12) || w == 4 || w == 5|| w == 6 || w == 0){
+			//周三12点之后
+			//获取本周三12点的时间long类型，与订单时间的long类型比较
+			Calendar cal2 = Calendar.getInstance();
+	    	cal2.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY); 
+	    	cal2.set(Calendar.HOUR_OF_DAY, 12);
+	    	cal2.set(Calendar.MINUTE, 0);
+	    	cal2.set(Calendar.SECOND, 0);
+	    	//当前周三12点
+	    	Date date = cal2.getTime();
+	    	if(createDate.getTime()-date.getTime()>0){
+	    		return true;
+	    	}else{
+	    		return false;
+	    	}
+		} else{
+			return false;
+		}
+	}
 
 	public static String getT2Date(int dateNum) {
 		return new SimpleDateFormat("yyyy-MM-dd").format(getArrivalDate(dateNum));

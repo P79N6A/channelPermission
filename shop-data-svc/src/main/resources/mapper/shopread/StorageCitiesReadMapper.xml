@@ -20,53 +20,53 @@
     <select id="get" parameterType="Integer" resultMap="storageCitiesResult">
         select
         `id`,`provinceId`,`cityId`,`regionId`,`provinceName`,`cityName`,`regionName`,`sCodeA`,`sCodeB`,`onedayLimit`,`tcCover`,`tcLimit`,`pointCover`,`pointLimit`
-        from `StorageCities`
+        from `storagecities`
         where `id` = #{id}
     </select>
     <select id="getCodeListByCity" parameterType="Integer" resultType="java.lang.String">
         select distinct `sCodeA`
-        from `StorageCities`
+        from `storagecities`
         where `cityId` = #{cityId}
     </select>
     <select id="getCodeListByRegion" parameterType="Integer" resultType="java.lang.String">
         select distinct `sCodeA`
-        from `StorageCities`
+        from `storagecities`
         where `regionId` = #{regionId}
     </select>
     <select id="getStorageCityByIds" parameterType="map" resultMap="storageCitiesResult">
         select
         `id`,`provinceId`,`cityId`,`regionId`,`provinceName`,`cityName`,`regionName`,`sCodeA`,`sCodeB`,`onedayLimit`,`tcCover`,`tcLimit`,`pointCover`,`pointLimit`
-        from `StorageCities`
+        from `storagecities`
         where `provinceId`=#{provinceId} and `cityId`=#{cityId} and `regionId`=#{regionId}
     </select>
     <select id="getStorageCities" resultType="com.haier.shop.model.StorageCities">
-        select distinct sCodeA, cityId from StorageCities
+        select distinct sCodeA, cityId from storagecities
     </select>
     <select id="getAllProvince" resultMap="storageCitiesResult">
-        SELECT `provinceId`,`provinceName` FROM `StorageCities` group by id asc
+        SELECT `provinceId`,`provinceName` FROM `storagecities` group by id asc
     </select>
     <select id="getAllCityByProvId" parameterType="map" resultMap="storageCitiesResult">
-        SELECT `cityId`, `cityName` FROM `StorageCities` where `provinceId`=#{provinceId} group by cityId order by
+        SELECT `cityId`, `cityName` FROM `storagecities` where `provinceId`=#{provinceId} group by cityId order by
         cityId asc
     </select>
     <select id="getAllRegionByCityId" parameterType="map" resultMap="storageCitiesResult">
-        SELECT `regionId`,`regionName` FROM `StorageCities` WHERE `cityId`=#{cityId} group by regionId order by id asc
+        SELECT `regionId`,`regionName` FROM `storagecities` WHERE `cityId`=#{cityId} group by regionId order by id asc
     </select>
     <select id="getAllCityIds" resultMap="storageCitiesResult">
-        SELECT distinct cityId from `StorageCities`
+        SELECT distinct cityId from `storagecities`
     </select>
     <select id="getAllCities" resultMap="storageCitiesResult">
-        select cityId,sCodeA from StorageCities group by cityId,sCodeA
+        select cityId,sCodeA from storagecities group by cityId,sCodeA
     </select>
     <select id="getAllRegions" resultMap="storageCitiesResult">
-        select cityId,regionId,sCodeA from StorageCities group by cityId,regionId,sCodeA
+        select cityId,regionId,sCodeA from storagecities group by cityId,regionId,sCodeA
     </select>
     <!-- <insert id="insert" parameterType="com.haier.cbs.stock.entity.StorageCities">
-        insert into `StorageCities`(`provinceId`,`cityId`,`regionId`,`provinceName`,`cityName`,`regionName`,`sCodeA`,`sCodeB`,`onedayLimit`,`tcCover`,`tcLimit`,`pointCover`,`pointLimit`)
+        insert into `storagecities`(`provinceId`,`cityId`,`regionId`,`provinceName`,`cityName`,`regionName`,`sCodeA`,`sCodeB`,`onedayLimit`,`tcCover`,`tcLimit`,`pointCover`,`pointLimit`)
         values(#{provinceId},#{cityId},#{regionId},#{provinceName},#{cityName},#{regionName},#{sCodeA},#{sCodeB},#{onedayLimit},#{tcCover},#{tcLimit},#{pointCover},#{pointLimit})
     </insert>
     <update id="update" parameterType="com.haier.cbs.stock.entity.StorageCities">
-        update `StorageCities` set `provinceId`=#{provinceId},`cityId`=#{cityId},`regionId`=#{regionId},`provinceName`=#{provinceName},`cityName`=#{cityName},`regionName`=#{regionName},`sCodeA`=#{sCodeA},`sCodeB`=#{sCodeB},`onedayLimit`=#{onedayLimit},`tcCover`=#{tcCover},`tcLimit`=#{tcLimit},`pointCover`=#{pointCover},`pointLimit`=#{pointLimit}
+        update `storagecities` set `provinceId`=#{provinceId},`cityId`=#{cityId},`regionId`=#{regionId},`provinceName`=#{provinceName},`cityName`=#{cityName},`regionName`=#{regionName},`sCodeA`=#{sCodeA},`sCodeB`=#{sCodeB},`onedayLimit`=#{onedayLimit},`tcCover`=#{tcCover},`tcLimit`=#{tcLimit},`pointCover`=#{pointCover},`pointLimit`=#{pointLimit}
         where `id` = #{id}
     </update> -->
 </mapper>

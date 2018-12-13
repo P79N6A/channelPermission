@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>测试页面</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+  <script src="../static/js/easyui-extention_ws.js"></script>
+  <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+  <table id="dg">
+  </table>
+</div>
+
+<div id="datagridToolbar">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="paramForm" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          人员
+        </span>
+        <input class="easyui-textbox" name="userName" id="search-userName"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          电话
+        </span>
+        <input class="easyui-textbox" name="mobile" id="search-mobile"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          邮件
+        </span>
+        <input class="easyui-textbox" name="email" id="search-email"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          员工类型
+        </span>
+        <select class="easyui-combobox" name="userType" id="userType" style="width: 174px;">
+          <option value="">请选择</option>
+          <option value="0">普通员工</option>
+          <option value="1">一级领导</option>
+          <option value="2">二级领导</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          发送统计邮件
+        </span>
+        <select class="easyui-combobox" name="sendEmail" id="sendEmail" style="width: 174px;" panelHeight="auto">
+          <option value="">请选择</option>
+          <option value="1">发送</option>
+          <option value="0">不发送</option>
+        </select>
+      </div>
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn"
+       data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_orderOp"
+       data-options="iconCls:'icon-redo',plain:true">重置</a>
+    <a href="#" class="easyui-linkbutton" id="addBtn"
+       data-options="iconCls:'icon-add',plain:true">新增</a>
+    <a href="#" class="easyui-linkbutton" id="delBtn"
+       data-options="iconCls:'icon-remove',plain:true">删除</a>
+    <a href="#" class="easyui-linkbutton" id="editBtn"
+       data-options="iconCls:'icon-edit',plain:true">修改</a>
+    <a href="#" class="easyui-linkbutton" id="export" onclick="exp()"
+       data-options="iconCls:'icon-save',plain:true">导出</a>
+  </form>
+</div>
+
+<div id="addDlg" data-options="title:'',resizable:true,modal:true"
+     class="easyui-dialog add-dlg"
+     style="width:600px;height:300px;"
+     closed="true" buttons="#dlg-buttons">
+  <form id="addForm" method="post">
+    <input name="id" type="text" style="display:none;">
+    <input __acttype="" type="hidden" value="add">
+    <input type="hidden" name="userId">
+    <div class="fitem">
+      <label>姓名</label>
+      <input class="easyui-textbox" name="userName" required="true">
+    </div>
+    <div class="fitem">
+      <label>电话</label>
+      <input class="easyui-textbox" name="mobile" required="true">
+    </div>
+    <div class="fitem">
+      <label>邮件</label>
+      <input class="easyui-textbox" name="email" required="true">
+    </div>
+    <div class="fitem">
+      <label>员工类型</label>
+      <select class="easyui-combobox" name="userType">
+        <option value="0">普通员工</option>
+        <option value="1">一级领导</option>
+        <option value="2">二级领导</option>
+      </select>
+    </div>
+    <div class="fitem">
+      <label>发送统计邮件</label>
+      <select class="easyui-combobox" name="sendEmail">
+        <option value="1">发送</option>
+        <option value="0">不发送</option>
+      </select>
+    </div>
+  </form>
+  <div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn" iconCls="icon-ok">确认</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#addDlg').dialog('close')">关闭</a>
+  </div>
+</div>
+<script type="application/javascript">
+  var dataGrid = $('#dg').datagrid({
+    url:"/woUser/getList",
+    method:"get",
+    fit: true,
+    fitColumns : false,
+    pagination: true,
+    pageSize: 50,
+    pageList: [50, 100, 200 ],
+    pageNumber:1,
+    autoRowHeight : true,
+    striped : true,
+    toolbar : '#datagridToolbar',
+    rownumbers : true,
+    nowrap : false,
+    columns: [
+      [
+        {
+          field: 'userId',
+          title: '全选',
+          width: '20',
+          align: 'center',
+          checkbox: true
+        },
+        {
+          field:'userName',
+          title:'人员',
+          width:'200',
+          align:'center'
+        },
+        {
+          field:'mobile',
+          title:'电话',
+          width:'300',
+          align:'center'
+        },
+        {
+          field:'email',
+          title:'邮件',
+          width:'300',
+          align:'center'
+        },
+        {
+          field:'userType',
+          title:'员工类型',
+          width:'120',
+          align:'center',
+          formatter : function(value) {
+            if(value == 0){
+              return "普通员工";
+            }
+            if(value == 1){
+              return "一级领导";
+            }
+            if(value == 2){
+              return "二级领导";
+            }
+          }
+        },
+        {
+          field:'sendEmail',
+          title:'发送统计邮件',
+          width:'300',
+          align:'center',
+          formatter : function(value) {
+            if(value == 0){
+              return "不发送";
+            }
+            if(value == 1){
+              return "发送";
+            }
+          }
+        }
+      ]
+    ]
+  });
+
+
+
+</script>
+<script src="../static/js/report/workOrderUser.js"></script>
+##<script src="../static/js/report/workOrder.js"></script>
+</body>
+</html>

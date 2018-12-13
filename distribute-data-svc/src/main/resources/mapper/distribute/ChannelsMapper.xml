@@ -15,6 +15,15 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
+  
+    <resultMap id="PushResultMap" type="com.haier.distribute.data.model.PushData" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="channelCode" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channelName" property="channelName" jdbcType="VARCHAR" />
+    <result column="sendTime" property="sendTime" jdbcType="VARCHAR" />
+    <result column="sendInfo" property="sendInfo"  />
+    <result column="sendStatus" property="sendStatus"  />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, channelCode, channelName, moneyLimit, moneyLock, moneyAlert, sort, createBy, 
     createTime, updateBy, remark, updateTime
@@ -32,6 +41,25 @@
     id
     from t_channels_info
     where channelCode=#{distributionCode,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findPushData" resultMap="PushResultMap" >
+			SELECT
+				ts.channelCode,
+				tc.channelName,
+				max(ts.sendTime) sendTime,
+				ts.sendInfo,
+				ts.sendStatus
+			FROM
+				t_channels_info tc,
+				t_send_info_log ts
+			WHERE
+				tc.channelCode = ts.channelCode
+			<if test="_parameter != null and _parameter !=''">
+                <![CDATA[ and tc.channelName= #{_parameter}]]>
+            </if> 
+			GROUP BY
+				ts.channelCode
   </select>
   
 </mapper>

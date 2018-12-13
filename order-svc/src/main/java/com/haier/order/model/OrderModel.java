@@ -10,19 +10,62 @@ import com.haier.order.services.OrderCenterItemServiceImpl;
 import com.haier.order.util.OrderSnUtil;
 import com.haier.order.util.PayCenterJsonUtils;
 import com.haier.order.util.SignUtil;
-import com.haier.shop.model.*;
-import com.haier.shop.service.*;
+import com.haier.shop.model.BenefitTypeReqVO;
+import com.haier.shop.model.CmtCommentOrderProducts;
+import com.haier.shop.model.CostPools;
+import com.haier.shop.model.HpReservationDateLogs;
+import com.haier.shop.model.HpSignTimeInterface;
+import com.haier.shop.model.InvoiceQueue;
+import com.haier.shop.model.InvoicesReady;
+import com.haier.shop.model.NetPoints;
+import com.haier.shop.model.OrderOperateLogs;
+import com.haier.shop.model.OrderPriceProductGroupIndustry;
+import com.haier.shop.model.OrderProductsAttributes;
+import com.haier.shop.model.OrderProductsNew;
+import com.haier.shop.model.OrderRepairHPRecordsNew;
+import com.haier.shop.model.OrderRepairsNew;
+import com.haier.shop.model.OrderShippedQueue;
+import com.haier.shop.model.OrderType;
+import com.haier.shop.model.OrderWorkflowRegion;
+import com.haier.shop.model.OrderWorkflows;
+import com.haier.shop.model.OrdersAttributes;
+import com.haier.shop.model.OrdersNew;
+import com.haier.shop.model.ProductCates;
+import com.haier.shop.model.ProductsNew;
+import com.haier.shop.service.CmtCommentOrderProductsService;
+import com.haier.shop.service.CostPoolsService;
+import com.haier.shop.service.HpReservationDateLogsService;
+import com.haier.shop.service.HpSignTimeInterfaceService;
+import com.haier.shop.service.InvoiceQueueService;
+import com.haier.shop.service.InvoicesReadyService;
+import com.haier.shop.service.OrderPriceGateService;
+import com.haier.shop.service.OrderPriceProductGroupIndustryService;
+import com.haier.shop.service.OrderProductsAttributesService;
+import com.haier.shop.service.OrderProductsNewService;
+import com.haier.shop.service.OrderRepairHPRecordsnNewService;
+import com.haier.shop.service.OrderRepairsNewService;
+import com.haier.shop.service.OrderShippedQueueService;
+import com.haier.shop.service.OrderWorkflowRegionService;
+import com.haier.shop.service.OrdersAttributesService;
+import com.haier.shop.service.OrdersNewService;
+import com.haier.shop.service.OrdersService;
+import com.haier.shop.service.ShopOrderOperateLogsService;
+import com.haier.shop.service.ShopOrderWorkflowsService;
+import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.Assert;
-
-import java.math.BigDecimal;
-import java.net.URLDecoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 @Configuration
 public class OrderModel {
@@ -63,6 +106,15 @@ public class OrderModel {
     private OrderThirdCenterPayCenterFallBackService orderThirdCenterPayCenterFallBackService;
     @Autowired
     private OrderRepairHPRecordsnNewService orderRepairHPRecordsDao;
+
+    @Autowired
+    private OrderPriceProductGroupIndustryService orderPriceProductGroupIndustryService;
+    @Autowired
+    private OrderPriceGateService orderPriceGateService;
+    @Autowired
+    private CostPoolsService costPoolsService;
+    @Autowired
+    private OrdersService ordersService;
     private static final String RAS_PRIVATE_KEY = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBALEOFaUEqEG7cfWcv0SLpHlQmr3qIiFH3ttwBVmnffwF/9xVp2zAZCbgOFDPu+tCedXgEWD13d2W6xG/qp8vhe+Oqo93+J19LnajRyjyGkmDH+pzCn5aS7D7SZ/j1cIu2CuNQNwj9IFmGEEASgimRhHeFnGGfY7PzZqI3XRlzbr/AgMBAAECgYBKTKzMmQ26t9x0w5iIPUmCF084jz5PVQeycmnsW5tE3YengNJHktz0a3d2ghZL/ZN/Kw5f8A1w5dozkokZUCoV0Mpd63JE0BZF9LQH7vJpHSC8MaPHntXB4di9O2//A8KrWDzz8f0lNcnw9vxvDzL3VnAUIiIaFkCwEhcToOJwsQJBANZR47SMc+KziSmg+F8d7dR6mFCczmrB1BEMcASEf45Ij6JFwuU67s1Z5ZmTSH2sFWGJKUEUy20v3oXVyBwCkaMCQQDTfO4PRAWwMidwXAhyH7X/KjuRQTMtuXpl/3ZRF5AAQSD7h0gYRV+1SoQgT4UXQBlnbV4k2KEzkHBiDuYhj971AkAaPykdwV2n08jmejowm9+2d9UTekClPluUQuutAfUFHcnJW7XEkPUR3QKLTkhAa8SqjzuoJr3K/2PHDClXlND1AkB3uZjXYY3K0onLLP7HBLa2TkVMlNmRQBhPl9B2Vd16l2RBoLMqslNdQWMNG5dfszTufVa3iz+u/kzw5jhXtaflAkAb/IPuTy3afvI7f04alHqkSDRQuDoO0QP0dTCQbih0kFPItNGB/l0J86fbGYiF4Uiugdm1aGUJ9dwKR8uO2aMx";
     @SuppressWarnings("serial")
     private static Map<Integer, String> orderStatusMap = new HashMap<Integer, String>() {
@@ -254,14 +306,22 @@ public class OrderModel {
 
         //3W-更新'订单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-27
         //3W-更新'网单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-28
-        OrdersAttributes ordersAttributes = null;
+        //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+        //OrdersAttributes ordersAttributes = null;
+        //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 end
+
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
         //'网单扩展属性表'
-        OrderProductsAttributes orderProductsAttributes = orderProductsAttributesDao
-                .getByOrderProductId(orderProduct.getId());
+        /*OrderProductsAttributes orderProductsAttributes = orderProductsAttributesDao
+                .getByOrderProductId(orderProduct.getId());*/
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
         if (orderProduct.getStockType() != null
                 && orderProduct.getStockType().equalsIgnoreCase("3W")) {
+
+            //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
             //'订单扩展属性表'
-            ordersAttributes = ordersAttributesDao.getByOrderId(Integer.valueOf(order.getId()));
+            /*ordersAttributes = ordersAttributesDao.getByOrderId(Integer.valueOf(order.getId()));
             if (ordersAttributes == null) {
                 log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "],order.id["
                         + order.getId() + "]没有查到[订单扩展属性信息]");
@@ -269,9 +329,12 @@ public class OrderModel {
                 result.setMessage("CaiNiao网单出库：order.id[" + order.getId() + "]在[订单扩展属性表]没有查到");
                 return result;
             }
-            ordersAttributes.setLbx(cainiaoMap.get("lbxSn"));
+            ordersAttributes.setLbx(cainiaoMap.get("lbxSn"));*/
+            order.setLbxSn(cainiaoMap.get("lbxSn"));
+            //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 end
 
-            if (orderProductsAttributes == null) {
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+            /*if (orderProductsAttributes == null) {
                 log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "],orderProduct.id["
                         + orderProduct.getId() + "]没有查到[网单扩展属性信息]");
                 result.setResult(false);
@@ -279,7 +342,9 @@ public class OrderModel {
                         "CaiNiao网单出库：orderProduct.id[" + orderProduct.getId() + "]在[网单扩展属性表]没有查到");
                 return result;
             }
-            orderProductsAttributes.setTbOrderSn(cainiaoMap.get("tbOrderSn"));
+            orderProductsAttributes.setTbOrderSn(cainiaoMap.get("tbOrderSn"));*/
+            orderProduct.setTbOrderSn(cainiaoMap.get("tbOrderSn"));
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
 
             //更新网单相关数据（3W订单没有HP相关业务逻辑，导致网单有的没有数据，但后续业务需要）
             orderProduct.setSCode(cainiaoMap.get("sCode"));
@@ -367,16 +432,26 @@ public class OrderModel {
             //3W-更新'订单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-27
             if (orderProduct.getStockType() != null
                     && orderProduct.getStockType().equalsIgnoreCase("3W")) {
-                int n = ordersAttributesDao.update(ordersAttributes);
+
+                //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+                //int n = ordersAttributesDao.update(ordersAttributes);
+                int n = ordersNewDao.updateLbxSn(order);
                 if (n < 1) {
+                    /*log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
+                            + orderProduct.getCOrderSn() + "]跟新'订单扩展属性表'失败！");*/
                     log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
-                            + orderProduct.getCOrderSn() + "]跟新'订单扩展属性表'失败！");
+                        + orderProduct.getCOrderSn() + "]跟新'订单表'失败！");
                 }
-                n = orderProductsAttributesDao.update(orderProductsAttributes);
+                //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 end
+
+                //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+                /*n = orderProductsAttributesDao.update(orderProductsAttributes);
                 if (n < 1) {
                     log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
                             + orderProduct.getCOrderSn() + "]跟新'网单扩展属性表'失败！");
-                }
+                }*/
+                //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
                 orderProductsNewDao.updateAfterDelivery3W(orderProduct);
             } else {
                 //更新网单
@@ -865,7 +940,7 @@ public class OrderModel {
     		log.setChangeLog(StringUtil.isEmpty(changeLog) ? "" : changeLog);
     		log.setLogTime(((Long) (System.currentTimeMillis() / 1000)).intValue());
     		log.setNetPointId(orderProduct == null ? 0 : orderProduct.getNetPointId());
-    		log.setOperator("CBS系统");
+    		log.setOperator("系统");
     		log.setOrderId(orderProduct.getOrderId());
     		log.setOrderProductId(orderProduct == null ? 0 : orderProduct.getId());
     		log.setPaymentStatus(orderProduct.getCPaymentStatus());
@@ -1061,7 +1136,7 @@ public class OrderModel {
                         acceptTime.getTime() / 1000);
             }
             //记录网单日志
-            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "CBS系统", "网点接单",
+            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "系统", "网点接单",
                     "网点接单时间为：" + DateUtil.format(acceptTime, "yyyy-MM-dd HH:mm:ss"));
             orderOperateLogsDao.insert(orderProductOperateLogs);
 
@@ -1116,7 +1191,7 @@ public class OrderModel {
                         shipTime.getTime() / 1000);
             }
             //记录网单日志
-            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "CBS系统", "网点出库",
+            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "系统", "网点出库",
                     "网点出库时间为：" + DateUtil.format(shipTime, "yyyy-MM-dd HH:mm:ss"));
             orderOperateLogsDao.insert(orderProductOperateLogs);
 
@@ -1258,7 +1333,7 @@ public class OrderModel {
                 if (orderWorkflows.getUserAcceptTime().intValue() == 0) {
                     orderWorkflowsDao.updateUserAcceptTime(orderWorkflows.getId(),
                             signTime.getTime() / 1000);
-                    orderOperateLogsDao.insert(getOrderOperateLog(orders, orderProductsNew, "CBS系统",
+                    orderOperateLogsDao.insert(getOrderOperateLog(orders, orderProductsNew, "系统",
                             "用户签收时间同步", (StringUtil.isEmpty(mes[0]) ? "HP同步用户签收时间:" : mes[0])
                                     + DateUtil.format(signTime, "yyyy-MM-dd HH:mm:ss")));
                     //报表增加更新网单表modified字段，报表使用全流程NetPointArriveTime，但是订单网单没有及时更新
@@ -1342,7 +1417,7 @@ public class OrderModel {
                     if (n == opList.size()) {
                         ordersNewDao.completeClose(Integer.parseInt(orders.getId()), now.getTime() / 1000);
                         orderOperateLogs = getOrderOperateLog(orders, null,
-                                "CBS系统", "订单状态由“"
+                                "系统", "订单状态由“"
                                         + OrderStatus.getByCode(orders.getOrderStatus()).getName()
                                         + "”变成“" + OrderStatus.OS_COMPLETE.getName()
                                         + "”",
@@ -1356,7 +1431,7 @@ public class OrderModel {
 
                 orderProductsNewDao.completeClose(orderProductsNew.getId(), now.getTime() / 1000);
                 orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew,
-                        "CBS系统", "网单状态：由 ”"
+                        "系统", "网单状态：由 ”"
                                 + OrderProductStatus.getByCode(orderProductsNew.getStatus()).getName()
                                 + "“变成 ”" + OrderProductStatus.COMPLETED_CLOSE.getName()
                                 + "“",
@@ -1434,7 +1509,7 @@ public class OrderModel {
                 if (orderWorkflows.getUserAcceptTime().intValue() == 0) {
                     orderWorkflowsDao.updateUserAcceptTime(orderWorkflows.getId(),
                             signTime.getTime() / 1000);
-                    orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew, "CBS系统",
+                    orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew, "系统",
                             "用户签收时间同步",
                             //根据mes[0]区分是否为快递100回传签收
                             (StringUtil.isEmpty(mes[0]) ? "HP同步用户签收时间:" : mes[0])
@@ -1502,7 +1577,9 @@ public class OrderModel {
     			log.error("HPRecords没有不良品退机信息,单号:" + repairSn + ",退换货ID:" + ors.getId());
     			return true;
     		}
-    		OrderProductsAttributes opAttribute = orderProductsAttributesDao
+
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+    		/*OrderProductsAttributes opAttribute = orderProductsAttributesDao
     				.getByOrderProductId(orderProduct.getId());
     		if (opAttribute == null) {
     			return true;
@@ -1603,7 +1680,9 @@ public class OrderModel {
     				message[0] = "调用支付中心回退接口失败！Success=false," + JsonUtil.toJson(result);
     				return false;
     			}
-    		}
+    		}*/
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
     		return true;
     	} catch (Exception e) {
     		message[0] = "不良品调用支付中心回退接口异常" + e.getMessage();
@@ -1634,5 +1713,126 @@ public class OrderModel {
      */
     public Integer deleteOrderShippedQueue(Integer id) {
         return orderShippedQueueDao.delete(id);
+    }
+
+    /**
+     * 根据订单号，解锁保本价闸住的订单
+     * @param orderSns 订单号
+     * @param operator 操作人
+     * @param responsiblePerson 责任人
+     * @param reason 放行理由
+     * @return
+     */
+    public String unLockOrderGuaranteePricByOrderSns(List<String> orderSns, String operator,
+        String responsiblePerson,
+        String reason) throws Exception {
+        StringBuffer ret = new StringBuffer();
+        int yearMonth = Integer.parseInt(DateUtil.format(new Date(), "yyyyMM"));
+        Map<String, String> industryMap = new HashMap<String, String>();
+        List<OrderPriceProductGroupIndustry> groupIndustryList = orderPriceProductGroupIndustryService
+            .getProductGroupIndustryList();
+        if (groupIndustryList != null && !groupIndustryList.isEmpty()) {
+            for (OrderPriceProductGroupIndustry temp : groupIndustryList) {
+                industryMap.put(temp.getIndustryCode(), temp.getIndustryName());
+            }
+        }
+        //循环查询
+        for (String orderSn : orderSns) {
+            //查询订单和网单信息
+            List<Map<String, Object>> list = orderPriceGateService.getUnLockbyOrderSn(orderSn);
+            if (list == null || list.isEmpty()) {
+                ret.append("订单号：").append(orderSn).append("查询不到订单信息").append("\r\n");
+                continue;
+            }
+            //费用池处理
+            if ("2".equals(list.get(0).get("gate_type").toString())) {
+                boolean flag = false;
+                for (Map<String, Object> unLockMap : list) {
+                    List<CostPools> costPoolList = costPoolsService
+                        .getCouponCostPoolByChannelAndChanYeAndYearMonth(
+                            CostPools.getChannelValue(unLockMap.get("channel_code").toString()),
+                            unLockMap.get("industry_code").toString(), yearMonth);
+                    if (costPoolList == null || costPoolList.isEmpty()) {
+                        ret.append("订单号：").append(orderSn).append("，网单号：")
+                            .append(unLockMap.get("corder_sn")).append("，产业：")
+                            .append(industryMap.get(unLockMap.get("industry_code").toString()))
+                            .append("，月度店铺优惠券费用未维护，不允许放行！").append("\r\n");
+                        flag = true;
+                        continue;
+                    }
+                    BigDecimal batchCanUseCouponSum = BigDecimal.ZERO;
+                    for (CostPools costPools : costPoolList) {
+                        batchCanUseCouponSum = batchCanUseCouponSum
+                            .add(costPools.getAmount().subtract(costPools.getBalanceAmount()));
+                    }
+                    if (batchCanUseCouponSum.compareTo(BigDecimal.ZERO) < 1) {
+                        ret.append("订单号：").append(orderSn).append("，网单号：")
+                            .append(unLockMap.get("corder_sn")).append("，产业：")
+                            .append(industryMap.get(unLockMap.get("industry_code").toString()))
+                            .append("，月度费用已占用完，不允许继续使用店铺优惠券，不允许放行！").append("\r\n");
+                        flag = true;
+                        continue;
+                    }
+                    BigDecimal dpCoupon = new BigDecimal(
+                        unLockMap.get("subduction_price").toString());
+                    if (batchCanUseCouponSum.compareTo(dpCoupon) < 1) {
+                        ret.append("订单号：").append(orderSn).append("，网单号：")
+                            .append(unLockMap.get("corder_sn")).append("，产业：")
+                            .append(industryMap.get(unLockMap.get("industry_code").toString()))
+                            .append("，月度费用已占用完，不允许继续使用店铺优惠券，不允许放行！").append("\r\n");
+                        flag = true;
+                        continue;
+                    }
+                }
+                if (flag) {
+                    return ret.toString();
+                }
+            } // if end
+
+            DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+            //TransactionStatus status = transactionManager.getTransaction(def);
+            try {
+                //记录操作日志
+                List<OrderOperateLogs> orderOperateLogsList = new ArrayList<OrderOperateLogs>();
+                Integer orderId = null;
+                for (Map<String, Object> map : list) {
+                    orderId = Integer.parseInt(map.get("orderId").toString());
+                    OrderOperateLogs log = new OrderOperateLogs();
+                    if ("1".equals(map.get("gate_type").toString())) {
+                        log.setChangeLog("保本价闸口放行");
+                    } else {
+                        log.setChangeLog("费用池闸口放行");
+                    }
+                    log.setNetPointId(Integer.parseInt(map.get("netPointId").toString()));
+                    log.setOperator(operator);
+                    log.setOrderId(Integer.parseInt(map.get("orderId").toString()));
+                    log.setOrderProductId(Integer.parseInt(map.get("orderProductId").toString()));
+                    log.setPaymentStatus(Integer.parseInt(map.get("paymentStatus").toString()));
+                    log.setRemark("责任人：" + responsiblePerson + "，放行原因：" + reason);
+                    log.setSiteId(1);
+                    log.setStatus(Integer.parseInt(map.get("status").toString()));
+
+                    orderOperateLogsList.add(log);
+                }
+                if (!orderOperateLogsList.isEmpty()) {
+                    orderOperateLogsDao.batchInsert(orderOperateLogsList);
+                } else {
+                    throw new BusinessException("操作日志记录无法生成");
+                }
+                //解锁闸口表
+                orderPriceGateService.unLockOrderPriceGatebyOrderSn(orderSn, operator,
+                    responsiblePerson, reason);
+                //解锁订单表
+                ordersService.updateNotAutoConfirm(orderId, 1, 0);
+                //transactionManager.commit(status);
+            } catch (Exception e) {
+                log.error("解锁订单[" + orderSn + "]失败：", e);
+                ret.append("订单号：").append(orderSn).append("解锁失败，请联系管理员！").append("\r\n");
+                //transactionManager.rollback(status);
+            }
+        }
+
+        return ret.toString();
     }
 }

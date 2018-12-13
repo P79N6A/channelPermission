@@ -245,7 +245,7 @@ public class InvoiceServiceUtil {
                 dispValue="天猫模卡分销";
                 break;
             case "GQGYS" :
-                dispValue="天猫分销";
+                dispValue="生态授权店";
                 break;
             case "TBCT" :
                 dispValue="淘宝村淘";

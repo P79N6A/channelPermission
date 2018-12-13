@@ -8,4 +8,8 @@ public interface EopCenterStockSyncLogService {
 	JSONObject LogListf(PagerInfo pager,String sse,
 		   String sku,String sourceProductId,String sCode,String sourceStoreCode,
 			  String stockSyncResult,String addTimeStart,String addTimeEnd);
+
+	JSONObject TmLogListf(PagerInfo pager,String sse,
+						String sku,String sCode, String stockSyncResult,
+						String addTimeStart,String addTimeEnd);
 }

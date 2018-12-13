@@ -23,6 +23,7 @@ public class MemStockLockServiceImpl implements MemStockLockService{
 	@Override
 	public List<InvStockLockEx> queryMemStockLockList(InvStockLockEx stockLock, PagerInfo pager) {
 		// TODO Auto-generated method stub
+		pager.setRowsCount(pager.getStart());
 		return memStockLockDao.queryMemStockLockList(stockLock, pager);
 	}
 

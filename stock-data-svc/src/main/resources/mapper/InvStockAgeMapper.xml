@@ -71,7 +71,7 @@
         </if>
     </select>
     
-    <select id="getCount" resultType="Integer">
+    <select id="getCount" parameterType="Map" resultType="Integer">
         select count(*)
         from
         `inv_stock_age` a
@@ -166,10 +166,10 @@
 		<where>
             age_data is not null
             <if test="sku != null and sku !=''">
-                and age.sku = #{sku}
+                and age.sku LIKE CONCAT('%',#{sku},'%')
             </if>
             <if test="sec_code != null and sec_code != ''">
-                and age.sec_code = #{sec_code}
+                and age.sec_code LIKE CONCAT('%',#{sec_code},'%')
             </if>
             <if test="channel_code != null and channel_code != ''">
                 and age.channel_code = #{channel_code}
@@ -441,4 +441,34 @@
         where
         `sku` = #{sku}
     </update>
+
+    <select id="getStockAgeListByMap" parameterType="Map" resultMap="invStockAgeResult">
+      SELECT
+      id,
+      item_id,
+      sku,
+      sec_code,
+      brand,
+      sec_name,
+      product_name,
+      product_type_name,
+      product_group_name,
+      channel_code,
+      channel_name,
+      age_data,
+      price,
+      update_time,
+      date,
+      create_time,
+      wa_stock_qty
+      FROM
+      inv_stock_age
+      WHERE 1=1
+      <if test="channel_code != null and channel_code != ''">
+        and channel_code = #{channel_code}
+      </if>
+      <if test="product_type_name != null and product_type_name != ''">
+        and product_type_name = #{product_type_name}
+      </if>
+    </select>
 </mapper>

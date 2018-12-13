@@ -145,4 +145,53 @@ public interface OrderWorkflowsReadDao {
      */
     List<OrderWorkflows> getListByOrderSn(String orderSn);
 
+    /**
+     * 根据网单号获取及时率报表逆向数据
+     * @return 网单列表集合
+     */
+    List<Map<String, Object>> getOntimeRateReverseByOrderSn(Map<String, Object> paramMap);
+
+    /**
+     * 获取及时率报表逆向数据
+     * @return 网单列表集合
+     */
+    List<Map<String, Object>> getOntimeRateReverse(Map<String, Object> paramMap);
+    /**
+     * 获取及时率报表逆向数据
+     * @return 网单列表集合
+     */
+    List<Map<String, Object>> getOntimeRateReverseBlp(Map<String, Object> paramMap);
+
+    /**
+     * 获取及时率报表逆向数据
+     * @return 网单列表集合
+     */
+    List<Map<String, Object>> getOntimeRateReverseHp(Map<String, Object> paramMap);
+    /**
+     * 获取及时率报表逆向数据
+     * @return 网单列表集合
+     */
+    List<Map<String, Object>> getOntimeRateReverseOrderclose(Map<String, Object> paramMap);
+
+    /**
+     * 获取及时率报表逆向网单明细
+     * @return cOrderSn网单号数组,pager分页信息
+     */
+    List<Map<String, Object>> getOntimeRateReverseDetail(Map<String, Object> paramMap);
+    /**
+     * 获取不良品及时率报表逆向网单明细
+     * @return cOrderSn网单号数组,pager分页信息
+     */
+    List<Map<String, Object>> getOntimeRateReverseDetailNew(Map<String, Object> paramMap);
+    /**
+     * 获取及时率报表逆向网单明细总数
+     * @return
+     */
+    Integer getOntimeRateReverseDetailCount(Map<String, Object> paramMap);
+
+    /**
+     * 获取不良品及时率报表逆向网单明细总数
+     * @return
+     */
+    Integer getOntimeRateReverseDetailCountNew(Map<String, Object> paramMap);
 }

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.PurchaseOrderQueue4DailyDao">
+    <resultMap id="purchaseOrderQueue4DailyResult" type="com.haier.purchase.data.model.PurchaseOrderQueue4Daily">
+        <result property="id" column="id"/>
+        <result property="refNo" column="ref_no"/>
+        <result property="status" column="status"/>
+        <result property="omsNo" column="oms_no"/>
+        <result property="omsStatus" column="oms_status"/>
+        <result property="message" column="message"/>
+        <result property="addTime" column="add_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="detailInfoSyncStatus" column="detail_info_sync_status"/>
+        <result property="syncProdDateStatus" column="sync_prod_date_status"/>
+    </resultMap>
+    <select id="get" parameterType="Integer" resultMap="purchaseOrderQueue4DailyResult">
+        SELECT
+            `id`,
+            `ref_no`,
+            `status`,
+            `order_status`,
+            `detail_info_sync_status`,
+            `oms_no`,
+            `oms_status`,
+            `message`,
+            `add_time`,
+            `update_time`
+        FROM `purchase_order_queue_4_daily`
+        WHERE `id` = #{id}
+    </select>
+    <select id="getByStatus" resultMap="purchaseOrderQueue4DailyResult">
+        SELECT
+            `id`,
+            `ref_no`,
+            `status`,
+            `order_status`,
+            `detail_info_sync_status`,
+            `sync_prod_date_status`,
+            `oms_no`,
+            `oms_status`,
+            `message`,
+            `add_time`,
+            `update_time`
+        FROM `purchase_order_queue_4_daily`
+        WHERE `status` = #{status}
+        LIMIT 1;
+    </select>
+    <select id="getByOrderStatus" resultMap="purchaseOrderQueue4DailyResult">
+        SELECT
+            `id`,
+            `ref_no`,
+            `status`,
+            `order_status`,
+            `detail_info_sync_status`,
+            `sync_prod_date_status`,
+            `oms_no`,
+            `oms_status`,
+            `message`,
+            `add_time`,
+            `update_time`
+        FROM `purchase_order_queue_4_daily`
+        WHERE `order_status` != 50 AND `status` != 120
+        LIMIT 2000;
+    </select>
+    <select id="getBySyncStatus" resultMap="purchaseOrderQueue4DailyResult">
+        SELECT
+            `id`,
+            `ref_no`,
+            `status`,
+            `order_status`,
+            `detail_info_sync_status`,
+            `sync_prod_date_status`,
+            `oms_no`,
+            `oms_status`,
+            `message`,
+            `add_time`,
+            `update_time`
+        FROM `purchase_order_queue_4_daily`
+        WHERE `detail_info_sync_status` != 200 AND `status` != 120
+        LIMIT 2000;
+    </select>
+    <select id="getForSyncProdDateFromEDW" resultMap="purchaseOrderQueue4DailyResult">
+        SELECT
+            `id`,
+            `ref_no`,
+            `status`,
+            `order_status`,
+            `detail_info_sync_status`,
+            `sync_prod_date_status`,
+            `oms_no`,
+            `oms_status`,
+            `message`,
+            `add_time`,
+            `update_time`
+        FROM `purchase_order_queue_4_daily`
+        WHERE `sync_prod_date_status` != 10 AND `status` != 120
+        LIMIT 2000;
+    </select>
+    <select id="getQueues" resultMap="purchaseOrderQueue4DailyResult">
+        select `id`,`ref_no`,`status`,`oms_no`,`oms_status`,`order_status`,
+        `detail_info_sync_status`,`message`,`add_time`,`update_time`
+        from `purchase_order_queue_4_daily`
+        where `ref_no` in
+        <foreach collection="refNos" index="index" item="refNo" open="("
+                 separator="," close=")">
+            #{refNo}
+        </foreach>
+    </select>
+    <insert id="insert" parameterType="com.haier.purchase.data.model.PurchaseOrderQueue4Daily">
+        INSERT INTO `purchase_order_queue_4_daily` (`id`, `ref_no`, `status`, `order_status`,
+                                                    `detail_info_sync_status`, `oms_no`, `oms_status`, `message`, `add_time`, `update_time`)
+        VALUES (#{id}, #{refNo}, #{status}, #{orderStatus}, #{detailInfoSyncStatus}, #{omsNo}, #{omsStatus}, #{message},
+                #{addTime}, #{updateTime})
+    </insert>
+    <update id="update" parameterType="com.haier.purchase.data.model.PurchaseOrderQueue4Daily">
+        UPDATE `purchase_order_queue_4_daily`
+        SET `ref_no`                  = #{refNo}, `status` = #{status}, `order_status` = #{orderStatus},
+            `detail_info_sync_status` = #{detailInfoSyncStatus}, `oms_no` = #{omsNo}, `oms_status` = #{omsStatus},
+            `message`                 = #{message}, `add_time` = #{addTime}, `update_time` = #{updateTime}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateMsg" parameterType="com.haier.purchase.data.model.PurchaseOrderQueue4Daily">
+        UPDATE `purchase_order_queue_4_daily`
+        SET
+            `message` = #{msg}, `update_time` = now()
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateStatus" parameterType="com.haier.purchase.data.model.PurchaseOrderQueue4Daily">
+        UPDATE `purchase_order_queue_4_daily`
+        SET
+            `status` = #{newStatus}, `update_time` = now()
+        WHERE `id` = #{id} AND `status` = #{oldStatus}
+    </update>
+    <update id="updateOrderStatus" parameterType="com.haier.purchase.data.model.PurchaseOrderQueue4Daily">
+        UPDATE `purchase_order_queue_4_daily`
+        SET
+            `order_status` = #{newStatus}, `update_time` = now()
+        WHERE `id` = #{id} AND `order_status` = #{oldStatus}
+    </update>
+    <update id="updateSyncStatus" parameterType="com.haier.purchase.data.model.PurchaseOrderQueue4Daily">
+        UPDATE `purchase_order_queue_4_daily`
+        SET
+            `detail_info_sync_status` = #{newStatus}, `update_time` = now()
+        WHERE `id` = #{id} AND `detail_info_sync_status` = #{oldStatus}
+    </update>
+    <update id="updateSyncProdDateStatus" parameterType="com.haier.purchase.data.model.PurchaseOrderQueue4Daily">
+        UPDATE `purchase_order_queue_4_daily`
+        SET
+            `sync_prod_date_status` = #{newStatus}, `update_time` = now()
+        WHERE `id` = #{id} AND `sync_prod_date_status` = #{oldStatus}
+    </update>
+</mapper>

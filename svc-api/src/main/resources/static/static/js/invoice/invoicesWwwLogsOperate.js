@@ -11,14 +11,15 @@ $(function () {
         singleSelect: true,
         pagination: true,
         columns: [[
-            // {title: "操作", field: "field0", sortable: true, formatter: go_detail},
-            {title: "序号", field: "id", hidden: true, width: 10},
-            {title: "订单号", field: "orderSn", sortable: true, width: "20%"},
-            {title: "处理状态", field: "success",sortable: true, width: "10%" },
-            {title: "订单来源", field: "source", sortable: true, width: "20%"},
-            {title: "添加时间", field: "addTime", sortable: true, width: "15%"},
-            {title: "处理时间", field: "processTime", sortable: true, width: "15%"},
-            {title: "操作", field: "caozuo", width: "20%"}
+            // {title: "操作", field: "field0", sortable: false, formatter: go_detail},
+            {title: "序号", field: "id", hidden: true},
+            {title: "订单号", field: "orderSn", sortable: false},
+            {title: "网单编号", field: "cOrderSn", sortable: false},
+            {title: "处理状态", field: "success",sortable: false},
+            {title: "订单来源", field: "source", sortable: false},
+            {title: "添加时间", field: "addTime", sortable: false},
+            {title: "处理时间", field: "processTime", sortable: false},
+            {title: "操作", field: "caozuo"}
             ]],
         pageSize: 50,
         pageList: [50,100,200],
@@ -46,6 +47,7 @@ $('#searchBtn_invoice3wLogs').click(function () {
 
     queryParameters = {
         sourceSn:$("#sourceSn").val(),
+        cOrderSn:$("#cOrderSn").val(),
         success:$("#success").combobox("getValue"),
         source:$("#source").combobox("getValue"),
         addTimeMin:$("#addTimeMin").datetimebox('getValue'),
@@ -69,16 +71,34 @@ $('#searchBtn_invoice3wLogs').click(function () {
             {
                 field: 'id',
                 title: '序号',
-                width: 10,
                 align: 'center',
                 hidden:true
             },{
-                width : '20%',
+                
                 title : '订单号',
                 align : 'center',
-                field : 'orderSn'
-            },{
-                width : '10%',
+                field : 'orderSn',
+                formatter: function(value,row,index){
+                    if(value != null){
+                        var returnOrderProduct = "<a href='javascript:void(0);' onclick='addTab3(" + '"' + row.orderSn + '"'+ ");return false;'>"+row.orderSn+"</a><br/>";
+                        return returnOrderProduct;
+                    }
+
+                }
+            },
+            {
+                title: '网单编号 ',
+                field: 'cOrderSn',
+                align: 'center',
+                formatter: function(value,row,index){
+                    if(value != null){
+                        var returnOrderProduct = "<a href='javascript:void(0);' onclick='addTab2(" + '"' + row.cOrderSn + '"'+ ");return false;'>"+row.cOrderSn+"</a><br/>";
+                        return returnOrderProduct;
+                    }
+                }
+            },
+            {
+                
                 title : '处理状态',
                 field : 'success',
                 align : 'center',
@@ -96,7 +116,7 @@ $('#searchBtn_invoice3wLogs').click(function () {
                     return dispValue ;
                 }
             }, {
-                width : '20%',
+                
                 title : '订单来源',
                 field : 'source',
                 align : 'center',
@@ -151,7 +171,7 @@ $('#searchBtn_invoice3wLogs').click(function () {
                         dispValue="天猫模卡分销";
                     }
                     if (row.source=='GQGYS'){
-                        dispValue="天猫分销";
+                        dispValue="生态授权店";
                     }
                     if (row.source=='TBCT'){
                         dispValue="淘宝村淘";
@@ -187,17 +207,15 @@ $('#searchBtn_invoice3wLogs').click(function () {
                 }
             },
             {
-                width : '15%',
                 title : '添加时间',
                 field : 'addTime',
                 align : 'center'
             },{
-                width : '15%',
                 title : '处理时间',
                 field : 'processTime',
                 align : 'center'
             },{
-                width : '20%',
+                
                 title : '操作',
                 field : 'caozuo',
                 align : 'center',
@@ -211,6 +229,12 @@ $('#searchBtn_invoice3wLogs').click(function () {
     });
 });
 
+function addTab2(corderSn) {
+    window.top.addTab("网单详情和订单详情", "/operationArea/ProductView?cOrderSn=" + corderSn, true);
+}
+function addTab3(orderSn) {
+    window.top.addTab("订单查询网单", "/operationArea/orderNumberSelect?orderSn=" + orderSn, true);
+}
 //导出
 $('#exportBtn_invoice3wLogs').click(function (){
     if(!datagrid){
@@ -248,9 +272,12 @@ function invoiceOperate(flag, orderId, orderProductId){
         }
     });
 }
-
 //修改发票信息
 function modifyMemberInvoices(modifyFlg, id, orderSn){
+    window.top.addTab("编辑或查看发票信息", "/invoice/modifyMemberInvoicesBy3wInvoiceLog?modifyFlg="+modifyFlg+"&id="+id+"&orderSn="+orderSn, true);
+}
+
+/*function modifyMemberInvoices(modifyFlg, id, orderSn){
 	$("#memberInvoiceDetail").attr("style", "display:none;padding:5px;width:800px;height:400px;");
 	if (orderSn == undefined){
 		orderSn = "";
@@ -273,5 +300,5 @@ function modifyMemberInvoices(modifyFlg, id, orderSn){
             });
         }
     });
-}
+}*/
 

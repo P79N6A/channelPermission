@@ -1,16 +1,41 @@
 package com.haier.svc.services;
 
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import javax.xml.ws.Holder;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.JsonUtil;
+import com.haier.purchase.data.model.CrmManualOrder;
 import com.haier.purchase.data.model.CrmOrderManualDetailItem;
 import com.haier.purchase.data.model.CrmOrderManualItem;
 import com.haier.purchase.data.model.InvBudgetOrg;
-import com.haier.purchase.data.service.PurchaseT2OrderService;
+import com.haier.purchase.data.model.ProductPayment;
 import com.haier.shop.model.ItemBase;
 import com.haier.stock.model.InvRrsWarehouse;
+import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.InvWarehouse;
+import com.haier.stock.model.JdStorage;
+import com.haier.stock.service.StockAgeService;
+import com.haier.stock.service.StockJdStorageService;
 import com.haier.svc.bean.GVSOrderPriceRequire;
 import com.haier.svc.bean.GVSOrderPriceResponse;
 import com.haier.svc.model.CrmOrderManualModel;
@@ -21,24 +46,14 @@ import com.haier.svc.purchase.crmmanual.InsertWAOrderBillFromEhaierToCRM_Service
 import com.haier.svc.purchase.crmmanual.MasterType;
 import com.haier.svc.service.CrmOrderManualService;
 import com.haier.svc.service.ItemService;
+import com.haier.svc.service.ProductPaymentService;
 import com.haier.svc.service.PurchaseBaseCommonService;
 import com.haier.svc.service.PurchaseCommonService;
+import com.haier.svc.service.T2OrderService;
 import com.haier.svc.util.CommUtil;
 import com.haier.svc.util.DateCal;
 import com.haier.svc.util.HttpUtils;
 import com.haier.svc.util.WSUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.xml.ws.Holder;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.*;
 
 /**
  * Created by 李超 on 2018/3/13.
@@ -51,7 +66,9 @@ public class CrmOrderManualServiceImpl implements CrmOrderManualService {
     @Autowired
     private CrmOrderManualModel crmOrderManualModel;
 //    private GVSOrderModel                  gvsOrderModel;
-    private String                         wsdlLocation = "/wsdl";
+    
+    @Value("${t2OrderResponse.location}")
+    private String                         wsdlLocation;
 
     //获取价格地址
     @Value("${t2Order.kxPath.priceUrl}")
@@ -66,7 +83,18 @@ public class CrmOrderManualServiceImpl implements CrmOrderManualService {
 
     @Autowired
     private InterfaceLogModel interfaceLogModel;
-
+    
+    @Autowired
+    private ProductPaymentService     productPaymentService;
+    
+    @Autowired
+    private T2OrderService t2OrderService;
+    
+    @Autowired
+	StockAgeService stockAgeService;
+    @Autowired
+    private StockJdStorageService jdStorageService;
+    
     public void setWsdlLocation(String wsdlLocation) {
         this.wsdlLocation = wsdlLocation;
     }
@@ -319,8 +347,10 @@ public class CrmOrderManualServiceImpl implements CrmOrderManualService {
                     log.error("", ex);
                 }
             }
-//            log.info("*****调用接口入参masterType："+ JsonUtil.toJson(masterType));
-//            log.info("*****调用接口入参l_detail："+JsonUtil.toJson(l_detail));
+            String masterTypeJ=JsonUtil.toJson(masterType);
+            String l_detailJ=JsonUtil.toJson(l_detail);
+            log.info("*****调用接口入参masterType："+ JsonUtil.toJson(masterType));
+            log.info("*****调用接口入参l_detail："+JsonUtil.toJson(l_detail));
             interfaceLogModel.insertInterfaceLog("CRM手工采购订单录入接口入参masterType","CRM手工采购订单",JsonUtil.toJson(masterType));
             interfaceLogModel.insertInterfaceLog("CRM手工采购订单录入接口入参l_detail","CRM手工采购订单",JsonUtil.toJson(l_detail));
             soap.insertWAOrderBillFromEhaierToCRM("EHAIER", masterType, l_detail, billCode, flag,
@@ -341,7 +371,7 @@ public class CrmOrderManualServiceImpl implements CrmOrderManualService {
                 comi.setFlow_flag(0);
                 result.setResult(false);
                 result.setMessage(result.getMessage()+message.value);
-                log.warn("CRM手工采购调用接口失败：" + JsonUtil.toJson(comi) + ",\r\n"
+                log.warn("CRM手工采购调用接口失败：" + JsonUtil.toJson(comi) + ",<br>"
                         + JsonUtil.toJson(l_comdi));
             }
             crmOrderManualModel.commitOrderManualForCRM(comi);
@@ -860,4 +890,381 @@ public class CrmOrderManualServiceImpl implements CrmOrderManualService {
         return result;
     }
 
+	@Override
+	public Map<String, Object> importCrmOrderManualJD(List<String[]> list, Map<String, String> productgroupMap, Map<String, String> brandMap) {
+		Map<String, Object> resultMap = new HashMap<>();
+		List<CrmManualOrder> result = new ArrayList<>();
+		ServiceResult<List<InvStockChannel>> channels = stockAgeService.getChannels();
+        // 渠道数据存入HashMap
+        Map<String, String> invstockchannelmap = new HashMap<String, String>();
+
+        // 调用stockCommonService，取得渠道数据
+        invstockchannelmap = t2OrderService
+                .getChannelMapByName(invstockchannelmap);
+		boolean access = true;
+		String errorMsg = "";
+		
+		
+		for(int i = 1; i < list.size(); i++){
+			String[] s = list.get(i);
+			
+			String materials_id = s[1];
+			String qty = s[2];
+			String whCode = s[4];
+			String estorge_id = s[5];
+			String ed_channel_id = s[6];
+
+
+			if(StringUtils.isBlank(materials_id)){
+				continue;
+			}
+			if(StringUtils.isBlank(ed_channel_id)){
+				access = false;
+				errorMsg += "<br>请将第" + (i+1) + "行数据渠道补充完整。";
+			}else{
+				boolean exists = false;
+				for(InvStockChannel isc : channels.getResult()){
+					if(isc.getName().equals(ed_channel_id)){
+						exists = true;
+						ed_channel_id = isc.getChannelCode();
+						break;
+					}
+				}
+				if(exists == false){
+					access = false;
+					errorMsg += "<br>第" + (i+1) + "行数据渠道【" + ed_channel_id + "】填写错误。";
+				}
+			}
+
+            ed_channel_id=invstockchannelmap.get(ed_channel_id);
+
+			if(StringUtils.isBlank(qty) || !isInteger(qty) || Integer.valueOf(qty).intValue() <= 0){
+				access = false;
+				errorMsg += "<br>请将第" + (i+1) + "行可用库存数填写为正确的正整数。";
+			}
+			if(StringUtils.isBlank(estorge_id)){
+				access = false;
+				errorMsg += "<br>请将第" + (i+1) + "行WA库位码补充完整。";
+			}else{
+				Map params = new HashMap();
+				params.put("estorageId", estorge_id);
+				List<JdStorage> storageList = jdStorageService.getAllRrsWhByEstorgeOriginal(params);
+				if(storageList == null || storageList.isEmpty()){
+					access = false;
+					errorMsg += "<br>第" + (i+1) + "行WA库位码【" + estorge_id + "】未在数据库中检索到相关信息，请检查是否填写正确。";
+				}else{
+					boolean exists = false;
+					for(JdStorage js : storageList){
+						if(js.getWhCode().equals(whCode)){
+							exists = true;
+							break;
+						}
+					}
+					if(!exists){
+						access = false;
+						errorMsg += "<br>第" + (i+1) + "行WA库位码【" + estorge_id + "】未在数据库中检索到对应的京东库位码【" + whCode + "】，请检查是否填写正确。";
+					}
+				}
+			}
+			
+		}
+		
+		if(access == false){
+			resultMap.put("result", false);
+			resultMap.put("msg", errorMsg);
+			return resultMap;
+		}
+		
+		for(int i = 1; i < list.size(); i++){
+			String[] s = list.get(i);
+			CrmOrderManualItem orderItem = new CrmOrderManualItem();
+			CrmOrderManualDetailItem orderDetail = new CrmOrderManualDetailItem();
+			
+			String product_group_id = "";
+			//付款方代码
+            String custCode = "";
+            String regionId = "";
+//            String ed_channel_name = "";
+			
+			String materials_id = s[1];
+			String qty = s[2];
+			String whCode = s[4];
+			String estorge_id = s[5];
+			String ed_channel_id = s[6];
+            ed_channel_id=invstockchannelmap.get(ed_channel_id);
+
+            if(StringUtils.isBlank(materials_id)){
+				continue;
+			}
+			
+			Map<String, Object> params = new HashMap<>();
+			params.put("estorageId", estorge_id);
+			List<JdStorage> storageList = jdStorageService.getAllRrsWhByEstorgeOriginal(params);
+			for(JdStorage js : storageList){
+				if(js.getWhCode().equals(whCode)){
+					regionId = js.getRegionId();
+					break;
+				}
+			}
+			
+			
+			orderItem.setMaker("");
+			orderDetail.setMaker("");
+			
+			orderItem.setSource_order_id("");
+			orderItem.setCustMgr("00022923");
+//			orderDetail.setCustMgr("00022923");
+			orderItem.setPorMgr("00022923");
+//			orderDetail.setPorMgr("00022923");
+			orderItem.setProDputy("00022923");
+//			orderDetail.setProDputy("00022923");
+//            orderDetail.setMaker(WebUtil.currentUserName(request));
+            // 设置默认值
+			orderItem.setBillType("ZGOR");
+//            orderDetail.setBillType("ZGOR");
+            orderItem.setSap_flow_num(2);
+//            orderDetail.setSap_flow_num(2);
+            orderItem.setWhCode(whCode);
+//            orderDetail.setWhCode(whCode);
+            
+            orderDetail.setEd_channel_id(ed_channel_id);
+            orderDetail.setMaterials_id(materials_id);
+            
+            orderDetail.setDn_id("");
+            orderDetail.setSo_id("");
+            
+//            for(InvStockChannel isc : channels.getResult()){
+//            	
+//            }
+            
+            
+            orderItem.setBudgetSort("30");
+            
+            
+            if(StringUtils.isBlank(qty)){
+            	
+            }else{
+            	orderDetail.setQty(Integer.valueOf(qty));
+            }
+            
+            
+            
+			
+            // 通过共通方法获取产品组和品牌map待用
+//            Map<String, String> productgroupMap = new HashMap<String, String>();
+//            Map<String, String> brandMap = new HashMap<String, String>();
+//            commPurchase.getProductMap(productgroupMap);
+//            commPurchase.getBrandMap(brandMap);
+
+            // 权限Map
+            Map<String, String> authMap = new HashMap<String, String>();
+            // 取得产品组权限List,渠道权限List和品类List
+//            commPurchase.getAuthMap(purchaseCommonService, request, null, null, null, authMap);
+            
+            //根据物料号补充内容
+            if (materials_id != null && !materials_id.equals("")) {
+                // 调用service执行检索
+                ServiceResult<List<ItemBase>> itemResult = itemService
+                        .findItemBaseByMaterialId(materials_id);
+                if (itemResult.getSuccess() && itemResult.getResult() != null
+                        && itemResult.getResult().size() > 0) {
+                    // DB操作成功
+                    ItemBase item = itemResult.getResult().get(0);
+                    // 型号
+                    String materials_desc = item.getMaterialDescription();
+                    // 品牌code
+                    String brand_id = item.getProBand();
+                    // 品牌名称
+                    String brand_name = brandMap.get(brand_id);
+                    // 产品组code
+                    product_group_id = item.getDepartment();
+                    // 产品组名称
+                    String product_group_name = productgroupMap.get(product_group_id);
+                    //付款方
+                    String payment_name = "";
+                    
+
+                    if("SC".equals(ed_channel_id) || "SC".equals(ed_channel_id)){
+                    	custCode = "C200130028";
+                    	payment_name = "海尔集团电子商务有限公司(顺逛全产业)";
+                    }else if (org.apache.commons.lang.StringUtils.isNotBlank(product_group_name)) {
+                		params = new HashMap<String, Object>();
+                		params.put("productName", product_group_name);
+                		List<ProductPayment> ppList = productPaymentService.findPaymentNameByCode(params);
+                		if (ppList.size() > 0) {
+                			payment_name = ppList.get(0).getPayMentName();
+                			custCode = ppList.get(0).getPayMentCode();
+	                	}
+	                }
+
+                    authMap = t2OrderService.getProductMap(authMap);
+                    List<String> productGroupList = new ArrayList<>();
+                    Iterator<Map.Entry<String, String>> it = authMap.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry<String, String> entry = it.next();
+                        productGroupList.add(entry.getKey());
+                    }
+
+//                    String[] authProductGroup = (String[]) authMap.get("productGroup");
+//                    List<String> productGroupList = Arrays.asList(authProductGroup);
+                    // 判断产品组id是否合法
+                    if (productGroupList.contains(product_group_id)) {
+                        // 产品组id合法，所需要的数据汇总并存入map
+//                        Map<String, Object> Data = new HashMap<String, Object>();
+//                        Data.put("payment_name", payment_name);//付款方
+                    	orderItem.setPayment_name(payment_name);
+//                        orderDetail.setPayment_name(payment_name);
+//                        Data.put("custCode", custCode);//付款方代码
+                        orderItem.setCustCode(custCode);
+//                        orderDetail.setCustCode(custCode);
+//                        Data.put("materials_desc", materials_desc);
+                        orderDetail.setMaterials_desc(materials_desc);
+//                        Data.put("brand_id", brand_id);
+                        orderDetail.setBrand_id(brand_id);
+//                        Data.put("brand_name", brand_name);
+                        orderDetail.setBrand_name(brand_name);
+//                        Data.put("product_group_id", product_group_id);
+                        orderDetail.setProduct_group_id(product_group_id);
+//                        Data.put("product_group_name", product_group_name);
+                        orderDetail.setProduct_group_name(product_group_name);
+                        
+                    } else {
+                        // 产品组id非法，
+                    }
+                } else {
+                    // DB操作失败
+                	access = false;
+                	errorMsg += "<br>第" + (i+1) + "行物料号码【" + materials_id + "】未检索到相关信息，请检查是否填写正确。";
+                }
+            }
+            
+            
+            
+            
+            //根据WA库位码补充内容
+            if (estorge_id != null && !estorge_id.equals("")) {
+            	
+            	orderItem.setEstorge_id(estorge_id);
+//            	orderDetail.setEstorge_id(estorge_id);
+
+                // 通过电商库位码获取仓库
+                ServiceResult<InvWarehouse> invWarehouseResult = purchaseBaseCommonService
+                        .getAllWhByEstorgeId(estorge_id);
+                if (invWarehouseResult.getSuccess() && invWarehouseResult.getResult() != null) {
+                    Map<String, Object> Data = new HashMap<String, Object>();
+                    // WA库位名
+                    String estorge_name = invWarehouseResult.getResult().getEstorge_name();
+                    // 工贸编码
+                    String industry_trade_id = invWarehouseResult.getResult().getIndustry_trade_id();
+                    // 工贸描述
+                    String industry_trade_desc = invWarehouseResult.getResult()
+                            .getIndustry_trade_desc();
+                    // 管理客户编码
+                    // String custom_id =
+                    // invWarehouseResult.getResult().getCustom_id();
+                    // 管理客户描述
+                    // String custom_desc =
+                    // invWarehouseResult.getResult().getCustom_desc();
+                    // 付款方
+                    // String payment_id = invWarehouseResult.getResult().getPayment_id();
+                    //String payment_name = invWarehouseResult.getResult().getPayment_name();
+                    // 送达方编码
+                    String transmit_id = invWarehouseResult.getResult().getTransmit_id();
+                    // 送达方描述
+                    String transmit_desc = invWarehouseResult.getResult().getTransmit_desc();
+                    // 配送中心编码
+                    String distribution_center_id = invWarehouseResult.getResult().getCenterCode();
+                    // 配送中心描述
+                    String distribution_center_desc = invWarehouseResult.getResult()
+                            .getRrs_distribution_name();
+
+//                    Data.put("estorge_name", estorge_name);
+                    orderItem.setEstorge_name(estorge_name);
+//                    orderDetail.setEstorge_name(estorge_name);
+//                    Data.put("corpCode", invWarehouseResult.getResult().getSale_org_id());
+                    orderItem.setCorpCode(invWarehouseResult.getResult().getSale_org_id());
+//                    orderDetail.setCorpCode(invWarehouseResult.getResult().getSale_org_id());
+                    orderItem.setSaleOrgCode(invWarehouseResult.getResult().getSale_org_id());
+//                    Data.put("corpName", invWarehouseResult.getResult().getBranch());
+                    orderItem.setCorpName(invWarehouseResult.getResult().getBranch());
+//                    orderDetail.setCorpName(invWarehouseResult.getResult().getBranch());
+//                    Data.put("regionId", industry_trade_id);
+                    orderItem.setRegionId(regionId);
+//                    orderDetail.setRegionId(industry_trade_id);
+//                    Data.put("industry_trade_desc", industry_trade_desc);
+                    orderItem.setIndustry_trade_desc(industry_trade_desc);
+//                    orderDetail.setIndustry_trade_desc(industry_trade_desc);
+                    // Data.put("custCode", payment_id);
+                    //Data.put("payment_name", payment_name);
+//                    Data.put("destCode", transmit_id);
+                    orderItem.setDestCode(transmit_id);
+//                    orderDetail.setDestCode(transmit_id);
+//                    Data.put("esale_name", transmit_desc);
+                    orderItem.setEsale_name(transmit_desc);
+//                    orderDetail.setEsale_name(transmit_desc);
+//                    Data.put("destCenter", distribution_center_id);
+                    orderItem.setDestCenter(distribution_center_id);
+//                    orderDetail.setDestCenter(distribution_center_id);
+//                    Data.put("rrs_distribution_name", distribution_center_desc);
+                    orderItem.setRrs_distribution_name(distribution_center_desc);
+//                    orderDetail.setRrs_distribution_name(distribution_center_desc);
+                    Data.put("areaId", invWarehouseResult.getResult().getArea_id());
+                    Data.put("sale_org_id", invWarehouseResult.getResult().getSale_org_id());
+                    Data.put("branch", invWarehouseResult.getResult().getBranch());
+
+                    // 预算体取得
+                    if (product_group_id != null && !product_group_id.equals("")) {
+                        // 预算体取得
+                        params = new HashMap<String, Object>();
+                        params.put("product_group_id", product_group_id);
+                        params.put("area_id", invWarehouseResult.getResult().getArea_id());
+                        ServiceResult<InvBudgetOrg> invBudgetOrg = purchaseBaseCommonService
+                                .getAllBudgetOrg(params);
+                        if (invBudgetOrg.getSuccess() && invBudgetOrg.getResult() != null) {
+//                            Data.put("budgetOrg", invBudgetOrg.getResult().getBudgetorg_id());
+                        	orderItem.setBudgetOrg(invBudgetOrg.getResult().getBudgetorg_id());
+//                            orderDetail.setBudgetOrg(invBudgetOrg.getResult().getBudgetorg_id());
+//                            Data.put("budgetOrgName", invBudgetOrg.getResult().getBudgetorg_name());
+                            orderItem.setBudgetOrgName(invBudgetOrg.getResult().getBudgetorg_name());
+//                            orderDetail.setBudgetOrgName(invBudgetOrg.getResult().getBudgetorg_name());
+                        }
+
+                    }
+                    // 设置返回值
+                } else {
+                    // DB操作失败
+                }
+
+            }
+           CrmManualOrder cmo = new CrmManualOrder();
+           cmo.setCrmOrderManualItem(orderItem);
+           cmo.setCrmOrderManualDetailItem(orderDetail);
+           result.add(cmo);
+		}
+		
+		if(access == true){
+			resultMap.put("result", true);
+			resultMap.put("list", result);
+		}else{
+			resultMap.put("result", false);
+			resultMap.put("msg", errorMsg);
+		}
+		return resultMap;
+	}
+
+    @Override
+    public CrmOrderManualItem getCrmOrderManualItem(String s) {
+        return crmOrderManualModel.getCrmOrderManualItem(s);
+    }
+
+    @Override
+    public List<CrmOrderManualDetailItem> getcrmOrderManualDetailItem(String s) {
+        return crmOrderManualModel.getcrmOrderManualDetailItem(s);
+
+    }
+
+    static boolean isInteger(String str) {
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");  
+        return pattern.matcher(str).matches();  
+  }
 }

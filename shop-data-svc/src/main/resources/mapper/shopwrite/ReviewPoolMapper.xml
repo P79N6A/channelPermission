@@ -1,0 +1,1754 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.workorder.ReviewPoolDao">
+	<resultMap id="reviewPoolResult" type="com.haier.shop.model.ReviewPool">
+		<result property="id" column="id" />
+		<result property="orderCome" column="orderCome" />
+		<result property="orderId" column="orderId" />
+		<result property="netOrderId" column="netOrderId" />
+		<result property="wordkOrderId" column="wordkOrderId" />
+		<result property="workOrderType" column="workOrderType" />
+		<result property="workStatus" column="workStatus" />
+		<result property="createTime" column="createTime" />
+		<result property="context" column="context" />
+		<result property="buyer" column="buyer" />
+		<result property="buyerMobile" column="buyerMobile" />
+		<result property="productName" column="productName" />
+		<result property="number" column="number" />
+		<result property="sku" column="sku" />
+		<result property="productAmount" column="productAmount" />
+		<result property="netPointId" column="netPointId" />
+		<result property="productType" column="productType" />
+		<result property="wangId" column="wangId" />
+		<result property="phone" column="phone" />
+		<result property="payTime" column="payTime" />
+		<result property="regionName" column="regionName" />
+		<result property="company" column="company" />
+		<result property="address" column="address" />
+		<result property="position1" column="position1" />
+		<result property="backContext1" column="backContext1" />
+		<result property="question1Level1" column="question1Level1" />
+		<result property="question1Level2" column="question1Level2" />
+		<result property="position2" column="position2" />
+		<result property="backContext2" column="backContext2" />
+		<result property="question2Level1" column="question2Level1" />
+		<result property="question2Level2" column="question2Level2" />
+		<result property="position3" column="position3" />
+		<result property="backContext3" column="backContext3" />
+		<result property="question3Level1" column="question3Level1" />
+		<result property="question3level2" column="question3level2" />
+		<result property="workOrderStatus" column="workOrderStatus" />
+		<result property="reViewType" column="reViewType" />
+		<result property="insertTime" column="insertTime" />
+		<result property="remark1" column="remark1" />
+		<result property="remark2" column="remark2" />
+		<result property="remark3" column="remark3" />
+		<result property="remark4" column="remark4" />
+		<result property="remark5" column="remark5" />
+		<!-- 后添加数据库字段 -->
+		<result property="appealCount1" column="appealCount1" />
+		<result property="appealCount2" column="appealCount2" />
+		<result property="lastAppealTime" column="lastAppealTime" />
+		<result property="feedBackCount" column="feedBackCount" />
+		<result property="closeType" column="closeType" />
+		
+		<result property="oneProcessTime" column="oneProcessTime" />
+		<result property="orderProcessTime" column="orderProcessTime" />
+		<result property="complaintFlg" column="complaintFlg" />
+		<result property="askFlg" column="askFlg" />
+		
+		<result property="corderPrimary" column="corderPrimary" />
+		<result property="orderPrimary" column="orderPrimary" />
+		<result property="storeId" column="store_id" />
+		<result property="categoryLevelOne" column="category_level_one" />
+		<result property="categoryLevelTwo" column="category_level_two" />
+		<result property="categoryLevelThree" column="category_level_three" />
+		<result property="centerType" column="center_type" />
+		<result property="sqmStatus" column="sqm_status" />
+		<result property="sqmType" column="sqm_type" />
+		<result property="sqmCount" column="sqm_count" />
+		<result property="question1Level3" column="question1Level3" />
+		<result property="desidePass" column="deside_pass" />
+		<result property="desideText" column="deside_Text" />
+		<result property="workOrderTime" column="work_order_time" />
+		<result property="middleType" column="middle_type" />
+		<result property="workOrderTo" column="work_order_to"/>
+		<result property="workCreateTime" column="work_create_time"/>
+		<result property="hpOrderId" column="hp_order_id"/>
+		<result property="productCode" column="product_code"/>
+		<result property="complaintPhone" column="complaint_phone"/>
+		<result property="storeType" column="store_type"/>
+		<result property="channelCode" column="channel_code"/>
+		<result property="channelName" column="channel_name"/>
+		<result property="automaticAppealTime" column="automatic_appeal_time"/>
+	</resultMap>
+	<sql id="search_insert">
+		<if test="pool.id != null">
+			#{pool.id},
+		</if>
+		<if test="pool.orderCome != null">
+			#{pool.orderCome},
+		</if>
+		<if test="pool.orderId != null">
+			#{pool.orderId},
+		</if>
+		<if test="pool.netOrderId != null">
+			#{pool.netOrderId},
+		</if>
+		<if test="pool.wordkOrderId != null">
+			#{pool.wordkOrderId},
+		</if>
+		<if test="pool.workOrderType != null">
+			#{pool.workOrderType},
+		</if>
+		<if test="pool.workStatus != null">
+			#{pool.workStatus},
+		</if>
+		<if test="pool.createTime != null">
+			#{pool.createTime},
+		</if>
+		<if test="pool.context != null">
+			#{pool.context},
+		</if>
+		<if test="pool.buyer != null">
+			#{pool.buyer},
+		</if>
+		<if test="pool.buyerMobile != null">
+			#{pool.buyerMobile},
+		</if>
+		<if test="pool.productName != null">
+			#{pool.productName},
+		</if>
+		<if test="pool.number != null">
+			#{pool.number},
+		</if>
+		<if test="pool.sku != null">
+			#{pool.sku},
+		</if>
+		<if test="pool.productAmount != null">
+			#{pool.productAmount},
+		</if>
+		<if test="pool.netPointId != null">
+			#{pool.netPointId},
+		</if>
+		<if test="pool.productType != null">
+			#{pool.productType},
+		</if>
+		<if test="pool.wangId != null">
+			#{pool.wangId},
+		</if>
+		<if test="pool.phone != null">
+			#{pool.phone},
+		</if>
+		<if test="pool.payTime != null">
+			#{pool.payTime},
+		</if>
+		<if test="pool.regionName != null">
+			#{pool.regionName},
+		</if>
+		<if test="pool.company != null">
+			#{pool.company},
+		</if>
+		<if test="pool.address != null">
+			#{pool.address},
+		</if>
+		<if test="pool.position1 != null">
+			#{pool.position1},
+		</if>
+		<if test="pool.backContext1 != null">
+			#{pool.backContext1},
+		</if>
+		<if test="pool.question1Level1 != null">
+			#{pool.question1Level1},
+		</if>
+		<if test="pool.question1Level2 != null">
+			#{pool.question1Level2},
+		</if>
+		<if test="pool.position2 != null">
+			#{pool.position2},
+		</if>
+		<if test="pool.backContext2 != null">
+			#{pool.backContext2},
+		</if>
+		<if test="pool.question2Level1 != null">
+			#{pool.question2Level1},
+		</if>
+		<if test="pool.question2Level2 != null">
+			#{pool.question2Level2},
+		</if>
+		<if test="pool.position3 != null">
+			#{pool.position3},
+		</if>
+		<if test="pool.backContext3 != null">
+			#{pool.backContext3},
+		</if>
+		<if test="pool.question3Level1 != null">
+			#{pool.question3Level1},
+		</if>
+		<if test="pool.question3level2 != null">
+			#{pool.question3level2},
+		</if>
+		<if test="pool.workOrderStatus != null">
+			#{pool.workOrderStatus},
+		</if>
+		<if test="pool.reViewType != null">
+			#{pool.reViewType},
+		</if>
+		<if test="pool.insertTime != null">
+			#{pool.insertTime},
+		</if>
+		<if test="pool.remark1 != null">
+			#{pool.remark1},
+		</if>
+		<if test="pool.remark2 != null">
+			#{pool.remark2},
+		</if>
+		<if test="pool.remark3 != null">
+			#{pool.remark3},
+		</if>
+		<if test="pool.remark4 != null">
+			#{pool.remark4},
+		</if>
+		<if test="pool.remark5 != null">
+			#{pool.remark5},
+		</if>
+		<!-- 后添加数据库字段 -->
+		<if test="pool.appealCount1 != null">
+			#{pool.appealCount1},
+		</if>
+		<if test="pool.appealCount2 != null">
+			#{pool.appealCount2},
+		</if>
+		<if test="pool.workOrderTime != null">
+			#{pool.workOrderTime},
+		</if>
+		<if test="pool.feedBackCount != null">
+			#{pool.feedBackCount},
+		</if>
+		<if test="pool.closeType != null">
+			#{pool.closeType},
+		</if>
+		<if test="pool.oneProcessTime != null">
+			#{pool.oneProcessTime},
+		</if>
+		<if test="pool.orderProcessTime != null">
+			#{pool.orderProcessTime},
+		</if>
+		<if test="pool.complaintFlg != null">
+			#{pool.complaintFlg},
+		</if>
+		<if test="pool.askFlg != null">
+			#{pool.askFlg},
+		</if>
+		<if test="pool.corderPrimary != null">
+			#{pool.corderPrimary},
+		</if>
+		<if test="pool.orderPrimary != null">
+			#{pool.orderPrimary},
+		</if>
+		<if test="pool.storeId != null">
+			#{pool.storeId},
+		</if>
+		<if test="pool.categoryLevelOne != null">
+			#{pool.categoryLevelOne},
+		</if>
+		<if test="pool.categoryLevelTwo != null">
+			#{pool.categoryLevelTwo},
+		</if>
+		<if test="pool.categoryLevelThree != null">
+			#{pool.categoryLevelThree},
+		</if>
+		<if test="pool.centerType != null">
+			#{pool.centerType},
+		</if>
+		<if test="pool.sqmStatus != null">
+			#{pool.sqmStatus},
+		</if>
+		<if test="pool.sqmType != null">
+			#{pool.sqmType},
+		</if>
+		<if test="pool.sqmCount != null">
+			#{pool.sqmCount},
+		</if>
+		<if test="pool.question1Level3 != null">
+			#{pool.question1Level3},
+		</if>
+		<if test="pool.desidePass != null">
+			#{pool.desidePass},
+		</if>
+		<if test="pool.desideText != null">
+			#{pool.desideText},
+		</if>
+		<if test="pool.sqmState != null">
+			#{pool.sqmState},
+		</if>
+		<if test="pool.workOrderTo!=null">
+			#{pool.workOrderTo},
+		</if>
+		<if test="pool.workCreateTime!=null">
+			#{pool.workCreateTime},
+		</if>
+		<if test="pool.complaintPhone != null">
+			#{pool.complaintPhone},
+		</if>
+		<if test="pool.storeType != null">
+			#{pool.storeType},
+		</if>
+		<if test="pool.channelCode!=null">
+			#{pool.channelCode},
+		</if>
+		<if test="pool.channelName!=null">
+			#{pool.channelName},
+		</if>
+		<if test="pool.nextUserName!=null">
+			#{pool.nextUserName}
+		</if>
+		<if test="pool.tbOrderSn!=null">
+			,#{pool.tbOrderSn}
+		</if>
+	</sql>
+	<sql id="search_insert_column">
+		<if test="pool.id != null">
+			id,
+		</if>
+		<if test="pool.orderCome != null">
+			orderCome,
+		</if>
+		<if test="pool.orderId != null">
+			orderId,
+		</if>
+		<if test="pool.netOrderId != null">
+			netOrderId,
+		</if>
+		<if test="pool.wordkOrderId != null">
+			wordkOrderId,
+		</if>
+		<if test="pool.workOrderType != null">
+			workOrderType,
+		</if>
+		<if test="pool.workStatus != null">
+			workStatus,
+		</if>
+		<if test="pool.createTime != null">
+			createTime,
+		</if>
+		<if test="pool.context != null">
+			context,
+		</if>
+		<if test="pool.buyer != null">
+			buyer,
+		</if>
+		<if test="pool.buyerMobile != null">
+			buyerMobile,
+		</if>
+		<if test="pool.productName != null">
+			productName,
+		</if>
+		<if test="pool.number != null">
+			number,
+		</if>
+		<if test="pool.sku != null">
+			sku,
+		</if>
+		<if test="pool.productAmount != null">
+			productAmount,
+		</if>
+		<if test="pool.netPointId != null">
+			netPointId,
+		</if>
+		<if test="pool.productType != null">
+			productType,
+		</if>
+		<if test="pool.wangId != null">
+			wangId,
+		</if>
+		<if test="pool.phone != null">
+			phone,
+		</if>
+		<if test="pool.payTime != null">
+			payTime,
+		</if>
+		<if test="pool.regionName != null">
+			regionName,
+		</if>
+		<if test="pool.company != null">
+			company,
+		</if>
+		<if test="pool.address != null">
+			address,
+		</if>
+		<if test="pool.position1 != null">
+			position1,
+		</if>
+		<if test="pool.backContext1 != null">
+			backContext1,
+		</if>
+		<if test="pool.question1Level1 != null">
+			question1Level1,
+		</if>
+		<if test="pool.question1Level2 != null">
+			question1Level2,
+		</if>
+		<if test="pool.position2 != null">
+			position2,
+		</if>
+		<if test="pool.backContext2 != null">
+			backContext2,
+		</if>
+		<if test="pool.question2Level1 != null">
+			question2Level1,
+		</if>
+		<if test="pool.question2Level2 != null">
+			question2Level2,
+		</if>
+		<if test="pool.position3 != null">
+			position3,
+		</if>
+		<if test="pool.backContext3 != null">
+			backContext3,
+		</if>
+		<if test="pool.question3Level1 != null">
+			question3Level1,
+		</if>
+		<if test="pool.question3level2 != null">
+			question3level2,
+		</if>
+		<if test="pool.workOrderStatus != null">
+			workOrderStatus,
+		</if>
+		<if test="pool.reViewType != null">
+			reViewType,
+		</if>
+		<if test="pool.insertTime != null">
+			insertTime,
+		</if>
+		<if test="pool.remark1 != null">
+			remark1,
+		</if>
+		<if test="pool.remark2 != null">
+			remark2,
+		</if>
+		<if test="pool.remark3 != null">
+			remark3,
+		</if>
+		<if test="pool.remark4 != null">
+			remark4,
+		</if>
+		<if test="pool.remark5 != null">
+			remark5,
+		</if>
+		<!-- 后添加数据库字段 -->
+		<if test="pool.appealCount1 != null">
+			appealCount1,
+		</if>
+		<if test="pool.appealCount2 != null">
+			appealCount2,
+		</if>
+		<if test="pool.workOrderTime != null">
+			lastAppealTime,
+		</if>
+		<if test="pool.feedBackCount != null">
+			feedBackCount,
+		</if>
+		<if test="pool.closeType != null">
+			closeType,
+		</if>
+		<if test="pool.oneProcessTime != null">
+			oneProcessTime,
+		</if>
+		<if test="pool.orderProcessTime != null">
+			orderProcessTime,
+		</if>
+		<if test="pool.complaintFlg != null">
+			complaintFlg,
+		</if>
+		<if test="pool.askFlg != null">
+			askFlg,
+		</if>
+		<if test="pool.corderPrimary != null">
+			corderPrimary,
+		</if>
+		<if test="pool.orderPrimary != null">
+			orderPrimary,
+		</if>
+		<if test="pool.storeId != null">
+			store_id,
+		</if>
+		<if test="pool.categoryLevelOne != null">
+			category_level_one,
+		</if>
+		<if test="pool.categoryLevelTwo != null">
+			category_level_two,
+		</if>
+		<if test="pool.categoryLevelThree != null">
+			category_level_three,
+		</if>
+		<if test="pool.centerType != null">
+			center_type,
+		</if>
+		<if test="pool.sqmStatus != null">
+			sqm_status,
+		</if>
+		<if test="pool.sqmType != null">
+			sqm_type,
+		</if>
+		<if test="pool.sqmCount != null">
+			sqm_count,
+		</if>
+		<if test="pool.question1Level3 != null">
+			question1Level3,
+		</if>
+		<if test="pool.desidePass != null">
+			deside_pass,
+		</if>
+		<if test="pool.desideText != null">
+			deside_text,
+		</if>
+		<if test="pool.sqmState != null">
+			sqm_state,
+		</if>
+		<if test="pool.workOrderTo!=null">
+			work_order_to,
+		</if>
+		<if test="pool.workCreateTime!=null">
+			work_create_time,
+		</if>
+		<if test="pool.complaintPhone != null">
+			complaint_phone,
+		</if>
+		<if test="pool.storeType != null">
+			store_type,
+		</if>
+		<if test="pool.channelCode!=null">
+			channel_code,
+		</if>
+		<if test="pool.channelName!=null">
+			channel_name,
+		</if>
+		<if test="pool.nextUserName!=null">
+			nextUserName,
+		</if>
+		<if test="pool.tbOrderSn!=null">
+			tbOrderSn,
+		</if>
+	</sql>
+	<sql id="search_term">
+			 	id,orderCome,orderId,netOrderId,
+			 	wordkOrderId,workOrderType,workStatus,createTime,context,buyer,buyerMobile,productName,
+			 	number,sku,productAmount,netPointId,productType,wangId,phone,payTime,regionName,company,
+			 	address,position1,backContext1,question1Level1,question1Level2,position2,backContext2,
+			 	question2Level1,question2Level2,position3,backContext3,question3Level1,question3level2,
+			 	workOrderStatus,reViewType,insertTime,remark1,remark2,remark3,remark4,remark5,
+		appealCount1,appealCount2,lastAppealTime,feedBackCount,closeType,oneProcessTime,orderProcessTime,complaintFlg,askFlg,corderPrimary,orderPrimary,store_id,
+		category_level_one,category_level_two,category_level_three,center_type,sqm_status,sqm_type,sqm_count,question1Level3,deside_pass,deside_text,sqm_state,
+		work_order_time,middle_type,work_order_to,work_create_time,hp_order_id,product_code,complaint_phone,store_type,channel_code,channel_name,nextUserName,automatic_appeal_time,tbOrderSn
+	</sql>
+	<sql id="search_where">
+			<if test="pool.id != null">
+			 	and id = #{pool.id} 
+			</if>
+			<if test="pool.orderCome != null">
+			 	and orderCome = #{pool.orderCome} 
+			</if>
+			<if test="pool.orderId != null">
+			 	and orderId = #{pool.orderId} 
+			</if>
+			<if test="pool.netOrderId != null">
+			 	and netOrderId = #{pool.netOrderId} 
+			</if>
+			<if test="pool.wordkOrderId != null">
+			 	and wordkOrderId = #{pool.wordkOrderId} 
+			</if>
+			<if test="pool.workOrderType != null">
+			  	and workOrderType = #{pool.workOrderType} 
+			</if>
+			<if test="pool.workStatus != null">
+			 	and workStatus = #{pool.workStatus} 
+			</if>
+			<if test="pool.createTime != null">
+			 	and createTime = #{pool.createTime} 
+			</if>
+			<if test="pool.context != null">
+			 	and context = #{pool.context} 
+			</if>
+			<if test="pool.buyer != null">
+			 	and buyer = #{pool.buyer} 
+			</if>
+			<if test="pool.buyerMobile != null">
+			 	and buyerMobile = #{pool.buyerMobile} 
+			</if>
+			<if test="pool.productName != null">
+			 	and productName = #{pool.productName} 
+			</if>
+			<if test="pool.number != null">
+			 	and number = #{pool.number} 
+			</if>
+			<if test="pool.sku != null">
+			 	and sku = #{pool.sku} 
+			</if>
+			<if test="pool.productAmount != null">
+			 	and productAmount = #{pool.productAmount} 
+			</if>
+			<if test="pool.netPointId != null">
+			 	and netPointId = #{pool.netPointId} 
+			</if>
+			<if test="pool.productType != null">
+			 	and productType = #{pool.productType}
+			</if>
+			<if test="pool.wangId != null">
+			 	and wangId = #{pool.wangId} 
+			</if>
+			<if test="pool.phone != null">
+			 	and phone = #{pool.phone} 
+			</if>
+			<if test="pool.payTime != null">
+			 	and payTime = #{pool.payTime} 
+			</if>
+			<if test="pool.regionName != null">
+			 	and regionName = #{pool.regionName} 
+			</if>
+			<if test="pool.company != null">
+			 	and company = #{pool.company} 
+			</if>
+			<if test="pool.address != null">
+			 	and address = #{pool.address} 
+			</if>
+			<if test="pool.position1 != null">
+			 	and position1 = #{pool.position1} 
+			</if>
+			<if test="pool.backContext1 != null">
+			 	and backContext1 = #{pool.backContext1} 
+			</if>
+			<if test="pool.question1Level1 != null">
+			 	and question1Level1 = #{pool.question1Level1} 
+			</if>
+			<if test="pool.question1Level2 != null">
+			 	and question1Level2 = #{pool.question1Level2} 
+			</if>
+			<if test="pool.position2 != null">
+			 	and position2 = #{pool.position2} 
+			</if>
+			<if test="pool.backContext2 != null">
+			 	and backContext2 = #{pool.backContext2} 
+			</if>
+			<if test="pool.question2Level1 != null">
+			 	and question2Level1 = #{pool.question2Level1} 
+			</if>
+			<if test="pool.question2Level2 != null">
+			 	and question2Level2 = #{pool.question2Level2} 
+			</if>
+			<if test="pool.position3 != null">
+			 	and position3 = #{pool.position3}
+			</if>
+			<if test="pool.backContext3 != null">
+			 	and backContext3 = #{pool.backContext3} 
+			</if>
+			<if test="pool.question3Level1 != null">
+			 	and question3Level1 = #{pool.question3Level1} 
+			</if>
+			<if test="pool.question3level2 != null">
+			 	and question3level2 = #{pool.question3level2}
+			</if>
+			<if test="pool.workOrderStatus != null">
+			 	and workOrderStatus = #{pool.workOrderStatus}
+			</if>
+			<if test="pool.reViewType != null">
+			 	and reViewType = #{pool.reViewType} 
+			</if>
+			<if test="pool.insertTime != null">
+			 	and insertTime = #{pool.insertTime}
+			</if>
+			<if test="pool.remark1 != null">
+			 	and remark1 = #{pool.remark1} 
+			</if>
+			<if test="pool.remark2 != null">
+			 	and remark2 = #{pool.remark2} 
+			</if>
+			<if test="pool.remark3 != null">
+			 	and remark3 = #{pool.remark3}
+			</if>
+			<if test="pool.remark4 != null">
+			 	and remark4 = #{pool.remark4} 
+			</if>
+			<if test="pool.remark5 != null">
+			 	and remark5 = #{pool.remark5} 
+			</if>
+			<!-- 后添加数据库字段 -->
+			<if test="pool.appealCount1 != null">
+			 	and appealCount1 = #{pool.appealCount1} 
+			</if>
+			<if test="pool.appealCount2 != null">
+			 	and appealCount2 = #{pool.appealCount2} 
+			</if>
+			<if test="pool.workOrderTime != null">
+				and workOrderTime = #{pool.workOrderTime}
+			</if>
+			<if test="pool.feedBackCount != null">
+			 	and feedBackCount = #{pool.feedBackCount} 
+			</if>
+			<if test="pool.closeType != null">
+			 	and closeType = #{pool.closeType} 
+			</if>
+			<if test="pool.oneProcessTime != null">
+			 	and oneProcessTime = #{pool.oneProcessTime} 
+			</if>
+			<if test="pool.orderProcessTime != null">
+			 	and orderProcessTime = #{pool.orderProcessTime} 
+			</if>
+			<if test="pool.complaintFlg != null">
+			 	and complaintFlg = #{pool.complaintFlg} 
+			</if>
+			<if test="pool.askFlg != null">
+			 	and askFlg = #{pool.askFlg} 
+			</if>
+			<if test="pool.corderPrimary != null">
+			 	and corderPrimary = #{pool.corderPrimary} 
+			</if>
+			<if test="pool.orderPrimary != null">
+			 	and orderPrimary = #{pool.orderPrimary} 
+			</if>
+			<if test="pool.storeId != null">
+				and store_id = #{pool.storeId}
+			</if>
+			<!--  
+			<if test="pool.storeId != null and pool.storeId != ''">
+				and question1Level1 IN ('顺逛商城-物流类', '顺逛商城-发票类', '顺逛商城-售后类')
+			</if>  -->
+		<if test="pool.categoryLevelOne != null">
+			and category_level_one = #{pool.categoryLevelOne}
+		</if>
+		<if test="pool.categoryLevelTwo != null">
+			and category_level_two = #{pool.categoryLevelTwo}
+		</if>
+		<if test="pool.categoryLevelThree != null">
+			and category_level_three = #{pool.categoryLevelThree}
+		</if>
+		<if test="pool.centerType != null">
+			<if test="pool.centerType == 'WA类'">
+				and substring(center_type,CHAR_LENGTH(center_type)-1,CHAR_LENGTH(center_type))='WA'
+			</if>
+			<if test="pool.centerType == 'OTO类'">
+				and (substring(center_type,1,1)='8' or substring(center_type,1,2)='14')
+			</if>
+			<if test="pool.centerType == '小电类'">
+				and center_type='CT01'
+			</if>
+		</if>
+		<if test="pool.sqmStatus != null">
+			and sqm_status = #{pool.sqmStatus}
+		</if>
+		<if test="pool.sqmType != null">
+			and sqm_type = #{pool.sqmType}
+		</if>
+		<if test="pool.sqmCount != null">
+			and sqm_count = #{pool.sqmCount}
+		</if>
+		<if test="pool.question1Level3 != null">
+			and question1Level3 = #{pool.question1Level3}
+		</if>
+		<if test="pool.desidePass != null">
+			and deside_pass = #{pool.desidePass}
+		</if>
+		<if test="pool.workOrderTo !=null">
+			and work_order_to = #{pool.workOrderTo}
+		</if>
+		<if test="pool.complaintPhone!=null">
+			and complaint_phone = #{pool.complaintPhone}
+		</if>
+		<if test="pool.storeType!=null">
+			and store_type = #{pool.storeType}
+		</if>
+		<if test="pool.channelName!=null">
+			and channel_name = #{pool.channelName}
+		</if>
+				order by `insertTime` DESC
+	</sql>
+
+    <sql id="search_update">
+        <if test="pool.orderCome != null">
+            orderCome = #{pool.orderCome},
+        </if>
+        <if test="pool.orderId != null">
+            orderId = #{pool.orderId},
+        </if>
+        <if test="pool.netOrderId != null">
+            netOrderId = #{pool.netOrderId},
+        </if>
+        <if test="pool.wordkOrderId != null">
+            wordkOrderId = #{pool.wordkOrderId},
+        </if>
+        <if test="pool.workOrderType != null">
+            workOrderType = #{pool.workOrderType},
+        </if>
+        <if test="pool.workStatus != null">
+            workStatus = #{pool.workStatus},
+        </if>
+        <if test="pool.createTime != null">
+            createTime = #{pool.createTime},
+        </if>
+        <if test="pool.context != null">
+            context = #{pool.context},
+        </if>
+        <if test="pool.buyer != null">
+            buyer = #{pool.buyer},
+        </if>
+        <if test="pool.buyerMobile != null">
+            buyerMobile = #{pool.buyerMobile},
+        </if>
+        <if test="pool.productName != null">
+            productName = #{pool.productName},
+        </if>
+        <if test="pool.number != null">
+            number = #{pool.number},
+        </if>
+        <if test="pool.sku != null">
+            sku = #{pool.sku},
+        </if>
+        <if test="pool.productAmount != null">
+            productAmount = #{pool.productAmount},
+        </if>
+        <if test="pool.netPointId != null">
+            netPointId = #{pool.netPointId},
+        </if>
+        <if test="pool.productType != null">
+            productType = #{pool.productType},
+        </if>
+        <if test="pool.wangId != null">
+            wangId = #{pool.wangId},
+        </if>
+        <if test="pool.phone != null">
+            phone = #{pool.phone},
+        </if>
+        <if test="pool.payTime != null">
+            payTime = #{pool.payTime},
+        </if>
+        <if test="pool.regionName != null">
+            regionName = #{pool.regionName},
+        </if>
+        <if test="pool.company != null">
+            company = #{pool.company},
+        </if>
+        <if test="pool.address != null">
+            address = #{pool.address},
+        </if>
+        <if test="pool.position1 != null and pool.position1 != '' ">
+            position1 = #{pool.position1},
+        </if>
+        <if test="pool.backContext1 != null and pool.backContext1 != '' ">
+            backContext1 = #{pool.backContext1},
+        </if>
+        <if test="pool.question1Level1 != null">
+            question1Level1 = #{pool.question1Level1},
+        </if>
+        <if test="pool.question1Level2 != null">
+            question1Level2 = #{pool.question1Level2},
+        </if>
+        <if test="pool.question1Level3 != null">
+            question1Level3 = #{pool.question1Level3},
+        </if>
+        <if test="pool.position2 != null  and pool.position2 != '' ">
+            position2 = #{pool.position2},
+        </if>
+        <if test="pool.backContext2 != null  and pool.backContext2 != '' ">
+            backContext2 = #{pool.backContext2},
+        </if>
+        <if test="pool.question2Level1 != null">
+            question2Level1 = #{pool.question2Level1},
+        </if>
+        <if test="pool.question2Level2 != null">
+            question2Level2 = #{pool.question2Level2},
+        </if>
+        <if test="pool.position3 != null and pool.position3 != '' ">
+            position3 = #{pool.position3},
+        </if>
+        <if test="pool.backContext3 != null  and pool.backContext3 != '' ">
+            backContext3 = #{pool.backContext3},
+        </if>
+        <if test="pool.question3Level1 != null">
+            question3Level1 = #{pool.question3Level1},
+        </if>
+        <if test="pool.question3level2 != null">
+            question3level2 = #{pool.question3level2},
+        </if>
+        <if test="pool.workOrderStatus != null">
+            workOrderStatus = #{pool.workOrderStatus},
+        </if>
+        <if test="pool.reViewType != null">
+            reViewType = #{pool.reViewType},
+        </if>
+        <if test="pool.insertTime != null">
+            insertTime = #{pool.insertTime},
+        </if>
+        <if test="pool.remark1 != null">
+            remark1 = #{pool.remark1},
+        </if>
+        <if test="pool.remark2 != null">
+            remark2 = #{pool.remark2},
+        </if>
+        <if test="pool.remark3 != null">
+            remark3 = #{pool.remark3},
+        </if>
+        <if test="pool.remark4 != null">
+            remark4 = #{pool.remark4},
+        </if>
+        <if test="pool.remark5 != null">
+            remark5 = #{pool.remark5},
+        </if>
+        <!-- 后添加数据库字段 -->
+        <if test="pool.appealCount1 != null">
+            appealCount1 = #{pool.appealCount1},
+        </if>
+        <if test="pool.appealCount2 != null">
+            appealCount2 = #{pool.appealCount2},
+        </if>
+        <if test="pool.feedBackCount != null">
+            feedBackCount = #{pool.feedBackCount},
+        </if>
+        <if test="pool.closeType != null">
+            closeType = #{pool.closeType},
+        </if>
+        <if test="pool.oneProcessTime != null">
+            oneProcessTime = #{pool.oneProcessTime},
+        </if>
+        <if test="pool.orderProcessTime != null">
+            orderProcessTime = #{pool.orderProcessTime},
+        </if>
+        <if test="pool.complaintFlg != null">
+            complaintFlg = #{pool.complaintFlg},
+        </if>
+        <if test="pool.askFlg != null">
+            askFlg = #{pool.askFlg},
+        </if>
+        <if test="pool.corderPrimary != null">
+            corderPrimary=#{pool.corderPrimary},
+        </if>
+        <if test="pool.orderPrimary != null">
+            orderPrimary=#{pool.orderPrimary},
+        </if>
+        <if test="pool.storeId != null">
+            store_id=#{pool.storeId},
+        </if>
+        <if test="pool.categoryLevelOne != null">
+            category_level_one = #{pool.categoryLevelOne},
+        </if>
+        <if test="pool.categoryLevelTwo != null">
+            category_level_two = #{pool.categoryLevelTwo},
+        </if>
+        <if test="pool.categoryLevelThree != null">
+            category_level_three = #{pool.categoryLevelThree},
+        </if>
+        <if test="pool.centerType != null">
+            center_type = #{pool.centerType},
+        </if>
+        <if test="pool.sqmStatus != null">
+            sqm_status = #{pool.sqmStatus},
+        </if>
+        <if test="pool.workOrderTime != null">
+            work_order_time = #{pool.workOrderTime},
+        </if>
+        <if test="pool.desideText != null">
+            deside_Text = #{pool.desideText},
+        </if>
+        <if test="pool.sqmType != null">
+            sqm_type = #{pool.sqmType},
+        </if>
+        <if test="pool.sqmCount != null">
+            sqm_count = #{pool.sqmCount},
+        </if>
+
+        <if test="pool.desidePass != null">
+            deside_pass = #{pool.desidePass},
+        </if>
+
+        <if test="pool.middleType != null">
+            middle_type = #{pool.middleType},
+        </if>
+        <if test="pool.workOrderTo!=null">
+            work_order_to = #{pool.workOrderTo},
+        </if>
+
+        <if test="pool.sqmState != null">
+            sqm_state = #{pool.sqmState},
+        </if>
+        <if test="pool.complaintPhone != null">
+            complaint_phone = #{pool.complaintPhone},
+        </if>
+        <if test="pool.storeType != null">
+            store_type = #{pool.storeType},
+        </if>
+        <if test="pool.channelCode != null">
+            channel_code = #{pool.channelCode},
+        </if>
+        <if test="pool.automaticAppealTime != null">
+            automatic_appeal_time = #{pool.automaticAppealTime}
+        </if>
+    </sql>
+
+	<sql id="pagination_Tail">
+	  <![CDATA[ limit #{pager.start},#{pager.pageSize}]]>
+	</sql>
+	<insert id="addWorkOrder" parameterType="java.util.List">
+		insert into
+		wo_reviewpool
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<include refid="search_insert_column" />
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<include refid="search_insert" />
+		</trim>
+	</insert>
+	<select id="findPageList" resultMap="reviewPoolResult">
+		SELECT wo.id,wo.orderCome,wo.orderId,wo.netOrderId,
+		wo.wordkOrderId,wo.workOrderType,wo.workStatus,wo.createTime,(SELECT GROUP_CONCAT(context SEPARATOR ';') FROM wo_reviewcontext t
+		WHERE t.reviewid =wo.id group by t.reviewid) as context,wo.buyer,wo.buyerMobile,wo.productName,
+		wo.number,wo.sku,wo.productAmount,wo.netPointId,wo.productType,wo.wangId,wo.phone,wo.payTime,wo.regionName,wo.company,
+		wo.address,wo.position1,wo.backContext1,wo.question1Level1,wo.question1Level2,wo.position2,wo.backContext2,
+		wo.question2Level1,wo.question2Level2,wo.position3,wo.backContext3,wo.question3Level1,wo.question3level2,
+		wo.workOrderStatus,wo.reViewType,wo.insertTime,wo.remark1,wo.remark2,wo.remark3,wo.remark4,wo.remark5,
+		wo.appealCount1,wo.appealCount2,wo.lastAppealTime,wo.feedBackCount,wo.closeType,wo.oneProcessTime,wo.orderProcessTime,wo.complaintFlg,wo.askFlg,wo.corderPrimary,wo.orderPrimary,wo.store_id,
+		wo.category_level_one,wo.category_level_two,wo.category_level_three,wo.center_type,wo.sqm_status,wo.sqm_type,wo.sqm_count,wo.question1Level3,wo.deside_pass,wo.deside_text,wo.sqm_state,
+		wo.work_order_time,wo.middle_type,wo.work_order_to,wo.work_create_time,wo.hp_order_id,wo.product_code,wo.complaint_phone,wo.store_type,wo.channel_code,wo.channel_name,wo.nextUserName,wo.automatic_appeal_time,wo.tbOrderSn
+		from `wo_reviewpool` wo
+		  where 1 = 1
+		  <if test="startTime!=null">
+				and  wo.`insertTime` <![CDATA[>=]]> #{startTime}
+		  </if>
+		  <if test="endTime!=null">
+				and wo.`insertTime` <![CDATA[<=]]> #{endTime}
+		  </if>
+		<if test="pool.id != null">
+			and wo.id = #{pool.id}
+		</if>
+		<if test="pool.orderCome != null">
+			and wo.orderCome = #{pool.orderCome}
+		</if>
+		<if test="pool.orderId != null">
+			and wo.orderId = #{pool.orderId}
+		</if>
+		<if test="pool.netOrderId != null">
+			and wo.netOrderId = #{pool.netOrderId}
+		</if>
+		<if test="pool.wordkOrderId != null">
+			and wo.wordkOrderId = #{pool.wordkOrderId}
+		</if>
+		<if test="pool.workOrderType != null">
+			and wo.workOrderType = #{pool.workOrderType}
+		</if>
+		<if test="pool.workStatus != null">
+			and wo.workStatus = #{pool.workStatus}
+		</if>
+		<if test="pool.createTime != null">
+			and wo.createTime = #{pool.createTime}
+		</if>
+		<if test="pool.context != null">
+			and wo.context = #{pool.context}
+		</if>
+		<if test="pool.buyer != null">
+			and wo.buyer = #{pool.buyer}
+		</if>
+		<if test="pool.buyerMobile != null">
+			and wo.buyerMobile = #{pool.buyerMobile}
+		</if>
+		<if test="pool.productName != null">
+			and wo.productName = #{pool.productName}
+		</if>
+		<if test="pool.number != null">
+			and wo.number = #{pool.number}
+		</if>
+		<if test="pool.sku != null">
+			and wo.sku = #{pool.sku}
+		</if>
+		<if test="pool.productAmount != null">
+			and wo.productAmount = #{pool.productAmount}
+		</if>
+		<if test="pool.netPointId != null">
+			and wo.netPointId = #{pool.netPointId}
+		</if>
+		<if test="pool.productType != null">
+			and wo.productType = #{pool.productType}
+		</if>
+		<if test="pool.wangId != null">
+			and wo.wangId = #{pool.wangId}
+		</if>
+		<if test="pool.phone != null">
+			and wo.phone = #{pool.phone}
+		</if>
+		<if test="pool.payTime != null">
+			and wo.payTime = #{pool.payTime}
+		</if>
+		<if test="pool.regionName != null">
+			and wo.regionName = #{pool.regionName}
+		</if>
+		<if test="pool.company != null">
+			and wo.company = #{pool.company}
+		</if>
+		<if test="pool.address != null">
+			and wo.address = #{pool.address}
+		</if>
+		<if test="pool.position1 != null">
+			and wo.position1 = #{pool.position1}
+		</if>
+		<if test="pool.backContext1 != null">
+			and wo.backContext1 = #{pool.backContext1}
+		</if>
+		<if test="pool.question1Level1 != null">
+			and wo.question1Level1 = #{pool.question1Level1}
+		</if>
+		<if test="pool.question1Level2 != null">
+			and wo.question1Level2 = #{pool.question1Level2}
+		</if>
+		<if test="pool.position2 != null">
+			and wo.position2 = #{pool.position2}
+		</if>
+		<if test="pool.backContext2 != null">
+			and wo.backContext2 = #{pool.backContext2}
+		</if>
+		<if test="pool.question2Level1 != null">
+			and wo.question2Level1 = #{pool.question2Level1}
+		</if>
+		<if test="pool.question2Level2 != null">
+			and wo.question2Level2 = #{pool.question2Level2}
+		</if>
+		<if test="pool.position3 != null">
+			and wo.position3 = #{pool.position3}
+		</if>
+		<if test="pool.backContext3 != null">
+			and wo.backContext3 = #{pool.backContext3}
+		</if>
+		<if test="pool.question3Level1 != null">
+			and wo.question3Level1 = #{pool.question3Level1}
+		</if>
+		<if test="pool.question3level2 != null">
+			and wo.question3level2 = #{pool.question3level2}
+		</if>
+		<if test="pool.workOrderStatus != null">
+			and wo.workOrderStatus = #{pool.workOrderStatus}
+		</if>
+		<if test="pool.reViewType != null">
+			and wo.reViewType = #{pool.reViewType}
+		</if>
+		<if test="pool.insertTime != null">
+			and wo.insertTime = #{pool.insertTime}
+		</if>
+		<if test="pool.remark1 != null">
+			and wo.remark1 = #{pool.remark1}
+		</if>
+		<if test="pool.remark2 != null">
+			and wo.remark2 = #{pool.remark2}
+		</if>
+		<if test="pool.remark3 != null">
+			and wo.remark3 = #{pool.remark3}
+		</if>
+		<if test="pool.remark4 != null">
+			and wo.remark4 = #{pool.remark4}
+		</if>
+		<if test="pool.remark5 != null">
+			and wo.remark5 = #{pool.remark5}
+		</if>
+		<!-- 后添加数据库字段 -->
+		<if test="pool.appealCount1 != null">
+			and wo.appealCount1 = #{pool.appealCount1}
+		</if>
+		<if test="pool.appealCount2 != null">
+			and wo.appealCount2 = #{pool.appealCount2}
+		</if>
+		<if test="pool.workOrderTime != null">
+			and wo.workOrderTime = #{pool.workOrderTime}
+		</if>
+		<if test="pool.feedBackCount != null">
+			and wo.feedBackCount = #{pool.feedBackCount}
+		</if>
+		<if test="pool.closeType != null">
+			and wo.closeType = #{pool.closeType}
+		</if>
+		<if test="pool.oneProcessTime != null">
+			and wo.oneProcessTime = #{pool.oneProcessTime}
+		</if>
+		<if test="pool.orderProcessTime != null">
+			and wo.orderProcessTime = #{pool.orderProcessTime}
+		</if>
+		<if test="pool.complaintFlg != null">
+			and wo.complaintFlg = #{pool.complaintFlg}
+		</if>
+		<if test="pool.askFlg != null">
+			and wo.askFlg = #{pool.askFlg}
+		</if>
+		<if test="pool.corderPrimary != null">
+			and wo.corderPrimary = #{pool.corderPrimary}
+		</if>
+		<if test="pool.orderPrimary != null">
+			and wo.orderPrimary = #{pool.orderPrimary}
+		</if>
+		<if test="pool.storeId != null">
+			and wo.store_id = #{pool.storeId}
+		</if>
+		<if test="pool.categoryLevelOne != null">
+			and wo.category_level_one = #{pool.categoryLevelOne}
+		</if>
+		<if test="pool.categoryLevelTwo != null">
+			and wo.category_level_two = #{pool.categoryLevelTwo}
+		</if>
+		<if test="pool.categoryLevelThree != null">
+			and wo.category_level_three = #{pool.categoryLevelThree}
+		</if>
+		<if test="pool.centerType != null">
+			<if test="pool.centerType == 'WA类'">
+				and substring(wo.center_type,CHAR_LENGTH(wo.center_type)-1,CHAR_LENGTH(wo.center_type))='WA'
+			</if>
+			<if test="pool.centerType == 'OTO类'">
+				and (substring(wo.center_type,1,1)='8' or substring(wo.center_type,1,2)='14')
+			</if>
+			<if test="pool.centerType == '小电类'">
+				and wo.center_type='CT01'
+			</if>
+		</if>
+		<if test="pool.sqmStatus != null">
+			and wo.sqm_status = #{pool.sqmStatus}
+		</if>
+		<if test="pool.sqmType != null">
+			and wo.sqm_type = #{pool.sqmType}
+		</if>
+		<if test="pool.sqmCount != null">
+			and wo.sqm_count = #{pool.sqmCount}
+		</if>
+		<if test="pool.question1Level3 != null">
+			and wo.question1Level3 = #{pool.question1Level3}
+		</if>
+		<if test="pool.desidePass != null">
+			and wo.deside_pass = #{pool.desidePass}
+		</if>
+		<if test="pool.workOrderTo !=null">
+			and wo.work_order_to = #{pool.workOrderTo}
+		</if>
+		<if test="pool.complaintPhone!=null">
+			and wo.complaint_phone = #{pool.complaintPhone}
+		</if>
+		<if test="pool.storeType!=null">
+			and wo.store_type = #{pool.storeType}
+		</if>
+		<if test="pool.channelName!=null">
+			and wo.channel_name = #{pool.channelName}
+		</if>
+		order by wo.insertTime DESC
+		<include refid="pagination_Tail" />
+	</select>
+	
+	<select id="findReviewById" resultMap="reviewPoolResult">
+		select
+		<include refid="search_term" />
+			from `wo_reviewpool`
+		  where 1 = 1
+		  <if test="pool.id!=null">
+				and `id` <![CDATA[=]]> #{pool.id}
+		  </if>
+	</select>
+
+	<select id="getReviewPoolForMobile" resultMap="reviewPoolResult">
+		select
+		 id,buyer,buyerMobile,productName, concat(regionName,address)  address,netPointId,backContext1,backContext2,backContext3,company,context,
+		question1Level1,question1Level2,
+		case
+		when workStatus='0' then '未处理'
+		when workStatus='2' then '中间结果'
+		when workStatus='3' then '最终结果'
+
+		end 'workStatus',
+
+		work_create_Time,remark5
+		from `wo_reviewpool`
+		where
+	<!--	<if test="pool.buyerMobile!=null">-->
+				  `buyerMobile` <![CDATA[=]]> #{pool.buyerMobile}
+<!--		</if>-->
+
+	</select>
+	
+	
+	<select id="findPageCount" resultType="int">
+		select count(1) 
+			from `wo_reviewpool`
+		  where 1 = 1
+		  <if test="startTime!=null">
+				and `insertTime` <![CDATA[>=]]> #{startTime}
+		  </if>
+		  <if test="endTime!=null">
+				and `insertTime` <![CDATA[<=]]> #{endTime}
+		  </if>
+		<include refid="search_where" />
+	</select>
+	<select id="searchPageList" resultMap="reviewPoolResult">
+		select 
+		<include refid="search_term" /> 
+			from `wo_reviewpool`
+		  where 1 = 1
+		  <if test="searchStartTime!=null">
+				and `createTime` <![CDATA[>=]]> #{searchStartTime}
+		  </if>
+		  <if test="searchEndTime!=null">
+				and `createTime` <![CDATA[<=]]> #{searchEndTime}
+		  </if>
+		<include refid="search_where" />
+		<include refid="pagination_Tail" />
+	</select>
+	<select id="searchPageCount" resultType="int">
+		select count(1) 
+			from `wo_reviewpool`
+		  where 1 = 1
+		  <if test="searchStartTime!=null">
+				and `createTime` <![CDATA[>=]]> #{searchStartTime}
+		  </if>
+		  <if test="searchEndTime!=null">
+				and `createTime` <![CDATA[<=]]> #{searchEndTime}
+		  </if>
+		<include refid="search_where" />
+	</select>
+	
+	<select id="qryFeedBackCount" resultType="int">
+		select count(1)
+			from `wo_reviewpool`
+		  where netOrderId = #{netOrderId}
+	</select>
+	
+	<select id="queryNotifyReviewPools" resultMap="reviewPoolResult">
+		select 
+		<include refid="search_term" /> 
+			from `wo_reviewpool`
+		  where orderCome = 'SG' 
+		  	and workStatus = 0
+		  	and question1Level1 = #{question1Level1}
+	</select>
+
+	<select id="getTplCount" resultType="int" parameterType="com.haier.shop.model.ReviewPool">
+		select
+		 count(*)
+		from wo_third_party_liability_condition
+ 		where question1Level1=#{pool.question1Level1}
+		and  question1Level2=#{pool.question1Level2}
+		<if test="pool.question1Level3==null">
+
+		</if>
+		<if test="pool.question1Level3!=null and pool.question1Level3!=''">
+			and  question1Level3=#{pool.question1Level3}
+		</if>
+		and  Third_party_type=#{pool.workOrderTo}
+	</select>
+	
+	<select id="findMaxTime" resultType="java.lang.String">
+		select max(insertTime) 
+			from `wo_reviewpool`
+		  where netOrderId = #{netOrderId} and question1Level2 = #{question1Level2}
+	</select>
+	<!-- 根据网单号与责任位查询最后一个插入的工单信息 -->
+	<select id="findFinallyAdd" resultMap="reviewPoolResult">
+		select 
+		<include refid="search_term" />
+			from `wo_reviewpool`
+		  where netOrderId = #{netOrderId} 
+		  and question1Level2 = #{question1Level2}
+		<if test="question1Level3!=null">
+			and question1Level3 = #{question1Level3}
+		</if>
+		  order by insertTime desc limit 0,1
+	</select>
+	<!--根据网单号与责任位查询最后一条工单的上一条工单信息-->
+	<select id="findFinallyAddOne" resultMap="reviewPoolResult">
+		select
+		<include refid="search_term" />
+		from `wo_reviewpool`
+		where netOrderId = #{netOrderId}
+		and question1Level2 = #{question1Level2}
+		<if test="question1Level3!=null">
+			and question1Level3 = #{question1Level3}
+		</if>
+        and position3!=""
+        order by  position3 desc
+        LIMIT 1;
+
+	</select>
+	<!-- 根据网单号与责任位查询最后一个插入的工单信息 去除最终结果的 -->
+	<select id="findFinallyAddStateNoFinally" resultMap="reviewPoolResult">
+		select 
+		<include refid="search_term" />
+			from `wo_reviewpool`
+		  where netOrderId = #{netOrderId} 
+		  and question1Level2 = #{question1Level2}
+		<if test="question1Level3!=null">
+			and question1Level3 = #{question1Level3}
+		</if>
+		  and workStatus <![CDATA[<>]]> 3
+		  order by insertTime desc limit 0,1
+	</select>
+	
+	<select id="getReviewPoolByStatus" resultMap="reviewPoolResult">
+		select 
+		<include refid="search_term" />
+			from `wo_reviewpool`
+		  where `workStatus` = #{workStatus}
+
+
+	</select>
+
+
+	<select id="getReviewPoolByStatusAppeal" resultMap="reviewPoolResult">
+		select
+		<include refid="search_term" />
+		from `wo_reviewpool`
+		where `workStatus` = #{pool.workStatus}
+		<if test="pool.middleType!=null and pool.middleType!='' " >
+			and `middle_type` = #{pool.middleType}
+		</if>
+	</select>
+
+	<select id="getSqmOrderByStatus" resultMap="reviewPoolResult">
+		select
+		<include refid="search_term" />
+		from `wo_reviewpool`
+		where sqm_status = #{sqmStatus}   and question1Level3!='' and work_order_to='SQM'
+		and workStatus!='3'
+
+
+	</select>
+
+	<select id="getSqmOrderByJudgeStatus" resultMap="reviewPoolResult">
+		select
+		<include refid="search_term" />
+		from `wo_reviewpool`
+		where deside_pass in ('0','1') and workStatus='3'      and work_order_to='SQM'  and sqm_status!='4'  and sqm_status!='0'
+
+
+	</select>
+
+	<select id="getPoolByQuestion1Level1" resultMap="reviewPoolResult">
+		select
+		<include refid="search_term" />
+			from `wo_reviewpool`
+		  where `workStatus` != 3
+		  and question1Level1 = #{questionLevel}  and sqm_status='4'
+		<if test="remark5!=null">
+			and `remark5` = #{remark5}
+		</if>
+		<if test="question1Level2!=null">
+			<foreach collection="question1Level2" item="item" index="index"  open="" separator="" close="" >
+				and question1Level2 <![CDATA[<>]]> #{item}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getPoolByQuestion1Level1s" resultMap="reviewPoolResult">
+		select
+		<include refid="search_term" />
+		from `wo_reviewpool`
+		where  `workStatus` != '3'
+		and  (
+									(question1Level1 ='顺逛商城-物流类' and	(question1Level2='时效内催送货' or	question1Level2='时效外催送货'
+											or
+											(question1Level2='配送类' and  question1Level3='时效内催配送')
+											or
+											(question1Level2='配送类' and  question1Level3='时效外催配送')
+											or
+											(question1Level2='配送类' and  question1Level3='延迟收货')
+											or
+											(question1Level2='配送类' and  question1Level3='大电关单')
+											or
+											(question1Level2='配送类' and  question1Level3='添加电话')
+											)
+									)
+									
+									or
+									(
+											question1Level1='顺逛商城-O2O类' and (
+											(question1Level2='配送类' and  question1Level3='时效内催配送')
+											or
+											(question1Level2='配送类' and  question1Level3='时效外催配送')
+											or
+											(question1Level2='配送类' and  question1Level3='延迟收货')
+											or
+											(question1Level2='配送类' and  question1Level3='大电关单')
+											or
+											(question1Level2='配送类' and  question1Level3='添加电话')
+											)
+									)
+									or
+									(
+											question1Level1='顺逛商城-社会化业务'  and (
+															(question1Level2='配送类' and  question1Level3='催配送')
+															or
+															(question1Level2='配送类' and  question1Level3='电话错误')
+														)
+												)
+		)
+	</select>
+
+
+	<!-- 根据网单号获取所有工单ID -->
+	<select id="getPoolByNetOrderId" resultMap="reviewPoolResult">
+		select id
+			from `wo_reviewpool`
+		  where 
+		  netOrderId = #{netOrderId}
+	</select>
+
+  <select id="getPoolByOrderId" resultMap="reviewPoolResult">
+    select
+    <include refid="search_term"/>
+    from `wo_reviewpool`
+    where
+    netOrderId = #{orderId}
+	</select>
+	<!--责任位统计-->
+	<select id="dutyStatistic" resultType="java.util.HashMap">
+		select question1Level1,
+			question1Level2,
+		group_concat(workStatus) as workStatus,group_concat(CAST(num AS char)) as num
+		from
+		(select question1Level1,
+			question1Level2,
+		workStatus,count(*) as num
+		from `wo_reviewpool`
+		where 1= 1
+		<if test="map.startTime!=null">
+				and `insertTime` <![CDATA[>=]]> #{map.startTime}
+		  </if>
+		  <if test="map.endTime!=null">
+				and `insertTime` <![CDATA[<=]]> #{map.endTime}
+		  </if>
+		 <if test="map.question1Level1!=null">
+				and `question1Level1` <![CDATA[=]]> #{map.question1Level1}
+		  </if>
+		  
+		group by question1Level1,workStatus
+			,question1Level2
+		) as reviewpool
+		group by question1Level1
+			,question1Level2
+		<include refid="pagination_Tail" />
+	 </select>
+	<!--人员统计-->
+	<select id="personnelStatistic" resultType="java.util.HashMap">
+	select wangId,company,sum(appealCount2) as appealCount2,group_concat(workStatus) as workStatus,group_concat(CAST(num AS char)) as num
+	from(
+	select wangId,company,sum(appealCount2) as appealCount2,workStatus,count(*) as num
+		from `wo_reviewpool`
+		where 1=1
+		<if test="map.startTime!=null">
+				and `insertTime` <![CDATA[>=]]> #{map.startTime}
+		  </if>
+		  <if test="map.endTime!=null">
+				and `insertTime` <![CDATA[<=]]> #{map.endTime}
+		  </if>
+		  <if test="map.wangId!=null">
+				and `wangId` <![CDATA[=]]> #{map.wangId}
+		  </if>
+		group by wangId,company,workStatus
+	) as reviewpool
+	group by wangId,company
+	<include refid="pagination_Tail" />
+	 </select>
+	 	<select id="qryWdzxCount" resultType="int">
+		select count(1) 
+			from `wo_reviewpool`
+		  where netOrderId like concat(#{netOrderId},'%')
+	</select>
+		<!--人员统计总数量-->
+	<select id="findPersonnelStatisticCount" resultType="int">
+	select count(1) from
+	(select wangId,company
+	from(
+	select wangId,company
+		from `wo_reviewpool`
+		where 1=1
+		<if test="map.startTime!=null">
+				and `insertTime` <![CDATA[>=]]> #{map.startTime}
+		  </if>
+		  <if test="map.endTime!=null">
+				and `insertTime` <![CDATA[<=]]> #{map.endTime}
+		  </if>
+		  <if test="map.wangId!=null">
+				and `wangId` <![CDATA[=]]> #{map.wangId}
+		  </if>
+		group by wangId,company,workStatus
+	) as reviewpool
+	group by wangId,company) as t
+	 </select>
+	<!--责任位统计-->
+	<select id="findDutyStatisticCount" resultType="int">
+		select count(1)
+		from
+		(select question1Level1
+			,question1Level2
+		from
+		(select question1Level1
+			,question1Level2
+		from `wo_reviewpool`
+		where 1= 1
+		<if test="map.startTime!=null">
+				and `insertTime` <![CDATA[>=]]> #{map.startTime}
+		  </if>
+		  <if test="map.endTime!=null">
+				and `insertTime` <![CDATA[<=]]> #{map.endTime}
+		  </if>
+		 <if test="map.question1Level1!=null">
+				and `question1Level1` <![CDATA[=]]> #{map.question1Level1}
+		  </if>
+		  
+		group by question1Level1,workStatus
+			,question1Level2
+		) as reviewpool
+		group by question1Level1
+			,question1Level2
+		)as t
+	 </select>
+	
+	<select id="selectdelete" resultType="int">
+    select 
+    count(1)
+    from wo_reviewpool
+    where remark4 = #{id,jdbcType=VARCHAR}
+    and workStatus <![CDATA[<>]]>3
+  </select>
+	
+	<!--发送邮件工单完成率数据-->
+	<select id="sendMailDutyStatistic" resultType="java.util.HashMap">
+		SELECT id
+			 , userName
+			 , email
+			 , question1Level1
+			 , question1Level2
+			 , orderCome
+			 , group_concat(workStatus) AS workStatus
+			 , group_concat(num) AS num
+		  FROM (SELECT a.user_id id
+		  			 , a.user_name userName
+		  			 , a.email
+		  			 , b.question1Level1
+		  			 , b.question1Level2
+		  			 , b.orderCome
+		  			 , c.workStatus
+		  			 , count(*) AS num
+				  FROM wo_user a
+			 LEFT JOIN wo_reviewcontacts b
+					ON a.user_id = b.userid
+			 LEFT JOIN wo_reviewpool c
+					ON b.question1Level1 = c.question1Level1
+				   AND b.question1Level2 = c.question1Level2
+				   AND b.orderCome = c.remark5
+				 WHERE a.send_email = '1'
+				   AND a.user_type = '2'
+				   AND c.insertTime <![CDATA[>=]]> #{monthStartTime}
+			  GROUP BY a.user_id
+			  		 , a.user_name
+			  		 , a.email
+			  		 , b.question1Level1
+			  		 , b.question1Level2
+			  		 , b.orderCome
+			  		 , c.workStatus
+				) AS reviewpool
+		WHERE workStatus IS NOT NULL
+	 GROUP BY id
+	 		, userName
+	 		, email
+	 		, question1Level1
+	 		, question1Level2
+	 		, orderCome
+	 ORDER BY id
+	</select>
+	
+	
+	
+	
+	
+	<select id="getPage" resultMap="reviewPoolResult">
+		select 
+		<include refid="search_term" />
+		from `wo_reviewpool`
+		where 1=1 
+		<if test="map.type ==1">
+			and `workStatus` <![CDATA[<>]]>  '3'
+		</if>
+		<if test="map.type ==2">
+			and `workStatus` <![CDATA[=]]>  '3'
+		</if>
+		
+		<if test="map.insertTime != null">
+			 	and insertTime <![CDATA[>=]]> #{map.insertTime}
+		</if>
+		<if test="map.lastInsertTime != null">
+			 	and insertTime <![CDATA[<=]]> #{map.lastInsertTime}
+		</if>
+		<if test="map.id != null">
+			 	and id in 
+			<foreach collection="map.id" item="item" index="index"  open="(" separator="," close=")" >
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY id
+		<![CDATA[ limit #{map.pageIndex},#{map.pageSize}]]>
+	</select>
+	
+	<select id="findPerformNum" resultType="int">
+		select count(1)
+		from `wo_reviewpool`
+		where
+		1=1
+		<if test="map.type ==1">
+			and `workStatus` <![CDATA[<>]]>  '3'
+		</if>
+		<if test="map.type ==2">
+			and `workStatus` <![CDATA[=]]>  '3'
+		</if>
+		<if test="map.insertTime != null">
+			 	and insertTime <![CDATA[>=]]> #{map.insertTime}
+		</if>
+		<if test="map.lastInsertTime != null">
+			 	and insertTime <![CDATA[<=]]> #{map.lastInsertTime}
+		</if>
+		<if test="map.isOpen==1">
+			and corderPrimary is Null
+		</if>
+		<if test="map.isOpen==2">
+			and corderPrimary is NOT Null
+		</if>
+	</select>
+	<select id="getHPOrderByStatusAndTO" resultMap="reviewPoolResult">
+		select
+		<include refid="search_term" />
+		from `wo_reviewpool`
+		WHERE sqm_status = #{sqmStatus} and work_order_to='HP'
+	</select>
+
+	<select id="getHPOrderBySqmStatusAndTO" resultMap="reviewPoolResult">
+		select
+		<include refid="search_term" />
+		from `wo_reviewpool`
+		WHERE deside_pass in ('0','1') and sqm_status='3' and work_order_to='HP'
+	</select>
+
+	<update id="updWorkOrder" >
+		update
+		wo_reviewpool
+		<set>
+			<include refid="search_update" />
+		</set>
+		where
+		id = #{pool.id}
+	</update>
+	<update id="updateProductCode">
+		update
+		wo_reviewpool
+		<set>
+			product_code=#{productCode}
+		</set>
+		where
+		id=#{reviewId}
+	</update>
+    <update id="addHpOrderId">
+        update
+        wo_reviewpool
+        <set>
+            hp_order_id=#{hpOrderId}
+        </set>
+        where
+        id=#{reviewId}
+    </update>
+
+</mapper>

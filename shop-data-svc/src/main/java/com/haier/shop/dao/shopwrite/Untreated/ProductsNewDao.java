@@ -41,7 +41,7 @@ public interface ProductsNewDao {
      * 根据sku列表，获取对应的产品列表(只查询上架的sku)
      * @return
      */
-    List<ProductBase> getListBySkus(@Param("skuList") List<String> skuList);
+    List<ProductBase> getListBySkus(List<String> skuList);
 
     /**
      * 获得所有上架或下架商品

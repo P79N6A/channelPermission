@@ -1,7 +1,10 @@
 package com.haier.stock.services;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,6 +116,22 @@ public class StockInvSectionServiceImpl implements StockInvSectionService{
 	public long getPagerCount(Object entity) {
 		// TODO Auto-generated method stub
 		return invSectionDao.getPagerCount((InvSection) entity);
+	}
+
+	@Override
+	public JSONObject getInvSectionList(InvSection invSection) {
+		JSONObject result = new JSONObject();
+		invSection.setStart((invSection.getPage()-1)*100);
+		invSection.setSize(invSection.getRows());
+		result.put("total", invSectionDao.countInvSectionWithLike(invSection));
+		result.put("rows", invSectionDao.getInvSectionList(invSection));
+		return result;
+	}
+
+	@Override
+	public List<InvSection> queryInvSectionExcel(InvSection invSection) {
+
+		return invSectionDao.queryInvSectionExcel(invSection);
 	}
 
 }

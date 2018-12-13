@@ -79,5 +79,5 @@ public interface InvStockTransactionDao {
     List<Map<String, Object>> query(Map params);
     
 
-    int getRowCnt();
+    int getRowCnt(Map params);
 }

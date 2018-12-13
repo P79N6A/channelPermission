@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.InvTransferLineSalesReadDao">
+
+    <resultMap type="com.haier.shop.model.InvTransferLineSales" id="BaseResult">
+        <result property="id" column="id"/>
+        <result property="lineNum" column="line_num"/>
+        <result property="soLineNum" column="so_line_num"/>
+        <result property="createTime" column="create_time"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="secTo" column="sec_to"/>
+        <result property="transferQty" column="transfer_qty"/>
+        <result property="salesAmounts" column="sales_amounts"/>
+        <result property="invoiceState" column="invoiceState"/>
+        <result property="saleOutState" column="saleOutState"/>
+    </resultMap>
+
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+
+    <select id="findListByVo" resultMap="BaseResult">
+        SELECT
+        id,
+        line_num,
+        so_line_num,
+        create_time,
+        item_code,
+        sec_to,
+        transfer_qty,
+        sales_amounts,
+        invoiceState,
+        saleOutState
+        FROM inv_transfer_line_sales WHERE 1=1
+
+        <if test="vo.lineNum !=null and vo.lineNum!='' ">
+            AND line_num=#{vo.lineNum}
+        </if>
+
+        <if test="vo.soLineNum !=null and vo.soLineNum!='' ">
+            AND so_line_num=#{vo.soLineNum}
+        </if>
+
+        <if test="vo.createTimeMin !=null and vo.createTimeMin!='' ">
+            AND create_time > #{vo.createTimeMin}
+        </if>
+
+        <if test="vo.createTimeMax !=null and vo.createTimeMax!='' ">
+            AND create_time &lt;= #{vo.createTimeMax}
+        </if>
+
+        <if test="vo.itemCode !=null and vo.itemCode!='' ">
+            AND item_code=#{vo.itemCode}
+        </if>
+
+        <if test="vo.secTo !=null and vo.secTo!='' ">
+            AND sec_to=#{vo.secTo}
+        </if>
+
+        <if test="vo.transferQty !=null  ">
+            AND transfer_qty=#{vo.transferQty}
+        </if>
+
+        <if test="vo.salesAmounts !=null and vo.salesAmounts!='' ">
+            AND sales_amounts=#{vo.salesAmounts}
+        </if>
+
+        <if test="vo.invoiceState !=null and vo.invoiceState!='-1' ">
+            AND invoiceState=#{vo.invoiceState}
+        </if>
+
+        <if test="vo.saleOutState !=null and vo.saleOutState!='-1' ">
+            AND saleOutState=#{vo.saleOutState}
+        </if>
+
+        ORDER BY create_time DESC,id DESC
+
+        <include refid="pagination" />
+
+    </select>
+
+    <select id="exportListByVo" resultMap="BaseResult">
+        SELECT
+        id,
+        line_num,
+        so_line_num,
+        create_time,
+        item_code,
+        sec_to,
+        transfer_qty,
+        sales_amounts,
+        invoiceState,
+        saleOutState
+        FROM inv_transfer_line_sales WHERE 1=1
+
+        <if test="vo.lineNum !=null and vo.lineNum!='' ">
+            AND line_num=#{vo.lineNum}
+        </if>
+
+        <if test="vo.soLineNum !=null and vo.soLineNum!='' ">
+            AND so_line_num=#{vo.soLineNum}
+        </if>
+
+        <if test="vo.createTimeMin !=null and vo.createTimeMin!='' ">
+            AND create_time > #{vo.createTimeMin}
+        </if>
+
+        <if test="vo.createTimeMax !=null and vo.createTimeMax!='' ">
+            AND create_time &lt;= #{vo.createTimeMax}
+        </if>
+
+        <if test="vo.itemCode !=null and vo.itemCode!='' ">
+            AND item_code=#{vo.itemCode}
+        </if>
+
+        <if test="vo.secTo !=null and vo.secTo!='' ">
+            AND sec_to=#{vo.secTo}
+        </if>
+
+        <if test="vo.transferQty !=null  ">
+            AND transfer_qty=#{vo.transferQty}
+        </if>
+
+        <if test="vo.salesAmounts !=null and vo.salesAmounts!='' ">
+            AND sales_amounts=#{vo.salesAmounts}
+        </if>
+
+        <if test="vo.invoiceState !=null and vo.invoiceState!='-1' ">
+            AND invoiceState=#{vo.invoiceState}
+        </if>
+
+        <if test="vo.saleOutState !=null and vo.saleOutState!='-1' ">
+            AND saleOutState=#{vo.saleOutState}
+        </if>
+
+        ORDER BY create_time DESC ,id DESC
+
+        LIMIT 0, 5000
+
+    </select>
+
+    <select id="getPagerCountS" resultType="int">
+        SELECT count(id)
+
+        FROM inv_transfer_line_sales WHERE 1=1
+
+
+        <if test="vo.lineNum !=null and vo.lineNum!='' ">
+            AND line_num=#{vo.lineNum}
+        </if>
+
+        <if test="vo.soLineNum !=null and vo.soLineNum!='' ">
+            AND so_line_num=#{vo.soLineNum}
+        </if>
+
+        <if test="vo.createTimeMin !=null and vo.createTimeMin!='' ">
+            AND create_time > #{vo.createTimeMin}
+        </if>
+
+        <if test="vo.createTimeMax !=null and vo.createTimeMax!='' ">
+            AND create_time &lt;= #{vo.createTimeMax}
+        </if>
+
+        <if test="vo.itemCode !=null and vo.itemCode!='' ">
+            AND item_code=#{vo.itemCode}
+        </if>
+
+        <if test="vo.secTo !=null and vo.secTo!='' ">
+            AND sec_to=#{vo.secTo}
+        </if>
+
+        <if test="vo.transferQty !=null  ">
+            AND transfer_qty=#{vo.transferQty}
+        </if>
+
+        <if test="vo.salesAmounts !=null and vo.salesAmounts!='' ">
+            AND sales_amounts=#{vo.salesAmounts}
+        </if>
+
+        <if test="vo.invoiceState !=null and vo.invoiceState!='-1' ">
+            AND invoiceState=#{vo.invoiceState}
+        </if>
+
+        <if test="vo.saleOutState !=null and vo.saleOutState!='-1' ">
+            AND saleOutState=#{vo.saleOutState}
+        </if>
+    </select>
+
+    <select id="getByLine__num" resultMap="BaseResult">
+        SELECT
+        id,
+        line_num,
+        so_line_num,
+        create_time,
+        item_code,
+        sec_to,
+        transfer_qty,
+        sales_amounts,
+        invoiceState,
+        saleOutState
+        FROM inv_transfer_line_sales WHERE
+        line_num = #{line_num}
+    </select>
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.StorageLocMgtDao">
+
+    <resultMap type="com.haier.stock.model.StorageLocMgt" id="InvWareHouseResultMap"></resultMap>
+    <select id="getInvWareHouseList"  parameterType="com.haier.stock.model.StorageLocMgt" resultMap="InvWareHouseResultMap">
+        select  wh_code as whCode, wh_name as whName, status as status,center_code as centerCode,support_cod as supportCod,supported_delivery_mode as supportedDeliveryMode,update_time as updateTime,les_five_yard as lesFiveYard,les_wh_code as lesWhCode,les_accepter as lesAccepter  from inv_warehouse where 1=1
+        <!-- 查询条件 -->
+        <if test="whCode != null and whCode != '' ">
+            and wh_code = #{whCode}
+        </if>
+        <!-- 查询条件 -->
+        <if test="whName != null and whName != '' ">
+            and wh_name like CONCAT(CONCAT('%', #{whName}),'%')
+        </if>
+        order by create_time desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+
+    </select>
+
+
+    <!-- 计算列表数量 -->
+    <select id="countStorageLocMgtWithLike" parameterType="com.haier.stock.model.StorageLocMgt" resultType="Integer">
+        select
+        count(1)
+        from inv_warehouse where 1=1
+        <!-- 查询条件 -->
+        <if test="whCode != null and whCode != '' ">
+            and wh_code = #{whCode}
+        </if>
+        <!-- 查询条件 -->
+        <if test="whName != null and whName != '' ">
+            and wh_name like CONCAT(CONCAT('%', #{whName}),'%')
+        </if>
+    </select>
+
+
+    <select id="queryStorageLocMgtExcel"  parameterType="com.haier.stock.model.StorageLocMgt"  resultMap="InvWareHouseResultMap">
+        select  wh_code as whCode,
+        wh_name as whName,
+        case STATUS when 0 then '停用' else '在用' end	AS statusExcel,
+        center_code as centerCode,
+        case  support_cod when 0 then '否' else '是' end	AS supportCodExcel,
+        supported_delivery_mode as supportedDeliveryMode,
+        update_time as updateTime,
+        les_five_yard as lesFiveYard,
+        les_wh_code as lesWhCode,
+        les_accepter as lesAccepter
+        from inv_warehouse where 1=1
+        <!-- 查询条件 -->
+        <if test="whCode != null and whCode != '' ">
+            and wh_code = #{whCode}
+        </if>
+        <!-- 查询条件 -->
+        <if test="whName != null and whName != '' ">
+            and wh_name like CONCAT(CONCAT('%', #{whName}),'%')
+        </if>
+        order by create_time desc
+    </select>
+</mapper>

@@ -27,7 +27,17 @@
 		and `status` = 0
 		order by id
 	</select>
-
+	<select id="querySubsku" parameterType="java.lang.String" resultType="java.lang.String">
+	SELECT
+		sub_sku
+	FROM
+		inv_machine_set
+	WHERE
+		main_sku =#{sku}
+	and `status` = 0
+	ORDER BY id
+	LIMIT 0,1
+	</select>
     <resultMap id="skuMap" type="java.util.Map">
         <result column="sub_sku" property="sub_sku"/><!--子物料号-->
         <result column="main_sku" property="main_sku"/><!--主物料号-->
@@ -40,7 +50,10 @@
             SELECT sub_sku,main_sku FROM inv_machine_set WHERE sub_sku=#{item.input_sku}
         </foreach>
     </select>
-    <select id="getByMainSkuAndBomNum" parameterType="Integer"
+    <select id="selectMainSkuAndSubSku" parameterType="map" resultMap="skuMap">
+        SELECT sub_sku,main_sku FROM `inv_machine_set` WHERE `main_sku` = #{mainSku} and `sub_sku` = #{subSku}
+    </select>
+    <select id="getByMainSkuAndBomNum" parameterType="java.lang.String"
             resultMap="invMachineSetResult">
 		select
 		`id`,`main_sku`,`sub_sku`,`factory_code`,`stlnr`,`posnr`,`menge`,`create_time`,`maktx1`,`maktx2`,`update_time`,`status`
@@ -50,7 +63,15 @@
 		and `posnr` = #{posnr}
 		limit 1;
 	</select>
+    <select id="findBySubSku" resultType="String">
+        SELECT  main_sku FROM inv_machine_set
+            WHERE main_sku in (
+            SELECT main_sku FROM inv_machine_set
+            WHERE sub_sku = #{subSku1} )
+            and sub_sku = #{subSku2}
 
+
+    </select>
     <insert id="insert" parameterType="com.haier.stock.model.InvMachineSet">
 		insert into
 		`inv_machine_set`(`main_sku`,`sub_sku`,`factory_code`,`stlnr`,`posnr`,`menge`,`create_time`,`maktx1`,`maktx2`,`update_time`,`status`)
@@ -69,10 +90,10 @@
         1=1
         <if test="machineSet!=null">
             <if test="machineSet.mainSku !=null and machineSet.mainSku !=''">
-                AND `main_sku` = #{machineSet.mainSku}
+                AND `main_sku` LIKE CONCAT('%',TRIM(#{machineSet.mainSku}),'%')
             </if>
             <if test="machineSet.subSku !=null and machineSet.subSku !=''">
-                AND `sub_sku` = #{machineSet.subSku}
+                AND `sub_sku` LIKE CONCAT('%',TRIM(#{machineSet.subSku}),'%')
             </if>
             <if test="machineSet.status !=null">
                 <if test="machineSet.status == 1 ">

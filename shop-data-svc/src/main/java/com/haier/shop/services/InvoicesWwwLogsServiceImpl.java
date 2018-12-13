@@ -87,6 +87,7 @@ public class InvoicesWwwLogsServiceImpl implements InvoicesWwwLogsService {
                 invoicesWwwLogs.setSuccess(1);
                 invoicesWwwLogs.setFlag(2);
                 invoicesWwwLogs.setLastMessage("");
+                invoicesWwwLogs.setProcessTime((int) (System.currentTimeMillis() / 1000));
                 invoicesWwwLogsWriteDao.updateInvoiceWwwLogs(invoicesWwwLogs);
                 tempOrderProduct.setMakeReceiptType(InvoiceConst.MR_TYPE_HOUSE); //库房开票
                 orderProductsWriteDao.updateMakeReceiptType(tempOrderProduct);

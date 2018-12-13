@@ -4780,7 +4780,7 @@ public class InvoiceModel {
                         }
                         // 开票中的场合
                         if (eachOrderProducts.getIsMakeReceipt() != null
-                            && eachOrderProducts.getIsMakeReceipt().equals(3)
+                            && eachOrderProducts.getIsMakeReceipt().equals(5)
                             && !oldmemberInvoices.getInvoiceType().equals(
                                 paramMemberInvoices.getInvoiceType())) {
                             return "对不起，该订单有网单开票中，不能修改发票类型!";

@@ -31,7 +31,8 @@
             `content`,
             `remark`,
             `process_status`,
-            `message`
+            `message`,
+            `add_time`
         FROM `vom_shipping_status`
         WHERE `process_status` = #{process_status} and not instr(`order_no`, 'TC' )>0
         LIMIT 2000
@@ -66,5 +67,10 @@
         FROM `vom_shipping_status`
         WHERE `process_status` = #{process_status} and instr(`order_no`, 'TC' )>0
         LIMIT 2000
+    </select>
+  
+  
+    <select id="queryCountByOrderNo" resultType="int">
+        SELECT count(1) from vom_shipping_status WHERE  order_no = #{orderNo} and (status = 'TD' OR  status = 'KO')
     </select>
 </mapper>

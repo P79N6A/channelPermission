@@ -3,15 +3,15 @@ var datagridOptions_orderForecastGoal = {
     singleSelect: true,//多选
     url: '',
     columns: [[
-        {title: '店铺码 ', field: 'storeCode', sortable: true},
-        {title: '店铺名称 ', field: 'storeName', sortable: true},
-        {title: '物料编号', field: 'storeSku', sortable: true},
-        {title: '品类', field: 'cbsCategory', sortable: true},
-        {title: '产品型号', field: 'productName', sortable: true},
-        {title: '总库存量', field: 'stockqty', sortable: true},
-        {title: 'EC库存更新时间', field: 'storeTs', sortable: true, formatter: formatDatebox},
+        {title: '店铺码 ', field: 'storeCode', sortable: false},
+        {title: '店铺名称 ', field: 'storeName', sortable: false},
+        {title: '物料编号', field: 'storeSku', sortable: false},
+        {title: '品类', field: 'cbsCategory', sortable: false},
+        {title: '产品型号', field: 'productName', sortable: false},
+        {title: '总库存量', field: 'stockqty', sortable: false},
+        {title: 'EC库存更新时间', field: 'storeTs', sortable: false, formatter: formatDatebox},
         {
-            title: '创建时间', field: 'updateTime', sortable: true, formatter: formatDatebox
+            title: '创建时间', field: 'updateTime', sortable: false, formatter: formatDatebox
         },
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
@@ -96,15 +96,15 @@ $("#searchBtn").on('click', function (event) {
             productName: productNameData
         },
         columns: [[
-            {title: '店铺码 ', field: 'storeCode', sortable: true},
-            {title: '店铺名称 ', field: 'storeName', sortable: true},
-            {title: '物料编号', field: 'storeSku', sortable: true},
-            {title: '品类', field: 'cbsCategory', sortable: true},
-            {title: '产品型号', field: 'productName', sortable: true},
-            {title: '总库存量', field: 'stockqty', sortable: true},
-            {title: 'EC库存更新时间', field: 'storeTs', sortable: true, formatter: formatDatebox},
+            {title: '店铺码 ', field: 'storeCode', sortable: false},
+            {title: '店铺名称 ', field: 'storeName', sortable: false},
+            {title: '物料编号', field: 'storeSku', sortable: false},
+            {title: '品类', field: 'cbsCategory', sortable: false},
+            {title: '产品型号', field: 'productName', sortable: false},
+            {title: '总库存量', field: 'stockqty', sortable: false},
+            {title: 'EC库存更新时间', field: 'storeTs', sortable: false, formatter: formatDatebox},
             {
-                title: '创建时间', field: 'updateTime', sortable: true, formatter: formatDatebox
+                title: '创建时间', field: 'updateTime', sortable: false, formatter: formatDatebox
             },
         ]],
     });

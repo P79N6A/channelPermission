@@ -8,25 +8,27 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- *
- *
+ * <p>RequestData complex type的 Java 类。
+ * 
+ * <p>以下模式片段指定包含在此类中的预期内容。
+ * 
  * <pre>
- * &lt;complexType name="RequestData">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="SysName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field1" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field2" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field3" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field4" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field5" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="revokeResult" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="titleSoCodeId" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="RequestData"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="SysName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field1" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field2" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field3" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field4" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field5" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="revokeResult" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="titleSoCodeId" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -61,28 +63,57 @@ public class RequestData {
     @XmlElement(required = true)
     protected String titleSoCodeId;
 
-
+    /**
+     * 获取sysName属性的值。
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
     public String getSysName() {
         return sysName;
     }
 
-
+    /**
+     * 设置sysName属性的值。
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
     public void setSysName(String value) {
         this.sysName = value;
     }
 
-
+    /**
+     * 获取field1属性的值。
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
     public String getField1() {
         return field1;
     }
 
-
+    /**
+     * 设置field1属性的值。
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
     public void setField1(String value) {
         this.field1 = value;
     }
 
     /**
-     *
+     * 获取field2属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -93,7 +124,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 设置field2属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -104,7 +136,7 @@ public class RequestData {
     }
 
     /**
-     *
+     * 获取field3属性的值。
      * 
      * @return
      *     possible object is
@@ -116,7 +148,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 设置field3属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -127,7 +160,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 获取field4属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -138,7 +172,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 设置field4属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -149,7 +184,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 获取field5属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -160,7 +196,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 设置field5属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -171,7 +208,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 获取revokeResult属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -182,7 +220,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 设置revokeResult属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -193,7 +232,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 获取titleSoCodeId属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -204,7 +244,8 @@ public class RequestData {
     }
 
     /**
-     *
+     * 设置titleSoCodeId属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }

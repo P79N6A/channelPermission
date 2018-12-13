@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>母婴产品维护</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/ajaxfileupload.js"></script>
+    <style>
+        .i-mark {
+            font-size: 10px;
+        }
+        #importExecl table{
+            margin: 5px;
+        }
+        #importExecl button{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label" style="width: 100px">是否有效：</span>
+                <select  id="flag" name="flag"  class="easyui-combobox" style="width:120px;" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="Y" selected>有效</option>
+                    <option value="N">无效</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderOp"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn"
+           data-options="iconCls:'icon-add',plain:true">新增</a>
+        <a href="#" class="easyui-linkbutton" id="delBtn"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <a href="#" class="easyui-linkbutton" id="export"
+           data-options="iconCls:'icon-save',plain:true" onclick="exp()">导出</a>
+
+    </form>
+</div>
+<div id="userEdit" data-options="title:'',resizable:true,modal:true"
+     class="easyui-dialog add-dlg"
+     style="width:600px;height:150px;"
+     closed="true" buttons="#dlg-buttons">
+    <form id="fm" method="post">
+
+
+        <div class="fitem">
+            <label class="" style="width:100px">sku：</label>
+            <input id="sku"  name="sku" class="easyui-textbox" style="width:100px" required="true">
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">品类：</label>
+            <input id="category"  name="category" class="easyui-textbox" style="width:100px" required="true">
+        </div>
+    </form>
+    <div id="dlg-buttons">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#userEdit').dialog('close')">关闭</a>
+    </div>
+</div>
+<script type="application/javascript">
+    var buttons = $.extend([], $.fn.datetimebox.defaults.buttons);
+    buttons.splice(1, 0, {
+        text: '清除',
+        handler: function(target){
+            $(target).datetimebox('setValue', '');
+            $(target).combo("hidePanel");
+        }
+    });
+
+
+    var dataGrid = $('#dg').datagrid({
+        url:"/peculiarCategory/getList",
+        fit: true,
+        fitColumns : false,
+        pagination: true,
+        pageSize: 50,
+        pageList: [50, 100, 200 ],
+        pageNumber:1,
+        autoRowHeight : true,
+        striped : true,
+        toolbar : '#datagridToolbar',
+        rownumbers : true,
+        nowrap : false,
+        queryParams: {
+            flag: $("#flag").val()
+        },
+        columns: [
+            [
+                {
+                    field: 'ck',
+                    title: '选择',
+                    checkbox: true
+                }, {
+                field: "id",
+                title: "id",
+                hidden: "true"
+            }, {
+                field: "sku",
+                title: "sku"
+            }, {
+                field: "category",
+                title: "品类"
+            }, {
+                field: "flag",
+                title: "是否有效",
+                formatter: function(value) {
+                    if (value == 'Y') {
+                        return '有效';
+                    } else if (value == 'N') {
+                        return '无效';
+                    } else {
+                        return '';
+                    }
+                }
+            }, {
+                field: "createBy",
+                title: "创建人"
+            }, {
+                field: "createTime",
+                title: "创建时间",
+                formatter: function(value) {
+                    return DateUtil.NumberToDate(value);
+                }
+            }
+            ]
+        ]
+    });
+
+
+    var DateUtil = (function() {
+        function DateUtil() {}
+
+        DateUtil.AddDays = function(date, days) {
+            var cdate, d, m, nd, y;
+            nd = new Date(date);
+            nd = nd.valueOf();
+            nd = nd + days * 24 * 60 * 60 * 1000;
+            nd = new Date(nd);
+            y = nd.getFullYear();
+            m = nd.getMonth() + 1;
+            d = nd.getDate();
+            if (m <= 9) {
+                m = "0" + m;
+            }
+            if (d <= 9) {
+                d = "0" + d;
+            }
+            cdate = y + "-" + m + "-" + d;
+            return cdate;
+        };
+
+        DateUtil.DaysBetween = function(DateOne, DateTwo) {
+            var cha;
+            cha = (Date.parse(DateOne) - Date.parse(DateTwo)) / 86400000;
+            return Math.abs(cha);
+        };
+
+        DateUtil.StringToDate = function(DateStr) {
+            var arys, converted, myDate;
+            converted = Date.parse(DateStr);
+            myDate = new Date(converted);
+            if (isNaN(myDate)) {
+                arys = DateStr.split('-');
+                myDate = new Date(arys[0], --arys[1], arys[2]);
+            }
+            return myDate;
+        };
+
+        DateUtil.NumberToDate = function(DateStr) {
+            if (DateStr) {
+                return new Date(DateStr).toLocaleString();
+            } else {
+                return '';
+            }
+        };
+
+        DateUtil.GetMonthBeginEnd = function(DateTemp) {
+            var beginDate, d, e, endDate, f;
+            d = new Date(DateTemp);
+            f = d.setDate(1);
+            f = new Date(f);
+            e = d.setDate(1);
+            e = new Date(e);
+            e = e.setMonth(d.getMonth() + 1) - 24 * 60 * 60 * 1000;
+            e = new Date(e);
+            beginDate = f.toLocaleDateString();
+            endDate = e.toLocaleDateString();
+            beginDate = beginDate.replace(/\//gm, '-').replace('骞�', '-').replace('鏈�', '-').replace('鏃�', '');
+            endDate = endDate.replace(/\//gm, '-').replace('骞�', '-').replace('鏈�', '-').replace('鏃�', '');
+            return [beginDate, endDate];
+        };
+
+        return DateUtil;
+
+    })();
+</script>
+<script src="../static/js/settleCenter/peculiarCategory.js"></script>
+##<script src="../static/js/report/workOrder.js"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.haier.svc.service;
 
 import com.haier.common.ServiceResult;
+import com.haier.purchase.data.model.CrmManualOrder;
 import com.haier.purchase.data.model.CrmOrderManualDetailItem;
 import com.haier.purchase.data.model.CrmOrderManualItem;
 import com.haier.svc.bean.GVSOrderPriceRequire;
@@ -74,4 +75,15 @@ public interface CrmOrderManualService {
      * 获取价格
      * */
     public GVSOrderPriceResponse quirePrice(GVSOrderPriceRequire order);
+
+    /**
+     * 导入CRM手工订单京东
+     * @param list
+     * @return 
+     */
+	public Map<String, Object> importCrmOrderManualJD(List<String[]> list, Map<String, String> productgroupMap, Map<String, String> brandMap);
+
+    CrmOrderManualItem getCrmOrderManualItem(String s);
+
+    List<CrmOrderManualDetailItem> getcrmOrderManualDetailItem(String s);
 }

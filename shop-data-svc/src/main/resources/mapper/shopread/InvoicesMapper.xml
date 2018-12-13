@@ -63,30 +63,44 @@
 	</resultMap>
 	<select id="get" parameterType="Integer" resultMap="invoicesResult">
 		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
-		from `Invoices`
+		from `invoices`
 		where `id` = #{id}
+	</select>
+	<select id="queryDataByOrderId" parameterType="Integer" resultMap="invoicesResult">
+		SELECT  
+				i.id,i.isOld,i.isReInvoice,i.orderProductId,i.cOrderType,i.diffId,i.cOrderSn,i.memberInvoiceId,i.customerCode,i.invoiceTitle,
+				i.taxPayerNumber,i.registerAddressAndPhone,i.bankNameAndAccount,i.remark,i.cOrderAddTime,i.sku,i.productName,
+				i.productCateName,i.unit,i.number,i.price,i.amount,i.nonTaxPrice,i.nonTaxAmount,i.taxAmount,i.taxRate,i.type,
+				i.isTogether,i.state,i.lessOrderSn,i.paymentName,i.sCode,i.orderType,i.invoiceNumber,i.billingTime,i.eaiWriteTime,
+				i.drawer,i.eaiWriteState,i.invalidTime,i.firstPushTime,i.lastModifyTime,i.internalSettlement,i.branchOfficeCode,
+				i.orderLineNumber,i.backupFieldA,i.backupFieldB,i.integralAmount,i.energySavingAmount,i.energySavingRemark,
+				i.statusType,i.success,i.addTime,i.tryNum,i.electricFlag,i.invalidReason
+		FROM
+		invoices i,orderproducts op
+		where 
+			i.orderProductId=op.id AND op.orderId=#{orderId}
 	</select>
 	<select id="getByCorderSn" resultMap="invoicesResult">
 		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
-		from `Invoices`
+		from `invoices`
 		where `cOrderSn` = #{cOrderSn}
 	</select>
 	<select id="searchInvoicesInfoByCOrderSn" resultType="java.util.Map">
 		select `cOrderSn`,`invoiceTitle`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`state`,`paymentName`,`invoiceNumber`,`billingTime`,`drawer`,`eaiWriteState`,`invalidTime`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
-		from `Invoices`
+		from `invoices`
 		where `cOrderSn` = #{cOrderSn} and `electricFlag`=1
 	</select>
 	<select id="getByOrderProductId" parameterType="Integer" resultMap="invoicesResult">
 		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`
-		from `Invoices`
+		from `invoices`
 		where `orderProductId` = #{orderProductId}
 	</select>
-	<insert id="insertInvoice" parameterType="com.haier.shop.model.Invoices">
-		insert into `Invoices`(`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`)
+	<insert id="insertInvoice" parameterType="com.haier.shop.model.Invoices" useGeneratedKeys="true" keyProperty="id">
+		insert into `invoices`(`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`)
 		values(#{isOld},#{isReInvoice},#{orderProductId},#{cOrderType},#{diffId},#{cOrderSn},#{memberInvoiceId},#{customerCode},#{invoiceTitle},#{taxPayerNumber},#{registerAddressAndPhone},#{bankNameAndAccount},#{remark},#{cOrderAddTime},#{sku},#{productName},#{productCateName},#{unit},#{number},#{price},#{amount},#{nonTaxPrice},#{nonTaxAmount},#{taxAmount},#{taxRate},#{type},#{isTogether},#{state},#{lessOrderSn},#{paymentName},#{sCode},#{orderType},#{invoiceNumber},#{billingTime},#{eaiWriteTime},#{drawer},#{eaiWriteState},#{invalidTime},#{firstPushTime},#{lastModifyTime},#{internalSettlement},#{branchOfficeCode},#{orderLineNumber},#{backupFieldA},#{backupFieldB},#{integralAmount},#{energySavingAmount},#{energySavingRemark},#{statusType},#{success},#{addTime},#{tryNum},#{electricFlag},#{invalidReason})
 	</insert>
 	<update id="update" parameterType="com.haier.shop.model.Invoices">
-		update `Invoices`  
+		update `invoices`
 		<trim prefix="set" suffixOverrides=",">  
 				`lastModifyTime`=UNIX_TIMESTAMP(now()),
 			<if test="statusType != null">
@@ -146,7 +160,7 @@
 	<select id="getSyncInvoiceList" parameterType="Integer" resultMap="invoicesResult">
 		<![CDATA[
 		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
-		from `Invoices`
+		from `invoices`
 		where `success` = 0 and `tryNum` < 20
 		order by `id` desc
 		limit #{topX}
@@ -155,12 +169,26 @@
 	<select id="getInvoiceInvalidNotEndList" parameterType="Integer" resultMap="invoicesResult">
 		<![CDATA[
 		select `id`,`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`,`eInvViewUrl`,`fiscalCode`,`checkCode`
-		from `Invoices`
+		from `invoices`
 		where invalidTime=0 and statusType=4 and success=1 and electricFlag=1 and type=2 and tryNum < 30 and addTime >= 1427817600
 		order by `id` desc
 		limit #{topX}
 		]]>
 	</select>
+	  <select id="selectInvoiceView" parameterType="java.lang.String" resultMap="invoicesResult">
+		 SELECT
+		s.electricFlag,
+		s.type,
+		s.isTogether,
+		s.invoiceTitle,
+		s.id
+	FROM
+		  invoices s
+			inner JOIN orderproducts os ON os.id = s.orderProductId
+			inner JOIN orders o ON os.orderId = o.id
+	WHERE
+		o.orderSn = #{productId}
+    </select>
 	<select id="getOrderProductsByCOrderSn" parameterType="String" resultType="com.haier.shop.model.OrderProductsNew">
 		SELECT
 		id,
@@ -223,7 +251,7 @@
 		itemShareAmount,
 		lessShipTInTime,
 		lessShipTOutTime,
-		cbsSecCode,
+		isSAorZP,
 		points,
 		modified,
 		splitFlag,
@@ -235,10 +263,19 @@
 		couponCode,
 		couponCodeValue
 		FROM
-		OrderProducts
+		orderproducts
 		WHERE
 		cOrderSn = #{cOrderSn}
 	</select>
-	
+	<select id="selectCountView" parameterType="java.lang.String" resultType="int"> 
+	SELECT
+		COUNT(1)
+	FROM
+		invoices
+	WHERE
+		statusType = '4'
+	AND success = '1'
+	AND orderProductId = #{productId}
+	</select>
 	
 </mapper>

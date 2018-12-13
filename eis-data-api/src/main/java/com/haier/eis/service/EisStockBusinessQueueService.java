@@ -15,4 +15,7 @@ public interface EisStockBusinessQueueService {
 
     Integer insert(EisStockBusinessQueue stockBusinessQueue);
 
+    List<EisStockBusinessQueue> getTops(int i);
+
+    void delete(EisStockBusinessQueue queue);
 }

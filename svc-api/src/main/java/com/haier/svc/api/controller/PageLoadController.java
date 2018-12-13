@@ -37,6 +37,7 @@ public class PageLoadController {
     @RequestMapping(value = "/accordion")
     public String accordion(HttpServletRequest request,HttpServletResponse response){
         HttpSession session = request.getSession();
+        session.setMaxInactiveInterval(7200);
         String sessionId = session.getId();
         System.out.println("pageload sessionId ==>"+session.getId());
         List<SysMenu> menus = systemCenterPageLoadService.loadUserMenu(sessionId).getResult();

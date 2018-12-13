@@ -15,7 +15,7 @@ $(function(){
 				pagination : true,
 				nowrap: true,
 				 pageSize: 50,
-			     pageList: [50,10,200,300],
+			     pageList: [50,100,200,300],
 				singleSelect : true,
 				fitColunms : true,
 				columns : [ [ {
@@ -72,7 +72,7 @@ $(function(){
 					align : 'center',
 					formatter: function(value,row,index){
 						
-						return "<a id='oper' href='#' onclick='execute("+JSON.stringify(row)+")'>点击执行</a>";
+						return "<a id='oper' href='loadInvStockLockPage?sku="+row.sku+"&secCode="+row.secCode+"' onclick='execute("+JSON.stringify(row)+")'>点击执行</a>";
 				}
 				} ] ],
 				 toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure'
@@ -82,6 +82,9 @@ $(function(){
 		    	 
 				onSelectPage : function(pageNumber, pageSize) {
 					var gridOpts = $('#dg').datagrid('options');
+					if (pageNumber == 0) {
+            pageNumber = 1;
+					}
 					gridOpts.pageNumber = pageNumber;
 					gridOpts.pageSize = pageSize;
 					onQuerys(1);
@@ -154,7 +157,7 @@ $(function(){
 	    
 	    function execute(toStr){
 			
-			window.location.href="loadInvStockLockPage?sku="+toStr.sku+"&secCode="+toStr.secCode;	
+			window.location.href="loadInvStockLockPage?sku="+toStr.sku+"&secCode="+toStr.secCode;
 		}
 	    Date.prototype.format = function (format) {  
 	        var o = {  

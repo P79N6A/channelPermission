@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.eop.data.dao.StoreCodeMappingDao">
+    <resultMap id="BaseResultMap" type="com.haier.eop.data.model.StoreCodeMapping">
+        <result property="id" column="id" />
+        <result property="storeName" column="storeName" />
+        <result property="haierStoreCode" column="haierStoreCode" />
+        <result property="cainiaoStoreCode" column="cainiaoStoreCode" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,storeName,haierStoreCode,cainiaoStoreCode
+    </sql>
+
+    <sql id="queryCondition">
+        <if test="storeName !=null and storeName != ''">
+            AND storeName = #{storeName}
+        </if>
+        <if test="haierStoreCode !=null and haierStoreCode != ''">
+            AND haierStoreCode = #{haierStoreCode}
+        </if>
+        <if test="cainiaoStoreCode !=null and cainiaoStoreCode != ''">
+            AND cainiaoStoreCode = #{cainiaoStoreCode}
+        </if>
+    </sql>
+
+    <select id="findByStoreCodeId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM storecodemapping WHERE id = #{id}
+    </select>
+
+    <select id="findByHaierStoreCode" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM storecodemapping WHERE haierStoreCode = #{haierStoreCode}
+    </select>
+
+    <select id="findByCainiaoStoreCode" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM storecodemapping WHERE cainiaoStoreCode = #{cainiaoStoreCode}
+    </select>
+
+    <select id="getStoreCode" parameterType="Map" resultMap="BaseResultMap">
+        SELECT SQL_CALC_FOUND_ROWS
+        id,storeName,haierStoreCode,cainiaoStoreCode
+        FROM storecodemapping
+        WHERE 1=1
+        <include refid="queryCondition"/>
+        Order By id DESC
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getRowCnts" resultType="int">
+        select
+        FOUND_ROWS();
+    </select>
+
+    <insert id="insertStoreCode" parameterType="com.haier.eop.data.model.StoreCodeMapping" >
+        INSERT INTO `storecodemapping` (
+        `storeName`,
+        `haierStoreCode`,
+        `cainiaoStoreCode`
+        )
+        SELECT
+        #{storeName},
+        #{haierStoreCode},
+        #{cainiaoStoreCode}
+        FROM DUAL
+        WHERE NOT EXISTS
+        (
+        SELECT
+        1
+        FROM storecodemapping s
+        WHERE s.cainiaoStoreCode = #{cainiaoStoreCode}
+        )
+    </insert>
+
+    <update id="updateStoreCode" parameterType="com.haier.eop.data.model.StoreCodeMapping">
+        UPDATE	storecodemapping
+        SET `storeName` = #{storeName},
+        `haierStoreCode` = #{haierStoreCode},
+        `cainiaoStoreCode`= #{cainiaoStoreCode}
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="deleteStoreCodeById">
+        DELETE
+        FROM
+        storecodemapping
+        WHERE
+        id = #{id}
+    </delete>
+
+</mapper>

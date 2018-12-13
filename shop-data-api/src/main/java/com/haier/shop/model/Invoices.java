@@ -20,6 +20,11 @@ public class Invoices implements Serializable {
 //     * 网单类型-专项开票
 //     */
     public static final Integer CORDERTYPE_SPECIAL_CORDER_TYPE = 3;
+
+    /**
+     *  优品开票:4
+     */
+    public static final Integer CORDERTYPE_YOUPIN_CORDER_TYPE = 4;
     /**
      * 发票类型-电子发票
      */

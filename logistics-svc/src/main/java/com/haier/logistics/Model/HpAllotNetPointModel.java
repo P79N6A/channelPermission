@@ -1,5 +1,6 @@
 package com.haier.logistics.Model;
 
+import com.alibaba.fastjson.JSON;
 import com.haier.common.BusinessException;
 import com.haier.common.util.DateUtil;
 import com.haier.common.util.JsonUtil;
@@ -9,24 +10,21 @@ import com.haier.shop.model.AllotNetPoint;
 import com.haier.shop.model.ApiLogs;
 import com.haier.shop.model.HpAllotNetPoint;
 import com.haier.shop.model.OrderOperateLogs;
-import com.haier.shop.model.OrderProducts;
 import com.haier.shop.model.OrderProductsNew;
 import com.haier.shop.service.AllotNetPointService;
 import com.haier.shop.service.ApiLogsService;
 import com.haier.shop.service.OrderProductsNewService;
 import com.haier.shop.service.ShopOrderOperateLogsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @Service
 public class HpAllotNetPointModel {
@@ -71,6 +69,20 @@ public class HpAllotNetPointModel {
                 netPoint.setMessage("网单号为空");
                 continue;
             }
+            OrderProductsNew orderProducts = orderProductsNewService.getByCOrderSn(netPoint.getORDER_NO());
+            if (null == orderProducts||null == orderProducts.getId()){
+                response.append(responseMsg(FAILED, netPoint.getORDER_NO(), "网单不存在"));
+                netPoint.setStatus(AllotNetPoint.STATUS_FAIL);
+                netPoint.setMessage("查询网单数据为空");
+                continue;
+            }
+            if (null != orderProducts.getStatus() &&
+                orderProducts.getStatus().intValue() == OrderProductsNew.STATUS_CANCEL_CLOSE.intValue()){
+                response.append(responseMsg(FAILED, netPoint.getORDER_NO(), "网单已关闭"));
+                netPoint.setStatus(AllotNetPoint.STATUS_FAIL);
+                netPoint.setMessage("网单已关闭");
+                continue;
+            }
             //【接受HP回传接口】每一个网单记录一次日志 xinm 2016-6-14
             saveApiLogs(netPoint.getORDER_NO(), JsonUtil.toJson(netPoint), "", "接收xml数据,单条解析成功",
                     ApiLogs.FLAG_SUCCESS);
@@ -84,7 +96,6 @@ public class HpAllotNetPointModel {
                     procRemark = procRemark + "网点8码为空";
                 }
                 //记录订单操作日志
-                OrderProductsNew orderProducts = orderProductsNewService.getByCOrderSn(netPoint.getORDER_NO());
                 if (orderProducts != null) {
                     saveOrderProductLog(orderProducts, procRemark, "HP改配网点", 0);
                 }
@@ -98,8 +109,6 @@ public class HpAllotNetPointModel {
                             customerCode + "网点在海尔商城不存在，请及时维护"));
                     netPoint.setStatus(AllotNetPoint.STATUS_FAIL);
                     //记录订单操作日志
-                    OrderProductsNew orderProducts = orderProductsNewService
-                            .getByCOrderSn(netPoint.getORDER_NO());
                     if (orderProducts != null) {
                         saveOrderProductLog(orderProducts, customerCode + "网点在海尔商城不存在，请及时维护",
                                 "HP改配网点", 0);
@@ -182,6 +191,61 @@ public class HpAllotNetPointModel {
             throw new BusinessException("保存HP分配网点信息失败");
         }
     }
+
+    /**
+     * 从VOM解析网单数据保存
+     * @param content json格式数据
+     * @return 处理结果
+     */
+    public String saveNetPointFromVom(String content){
+        //数据不再保存apilogs,因为从VOM推送过来的时候已经解析到vom_shipping_status表中
+        //apilogid改为保存vom_shipping_status的id
+        //解析网点数据信息
+        AllotNetPoint netPoint = JSON.parseObject(content,AllotNetPoint.class);
+        //默认初始状态
+        netPoint.setStatus(AllotNetPoint.STATUS_INITIAL);
+        //缓存处理信息
+        StringBuffer response = new StringBuffer();
+        OrderProductsNew orderProducts = orderProductsNewService.getByCOrderSn(netPoint.getORDER_NO());
+        if (null == orderProducts||null == orderProducts.getId()){
+            response.append("查询网单不存在");
+            //失败状态
+            netPoint.setStatus(AllotNetPoint.STATUS_FAIL);
+        }
+
+        if (null != orderProducts.getStatus() &&
+            orderProducts.getStatus().intValue() == OrderProductsNew.STATUS_CANCEL_CLOSE.intValue()){
+            response.append("网单已关闭,无法分配网点");
+            netPoint.setStatus(AllotNetPoint.STATUS_FAIL);
+        }
+
+        //网点8码数据验证,查看网点8码是否存在
+        Set<String> netPointSet = new HashSet<String>();
+        List<Map<String, Object>> netPointList = allotNetPointService.getNetPoints();
+        for (Map<String, Object> map : netPointList) {
+            netPointSet.add(map.get("netPointN8").toString());
+        }
+        if (!netPointSet.contains(netPoint.getCUSTOMER_CODE())) {
+            response.append(netPoint.getCUSTOMER_CODE() + "网点在海尔商城不存在，请及时维护");
+            netPoint.setStatus(AllotNetPoint.STATUS_FAIL);
+            //记录订单操作日志
+            if (orderProducts != null) {
+                saveOrderProductLog(orderProducts, netPoint.getCUSTOMER_CODE() + "网点在海尔商城不存在，请及时维护",
+                    "HP改配网点", 0);
+            }
+        }
+
+        //记录处理结果
+        netPoint.setMessage(response.toString());
+        //保存网点数据
+        int num = allotNetPointService.insert(netPoint);
+        if (num == 1){
+            return "保存网点数据成功";
+        }
+        return response.toString();
+
+
+    }
     /**
      * 解析HP分配网点信息
      * @param requestXml
@@ -256,7 +320,7 @@ public class HpAllotNetPointModel {
         orderOperateLog.setOrderId(orderProducts.getOrderId());
         orderOperateLog.setOrderProductId(orderProducts.getId());
         orderOperateLog.setNetPointId(orderProducts.getNetPointId());
-        orderOperateLog.setOperator("CBS系统");
+        orderOperateLog.setOperator("系统");
         orderOperateLog.setChangeLog(changeLog);
         orderOperateLog.setRemark(remark);
         orderOperateLog.setStatus(orderProducts.getStatus());

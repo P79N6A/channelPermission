@@ -74,4 +74,17 @@ public interface MemberInvoicesReadDao {
      */
     int getElectricFlag(Integer orderId);
 
+    /**
+     * 获得条数
+     */
+    public int getCount();
+
+    /**
+     * 根据订单ID获得memberId
+     * @param orderId
+     * @return
+     */
+    int getIdByOrderId(Integer orderId);
+
+    MemberInvoices getMemberInvoiceByInvoiceTitleForYoupin(@Param("invoiceTitle")String invoiceTitle);
 }

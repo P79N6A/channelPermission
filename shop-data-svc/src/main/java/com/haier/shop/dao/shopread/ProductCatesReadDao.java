@@ -11,6 +11,8 @@ import com.haier.shop.model.ProductCates;
 @Mapper
 public interface ProductCatesReadDao extends BaseReadDao<ProductCates> {
 	 List<ProductCates> selectByProducttypesId();
+	List<ProductCates> selectCateName();
+
 	    List<ProductCates> selectByProducttypesSku(int id);
 
 	    ProductCates get(Integer id);
@@ -30,5 +32,4 @@ public interface ProductCatesReadDao extends BaseReadDao<ProductCates> {
 	    List<ProductCates> findIndustry(String typeName);
 	    List<ProductCates> findindustry();
 		List<ProductCates> findSortCount();
-
 }

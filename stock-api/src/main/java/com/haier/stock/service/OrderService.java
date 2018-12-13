@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.haier.common.ServiceResult;
 import com.haier.shop.model.HpSignTimeInterface;
+import com.haier.shop.model.OrderProducts;
 import com.haier.shop.model.OrderProductsAttributes;
 import com.haier.shop.model.OrderProductsNew;
 import com.haier.shop.model.OrderRepairsNew;
@@ -137,4 +138,33 @@ public interface OrderService {
      * @return 影响行数
      */
     ServiceResult<Integer> deleteOrderShippedQueue(Integer id);
+    
+    /**
+     * 根据网单编号，获取网单信息
+     * @param cOrderSn 网单编号
+     * @return
+     */
+//    ServiceResult<OrderProducts> getOrderProductByCOrderSn(String cOrderSn);
+
+    /**
+     * 根据日日单状态获取网单列表
+     * @param pdOrderStatus 日日单状态
+     * @return
+     */
+    ServiceResult<List<OrderProductsNew>> getByPdOrderStatusPaging(Integer pdOrderStatus,
+        Integer minId, Integer size);
+
+    /**
+     * 根据主键，获取订单对象
+     * @param orderId 订单id
+     * @return
+     */
+    ServiceResult<OrdersNew> getOrder(Integer orderId);
+
+    /**
+     * 根据网单id更新日日单信息
+     * @param orderProducts
+     * @return
+     */
+    ServiceResult<Boolean> updateRRSById(OrderProductsNew orderProducts);
 }

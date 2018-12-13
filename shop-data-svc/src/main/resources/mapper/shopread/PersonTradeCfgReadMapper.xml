@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.PersonTradeCfgReadDao">
+	<resultMap id="personTradeCfgResult" type="com.haier.shop.model.PersonTradeCfg">
+		<result property="id" column="id" />
+		<result property="area" column="area" />
+		<result property="trade" column="trade" />
+		<result property="commissioner" column="commissioner" />
+		<result property="smallChannelPeople" column="small_channel_people" />
+		<result property="manager" column="manager" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="modifyUser" column="modify_user" />
+	</resultMap>
+	<select id="getCommissionerByArea" parameterType="String" resultType="java.util.Map">
+		select distinct `commissioner` as value
+		from `person_trade_cfg`
+		where `area` = #{area}
+	</select>
+	<select id="getTradeBycommissioner" parameterType="String" resultType="java.util.Map">
+		select distinct `trade` as value
+		from `person_trade_cfg`
+		where `commissioner` = #{commissioner}
+	</select>
+	<select id="getAll" resultMap="personTradeCfgResult">
+		select * from `person_trade_cfg`
+	</select>
+	<select id="get" parameterType="Integer" resultMap="personTradeCfgResult">
+		select `id`,`area`,`trade`,`commissioner`,`small_channel_people`,`manager`,`modify_time`,`modify_user`
+		from `person_trade_cfg`
+		where `id` = #{id}
+	</select>
+
+	<select id="getLoginPersonInfo" parameterType="String" resultType="java.util.Map">
+		select commissioner,trade,'0' as type
+		from person_trade_cfg
+		where commissioner=#{commissioner}
+		union
+		select trade_commissioner as commissioner,trade,'1' as type
+		from person_trade_cfg
+		where trade_commissioner like CONCAT(CONCAT('%', #{commissioner}),'%')
+		union
+		select small_channel_people as commissioner,trade,'0' as type
+		from person_trade_cfg
+		where small_channel_people=#{commissioner}
+	</select>
+
+	<select id="getTradeAllSmallChannelPeople" resultType="java.util.Map">
+		select distinct small_channel_people as value
+		from person_trade_cfg
+	</select>
+
+	<select id="getTradeAllCommissioner" resultType="java.util.Map">
+		select distinct commissioner as value
+		from person_trade_cfg
+	</select>
+
+
+</mapper>

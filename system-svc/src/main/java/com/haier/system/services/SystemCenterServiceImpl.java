@@ -96,11 +96,11 @@ public class SystemCenterServiceImpl implements SystemCenterService {
 	}
 
 	@Override
-	public ServiceResult<Boolean> updateUser(SysUser user, int optUserId) {
+	public ServiceResult<Boolean> updateUser(SysUser user) {
 		ServiceResult<Boolean> result = new ServiceResult<Boolean>();
 		try {
 			Assert.notNull(systemModel, "Property 'systemModel' is required.");
-			result.setResult(systemModel.updateUser(user, optUserId));
+			result.setResult(systemModel.updateUser(user));
 		} catch (BusinessException be) {
 			result.setSuccess(false);
 			result.setMessage(be.getMessage());

@@ -3,18 +3,18 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.HPQueuesWriteDao">
 
 	<insert id="insert" parameterType="com.haier.shop.model.HPQueues">
-		insert into `HPQueues`(`orderProductId`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`successTime`,`vomLastMessage`,`vomReturnData`) values
+		insert into `hpqueues`(`orderProductId`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`successTime`,`vomLastMessage`,`vomReturnData`) values
 		<foreach collection="list" item="item" index="index"  separator=",">
 		(#{item.orderProductId},#{item.pushData},#{item.success},#{item.count},#{item.addTime},#{item.lastMessage},#{item.successTime},'','')
 		</foreach>
 	</insert>
 	<update id="update" parameterType="com.haier.shop.model.HPQueues">
-		update `HPQueues` set `success`=#{success},`count`=#{count},`addTime`=#{addTime},`lastMessage`=#{lastMessage},`successTime`=#{successTime}
+		update `hpqueues` set `success`=#{success},`count`=#{count},`addTime`=#{addTime},`lastMessage`=#{lastMessage},`successTime`=#{successTime}
 		where `id` = #{id}
 	</update>
 
 	<update id="updateHPAllotNetPoint" parameterType="com.haier.shop.model.HPQueues">
-        update `HPQueues` 
+        update `hpqueues`
         <set>
 	    	<if test="lastMessage != null and lastMessage != ''">
 				`lastMessage`=#{lastMessage},

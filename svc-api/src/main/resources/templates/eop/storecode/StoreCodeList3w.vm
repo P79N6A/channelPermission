@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-cmn-Hans" xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>仓库编码对照信息列表</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+        collapsible:false">
+    <table id="datagrid">
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  仓库名称
+			</span>
+                <input class="easyui-textbox" id="storeName" name="storeName"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  海尔仓库编码
+			</span>
+                <input class="easyui-textbox" id="haierStoreCode" name="haierStoreCode"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              菜鸟仓库编码
+            </span>
+                 <input class="easyui-textbox" id="cainiaoStoreCode" name="cainiaoStoreCode"/>
+            </div>
+
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+            data-options="iconCls:'icon-search',plain:true"> 查询 </a>
+        <a href="#" class="easyui-linkbutton" id="add"
+            data-options="iconCls:'icon-add',plain:true"> 增加 </a>
+        <a href="#" class="easyui-linkbutton" id="update"
+            data-options="iconCls:'icon-edit',plain:true"> 修改 </a>
+        <a href="#" class="easyui-linkbutton" id="delete"
+            data-options="iconCls:'icon-remove',plain:true"> 删除 </a>
+        <!--<a href="#" class="easyui-linkbutton" id="export"-->
+        <!--data-options="iconCls:'icon-save',plain:true">导出</a>-->
+        <!--<input id="exportData" name="exportData" type="hidden"/>-->
+        <!--<input id="ids" name="ids" type="hidden"/>-->
+    </form>
+</div>
+
+<div id="add_Store" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:400px;height:250px;"
+     closed="true" buttons="#dlg-buttons_orderForecastGoal">
+    <form id="addForm_warehouse" method="post">
+        <input __actType type="hidden"/>
+        <div class="fitem">
+            <label>仓库名称<span style="color: red;">*</span></label>
+            <input id="store_Name" class="easyui-textbox" name="store_Name" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>海尔仓库编码<span style="color: red;">*</span></label>
+            <input id="haier_Store_Code" class="easyui-textbox" name="haier_Store_Code" required="true"/>
+        </div>
+        <div class="fitem">
+            <label>菜鸟仓库编码<span style="color: red;">*</span></label>
+            <input id="cainiao_Store_Code" class="easyui-textbox" name="cainiao_Store_Code" required="true"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_orderForecastGoal">
+        <a href="#" class="easyui-linkbutton" id="store_Pre" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#add_Store').dialog('close')">取消</a>
+    </div>
+</div>
+
+
+<script src="../static/js/eop/StoreCodeList3w.js"></script>
+</body>
+</html>

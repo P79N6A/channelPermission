@@ -21,4 +21,5 @@ public interface StocksyncproductsDao {
     List<Stocksyncproducts> Listf(@Param("entity")Stocksyncproducts entity,@Param("start") int start, @Param("rows") int rows);
     int getPagerCountS(@Param("entity")Stocksyncproducts entity);
     Stocksyncproducts getId(@Param("sku")String sku,@Param("source")String source);
+    Stocksyncproducts getBySourceAndSku(@Param("source") String source,@Param("sku") String sku);
 }

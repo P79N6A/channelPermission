@@ -1,5 +1,6 @@
 package com.haier.svc.model;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DateFormat;
@@ -22,9 +23,10 @@ import com.haier.purchase.data.model.*;
 import com.haier.purchase.data.service.PurchaseLesRRSOutService;
 import com.haier.purchase.data.service.PurchaseLesStockInfoService;
 import com.haier.purchase.data.model.SIOUInfoItem;
+import com.haier.shop.model.LesFiveYardInfo;
 import com.haier.svc.bean.gettidanzwdfromlestoehaier.ZWDTABLE2;
-
 import com.haier.svc.purchase.createscordertoles.CreateSCOrderToLESResponse;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -47,7 +49,8 @@ import com.haier.svc.bean.ZBSTKD;
 import com.haier.svc.bean.gettidanzwdfromlestoehaier.GetTidanZWDFromLESToEHAIER;
 import com.haier.svc.bean.gettidanzwdfromlestoehaier.GetTidanZWDFromLESToEHAIER_Service;
 import com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIER;
-import com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponseStockQty;
+import com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT;
+import com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT1;
 import com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponseStockTrans;
 import com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIER_Service;
 import com.haier.svc.purchase.canceltidan.JdeAndLesLoseValidity;
@@ -61,13 +64,14 @@ import com.haier.svc.purchase.querydninfofromlestoehaier.QueryDNinfoFromLEStoEha
 import com.haier.svc.purchase.querydninfofromlestoehaier.ZBSTKDWD;
 import com.haier.svc.service.ItemService;
 import com.haier.svc.service.PurchaseBaseCommonService;
+
 import com.haier.svc.purchase.canceltidan.JdeAndLesLoseValidity_Type.In;
 import com.haier.svc.purchase.canceltidan.JdeAndLesLoseValidityResponse.Out;
 
 @Service("lesTransferOrderModel")
 public class LESTransferOrderModel {
 	private static org.apache.log4j.Logger log				   = org.apache.log4j.LogManager
-		.getLogger(LESTransferOrderModel.class);
+			.getLogger(LESTransferOrderModel.class);
 	// TODO 待修改
 	protected static final String		   TRANSFER_TO_LES_URL = "/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=CRM_INT_OMS_4";
 
@@ -93,29 +97,29 @@ public class LESTransferOrderModel {
 		// String resultMsg = WebCommonUtil.PostMessage(url,
 		// order.toXMLMessage());
 		String resultMsg = "" + "<PARAMETER>" + "<DETAIL>" + "<FLAG>S</FLAG>"
-						   + "<MESSAGE>test</MESSAGE>" + "<ZFLAG1>1</ZFLAG1>" + "<SubRecords>"
-						   + "<LESTransferOutInPutOrderSubResponse>" + "<BSTKD>OderNum1</BSTKD>"
-						   + "<FLAG_RK>C</FLAG_RK>" + "<ERDAT_RK>2014-07-11</ERDAT_RK>"
-						   + "<ERZET_RK>2014-07-11 12:31:34</ERZET_RK>" + "<FLAG_CK>C</FLAG_CK>"
-						   + "<ERDAT_CK>2014-07-12</ERDAT_CK>"
-						   + "<ERZET_CK>2014-07-12 22:32:22</ERZET_CK>" + "<ADD1>1</ADD1>"
-						   + "<ADD2>1</ADD2>" + "<ADD3>1</ADD3>" + "<ADD4>1</ADD4>"
-						   + "</LESTransferOutInPutOrderSubResponse>"
-						   + "<LESTransferOutInPutOrderSubResponse>" + "<BSTKD>OderNum2</BSTKD>"
-						   + "<FLAG_RK>C</FLAG_RK>" + "<ERDAT_RK>2014-07-12</ERDAT_RK>"
-						   + "<ERZET_RK>2014-07-12 12:31:34</ERZET_RK>" + "<FLAG_CK>C</FLAG_CK>"
-						   + "<ERDAT_CK>2014-07-22</ERDAT_CK>"
-						   + "<ERZET_CK>2014-07-22 22:32:22</ERZET_CK>" + "<ADD1>2</ADD1>"
-						   + "<ADD2>2</ADD2>" + "<ADD3>2</ADD3>" + "<ADD4>2</ADD4>"
-						   + "</LESTransferOutInPutOrderSubResponse>"
-						   + "<LESTransferOutInPutOrderSubResponse>" + "<BSTKD>OderNum3</BSTKD>"
-						   + "<FLAG_RK>C</FLAG_RK>" + "<ERDAT_RK>2014-07-13</ERDAT_RK>"
-						   + "<ERZET_RK>2014-07-13 12:31:34</ERZET_RK>" + "<FLAG_CK>C</FLAG_CK>"
-						   + "<ERDAT_CK>2014-07-23</ERDAT_CK>"
-						   + "<ERZET_CK>2014-07-23 22:32:22</ERZET_CK>" + "<ADD1>3</ADD1>"
-						   + "<ADD2>3</ADD2>" + "<ADD3>3</ADD3>" + "<ADD4>3</ADD4>"
-						   + "</LESTransferOutInPutOrderSubResponse>" + "</SubRecords>"
-						   + "</DETAIL>" + "</PARAMETER>";
+				+ "<MESSAGE>test</MESSAGE>" + "<ZFLAG1>1</ZFLAG1>" + "<SubRecords>"
+				+ "<LESTransferOutInPutOrderSubResponse>" + "<BSTKD>OderNum1</BSTKD>"
+				+ "<FLAG_RK>C</FLAG_RK>" + "<ERDAT_RK>2014-07-11</ERDAT_RK>"
+				+ "<ERZET_RK>2014-07-11 12:31:34</ERZET_RK>" + "<FLAG_CK>C</FLAG_CK>"
+				+ "<ERDAT_CK>2014-07-12</ERDAT_CK>"
+				+ "<ERZET_CK>2014-07-12 22:32:22</ERZET_CK>" + "<ADD1>1</ADD1>"
+				+ "<ADD2>1</ADD2>" + "<ADD3>1</ADD3>" + "<ADD4>1</ADD4>"
+				+ "</LESTransferOutInPutOrderSubResponse>"
+				+ "<LESTransferOutInPutOrderSubResponse>" + "<BSTKD>OderNum2</BSTKD>"
+				+ "<FLAG_RK>C</FLAG_RK>" + "<ERDAT_RK>2014-07-12</ERDAT_RK>"
+				+ "<ERZET_RK>2014-07-12 12:31:34</ERZET_RK>" + "<FLAG_CK>C</FLAG_CK>"
+				+ "<ERDAT_CK>2014-07-22</ERDAT_CK>"
+				+ "<ERZET_CK>2014-07-22 22:32:22</ERZET_CK>" + "<ADD1>2</ADD1>"
+				+ "<ADD2>2</ADD2>" + "<ADD3>2</ADD3>" + "<ADD4>2</ADD4>"
+				+ "</LESTransferOutInPutOrderSubResponse>"
+				+ "<LESTransferOutInPutOrderSubResponse>" + "<BSTKD>OderNum3</BSTKD>"
+				+ "<FLAG_RK>C</FLAG_RK>" + "<ERDAT_RK>2014-07-13</ERDAT_RK>"
+				+ "<ERZET_RK>2014-07-13 12:31:34</ERZET_RK>" + "<FLAG_CK>C</FLAG_CK>"
+				+ "<ERDAT_CK>2014-07-23</ERDAT_CK>"
+				+ "<ERZET_CK>2014-07-23 22:32:22</ERZET_CK>" + "<ADD1>3</ADD1>"
+				+ "<ADD2>3</ADD2>" + "<ADD3>3</ADD3>" + "<ADD4>3</ADD4>"
+				+ "</LESTransferOutInPutOrderSubResponse>" + "</SubRecords>"
+				+ "</DETAIL>" + "</PARAMETER>";
 		LESTransferOutInPutOrderResponse result = new LESTransferOutInPutOrderResponse();
 		Document doc = DocumentHelper.parseText(resultMsg);
 		Element element = (Element) doc.getRootElement().elements().get(0);
@@ -183,7 +187,7 @@ public class LESTransferOrderModel {
 
 	/**
 	 * 从LES获取交易数据和库存数据
-	 * 
+	 *
 	 * @param dateBegin
 	 * @param dateEnd
 	 * @param timeBegin
@@ -191,13 +195,16 @@ public class LESTransferOrderModel {
 	 * @param secType
 	 */
 	public ServiceResult<Calendar> getInventoryTranFromLes(String dateBegin, String dateEnd,
-														  String timeBegin, String timeEnd,
-														  String secType) {
+														   String timeBegin, String timeEnd,
+														   String secType) {
 		ServiceResult<Calendar> result = new ServiceResult<Calendar>();
 		Holder<String> flag = new Holder<String>();
 		Holder<String> message = new Holder<String>();
-		Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockTrans>> responseStockTrans = new Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockTrans>>();
-		Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockQty>> responseStockQtys = new Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockQty>>();
+//		Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockTrans>> responseStockTrans = new Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockTrans>>();
+//		Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockQty>> responseStockQtys = new Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockQty>>();
+		Holder<java.util.List<com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT>> output = new Holder<java.util.List<com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT>>();
+		Holder<java.util.List<com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT1>> output1 = new Holder<java.util.List<com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT1>>();
+
 		// 调用接口
 //		String path = "file:" + this.getClass()
 //			.getResource(wsdlLocation + "/GetKUCUNInfoFromLESToEHAIER.wsdl").getPath();
@@ -205,15 +212,16 @@ public class LESTransferOrderModel {
 		boolean success = false;
 		try {
 //			url = new URL(path);
+//			wsdlLocation = "/wsdl";
 			URL url = this.getClass().getResource(
 					wsdlLocation + "/GetKUCUNInfoFromLESToEHAIER.wsdl");
 			GetKUCUNInfoFromLESToEHAIER_Service service = new GetKUCUNInfoFromLESToEHAIER_Service(
-				url);
+					url);
 			GetKUCUNInfoFromLESToEHAIER soap = service.getGetKUCUNInfoFromLESToEHAIERSOAP();
 			String crk = "";
-
-			soap.getKUCUNInfoFromLESToEHAIER(crk, dateBegin, dateEnd, secType, timeBegin, timeEnd,
-				flag, message, responseStockTrans, responseStockQtys);
+			soap.getKUCUNInfoFromLESToEHAIER(crk, dateBegin, dateEnd, secType, timeBegin, timeEnd, flag, message, output, output1);
+//			.getKUCUNInfoFromLESToEHAIER(crk, dateBegin, dateEnd, secType, timeBegin, timeEnd,
+//				flag, message, responseStockTrans, responseStockQtys);
 			success = true;
 			Calendar response_cal = Calendar.getInstance();
 			Calendar now = Calendar.getInstance();
@@ -233,40 +241,23 @@ public class LESTransferOrderModel {
 		if (flag.value.equalsIgnoreCase("0") && success) {
 			success = true;
 			// 数据库操作
-			for (GetKUCUNInfoFromLESToEHAIERResponseStockTrans info : responseStockTrans.value) {
+			List<GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity> datas = new ArrayList<>();
+			List<GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity> datas2 = new ArrayList<>();
+			for (OUTPUT info : output.value) {
+				GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity entity = new GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity();
 				try {
-					GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity entity = new GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity();
-					BeanUtils.copyProperties(info,entity);
-					if (purchaseLesStockInfoService.selectInOutInfo(entity) > 0)
-						purchaseLesStockInfoService.updateInOutInfo(entity);
-					else
-						purchaseLesStockInfoService.insertInOutInfo(entity);
-					if(info.getLGORT()!=null){
-					   if (info.getLGORT().indexOf("WA")>=0){
-					       log.info("插入(更新)les成功："+info);
-					   }
-					}
-				} catch (Exception ex) {
-					success = false;
-					log.error("插入(更新)les失败"+info, ex);
-					result.setSuccess(false);
-					result.setMessage("插入(更新)les失败"+ex.getMessage());
+					BeanUtils.copyProperties(entity, info);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					e.printStackTrace();
 				}
+				datas.add(entity);
 			}
 
-			for (GetKUCUNInfoFromLESToEHAIERResponseStockQty info : responseStockQtys.value) {
+			for (OUTPUT1 info : output1.value) {
 				try {
 					GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity entity = new GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity();
-					BeanUtils.copyProperties(info,entity);
-					if (purchaseLesStockInfoService.selectStockInfo(entity) > 0)
-						purchaseLesStockInfoService.updateStockInfo(entity);
-					else
-						purchaseLesStockInfoService.insertStockInfo(entity);
-					    if(info.getLGORT()!=null){
-	                       if (info.getLGORT().indexOf("WA")>=0){
-	                           log.info("插入(更新)les成功："+info);
-	                       }
-	                    }
+					BeanUtils.copyProperties(entity, info);
+					datas2.add(entity);
 				} catch (Exception ex) {
 					//success = false;
 					log.error("插入(更新)les失败"+info, ex);
@@ -274,12 +265,16 @@ public class LESTransferOrderModel {
 					result.setMessage("插入(更新)les失败"+ex.getMessage());
 				}
 			}
+			
+			log.info("开始保存库存数据");
+			purchaseLesStockInfoService.saveOrUpdateInfo(datas, datas2);
+			log.info("保存库存数据成功");
 			//result.setResult(success);
 
 			// TODO 此处需要添加LES最后同步时间
 		} else {
 			log.warn("从LES同步出入WA库数据失败:" + message.value);
-		//	result.setResult(false);
+			//	result.setResult(false);
 			result.setSuccess(false);
 			result.setMessage("接口读取数据失败");
 		}
@@ -299,13 +294,16 @@ public class LESTransferOrderModel {
 	 * @param secType
 	 */
 	public ServiceResult<Calendar> getInventoryTranFromLesTemp(String dateBegin, String dateEnd,
-														   String timeBegin, String timeEnd,
-														   String secType) {
+															   String timeBegin, String timeEnd,
+															   String secType) {
 		ServiceResult<Calendar> result = new ServiceResult<Calendar>();
 		Holder<String> flag = new Holder<String>();
 		Holder<String> message = new Holder<String>();
-		Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockTrans>> responseStockTrans = new Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockTrans>>();
-		Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockQty>> responseStockQtys = new Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockQty>>();
+//		Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockTrans>> responseStockTrans = new Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockTrans>>();
+//		Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockQty>> responseStockQtys = new Holder<List<GetKUCUNInfoFromLESToEHAIERResponseStockQty>>();
+		Holder<java.util.List<com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT>> output = new Holder<java.util.List<com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT>>();
+		Holder<java.util.List<com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT1>> output1 = new Holder<java.util.List<com.haier.svc.bean.getucunioninfofromles.GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT1>>();
+
 		// 调用接口
 //		String path = "file:" + this.getClass()
 //				.getResource(wsdlLocation + "/GetKUCUNInfoFromLESToEHAIER.wsdl").getPath();
@@ -319,8 +317,9 @@ public class LESTransferOrderModel {
 					url);
 			GetKUCUNInfoFromLESToEHAIER soap = service.getGetKUCUNInfoFromLESToEHAIERSOAP();
 			String crk = "";
-			soap.getKUCUNInfoFromLESToEHAIER(crk, dateBegin, dateEnd, secType, timeBegin, timeEnd,
-					flag, message, responseStockTrans, responseStockQtys);
+//			soap.getKUCUNInfoFromLESToEHAIER(crk, dateBegin, dateEnd, secType, timeBegin, timeEnd,
+//					flag, message, responseStockTrans, responseStockQtys);
+			soap.getKUCUNInfoFromLESToEHAIER(crk, dateBegin, dateEnd, secType, timeBegin, timeEnd, flag, message, output, output1);
 			success = true;
 			Calendar response_cal = Calendar.getInstance();
 			Calendar now = Calendar.getInstance();
@@ -340,7 +339,7 @@ public class LESTransferOrderModel {
 		if (flag.value.equalsIgnoreCase("0") && success) {
 			success = true;
 			// 数据库操作
-			for (GetKUCUNInfoFromLESToEHAIERResponseStockTrans info : responseStockTrans.value) {
+			for (OUTPUT info : output.value) {
 				try {
 					GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity entity = new GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity();
 					BeanUtils.copyProperties(info,entity);
@@ -361,7 +360,7 @@ public class LESTransferOrderModel {
 				}
 			}
 
-			for (GetKUCUNInfoFromLESToEHAIERResponseStockQty info : responseStockQtys.value) {
+			for (OUTPUT1 info : output1.value) {
 				try {
 					GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity entiry = new GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity();
 					if (purchaseLesStockInfoService.selectStockInfo(entiry) == 0) {
@@ -402,7 +401,7 @@ public class LESTransferOrderModel {
 			URL url = this.getClass().getResource(
 					wsdlLocation + "/GetTidanZWDFromLESToEHAIER.wsdl");
 			GetTidanZWDFromLESToEHAIER_Service service = new GetTidanZWDFromLESToEHAIER_Service(
-				url);
+					url);
 			GetTidanZWDFromLESToEHAIER soap = service.getGetTidanZWDFromLESToEHAIERSOAP();
 			Holder<String> flag = new Holder<String>();
 			Holder<String> faultDetail = new Holder<String>();
@@ -415,11 +414,12 @@ public class LESTransferOrderModel {
 			result.setMESSAGE(message.value);
 			List<LESOutRRSLedingBillTimeSubResponse> listRr = new ArrayList<LESOutRRSLedingBillTimeSubResponse>();
 			List<ZWDTABLE2> listR = tempoutput.value;
-			List<ZWDTABLEEntity> entityList = new ArrayList<ZWDTABLEEntity>();
-			BeanUtils.copyProperties(listR,entityList);
+//			BeanUtils.copyProperties(entityList, listR);
 			// System.out.println(JsonUtil.toJson(listR));
 			if (listR != null && listR.size() > 0) {
 				for (int i = 0; i < listR.size(); i++) {
+					ZWDTABLEEntity ze = new ZWDTABLEEntity();
+					BeanUtils.copyProperties(ze, listR.get(i));
 					LESOutRRSLedingBillTimeSubResponse re = new LESOutRRSLedingBillTimeSubResponse();
 					re.setBSTKD(listR.get(i).getBSTKD());
 					re.setGVS_SO(listR.get(i).getGVSSO());
@@ -432,8 +432,8 @@ public class LESTransferOrderModel {
 					re.setAD2(listR.get(i).getAD2());
 					re.setAD3(listR.get(i).getAD3());
 					listRr.add(re);
-					if (purchaseLesRRSOutService.isExist(entityList.get(i)) == 0) {
-						purchaseLesRRSOutService.insertOutInfo(entityList.get(i));
+					if (purchaseLesRRSOutService.isExist(ze) == 0) {
+						purchaseLesRRSOutService.insertOutInfo(ze);
 					}
 				}
 			}
@@ -457,7 +457,7 @@ public class LESTransferOrderModel {
 			URL url = this.getClass().getResource(
 					wsdlLocation + "/QueryDNinfoFromLEStoEhaier.wsdl");
 			QueryDNinfoFromLEStoEhaier_Service service = new QueryDNinfoFromLEStoEhaier_Service(
-				url);
+					url);
 			QueryDNinfoFromLEStoEhaier soap = service.getQueryDNinfoFromLEStoEhaierSOAP();
 			String sysName = "EHAIER";
 			List<com.haier.svc.purchase.querydninfofromlestoehaier.ZBSTKD> input = new ArrayList<com.haier.svc.purchase.querydninfofromlestoehaier.ZBSTKD>();
@@ -475,7 +475,7 @@ public class LESTransferOrderModel {
 			Holder<String> zflag1 = new Holder<String>();
 			Holder<List<ZBSTKDWD>> output = new Holder<List<ZBSTKDWD>>();
 			soap.queryDNinfoFromLEStoEhaier(sysName, zflag, input, flag, message, faultDETAIL,
-				zflag1, output);
+					zflag1, output);
 			result.setFLAG(flag.value);
 			result.setMESSAGE(message.value);
 			result.setFaultDETAIL(faultDETAIL.value);
@@ -544,7 +544,7 @@ public class LESTransferOrderModel {
 					Map<String, Object> params = new HashMap<String, Object>();
 					params.put("sCode", message.get(i).getStorage_id());
 					ServiceResult<List<LesFiveYardInfo>> yards = itemService
-						.selectLesFiveYards(params);
+							.selectLesFiveYards(params);
 
 					if (yards.getSuccess() && yards.getResult().size() > 0) {
 						LesFiveYardInfo info = yards.getResult().get(0);
@@ -552,7 +552,7 @@ public class LESTransferOrderModel {
 						tempIn.setKUNWE(info.getFiveYard());
 					} else {
 						log.error("can not find fiveyardinfo from table LesFiveYards using sCode:"
-								  + message.get(i).getStorage_id());
+								+ message.get(i).getStorage_id());
 					}
 
 					tempIn.setMATNR(message.get(i).getMaterials_id());
@@ -567,7 +567,7 @@ public class LESTransferOrderModel {
 					tempIn.setPOSNRE("");
 					float taxInPrice = message.get(i).getTax_in_price();
 					tempIn
-						.setKBETR(new BigDecimal(taxInPrice).setScale(2, BigDecimal.ROUND_HALF_UP));
+							.setKBETR(new BigDecimal(taxInPrice).setScale(2, BigDecimal.ROUND_HALF_UP));
 					float price = taxInPrice * message.get(i).getQuantity();
 					tempIn.setKWERT(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
 					tempIn.setSHIPCO(new BigDecimal(0));
@@ -575,7 +575,7 @@ public class LESTransferOrderModel {
 					tempIn.setDHRXM(message.get(i).getConcat_person());
 					tempIn.setDHRPH(message.get(i).getConcat_phone());
 					ServiceResult<List<WAAddress>> waInfos = purchaseBaseCommonService
-						.getAllWAAddressInfo(message.get(i).getStorage_id());
+							.getAllWAAddressInfo(message.get(i).getStorage_id());
 					if (waInfos.getResult().size() > 0) {
 						WAAddress waInfo = waInfos.getResult().get(0);
 						tempIn.setSHRMOB(waInfo.getMobilePhone());
@@ -673,7 +673,7 @@ public class LESTransferOrderModel {
 					Map<String, Object> params = new HashMap<String, Object>();
 					params.put("sCode", wdInfo.getStorage_id());
 					ServiceResult<List<LesFiveYardInfo>> yards = itemService
-						.selectLesFiveYards(params);
+							.selectLesFiveYards(params);
 
 					if (yards.getSuccess() && yards.getResult().size() > 0) {
 						LesFiveYardInfo info = yards.getResult().get(0);
@@ -681,7 +681,7 @@ public class LESTransferOrderModel {
 						tempIn.setKUNWE(info.getFiveYard());
 					} else {
 						log.error("can not find fiveyardinfo from table LesFiveYards using sCode:"
-								  + wdInfo.getStorage_id());
+								+ wdInfo.getStorage_id());
 					}
 
 					tempIn.setMATNR(message.get(i).getMaterials_id());
@@ -701,9 +701,9 @@ public class LESTransferOrderModel {
 					if (wdInfo.getTax_in_price() != null) {
 						float price = wdInfo.getTax_in_price();
 						tempIn
-							.setKWERT(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
+								.setKWERT(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
 						tempIn
-							.setKWERZ(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
+								.setKWERZ(new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP));
 					} else {
 						tempIn.setKWERT(new BigDecimal(0));
 						tempIn.setKWERZ(new BigDecimal(0));
@@ -712,7 +712,7 @@ public class LESTransferOrderModel {
 					tempIn.setDHRXM(wdInfo.getConcat_person());
 					tempIn.setDHRPH(wdInfo.getConcat_phone());
 					ServiceResult<List<WAAddress>> waInfos = purchaseBaseCommonService
-						.getAllWAAddressInfo(wdInfo.getStorage_id());
+							.getAllWAAddressInfo(wdInfo.getStorage_id());
 					if (waInfos.getResult().size() > 0) {
 						WAAddress waInfo = waInfos.getResult().get(0);
 						tempIn.setSHRMOB(waInfo.getMobilePhone());
@@ -810,7 +810,7 @@ public class LESTransferOrderModel {
 					Map<String, Object> params = new HashMap<String, Object>();
 					params.put("sCode", wdInfo.getStorage_id());
 					ServiceResult<List<LesFiveYardInfo>> yards = itemService
-						.selectLesFiveYards(params);
+							.selectLesFiveYards(params);
 
 					if (yards.getSuccess() && yards.getResult().size() > 0) {
 						LesFiveYardInfo info = yards.getResult().get(0);
@@ -818,7 +818,7 @@ public class LESTransferOrderModel {
 						tempIn.setKUNWE(info.getFiveYard());
 					} else {
 						log.error("can not find fiveyardinfo from table LesFiveYards using sCode:"
-								  + wdInfo.getStorage_id());
+								+ wdInfo.getStorage_id());
 					}
 
 					tempIn.setMATNR(message.get(i).getMaterials_id());
@@ -842,7 +842,7 @@ public class LESTransferOrderModel {
 					tempIn.setDHRXM(wdInfo.getConcat_person());
 					tempIn.setDHRPH(wdInfo.getConcat_phone());
 					ServiceResult<List<WAAddress>> waInfos = purchaseBaseCommonService
-						.getAllWAAddressInfo(wdInfo.getStorage_id());
+							.getAllWAAddressInfo(wdInfo.getStorage_id());
 					if (waInfos.getResult().size() > 0) {
 						WAAddress waInfo = waInfos.getResult().get(0);
 						tempIn.setSHRMOB(waInfo.getMobilePhone());
@@ -938,7 +938,7 @@ public class LESTransferOrderModel {
 
 	/**
 	 * 时间转换成XMLGregorianCalendar
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 * @throws ParseException
@@ -1009,11 +1009,11 @@ public class LESTransferOrderModel {
 			List<ZWDTABLEEntity> entityList = purchaseLesRRSOutService.findOutInfoBySO(so);
 			for (ZWDTABLEEntity zwdtableEntity : entityList){
 				ZWDTABLE2 zwdtable2 = new ZWDTABLE2();
-				BeanUtils.copyProperties(zwdtableEntity,zwdtable2);
+				BeanUtils.copyProperties(zwdtable2,zwdtableEntity);
 				list.add(zwdtable2);
 			}
 		}catch (Exception e){
-
+			e.printStackTrace();
 		}
 		//return purchaseLesRRSOutService.findOutInfoBySO(so);
 		return list;
@@ -1044,11 +1044,11 @@ public class LESTransferOrderModel {
 			List<GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity> entityList = purchaseLesStockInfoService.selectInOutInfoByDn(dn);
 			for (GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity getKUCUNInfoFromLESToEHAIERResponseStockTransEntity : entityList){
 				GetKUCUNInfoFromLESToEHAIERResponseStockTrans getKUCUNInfoFromLESToEHAIERResponseStockTrans = new GetKUCUNInfoFromLESToEHAIERResponseStockTrans();
-				BeanUtils.copyProperties(getKUCUNInfoFromLESToEHAIERResponseStockTransEntity,getKUCUNInfoFromLESToEHAIERResponseStockTrans);
+				BeanUtils.copyProperties(getKUCUNInfoFromLESToEHAIERResponseStockTrans, getKUCUNInfoFromLESToEHAIERResponseStockTransEntity);
 				list.add(getKUCUNInfoFromLESToEHAIERResponseStockTrans);
 			}
 		}catch (Exception e){
-
+			e.printStackTrace();
 		}
 		return list;
 
@@ -1075,7 +1075,7 @@ public class LESTransferOrderModel {
 
 	/**
 	 * 查询最后一次更新LES时间
-	 * 
+	 *
 	 * @return
 	 */
 	public String selectLastSyncTime() {

@@ -39,7 +39,7 @@ import com.haier.shop.model.HpSignTimeInterface;
 * 2017/12/26
 */
 @Controller
-@RequestMapping("acceptTimeController")
+@RequestMapping("hp")
 public class AcceptTimeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AcceptTimeController.class);
     @Autowired

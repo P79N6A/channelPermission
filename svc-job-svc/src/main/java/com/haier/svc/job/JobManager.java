@@ -50,7 +50,6 @@ public class JobManager implements ApplicationContextAware, ApplicationListener<
 
     public void init() {
         Assert.notNull(this.repository, "Property 'repository' is required");
-
         try {
             this.scheduler = StdSchedulerFactory.getDefaultScheduler();
             this.scheduler.start();
@@ -60,7 +59,8 @@ public class JobManager implements ApplicationContextAware, ApplicationListener<
         }
 
         try {
-            this.scheduleJob(this.repository.findSysJobDao(null, SysJob.STATUS_ENABLED));
+        	List<SysJob> jobList = this.repository.findSysJobDao(null, SysJob.STATUS_ENABLED);
+            this.scheduleJob(jobList);
         } catch (Exception e) {
             log.error("Load job list error, no jobs scheduled!", e);
         }

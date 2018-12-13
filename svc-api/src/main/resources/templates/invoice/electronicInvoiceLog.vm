@@ -61,7 +61,7 @@
 			<span class="search-row-label">
 			  是否成功
 			</span>
-                <select class="easyui-combobox" id="success"  name="success" style="width: 174px;">
+                <select class="easyui-combobox" id="success"  name="success" style="width: 174px;" panelHeight="auto">
                     <option value="-1"  selected="true">全部</option>
                     <option value="1">成功</option>
                     <option value="0">失败</option>
@@ -71,7 +71,7 @@
 			<span class="search-row-label">
 			  操作类型
 			</span>
-                <select class="easyui-combobox" id="type"  name="type"  style="width: 174px;">
+                <select class="easyui-combobox" id="type"  name="type"  style="width: 174px;" panelHeight="auto">
                     <option value="-1"  selected="true">全部</option>
                     <option value="1">开票</option>
                     <option value="2">作废/冲红</option>
@@ -115,14 +115,14 @@ $(function () {
         singleSelect: true,
         pagination: true,
         columns: [[
-            // {title: "操作", field: "field0", sortable: true, formatter: go_detail},
+            // {title: "操作", field: "field0", sortable: false, formatter: go_detail},
             {title: "序号", field: "id", hidden: true},
-            {title: "网单编号", field: "cOrderSn", sortable: true},
-            {title: "操作类型", field: "type", sortable: true},
-            {title: "记录时间", field: "addTime", sortable: true},
-            {title: "是否成功", field: "success", sortable: true},
-            {title: "次数", field: "count", sortable: true},
-            {title: "提示信息", field: "lastMessage",sortable: true}
+            {title: "网单编号", field: "cOrderSn", sortable: false},
+            {title: "操作类型", field: "type", sortable: false},
+            {title: "记录时间", field: "addTime", sortable: false},
+            {title: "是否成功", field: "success", sortable: false},
+            {title: "次数", field: "count", sortable: false},
+            {title: "提示信息", field: "lastMessage",sortable: false}
         ]],
         pageSize: 50,
         pageList: [50,100,200],
@@ -256,13 +256,13 @@ $('#search').click(function () {
 	           		field: 'cOrderSn',
                     title: '网单编号',
                     width: 150,
-                    sortable:true,
+                    sortable: false,
                     align: 'center'
 	           	},
 	           	{
                     field: 'type',
                     title: '操作类型',
-                    sortable:true,
+                    sortable: false,
                     width: 100,
                     align: 'center',
                     formatter:function(value,rowData,rowIndex){
@@ -275,14 +275,14 @@ $('#search').click(function () {
                 {
                     field: 'addTime',
                     title: '记录时间',
-                    sortable:true,
+                    sortable: false,
                     width: 200,
                     align: 'center'
                 },
                 {
                     field: 'success',
                     title: '是否成功',
-                    sortable:true,
+                    sortable: false,
                     width: 100,
                     align: 'center',
                     formatter:function(value,rowData,rowIndex){
@@ -294,14 +294,14 @@ $('#search').click(function () {
                 {
                     field: 'count',
                     title: '次数',
-                    sortable:true,
+                    sortable: false,
                     width: 100,
                     align: 'center'
                 },
                 {
                     field: 'lastMessage',
                     title: '提示信息',
-                    sortable:true,
+                    sortable: false,
                     width: 500,
                     align: 'center'
                 }

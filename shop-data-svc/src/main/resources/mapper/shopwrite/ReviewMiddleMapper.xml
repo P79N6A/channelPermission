@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.workorder.ReviewMiddleDao">
+
+	<resultMap id="reviewMiddleResult" type="com.haier.shop.model.ReviewMiddle">
+		<result property="id" column="id" />
+		<result property="reviewid" column="reviewid" />
+		<result property="middleContext" column="middleContext" />
+		<result property="addtime" column="addtime" />
+		<result property="adduser" column="adduser" />
+		<result property="resultType" column="resultType" />
+	</resultMap>
+	<resultMap id="reviewFinalResult" type="com.haier.shop.model.ReviewFinalResult">
+		<result property="id" column="id" />
+		<result property="reviewid" column="reviewid" />
+		<result property="middleContext" column="middleContext" />
+		<result property="addtime" column="addtime" />
+		<result property="adduser" column="adduser" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+    	id, reviewid, middleContext, addtime, adduser,resultType
+  	</sql>
+	<sql id="Base_Final_List" >
+		id, reviewid, middleContext, addtime, adduser
+	</sql>
+	<select id="findReviewMiddleById" resultMap="reviewMiddleResult">
+		select
+		<include refid="Base_Column_List" />
+			from `wo_reviewmiddle`
+		  where 1 = 1
+		  and  (`resultType` ='0' or `resultType` ='')
+		  <if test="reviewMiddle.id!=null">
+				and `id` <![CDATA[=]]> #{reviewMiddle.id}
+		  </if>
+	</select>
+
+	<select id="getReviewMiddleByReviewId" resultMap="reviewMiddleResult">
+		select
+		<include refid="Base_Column_List" />
+			from `wo_reviewmiddle`
+		  where 1 = 1
+		  and  (`resultType` ='0' or `resultType` ='')
+		  <if test="reviewId!=null">
+				and `reviewid` <![CDATA[=]]> #{reviewId}
+		  </if>
+		  order by addtime desc
+	</select>
+
+
+	<select id="getReviewMiddleByReviewIds" resultMap="reviewMiddleResult">
+		select
+	    middleContext,addtime,adduser
+		from `wo_reviewmiddle`
+		where 1 = 1
+		and  (`resultType` ='0' or `resultType` ='')
+
+			and `reviewid` <![CDATA[=]]> #{reviewId}
+
+		order by addtime desc
+	</select>
+
+	<select id="getCountByReviewId" resultType="int">
+		select count(1)
+			from `wo_reviewmiddle`
+		  where 1 = 1
+		  and  (`resultType` ='0' or `resultType` ='')
+		  <if test="reviewId!=null">
+				and `reviewid` <![CDATA[=]]> #{reviewId}
+		  </if>
+	</select>
+
+	<select id="findFinalResult" resultMap="reviewFinalResult">
+		select
+		<include refid="Base_Final_List" />
+		from `wo_review_final_result`
+		where 1 = 1
+		and `reviewid` <![CDATA[=]]> #{reviewId}
+		order by addtime desc
+	</select>
+
+	<select id="getMinTimeByReviewId" resultType="string">
+		select min(addtime)
+			from `wo_reviewmiddle`
+		  where 1 = 1
+		  and  (`resultType` ='0' or `resultType` ='')
+		  <if test="reviewId!=null">
+				and `reviewid` <![CDATA[=]]> #{reviewId}
+		  </if>
+	</select>
+		<select id="getMaxTimeByReviewId" resultType="string">
+		select max(addtime)
+			from `wo_reviewmiddle`
+		  where 1 = 1
+			and  (`resultType` ='0' or `resultType` ='')
+		  <if test="reviewId!=null">
+				and `reviewid` <![CDATA[=]]> #{reviewId}
+		  </if>
+	</select>
+
+	<select id="findPageCount" resultType="int">
+		select count(1)
+			from `wo_reviewmiddle`
+		  where 1 = 1
+		  and  `resultType` ='0'
+		  <!-- <if test="startTime!=null">
+				and `insertTime` <![CDATA[>=]]> #{startTime}
+		  </if>
+		  <if test="endTime!=null">
+				and `insertTime` <![CDATA[<=]]> #{endTime}
+		  </if>
+		<include refid="search_where" /> -->
+	</select>
+
+	<sql id="pagination_Tail">
+	  <![CDATA[ limit #{pager.start},#{pager.pageSize}]]>
+	</sql>
+
+	<select id="findByreviewIdList" resultMap="reviewMiddleResult"
+		parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM `wo_reviewmiddle`
+		where
+		reviewid in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		and resultType='0'
+		order by addtime
+	</select>
+
+
+	<insert id="addReviewMiddle">
+		insert into
+		wo_reviewmiddle
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="reviewid != null">
+				reviewid,
+			</if>
+			<if test="middleContext != null">
+				middleContext,
+			</if>
+			<if test="addtime != null">
+				addtime,
+			</if>
+			<if test="adduser != null">
+				adduser,
+			</if>
+			<if test="resultType != null">
+				resultType,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="reviewid != null">
+				#{reviewid},
+			</if>
+			<if test="middleContext != null">
+				#{middleContext},
+			</if>
+			<if test="addtime != null">
+				#{addtime},
+			</if>
+			<if test="adduser != null">
+				#{adduser},
+			</if>
+			<if test="resultType != null">
+				#{resultType},
+			</if>
+		</trim>
+	</insert>
+
+	<!--添加最终结果信息-->
+	<insert id="addReviewFinalResult">
+		insert into
+		wo_review_final_result
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="reviewid != null">
+				reviewid,
+			</if>
+			<if test="middleContext != null">
+				middleContext,
+			</if>
+			<if test="addtime != null">
+				addtime,
+			</if>
+			<if test="adduser != null">
+				adduser,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="reviewid != null">
+				#{reviewid},
+			</if>
+			<if test="middleContext != null">
+				#{middleContext},
+			</if>
+			<if test="addtime != null">
+				#{addtime},
+			</if>
+			<if test="adduser != null">
+				#{adduser},
+			</if>
+		</trim>
+	</insert>
+</mapper>

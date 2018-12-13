@@ -1,5 +1,6 @@
 package com.haier.stock.services;
 
+import com.haier.stock.model.Stock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,7 +15,6 @@ import com.haier.shop.model.BasChangeStock;
 import com.haier.shop.model.BigStoragesRela;
 import com.haier.shop.model.ProductBase;
 import com.haier.shop.model.SgConstants;
-import com.haier.shop.model.Stock;
 import com.haier.shop.model.StorageCities;
 import com.haier.shop.model.StoragesRela;
 import com.haier.shop.service.BasChangeStockService;

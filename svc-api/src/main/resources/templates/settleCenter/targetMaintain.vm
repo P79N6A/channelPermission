@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>返利目标维护</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+  <script src="../static/js/easyui-extention_ws.js"></script>
+  <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+  <table id="dg">
+  </table>
+</div>
+
+<div id="datagridToolbar">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="paramForm" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          产业
+        </span>
+        <select id="industry" name="industry" class="easyui-combobox" style="width: 174px;">
+          <option value="">&nbsp;</option>
+          <option value="冰箱">冰箱</option>
+          <option value="彩电">彩电</option>
+          <option value="空调">空调</option>
+          <option value="冷柜">冷柜</option>
+          <option value="热水器">热水器</option>
+          <option value="水家电">水家电</option>
+          <option value="统帅">统帅</option>
+          <option value="洗衣机">洗衣机</option>
+          <option value="厨电">厨电</option>
+          <option value="洗碗机">洗碗机</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          年度
+        </span>
+        <select class="easyui-combobox" name="year" style="width: 174px;" panelHeight="auto">
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          期间
+        </span>
+        <select class="easyui-combobox" name="month" style="width: 174px;">
+            <option value="">&nbsp;</option>
+            <option value="01">1月</option>
+            <option value="02">2月</option>
+            <option value="03">3月</option>
+            <option value="04">4月</option>
+            <option value="05">5月</option>
+            <option value="06">6月</option>
+            <option value="07">7月</option>
+            <option value="08">8月</option>
+            <option value="09">9月</option>
+            <option value="10">10月</option>
+            <option value="11">11月</option>
+            <option value="12">12月</option>
+            <option value="Q1">Q1</option>
+            <option value="Q2">Q2</option>
+            <option value="Q3">Q3</option>
+            <option value="Q4">Q4</option>
+            <option value="N">N</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          生态店
+        </span>
+        <input class="easyui-textbox" name="ecologyShop"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          类型
+        </span>
+        <select name="type" class="easyui-combobox" panelHeight="auto" style="width: 174px;">
+          <option value="">请选择</option>
+          <option value="y">年度</option>
+          <option value="q">季度</option>
+          <option value="m">月度</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          是否删除
+        </span>
+        <select name="deleteTab" class="easyui-combobox" panelHeight="auto" style="width: 174px;">
+          <option value="">请选择</option>
+          <option value="Y">已删除</option>
+          <option value="N">未删除</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          审核状态
+        </span>
+        <select name="auditState" class="easyui-combobox" panelHeight="auto" style="width: 174px;">
+          <option value="">请选择</option>
+          <option value="B">业务审核</option>
+          <option value="F">财务审核</option>
+          <option value="A">审核通过</option>
+        </select>
+      </div>
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn"
+       data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="addBtn"
+       data-options="iconCls:'icon-add',plain:true">新增</a>
+    <a href="#" class="easyui-linkbutton" id="editBtn"
+       data-options="iconCls:'icon-edit',plain:true">修改</a>
+    <a href="#" class="easyui-linkbutton" id="export" onclick="exp()"
+       data-options="iconCls:'icon-save',plain:true">导出</a>
+    <a href="#" class="easyui-linkbutton" id="importBtn"
+       data-options="iconCls:'icon-edit',plain:true">导入</a>
+    <a href="#" class="easyui-linkbutton" id="delBtn"
+       data-options="iconCls:'icon-remove',plain:true">删除</a>
+    <a href="#" class="easyui-linkbutton" id="businessAudit"
+       data-options="iconCls:'icon-remove',plain:true">业务审核</a>
+    <a href="#" class="easyui-linkbutton" id="financeAudit"
+       data-options="iconCls:'icon-remove',plain:true">财务审核</a>
+    <a href="#" class="easyui-linkbutton" id="calculate"
+       data-options="iconCls:'icon-remove',plain:true">计算</a>
+  </form>
+</div>
+
+<div id="addDlg" data-options="title:'',resizable:true,modal:true"
+     class="easyui-dialog add-dlg"
+     style="width:600px;height:300px;"
+     closed="true" buttons="#dlg-buttons">
+  <form id="addForm" method="post">
+    <input name="id" type="text" style="display:none;">
+    <input __acttype="" type="hidden" value="add">
+    <input type="hidden" name="userId">
+    <div class="fitem">
+      <label>生态店</label>
+      <input class="easyui-textbox" name="ecologyShop" id="ecologyShop" required="true">
+    </div>
+    <div class="fitem">
+      <label>年度</label>
+      <select class="easyui-combobox" name="year" id="year" required="true">
+      </select>
+    </div>
+      <div class="fitem">
+          <label>产业</label>
+          <select class="easyui-combobox" name="industry" id="industryS" required="true">
+              <option value="冰箱">冰箱</option>
+              <option value="彩电">彩电</option>
+              <option value="空调">空调</option>
+              <option value="冷柜">冷柜</option>
+              <option value="热水器">热水器</option>
+              <option value="水家电">水家电</option>
+              <option value="统帅">统帅</option>
+              <option value="洗衣机">洗衣机</option>
+              <option value="厨电">厨电</option>
+              <option value="洗碗机">洗碗机</option>
+          </select>
+      </div>
+    <div class="fitem">
+      <label>期间</label>
+      <select class="easyui-combobox" name="month" id="month" required="true">
+          <option value="01">1月</option>
+          <option value="02">2月</option>
+          <option value="03">3月</option>
+          <option value="04">4月</option>
+          <option value="05">5月</option>
+          <option value="06">6月</option>
+          <option value="07">7月</option>
+          <option value="08">8月</option>
+          <option value="09">9月</option>
+          <option value="10">10月</option>
+          <option value="11">11月</option>
+          <option value="12">12月</option>
+          <option value="Q1">Q1</option>
+          <option value="Q2">Q2</option>
+          <option value="Q3">Q3</option>
+          <option value="Q4">Q4</option>
+          <option value="N">N</option>
+      </select>
+    </div>
+
+    <div class="fitem">
+      <label>品牌</label>
+      <input class="easyui-textbox" name="brand" id="brand" required="true">
+    </div>
+    <div class="fitem">
+      <label>类型</label>
+      <select name="type" id="type" class="easyui-combobox" required="true">
+        <option value="y">年度</option>
+        <option value="q">季度</option>
+        <option value="m">月度</option>
+      </select>
+    </div>
+    <div class="fitem">
+      <label>目标</label>
+      <input class="easyui-numberbox" name="target" id="target" required="true">
+    </div>
+  </form>
+  <div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn" iconCls="icon-ok">确认</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#addDlg').dialog('close')">关闭</a>
+  </div>
+</div>
+<div id="importExcel" class="easyui-dialog"
+     data-options="title:'报表导入',resizable:true,modal:true"
+     closed="true" style="width:500px;height:300px;">
+  <div class="import-panel">
+    <input type="hidden" id="rowId"/>
+    <table>
+      <tr>
+        <td colspan="2">
+          请仔细阅读以下注意事项：
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          1、请使用最新的导入模板导入数据，最新模板为<a href='/static/excel/odsTMFXTargetMaintain.xls' target='_blank'>【返利政策目标维护导入.xls】</a>。
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          2、请直接在<b><span
+            style="color:#dc143c">导入模板的基础上 拷贝粘贴实际业务数据，不要添加删除行或列，也不要更改模板的公式、格式等</span></b>。
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          3、模板中的<b><span style="color:#dc143c">数据不能超过2000行</span></b>，超过后请分成多个excel导入。
+        </td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>EXCEL 导入：</td>
+        <td>
+          <input type="file" id="file" name="file" label="上传文件"/>
+          <input type="hidden" id="uploadfileId">
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <button id="upload" href="javascript:void(0)"
+                  class="btn btn-default easyui-linkbutton c6 " style="width:250px">导入
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div id="actionEdit" class="easyui-dialog" style="width:400px;height:300px;padding:10px 20px"
+     closed="true" buttons="#actionEdit-buttons">
+    <div class="query-group">
+        <label class="query-label" style="width:60px">年度：</label>
+        <select class="easyui-combobox" name="year2" style="width:150px" required="true">
+        </select>
+    </div>
+    <div class="query-group">
+        <label class="query-label" style="width:60px">期间：</label>
+        <select  id="month2" class="easyui-combobox" name="month2" style="width:150px;"required="true">
+            <option value="01">1月</option>
+            <option value="02">2月</option>
+            <option value="03">3月</option>
+            <option value="04">4月</option>
+            <option value="05">5月</option>
+            <option value="06">6月</option>
+            <option value="07">7月</option>
+            <option value="08">8月</option>
+            <option value="09">9月</option>
+            <option value="10">10月</option>
+            <option value="11">11月</option>
+            <option value="12">12月</option>
+            <option value="Q1">Q1</option>
+            <option value="Q2">Q2</option>
+            <option value="Q3">Q3</option>
+            <option value="Q4">Q4</option>
+            <option value="N">N</option>
+        </select>
+    </div>
+    <div class="query-group">
+        <label class="query-label" style="width:60px">类型：</label>
+        <select id="type2"  name="type2" class="easyui-combobox" style="width:150px" required="true">
+            <option value="y">年度</option>
+            <option value="q">季度</option>
+            <option value="m" selected>月度</option>
+        </select>
+    </div>
+</div>
+<div id="actionEdit-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#actionEdit').dialog('close')" style="width:100px">取消</a>
+    <a id="toAction" href="javascript:void(0)" class="btn btn-default easyui-linkbutton c6" iconCls="icon-ok" style="width:70px">执行</a>
+</div>
+<script type="application/javascript">
+  var dataGrid = $('#dg').datagrid({
+    url: "/scTargetMaintain/queryPage",
+    method: "get",
+    fit: true,
+    fitColumns: false,
+    pagination: true,
+    pageSize: 50,
+    pageList: [50, 100, 200],
+    pageNumber: 1,
+    autoRowHeight: true,
+    striped: true,
+    toolbar: '#datagridToolbar',
+    rownumbers: true,
+    nowrap: false,
+    columns: [
+      [
+        {
+          field: 'id',
+          title: '全选',
+          align: 'center',
+          checkbox: true
+        },
+        {
+          field: 'ecologyShop',
+          title: '生态店',
+          align: 'center'
+        },
+        {
+          field: 'year',
+          title: '年度',
+          align: 'center'
+        },
+        {
+          field: 'month',
+          title: '期间',
+          align: 'center'
+        },
+        {
+          field: 'industry',
+          title: '产业',
+          align: 'center'
+        },
+        {
+          field: 'brand',
+          title: '品牌',
+          align: 'center'
+        },
+        {
+          field: 'type',
+          title: '类型',
+          align: 'center'
+        },
+        {
+          field: 'target',
+          title: '目标',
+          align: 'center'
+        },
+        {
+          field: 'deleteTab',
+          title: '标记删除',
+          align: 'center',
+          formatter: function (value) {
+            if (value == 'Y') {
+              return '已删除'
+            }
+            if (value == 'N') {
+              return '未删除'
+            }
+          }
+        },
+        {
+          field: 'qtCostAmount',
+          title: '其他费用',
+          align: 'center'
+        },
+        {
+          field: 'createTime',
+          title: '创建时间',
+          align: 'center',
+          formatter: function (value) {
+            return new Date(value).format('yyyy-MM-dd hh:mm:ss')
+          }
+        },
+        {
+          field: 'createBy',
+          title: '创建人',
+          align: 'center'
+        },
+        {
+          field: 'auditState',
+          title: '审核状态',
+          align: 'center',
+          formatter: function (value) {
+            if (value == 'B') {
+              return "业务审核";
+            }
+            if (value == 'F') {
+              return "财务审核";
+            }
+            if (value == 'A') {
+              return "审核通过";
+            }
+          }
+        },
+        {
+          field: 'auditBy',
+          title: '审核人',
+          align: 'center'
+        },
+        {
+          field: 'auditTime',
+          title: '审核时间',
+          align: 'center',
+          formatter: function (value) {
+            if (!value) {
+              return ''
+            }
+            return new Date(value).format('yyyy-MM-dd hh:mm:ss')
+          }
+        }
+      ]
+    ]
+  });
+
+
+</script>
+<script src="../static/js/settleCenter/ajaxfileupload.js"></script>
+<script src="../static/js/settleCenter/targetMaintain.js"></script>
+##<script src="../static/js/report/workOrder.js"></script>
+</body>
+</html>

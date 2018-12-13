@@ -1,10 +1,32 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>订单发票列表</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+<body class="iframe-body">
 <div>
-	<div>您可以在这里编辑或查看订单的发票信息，或者点击这里返回订单发票列表， 或者点击这里返回订单详情 。</div>
+	<div>您可以在这里编辑或查看订单的发票信息 。</div>
 	<br>
-	<table style="width:80%">
+	<table style="width:80%;" >
 		#set($tableRowHeight = "height:10px")
 		<tr>
 			<td style="vertical-align:top;width:15%">锁定状态:</td>
@@ -19,7 +41,9 @@
 		<tr style="$tableRowHeight"></tr>
 		<tr>
 			<td>订单编号:</td>
-			<td>$!{orderSn}</td>
+			<td>
+			<a href="javascript:void(0);" onclick=addTab3('$!{orderSn}');return false;>$!{orderSn}</a>
+			</td>
 		</tr>
 		<tr style="$tableRowHeight"></tr>
 		<tr>
@@ -69,7 +93,8 @@
 				<br>当发票类型为“增值税发票”时此项必须填写
 			</td>
 		</tr>
-		<tr style="$tableRowHeight"></tr>
+
+        <tr style="$tableRowHeight"></tr>
 		<tr>
 			<td style="vertical-align:top">注册地址:</td>
 			<td>
@@ -85,22 +110,22 @@
 				<br>当发票类型为“增值税发票”时此项必须填写
 			</td>
 		</tr>
-		<tr style="$tableRowHeight"></tr>
-		<tr>
-			<td style="vertical-align:top">开户银行:</td>
-			<td>
-				<input id="modify_BankName" name="modify_BankName" value="$!{memberInvoices.getBankName()}" style="width:100%;background-color:#dddbdb;" />
-				<br>当发票类型为“增值税发票”时此项必须填写
-			</td>
-		</tr>
-		<tr style="$tableRowHeight"></tr>
-		<tr>
-			<td style="vertical-align:top">开户卡号:</td>
-			<td>
-				<input id="modify_BankCardNumber" name="modify_BankCardNumber" value="$!{memberInvoices.getBankCardNumber()}" style="width:100%;background-color:#dddbdb;" />
-				<br>当发票类型为“增值税发票”时此项必须填写
-			</td>
-		</tr>
+        <tr style="$tableRowHeight"></tr>
+        <tr>
+            <td style="vertical-align:top">开户银行:</td>
+            <td>
+                <input id="modify_BankName" name="modify_BankName" value="$!{memberInvoices.getBankName()}" style="width:100%;background-color:#dddbdb;" />
+                <br>当发票类型为“增值税发票”时此项必须填写
+            </td>
+        </tr>
+        <tr style="$tableRowHeight"></tr>
+        <tr>
+            <td style="vertical-align:top">开户卡号:</td>
+            <td>
+                <input id="modify_BankCardNumber" name="modify_BankCardNumber" value="$!{memberInvoices.getBankCardNumber()}" style="width:100%;background-color:#dddbdb;" />
+                <br>当发票类型为“增值税发票”时此项必须填写
+            </td>
+        </tr>
 		<!-- 审核发票的场合显示审核状态信息 -->
 		#if ($!{modifyFlg} == 2)
 		<tr style="$tableRowHeight"></tr>
@@ -126,6 +151,14 @@
 			</td>
 		</tr>
 		<tr style="$tableRowHeight"></tr>
+		<tr>
+            <td style="vertical-align:top">增值税发票备注:</td>
+            <td>
+                <textarea id="modify_Vatremark" style="width:100%;font-size:100%;background-color:#dddbdb;" >$!{memberInvoices.getVatremark()}</textarea>
+                <br>增值税发票备,开票附加备注。
+            </td>
+        </tr>
+        <tr style="$tableRowHeight"></tr>
 		<tr>
 			<td></td>
 			<td>
@@ -208,13 +241,14 @@
 	            	 $("#modify_RegisterPhone").val(data.memberInvoices.registerPhone);
 	            	 $("#modify_BankName").val(data.memberInvoices.bankName);
 	            	 $("#modify_BankCardNumber").val(data.memberInvoices.bankCardNumber);
-            	 } else{
+            	 }else{
             		 $("#modify_TaxPayerNumber").val("");
 	            	 $("#modify_RegisterAddress").val("");
 	            	 $("#modify_RegisterPhone").val("");
 	            	 $("#modify_BankName").val("");
 	            	 $("#modify_BankCardNumber").val("");
             	 }
+
 			}
 		});
 	}
@@ -224,19 +258,20 @@
             data:{
             	"id": $!{memberInvoices.getId()},
             	"invoiceType":$('input[name="modify_InvoiceType"]:checked').val(),
-            	"invoiceTitle": $("#modify_InvoiceTitle").val(),
-            	"taxPayerNumber": $("#modify_TaxPayerNumber").val(),
-            	"registerAddress": $("#modify_RegisterAddress").val(),
-            	"registerPhone": $("#modify_RegisterPhone").val(),
-            	"bankName": $("#modify_BankName").val(),
-            	"bankCardNumber": $("#modify_BankCardNumber").val(),
+            	"invoiceTitle": $("#modify_InvoiceTitle").val().trim(),
+            	"taxPayerNumber": $("#modify_TaxPayerNumber").val().trim(),
+            	"registerAddress": $("#modify_RegisterAddress").val().trim(),
+            	"registerPhone": $("#modify_RegisterPhone").val().trim(),
+            	"bankName": $("#modify_BankName").val().trim(),
+            	"bankCardNumber": $("#modify_BankCardNumber").val().trim(),
             	#if ($!{modifyFlg} == 2)
             		//"state": $("#modify_State").combobox("getValue"),
             		"state": $('input[name="modify_State"]:checked').val(),
             	#else
             		"state": $!{memberInvoices.getState()},
             	#end
-            	"remark": $("#modify_Remark").val()
+            	"remark": $("#modify_Remark").val(),
+            	"vatremark": $("#modify_Vatremark").val()
             },
             type: "GET",
             success: function (data) {
@@ -281,4 +316,8 @@
 			}
 		});
 	}
+function addTab3(orderSn) {
+    window.top.addTab("订单查询网单", "/operationArea/orderNumberSelect?orderSn="+orderSn, true);
+}
 </script>
+</body>

@@ -1,6 +1,7 @@
 package com.haier.shop.dao.shopread;
 
 import com.haier.shop.model.BigStoragesRela;
+import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,4 +20,25 @@ public interface BigStoragesRelaReadDao {
      * @return
      */
     List<BigStoragesRela> getListByCodes(@Param("codeList") List<String> codeList);
+
+    /**
+     * 获取大家电多层级列表 带条件
+     * @param params
+     * @return
+     */
+    List<BigStoragesRela> getListByParam(Map<String, Object> params);
+
+    /**
+     * 获取大家电多层级列表数量 带条件
+     * @param params
+     * @return
+     */
+    Integer getListCountByParam(Map<String, Object> params);
+
+    /**
+     * 根据库位主库位中心库位判断是否存在
+     * @param bigStoragesRela
+     * @return
+     */
+    Integer selectByCode(@Param("entity") BigStoragesRela bigStoragesRela);
 }

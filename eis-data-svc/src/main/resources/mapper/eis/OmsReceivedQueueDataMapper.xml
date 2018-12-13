@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.OmsReceivedQueueDataDao">
+    <insert id="insert" parameterType="java.util.Map">
+        INSERT INTO oms_received_queue(content,add_time,status) VALUES (#{content},#{addTime},${status})
+    </insert>
+    <select id="select" resultType="java.util.Map">
+        SELECT * FROM oms_received_queue WHERE status=0
+    </select>
+    <update id="update" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE oms_received_queue SET status=1,handle_time=#{item.handleTime} where id = #{item.id}
+        </foreach>
+    </update>
+</mapper>

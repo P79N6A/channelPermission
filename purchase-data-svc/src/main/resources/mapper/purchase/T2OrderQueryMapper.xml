@@ -112,21 +112,21 @@
 		<if test="report_year_week != null and report_year_week != ''">
 			and report_year_week = #{report_year_week}
 		</if>
-		<if test="ed_channel_id != null and ed_channel_id != ''">
-			AND t2.ed_channel_id = #{ed_channel_id}
-<!-- 			AND t2.ed_channel_id in -->
-<!-- 			<foreach item="item" index="index" collection="ed_channel_id" -->
-<!-- 				open="(" separator="," close=")"> -->
-<!-- 				#{item} -->
-<!-- 			</foreach> -->
+		<if test="ed_channel_id != null and ed_channel_id.length > 0">
+<!-- 			AND t2.ed_channel_id = #{ed_channel_id} -->
+			AND t2.ed_channel_id in
+			<foreach item="item" index="index" collection="ed_channel_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
 		</if>
-		<if test="product_group_id !=null and product_group_id != ''">
-			AND t2.product_group_id = #{product_group_id}
-<!-- 			AND t2.product_group_id in -->
-<!-- 			<foreach item="item" index="index" collection="product_group_id" -->
-<!-- 				open="(" separator="," close=")"> -->
-<!-- 				#{item} -->
-<!-- 			</foreach> -->
+		<if test="product_group_id !=null and product_group_id.length > 0">
+<!-- 			AND t2.product_group_id = #{product_group_id} -->
+			AND t2.product_group_id in
+			<foreach item="item" index="index" collection="product_group_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
 		</if>
 		<if test="order_id !=null and order_id != ''">
 			AND UPPER(t2.order_id) LIKE CONCAT(CONCAT('%',UPPER
@@ -187,13 +187,13 @@
 		<if test="sync_status !=null and sync_status != ''">
 			AND t2.sync_status in (${sync_status})
 		</if>
-		<if test="category_id !=null and category_id != ''">
-			AND t2.category_id = #{category_id}
-<!-- 			AND t2.category_id in -->
-<!-- 			<foreach item="item" index="index" collection="category_id" -->
-<!-- 				open="(" separator="," close=")"> -->
-<!-- 				#{item} -->
-<!-- 			</foreach> -->
+		<if test="category_id !=null and category_id.length > 0">
+<!-- 			AND t2.category_id = #{category_id} -->
+			AND t2.category_id in
+			<foreach item="item" index="index" collection="category_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
 		</if>
 		<if test="wp_order_list !=null and wp_order_list != ''">
 			AND t2.order_id = #{wp_order_list}
@@ -217,7 +217,111 @@
 			AND cancel_flag = #{cancelOrder}
 		</if>
 	</sql>
-	
+
+	<select id="getIsNullWaInTime" parameterType="Map"
+			resultMap="crmOrderResult">
+		SELECT
+			t2.order_id,
+			date_format(crm.rrs_out_time,'%Y-%m-%d %H:%i:%S') as
+			rrs_out_time_display,
+			crm.wa_in_time
+		FROM
+			haier_t2_order_t t2
+			RIGHT JOIN crm_order_t crm ON t2.order_id = crm.source_order_id
+		WHERE
+			t2.delete_flag = 0
+			AND crm.flow_flag IN ( '70' )
+			AND rrs_out_time IS NOT NULL
+			AND wa_in_time IS NULL
+		ORDER BY
+			rrs_out_time
+			LIMIT 1
+	</select>
+	<select id="findT2OrderMultipleExportList" parameterType="Map"
+			resultMap="t2OrderResult">
+		SELECT SQL_CALC_FOUND_ROWS
+		t2.flow_flag,
+		t2.order_id,
+		date_format(t2.channel_commit_time,'%Y-%m-%d %H:%i:%S') as
+		channel_commit_time_display,
+		t2.oms_order_id,
+		t2.custom_desc,
+		t2.transmit_desc,
+		t2.report_year_week,
+		t2.industry_trade_desc,
+		t2.ed_channel_id,
+		t2.product_group_id,
+		t2.brand_id,
+		t2.materials_id,
+		t2.materials_desc,
+		t2.order_type_id,
+		t2.count,
+		t2.price,
+		t2.amount,
+		t2.storage_id,
+		t2.storage_name,
+		t2.distribution_center_desc,
+		t2.arrival_storage_desc,
+		t2.series_id,
+		t2.status,
+		t2.order_category,
+		t2.T2_delivery_prediction,
+		date_format(t2.latest_arrive_date,'%Y-%m-%d') as
+		latest_arrive_date_display,
+		date_format(t2.plan_deliver_date,'%Y-%m-%d') as
+		plan_deliver_date_display,
+		date_format(t2.promise_arrive_date,'%Y-%m-%d') as
+		promise_arrive_date_display,
+		date_format(t2.actual_deliver_date,'%Y-%m-%d') as
+		actual_deliver_date_display,
+		date_format(t2.predict_arrive_date,'%Y-%m-%d') as
+		predict_arrive_date_display,
+		date_format(t2.industry_trade_take_date,'%Y-%m-%d') as
+		industry_trade_take_date_display,
+		date_format(t2.custom_sign_date,'%Y-%m-%d') as
+		custom_sign_date_display,
+		date_format(t2.return_order_date,'%Y-%m-%d')
+		as return_order_date_display,
+		t2.satisfy_type_id,
+		date_format(t2.latest_leave_base_date,'%Y-%m-%d') as
+		latest_leave_base_date_display,
+		t2.factory_id,
+		t2.factory_name,
+		t2.shipment_combination_id,
+		t2.sign_num,
+		t2.no_pass_reason,
+		t2.pass_reason,
+		t2.gvs_order_id,
+		t2.dn_id,
+		date_format(t2.confirm_order_time,'%Y-%m-%d %H:%i:%S') as confirm_order_time_display,
+		date_format(t2.commit_time,'%Y-%m-%d') as commit_time_display,
+		t2.rrs_order_flag,
+		t2.customization,
+		t2.category_id,
+		sum(crm.wa_in_num)
+		as WAqty,
+		t2.channel_commit_user,
+		t2.custpodetailcode,
+		t2.audit_user,
+		t2.error_msg,
+		CASE t2.audit_time WHEN DEFAULT(t2.audit_time) THEN ''
+		ELSE
+		date_format(t2.audit_time,'%Y-%m-%d %H:%i:%S') END as
+		audit_time_display,
+		t2.order_close_user,
+		CASE t2.order_close_time WHEN
+		DEFAULT(t2.order_close_time) THEN '' ELSE
+		date_format(t2.order_close_time,'%Y-%m-%d %H:%i:%S') END as
+		order_close_time_display,
+		t2.relevance_id,
+		t2.cancel_order_id,
+		t2.cancel_flag
+		<include refid="findT2OrderMultipleListSQLCond" />
+		group by t2.order_id
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
 	<select id="findT2OrderMultipleList" parameterType="Map"
 		resultMap="t2OrderResult">
 		SELECT SQL_CALC_FOUND_ROWS
@@ -300,7 +404,7 @@
 		<include refid="findT2OrderMultipleListSQLCond" />
 		group by t2.order_id
 		ORDER BY
-		t2.order_id
+		t2.report_year_week desc, t2.order_id desc
 		<if test="m!=null and n!=null">
 			limit ${m},${n}
 		</if>
@@ -334,8 +438,13 @@
 	</select>-->
 
 	<select id="getRowCnts" resultType="int">
-		SELECT COUNT(1)
-		<include refid="findT2OrderMultipleListSQLCond" />
+		select
+			count(1)
+		from(
+		SELECT t2.order_id
+			<include refid="findT2OrderMultipleListSQLCond" />
+		group by t2.order_id
+		) as a
 	</select>
 	
 	<update id="commitAgainOrderMultiple" parameterType="map">
@@ -406,14 +515,14 @@
 					and t2.latest_arrive_date <= #{report_end_week}
 				]]>
 		</if>
-		<if test="ed_channel_id !=null and ed_channel_id != ''">
+		<if test="ed_channel_id !=null and ed_channel_id.length > 0">
 			AND t2.ed_channel_id in
 			<foreach item="item" index="index" collection="ed_channel_id"
 				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
-		<if test="product_group_id !=null and product_group_id != ''">
+		<if test="product_group_id !=null and product_group_id.length > 0">
 			AND t2.product_group_id in
 			<foreach item="item" index="index" collection="product_group_id"
 				open="(" separator="," close=")">
@@ -474,7 +583,7 @@
 		<if test="brand_id !=null and brand_id != ''">
 			AND t2.brand_id = #{brand_id}
 		</if>
-		<if test="category_id !=null and category_id != ''">
+		<if test="category_id !=null and category_id.length > 0">
 			AND t2.category_id in
 			<foreach item="item" index="index" collection="category_id"
 				open="(" separator="," close=")">
@@ -500,7 +609,6 @@
 			</foreach>
 		</if>
 	</sql>
-	
 	<select id="findPOList" parameterType="Map" resultMap="crmOrderResult">
 		SELECT t2.order_id,
 		CONCAT('PO',crm.so_id) as po_id,
@@ -534,8 +642,10 @@
 		t2.brand_id,
 		t2.category_id,
 		t2.price,
-		t2.amount as t2_amount
+		t2.amount as t2_amount,
+		crm.wa_in_num as WAqty
 		<include refid="findPOListSQLCond" />
+		order by crm.bill_time desc
 		<if test="m!=null and n!=null">
 			limit ${m},${n}
 		</if>
@@ -544,5 +654,16 @@
 	<select id="findPOListCNT" resultType="int">
 		SELECT COUNT(1)
 		<include refid="findPOListSQLCond" />
+	</select>
+
+	<select id="getByOrderId" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+			haier_t2_order_t t1,
+			crm_order_t t2
+		WHERE
+			t1.order_id = t2.source_order_id
+			and t2.dn_id = #{orderId}
 	</select>
 </mapper>

@@ -227,7 +227,7 @@ $(function () {
         success: function (data) {
             // var temp = JSON.parse(data);
             if (data === "timeout"){
-                alert("登录超时，请重新登录");
+                // alert("登录超时，请重新登录");
                 window.location.href="login.html";
             }
             if (data === null || data === ""){
@@ -235,10 +235,12 @@ $(function () {
             } else {
                 // document.getElementById('currentsystem').innerHTML = JSON.parse(data)[0].text;
                 $.each(JSON.parse(data), function (index, item) {
-                    document.getElementById('systemlist').innerHTML +='<a id="'+item.id+'"style="cursor:pointer;" onclick="test('+item.id+')">'+item.text+'</a></br>';
+                    document.getElementById('systemlist').innerHTML +='<a id="'+item.id+'"style="cursor:pointer;" onclick="test('+item.id+',\''+item.text+'\')">'+item.text+'</a></br>';
+                    document.getElementById('circleMenu').innerHTML +='<li><input type="checkbox"><a for="" onclick="test('+item.id+',\''+item.text+'\')">'+item.text+'</a></li>';
                     $("#page_userName").html(item.userName);
-                    $("#data_userName").html(item.userName);
+                    $("#data_userName").html(item.userName);            
                 });
+                setTimeout(function() { toggleOptions('.selector'); }, 100);
             }
         }
     });
@@ -268,8 +270,10 @@ function add(text,data) {
 }
 
 */
-function test(mId) {
+function test(mId,name) {
+
     document.getElementById('test').innerHTML = "";
+    $('#currentsystem').text(name);
     jQuery.ajax({
         url: "/pageload/model",
         data:{
@@ -282,6 +286,7 @@ function test(mId) {
                     +'"></ul></li>'
                 //document.getElementById('test').innerHTML +='<ul menu-lin href="#" data-title="'+item.text+'" id="'+item.id+'" class="fa fa-list no_background;"  onclick="pageload('+item.id+')">'+item.text+'</ul></br>';
             });
+
             $("#test").html(_html);
         }
     });
@@ -293,4 +298,36 @@ $("#logoutBtn_zhushidiao").click(function () {
         type:"post"
     });
     window.location.href="login.html";
+});
+
+
+
+/* circle menu */
+var angleStart = -360;
+
+// jquery rotate animation
+function rotate(li,d) {
+    $({d:angleStart}).animate({d:d}, {
+        step: function(now) {
+            $(li)
+               .css({ transform: 'rotate('+now+'deg)' })
+               .find('a')
+                  .css({ transform: 'rotate('+(-now)+'deg)' });
+        }, duration: 0
+    });
+}
+
+// show / hide the options
+function toggleOptions(s) {
+    $(s).toggleClass('open');
+    var li = $(s).find('li');
+    var deg = $(s).hasClass('half') ? 180/(li.length-1) : 360/li.length;
+    for(var i=0; i<li.length; i++) {
+        var d = $(s).hasClass('half') ? (i*deg)-90 : i*deg;
+        $(s).hasClass('open') ? rotate(li[i],d) : rotate(li[i],angleStart);
+    }
+}
+
+$('.selector button').click(function(e) {
+    toggleOptions($(this).parent());
 });

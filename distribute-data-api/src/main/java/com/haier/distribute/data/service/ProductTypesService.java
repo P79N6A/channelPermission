@@ -18,4 +18,6 @@ public interface ProductTypesService {
     ProductTypesNew getByIdNew(int typeId);
 
     Producttypes getOneById(long l);
+
+	Producttypes getProductsTypeBySKU(String sku);
 }

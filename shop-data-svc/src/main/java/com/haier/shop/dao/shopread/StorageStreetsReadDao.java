@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface StorageStreetsReadDao {
@@ -14,4 +15,13 @@ public interface StorageStreetsReadDao {
 	 * @return
 	 */
 	List<String> getSCodeByStreet(@Param("streetId") Integer streetId);
+	
+	/**
+	 * 根据省Id查询市Id和市名称
+	 * @param provinceId
+	 * @return
+	 */
+	List<Map<String,Object>> getCityIdByProvinceId(Integer provinceId);
+	
+	List<Map<String,Object>> getCityByCityIds(String[] CityIds);
 }

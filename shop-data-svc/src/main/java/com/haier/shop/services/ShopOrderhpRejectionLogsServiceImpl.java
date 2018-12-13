@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.haier.shop.dao.shopread.OrderhpRejectionLogsReadDao;
 import com.haier.shop.dao.shopwrite.OrderhpRejectionLogsWriteDao;
 import com.haier.shop.model.OrderhpRejectionLogs;
+import com.haier.shop.model.OrderhpRejectionLogsVO;
 import com.haier.shop.service.ShopOrderhpRejectionLogsService;
 
 @Service
@@ -30,15 +31,15 @@ public class ShopOrderhpRejectionLogsServiceImpl implements ShopOrderhpRejection
         return orderhpRejectionLogsReadDao.selectByPrimaryKey(id);
     }
     
-    public String quereHPRejection(String id){
-    	return orderhpRejectionLogsReadDao.quereHPRejection(id);
+    public String quereHPRejection(String orderReprisSn,String hpLesId){
+    	return orderhpRejectionLogsReadDao.quereHPRejection(orderReprisSn, hpLesId);
     }
     public int updateHpRejectionLogs(OrderhpRejectionLogs record){
 		return orderhpRejectionLogsWriteDao.updateHpRejectionLogs(record);
     	
     }
     
-    public List<OrderhpRejectionLogs> quereEmptyOutSAP(){
+    public List<OrderhpRejectionLogsVO> quereEmptyOutSAP(){
     	return orderhpRejectionLogsReadDao.quereEmptyOutSAP();
     }
 
@@ -46,5 +47,29 @@ public class ShopOrderhpRejectionLogsServiceImpl implements ShopOrderhpRejection
 	public int updataEmptyOut(String id, String emptyOut) {
 		// TODO Auto-generated method stub
 		return orderhpRejectionLogsWriteDao.updataEmptyOut(id, emptyOut);
+	}
+
+	@Override
+	public List<OrderhpRejectionLogsVO> queryTheVirtualInto() {
+		// TODO Auto-generated method stub
+		return orderhpRejectionLogsReadDao.queryTheVirtualInto();
+	}
+
+	@Override
+	public String quereHpLesId(String channelOrderSn) {
+		// TODO Auto-generated method stub
+		return orderhpRejectionLogsReadDao.quereHpLesId(channelOrderSn);
+	}
+
+	@Override
+	public List<OrderhpRejectionLogsVO> queryRealOutofData() {
+		// TODO Auto-generated method stub
+		return orderhpRejectionLogsReadDao.queryRealOutofData();
+	}
+
+	@Override
+	public List<OrderhpRejectionLogs> queryVirtualEntryState(String channelOrderSn) {
+		// TODO Auto-generated method stub
+		return orderhpRejectionLogsReadDao.queryVirtualEntryState(channelOrderSn);
 	}
 }

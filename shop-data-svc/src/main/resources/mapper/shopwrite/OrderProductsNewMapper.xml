@@ -82,7 +82,7 @@
 		<result property="itemShareAmount" column="itemShareAmount" />
 		<result property="lessShipTInTime" column="lessShipTInTime" />
 		<result property="lessShipTOutTime" column="lessShipTOutTime" />
-		<result property="cbsSecCode" column="cbsSecCode" />
+		<result property="cbsSecCode" column="isSAorZP" />
 		<result property="pdOrderStatus" column="pdOrderStatus" />
 		<result property="omsOrderSn" column="omsOrderSn" />
 		<result property="splitFlag" column="splitFlag" />
@@ -97,8 +97,15 @@
 		<result property="hbAmount" column="hbAmount" />
 		<result property="jfbAmount" column="jfbAmount" />
 		<result property="djAmount" column="djAmount" />
+		<result property="orderSn" column="orderSn" />
+		<result property="typeName" column="typeName" />
+		<result property="isSelfSell" column="is_self_sell" />
+
+		<result property="isCd" column="idCd" />
+		<result property="tbOrderSn" column="tbOrderSn" />
 	</resultMap>
 
+	
     <select id="get" parameterType="Integer" resultMap="orderProductsResult">
         SELECT
         `id`,
@@ -161,7 +168,7 @@
         `itemShareAmount`,
         `lessShipTInTime`,
         `lessShipTOutTime`,
-        `cbsSecCode`,
+        `isSAorZP`,
         `pdOrderStatus`,
         `omsOrderSn`,
         `splitFlag`,
@@ -173,15 +180,17 @@
         `brokerageType`,
         `hbAmount`,
         `jfbAmount`,
-        `djAmount`
-        FROM `OrderProducts`
+        `djAmount`,
+        `oid`,
+        `is_self_sell`
+        FROM `orderproducts`
         WHERE `id` = #{id}
     </select>
 
 	<select id="getByCOrderSnList" resultMap="orderProductsResult">
 		select
-		`id`,`isTest`,`supportOneDayLimit`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`tsShippingTime`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`hpRegisterDate`,`hpFailDate`,`hpFinishDate`,`hpReservationDate`,`shippingOpporunity`,`isTimeoutFree`,`itemShareAmount`,`lessShipTInTime`,`lessShipTOutTime`,`cbsSecCode`,`pdOrderStatus`,`omsOrderSn`,`splitFlag`,`splitRelateCOrderSn`,`stockType`,`o2oType`,`storeId`,`storeType`,`brokerageType`,`hbAmount`,`jfbAmount`,`djAmount`
-		from `OrderProducts`
+		`id`,`isTest`,`supportOneDayLimit`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`tsShippingTime`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`hpRegisterDate`,`hpFailDate`,`hpFinishDate`,`hpReservationDate`,`shippingOpporunity`,`isTimeoutFree`,`itemShareAmount`,`lessShipTInTime`,`lessShipTOutTime`,`isSAorZP`,`pdOrderStatus`,`omsOrderSn`,`splitFlag`,`splitRelateCOrderSn`,`stockType`,`o2oType`,`storeId`,`storeType`,`brokerageType`,`hbAmount`,`jfbAmount`,`djAmount`
+		from `orderproducts`
 		where `cOrderSn` in
 		<foreach collection="snList" index="index" item="cOrderSn"
 			open="(" separator="," close=")">
@@ -189,7 +198,7 @@
 		</foreach>
 	</select>
 	<update id="updateAfterDelivery3W" parameterType="com.haier.shop.model.OrderProductsNew">
-		update `OrderProducts` set
+		update `orderproducts` set
 		<if test="unlockedNumber != 0">
 			`unlockedNumber`= `unlockedNumber` + #{unlockedNumber},
 		</if>
@@ -205,10 +214,13 @@
 		<if test="tsCode !=null and tsCode !='' ">
 			,`tsCode` = #{tsCode}
 		</if>
+		<if test="tbOrderSn !=null and tbOrderSn !='' ">
+			,`tbOrderSn` = #{tbOrderSn}
+		</if>
 		where `id` = #{id}
 	</update>
 	<update id="updateAfterDelivery" parameterType="com.haier.shop.model.OrderProductsNew">
-		update `OrderProducts` set
+		update `orderproducts` set
 		<if test="unlockedNumber != 0">
 			`unlockedNumber`= `unlockedNumber` + #{unlockedNumber},
 		</if>
@@ -224,12 +236,15 @@
 		<if test="systemRemark !=null ">
 			,`systemRemark` = CONCAT(`systemRemark`, #{systemRemark})
 		</if>
+		<if test="tbOrderSn !=null and tbOrderSn !='' ">
+			,`tbOrderSn` = #{tbOrderSn}
+		</if>
 		where `id` = #{id}
 	</update>
 	
 	
 	<update id="updateAfterTransferFirstOut" parameterType="com.haier.shop.model.OrderProductsNew">
-		update `OrderProducts` set
+		update `orderproducts` set
 		<if test="unlockedNumber != 0">
 			`unlockedNumber`= `unlockedNumber` + #{unlockedNumber},
 		</if>
@@ -241,9 +256,9 @@
 		where `id` = #{id}
 	</update>
 	<update id="updateAfterTransferIn" parameterType="com.haier.shop.model.OrderProductsNew">
-		UPDATE `OrderProducts`
+		UPDATE `orderproducts`
 		SET `status` = #{status},`lessShipTInTime` =
-		#{lessShipTInTime},`cbsSecCode` = #{cbsSecCode}
+		#{lessShipTInTime},`isSAorZP` = #{cbsSecCode}
 		<if test="systemRemark !=null ">
 			,`systemRemark`=CONCAT(`systemRemark`, #{systemRemark})
 		</if>
@@ -253,8 +268,8 @@
     
      <select id="getUnLockStockOpList" resultMap="orderProductsResult"> 
      <![CDATA[
-    select op.id,op.orderId,op.status,op.sku,op.number,op.lockedNumber,op.sCode,op.tsCode,op.tsShippingTime,op.cOrderSn,op.shippingMode,op.productType,op.systemRemark,op.makeReceiptType,op.netPointId,op.hpReservationDate,op.shippingOpporunity,op.stockType,op.o2oType,op.storeId,op.storeType,op.brokerageType from OrderProducts op force index(idx_OrderProducts_status)
-        inner join Orders os on op.orderId=os.id where op.stockType='WA' and op.status=0 and op.lockedNumber=0  and (((os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or (os.isCod = 0 and os.source='BLPHH')) or (os.isCod = 1 and os.codConfirmState = 2)) and (os.orderStatus = 200 or os.orderStatus = 204) and
+    select op.id,op.orderId,op.status,op.sku,op.number,op.lockedNumber,op.sCode,op.tsCode,op.tsShippingTime,op.cOrderSn,op.shippingMode,op.productType,op.systemRemark,op.makeReceiptType,op.netPointId,op.hpReservationDate,op.shippingOpporunity,op.stockType,op.o2oType,op.storeId,op.storeType,op.brokerageType from orderproducts op force index(idx_OrderProducts_status)
+        inner join orders os on op.orderId=os.id where op.stockType='WA' and op.status=0 and op.lockedNumber=0  and (((os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or (os.isCod = 0 and os.source='BLPHH')) or (os.isCod = 1 and os.codConfirmState = 2)) and (os.orderStatus = 200 or os.orderStatus = 204) and
               os.smConfirmStatus = 4 and os.orderType != 2 and os.isTest = 0 
               AND os.source <> 'MSTORE'
         limit 1000
@@ -263,8 +278,8 @@
     
      <select id="getLockStockExceptionOpList" resultMap="orderProductsResult">
     <![CDATA[
-        select op.id,op.orderId,op.status,op.sku,op.number,op.lockedNumber,op.sCode,op.tsCode,op.tsShippingTime,op.cOrderSn,op.shippingMode,op.productType,op.systemRemark,op.makeReceiptType,op.netPointId,op.hpReservationDate,op.shippingOpporunity,op.stockType,op.o2oType,op.storeId,op.storeType,op.brokerageType from OrderProducts op force index(idx_OrderProducts_status)
-        inner join Orders os on op.orderId=os.id where op.stockType='WA' and op.status=0 and op.lockedNumber=123456789  and (((os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or (os.isCod = 0 and os.source='BLPHH')) or (os.isCod = 1)) and (os.orderStatus = 200 or os.orderStatus = 204) and
+        select op.id,op.orderId,op.status,op.sku,op.number,op.lockedNumber,op.sCode,op.tsCode,op.tsShippingTime,op.cOrderSn,op.shippingMode,op.productType,op.systemRemark,op.makeReceiptType,op.netPointId,op.hpReservationDate,op.shippingOpporunity,op.stockType,op.o2oType,op.storeId,op.storeType,op.brokerageType from orderproducts op force index(idx_OrderProducts_status)
+        inner join orders os on op.orderId=os.id where op.stockType='WA' and op.status=0 and op.lockedNumber=123456789  and (((os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or (os.isCod = 0 and os.source='BLPHH')) or (os.isCod = 1)) and (os.orderStatus = 200 or os.orderStatus = 204) and
               os.smConfirmStatus = 4 and os.orderType != 2 and os.isTest = 0 
               AND os.source <> 'MSTORE'
     ]]>
@@ -279,8 +294,8 @@
 
 	<select id="getByOrderIds" resultMap="orderProductsResult">
 		select
-		`id`,`isTest`,`supportOneDayLimit`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`tsShippingTime`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`hpRegisterDate`,`hpFailDate`,`hpFinishDate`,`hpReservationDate`,`shippingOpporunity`,`isTimeoutFree`,`itemShareAmount`,`lessShipTInTime`,`lessShipTOutTime`,`cbsSecCode`,`pdOrderStatus`,`omsOrderSn`,`stockType`,`o2oType`,`storeId`,`storeType`,`brokerageType`,`hbAmount`,`jfbAmount`,`djAmount`
-		from `OrderProducts`
+		`id`,`isTest`,`supportOneDayLimit`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`tsShippingTime`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`hpRegisterDate`,`hpFailDate`,`hpFinishDate`,`hpReservationDate`,`shippingOpporunity`,`isTimeoutFree`,`itemShareAmount`,`lessShipTInTime`,`lessShipTOutTime`,`isSAorZP`,`pdOrderStatus`,`omsOrderSn`,`stockType`,`o2oType`,`storeId`,`storeType`,`brokerageType`,`hbAmount`,`jfbAmount`,`djAmount`
+		from `orderproducts`
 		where `orderId` in
 		<foreach collection="orderIds" index="index" item="id" open="("
 			separator="," close=")">
@@ -349,7 +364,7 @@
 		`itemShareAmount`,
 		`lessShipTInTime`,
 		`lessShipTOutTime`,
-		`cbsSecCode`,
+		`isSAorZP`,
 		`pdOrderStatus`,
 		`omsOrderSn`,
 		`splitFlag`,
@@ -361,8 +376,9 @@
 		`brokerageType`,
 		`hbAmount`,
 		`jfbAmount`,
-		`djAmount`
-		FROM `OrderProducts`
+		`djAmount`,
+		`isCd`
+		FROM `orderproducts`
 		WHERE `orderId` = #{orderId}
 	</select>
 
@@ -370,7 +386,7 @@
 	<select id="getByIdsForConfirm" resultMap="orderProductsResult">
 		select
 		id,orderStatus,orderSn,source,addTime,isProduceDaily,province,city,region,street,orderType,mobile,memberEmail,memberId,consignee,paymentStatus,isCod,codConfirmTime,tailPayTime,payTime,firstConfirmPerson,firstConfirmTime
-		from Orders
+		from orders
 		where id in
 		<foreach collection="ids" index="index" item="id" open="("
 			separator="," close=")">
@@ -379,7 +395,7 @@
 	</select>
 
 	<update id="updateForFrozenStock" parameterType="com.haier.shop.model.OrderProductsNew">
-		UPDATE `OrderProducts`
+		UPDATE `orderproducts`
 		SET `sCode` = #{sCode}, `tsCode` = #{tsCode}, `tsShippingTime` =
 		#{tsShippingTime},
 		`lockedNumber` = #{lockedNumber}, `status` = #{status}
@@ -390,42 +406,42 @@
 
 
 	<update id="updateStatus">
-		UPDATE `OrderProducts`
+		UPDATE `orderproducts`
 		SET `status` = #{status}
 		WHERE `id` = #{id} AND `status` NOT IN (110, 130)
 	</update>
 	<update id="updateShippingModeById" parameterType="com.haier.shop.model.OrderProductsNew">
-		UPDATE `OrderProducts`
+		UPDATE `orderproducts`
 		SET `shippingMode` = #{shippingMode}
 		WHERE `id` = #{id}
 	</update>
 	<update id="updateAfterCreateInvoice" parameterType="com.haier.shop.model.OrderProductsNew">
-		UPDATE `OrderProducts`
+		UPDATE `orderproducts`
 		SET `makeReceiptType` = #{makeReceiptType}, `isMakeReceipt` = #{isMakeReceipt}
 		WHERE `id` = #{id}
 	</update>
 	<select id="getStorageStreetsTimeoutFreeByStreetId" parameterType="Integer" resultType="Integer">
 		SELECT
 		`timeOutFree`
-		FROM `StorageStreets`
+		FROM `storagestreets`
 		WHERE `streetId` = #{streetId}
 		LIMIT 1
 	</select>
 	<update id="updateForMakeReceiptType" parameterType="com.haier.shop.model.OrderProductsNew">
-		UPDATE `OrderProducts`
+		UPDATE `orderproducts`
 		SET `makeReceiptType` = #{makeReceiptType}, `isMakeReceipt` = #{isMakeReceipt}, `systemRemark` = #{systemRemark}
 		WHERE `id` = #{id}
 	</update>
 	<select id="getStorageCitiesTimeoutFreeByRegionId" parameterType="Integer" resultType="Integer">
 		SELECT
 		`timeOutFree`
-		FROM `StorageCities`
+		FROM `storagecities`
 		WHERE `regionId` = #{regionId}
 		LIMIT 1
 	</select>
 	<update id="updateIsTimeoutFree" parameterType="map" statementType="PREPARED">
 		update
-		`OrderProducts`
+		`orderproducts`
 		set
 		isTimeoutFree = #{isTimeoutFree}
 		WHERE
@@ -433,14 +449,13 @@
 	</update>
 	<select id="getByTbNo" resultMap="orderProductsResult">
 
-		SELECT op.* FROM OrderProducts op INNER JOIN OrderProductsAttributes opa
-		WHERE op.`id` = opa.`order_product_id`
-		AND opa.`tb_order_sn` = #{tbNo}
+		SELECT op.* FROM orderproducts op
+		WHERE op.`tbOrderSn` = #{tbNo}
 
 	</select>
 	<update id="updateOpModify" parameterType="Integer" statementType="PREPARED">
 		update
-		`OrderProducts`
+		`orderproducts`
 		set
 		modified=now()
 		where
@@ -450,7 +465,7 @@
    
     
     <update id="completeClose">
-        UPDATE `OrderProducts`
+        UPDATE `orderproducts`
         SET `status` = 130, closeTime = #{closeTime}
         WHERE `id` = #{id} AND `status` NOT IN (110, 130)
     </update>
@@ -458,7 +473,7 @@
        <select id="getByOrderIdsForConfirm" resultMap="orderProductsResult">
         select
         id,orderId,status,sku,number,cOrderSn,shippingMode,productType,systemRemark,makeReceiptType,netPointId,lockedNumber,sCode,tsCode,tsShippingTime,hpReservationDate,shippingOpporunity,stockType,o2oType,storeId,storeType,cateId,brandId,price,couponAmount,productAmount,itemShareAmount,productId,couponCodeValue,isBook,isTimeoutFree,productName,points,hbAmount
-        from OrderProducts
+        from orderproducts
         where status &lt; 2 and orderId in
         <foreach collection="orderIds" index="index" item="id" open="("
                  separator="," close=")">
@@ -531,7 +546,7 @@
 			`itemShareAmount`,
 			`lessShipTInTime`,
 			`lessShipTOutTime`,
-			`cbsSecCode`,
+			`isSAorZP`,
 			`pdOrderStatus`,
 			`omsOrderSn`,
 			`splitFlag`,
@@ -546,23 +561,46 @@
 			`jfbAmount`,
 			`djAmount`
 		FROM
-			`OrderProducts`
+			`orderproducts`
 		WHERE `cOrderSn` = #{cOrderSn}
 		LIMIT 1
     </select>
+    
+      <insert id="insert" parameterType="com.haier.shop.model.OrderProductsNew">
+        insert into
+        `orderproducts`(`supportOneDayLimit`,`isTest`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`tsShippingTime`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`hpRegisterDate`,`hpFailDate`,`hpFinishDate`,`hpReservationDate`,`shippingOpporunity`,`isTimeoutFree`,`itemShareAmount`,`lessShipTInTime`,`lessShipTOutTime`,`isSAorZP`,`points`,`modified`,`splitFlag`,`splitRelateCOrderSn`,`channelId`,`activityId2`,`pdOrderStatus`,`omsOrderSn`,`couponCode`,`couponCodeValue`,`jfbAmount`,`djAmount`,`hbAmount`,`storeId`,`storeType`,`stockType`,`o2oType`,`brokerageType`,`oid`,`addTime`,`tzSku`,`isCd`,`tbOrderSn`)
+        values(#{supportOneDayLimit},#{isTest},#{orderId},#{cOrderSn},#{isBook},#{cPaymentStatus},#{cPayTime},#{productType},#{productId},#{productName},#{sku},#{price},#{number},#{lockedNumber},#{unlockedNumber},#{productAmount},#{couponAmount},#{esAmount},#{cateId},#{brandId},#{netPointId},#{shippingFee},#{settlementStatus},#{receiptOrRejectTime},#{isWmsSku},#{sCode},#{tsCode},#{tsShippingTime},#{status},#{invoiceNumber},#{expressName},#{invoiceExpressNumber},#{shippingTime},#{lessOrderSn},#{waitGetLesShippingInfo},#{getLesShippingCount},#{outping},#{lessShipTime},#{closeTime},#{isReceipt},#{isMakeReceipt},#{receiptNum},#{receiptAddTime},#{makeReceiptType},#{shippingMode},#{lastTimeForShippingMode},#{lastEditorForShippingMode},#{systemRemark},#{externalSaleSettingId},#{isNoLimitStockProduct},#{hpRegisterDate},#{hpFailDate},#{hpReservationDate},#{shippingOpporunity},#{isTimeoutFree},#{itemShareAmount},#{lessShipTInTime},#{lessShipTOutTime},#{cbsSecCode},#{points},#{modified},#{splitFlag},#{splitRelateCOrderSn},#{channelId},#{activityId2},#{pdOrderStatus},#{omsOrderSn},#{couponCode},#{couponCodeValue},#{jfbAmount},#{djAmount},#{hbAmount},#{storeId},#{storeType},#{o2oType},#{brokerageType},#{oid},#{addTime},#{tzSku},#{isCd},#{tbOrderSn})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">select last_insert_id()</selectKey>
+    </insert>
+          <insert id="insertOrderProducts" parameterType="com.haier.shop.model.OrderProducts">
+			  insert into
+			  `orderproducts`(`supportOneDayLimit`,`isTest`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`tsShippingTime`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`hpRegisterDate`,`hpFailDate`,`hpFinishDate`,`hpReservationDate`,`shippingOpporunity`,`isTimeoutFree`,`itemShareAmount`,`lessShipTInTime`,`lessShipTOutTime`,`isSAorZP`,`points`,`modified`,`splitFlag`,`splitRelateCOrderSn`,`channelId`,`activityId2`,`pdOrderStatus`,`omsOrderSn`,`couponCode`,`couponCodeValue`,`jfbAmount`,`djAmount`,`hbAmount`,`storeId`,`storeType`,`stockType`,`o2oType`,`brokerageType`,`oid`,`addTime`,`tzSku`,`isCd`,`tbOrderSn`)
+			  values(#{supportOneDayLimit},#{isTest},#{orderId},#{cOrderSn},#{isBook},#{cPaymentStatus},#{cPayTime},#{productType},#{productId},#{productName},#{sku},#{price},#{number},#{lockedNumber},#{unlockedNumber},#{productAmount},#{couponAmount},#{esAmount},#{cateId},#{brandId},#{netPointId},#{shippingFee},#{settlementStatus},#{receiptOrRejectTime},#{isWmsSku},#{sCode},#{tsCode},#{tsShippingTime},#{status},#{invoiceNumber},#{expressName},#{invoiceExpressNumber},#{shippingTime},#{lessOrderSn},#{waitGetLesShippingInfo},#{getLesShippingCount},#{outping},#{lessShipTime},#{closeTime},#{isReceipt},#{isMakeReceipt},#{receiptNum},#{receiptAddTime},#{makeReceiptType},#{shippingMode},#{lastTimeForShippingMode},#{lastEditorForShippingMode},#{systemRemark},#{externalSaleSettingId},#{isNoLimitStockProduct},#{hpRegisterDate},#{hpFailDate},#{hpFinishDate},#{hpReservationDate},#{shippingOpporunity},#{isTimeoutFree},#{itemShareAmount},#{lessShipTInTime},#{lessShipTOutTime},#{cbsSecCode},#{points},#{modified},#{splitFlag},#{splitRelateCOrderSn},#{channelId},#{activityId2},#{pdOrderStatus},#{omsOrderSn},#{couponCode},#{couponCodeValue},#{jfbAmount},#{djAmount},#{hbAmount},#{storeId},#{storeType},#{stockType},#{o2oType},#{brokerageType},#{oid},#{addTime},#{tzSku},#{isCd},#{tbOrderSn})
+			  <selectKey resultType="int" keyProperty="id" order="AFTER">select last_insert_id()</selectKey>
+    </insert>
      <update id="forceCancelClose">
-    	UPDATE `OrderProducts`
+    	UPDATE `orderproducts`
         SET `status` = 110, closeTime = #{closeTime}
         WHERE `id` = #{id} AND `status` NOT IN (110)
     </update>
+         <update id="interceptCancelClose">
+    	UPDATE `orderproducts`
+        SET `status` = 110, intercept = 1,closeTime = #{closeTime}
+        WHERE `id` = #{id} AND `status` NOT IN (110)
+    </update>
  <update id="update" parameterType="com.haier.shop.model.OrderProductsNew">
-        update `OrderProducts` set `isTest`=#{isTest},`supportOneDayLimit`=#{supportOneDayLimit},`orderId`=#{orderId},`cOrderSn`=#{cOrderSn},`isBook`=#{isBook},`cPaymentStatus`=#{cPaymentStatus},`cPayTime`=#{cPayTime},`productType`=#{productType},`productId`=#{productId},`productName`=#{productName},`sku`=#{sku},`price`=#{price},`number`=#{number},`lockedNumber`=#{lockedNumber},`unlockedNumber`=#{unlockedNumber},`productAmount`=#{productAmount},`couponAmount`=#{couponAmount},`esAmount`=#{esAmount},`cateId`=#{cateId},`brandId`=#{brandId},`netPointId`=#{netPointId},`shippingFee`=#{shippingFee},`settlementStatus`=#{settlementStatus},`receiptOrRejectTime`=#{receiptOrRejectTime},`isWmsSku`=#{isWmsSku},`sCode`=#{sCode},`tsCode`=#{tsCode},`tsShippingTime`=#{tsShippingTime},`status`=#{status},`invoiceNumber`=#{invoiceNumber},`expressName`=#{expressName},`invoiceExpressNumber`=#{invoiceExpressNumber},`shippingTime`=#{shippingTime},`lessOrderSn`=#{lessOrderSn},`waitGetLesShippingInfo`=#{waitGetLesShippingInfo},`getLesShippingCount`=#{getLesShippingCount},`outping`=#{outping},`lessShipTime`=#{lessShipTime},`closeTime`=#{closeTime},`isReceipt`=#{isReceipt},`isMakeReceipt`=#{isMakeReceipt},`receiptNum`=#{receiptNum},`receiptAddTime`=#{receiptAddTime},`makeReceiptType`=#{makeReceiptType},`shippingMode`=#{shippingMode},`lastTimeForShippingMode`=#{lastTimeForShippingMode},`lastEditorForShippingMode`=#{lastEditorForShippingMode},`systemRemark`=#{systemRemark},`externalSaleSettingId`=#{externalSaleSettingId},`isNoLimitStockProduct`=#{isNoLimitStockProduct},`hpRegisterDate`=#{hpRegisterDate},`hpFailDate`=#{hpFailDate},`hpFinishDate`=#{hpFinishDate},`hpReservationDate`=#{hpReservationDate},`shippingOpporunity`=#{shippingOpporunity},`isTimeoutFree`=#{isTimeoutFree},`itemShareAmount`=#{itemShareAmount},`lessShipTInTime`=#{lessShipTInTime},`lessShipTOutTime`=#{lessShipTOutTime}
+        update `orderproducts` set `isTest`=#{isTest},`supportOneDayLimit`=#{supportOneDayLimit},`orderId`=#{orderId},`cOrderSn`=#{cOrderSn},`isBook`=#{isBook},`cPaymentStatus`=#{cPaymentStatus},`cPayTime`=#{cPayTime},`productType`=#{productType},`productId`=#{productId},`productName`=#{productName},`sku`=#{sku},`price`=#{price},`number`=#{number},`lockedNumber`=#{lockedNumber},`unlockedNumber`=#{unlockedNumber},`productAmount`=#{productAmount},`couponAmount`=#{couponAmount},`esAmount`=#{esAmount},`cateId`=#{cateId},`brandId`=#{brandId},`netPointId`=#{netPointId},`shippingFee`=#{shippingFee},`settlementStatus`=#{settlementStatus},`receiptOrRejectTime`=#{receiptOrRejectTime},`isWmsSku`=#{isWmsSku},`sCode`=#{sCode},`tsCode`=#{tsCode},`tsShippingTime`=#{tsShippingTime},`status`=#{status},`invoiceNumber`=#{invoiceNumber},`expressName`=#{expressName},`invoiceExpressNumber`=#{invoiceExpressNumber},`shippingTime`=#{shippingTime},`lessOrderSn`=#{lessOrderSn},`waitGetLesShippingInfo`=#{waitGetLesShippingInfo},`getLesShippingCount`=#{getLesShippingCount},`outping`=#{outping},`lessShipTime`=#{lessShipTime},`closeTime`=#{closeTime},`isReceipt`=#{isReceipt},`isMakeReceipt`=#{isMakeReceipt},`receiptNum`=#{receiptNum},`receiptAddTime`=#{receiptAddTime},`makeReceiptType`=#{makeReceiptType},`shippingMode`=#{shippingMode},`lastTimeForShippingMode`=#{lastTimeForShippingMode},`lastEditorForShippingMode`=#{lastEditorForShippingMode},`systemRemark`=#{systemRemark},`externalSaleSettingId`=#{externalSaleSettingId},`isNoLimitStockProduct`=#{isNoLimitStockProduct},`hpRegisterDate`=#{hpRegisterDate},`hpFailDate`=#{hpFailDate},`hpFinishDate`=#{hpFinishDate},`hpReservationDate`=#{hpReservationDate},`shippingOpporunity`=#{shippingOpporunity},`isTimeoutFree`=#{isTimeoutFree},`itemShareAmount`=#{itemShareAmount},`lessShipTInTime`=#{lessShipTInTime},`lessShipTOutTime`=#{lessShipTOutTime}
+        where `id` = #{id}
+    </update>
+<!--更新网单和less单号-->
+	<update id="updateCOrderSn" parameterType="com.haier.shop.model.OrderProducts">
+        update `orderproducts` set `cOrderSn`=#{cOrderSn},`lessOrderSn`=#{lessOrderSn}
         where `id` = #{id}
     </update>
       <select id="getByIds" resultMap="orderProductsResult">
         select
-        `id`,`isTest`,`supportOneDayLimit`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`tsShippingTime`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`hpRegisterDate`,`hpFailDate`,`hpFinishDate`,`hpReservationDate`,`shippingOpporunity`,`isTimeoutFree`,`itemShareAmount`,`lessShipTInTime`,`lessShipTOutTime`,`cbsSecCode`,`pdOrderStatus`,`omsOrderSn`,`splitFlag`,`splitRelateCOrderSn`,`stockType`,`o2oType`,`storeId`,`storeType`,`brokerageType`,`hbAmount`,`jfbAmount`,`djAmount`
-        from `OrderProducts`
+        `id`,`isTest`,`supportOneDayLimit`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`tsShippingTime`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`hpRegisterDate`,`hpFailDate`,`hpFinishDate`,`hpReservationDate`,`shippingOpporunity`,`isTimeoutFree`,`itemShareAmount`,`lessShipTInTime`,`lessShipTOutTime`,`isSAorZP`,`pdOrderStatus`,`omsOrderSn`,`splitFlag`,`splitRelateCOrderSn`,`stockType`,`o2oType`,`storeId`,`storeType`,`brokerageType`,`hbAmount`,`jfbAmount`,`djAmount`
+        from `orderproducts`
         where `id` in
         <foreach collection="ids" index="index" item="id" open="("
                  separator="," close=")">
@@ -570,16 +608,16 @@
         </foreach>
     </select>
     <update id="updateMakeReceiptType" parameterType="com.haier.shop.model.OrderProductsNew">
-        UPDATE `OrderProducts`
+        UPDATE `orderproducts`
         SET `makeReceiptType` = #{makeReceiptType}
         WHERE `id` = #{id}
     </update>
        <update id="updateForsyncInvoice" parameterType="com.haier.shop.model.OrderProductsNew">
-        update `OrderProducts` set `isMakeReceipt`=#{isMakeReceipt},`receiptNum`=#{receiptNum},`receiptAddTime`=#{receiptAddTime},`systemRemark`=#{systemRemark}
+        update `orderproducts` set `isMakeReceipt`=#{isMakeReceipt},`receiptNum`=#{receiptNum},`receiptAddTime`=#{receiptAddTime},`systemRemark`=#{systemRemark}
         where `id` = #{id}
     </update>
 	<update id="updateHPAllotNetPoint" parameterType="com.haier.shop.model.OrderProductsNew">
-		update `OrderProducts`
+		update `orderproducts`
 		<set>
 			<if test="netPointId != null">
 				`netPointId`=#{netPointId},
@@ -600,16 +638,235 @@
 		where `id` = #{id}
 	</update>
 	<update id="updateAfterSyncLes" parameterType="com.haier.shop.model.OrderProductsNew">
-		UPDATE `OrderProducts`
+		UPDATE `orderproducts`
 		SET `status` = #{status}, `waitGetLesShippingInfo` = #{waitGetLesShippingInfo},`lessOrderSn` = #{lessOrderSn}
 		WHERE `id` = #{id}
 	</update>
 	<update id="updateOpHpReservationDate" parameterType="com.haier.shop.model.OrderProductsNew" statementType="PREPARED">
 		update
-		`OrderProducts`
+		`orderproducts`
 		set
 		hpReservationDate = #{hpReservationDate}
 		WHERE
 		id = #{id}
 	</update>
+
+	<update id="updateSyncLes" parameterType="com.haier.shop.model.OrderProductsNew">
+		UPDATE `orderproducts`
+		SET `lessOrderSn` = #{lessOrderSn}
+		WHERE `id` = #{id}
+	</update>
+	
+	<select id="getOrderId" parameterType="Integer" resultMap="orderProductsResult">
+        SELECT
+        `id`,
+        `isTest`,
+        `supportOneDayLimit`,
+        `orderId`,
+        `cOrderSn`,
+        `isBook`,
+        `cPaymentStatus`,
+        `cPayTime`,
+        `productType`,
+        `productId`,
+        `productName`,
+        `sku`,
+        `price`,
+        `number`,
+        `lockedNumber`,
+        `unlockedNumber`,
+        `productAmount`,
+        `couponAmount`,
+        `esAmount`,
+        `cateId`,
+        `brandId`,
+        `netPointId`,
+        `shippingFee`,
+        `settlementStatus`,
+        `receiptOrRejectTime`,
+        `isWmsSku`,
+        `sCode`,
+        `tsCode`,
+        `tsShippingTime`,
+        `status`,
+        `invoiceNumber`,
+        `expressName`,
+        `invoiceExpressNumber`,
+        `shippingTime`,
+        `lessOrderSn`,
+        `waitGetLesShippingInfo`,
+        `getLesShippingCount`,
+        `outping`,
+        `lessShipTime`,
+        `closeTime`,
+        `isReceipt`,
+        `isMakeReceipt`,
+        `receiptNum`,
+        `receiptAddTime`,
+        `makeReceiptType`,
+        `shippingMode`,
+        `lastTimeForShippingMode`,
+        `lastEditorForShippingMode`,
+        `systemRemark`,
+        `externalSaleSettingId`,
+        `isNoLimitStockProduct`,
+        `hpRegisterDate`,
+        `hpFailDate`,
+        `hpFinishDate`,
+        `hpReservationDate`,
+        `shippingOpporunity`,
+        `isTimeoutFree`,
+        `itemShareAmount`,
+        `lessShipTInTime`,
+        `lessShipTOutTime`,
+        `isSAorZP`,
+        `pdOrderStatus`,
+        `omsOrderSn`,
+        `splitFlag`,
+        `splitRelateCOrderSn`,
+        `stockType`,
+        `o2oType`,
+        `storeId`,
+        `storeType`,
+        `brokerageType`,
+        `hbAmount`,
+        `jfbAmount`,
+        `djAmount`
+        FROM `orderproducts`
+        WHERE `orderId` = #{id}
+        LIMIT 1
+    </select>
+
+
+	<select id="queryOccupyStockFail" resultMap="orderProductsResult" parameterType="java.util.Map">
+		<![CDATA[
+    select
+    	op.id,
+			op.orderId,
+			op. STATUS,
+			op.sku,
+			op.number,
+			op.lockedNumber,
+			op.sCode,
+			op.tsCode,
+			op.tsShippingTime,
+			op.cOrderSn,
+			op.shippingMode,
+			op.productType,
+			op.systemRemark,
+			op.makeReceiptType,
+			op.netPointId,
+			op.hpReservationDate,
+			op.shippingOpporunity,
+			op.stockType,
+			op.o2oType,
+			op.storeId,
+			op.storeType,
+			op.brokerageType,
+			os.orderSn,
+			pt.typeName
+    from orderproducts op force index(idx_OrderProducts_status)
+    inner join orders os on op.orderId=os.id
+    LEFT JOIN producttypes pt ON op.productType = pt.id
+    where op.stockType='WA' and op.status=0 and op.lockedNumber=123456789 and
+    (
+    	(
+    		(os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or
+    		(os.isCod = 0 and os.source='BLPHH')
+    	) or
+    	(os.isCod = 1 and os.codConfirmState = 2)
+    )
+    and (os.orderStatus = 200 or os.orderStatus = 204)
+    and os.smConfirmStatus = 4 and os.orderType != 2 and os.isTest = 0
+    AND os.source <> 'MSTORE'
+    ]]>
+		<if test="orderSn !=null and orderSn !=''">
+			AND os.orderSn = #{orderSn}
+		</if>
+		<if test="corderSn !=null and corderSn !=''">
+			AND op.cOrderSn = #{corderSn}
+		</if>
+		ORDER BY op.id
+		<if test="size != null and size &gt; 0">
+			limit #{start},#{size}
+		</if>
+	</select>
+
+	<select id="queryOccupyStockFailCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		<![CDATA[
+    select count(*)
+    from orderproducts op force index(idx_OrderProducts_status)
+    inner join orders os on op.orderId=os.id
+    LEFT JOIN producttypes pt ON op.productType = pt.id
+    where op.stockType='WA' and op.status=0 and op.lockedNumber=123456789 and
+    (
+    	(
+    		(os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or
+    		(os.isCod = 0 and os.source='BLPHH')
+    	) or
+    	(os.isCod = 1 and os.codConfirmState = 2)
+    )
+    and (os.orderStatus = 200 or os.orderStatus = 204)
+    and os.smConfirmStatus = 4 and os.orderType != 2 and os.isTest = 0
+    AND os.source <> 'MSTORE'
+    ]]>
+		<if test="orderSn !=null and orderSn !=''">
+			AND os.orderSn=#{orderSn}
+		</if>
+		<if test="cOrderSn !=null and cOrderSn !=''">
+			AND op.cOrderSn=#{cOrderSn}
+		</if>
+
+	</select>
+
+	<update id="updatePaymentStatusByOrderId" >
+        update `orderproducts` set `cPaymentStatus`=#{cPaymentStatus}
+        where `orderId` = #{orderId}
+    </update>
+
+	<update id="updateNum" >
+        update `orderproducts` set `number`=#{newNum},productAmount=#{productAmount}
+        where `id` = #{orderProductId}
+    </update>
+
+	<update id="updatesCodeBycOrderSn" >
+        update `orderproducts` set `sCode`=#{sCode}
+        where `cOrderSn` = #{cOrderSn}
+    </update>
+
+	<select id="getByPdOrderStatusPaging" resultMap="orderProductsResult">
+		SELECT
+		op.`id`,
+		op.`orderId`,
+		op.`cOrderSn`,
+		op.`sku`,
+		op.`price`,
+		op.`number`,
+		op.`sCode`,
+		op.`tsCode`,
+		op.`status`,
+		op.`pdOrderStatus`,
+		op.`omsOrderSn`
+		FROM `OrderProducts` op, `Orders` os
+		WHERE op.`pdOrderStatus` = #{pdOrderStatus}
+		AND op.`status` != 110
+		AND op.`orderId` = os.`id` AND os.`orderStatus` = 201
+		AND op.`id` > #{minId}
+		LIMIT #{size}
+	</select>
+
+	<update id="updateRRSById" parameterType="com.haier.shop.model.OrderProductsNew">
+		update `OrderProducts` set
+		`pdOrderStatus` = #{pdOrderStatus}
+		<if test="omsOrderSn !=null ">
+			,`omsOrderSn` = #{omsOrderSn}
+		</if>
+		where `id` = #{id}
+	</update>
+
+	<select id="getSuccessNum" resultType="java.lang.Integer">
+		SELECT count(*) FROM orderproducts
+		WHERE status != '1'
+		AND orderId = #{orderId}
+	</select>
 </mapper>

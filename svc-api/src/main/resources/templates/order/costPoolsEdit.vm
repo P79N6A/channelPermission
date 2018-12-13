@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<link>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+
+
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+
+<body class="iframe-body">
+<div style="height:100%;width:100%;overflow:auto">
+<div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px; width:100%; position: fixed;z-index:20">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;font-weight: bold;">
+            	编辑费用信息
+        </span>
+        ## <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+        ##        value="返回" onclick="window.history.back()"
+        ##        style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+               value="保存"  id="updateProduct"
+               style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+ </div>
+<div style="margin-left:50px;margin-top:50px;">
+    <form id="addForm_costPoolsManage" method="post">
+        <input name="id" type="text" value="$CostPools.id" style="display:none;"/>
+        <input __actType type="hidden"/>
+            <dl class="search-row_nowidth">
+                <dt>所属渠道:</dt>
+                <dd>
+                <select id="channel" name="channel" class="easyui-combobox" panelHeight="auto" editable="false">
+                    #if($CostPools.channel == 1)
+                    <option value="1" selected = "selected">商城</option>
+                    <option value="2" >天猫</option>
+                    <option value="3" >电商平台</option>
+                    <option value="4" >微店</option>
+                    #elseif($CostPools.channel == 2)
+                    <option value="1" >商城</option>
+                    <option value="2" selected = "selected">天猫</option>
+                    <option value="3" >电商平台</option>
+                    <option value="4" >微店</option>
+                    #elseif($CostPools.channel == 3)
+                    <option value="1" >商城</option>
+                    <option value="2" >天猫</option>
+                    <option value="3" selected = "selected">电商平台</option>
+                    <option value="4" >微店</option>
+                    #elseif($CostPools.channel == 4)
+                    <option value="1" >商城</option>
+                    <option value="2" >天猫</option>
+                    <option value="3" >电商平台</option>
+                    <option value="4" selected = "selected">微店</option>
+                    #else
+                    <option value="0"  selected = "selected">渠道信息错误</option>
+                    #end
+                </select>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>费用类型</dt>
+                <dd>
+                <select id="type" name="type" class="easyui-combobox" panelHeight="auto" editable="false">
+                #if($CostPools.type == 0)
+                   <option value="0" selected = "selected">赠品机</option>
+                   <option value="1" >优惠券</option>
+                #elseif($CostPools.type == 0)
+                   <option value="0" >赠品机</option>
+                   <option value="1" selected = "selected">优惠券</option>
+                #else
+                    <option value="0"  selected = "selected">类型信息错误</option>
+                #end
+                </select><br>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>年月:</dt>
+                <dd>
+                    <input class="easyui-numberbox" name="yearMonth" id="yearMonth" value="$!{CostPools.yearMonth}" required="true"/>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>批次:</dt>
+                <dd>
+                    <input class="easyui-numberbox" name="batch" id="batch" value="$!{CostPools.batch}" required="true"/>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>产业:</dt>
+                <dd>
+                    #if($CostPools.chanYe == "C200076226")
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="冰箱" disabled="disabled"/>
+                    #elseif($CostPools.chanYe == "C200076227")
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="冷柜" disabled="disabled"/>
+                    #elseif($CostPools.chanYe == "C200076228")
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="洗衣机" disabled="disabled"/>
+                    #elseif($CostPools.chanYe == "C200076229")
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="家用空调" disabled="disabled"/>
+                    #elseif($CostPools.chanYe == "C200076230")
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="热水器" disabled="disabled"/>
+                    #elseif($CostPools.chanYe == "C200076231")
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="厨电" disabled="disabled"/>
+                    #elseif($CostPools.chanYe == "C200076232")
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="彩电" disabled="disabled"/>
+                    #elseif($CostPools.chanYe == "C200076233")
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="商用空调及其他" disabled="disabled"/>
+                    #elseif($CostPools.chanYe == "C20170825")
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="海尔集团电子商务有限公司(赠品)" disabled="disabled"/>
+                    #else
+                    <input class="easyui-textbox" name="chanYe" id="chanYe" value="产业费用显示错误" disabled="disabled"/>
+                    #end
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>总费用:</dt>
+                <dd>
+                    <input class="easyui-numberbox" name="amount" id="amount" value="$!{CostPools.amount}" required="true"/>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>已使用费用:</dt>
+                <dd>
+                    <input class="easyui-textbox" name="balanceAmount" id="balanceAmount" value="$!{CostPools.balanceAmount}" disabled="disabled" />
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>备注:</dt>
+                <dd>
+                    <input class="easyui-textbox" name="remark" id="remark"  value="$!{CostPools.remark}" style="width:230px;"/>
+                </dd>
+            </dl><br>
+	</form>
+</div>	
+<script>    
+
+    $(function () {
+        function proof(v){
+            var special = new RegExp(/^[0-9]{6}$/);
+            if(special.test(v)){
+                return true;
+            }
+        }
+    
+	    $("#updateProduct").on('click', function (ev) {
+            if ($("#channel").val() == null || $("#channel").val() == "") {
+                alert("渠道不能为空");
+                return false;
+            }
+            if ($("#type").val() == null || $("#type").val() == "") {
+                alert("费用类型不能为空");
+                return false;
+            }
+            if ($("#yearMonth").val() == null || $("#yearMonth").val() == "") {
+                alert("年月不能为空");
+                return false;
+            }
+            if (!proof($("#yearMonth").val())) {
+                alert("年月必须是 "+Y+M+" 格式");
+                return false;
+            }
+            if ($("#amount").val() == null || $("#amount").val() == "") {
+                alert("总费用不能为空");
+                return false;
+            }
+            if ($("#batch").val() == null || $("#batch").val() == "") {
+                alert("批次不能为空");
+                return false;
+            }
+            $('#chanYe').combobox('enable')
+     		$.ajax({
+	        	url      : "/costPool/updateCostPool",
+	         	type     : 'POST',
+	         	dataType : 'json',
+	          	data     : $('#addForm_costPoolsManage').serialize(),
+		        success  : function(data) {
+		        	if (data==1) {
+			            $.messager.confirm('编辑成功', '点击确定跳转列表页面', function(r){
+							if (r){
+								window.location.href="/costPool/toCostPool";
+							}
+						});
+			        }
+					if(data==0){
+			            alert('编辑失败,请确认总费用大于已使用费用');
+			        }
+					if(data==2){
+			            alert('操作异常');
+			        }
+			        if(data==3){
+			            alert('产业信息错误');
+			        }
+			        if(data==4){
+                        alert('修改批次已存在');
+			        }
+		        }
+     		});
+	    });
+    
+    });
+    
+   
+</script>
+</body>
+</html>

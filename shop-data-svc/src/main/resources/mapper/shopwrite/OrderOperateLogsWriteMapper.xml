@@ -3,18 +3,27 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.OrderOperateLogsWriteDao">
 
     <insert id="insert" parameterType="com.haier.shop.model.OrderOperateLogs">
-        insert into `OrderOperateLogs`(`siteId`,`orderId`,`orderProductId`,`netPointId`,`operator`,`changeLog`,`remark`,`logTime`,`status`,`paymentStatus`)
+        insert into `orderoperatelogs`(`siteId`,`orderId`,`orderProductId`,`netPointId`,`operator`,`changeLog`,`remark`,`logTime`,`status`,`paymentStatus`)
         values(#{siteId},#{orderId},#{orderProductId},#{netPointId},#{operator},#{changeLog},#{remark},unix_timestamp(),#{status},#{paymentStatus})
     </insert>
     <insert id="batchInsert" parameterType="com.haier.shop.model.OrderOperateLogs">
-        insert into `OrderOperateLogs`(`siteId`,`orderId`,`orderProductId`,`netPointId`,`operator`,`changeLog`,`remark`,`logTime`,`status`,`paymentStatus`) values
+        insert into `orderoperatelogs`(`siteId`,`orderId`,`orderProductId`,`netPointId`,`operator`,`changeLog`,`remark`,`logTime`,`status`,`paymentStatus`) values
         <foreach collection="list" item="item" index="index"  separator=",">
             (#{item.siteId},#{item.orderId},#{item.orderProductId},#{item.netPointId},#{item.operator},#{item.changeLog},#{item.remark},unix_timestamp(),#{item.status},#{item.paymentStatus})
         </foreach>
     </insert>
     <!--
     <update id="update" parameterType="com.haier.svc.bean.pop.hpDispatch.OrderOperateLogs">
-        update `OrderOperateLogs` set `siteId`=#{siteId},`orderId`=#{orderId},`orderProductId`=#{orderProductId},`netPointId`=#{netPointId},`operator`=#{operator},`changeLog`=#{changeLog},`remark`=#{remark},`logTime`=#{logTime},`status`=#{status},`paymentStatus`=#{paymentStatus}
+        update `orderoperatelogs` set `siteId`=#{siteId},`orderId`=#{orderId},`orderProductId`=#{orderProductId},`netPointId`=#{netPointId},`operator`=#{operator},`changeLog`=#{changeLog},`remark`=#{remark},`logTime`=#{logTime},`status`=#{status},`paymentStatus`=#{paymentStatus}
         where `id` = #{id}
     </update> -->
+    <insert id="insertLog">
+        insert into orderoperatelogs (`siteId`,`orderId`,`orderProductId`,`netPointId`,`operator`,`changeLog`,`remark`,`logTime`,`status`,`paymentStatus`)
+        values (1,#{map.orderId},#{map.id},#{map.netPointId},#{map.operator},#{map.changeLog},#{map.remark},#{map.logTime},#{map.status},#{map.cPaymentStatus});
+    </insert>
+
+    <update id="updateOperator">
+        UPDATE orderoperatelogs SET operator = #{user}
+        WHERE id = #{id}
+    </update>
 </mapper>

@@ -14,4 +14,8 @@ public interface EisStockBusinessQueueDao {
 
     Integer insert(EisStockBusinessQueue stockBusinessQueue);
 
+    List<EisStockBusinessQueue> getTops(Integer topx);
+
+
+    void delete(EisStockBusinessQueue queue);
 }

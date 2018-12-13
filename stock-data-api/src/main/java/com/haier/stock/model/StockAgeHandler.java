@@ -298,6 +298,7 @@ public class StockAgeHandler implements Serializable {
     public InvStockAge getStockAge() {
         return stockAge;
     }
+    //根据库龄表列表生成数据，
     public void buildUpAgeDataListByStockAge(List<InvStockAge> stockAges) {
         if (dataList.size() > 0)
             dataList.clear();

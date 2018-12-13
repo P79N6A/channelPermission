@@ -10,6 +10,7 @@ public class VehicleOrderHistoryDTO extends VehicleOrderDetailsDTO {
 	private String remark;		//闸口信息
 	private String sapStatus;	//推送sap状态
 	private String lbxStatus;	//lxb状态
+	private Integer lbxActualQty;	//lbx实收数量
 	public String getZqItemNo() {
 		return zqItemNo;
 	}
@@ -39,6 +40,12 @@ public class VehicleOrderHistoryDTO extends VehicleOrderDetailsDTO {
 	}
 	public void setLbxStatus(String lbxStatus) {
 		this.lbxStatus = lbxStatus;
+	}
+	public Integer getLbxActualQty() {
+		return lbxActualQty;
+	}
+	public void setLbxActualQty(Integer lbxActualQty) {
+		this.lbxActualQty = lbxActualQty;
 	}
 
 }

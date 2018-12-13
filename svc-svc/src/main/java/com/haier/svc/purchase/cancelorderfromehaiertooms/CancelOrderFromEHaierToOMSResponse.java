@@ -9,18 +9,20 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- *
- *
+ * <p>anonymous complex type的 Java 类。
+ * 
+ * <p>以下模式片段指定包含在此类中的预期内容。
+ * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="requestDataReturn" type="{http://www.example.org/CancelOrderFromEHaierToOMS/}ResponseData"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="requestDataReturn" type="{http://www.example.org/CancelOrderFromEHaierToOMS/}ResponseData"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -36,7 +38,8 @@ public class CancelOrderFromEHaierToOMSResponse {
     protected ResponseData requestDataReturn;
 
     /**
-     *
+     * 获取requestDataReturn属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link ResponseData }
@@ -47,7 +50,8 @@ public class CancelOrderFromEHaierToOMSResponse {
     }
 
     /**
-     *
+     * 设置requestDataReturn属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link ResponseData }

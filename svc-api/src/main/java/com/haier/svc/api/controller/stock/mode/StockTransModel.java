@@ -152,8 +152,8 @@ public class StockTransModel {
      *
      * @return
      */
-    public int getTotalOfInvTrans() {
-        return stockInvStockTransactionService.getRowCnt();
+    public int getTotalOfInvTrans(Map params) {
+        return stockInvStockTransactionService.getRowCnt(params);
     }
 
 

@@ -6,7 +6,7 @@ interconn:
     enable: false
   trace:
     url: http://collector-trace.c.haier.net
-    sample: 0.1 #抽样率，0：关闭，1：全采样，sample<1：部分采样
+    sample: 0 #抽样率，0：关闭，1：全采样，sample<1：部分采样
 
 dubbo:
   registry: 10.162.162.43:2181,10.162.162.44:2181,10.162.162.45:2181
@@ -18,3 +18,17 @@ dubbo:
 wsdlPath: /wsdl_test
 stock_wsdl:
   location: /wsdl_test
+
+url:
+  ##orderToLesUrl START
+  orderToLesUrl: http://10.138.40.168:7100/EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM
+  ##orderToLesUrl END
+
+  #取消VOM订单接口 测试地址 start
+  #vomSynOrderEaiUrl: http://58.56.128.84:9001/EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM
+  vomSynOrderEaiUrl: http://10.138.40.168:7100/EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM
+  #取消VOM订单接口 测试地址 end
+
+  #更新日日单采购的生产信息 start
+  queryFromOmsUrl: http://10.138.40.168:8001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=OMS_test_001
+  #更新日日单采购的生产信息 end

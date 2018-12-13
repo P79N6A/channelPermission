@@ -1,6 +1,7 @@
 package com.haier.shop.service;
 
 import java.util.List;
+import java.util.Map;
 
 public interface StorageStreetsService {
     /**
@@ -9,4 +10,8 @@ public interface StorageStreetsService {
      * @return
      */
     List<String> getSCodeByStreet(Integer streetId);
+    
+	List<Map<String,Object>> getCityIdByProvinceId(Integer provinceId);
+	
+	List<Map<String,Object>> getCityByCityIds(String[] CityIds);
 }

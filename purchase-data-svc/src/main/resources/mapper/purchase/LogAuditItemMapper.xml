@@ -27,5 +27,93 @@
 		#{category}
 		)
 	</insert>
-	
+
+
+	<select id="getLogAuditList" parameterType="Map"
+			resultType="com.haier.purchase.data.model.LogAuditInfo">
+		select
+		order_id,
+		type,
+		content,
+		date_format(log_time,'%Y-%m-%d %H:%i:%S') as log_time,
+		oper_user_name,
+		oper_user_id
+		from operation_log_t
+		where 1=1
+		<if test="order_id != null and order_id != ''">
+			and UPPER(order_id) LIKE CONCAT(CONCAT('%',UPPER (#{order_id})),'%')
+		</if>
+
+		<if test="type != null and type != ''">
+			and type = #{type}
+		</if>
+		<if test="content != null and content != ''">
+			and content like '${content}%'
+		</if>
+		<if test="log_time_start != null and log_time_start != ''">
+			<![CDATA[and log_time >= str_to_date(#{log_time_start}, '%Y-%m-%d %H:%i:%s')]]>
+		</if>
+		<if test="log_time_end != null and log_time_end != ''">
+			<![CDATA[and log_time <= str_to_date(#{log_time_end}, '%Y-%m-%d %H:%i:%s')]]>
+		</if>
+		<if test="oper_user_name != null and oper_user_name != ''">
+			and oper_user_name like '%${oper_user_name}%'
+		</if>
+		<if test="jude_way_channel != null and jude_way_channel != ''">
+			and jude_way_channel = #{jude_way_channel}
+		</if>
+		<if test="gate_way_channel != null and gate_way_channel != ''">
+			and gate_way_channel = #{gate_way_channel}
+		</if>
+		<if test="channel != null and channel != ''">
+			and channel = #{channel}
+		</if>
+		<if test="category != null and category != ''">
+			and category = #{category}
+		</if>
+		order by log_time desc
+		<if test="m != null and n != ''">
+			limit #{m},#{n}
+		</if>
+
+	</select>
+
+
+	<select id="countLogAuditWithLike" parameterType="Map" resultType="Integer">
+		select
+		count(1)
+		from operation_log_t
+		where 1=1
+		<if test="order_id != null and order_id != ''">
+			and UPPER(order_id) LIKE CONCAT(CONCAT('%',UPPER (#{order_id})),'%')
+		</if>
+
+		<if test="type != null and type != ''">
+			and type = #{type}
+		</if>
+		<if test="content != null and content != ''">
+			and content like '${content}%'
+		</if>
+		<if test="log_time_start != null and log_time_start != ''">
+			<![CDATA[and log_time >= str_to_date(#{log_time_start}, '%Y-%m-%d %H:%i:%s')]]>
+		</if>
+		<if test="log_time_end != null and log_time_end != ''">
+			<![CDATA[and log_time <= str_to_date(#{log_time_end}, '%Y-%m-%d %H:%i:%s')]]>
+		</if>
+		<if test="oper_user_name != null and oper_user_name != ''">
+			and oper_user_name like '%${oper_user_name}%'
+		</if>
+		<if test="jude_way_channel != null and jude_way_channel != ''">
+			and jude_way_channel = #{jude_way_channel}
+		</if>
+		<if test="gate_way_channel != null and gate_way_channel != ''">
+			and gate_way_channel = #{gate_way_channel}
+		</if>
+		<if test="channel != null and channel != ''">
+			and channel = #{channel}
+		</if>
+		<if test="category != null and category != ''">
+			and category = #{category}
+		</if>
+	</select>
 </mapper>

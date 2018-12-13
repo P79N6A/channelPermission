@@ -2,6 +2,7 @@ package com.haier.purchase.data.service.vechile;
 
 import java.util.List;
 
+import com.haier.purchase.data.model.vehcile.PurchaseProductPaymentDTO;
 import com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO;
 
 /**
@@ -14,7 +15,9 @@ import com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO;
  * Copyright (c) 2015 北京柯莱特科技有限公司 交付部
  */
 public interface PurchaseVehicleProductPaymentService extends BasService<VehicleProductPaymentDTO> {
-    List<VehicleProductPaymentDTO> getList();
+    List<PurchaseProductPaymentDTO> getList();
 
     List<VehicleProductPaymentDTO> listByCondition(VehicleProductPaymentDTO entity);
+    
+    PurchaseProductPaymentDTO getPurchasePaymentOneByCondition(VehicleProductPaymentDTO entity);
 }

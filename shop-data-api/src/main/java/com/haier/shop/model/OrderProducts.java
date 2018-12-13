@@ -31,10 +31,10 @@ public class OrderProducts implements Serializable {
     private BigDecimal productAmount;//此字段专为同步外部订单而加，商品总金额=price*number+shippingFee-优惠金额，但优惠金额没在本系统存储
     //    private BigDecimal  balanceAmount;//余额扣减
     private BigDecimal couponAmount;//优惠券抵扣金额
-    private BigDecimal jfbAmount = new BigDecimal(0);//集分宝抵扣金额
-    private BigDecimal djAmount = new BigDecimal(0);//点券抵扣金额
-    private BigDecimal hbAmount = new BigDecimal(0);//红包抵扣金额
-    private BigDecimal esAmount = new BigDecimal(0);//节能补贴金额
+    private BigDecimal jfbAmount = new BigDecimal(0.00);//集分宝抵扣金额
+    private BigDecimal djAmount = new BigDecimal(0.00);//点券抵扣金额
+    private BigDecimal hbAmount = new BigDecimal(0.00);//红包抵扣金额
+    private BigDecimal esAmount = new BigDecimal(0.00);//节能补贴金额
     //    private BigDecimal  activityPrice;//活动价，当有活动价时price的值来源于activityPrice
     private Integer cateId;//分类ID
     private Integer brandId;// 品牌ID
@@ -87,11 +87,164 @@ public class OrderProducts implements Serializable {
     private String couponCode;
     private	String couponCodeValue;
     private int count;//用来取得分组数量的
-    private int parentId;//用来比对产业
+    private int rootId;//用来比对产业
+    private String tbOrderSn;//TB单号
+    private int invoIceId; //发票id
+    private int repairId;//退货单id
+    private String repairSn;//退货单号
+    private int operate;//判断是否出入库
+    private int tsShippingTime;//转运时效（小时）
+    private int hpRegisterDate;//HP注册时间
+    private int  hpFailDate;//HP派工失败时间
+    private int hpFinishDate;//HP派工成功时间
+    private int hpReservationDate;//HP回传预约送货时间
+    private String brokerageType;//佣金类别
+    private int isCd;//拆单标识
+    private BigDecimal itemShareAmount;//订单优惠价格分摊
+    private int lessShipTInTime;//less转运入库时间
+    private int lessShipTOutTime;//less转运出库时间
+    private int channelId;//区分EP和商城
+    private int activityId2;//运营活动id
+    private String omsOrderSn;//集团OMS单号
+    private int success;//判断发票是否推送成功
+    private int sapSuccess;//判断是否推送sap成功
+    private int statusType;//1为开票
+    private String vomRepairSn;//3Wvom退货单号
+
+    public String getIsSAorZP() {
+        return isSAorZP;
+    }
+
+    public void setIsSAorZP(String isSAorZP) {
+        this.isSAorZP = isSAorZP;
+    }
+
+    private String isSAorZP;
+    
+    /**
+     * 网单状态 -  LES 开提单, 待出库
+     */
+    public static Integer STATUS_LES_SHIPPING      = 8;
     
     
-    
-    public String getcOrderSn() {
+    public String getOmsOrderSn() {
+		return omsOrderSn;
+	}
+
+	public void setOmsOrderSn(String omsOrderSn) {
+		this.omsOrderSn = omsOrderSn;
+	}
+
+	public int getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(int channelId) {
+		this.channelId = channelId;
+	}
+
+	public int getActivityId2() {
+		return activityId2;
+	}
+
+	public void setActivityId2(int activityId2) {
+		this.activityId2 = activityId2;
+	}
+
+	public int getLessShipTInTime() {
+		return lessShipTInTime;
+	}
+
+	public void setLessShipTInTime(int lessShipTInTime) {
+		this.lessShipTInTime = lessShipTInTime;
+	}
+
+	public int getLessShipTOutTime() {
+		return lessShipTOutTime;
+	}
+
+	public void setLessShipTOutTime(int lessShipTOutTime) {
+		this.lessShipTOutTime = lessShipTOutTime;
+	}
+
+	public BigDecimal getItemShareAmount() {
+		return itemShareAmount;
+	}
+
+	public void setItemShareAmount(BigDecimal itemShareAmount) {
+		this.itemShareAmount = itemShareAmount;
+	}
+
+	public String getBrokerageType() {
+		return brokerageType;
+	}
+
+	public void setBrokerageType(String brokerageType) {
+		this.brokerageType = brokerageType;
+	}
+
+	public int getIsCd() {
+		return isCd;
+	}
+
+	public void setIsCd(int isCd) {
+		this.isCd = isCd;
+	}
+
+
+
+	public int getTsShippingTime() {
+		return tsShippingTime;
+	}
+
+	public void setTsShippingTime(int tsShippingTime) {
+		this.tsShippingTime = tsShippingTime;
+	}
+
+	public int getHpRegisterDate() {
+		return hpRegisterDate;
+	}
+
+	public void setHpRegisterDate(int hpRegisterDate) {
+		this.hpRegisterDate = hpRegisterDate;
+	}
+
+	public int getHpFailDate() {
+		return hpFailDate;
+	}
+
+	public void setHpFailDate(int hpFailDate) {
+		this.hpFailDate = hpFailDate;
+	}
+
+	public int getHpFinishDate() {
+		return hpFinishDate;
+	}
+
+	public void setHpFinishDate(int hpFinishDate) {
+		this.hpFinishDate = hpFinishDate;
+	}
+
+	public int getHpReservationDate() {
+		return hpReservationDate;
+	}
+
+	public void setHpReservationDate(int hpReservationDate) {
+		this.hpReservationDate = hpReservationDate;
+	}
+
+
+	
+  
+    public String getTbOrderSn() {
+		return tbOrderSn;
+	}
+
+	public void setTbOrderSn(String tbOrderSn) {
+		this.tbOrderSn = tbOrderSn;
+	}
+
+	public String getcOrderSn() {
 		return cOrderSn;
 	}
 
@@ -377,13 +530,6 @@ public class OrderProducts implements Serializable {
         this.isWmsSku = isWmsSku;
     }
 
-    public String getsCode() {
-        return sCode;
-    }
-
-    public void setsCode(String sCode) {
-        this.sCode = sCode;
-    }
 
     public String getCbsSecCode() {
         return cbsSecCode;
@@ -730,10 +876,104 @@ public class OrderProducts implements Serializable {
     public void setCount(int count) {
 		this.count = count;
 	}
-    public int getParentId() {
-		return parentId;
+
+
+
+	public Integer getcPaymentStatus() {
+		return cPaymentStatus;
 	}
-    public void setParentId(int parentId) {
-		this.parentId = parentId;
+
+	public void setcPaymentStatus(Integer cPaymentStatus) {
+		this.cPaymentStatus = cPaymentStatus;
 	}
+
+	public Long getcPayTime() {
+		return cPayTime;
+	}
+
+	public void setcPayTime(Long cPayTime) {
+		this.cPayTime = cPayTime;
+	}
+
+	public String getsCode() {
+		return sCode;
+	}
+
+	public void setsCode(String sCode) {
+		this.sCode = sCode;
+	}
+
+	public String getScode() {
+		return scode;
+	}
+
+	public void setScode(String scode) {
+		this.scode = scode;
+	}
+
+	public int getInvoIceId() {
+		return invoIceId;
+	}
+
+	public void setInvoIceId(int invoIceId) {
+		this.invoIceId = invoIceId;
+	}
+
+	public int getRepairId() {
+		return repairId;
+	}
+
+	public void setRepairId(int repairId) {
+		this.repairId = repairId;
+	}
+    public String getRepairSn() {
+		return repairSn;
+	}
+    public void setRepairSn(String repairSn) {
+		this.repairSn = repairSn;
+	}
+    public void setOperate(int operate) {
+		this.operate = operate;
+	}
+    public int getOperate() {
+		return operate;
+	}
+
+	public int getSuccess() {
+		return success;
+	}
+
+	public void setSuccess(int success) {
+		this.success = success;
+	}
+
+	public int getStatusType() {
+		return statusType;
+	}
+
+	public void setStatusType(int statusType) {
+		this.statusType = statusType;
+	}
+    public void setSapSuccess(int sapSuccess) {
+		this.sapSuccess = sapSuccess;
+	}
+    public int getSapSuccess() {
+		return sapSuccess;
+	}
+
+    public String getVomRepairSn() {
+        return vomRepairSn;
+    }
+
+    public void setVomRepairSn(String vomRepairSn) {
+        this.vomRepairSn = vomRepairSn;
+    }
+
+    public int getRootId() {
+        return rootId;
+    }
+
+    public void setRootId(int rootId) {
+        this.rootId = rootId;
+    }
 }

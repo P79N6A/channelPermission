@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>电商OMS送达方对照</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
+
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="invWarehouse" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label" style="width: 150px">仓库（TC）代码：</span>
+                <input id="wh_code" name="wh_code" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label" style="width: 150px">日日顺配送编码：</span>
+                <input id="rrs_distribution_id" name="rrs_distribution_id" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label" style="width:150px">日日顺配送名称：</span>
+                <input id="rrs_distribution_name" name="rrs_distribution_name" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label"style="width: 150px">电商库位名称：</span>
+                <input id="estorge_name" name="estorge_name" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label"style="width: 150px">送达方代码：</span>
+                <input id="transmit_id" name="transmit_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label"style="width: 150px">管理客户编码：</span>
+                <input id="custom_id" name="custom_id" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label" style="width: 150px">送达方名称：</span>
+                <input id="transmit_desc" name="transmit_desc" class="easyui-textbox" style="width:120px">
+            </div>
+
+        </div>
+        <input id="wh_code_hidden" name="wh_code_hidden" type="hidden" />
+        <input id="estorge_name_hidden" name="estorge_name_hidden" type="hidden" />
+        <input id="transmit_id_hidden" name="transmit_id_hidden" type="hidden" />
+        <input id="transmit_desc_hidden" name="transmit_desc_hidden" type="hidden" />
+        <input id="custom_id_hidden" name="custom_id_hidden" type="hidden" />
+        <input id="rrs_distribution_id_hidden" name="rrs_distribution_id_hidden" type="hidden" />
+        <input id="rrs_distribution_name_hidden" name="rrs_distribution_name_hidden" type="hidden" />
+        <input id="exportData" name="exportData" type="hidden" />
+        <a id="search" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" >查询</a>
+        <a id="create" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >创建</a>
+        <a id="update" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >修改</a>
+        <a id='delete' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" >删除</a>
+        <a id='openStatus' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" >启用</a>
+        <a id='closeStatus' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no',plain:true" >禁用</a>
+        <a id='export' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >导出</a>
+        <a id='exportall' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >全部导出</a>
+    </form>
+</div>
+
+<div id="createDiv" class="easyui-dialog"
+     closed="true" buttons="#usercreate-buttons" style="width:1050px; height:500px;">
+    <form id="createForm" method="post" style="padding:10px 20px">
+        <div class="fitem" style="width: 280px;">
+            <label style="width: 120px;">仓库（TC）代码: </label>
+            <input id="wh_code_create" name="wh_code_create" class="easyui-textbox" data-options="required:true,validType:'length[0,2]'"/>
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 180px;">仓库名称:</label>
+            <input id="wh_name_create" name="wh_name_create" class="easyui-textbox" data-options="required:true,validType:'length[0,10]'"  />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 200px;">网单中心代码:</label>
+            <input id="center_code_create" name="center_code_create" class="easyui-textbox" data-options="required:true,validType:'length[0,10]'" />
+        </div>
+        <div class="fitem" style="width: 280px;">
+            <label style="width: 120px;">电商库位码:</label>
+            <input id="estorge_id_create" name="estorge_id_create" class="easyui-textbox" data-options="required:true,validType:'length[0,4]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 180px;">电商库位名称:</label>
+            <input id="estorge_name_create" name="estorge_name_create" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'"  />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 200px;">送达方代码:</label>
+            <input id="transmit_id_create" name="transmit_id_create" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"  />
+        </div>
+        <div class="fitem" style="width: 280px;">
+            <label style="width: 120px;">送达方名称:</label>
+            <input id="transmit_desc_create" name="transmit_desc_create" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'"  />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 180px;">0E码（LES）:</label>
+            <input id="les_OE_id_create" name="les_OE_id_create" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"  />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 200px;">管理客户编码:</label>
+            <input id="custom_id_create" name="custom_id_create" 	class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"  />
+        </div>
+        <div class="fitem" style="width: 280px">
+            <label style="width: 120px;">管理客户名称:</label>
+            <input id="custom_desc_create" name="custom_desc_create" class="easyui-textbox"data-options="required:true,validType:'length[0,2000]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 180px;">工贸代码:</label>
+            <input id="industry_trade_id_create" name="industry_trade_id_create" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"  />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 200px;">工贸描述:</label>
+            <input id="industry_trade_desc_create" name="industry_trade_desc_create" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'"  />
+        </div>
+        <div class="fitem"style="width: 280px;">
+            <label style="width: 120px;">颗粒度编码:</label>
+            <input id="graininess_id_create" name="graininess_id_create" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 180px;">网单经营体编码:</label>
+            <input id="net_management_id_create" name="net_management_id_create" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 200px;">电商售达方编码:</label>
+            <input id="esale_id_create" name="esale_id_create" class="easyui-textbox"data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem"style="width: 280px;">
+            <label style="width: 120px;">电商售达方名称:</label>
+            <input id="esale_name_create" name="esale_name_create" class="easyui-textbox" required="true" data-options="required:true,validType:'length[0,2000]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 180px;">销售组织编码:</label>
+            <input id="sale_org_id_create" name="sale_org_id_create" class="easyui-textbox" required="true"data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 200px;">分公司地址:</label>
+            <input id="branch_create" name="branch_create" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'" />
+        </div>
+        <div class="fitem"style="width: 280px;">
+            <label style="width: 120px;">电商付款方编码:</label>
+            <input id="payment_id_create" name="payment_id_create" class="easyui-textbox" required="true" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 180px;">电商付款方名称:</label>
+            <input id="payment_name_create" name="payment_name_create" class="easyui-textbox" required="true" data-options="required:true,validType:'length[0,2000]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 200px;">地区编码（CRM专用）:</label>
+            <input id="area_id_create" name="area_id_create" class="easyui-textbox" required="true" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem"style="width: 280px;">
+            <label style="width: 120px;">日日顺配送编码:</label>
+            <input id="rrs_distribution_id_create" name="rrs_distribution_id_create" required="true" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 180px;">日日顺配送名称:</label>
+            <input id="rrs_distribution_name_create" name="rrs_distribution_name_create"required="true" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'" />
+        </div>
+        <div class="fitem" style="width: 350px">
+            <label style="width: 200px;">日日顺售达方:</label>
+            <input id="rrs_sale_id_create" name="rrs_sale_id_create" class="easyui-textbox" required="true" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 280px;">
+            <label style="width: 120px;">日日顺售达方名称:</label>
+            <input id="rrs_sale_name_create" name="rrs_sale_name_create" class="easyui-textbox" required="true"data-options="required:true,validType:'length[0,200]'" />
+        </div>
+        <div class="fitem"  style="width: 350px;">
+            <label style="width: 180px;">OMS重庆新日日顺付款方:</label>
+            <input id="oms_rrs_payment_id_create" name="oms_rrs_payment_id_create" class="easyui-textbox" required="true"data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 350px;">
+            <label style="width: 200px;">OMS重庆新日日顺付款方名称:</label>
+            <input id="oms_rrs_payment_name_create" name="oms_rrs_payment_name_create" class="easyui-textbox"required="true" data-options="required:true,validType:'length[0,2000]'" />
+        </div>
+        <div class="fitem" style="width: 280px;">
+            <label style="width: 120px;">城市描述:</label>
+            <input id="city_desc_create" name="city_desc_create" class="easyui-combobox" required="true"/>
+        </div>
+    </form>
+</div>
+<div id="usercreate-buttons">
+    <a id="createConfirm" href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#createDiv').dialog('close')" style="width:90px">取消</a>
+</div>
+<div id="userEdit-buttons">
+    <a id="updateConfirm" href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#updateDiv').dialog('close')" style="width:90px">取消</a>
+</div>
+<div id="updateDiv" class="easyui-dialog"
+     closed="true" buttons="#userEdit-buttons" style="width:1050px; height:500px;">
+    <form id="updateForm" method="post" style="padding:10px 20px">
+            <div class="fitem" style="width: 280px;">
+                <label style="width: 120px;">仓库（TC）代码: </label>
+                <input id="wh_code_update" name="whCode" class="easyui-textbox" required="true" readonly="readonly"/>
+            </div>
+            <div class="fitem" style="width: 350px">
+                <label style="width: 180px;">仓库名称:</label>
+                <input id="wh_name_update" name="whName" class="easyui-textbox" data-options="required:true,validType:'length[0,10]'" />
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 200px;">网单中心代码:</label>
+                <input id="center_code_update" name="centerCode" class="easyui-textbox" data-options="required:true,validType:'length[0,10]'"/>
+            </div>
+            <div class="fitem" style="width: 280px">
+                <label style="width: 120px;">电商库位码:</label>
+                <input id="estorge_id_update" name="estorge_id" class="easyui-textbox" data-options="required:true,validType:'length[0,4]'" />
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 180px;">电商库位名称:</label>
+                <input id="estorge_name_update" name="estorge_name" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'"/>
+            </div>
+            <div class="fitem" style="width: 350px">
+                <label style="width: 200px;">送达方代码:</label>
+                <input id="transmit_id_update" name="transmit_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+            </div>
+            <div class="fitem" style="width: 280px;">
+                <label style="width: 120px;">送达方名称:</label>
+                <input id="transmit_desc_update" name="transmit_desc" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'" />
+            </div>
+            <div class="fitem" style="width: 350px">
+                <label style="width: 180px;">0E码（LES）:</label>
+                <input id="les_OE_id_update" name="les_OE_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 200px;">管理客户编码:</label>
+                <input id="custom_id_update" name="custom_id" 	class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+            </div>
+            <div class="fitem" style="width: 280px">
+                <label style="width: 120px;">管理客户名称:</label>
+                <input id="custom_desc_update" name="custom_desc" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'" />
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 180px;">工贸代码:</label>
+                <input id="industry_trade_id_update" name="industry_trade_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+            </div>
+            <div class="fitem" style="width: 350px">
+                <label style="width: 200px;">工贸描述:</label>
+                <input id="industry_trade_desc_update" name="industry_trade_desc" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'" />
+            </div>
+            <div class="fitem" style="width: 280px;">
+                <label style="width: 120px;">颗粒度编码:</label>
+                <input id="graininess_id_update" name="graininess_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"/>
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 180px;">网单经营体编码:</label>
+                <input id="net_management_id_update" name="net_management_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"/>
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 200px;">电商售达方编码:</label>
+                <input id="esale_id_update" name="esale_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"/>
+            </div>
+            <div class="fitem" style="width: 280px;">
+                <label style="width: 120px;">电商售达方名称:</label>
+                <input id="esale_name_update" name="esale_name" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'"/>
+            </div>
+            <div class="fitem"style="width: 350px;">
+                <label style="width: 180px;">销售组织编码:</label>
+                <input id="sale_org_id_update" name="sale_org_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"/>
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 200px;">分公司地址:</label>
+                <input id="branch_update" name="branch" class="easyui-textbox" />
+            </div>
+            <div class="fitem"style="width: 280px;">
+                <label style="width: 120px;">电商付款方编码:</label>
+                <input id="payment_id_update" name="payment_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"/>
+            </div>
+            <div class="fitem"style="width: 350px;">
+                <label style="width: 180px;">电商付款方名称:</label>
+                <input id="payment_name_update" name="payment_name" class="easyui-textbox" data-options="required:true,validType:'length[0,2000]'"/>
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 200px;">地区编码（CRM专用）:</label>
+                <input id="area_id_update" name="area_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"/>
+            </div>
+            <div class="fitem" style="width: 280px;">
+                <label style="width: 120px;">日日顺配送编码:</label>
+                <input id="rrs_distribution_id_update" name="rrs_distribution_id" data-options="required:true,validType:'length[0,20]'" class="easyui-textbox" />
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 180px;">日日顺配送名称:</label>
+                <input id="rrs_distribution_name_update" name="rrs_distribution_name"data-options="required:true,validType:'length[0,200]'" class="easyui-textbox" />
+            </div>
+            <div class="fitem"style="width: 350px;">
+                <label style="width: 200px;">日日顺售达方:</label>
+                <input id="rrs_sale_id_update" name="rrs_sale_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"/>
+            </div>
+            <div class="fitem"style="width: 280px;">
+                <label style="width: 120px;">日日顺售达方名称:</label>
+                <input id="rrs_sale_name_update" name="rrs_sale_name" class="easyui-textbox" data-options="required:true,validType:'length[0,200]'"/>
+            </div>
+            <div class="fitem"style="width: 350px;">
+                <label style="width: 180px;">OMS重庆新日日顺付款方:</label>
+                <input id="oms_rrs_payment_id_update" name="oms_rrs_payment_id" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"/>
+            </div>
+            <div class="fitem" style="width: 350px;">
+                <label style="width: 200px;">OMS重庆新日日顺付款方名称:</label>
+                <input id="oms_rrs_payment_name_update" name="oms_rrs_payment_name" class="easyui-textbox"data-options="required:true,validType:'length[0,200]'" />
+            </div>
+            <div class="fitem" style="width: 280px;">
+                <label style="width: 120px;">城市描述:</label>
+                <input id="city_desc_update" name="city_desc" class="easyui-combobox" data-options="required:true"/>
+            </div>
+    </form>
+</div>
+
+<script src="../static/js/purchase/invWarehouse.js"></script>
+<script src="../static/js/settleCenter/ajaxfileupload.js"></script>
+
+</body>
+</html>

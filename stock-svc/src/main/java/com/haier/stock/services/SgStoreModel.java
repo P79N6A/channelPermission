@@ -21,7 +21,7 @@ import com.haier.common.util.StringUtil;
 import com.haier.shop.model.BigStoragesRela;
 import com.haier.shop.model.ProductBase;
 import com.haier.shop.model.SgConstants;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.shop.model.StoragesRela;
 import com.haier.shop.service.BasChangeStockService;
 import com.haier.shop.service.BigStoragesRelaService;

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
 import com.haier.eis.model.EisExternalSku;
-import com.haier.purchase.data.model.LesFiveYardInfo;
+import com.haier.shop.model.LesFiveYardInfo;
 
 @Service
 public class OrderCenterItemServiceImplNew {

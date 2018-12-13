@@ -1,42 +1,49 @@
-<!DOCTYPE html>
-<html lang="zh-cmn-Hans">
-<head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
     <meta charset="UTF-8">
+
+    <title>订单列表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
-    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
     <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
-    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
     <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
-    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
-
-    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
-    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
-    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
-
     <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
     <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
     <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
-    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
     <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
-
-
     <link rel="stylesheet" href="../static/css/common.css">
-    <title>orderForecastGoal</title>
     <script src="../static/third/jquery.js"></script>
     <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
     <script src="../static/third/easyui/jquery.easyui.min.js"></script>
     <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
     <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../static/js/utils.js"></script>
-    <script src="../static/js/easyui-extention.js"></script>
     <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <style>
+        .datagrid-header-rownumber{
+            width: 50px!important;
+            text-align: center;
+            margin: 0px;
+            padding: 3px 0;
+        }
+        .datagrid-cell-rownumber{
+            width: 50px!important;
+            text-align: center;
+            margin: 0px;
+            padding: 3px 0;
+        }
+    </style>
 </head>
 <body class="iframe-body">
 <div id="searchPanel_orderForecastGoal" class="easyui-panel"
      style="width:100%;height:100%;"
      data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
     collapsible:false">
-    <table id="datagrid_orderForecastGoal"></table>
+    <table id="datagrid"></table>
 </div>
 
 <div id="datagridToolbar_orderForecastGoal">
@@ -55,14 +62,14 @@
     <form id="paramForm_orderForecastGoal" class="param-form">
         <div class="search-panel" style="font-size: 11px;">
             <div class="search-row_nowidth mar_r6px">
-                <select id="smConfirmStatus" name="smConfirmStatus" class="easyui-combobox">
+                <select id="smConfirmStatus" name="smConfirmStatus" class="easyui-combobox" editable="false" panelHeight="auto">
                     <option value="0">是否转人工处理</option>
                     <option value="3">是</option>
                     <option value="-1">否</option>
                 </select>
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="isCod" name="isCod" class="easyui-combobox">
+                <select id="isCod" name="isCod" class="easyui-combobox" editable="false" panelHeight="auto">
                     <option value="-1" style="color: #aaa;">货到付款订单</option>
                     <option value="1">是</option>
                     <option value="0">否</option>
@@ -80,55 +87,87 @@
             <div class="search-row_nowidth mar_r6px">
                 <input id="consignee" name="consignee" class="easyui-textbox" data-options="prompt:'收货人'">
             </div>
-            <div class="search-row_nowidth mar_r6px">
-                <input id="productName" name="productName" class="easyui-textbox" data-options="prompt:'商品名称'">
-            </div>
-            <div class="search-row_nowidth mar_r6px">
-                <select id="source" name="source" class="easyui-combobox">
+
+            <div class="search-row_nowidth mar_r6px" style="width: 283px">
+                <select id="source" name="source" class="easyui-combobox" style="width: 283px" editable="false">
                     <option value="" selected="">订单来源</option>
-                    <option value="TBSC">海尔官方淘宝旗舰店</option>
-                    <option value="TOPBOILER">海尔热水器专卖店</option>
-                    <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
-                    <option value="TONGSHUAIFX">统帅品牌商</option>
-                    <option value="TOPXB">海尔新宝旗舰店</option>
-                    <option value="MOOKA">mooka模卡官方旗舰店</option>
-                    <option value="WASHER">海尔洗衣机旗舰店</option>
-                    <option value="FRIDGE">海尔冰冷旗舰店</option>
-                    <option value="AIR">海尔空调旗舰店</option>
-                    <option value="TBCT">村淘海尔商家</option>
-                    <option value="GQGYS">海尔官方旗舰店供应商</option>
-                    <option value="TMKSD">天猫卡萨帝旗舰店</option>
-                    <option value="TMTV">海尔电视旗舰店</option>
-                    <option value="TBCFDD">海尔厨房大电旗舰店</option>
+
+                    <option value="TBSC">淘宝海尔官方旗舰店</option>
+                    <option value="TOPFENXIAO">淘宝海尔官方旗舰店分销平台</option>
+                    <option value="TOPBOILER">淘宝海尔热水器专卖店</option>
+                    <option value="TOPMOBILE">淘宝海尔手机专卖店</option>
+                    <option value="AIR">淘宝空调旗舰店</option>
+                    <option value="TBCFDD">淘宝海尔厨房大电旗舰店</option>
+
+                    <option value="WASHER">海尔洗衣机官方旗舰店</option>
+                    <option value="FRIDGE">海尔冰冷官方旗舰店</option>
+                    <option value="TMKSD">卡萨帝官方旗舰店</option>
+
+                    <option value="TBQYG">天猫企业购</option>
+                    <option value="TMST">天猫生态</option>
                     <option value="TBXCR">天猫小超人旗舰店</option>
-                    <option value="TOPSHJD">海尔生活电器专卖店</option>
-                    <option value="TOPDHSC">海尔生活家电旗舰店</option>
-                    <option value="GMZX">统帅国美旗舰店</option>
-                    <option value="GMZXTS">统帅国美官方旗舰店</option>
-                    <option value="GMTSZYCW">统帅国美旗舰店(厨卫)</option>
-                    <option value="GMTSZYKT">统帅国美旗舰店(空调)</option>
-                    <option value="GMTSZYBX">统帅国美旗舰店(冰箱)</option>
-                    <option value="GMTSZYXYJ">统帅国美旗舰店(洗衣机)</option>
-                    <option value="yihaodian">一号店</option>
-                    <option value="yihaodiants">一号店统帅</option>
-                    <option value="YHDZY">一号店自营</option>
-                    <option value="YHDQWZY">一号店全网自营</option>
-                    <option value="jianhang">建行</option>
-                    <option value="ICBC">工商</option>
-                    <option value="YMX">亚马逊</option>
-                    <option value="SNYG">苏宁</option>
-                    <option value="SNHEGQ">苏宁海尔集团官方旗舰店</option>
+
+                    <option value="TONGSHUAI">统帅日日顺乐家专卖店</option>
+
+                    <option value="CCBSC">企业订单_建行龙卡商城订单</option>
+                    <option value="CCBSR">企业订单_建行善融商城订单</option>
+                    <option value="95533">企业内购-建行</option>
+                    <option value="CORPORATE">企业订单</option>
+                    <option value="CORPORATE_SJMG">企业订单_四季沐歌</option>
+
+                    <option value="ZPTH">正品退货</option>
+                    <option value="HPB2B">海朋转TC订单</option>
+                    <option value="C2BWASHER">C2B滚筒洗衣机订单</option>
+
+                    <option value="MOOKA">mooka模卡官方旗舰店</option>
+                    <option value="TMMK">mooka模卡官方旗舰店TMMK</option>
+                    <option value="JDMK">京东模卡</option>
+
+                    <option value="GQGYS">生态授权店</option>
+                    <option value="XSST">线上生态授权店</option>
+
+                    <option value="DSPTJDST">电商平台-京东生态</option>
+                    <option value="DDW">电商平台-当当网</option>
+
+                    <option value="SNYG">苏宁统帅官方旗舰店</option>
+                    <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
                     <option value="SNQDZX">苏宁渠道中心</option>
-                    <option value="DDW">当当</option>
-                    <option value="YLW">邮乐</option>
-                    <option value="YDYZ">有赞微商城</option>
-                    <option value="KDGW">微店</option>
-                    <option value="MD">萌店</option>
-                    <option value="JDXYJ">京东</option>
+                    <option value="GMZX">国美海尔官方旗舰店</option>
+                    <option value="GMZXTS">国美统帅官方旗舰店</option>
+                    <option value="JDHEBXGQ">京东海尔集团冰箱官方旗舰店</option>
+                    <option value="JDHEGQ">京东海尔官方旗舰店</option>
+
+##                    <option value="TBSC">海尔官方淘宝旗舰店</option>
+##                    <option value="TOPBOILER">海尔热水器专卖店</option>
+##                    <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
+##                    <option value="TONGSHUAIFX">统帅分销</option>
+##                    <option value="TOPXB">海尔新宝旗舰店</option>
+##                    <option value="MOOKA">mooka模卡官方旗舰店</option>
+##                    <option value="WASHER">海尔洗衣机旗舰店</option>
+##                    <option value="FRIDGE">海尔冰冷旗舰店</option>
+##                    <option value="AIR">海尔空调旗舰店</option>
+##                    <option value="TBCT">村淘海尔商家</option>
+##                    <option value="GQGYS">生态授权店</option>
+##                    <option value="TMKSD">天猫卡萨帝旗舰店</option>
+##                    <option value="TMTV">海尔电视旗舰店</option>
+##                    <option value="TBCFDD">海尔厨房大电旗舰店</option>
+##                    <option value="TBXCR">天猫小超人旗舰店</option>
+##                    <option value="TOPSHJD">海尔生活电器专卖店</option>
+##                    <option value="TOPDHSC">海尔生活家电旗舰店</option>
+##                    <option value="GMZX">国美海尔官方旗舰店</option>
+##                    <option value="GMZXTS">国美统帅官方旗舰店</option>
+##                    <option value="SNYG">苏宁统帅官方旗舰店</option>
+##                    <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
+##                    <option value="SNQDZX">苏宁渠道中心</option>
+##                    <option value="DDW">当当</option>
+##                    <option value="JDHEBXGQ">京东海尔集团冰箱官方旗舰店</option>
+##                    <option value="JDHEGQ">京东海尔官方旗舰店</option>
+##                    <option value="XSST">线上生态授权店</option>
+##                    <option value="DSPTJDST">电商平台-京东生态</option>
                 </select>
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="orderStatus" name="orderStatus" class="easyui-combobox">
+                <select id="orderStatus" name="orderStatus" class="easyui-combobox" editable="false" panelHeight="auto">
                     <option value="-1" selected="">订单状态</option>
                     <option value="200">未确认</option>
                     <option value="201">已确认</option>
@@ -137,7 +176,7 @@
                 </select>
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="paymentCode" name="paymentCode" class="easyui-combobox">
+                <select id="paymentCode" name="paymentCode" class="easyui-combobox" editable="false">
                     <option value="" selected="">支付方式</option>
                     <option value="chinapay">银联支付</option>
                     <option value="lejia">电子钱包</option>
@@ -160,7 +199,7 @@
                 </select>
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="paymentStatus" name="paymentStatus" class="easyui-combobox">
+                <select id="paymentStatus" name="paymentStatus" class="easyui-combobox" editable="false" panelHeight="auto">
                     <option value="-1" selected="">支付状态</option>
                     <option value="100">未付款</option>
                     <option value="101">已付款</option>
@@ -169,21 +208,21 @@
                 </select>
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="orderType" name="orderType" class="easyui-combobox">
+                <select id="orderType" name="orderType" class="easyui-combobox" editable="false" panelHeight="auto">
                     <option value="-1">订单类型</option>
                     <option value="0">普通订单</option>
                     <option value="2">定金-尾款订单</option>
                 </select>
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="invoiceType" name="invoiceType" class="easyui-combobox">
+                <select id="invoiceType" name="invoiceType" class="easyui-combobox" editable="false" panelHeight="auto">
                     <option value="-1">发票类型</option>
                     <option value="1">增值税发票</option>
                     <option value="2">普通发票</option>
                 </select>
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="provinceId" name="provinceId" class="easyui-combobox">
+                <select id="provinceId" name="provinceId" class="easyui-combobox" editable="false">
                     <option value="-1">省份</option>
                     <option value="13">A-安徽</option>
                     <option value="2">B-北京</option>
@@ -219,7 +258,7 @@
                 </select>
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="isUsePoint" name="isUsePoint" class="easyui-combobox">
+                <select id="isUsePoint" name="isUsePoint" class="easyui-combobox" editable="false" panelHeight="auto">
                     <option value="-1">是否使用积分</option>
                     <option value="1">是</option>
                     <option value="0">否</option>
@@ -236,13 +275,13 @@
                 <input id="modifiedEnd" name="modifiedEnd" class="easyui-datebox" data-options="prompt:'订单更新时间'">
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="payTimeSort" name="payTimeSort" class="easyui-combobox">
+                <select id="payTimeSort" name="payTimeSort" class="easyui-combobox" editable="false" panelHeight="auto">
                     <option value="asc">按付款时间升序显示</option>
                     <option value="desc" selected="true">按付款时间降序显示</option>
                 </select>
             </div>
             <div class="search-row_nowidth mar_r6px">
-                <select id="isProduceDaily" name="isProduceDaily" class="easyui-combobox">
+                <select id="isProduceDaily" name="isProduceDaily" class="easyui-combobox" editable="false" panelHeight="auto">
                     <option value="-1">是否日日单</option>
                     <option value="1">是</option>
                     <option value="0">否</option>
@@ -263,6 +302,7 @@
            data-options="iconCls:'icon-save',plain:true">导出</a>
         <input id="exportData" name="exportData" type="hidden"/>
     </form>
+    <input id="startDate" type="hidden" value="${startDate}"/>
 </div>
 <div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
      style="width:400px;height:350px;"
@@ -326,6 +366,10 @@
     </div>
 </div>
 <script type="text/javascript">
+	$(function() {// 初始化内容
+		var startDate=$('#startDate').val();
+    	$('#addTimeBegine').datebox('setValue',startDate);
+    });  
     function slideUpSlideClk(t) {
         var $this = $(t);
         if ($this.hasClass('open')) {
@@ -342,7 +386,7 @@
             $(".search-panel").slideDown();
         }
         setTimeout(function () {
-            $('#datagrid_orderForecastGoal').datagrid('resize');
+            $('#datagrid').datagrid('resize');
         }, 500);
     }
 </script>

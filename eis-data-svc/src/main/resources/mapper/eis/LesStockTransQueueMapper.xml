@@ -35,6 +35,12 @@
         <result property="financeStatus" column="finance_status"/>
         <result property="channelRevised" column="channel_revised"/>
         <result property="isManualSetChannel" column="is_manual_set_channel"/>
+        <result property="reviseTime" column="revise_time"/>
+
+        <result property="interfaceCode" column="interface_code"/>
+        <result property="statusF" column="statusF"/>
+        <result property="addTimeF" column="addTimeF"/>
+        <result property="updateTimeF" column="updateTimeF"/>
     </resultMap>
     <select id="getByLesBillNo" resultMap="lesStockTransQueueResult">
         SELECT
@@ -178,8 +184,57 @@
             `is_manual_set_channel`
         FROM `les_stock_trans_queue`
         WHERE finance_status = 0
+        AND `status` = 1
         LIMIT 500
         ]]>
+	</select>
+    <select id="getForFinanceByParams" resultType="java.util.Map" resultMap="lesStockTransQueueResult">
+
+        SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `data`,
+            `status`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`,
+            `channel_revised`,
+            `is_manual_set_channel`
+        FROM `les_stock_trans_queue`
+        WHERE finance_status = 0
+        AND ((
+        <if test="isNotDN">
+          bill_type != 'ZBCR'
+        </if>
+        <if test="isNotTrans">
+            AND  bill_type != 'ZGR6' AND bill_type != 'ZGI6'
+        </if>
+        )
+        OR (corder_sn LIKE 'WD%' AND bill_type = 'ZBCR')
+        )
+        AND `status` = 1
+        LIMIT 500
 	</select>
     <select id="getNotProcessByBatchId" parameterType="Integer"
             resultMap="lesStockTransQueueResult">
@@ -441,7 +496,54 @@
             `corder_sn` = #{corderSn}
         LIMIT 1
     </select>
-    
+
+    <select id="getLesStockTransQueueByCorderSnBillType" resultMap="lesStockTransQueueResult">
+        SELECT
+        `id`,
+        `les_batch_id`,
+        `sku`,
+        `sec_code`,
+        `corder_sn`,
+        `outping`,
+        `bill_time`,
+        `bill_type`,
+        `quantity`,
+        `zeile`,
+        `les_bill_no`,
+        `mark`,
+        `matkl`,
+        `kunnr_sale_to`,
+        `kunnr_send_to`,
+        `tknum`,
+        `bwart`,
+        `charg`,
+        `reserve1`,
+        `reserve2`,
+        `bstkd`,
+        `data`,
+        `process_time`,
+        `add_time`,
+        `error_message`,
+        `version_code`,
+        `channel_code`
+        FROM `les_stock_trans_queue`
+        WHERE
+        `corder_sn` = #{corderSn}
+        GROUP BY sku
+    </select>
+
+
+    <select id="findInStockCode" resultMap="lesStockTransQueueResult">
+    SELECT
+
+    `sec_code`
+
+    FROM `les_stock_trans_queue`
+    WHERE
+    `corder_sn` = #{corderSn}
+    LIMIT 1
+</select>
+
     <delete id="delete" parameterType="Integer" statementType="PREPARED">
 		delete from `les_stock_trans_queue`
 		where 
@@ -454,6 +556,18 @@
         FROM `les_stock_trans_queue`
         WHERE
             `corder_sn` = #{corder_sn} AND `sku` = #{sku} 
+    </select>
+    
+	<select id="getByLineNums" resultMap="lesStockTransQueueResult">
+        SELECT
+            *
+        FROM `les_stock_trans_queue`
+        WHERE
+            `corder_sn` in 
+        <foreach collection="lineNumList" index="index" item="lineNum" open="(" separator="," close=")">
+           #{lineNum}
+        </foreach>
+        ORDER BY corder_sn, bill_type
     </select>
     
     <update id="updateLesStatus" parameterType="java.util.Map">
@@ -513,5 +627,105 @@
         WHERE
             `status` = 2
     </select>
-    
+     <select id="queryCorderSn" resultMap="lesStockTransQueueResult" parameterType="java.lang.String"> 
+    SELECT
+            `id`,
+            `les_batch_id`,
+            `sku`,
+            `sec_code`,
+            `corder_sn`,
+            `outping`,
+            `bill_time`,
+            `bill_type`,
+            `quantity`,
+            `zeile`,
+            `les_bill_no`,
+            `mark`,
+            `matkl`,
+            `kunnr_sale_to`,
+            `kunnr_send_to`,
+            `tknum`,
+            `bwart`,
+            `charg`,
+            `reserve1`,
+            `reserve2`,
+            `bstkd`,
+            `status`,
+            `process_time`,
+            `add_time`,
+            `error_message`,
+            `version_code`,
+            `channel_code`,
+            `channel_revised`,
+            `is_manual_set_channel`
+        FROM `les_stock_trans_queue`
+        WHERE
+        	mark = #{mark}
+		AND charg = #{charg}
+    	AND  corder_sn =#{orderSn}
+    	LIMIT 0,1
+    </select>
+
+    <select id="getPushSapResult" resultMap="lesStockTransQueueResult">
+        SELECT
+          lstq.id,
+          lstq.corder_sn,
+          lstq.sku,
+          lstq.sec_code,
+          lstq.bill_type,
+          lstq.mark,
+          lstq.channel_code,
+          eif.interface_code,
+          eif.`status` statusF,
+          eif.add_time addTimeF,
+          eif.update_time updateTimeF
+        FROM
+          les_stock_trans_queue lstq
+        LEFT JOIN eis_interface_finance eif ON lstq.id = eif.les_stock_trans_queue_id
+        WHERE
+          eif.id IS NOT NULL
+          <if test="startTime != null and startTime != ''">
+            <![CDATA[AND eif.add_time >= #{startTime}]]>
+          </if>
+          <if test="endTime != null and endTime != ''">
+            <![CDATA[AND eif.update_time <= #{endTime}]]>
+          </if>
+          <if test="corderSn != null and corderSn != ''">
+            AND lstq.corder_sn = #{corderSn}
+          </if>
+          <if test="status != null and status != ''">
+            AND eif.`status` = #{status}
+          </if>
+          <if test="billType != null and billType != ''">
+            AND lstq.bill_type = #{billType}
+          </if>
+          <if test="pager != null">
+            limit #{pager.start},#{pager.pageSize}
+          </if>
+    </select>
+
+    <select id="getPushSapResultCount" resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        les_stock_trans_queue lstq
+        LEFT JOIN eis_interface_finance eif ON lstq.id = eif.les_stock_trans_queue_id
+        WHERE
+        eif.id IS NOT NULL
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[AND eif.add_time >= #{startTime}]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[AND eif.update_time <= #{endTime}]]>
+        </if>
+        <if test="corderSn != null and corderSn != ''">
+            AND lstq.corder_sn = #{corderSn}
+        </if>
+        <if test="status != null and status != ''">
+            AND eif.`status` = #{status}
+        </if>
+        <if test="billType != null and billType != ''">
+            AND lstq.bill_type = #{billType}
+        </if>
+    </select>
 </mapper>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>保本价解锁</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderPriceGate" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_orderPriceGate"></table>
+</div>
+
+<div id="datagridToolbar_orderPriceGate">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderPriceGate" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth">
+                <span class="search-row-label">闸口类型</span>
+                <select id="gateType" class="easyui-combobox" style="width: 178px;" panelHeight="auto">
+                    <option value="">请选择</option>
+                    <option value="1">保本价</option>
+                    <option value="2">费用池</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">下单时间 </span>
+                <input class="easyui-datebox" name="makeOrderTime" id="startTime" style="width: 178px;"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">至 </span>
+                <input class="easyui-datebox" name="makeOrderTime" id="endTime" style="width: 178px;"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">是否闸住</span>
+                <select id="isGate" class="easyui-combobox" style="width: 178px;" panelHeight="auto">
+                    <option value="">请选择</option>
+                    <option value="1" selected = "selected">闸口中</option>
+                    <option value="0">已放行</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+              <span class="search-row-label">渠道名称</span>
+              <input id="channel" name="channel" class="easyui-combobox" data-options="valueField:'id',textField:'text'" style="width: 178px;"/>
+            </div>
+            <div class="search-row_nowidth">
+              <span class="search-row-label">订单来源</span>
+              <input id="source" name="source" class="easyui-combobox" data-options="valueField:'id',textField:'text'" style="width: 178px;"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">产业</span>
+              <input id="industry" name="industry" class="easyui-combobox" data-options="valueField:'id',textField:'text'" style="width: 178px;"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">产品组</span>
+              <input id="productGroup" name="productGroup" class="easyui-combobox" data-options="valueField:'id',textField:'text'" style="width: 178px;"/>
+            </div>
+
+            <div class="search-row_nowidth">
+                <span class="search-row-label">订单编号</span>
+                <input class="easyui-textbox" name="orderNo" id="orderNo" style="width: 178px;"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">网单编号</span>
+                <input class="easyui-textbox" name="sorderNo" id="sorderNo" style="width: 178px;"/>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderPriceGate"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderPriceGate"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="unlockBtn_orderPriceGate"
+           data-options="iconCls:'icon-unlock',plain:true">解锁</a>
+        <!--<a href="#" class="easyui-linkbutton" id="editBtn_orderPriceGate" data-options="iconCls:'icon-edit',plain:true">修改</a>-->
+        <!--<a href="#" class="easyui-linkbutton" id="deleteBtn_orderPriceGate"-->
+        <!--data-options="iconCls:'icon-remove',plain:true">删除</a>-->
+        <span style="color: red">*(提醒：解锁是以订单为单位的，如果同一订单有多个网单都被闸住，必须将该订单下所有被闸住网单一起选定才可以解锁)<br/>
+        费用池优惠券闸口闸住时，网单使用优惠券请关注“保本价差额/费用池优惠券”
+        </span>
+    </form>
+</div>
+<div id="addDlg_orderPriceGate" data-options="title:'保本价放行闸住订单',resizable:true,modal:true" class="easyui-dialog add-dlg"
+     style="width:500px;height:300px;"
+     closed="true" buttons="#dlg-buttons_orderPriceGate">
+    <form id="addForm_orderPriceGate" method="post">
+        <input name="cOrderNo" type="text" id="cOrderNo" style="display:none;"/>
+        <input __actType type="hidden"/>
+      <div class="fitem">
+        <label>责任人<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="responsiblePerson" id="responsiblePerson" required="true"/>
+      </div>
+      <div class="fitem" style="width: 410px;">
+        <label>放行原因<span style="color: red;">*</span></label>
+        <input class="easyui-textbox" name="reason" id="reason" required="true" data-options="multiline:true,width:300,height:100"/>
+      </div>
+    </form>
+    <div id="dlg-buttons_orderPriceGate">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_orderPriceGate" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#addDlg_orderPriceGate').dialog('close')">取消</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderPriceGate').datagrid('resize');
+        }, 500);
+    }
+
+</script>
+<script src="../static/js/order/orderPriceOpenGateIndex.js"></script>
+</body>
+</html>

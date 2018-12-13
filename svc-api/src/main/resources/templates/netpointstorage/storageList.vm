@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>库位列表</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false,border:false">
+    <table id="datagrid">
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth">
+                <span class="search-row-label">
+                  库位名称
+                </span>
+                <input class="easyui-textbox" id="storageName" name="storageName"/>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">
+                  库位码
+                </span>
+                <input class="easyui-textbox" id="storageCode" name="storageCode"/>
+            </div>
+
+            <div class="search-row_nowidth">
+                <span class="search-row-label">
+                    库位类型
+                </span>
+                <select class="easyui-combobox" id="storageType" name="storageType"  panelHeight="auto">
+                    <option value="-1">全部</option>
+                    <option value="1">大库</option>
+                    <option value="2">小库</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">
+                  货票同行
+                </span>
+                <select class="easyui-combobox" name="isTogether" id="isTogether"  panelHeight="auto"">
+                    <option value="-1">全部</option>
+                    <option value="1">货票同行</option>
+                    <option value="0">非货票同行</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">
+                  支持货到付款
+                </span>
+                <select class="easyui-combobox" name="isSupportCod" id="isSupportCod" panelHeight="auto">
+                    <option value="-1">全部</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">
+                  覆盖地区
+                </span>
+                    <tr>
+                        <td>
+                            <input id="province" name="province" v class="easyui-combobox" editable="false"  style="width:180px;" />
+                        </td>
+                        <td>
+                            <input id="citys" name="citys"  class="easyui-combobox" editable="false" style="width:180px;"/>
+                        </td>
+                        <td>
+                            <input id="county" name="county"  class="easyui-combobox" editable="false" style="width:200px;" data-options="onSelect: function(rec){}"/>
+                        </td>
+                    </tr>
+            </div>
+
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="export"
+           data-options="iconCls:'icon-save',plain:true">导出库位报表</a>
+        <a href="#" class="easyui-linkbutton" id="add_Storage"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="delete_Storage"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <!-- 修改时传的id-->
+        <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+        <input id="exportData" name="exportData" type="hidden"/>
+        <input id="ids" name="ids" type="hidden"/>
+    </form>
+</div>
+    <div id="dialog-message" class="easyui-dialog" title="网单详情" closed="true" style="display: none">
+        <div id="list" class="list2" style="background:#ffffff;overflow-x:auto;overflow-y:auto;">
+        </div>
+    </div>
+
+<script src="../static/js/netpointstorage/storageList.js"></script>
+</body>
+</html>

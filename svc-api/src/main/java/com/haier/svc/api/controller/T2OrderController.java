@@ -6,13 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +18,8 @@ import com.haier.purchase.data.service.PurchaseProductPaymentService;
 import com.haier.stock.service.StockAgeService;
 import com.haier.stock.service.StockPurchaseBaseCommonService;
 
+import com.haier.svc.api.controller.util.*;
+import com.haier.svc.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -59,21 +55,8 @@ import com.haier.shop.model.ItemAttribute;
 import com.haier.stock.model.InvRrsWarehouse;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.InvWarehouse;
-import com.haier.svc.api.controller.util.CommUtil;
-import com.haier.svc.api.controller.util.ExcelExportUtil;
-import com.haier.svc.api.controller.util.ExcelReader;
-import com.haier.svc.api.controller.util.ExportData;
-import com.haier.svc.api.controller.util.ExportExcelUtil;
-import com.haier.svc.api.controller.util.HttpJsonResult;
-import com.haier.svc.api.controller.util.WebUtil;
 import com.haier.svc.api.service.CommPurchase;
 import com.haier.svc.api.service.T2OrderModel;
-import com.haier.svc.service.DataDictionaryService;
-import com.haier.svc.service.GateService;
-import com.haier.svc.service.ItemService;
-import com.haier.svc.service.LogAuditService;
-import com.haier.svc.service.PurchaseCommonService;
-import com.haier.svc.service.T2OrderService;
 
 /**
  * Created by 黄俊 on 2014/7/14.
@@ -92,14 +75,15 @@ public class T2OrderController {
 
 
 	// t+2填报导入模板表头信息
-	private static final String CHECKSTR = "序号,渠道,产品组,库位码,物料号,型号,T+2周订单数量,定制,库存满足方式,订单类型,订单类别";
+	private static final String CHECKSTR = "序号,渠道,产品组,库位码,物料号,型号,T+2周订单数量,定制,库存满足方式,订单类型,订单类别,参考单号(73单号),更改发货方向标识(Y)";
 	// 3w签收导入模板表头信息
 	private static final String CHECKSTR1 = "预约单号,85单号/J单号/K单号,3w库位,物料号,本次签收数量";
 	// 定制 导入项 (0：否 1：是 )
 	private static final String NONCUSTOMIZED = "0";
 	private static final String CUSTOMIZED = "1";
 	private static final String CUSTOMIZED_WORD = "是";
-
+	@Autowired
+	private SequenceService sequenceService;
 	// 状态(5 :待内部审核)
 	private static String FLOWFLAG_WAITFORREVIEW = "5";
 	// T+2订单状态
@@ -302,6 +286,13 @@ public class T2OrderController {
 				"1");
 		modelMap.put("currentweek", currentWeek);
 		modelMap.put("report_year_week", currentWeek);
+		Map<String, Object> authMap = new HashMap<>();
+		commPurchase.getAuthMap(request, "", "", "", authMap);
+		try {
+			modelMap.put("authMap", JSON.json(authMap));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return "purchase/t2OrderList";
 	}
 
@@ -352,8 +343,7 @@ public class T2OrderController {
 			// 权限Map
 			Map<String, Object> authMap = new HashMap<String, Object>();
 			// // 取得产品组权限List和渠道权限List
-			// commPurchase.getAuthMap(purchaseCommonService, request,
-			// product_group, channel, cbsCategory, authMap);
+			 commPurchase.getAuthMap(request, product_group, channel, cbsCategory, authMap);
 			// 渠道和产品组数据存入HashMap
 			Map<String, String> productgroupmap = new HashMap<String, String>();
 			// 取得产品组
@@ -367,15 +357,17 @@ public class T2OrderController {
 //				}
 //			}
 
-			params.put("cbsCategory", cbsCategory);
+//			params.put("cbsCategory", cbsCategory);
+			params.put("cbsCategory", authMap.get("cbsCategory"));
 			params.put("report_year_week", report_year_week.replace("年", "")
 					.replace("周", ""));
-			params.put("ed_channel_id", channel);
-			params.put("product_group_id", product_group);
+			params.put("ed_channel_id", authMap.get("channel"));
+//			params.put("product_group_id", product_group);
+			params.put("product_group_id", authMap.get("productGroup"));
 
-			Object a = authMap.get("channel");
-			Object a1 = authMap.get("productGroup");
-			Object a2 = authMap.get("cbsCatgory");
+//			Object a = authMap.get("channel");
+//			Object a1 = authMap.get("productGroup");
+//			Object a2 = authMap.get("cbsCatgory");
 			params.put("order_id", order_id);
 			params.put("materials_id", materials_id);
 			params.put("storage_id", storage_id);
@@ -478,6 +470,14 @@ public class T2OrderController {
 		HttpJsonResult<Map<String, Object>> result = new HttpJsonResult<Map<String, Object>>();
 		// 转型为MultipartHttpRequest
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		
+		Set<String> notAllowedChannedlList = new HashSet<String>(){
+			{
+				add("商城渠道");
+				add("顺逛O+O渠道");
+				add("微店渠道");
+			}
+		};
 		// 权限Map
 		// Map<String, Object> authMap = new HashMap<String, Object>();
 		// 取得产品组权限List和渠道权限List
@@ -602,6 +602,21 @@ public class T2OrderController {
 					.getProductLimitGateList(limitGateparams);
 			limitGateresult.setResult(limitGatelist);			
 			// 读取数据
+
+			Date dt=new Date();
+			SimpleDateFormat matter1=new SimpleDateFormat("yyyy-MM-dd");
+			Map<String, Object> paramtime = new HashMap<String, Object>();
+			paramtime.put("createTime",matter1.format(dt)+" 00:00:00");
+			// 订单流水号取得
+			List<T2OrderItem> t2OrderItemList=t2OrderService.getT2WdOrderId(paramtime);
+
+			if((t2OrderItemList==null||t2OrderItemList.isEmpty())){
+				Map<String, Object> paramse = new HashMap<String, Object>();
+				paramse.put("id","0");
+				paramse.put("name","WPOrderId");
+				sequenceService.clearSequence(paramse);
+			}
+
 			for (int i = 1; i < list.size(); i++) {
 				long roundStart = System.currentTimeMillis();
 
@@ -629,6 +644,12 @@ public class T2OrderController {
 				String orderType = StringUtil.nullSafeString(str[9].trim());
 				// 订单类别描述
 				String order_category_name = StringUtil.nullSafeString(str[10]
+						.trim());
+				// 订单类别描述
+				String order_num_73 = StringUtil.nullSafeString(str[11]
+						.trim());
+				// 订单类别描述
+				String send_flag = StringUtil.nullSafeString(str[12]
 						.trim());
 				// 体积，款先直发订单类型所需内容
 				// String volume=StringUtil.nullSafeString(str[11].trim());
@@ -689,6 +710,19 @@ public class T2OrderController {
 				if (StringUtil.isEmpty(edChannelName, true)) {
 					MsgList = "很抱歉！你导入的Excel数据,第" + i
 							+ "行数据的【渠道】不能为空! 请核查后重新导入！";
+
+					if (StringUtil.isEmpty(MsgList, true)) {
+						sb.append(MsgList);
+					} else {
+						MsgList = MsgList + "<br></br>";
+						sb.append(MsgList);
+					}
+					continue;
+				}
+				
+				if(notAllowedChannedlList.contains(edChannelName)){
+					MsgList = "很抱歉！你导入的Excel数据,第" + i
+							+ "行数据的【渠道】不能包含“商城渠道”，“顺逛O+O渠道”，“微店渠道”! ";
 
 					if (StringUtil.isEmpty(MsgList, true)) {
 						sb.append(MsgList);
@@ -1040,7 +1074,7 @@ public class T2OrderController {
 					invRrsWarehouseParams.put("t2_default", T2_DEFAULT_YES);
 					ServiceResult<List<InvRrsWarehouse>> invRrsWarehouseResult = stockPurchaseBaseCommonService
 							.getRrsWhByEstorgeId(invRrsWarehouseParams);
-					System.out.println(invRrsWarehouseResult.getMessage());
+					logger.info("通过电商库位码获取日日顺仓库List结果：" + invRrsWarehouseResult.getMessage());
 					if (invRrsWarehouseResult.getSuccess()
 							&& invRrsWarehouseResult.getResult() != null
 							&& invRrsWarehouseResult.getResult().size() > 0) {
@@ -1112,16 +1146,16 @@ public class T2OrderController {
 				if ("FD,LA,LB,LC".contains(department)) {
 					// 在库的场合
 					if ("1".equals(satisfy_type_id)) {
-						t2OrderItem.setOrder_id(commPurchase.getWPOrderId(
+						t2OrderItem.setOrder_id(commPurchase.getT2OrderId(
 								purchaseCommonService, "C99"));
 						// 补货的场合
 					} else if ("2".equals(satisfy_type_id)) {
-						t2OrderItem.setOrder_id(commPurchase.getWPOrderId(
+						t2OrderItem.setOrder_id(commPurchase.getT2OrderId(
 								purchaseCommonService, "C98"));
 					}
 				} else {
 					if ("1".equals(order_category)) {
-						t2OrderItem.setOrder_id(commPurchase.getWPOrderId(
+						t2OrderItem.setOrder_id(commPurchase.getT2OrderId(
 								purchaseCommonService, "C10"));
 						// 款先直发订单要在3w表中插入一条数据
 						/*
@@ -1132,10 +1166,10 @@ public class T2OrderController {
 						 * t2OrderService.insert3wOrder(crmOrderItem);
 						 */
 					} else if ("2".equals(order_category)) {
-						t2OrderItem.setOrder_id(commPurchase.getWPOrderId(
+						t2OrderItem.setOrder_id(commPurchase.getT2OrderId(
 								purchaseCommonService, "C11"));
 					} else {
-						t2OrderItem.setOrder_id(commPurchase.getWPOrderId(
+						t2OrderItem.setOrder_id(commPurchase.getT2OrderId(
 								purchaseCommonService, "C01"));
 					}
 				}
@@ -1211,6 +1245,8 @@ public class T2OrderController {
 					t2OrderItem.setAmount(amount);
 				}
 
+				t2OrderItem.setSend_flag(send_flag);
+				t2OrderItem.setOrder_num_73(order_num_73);
 				t2OrderItems.add(t2OrderItem);
 				// 创建T+2订单信息表单
 				// ServiceResult<Boolean> insResult =
@@ -1476,9 +1512,9 @@ public class T2OrderController {
 		Map<String, Object> authMap = new HashMap<String, Object>();
 
 		// 取得产品组权限List和渠道权限List
-		// commPurchase.getAuthMap(purchaseCommonService, request,
-		// product_group,
-		// channel, cbsCategory, authMap);
+		 commPurchase.getAuthMap(request,
+		 product_group,
+		 channel, cbsCategory, authMap);
 		// 提报周
 		params.put("report_year_week", report_year_week.replace("年", "")
 				.replace("周", ""));
@@ -1487,7 +1523,7 @@ public class T2OrderController {
 		// 产品组
 		params.put("product_group_id", authMap.get("productGroup"));
 		// 品类
-		params.put("cbsCategory", authMap.get("cbsCatgory"));
+		params.put("cbsCategory", authMap.get("cbsCategory"));
 		// 订单号
 		params.put("order_id", order_id);
 		// 物料号
@@ -1550,7 +1586,11 @@ public class T2OrderController {
 				.getT2OrderList(params);
 		List<T2OrderItem> t2Orderlist = queryresult.getResult();
 		// 取得提交者
-		String commituser = WebUtil.currentUserName(request);
+		String commituser = "";
+		Object cu = request.getSession().getAttribute("userName");
+		if(cu != null){
+			commituser = cu.toString();
+		}
 		// 价格确认
 
 		// 获取下市闸口信息
@@ -1719,6 +1759,13 @@ public class T2OrderController {
 				"1");
 		// modelMap.put("currentweek", "2017年44周");
 		modelMap.put("currentweek", currentWeek);
+		Map<String, Object> authMap = new HashMap<>();
+		commPurchase.getAuthMap(request, "", "", "", authMap);
+		try {
+			modelMap.put("authMap", JSON.json(authMap));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return "purchase/t2OrderDepartReview";
 	}
 
@@ -1767,20 +1814,20 @@ public class T2OrderController {
 				rows = 20;
 			if (page == null)
 				page = 1;
-			// 权限Map
-//			Map<String, Object> authMap = new HashMap<String, Object>();
-			// 取得产品组权限List和渠道权限List
-			// commPurchase.getAuthMap(purchaseCommonService, request,
-			// product_group, channel,
-			// cbsCategory, authMap);
+//			 权限Map
+			Map<String, Object> authMap = new HashMap<String, Object>();
+//			 取得产品组权限List和渠道权限List
+			 commPurchase.getAuthMap(request,
+			 product_group, channel,
+			 cbsCategory, authMap);
 			Map<String, Object> params = new HashMap<String, Object>();
 			if (report_year_week != null && !"".equals(report_year_week)) {
 				report_year_week = report_year_week.replace("年", "");
 				report_year_week = report_year_week.replace("周", "");
 			}
 			params.put("report_year_week", report_year_week);
-			params.put("product_group_id", product_group);
-			params.put("ed_channel_id", channel);
+			params.put("product_group_id", authMap.get("productGroup"));
+			params.put("ed_channel_id", authMap.get("channel"));
 
 			// 渠道和产品组数据存入HashMap
 			Map<String, String> productgroupmap = new HashMap<String, String>();
@@ -1793,7 +1840,7 @@ public class T2OrderController {
 //					break;
 //				}
 //			}
-			params.put("cbsCategory", cbsCategory);
+			params.put("cbsCategory", authMap.get("cbsCategory"));
 			params.put("order_id", order_id);
 			params.put("storage_id", storage_id);
 			params.put("materials_id", materials_id);
@@ -1820,7 +1867,7 @@ public class T2OrderController {
 					.getChannelMapByCode(invstockchannelmap);
 			// 渠道和产品组数据存入HashMap
 			// 取得产品组
-			productgroupmap = t2OrderService.getProductMap(productgroupmap);
+//			productgroupmap = t2OrderService.getProductMap(productgroupmap);
 //			for (String key : productgroupmap.keySet()) {
 //				if (cbsCategory.equals(productgroupmap.get(key))) {
 //					// 品类
@@ -1829,7 +1876,7 @@ public class T2OrderController {
 //				}
 //			}
 
-			params.put("cbsCategory", cbsCategory);
+//			params.put("cbsCategory", cbsCategory);
 			// 获取订单类型map
 			Map<String, String> orderTypeMap = commPurchase.getValueMeaningMap(
 					dataDictionaryService, ORDER_TYPE);
@@ -1911,6 +1958,7 @@ public class T2OrderController {
 			@RequestParam(required = false) String storage_id_save,
 			@RequestParam(required = false) String flow_flag_save,
 			@RequestParam(required = false) String cbsCategory_save,
+			@RequestParam(required = false) String order_category_save,
 			Map<String, Object> modelMap, HttpServletRequest request,
 			HttpServletResponse response) {
 		// 状态
@@ -1919,23 +1967,23 @@ public class T2OrderController {
 		if (flow_flag_save != null && !"".equals(flow_flag_save)) {
 			flow_flag_list = flow_flag_save.split(",");
 		}
-		/*
 		// 权限Map
 		Map<String, Object> authMap = new HashMap<String, Object>();
 		// 取得产品组权限List,渠道权限List和品类List
-		commPurchase.getAuthMap(purchaseCommonService, request,
+		commPurchase.getAuthMap(request,
 				product_group_id_save, ed_channel_id_save, cbsCategory_save,
-				authMap);*/
+				authMap);
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("report_year_week", report_year_week.replace("年", "")
 				.replace("周", ""));
-		params.put("ed_channel_id", AllToNull(ed_channel_id_save));
-		params.put("product_group_id", AllToNull(product_group_id_save));
+		params.put("ed_channel_id", authMap.get("channel"));
+		params.put("product_group_id", authMap.get("productGroup"));
 		params.put("order_id", order_id_save);
 		params.put("materials_id", materials_id_save);
 		params.put("storage_id", storage_id_save);
 		params.put("flow_flag", flow_flag_list);
-		params.put("cbsCategory", AllToNull(cbsCategory_save));
+		params.put("cbsCategory", authMap.get("cbsCategory"));
+		params.put("order_category", order_category_save);
 		List<T2OrderItem> orderList = getDetailsData(params);
 		// 1.创建一个workbook，对应一个Excel文件
 		HSSFWorkbook wb = new HSSFWorkbook();
@@ -1951,15 +1999,17 @@ public class T2OrderController {
 		sheet.setColumnWidth(7, (int) 8.57 * 256);
 		sheet.setColumnWidth(8, (int) 21.57 * 256);
 		sheet.setColumnWidth(9, (int) 21.57 * 256);
-		sheet.setColumnWidth(10, 9 * 256);
+		sheet.setColumnWidth(10, (int) 21.57 * 256);
 		sheet.setColumnWidth(11, (int) 21.57 * 256);
 		sheet.setColumnWidth(12, (int) 21.57 * 256);
 		sheet.setColumnWidth(13, (int) 21.57 * 256);
 		sheet.setColumnWidth(14, (int) 21.57 * 256);
 		sheet.setColumnWidth(15, (int) 21.57 * 256);
-		sheet.setColumnWidth(16, (int) 11.14 * 256);
-		sheet.setColumnWidth(17, (int) 8.57 * 256);
-		sheet.setColumnWidth(18, (int) 21.57 * 256);
+		sheet.setColumnWidth(16, (int) 21.57 * 256);
+		sheet.setColumnWidth(17, (int) 21.57 * 256);
+		sheet.setColumnWidth(18, (int) 11.14 * 256);
+		sheet.setColumnWidth(19, (int) 8.57 * 256);
+		sheet.setColumnWidth(20, (int) 21.57 * 256);
 
 		// 3.在sheet中添加表头第0行，老版本poi对excel行数列数有限制short
 		HSSFRow row = sheet.createRow(0);
@@ -2007,22 +2057,26 @@ public class T2OrderController {
 					String.valueOf(orderList.get(i).getAmount()));
 			row.createCell(9)
 					.setCellValue(orderList.get(i).getMaterials_desc());
-			row.createCell(10).setCellValue(
-					orderList.get(i).getFlow_flag_name());
-			row.createCell(11).setCellValue(
-					orderList.get(i).getOrder_type_name());
+			row.createCell(10)
+					.setCellValue(orderList.get(i).getOrder_num_73());
+			row.createCell(11)
+					.setCellValue(orderList.get(i).getSend_flag());
 			row.createCell(12).setCellValue(
-					orderList.get(i).getChannel_commit_user());
+					orderList.get(i).getFlow_flag_name());
 			row.createCell(13).setCellValue(
-					orderList.get(i).getChannel_commit_time_display());
+					orderList.get(i).getOrder_type_name());
 			row.createCell(14).setCellValue(
-					orderList.get(i).getAudit_depart_user());
+					orderList.get(i).getChannel_commit_user());
 			row.createCell(15).setCellValue(
-					orderList.get(i).getActual_deliver_date_display());
-			row.createCell(16).setCellValue(orderList.get(i).getAudit_user());
+					orderList.get(i).getChannel_commit_time_display());
+			row.createCell(16).setCellValue(
+					orderList.get(i).getAudit_depart_user());
 			row.createCell(17).setCellValue(
+					orderList.get(i).getAudit_depart_time_display());
+			row.createCell(18).setCellValue(orderList.get(i).getAudit_user());
+			row.createCell(19).setCellValue(
 					orderList.get(i).getAudit_time_display());
-			row.createCell(18).setCellValue(orderList.get(i).getError_msg());
+			row.createCell(20).setCellValue(orderList.get(i).getError_msg());
 
 		}
 
@@ -2093,9 +2147,9 @@ public class T2OrderController {
 		HttpJsonResult<String> result = new HttpJsonResult<String>();
 		Map<String, Object> authMap = new HashMap<String, Object>();
 		// 取得产品组权限List和渠道权限List
-		// commPurchase.getAuthMap(purchaseCommonService, request,
-		// product_group,
-		// channel, channel, authMap);
+		 commPurchase.getAuthMap( request,
+		 product_group,
+		 channel, channel, authMap);
 		// 时间闸口check
 		// if ("0".equals(authMap.get("gateLimit"))) {
 		// // 时间闸口check
@@ -2108,7 +2162,7 @@ public class T2OrderController {
 			Map<String, Object> reviewParams = new HashMap<String, Object>();
 			reviewParams.put("flow_flag", reviewFlag);
 			reviewParams.put("audit_remark", audit_remark);
-			reviewParams.put("audit_user", WebUtil.currentUserName(request));
+			reviewParams.put("audit_user", request.getSession().getAttribute("userName").toString());
 			List<String> reviewList = new ArrayList<String>();
 			if ("[]".equals(reviewData)) {
 				Map<String, Object> params = new HashMap<String, Object>();
@@ -2144,6 +2198,7 @@ public class T2OrderController {
 					.reviewT2OrderDepart(reviewParams);
 			result.setSuccess(reviewResult.getResult());
 		} catch (ParseException e) {
+			result.setSuccess(false);
 			e.printStackTrace();
 			logger.error("JSON转换失败！ 错误：", e);
 		}
@@ -2165,6 +2220,13 @@ public class T2OrderController {
 		String currentWeek = CommUtil.getWeekOfYear_Sunday(currentDate, null,
 				"1");
 		modelMap.put("currentweek", currentWeek);
+		Map<String, Object> authMap = new HashMap<>();
+		commPurchase.getAuthMap(request, "", "", "", authMap);
+		try {
+			modelMap.put("authMap", JSON.json(authMap));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return "purchase/t2OrderReviewList";
 	}
 
@@ -2264,15 +2326,16 @@ public class T2OrderController {
 				}
 				Map<String, Object> params = new HashMap<String, Object>();
 				params.put("revokeList", revokeList);
+				params.put("audit_user", request.getSession().getAttribute("userName").toString());
 				// 订单撤销更新
 				t2OrderService.revokeT2OrderList(params);
 			} catch (ParseException e) {
 				logger.error("", e);
-				throw new BusinessException("JSON转化失败" + e.getMessage());
+				result.setSuccess(false);
+				result.setMessage("撤销失败");
 			}
 
 		}
-		result.setMessage("撤销成功");
 		return result;
 	}
 
@@ -2336,9 +2399,9 @@ public class T2OrderController {
 			Map<String, Object> modelMap) {
 		HttpJsonResult<String> result = new HttpJsonResult<String>();
 //		// 权限Map
-//		Map<String, Object> authMap = new HashMap<String, Object>();
+		Map<String, Object> authMap = new HashMap<String, Object>();
 //		// 取得产品组权限List和渠道权限List
-//		commPurchase.getAuthMap(purchaseCommonService, request, null, null,
+//		commPurchase.getAuthMap( request, null, null,
 //				null, authMap);
 		// 闸口不秒杀的场合，时间闸口check
 //		if ("0".equals(authMap.get("gateLimit"))) {
@@ -2372,7 +2435,7 @@ public class T2OrderController {
 			review_flag = "-10";
 		}
 		// 审核者
-		String audit_user = WebUtil.currentUserName(request);
+		String audit_user = request.getSession().getAttribute("userName").toString();
 		// 审核状态判断
 		if (reviewData != null && !"[]".equals(reviewData)) {
 			try {
@@ -2725,15 +2788,17 @@ public class T2OrderController {
 		sheet.setColumnWidth(7, (int) 8.57 * 256);
 		sheet.setColumnWidth(8, (int) 21.57 * 256);
 		sheet.setColumnWidth(9, (int) 21.57 * 256);
-		sheet.setColumnWidth(10, 9 * 256);
+		sheet.setColumnWidth(10, (int) 21.57 * 256);
 		sheet.setColumnWidth(11, (int) 21.57 * 256);
-		sheet.setColumnWidth(12, (int) 21.57 * 256);
+		sheet.setColumnWidth(12, 9 * 256);
 		sheet.setColumnWidth(13, (int) 21.57 * 256);
 		sheet.setColumnWidth(14, (int) 21.57 * 256);
 		sheet.setColumnWidth(15, (int) 21.57 * 256);
-		sheet.setColumnWidth(16, (int) 11.14 * 256);
-		sheet.setColumnWidth(17, (int) 8.57 * 256);
-		sheet.setColumnWidth(18, (int) 21.57 * 256);
+		sheet.setColumnWidth(16, (int) 21.57 * 256);
+		sheet.setColumnWidth(17, (int) 21.57 * 256);
+		sheet.setColumnWidth(18, (int) 11.14 * 256);
+		sheet.setColumnWidth(19, (int) 8.57 * 256);
+		sheet.setColumnWidth(20, (int) 21.57 * 256);
 
 		// 3.在sheet中添加表头第0行，老版本poi对excel行数列数有限制short
 		HSSFRow row = sheet.createRow(0);
@@ -2781,22 +2846,26 @@ public class T2OrderController {
 					String.valueOf(orderList.get(i).getAmount()));
 			row.createCell(9)
 					.setCellValue(orderList.get(i).getMaterials_desc());
-			row.createCell(10).setCellValue(
-					orderList.get(i).getFlow_flag_name());
-			row.createCell(11).setCellValue(
-					orderList.get(i).getOrder_type_name());
+			row.createCell(10)
+				.setCellValue(orderList.get(i).getOrder_num_73());
+			row.createCell(11)
+				.setCellValue(orderList.get(i).getSend_flag());
 			row.createCell(12).setCellValue(
-					orderList.get(i).getChannel_commit_user());
+					orderList.get(i).getFlow_flag_name());
 			row.createCell(13).setCellValue(
-					orderList.get(i).getChannel_commit_time_display());
+					orderList.get(i).getOrder_type_name());
 			row.createCell(14).setCellValue(
-					orderList.get(i).getAudit_depart_user());
+					orderList.get(i).getChannel_commit_user());
 			row.createCell(15).setCellValue(
-					orderList.get(i).getActual_deliver_date_display());
-			row.createCell(16).setCellValue(orderList.get(i).getAudit_user());
+					orderList.get(i).getChannel_commit_time_display());
+			row.createCell(16).setCellValue(
+					orderList.get(i).getAudit_depart_user());
 			row.createCell(17).setCellValue(
+					orderList.get(i).getAudit_depart_time_display());
+			row.createCell(18).setCellValue(orderList.get(i).getAudit_user());
+			row.createCell(19).setCellValue(
 					orderList.get(i).getAudit_time_display());
-			row.createCell(18).setCellValue(orderList.get(i).getError_msg());
+			row.createCell(20).setCellValue(orderList.get(i).getError_msg());
 
 		}
 
@@ -3072,19 +3141,19 @@ public class T2OrderController {
 
         //库位码传参非空验证
         if (storageId == null || "".equals(storageId)){
-            MsgList = "库位码不能为空!";
+            MsgList = "{\"CODE\": \"N\",\"ReturnMsg\": \"\",\"Vblen\": \"库位码不能为空\"}";
             sb.append(MsgList);
             return sb.toString();
         }
         //物料号传参非空验证
         if (materialsId == null || "".equals(materialsId)){
-            MsgList = "物料号不能为空!";
+            MsgList = "{\"CODE\": \"N\",\"ReturnMsg\": \"\",\"Vblen\": \"物料号不能为空\"}";
             sb.append(MsgList);
             return sb.toString();
         }
         //T+2传参非空验证
         if (t2DeliveryPrediction == null || "".equals(t2DeliveryPrediction)){
-            MsgList = "T+2订单数量不能为空!";
+            MsgList = "{\"CODE\": \"N\",\"ReturnMsg\": \"\",\"Vblen\": \"T+2订单数量不能为空!\"}";
             sb.append(MsgList);
             return sb.toString();
         }
@@ -3110,7 +3179,7 @@ public class T2OrderController {
 
         // 产品组名称正确性判断
         if (productgroupmap.get(department) == null) {
-            MsgList = "很抱歉！你所传数据的产品组【"+ department + "】不正确! 请核查！";
+            MsgList = "{\"CODE\": \"N\",\"ReturnMsg\": \"\",\"Vblen\": \"很抱歉！你所传数据的产品组【"+ department + "】不正确! 请核查！\"}";
             sb.append(MsgList);
             return sb.toString();
         }
@@ -3122,7 +3191,7 @@ public class T2OrderController {
         // 型号非空时，正确性判断
         // 型号判断，为空则用根据物料号取得的materialDesc，否则要与取得的materialDesc相同
         if (materialDesc == null || "".equals(materialDesc)) {
-            MsgList = "很抱歉！你所传数据的型号【"+ materialDesc + "】不正确! 请核查！";
+            MsgList = "{\"CODE\": \"N\",\"ReturnMsg\": \"\",\"Vblen\": \"很抱歉！你所传数据的型号【"+ materialDesc + "】不正确! 请核查！\"}";
             sb.append(MsgList);
             return sb.toString();
         }
@@ -3196,7 +3265,9 @@ public class T2OrderController {
 //        t2OrderItem.setCreate_user(createUser);
         t2OrderItem.setBrand_id(itemBaseMap.get("brand_code"));
         t2OrderItem.setCategory_id(categoryId);
-        t2OrderItem.setReport_year_week("201812");
+//        t2OrderItem.setReport_year_week("201813");
+		SimpleDateFormat t2_year_week = new SimpleDateFormat("yyyy-MM-dd");
+        t2OrderItem.setReport_year_week(WSUtils.getWeekOfYear_Sunday(t2_year_week.format(new Date()),"yyyy-MM-dd", "0"));
 
         // 工贸编码
         t2OrderItem.setIndustry_trade_id(invWarehouse.getIndustry_trade_id());
@@ -3323,7 +3394,7 @@ public class T2OrderController {
         long totalEndTime = System.currentTimeMillis();
 
         if (insResult.getResult().get("success") == null || insResult.getResult().get("success") == 0){
-            MsgList = "T+2订单下单失败";
+            MsgList = "{\"CODE\": \"N\",\"ReturnMsg\": \"\",\"Vblen\": \"T+2订单创建失败!\"}";
             sb.append(MsgList);
             return sb.toString();
         }
@@ -3405,18 +3476,126 @@ public class T2OrderController {
             ServiceResult<Boolean> reviewResult = t2OrderService
                     .reviewKXOrderList(reviewMap);
             System.out.println(reviewResult.getMessage());
-            if (reviewResult.getSuccess() && reviewResult.getResult()) {
-                MsgList = "订单推送OMS审核成功!";
-                sb.append(MsgList);
-//                return sb.toString();
+            if (reviewResult.getResult() != null) {
+                if (reviewResult.getSuccess() && reviewResult.getResult()) {
+                    MsgList = "{\"CODE\": \"Y\",\"ReturnMsg\": " + wpOrderId + ",\"Vblen\": " + reviewResult.getMessage() + "}";
+                    sb.append(MsgList);
+                } else {
+                    MsgList = "{\"CODE\": \"N\",\"ReturnMsg\": " + wpOrderId + ",\"Vblen\": " + reviewResult.getMessage() + "}";
+                    sb.append(MsgList);
+                    return sb.toString();
+                }
             } else {
-                MsgList = "订单推送OMS审核失败!";
+                MsgList = "{\"CODE\": \"N\",\"ReturnMsg\": " + wpOrderId + ",\"Vblen\": " + reviewResult.getMessage() + "}";
                 sb.append(MsgList);
                 return sb.toString();
             }
+        }else {
+            MsgList = "{\"CODE\": \"N\",\"ReturnMsg\": "+wpOrderId+",\"Vblen\": "+insWAOBTCresult.getMessage()+"}";
+            sb.append(MsgList);
+            return sb.toString();
         }
 
         return sb.toString();
     }
+
+
+	@RequestMapping(value = {"/exportT2OrderInterfaceLogList.export"})
+	public void exportT2OrderInterfaceLog(@RequestParam(required = false) String purchaseLogList,
+								   HttpServletRequest request, HttpServletResponse response) {
+
+		com.alibaba.dubbo.common.json.JSONArray exportJson = new com.alibaba.dubbo.common.json.JSONArray();
+		ArrayList<Long> exportArray = null;
+		try {
+			if (purchaseLogList != null && !purchaseLogList.equals("")) {
+				exportJson = (com.alibaba.dubbo.common.json.JSONArray) JSON
+						.parse(purchaseLogList);
+				exportArray = new ArrayList<Long>(exportJson.length());
+				// JSONArray转化为list
+				for (int i = 0; i < exportJson.length(); i++) {
+					exportArray.add((Long) exportJson.get(i));
+				}
+			}
+		} catch (com.alibaba.dubbo.common.json.ParseException e1) {
+			e1.printStackTrace();
+			logger.error("JSON转换失败！ 错误：" + e1.getMessage());
+		}
+
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("purchaseLogList",exportArray);
+
+		HSSFWorkbook  wb = getT2OrderInterfaceLogData(map);
+
+		SimpleDateFormat sdf =  new SimpleDateFormat("yyyyMMddHHmmss");
+		Date date=new Date();
+		String str=sdf.format(date);
+		String fileName = "采购接口日志列表"+str;
+
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try {
+			wb.write(os);
+			byte[] content = os.toByteArray();
+			InputStream is = new ByteArrayInputStream(content);
+
+			ExportExcelUtil.exportCommon(is,fileName,response);
+		} catch (IOException e) {
+			logger.error("错误", e);
+		}
+	}
+
+	public HSSFWorkbook getT2OrderInterfaceLogData(Map<String,Object> map) {
+
+        ServiceResult<List<T2OrderInterfaceLog>> result = t2OrderService.findPurchaseLog(map);
+		List<T2OrderInterfaceLog> List = new ArrayList<T2OrderInterfaceLog>();
+		if (result.getSuccess() && result.getResult() != null) {
+			List = result.getResult();
+		}
+		// 1.创建一个workbook，对应一个Excel文件
+		HSSFWorkbook wb = new HSSFWorkbook();
+		// 2.在workbook中添加一个sheet，对应Excel中的一个sheet
+		HSSFSheet sheet = wb.createSheet("采购接口日志列表");
+		int length = ExportT2OrderInterfaceLog.t2OrderInterfaceLogListTitle.length;
+		for (int i = 0; i <length; i++) {
+			sheet.setColumnWidth(i, (int)(21.57*256));
+		}
+
+		// 3.在sheet中添加表头第0行，老版本poi对excel行数列数有限制short
+		HSSFRow row = sheet.createRow((int) 0);
+		// 4.创建单元格，设置值表头，设置表头居中
+		HSSFCellStyle style = wb.createCellStyle();
+		// 居中格式
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
+		style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+		style.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+		style.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+		style.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边
+		// 设置表头
+		for(int i=0;length-1>=i;i++){
+			HSSFCell cell = row.createCell(i);
+			cell.setCellValue(ExportT2OrderInterfaceLog.t2OrderInterfaceLogListTitle[i]);
+			cell.setCellStyle(style);
+		}
+
+		//向单元格里添加数据
+		for(short i=0;i<List.size();i++){
+			row = sheet.createRow(i+1);
+			row.createCell(0).setCellValue(List.get(i).getInterfaceId());
+            row.createCell(1).setCellValue(List.get(i).getInterfaceName());
+            row.createCell(2).setCellValue(List.get(i).getInterfaceCategory());
+			SimpleDateFormat sdf1= new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+			SimpleDateFormat sdf2= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				row.createCell(3).setCellValue(sdf2.format(sdf1.parse(List.get(i).getInterfaceDate().toString())));
+			} catch (java.text.ParseException e) {
+				e.printStackTrace();
+			}
+
+//			row.createCell(3).setCellValue(List.get(i).getInterfaceDate());
+            row.createCell(4).setCellValue(List.get(i).getInterfaceMessage());
+		}
+		return wb;
+	}
 
 }

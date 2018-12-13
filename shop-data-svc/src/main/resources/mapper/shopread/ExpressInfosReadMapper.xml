@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.ExpressInfosReadDao">
+    <resultMap id="expressInfosResult" type="com.haier.shop.model.ExpressInfos">
+        <result property="id" column="id"/>
+        <result property="addTime" column="addTime"/>
+        <result property="orderId" column="orderId"/>
+        <result property="orderProductId" column="orderProductId"/>
+        <result property="cOrderSn" column="cOrderSn"/>
+        <result property="expressCompany" column="expressCompany"/>
+        <result property="expressNumber" column="expressNumber"/>
+        <result property="flag" column="flag"/>
+    </resultMap>
+
+    <select id="findBycOrderSn" parameterType="String" resultMap='expressInfosResult'>
+        SELECT expressNumber,expressCompany FROM expressinfos WHERE  `cOrderSn` = #{cOrderSn}
+    </select>
+
+
+</mapper>

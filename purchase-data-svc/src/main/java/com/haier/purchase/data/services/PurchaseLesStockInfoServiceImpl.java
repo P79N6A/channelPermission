@@ -3,10 +3,14 @@
  */
 package com.haier.purchase.data.services;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.haier.purchase.data.dao.purchase.LesStockInfoDao;
 import com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity;
@@ -91,5 +95,30 @@ public class PurchaseLesStockInfoServiceImpl implements PurchaseLesStockInfoServ
 	@Override
 	public String selectLastSyncTime() {
 		return lesStockInfoDao.selectLastSyncTime();
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRES_NEW)
+	public void saveOrUpdateInfo(List<GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity> list, List<GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity> list2) {
+		Set<String> pks = new HashSet<>();
+		for(GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity entity : list){
+			if(pks.contains(entity.getMBLNR())){
+				continue;
+			}
+			pks.add(entity.getMBLNR());
+			lesStockInfoDao.insertInOutInfoTmp(entity);
+		}
+		lesStockInfoDao.moveInOutInfoFromTmp();
+		lesStockInfoDao.clearInOutInfoTmp();
+		for(GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity entity : list2){
+			String pk = entity.getKUNNR() + entity.getLGORT() + entity.getMATNR() + entity.getCHARG();
+			if(pks.contains(pk)){
+				continue;
+			}
+			pks.add(pk);
+			lesStockInfoDao.insertStockInfoTmp(entity);
+		}
+		lesStockInfoDao.moveStockInfoFromTmp();
+		lesStockInfoDao.clearStockInfoTmp();
 	}
 }

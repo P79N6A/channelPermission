@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import com.haier.afterSale.model.ItemModel;
 import com.haier.afterSale.service.OrderThirdCenterItemService;
 import com.haier.common.ServiceResult;
-import com.haier.purchase.data.model.LesFiveYardInfo;
-import com.haier.purchase.data.service.PurchaseLesFiveYardsService;
+import com.haier.shop.model.LesFiveYardInfo;
+import com.haier.shop.service.PurchaseLesFiveYardsService;
 @Service
 public class OrderThirdCenterItemServiceImpl implements OrderThirdCenterItemService {
 

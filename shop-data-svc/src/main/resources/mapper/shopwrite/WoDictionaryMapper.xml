@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.workorder.WoDictionaryDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.ReviewDataDictionaryEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="value_set_id" property="valueSetId" jdbcType="VARCHAR" />
+    <result column="value_set_meaning" property="valueSetMeaning" jdbcType="VARCHAR" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="value_meaning" property="valueMeaning" jdbcType="VARCHAR" />
+    <result column="parent_value" property="parentValue" jdbcType="VARCHAR" />
+    <result column="order_flag" property="orderFlag" jdbcType="INTEGER" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="SMALLINT" />
+  </resultMap>
+  <resultMap id="ThirdPartyMap" type="com.haier.shop.dto.ThirdPartyLiabilityCondition" >
+	<id column="id" property="id" jdbcType="INTEGER" />
+	<result column="question1Level1" property="question1Level1" jdbcType="VARCHAR" />
+	<result column="question1Level2" property="question1Level2" jdbcType="VARCHAR" />
+	<result column="question1Level3" property="question1Level3" jdbcType="VARCHAR" />
+	<result column="question1Level4" property="question1Level4" jdbcType="VARCHAR" />
+	<result column="adduser" property="adduser" jdbcType="VARCHAR" />
+	<result column="addtime" property="addtime" jdbcType="VARCHAR" />
+	<result column="Third_party_type" property="ThirdPartyType" jdbcType="VARCHAR" />
+	<result column="isEnable" property="isEnable" jdbcType="VARCHAR" />
+	<result column="service_type" property="serviceType" jdbcType="VARCHAR" />
+	<result column="canal" property="canal" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, value_set_id, value_set_meaning, value, value_meaning, parent_value, order_flag, delete_flag
+  </sql>
+  <sql id="Third_Party_List" >
+	id,question1Level1,question1Level2,question1Level3,question1Level4,adduser,addtime,Third_party_type,isEnable,service_type,canal
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from wo_data_dictionary
+    where id <![CDATA[=]]> #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectBySetId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from wo_data_dictionary
+    where delete_flag = 0
+    <if test="id!=null">
+		and `id` <![CDATA[=]]> #{id}
+	</if>
+	<if test="valueSetId!=null">
+    	and value_set_id <![CDATA[=]]> #{valueSetId,jdbcType=VARCHAR}
+    </if>
+    <if test="value!=null">
+    	and `value` <![CDATA[=]]> #{value,jdbcType=VARCHAR}
+    </if>
+    <if test="parentValue!=null">
+    	and parent_value <![CDATA[=]]> #{parentValue,jdbcType=VARCHAR}
+    </if>
+    order by order_flag asc
+  </select>
+
+  
+  <select id="selectByMeaning" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wo_data_dictionary
+    where value_meaning <![CDATA[=]]> #{valuemeaning,jdbcType=VARCHAR}
+    and delete_flag = 0
+    and value_set_id='order_source'
+  </select>
+  
+  <sql id="pagination_Tail">
+	  <![CDATA[ limit #{pager.start},#{pager.pageSize}]]>
+	</sql>
+	<sql id="search_where">
+			<if test="dic.valueSetId!=null and dic.valueSetId !=''">
+				and value_set_id=#{dic.valueSetId}
+			</if>
+			<if test="dic.valueSetMeaning!=null and dic.valueSetMeaning!=''">
+				and value_set_meaning=#{dic.valueSetMeaning}
+			</if>
+			<if test="dic.value!=null and dic.value!=''">
+				and `value`=#{dic.value}
+			</if>
+			<if test="dic.valueMeaning!=null and dic.valueMeaning!=''">
+				and value_meaning=#{dic.valueMeaning}
+			</if>
+			<if test="dic.parentValue!=null and dic.parentValue!=''">
+				and parent_value=#{dic.parentValue}
+			</if>
+			<if test="dic.orderFlag!=null and dic.orderFlag!=''">
+				and order_flag=#{dic.orderFlag}
+			</if>
+			<if test="dic.deleteFlag!=null and dic.deleteFlag!=''">
+				and delete_flag=#{dic.deleteFlag}
+			</if>
+	</sql>
+  <!-- 分页查询订单来源 -->
+  <select id="findPageList" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+			from `wo_data_dictionary`
+		  where 1 = 1
+		<include refid="search_where" />
+		<include refid="pagination_Tail" />
+	</select>
+	<!-- 查询订单来源总数量 -->
+	<select id="findPageCount" resultType="int">
+		select count(1) 
+			from `wo_data_dictionary`
+		  where 1 = 1
+		<include refid="search_where" />
+	</select>
+	
+  	<!-- 校验是否有重复的订单来源 -->
+   <select id="checkoutRepeat" resultType="int" >
+    select count(1)
+    from wo_data_dictionary
+    where 
+    (value <![CDATA[=]]> #{map.value} or value_meaning =#{map.valueMeaning})
+    and value_set_id='order_source' 
+    <if test="map.id!=null">
+    	and id <![CDATA[<>]]> #{map.id}
+    </if>
+  </select>
+  	<!-- 忽略是否启用的查询 -->
+   <select id="selectBySetIdIgnoreFlg" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from wo_data_dictionary
+    where 1 = 1
+    <if test="id!=null">
+		and `id` <![CDATA[=]]> #{id}
+	</if>
+	<if test="valueSetId!=null">
+    	and value_set_id <![CDATA[=]]> #{valueSetId,jdbcType=VARCHAR}
+    </if>
+    <if test="value!=null">
+    	and `value` <![CDATA[=]]> #{value,jdbcType=VARCHAR}
+    </if>
+    <if test="parentValue!=null">
+    	and parent_value <![CDATA[=]]> #{parentValue,jdbcType=VARCHAR}
+    </if>
+    order by order_flag asc
+  </select>
+  
+     <select id="findPageRegionCompanyList" resultType="com.haier.shop.dto.ReviewRegionCompanyDto" parameterType="java.util.Map" >
+		  SELECT
+				province.value_meaning as provinceName,
+				province.value as provinceId,
+				city.value_meaning as cityName,
+				city.value as cityId,
+				gm.value_meaning as companyName,
+				gm.value as companyId,
+				region.value_meaning as regionName,
+				region.value as regionId
+			FROM
+				wo_data_dictionary AS region
+			LEFT JOIN (
+				SELECT
+					`value`,
+					parent_value,
+					value_meaning
+				FROM
+					wo_data_dictionary
+				WHERE
+					value_set_id = 'company'
+			) AS gm ON INSTR(
+				concat(',',gm.parent_value,','),
+				concat(',',region.`value`,',')
+			)
+			LEFT JOIN
+					wo_data_dictionary
+				AS city ON region.parent_value = city.`value` and city.value_set_id='city'
+			LEFT JOIN
+					wo_data_dictionary	AS province ON city.parent_value = province.`value` and province.value_set_id = 'province'
+			WHERE
+				region.value_set_id = 'region'
+			<if test="map.provinceId!=null">
+		    	and province.value <![CDATA[=]]> #{map.provinceId}
+		    </if>
+		    <if test="map.cityId!=null">
+		    	and city.value <![CDATA[=]]> #{map.cityId}
+		    </if>
+		    <if test="map.companyId!=null and map.companyId!=0">
+		    	and gm.value <![CDATA[=]]> #{map.companyId}
+		    </if>
+		    <if test="map.companyId==0">
+		    	and (gm.parent_value is null or  gm.parent_value='')
+		    </if>
+		    <if test="map.regionId!=null">
+		    	and region.value <![CDATA[=]]> #{map.regionId}
+		    </if>
+		    <if test="pager!=null">
+				<include refid="pagination_Tail" />
+			</if>
+  </select>
+  <select id="findPageRegionCompanyNum" resultType="int" parameterType="java.util.Map" >
+		  SELECT count(1) 
+		  FROM (
+		  SELECT
+				region.value as regionId
+			FROM
+				wo_data_dictionary AS region
+			LEFT JOIN (
+				SELECT
+					`value`,
+					parent_value,
+					value_meaning
+				FROM
+					wo_data_dictionary
+				WHERE
+					value_set_id = 'company'
+			) AS gm ON INSTR(
+				concat(',',gm.parent_value,','),
+				concat(',',region.`value`,',')
+			)
+			LEFT JOIN
+					wo_data_dictionary
+				AS city ON region.parent_value = city.`value` and city.value_set_id='city'
+			LEFT JOIN
+					wo_data_dictionary	AS province ON city.parent_value = province.`value` and province.value_set_id = 'province'
+			WHERE
+				region.value_set_id = 'region'
+			<if test="map.provinceId!=null">
+		    	and province.value <![CDATA[=]]> #{map.provinceId}
+		    </if>
+		    <if test="map.cityId!=null">
+		    	and city.value <![CDATA[=]]> #{map.cityId}
+		    </if>
+		    <if test="map.companyId!=null and map.companyId!=0">
+		    	and gm.value <![CDATA[=]]> #{map.companyId}
+		    </if>
+		    <if test="map.companyId==0">
+		    	and (gm.parent_value is null or  gm.parent_value='')
+		    </if>
+		    <if test="map.regionId!=null">
+		    	and region.value <![CDATA[=]]> #{map.regionId}
+		    </if>
+		    ) as t
+  </select>
+  
+  	<!-- 查询指定条件区县数量 -->
+    <select id="findRegionNum" resultType="int" >
+    select count(1)
+    from wo_data_dictionary
+    where
+    (value_meaning = #{dic.valueMeaning}
+   	and parent_value=#{dic.parentValue}
+    and delete_flag = 0
+    and value_set_id='region')
+    or 
+    (`value`=#{dic.value} 
+    and delete_flag = 0 
+    and value_set_id='region')
+  </select>
+  <select id="findThirdPartyCount" resultType="Integer">
+	  select count(1)
+	  from `wo_third_party_liability_condition`
+	  where 1 = 1
+	  <if test="question1Level1!=null">
+		  AND  question1Level1 <![CDATA[=]]>  #{question1Level1}
+	  </if>
+	  <if test="question1Level2!=null">
+		  AND  question1Level2 <![CDATA[=]]>  #{question1Level2}
+	  </if>
+	  <if test="question1Level3!=null">
+			  AND  question1Level3 <![CDATA[=]]>  #{question1Level3}
+	  </if>
+  </select>
+  <select id="selectByValueMeaning" resultMap="BaseResultMap" parameterType="java.lang.String">
+	  select
+	  <include refid="Base_Column_List" />
+	  from wo_data_dictionary
+	  where delete_flag = 0
+	  <if test="valueMeaning!=null">
+		  and value_meaning <![CDATA[=]]> #{valueMeaning,jdbcType=VARCHAR}
+	  </if>
+	  <if test="valueSetId!=null">
+		  and value_set_id <![CDATA[=]]> #{valueSetId,jdbcType=VARCHAR}
+	  </if>
+	  <if test="parentValue!=null">
+		  and parent_value <![CDATA[=]]> #{parentValue,jdbcType=VARCHAR}
+	  </if>
+  </select>
+
+	<select id="getCompany" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		FROM wo_data_dictionary
+		WHERE value_set_id = 'company'
+		and (parent_value like concat('%,',#{region},',%') or parent_value like concat(#{region},',%'))
+	</select>
+	<select id="findTypeFromThirdPartyCount" resultMap="ThirdPartyMap">
+		select
+		<include refid="Third_Party_List" />
+		from `wo_third_party_liability_condition`
+		where 1 = 1
+		<if test="question1Level1!=null">
+			AND  question1Level1 <![CDATA[=]]>  #{question1Level1}
+		</if>
+		<if test="question1Level2!=null">
+			AND  question1Level2 <![CDATA[=]]>  #{question1Level2}
+		</if>
+		<if test="question1Level3==null">
+
+		</if>
+		<if test="question1Level3!=null and question1Level3!=''">
+			and  question1Level3 <![CDATA[=]]>  #{question1Level3}
+		</if>
+			AND  Third_party_type <![CDATA[=]]>  'HP'
+	</select>
+	<select id="findInfoFromThird" resultMap="ThirdPartyMap">
+		select
+		<include refid="Third_Party_List" />
+		from `wo_third_party_liability_condition`
+		where 1 = 1
+		<if test="question1Level1!=null">
+			AND  question1Level1 <![CDATA[=]]>  #{question1Level1}
+		</if>
+		<if test="question1Level2!=null">
+			AND  question1Level2 <![CDATA[=]]>  #{question1Level2}
+		</if>
+		<if test="question1Level3!=null and question1Level3!=''">
+			and  question1Level3 <![CDATA[=]]>  #{question1Level3}
+		</if>
+	</select>
+
+	<select id="getOrderSource"  resultType="String">
+		select   VALUE   from  wo_data_dictionary  where value_set_id='order_source'
+
+	</select>
+
+
+	<select id="getChannelCode" resultMap="BaseResultMap">
+
+	  select value,value_meaning	  from  wo_data_dictionary  where  parent_value=#{valueMeaning} and value_set_meaning='订单渠道'
+
+	</select>
+
+
+	<select id="selectBySetIds"   resultMap="BaseResultMap">
+		select * from  wo_data_dictionary
+		where delete_flag = 0
+
+		<if test="reviewDataDictionaryEntity.valueSetId!=null">
+			and value_set_id <![CDATA[=]]> #{reviewDataDictionaryEntity.valueSetId}
+		</if>
+		<if test="reviewDataDictionaryEntity.value!=null">
+			and `value` <![CDATA[=]]> #{reviewDataDictionaryEntity.value}
+		</if>
+		<if test="reviewDataDictionaryEntity.parentValue!=null">
+			and parent_value <![CDATA[=]]> #{reviewDataDictionaryEntity.parentValue}
+		</if>
+		order by order_flag asc
+		<include refid="pagination_Tail" />
+	</select>
+	<select id="selectBySetIdsCount" resultType="int">
+		select count(1)
+		from `wo_data_dictionary`
+		where delete_flag = 0
+
+
+		<if test="reviewDataDictionaryEntity.valueSetId!=null">
+			and value_set_id <![CDATA[=]]> #{reviewDataDictionaryEntity.valueSetId}
+		</if>
+		<if test="reviewDataDictionaryEntity.value!=null">
+			and `value` <![CDATA[=]]> #{reviewDataDictionaryEntity.value}
+		</if>
+		<if test="reviewDataDictionaryEntity.parentValue!=null">
+			and parent_value <![CDATA[=]]> #{reviewDataDictionaryEntity.parentValue}
+		</if>
+	</select>
+
+
+
+    <!-- 删除原工贸中的区县ID -->
+    <update id="delOldCompanyOfRegion" parameterType="java.util.Map">
+        UPDATE wo_data_dictionary
+        SET parent_value = (
+        CASE
+        WHEN instr(parent_value, ',') THEN
+        substring((REPLACE(concat(',',parent_value,','), ',${map.regionId},', ',')) ,2, (LENGTH(REPLACE(concat(',',parent_value,','), ',${map.regionId},',','))-2))
+        ELSE
+        REPLACE (parent_value, ${map.regionId}, '')
+        END
+        )
+        WHERE value_set_id='company'
+        and `value`=#{map.oldCompanyId}
+    </update>
+    <!-- 在新工贸中追加区县ID -->
+    <update id="addCompanyOfRegion" parameterType="java.util.Map">
+        UPDATE
+        wo_data_dictionary
+        SET parent_value = (
+        CASE
+        WHEN (parent_value is null or parent_value='') THEN
+        #{map.regionId}
+        ELSE
+        concat(parent_value,',',#{map.regionId})
+        END)
+        WHERE value_set_id='company'
+        and `value`=#{map.newCompanyId}
+    </update>
+	<!-- 添加区县 -->
+	<insert id="addRegion" parameterType="com.haier.shop.model.ReviewDataDictionaryEntity">
+		insert into wo_data_dictionary (value_set_id,
+		value_set_meaning, value,
+		value_meaning, parent_value,order_flag,
+		delete_flag)
+		values ('region',
+		'区县',
+		#{value,jdbcType=VARCHAR},
+		#{valueMeaning,jdbcType=VARCHAR},
+		#{parentValue},
+		(SELECT t.num FROM(SELECT MAX(order_flag)+1 as num FROM wo_data_dictionary WHERE value_set_id='region') as t),
+		0)
+	</insert>
+
+
+	<!-- 添加订单来源 -->
+	<insert id="addOrderSource" parameterType="com.haier.shop.model.ReviewDataDictionaryEntity">
+		insert into wo_data_dictionary (value_set_id,
+		value_set_meaning, value,
+		value_meaning,  order_flag,
+		delete_flag)
+
+		values ('order_source',
+		'订单来源',
+		#{value,jdbcType=VARCHAR},
+		#{valueMeaning,jdbcType=VARCHAR},
+		(SELECT t.num FROM(SELECT MAX(order_flag)+1 as num FROM wo_data_dictionary WHERE value_set_id='order_source') as t),
+		#{deleteFlag})
+	</insert>
+	<!-- 修改订单来源 -->
+	<update id="updateOrderSource" parameterType="com.haier.shop.model.ReviewDataDictionaryEntity">
+		update wo_data_dictionary
+		<set>
+			<if test="valueSetId!=null">
+				value_set_id=#{valueSetId},
+			</if>
+			<if test="valueSetMeaning!=null">
+				value_set_meaning=#{valueSetMeaning},
+			</if>
+			<if test="value!=null">
+				value=#{value},
+			</if>
+			<if test="valueMeaning!=null">
+				value_meaning=#{valueMeaning},
+			</if>
+			<if test="parentValue!=null">
+				parent_value=#{parentValue},
+			</if>
+			<if test="orderFlag!=null">
+				order_flag=#{orderFlag},
+			</if>
+			<if test="deleteFlag!=null">
+				delete_flag=#{deleteFlag}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+</mapper>

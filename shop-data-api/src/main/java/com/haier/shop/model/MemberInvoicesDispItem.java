@@ -32,6 +32,15 @@ public class MemberInvoicesDispItem implements Serializable {
     private String auditTimeMax;                          //审核时间
     private String auditor;                               //审核人
     private String orderSn;                               //订单号
+    private String message;                               //信息
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public Integer getOrderId() {
         return orderId;

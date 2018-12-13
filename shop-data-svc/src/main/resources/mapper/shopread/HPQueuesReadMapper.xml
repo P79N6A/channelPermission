@@ -13,11 +13,11 @@
 	</resultMap>
 
 	<select id="getCountByOpId" resultType="int">
-		select count(id) from HPQueues where orderProductId = #{orderProductId}
+		select count(id) from hpqueues where orderProductId = #{orderProductId}
 	</select>
 	<select id="getByOrderProductId" parameterType="Integer" resultMap="hPQueuesResult">
         SELECT `id`,`orderProductId`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`successTime`
-        FROM `HPQueues`
+        FROM `hpqueues`
         WHERE `orderProductId` = #{orderProductId}
     </select>
 

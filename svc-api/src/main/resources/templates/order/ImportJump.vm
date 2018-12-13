@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../static/css/common.css">
+
+
+
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+##    <link rel="stylesheet" href="../static/css/orderworkflow.css" />
+   <link rel="stylesheet" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
+    <title>添加订单</title>
+
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+
+    <script src="../static/js/jquery.form.js"></script>
+
+    ## <script src="../static/third/jqueryui/jquery.ui.core.js"></script>
+    ## <script src="../static/third/jqueryui/jquery.ui.widget.js"></script>
+    ## <script src="../static/third/jqueryui/jquery.ui.mouse.js"></script>
+    ## <script src="../static/third/jqueryui/jquery.ui.button.js"></script>
+    ## <script src="../static/third/jqueryui/jquery.ui.draggable.js"></script>
+    ## <script src="../static/third/jqueryui/jquery.ui.position.js"></script>
+    ## <script src="../static/third/jqueryui/jquery.ui.resizable.js"></script>
+    ## <script src="../static/third/jqueryui/jquery.ui.dialog.js"></script>
+
+
+
+    <style type="text/css">
+        input{ vertical-align:middle; margin:0; padding:0}
+        .file-box{ position:relative;width:100%}
+        .txt{ height:22px; border:1px solid #cdcdcd; width:360px;}
+        .btn{ background-color:#FFF; border:1px solid #CDCDCD;height:24px; width:70px;}
+
+        .layout {
+            display: none;
+            position: absolute;
+            top: 20%;
+            left: 40%;
+            width: 20%;
+            height: 20%;
+            z-index: 1001;
+            text-align:center;
+        }
+    </style>
+</head>
+<body >
+
+
+   <div>
+       <ol class="breadcrumb" style="margin:20px;">
+           <H4 style="color: red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;批量导入有风险慎重使用，确保数据准确。仅支持普通商品订单的导入，请勿导入套装，集合竞价，o2o类商品。</H4>
+       </ol>
+       <form class="form-horizontal" id="importForm"   name="importForm"  enctype="multipart/form-data">
+
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">订单来源</label>
+               <div class="col-sm-10" style="font-size: 11px;">
+                   <select id="source" name="source" class="easyui-combobox" style="width:180px;">
+                       <option value="" selected="">---订单来源---</option>
+                       <!--国美-->
+                       <option value="GMZX">国美海尔官方旗舰店</option>
+                       <option value="GMZXTS">国美统帅官方旗舰店</option>
+                       <!--苏宁-->
+                       <option value="SNYG">苏宁统帅官方旗舰店</option>
+                       <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
+                       <option value="SNQDZX">海尔渠道中心</option>
+                       <!--当当-->
+                       <option value="DDW">海尔当当旗舰店</option>
+                       <!--京东-->
+                       <option value="JDHEGQ">京东海尔官方旗舰店</option>
+                       <option value="JDHEBXGQ">京东海尔集团冰箱官方旗舰店</option>
+                       <!--天猫-->
+                       <option value="TBSC">海尔官方淘宝旗舰店</option>
+                       <option value="TBXCR">天猫小超人旗舰店</option>
+                       <option value="TBCFDD">海尔厨房大电旗舰店</option>
+                       <option value="TBZYKT">淘宝中央空调</option>
+                       <option value="TOPBOILER">海尔热水器专卖店</option>
+                       <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
+                       <option value="TOPFENXIAO">海尔官方旗舰店(分销平台)</option>
+                       <option value="TMMK">mooka模卡官方旗舰店</option>
+                       <option value="TMTV">海尔电视旗舰店</option>
+                       <option value="TMKSD">天猫卡萨帝旗舰店</option>
+                       <option value="FRIDGE">海尔冰冷旗舰店</option>
+                       <option value="AIR">海尔空调旗舰店</option>
+                       <option value="GQGYS">海尔官方旗舰店供应商</option>
+                       <option value="XSST">淘宝WA线上生态授权店</option>
+                       <option value="WASHER">海尔洗衣机旗舰店</option>
+                   </select>
+                   <h6 id="sourceInfo"  style="color: red"></h6>
+               </div>
+           </div>
+
+
+
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">订单过期时间</label>
+               <div class="col-sm-10">
+                   <div class="radio input_form">
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod2" value="2" checked>2天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod3" value="3">3天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod4" value="4">4天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod5" value="5">5天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod6" value="6">6天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod6" value="7">7天
+                       </label>
+
+                       <ul style="color: red">
+                           <li style="list-style-type:none;">
+                               选着订单过期时间后会根据选着时间来延长订单过期的时间，默认是48小时。
+                           </li>
+                       </ul>
+                   </div>
+
+               </div>
+
+           </div>
+
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">支付方式</label>
+               <div class="col-sm-10">
+                   <div class="radio input_form">
+                       <!--
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName1" value="银联支付" >银联支付
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName2" value="电子钱包" >电子钱包
+                       </label>
+                       -->
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName3" value="PC端支付宝" checked>PC端支付宝
+                       </label>
+                       <!--
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName4" value="货到付款" >货到付款
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName5" value="商城快捷通" >商城快捷通
+                       </label>
+                   </br>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName6" value="微信支付" >微信支付
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName7" value="商城微信" >商城微信
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName8" value="建行信用卡分期" >建行信用卡分期
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName9" value="顺逛白条" >顺逛白条
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName10" value="光大信用卡分期" >光大信用卡分期
+                       </label>
+                   </br>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName11" value="移动端支付宝" >移动端支付宝
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName12" value="联行支付" >联行支付
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName13" value="内部结算单" >内部结算单
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName14" value="余额支付" >余额支付
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName15" value="礼品卡支付" >礼品卡支付
+                       </label>
+                   </br>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName16" value="礼品卡支付" >礼品卡支付
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName17" value="线下支付" >线下支付
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName18" value="客户预付贷款" >客户预付贷款
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName19" value="建行网银支付" >建行网银支付
+                       </label>
+                       <label>
+                           <input type="radio" name="paymentName" id="paymentName20" value="APP微信" >APP微信
+                       </label>
+                       -->
+                   </div>
+                   <ul style="color: red">
+                       <li style="list-style-type:none;">
+                           如果你添加的订单要使用客户预付贷款支付，支付方式必须选着"客户预付贷款"。
+                       </li>
+                   </ul>
+
+               </div>
+           </div>
+
+
+
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">是否赠品</label>
+               <div class="col-sm-10">
+                   <div class="radio input_form">
+                       <label>
+                           <input type="radio" name="idGift" id="idGift" value="1" >是
+                       </label>
+                       <label>
+                           <input type="radio" name="idGift" id="idGift" value="0" checked>否
+                       </label>
+                   </div>
+               </div>
+           </div>
+
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">所属产业</label>
+               <div class="col-sm-10" style="font-size: 11px;">
+                    <select id="industrys" name="industrys" class="easyui-combobox" style="width:180px;">
+                        <option value="" selected="">---所属产业---</option>
+                        <option value="C200076226">冰箱</option>
+                        <option value="C200076227">冷柜</option>
+                        <option value="C200076228">洗衣机</option>
+                        <option value="C200076229">家用空调</option>
+                        <option value="C200076230">热水器</option>
+                        <option value="C200076231">厨电</option>
+                        <option value="C200076232">彩电</option>
+                        <option value="C200076233">商用空调及其他</option>
+                        <option value="C20170825">海尔集团电子商务有限公司(赠品)</option>
+                    </select>
+                   <h6 id="industrysInfo" style="color: red"></h6>
+                   <ul style="color: red">
+                       <li style="list-style-type:none;">
+                           赠品机必须选择商品所占费用所属的产业
+                       </li>
+                   </ul>
+               </div>
+
+
+           </div>
+
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">配送时间</label>
+               <div class="col-sm-10">
+                   <select id="deliverTime" name="deliverTime" class="form-control input_form" style="width: 240px;height: 34px" >
+                       <option>工作日、双休、节假日均可配送</option>
+                       <option>2</option>
+                       <option>3</option>
+                       <option>4</option>
+                       <option>5</option>
+                   </select>
+
+               </div>
+           </div>
+
+
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">导入文件包</label>
+               <div class="col-sm-10">
+                   <span>请选择要导入的模板</span>
+                   <input id="file" name="file" type="file" style="display:none" onchange="document.getElementById('textfield').value=this.value" />
+                   <input type='text' readonly="readonly" name='textfield'  id='textfield' class='txt'style="width: 162px;height: 34px" />
+                   <input type="button" class="button" value="选择..." onclick="document.getElementById('file').click()"/>
+                   <input type="button" id="submit" name="submit" class="button" value="导入" />
+                   <input type="button" id="close"  class="button" value="返回" onclick='onGoBack()'/>
+                   <input id="report_year_week" name="report_year_week" type="hidden" value="$!report_year_week"/>
+                   <input id="url" name="url" type="hidden" value="$!url"/>
+               </div>
+           </div>
+
+
+       </form>
+   </div>
+   <div id="list" class="list">
+       <div class="well">
+
+           <h3>注意</h3>
+           <ul>
+               <li>只支持Excel 2003(<strong>xls</strong>) .</li>
+               <li>上传中请不要关闭浏览器.</li>
+               <li>
+                   请下载Excel模板，严格按照模板格式填写.
+               </li>
+
+
+               <li>
+                   【物料编码】【物流模式】必须填写准确，不得有空格.
+               </li>
+
+
+           </ul>
+
+       </div>
+   </div>
+<!--
+<div id="dialog-message" title="处理中" class="easyui-dialog" closed="true" height="200" width="200">
+    <h1 id="message"></h1>
+    <span id="errMsg"></span>
+    <div>
+        <div id="layout" class="layout">
+            <img src="../static/img/loading.gif"/>
+        </div>
+    </div>
+    <div id="result">
+        <ul>
+            <li id="total"></li>
+            <li id="success"></li>
+            <li id="ignore"></li>
+        </ul>
+    </div>
+
+</div>
+-->
+   <div id="dialog-message" title="请稍后" closed="true" style="display:none;">
+       <div id="list" class="list2" style="background:#ffffff;overflow-x:auto;overflow-y:auto;">
+       </div>
+   </div>
+
+   <div id="handleResultDetail" style="display:none" title="结果">
+   </div>
+
+<!--
+<div id="dialog" class="easyui-dialog" title="提示" closed="true">
+    <p>订单来源不能为空,请选择订单来源!</p>
+</div>
+<div id="dialog1" class="easyui-dialog" title="警告" closed="true">
+    <p>所属产业不能为空,请选择所属产业!</p>
+</div>
+-->
+<script src="../static/js/order/ImportJump.js"></script>
+
+</body>
+</html>

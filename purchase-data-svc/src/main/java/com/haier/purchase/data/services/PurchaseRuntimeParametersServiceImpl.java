@@ -31,4 +31,8 @@ public class PurchaseRuntimeParametersServiceImpl implements PurchaseRuntimePara
 	public void updateRuntimeParameters(RuntimeParametersVO vo){
 		runtimeParametersDAO.updateRuntimeParameters(vo);
 	}
+	@Override
+	public void updateRuntimeWpOrderId(RuntimeParametersVO vo){
+		runtimeParametersDAO.updateRuntimeWpOrderId(vo);
+	}
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haier.purchase.data.dao.purchase.RuntimeParametersDAO">
 	<select id="getRuntimeParameterByKey" parameterType="java.lang.String"  resultType="com.haier.purchase.data.model.RuntimeParametersVO">
-		select `key`,`value`
+		select `key`,`value`,`wp_order_id`
 		from runtime_parameters_t
 		where `key`=#{key}
 	</select>
@@ -22,4 +22,13 @@
 		WHERE 
 			`key` = #{key}
     </update>
+
+	<update id="updateRuntimeWpOrderId" parameterType="com.haier.purchase.data.model.RuntimeParametersVO">
+		UPDATE runtime_parameters_t
+		SET
+		`wp_order_id` = #{wp_order_id},
+		`value` = #{value}
+		WHERE
+		`key` = #{key}
+	</update>
 </mapper>

@@ -10,21 +10,44 @@ public class OrderSnUtil {
      * @param opId
      * @return
      */
-    public static String getCOrderSn(String opId, Date date) {
+    public static String getCOrderSn(Integer opId) {
+
+        //序列号,不足8位补0,超过8位取末尾8位
+        String seq = String.format("%08d", opId);
+        int len = seq.length();
+        if (len > 8) {
+            seq = seq.substring(len - 8);
+        }
+        //日期
+
+        Calendar date = Calendar.getInstance();
+        String year = String.valueOf(date.get(Calendar.YEAR)).substring(2, 4);
+        String month = String .valueOf(date.get(Calendar.MONTH) + 1 + 84);
+        String day = String.valueOf(date.get(Calendar.DAY_OF_MONTH));
+        if(day.length() == 1){
+            day = "0" + day;
+        }
+        return "WD" + year + month + day + seq;
+    }
+
+    /**
+     * 获取调拨编号
+     * @param dbId
+     * @return
+     */
+    public static String getDbSn(Integer dbId, Date date) {
         if (null == date) {
             date = new Date();
         }
-        //序列号,不足6位补0,超过6位取末尾6位
-        int len = opId.length();
-        String seq = null;
-        if (len >= 6) {
-            seq = opId.substring(len - 6);
-        } else {
-            seq = String.format("%06d", opId);
+        //序列号,不足8位补0,超过8位取末尾8位
+        String seq = String.format("%08d", dbId);
+        int len = seq.length();
+        if (len > 8) {
+            seq = seq.substring(len - 8);
         }
         //日期
         String sDate = DateFormatUtil.formatByType("yyMMdd", date);
-        return "WD" + sDate + seq;
+        return "DB" + sDate + seq;
     }
 
     /**

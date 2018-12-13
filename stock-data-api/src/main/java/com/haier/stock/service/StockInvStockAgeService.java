@@ -1,5 +1,6 @@
 package com.haier.stock.service;
 
+import com.haier.common.ServiceResult;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ public interface StockInvStockAgeService {
 	public int getCount(Map<String, Object> params);
 
 	public List<InvStockAge> getStockAgeList(Map<String, Object> params);
+	public Integer getStockAgeListCounts(Map<String, Object> params);
 	public List<Map<String, Object>> countStockGroupBySkuWithChannel(Date date, String channel);
 
 	Integer getRowCnt();
@@ -94,4 +96,12 @@ public interface StockInvStockAgeService {
 	 * @return
 	 */
 	public Integer update(InvStockAge invStockAge);
+
+	List<InvStockAge> getStockAgeListByMap(Map param);
+
+	/**
+	 * 获取产品组
+	 * @return 产品组
+	 */
+	ServiceResult<List<String>> getProductGroupsInStockAge(String productType);
 }

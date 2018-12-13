@@ -28,13 +28,9 @@
             addTime,
             logId,
             syncTBStatus
-        FROM LesShippingInfos
+        FROM lesshippinginfos
         WHERE cOrderSn = #{corderSn}
         ORDER BY nodeTime
     </select>
-    <insert id="insert">
-        INSERT INTO LesShippingInfos (orderId, orderProductId, cOrderSn, nodeTime, deliveryType, nodeCode, nodeDesc, addTime, logId, syncTBStatus)
-        VALUES (#{orderId}, #{orderProductId}, #{cOrderSn}, #{nodeTime}, #{deliveryType}, #{nodeCode}, #{nodeDesc},
-                UNIX_TIMESTAMP(), #{logId}, #{syncTBStatus})
-    </insert>
+
 </mapper>

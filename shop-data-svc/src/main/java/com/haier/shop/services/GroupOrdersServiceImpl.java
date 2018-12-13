@@ -61,7 +61,7 @@ public class GroupOrdersServiceImpl implements GroupOrdersService {
     }
 
     @Override
-    public Object update(GroupOrders groupOrders) {
+    public Integer update(GroupOrders groupOrders) {
         // TODO Auto-generated method stub
         return groupOrdersWriteDao.update(groupOrders);
     }

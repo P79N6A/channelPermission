@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.haier.common.ServiceResult;
 import com.haier.shop.dao.shopread.ItemBaseReadDao;
 import com.haier.shop.dao.shopwrite.ItemBaseWriteDao;
 import com.haier.shop.model.ItemBase;

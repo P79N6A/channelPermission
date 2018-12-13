@@ -12,8 +12,11 @@
         http://code.alibabatech.com/schema/dubbo
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
     <!--注册中心发现服务地址-->
-    <!--<dubbo:registry address="zookeeper://127.0.0.1:2181"/>-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
     <!-- 生成远程服务代理，可以和本地bean一样使用-->
     <!-- <dubbo:reference retries="0" interface="com.haier.eis.service.DemoService"
                       id="demoService" check="false" timeout="10000"/>-->
+    <dubbo:application name="testst"/>
+    <dubbo:reference interface="com.haier.eis.service.LesStockTransQueueService" version="1.0.0"
+        timeout="100000" retries="0" check="true" id="lesStockTransQueueService"/>
 </beans>

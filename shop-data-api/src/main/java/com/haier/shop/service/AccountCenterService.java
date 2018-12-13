@@ -2,6 +2,7 @@ package com.haier.shop.service;
 
 
 import com.haier.shop.model.O2OOrderConfirmQueues;
+import com.haier.shop.model.O2OOrderTailendQueues;
 import com.haier.shop.model.O2oOrderCloseQueues;
 import com.haier.shop.model.O2oOrderCloseQueuesExt;
 
@@ -18,7 +19,6 @@ public interface AccountCenterService {
 
     /**
      * 更具网单号ID OrderProductId 获取 o2o确认订单成功队列表
-     * @param pushNumber
      * @return
      */
     
@@ -26,7 +26,6 @@ public interface AccountCenterService {
 
     /**
      * 获取 o2o确认订单成功队列表(count=0)
-     * @param pushNumber
      * @return
      */
     
@@ -137,4 +136,12 @@ public interface AccountCenterService {
      * @return
      */
     int updateOrderCloseQueue(O2oOrderCloseQueuesExt o2oOrderCloseQueuesExt);
+
+
+    O2OOrderTailendQueues getTailendToAccountCenterByDepositOrderProductId(Integer depositOrderProductId);
+
+    /**
+     * 插入 o2o已付尾款队列表
+     */
+    int insertTailendToAccountCenterList(O2OOrderTailendQueues o2oOrderTailendQueues);
 }

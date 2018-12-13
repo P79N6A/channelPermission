@@ -34,40 +34,40 @@ $('#gridView').datagrid({
              width: 120,
              field: 'source',
              align: 'center'
-             , sortable: true
+             , sortable: false
          },
          {
              title: '物料编码',
              width: 120,
              field: 'sku',
              align: 'center'
-             , sortable: true
+             , sortable: false
          },
          {
              title: '套装SKU',
              width: 120,
              field: 'tzSku',
              align: 'center'
-             , sortable: true
+             , sortable: false
          },
          {
              title: '库位编码',
              width: 120,
              field: 'sCode',
              align: 'center'
-             , sortable: true
+             , sortable: false
          },
          {
              title: '是否套装',
              width: 120,
              field: 'stype',
              align: 'center'
-             , sortable: true,
+             , sortable: false,
              formatter: function (value, row, index) {
                  if (row.stype == 1) {
-                     return "是";
-                 } else {
                      return "否";
+                 } else {
+                     return "是";
                  }
              }
          },
@@ -76,7 +76,7 @@ $('#gridView').datagrid({
              width: 120,
              field: 'isOn',
              align: 'center'
-             , sortable: true,
+             , sortable: false,
              formatter: function (value, row, index) {
                  if (row.isOn == 1) {
                      return "同步";
@@ -90,14 +90,14 @@ $('#gridView').datagrid({
              width: 162,
              field: 'addTime',
              align: 'center'
-             , sortable: true
+             , sortable: false
          },
          {
              title: 'id',
              width: 120,
              field: 'id',
              align: 'center'
-             , sortable: true,
+             , sortable: false,
              hidden:true
          }
     ]],
@@ -117,7 +117,7 @@ $(function () {
         onSelectPage: function (pageNo, pageSize) {
 
             var start = (pageNo - 1) * pageSize;//页码分页自增
-            var source = $('#csource').val();
+            var source = $('#csource').combobox("getValue");
             var tzSku = $('#ctzSku').val();
             var sku = $('#csku').val();
             var sCode=$("#csCode").val();
@@ -477,12 +477,13 @@ function Delete() {
 function SetCodeValue4() {
 
     var id = $("#id").val();
-    var source = $("#source").val();
+    var source = $("#source").combobox("getValue");
     var sku = $("#sku").val();
-    var sCode=$("#sCode").val();
-    var stype= $('#stype').combobox('getValue');
-    var isOn= $('#isOn').combobox('getValue');
- 
+    var sCode = $("#sCode").val();
+    var stype = $('#stype').combobox('getValue');
+    var isOn = $('#isOn').combobox('getValue');
+    var kuwei = $("#kuwei").combobox("getValue");
+
     var url = '/eop/StocksyncProstorage/updatecommission_product';
     if (source == "") {
         autoAlt("来源店铺不能为空");
@@ -492,12 +493,17 @@ function SetCodeValue4() {
         autoAlt("物料编码不能为空");
         return false;
     }
-    
-   
-    jiaoyan(sku,sCode,source);
-    if(gloid.id == 0){
-    	autoAlt("物料编码不存在！");
-    	return;
+    //验证指定库位的库存同步是否存在
+    if(kuwei == "0"){
+        jiaoyan(sku,sCode,source);
+        if(gloid.count != "0"){
+            autoAlt("物料编码" + sku + "的" + gloid.count + "库存同步配置已存在！");
+            return;
+        }
+        if(gloid.id == 0){
+            autoAlt("商品对应关系不存在！");
+            return;
+        }
     }
     if (id == "") {
         url = '/eop/StocksyncProstorage/addcommission_product';
@@ -514,9 +520,7 @@ function SetCodeValue4() {
             stype: stype,
             isOn:isOn,
             sCode:sCode,
-            kuwei:$("#kuwei").combobox("getValue")
-//            syncProductId:gloid.id,
-//            syncStorageId:gloid.cid
+            kuwei:kuwei
         },
         success: function (data, textStatus) {
             if (data == 1) {
@@ -526,7 +530,6 @@ function SetCodeValue4() {
             } else {
                 autoAlt("操作失败！");
             }
-
         }
 
     });
@@ -572,6 +575,7 @@ function SearchClear() {
 }
 //主表查询
 function SearchUnit() {
+    var source =$("#csource").combobox("getValue");
     var tzSku = $('#ctzSku').val();
     var sku = $('#csku').val();
     var sCode=$("#csCode").val();

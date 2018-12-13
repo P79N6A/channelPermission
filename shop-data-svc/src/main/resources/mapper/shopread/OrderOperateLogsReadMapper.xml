@@ -3,6 +3,7 @@
 <mapper namespace="com.haier.shop.dao.shopread.OrderOperateLogsReadDao">
 	<resultMap id="orderOperateLogsResult" type="com.haier.shop.model.OrderOperateLogs">
 		<result property="id" column="id" />
+		<result property="cOrderSn" column="cOrderSn" />
 		<result property="siteId" column="siteId" />
 		<result property="orderId" column="orderId" />
 		<result property="orderProductId" column="orderProductId" />
@@ -16,7 +17,38 @@
 	</resultMap>
 	<select id="get" parameterType="Integer" resultMap="orderOperateLogsResult">
 		select `id`,`siteId`,`orderId`,`orderProductId`,`netPointId`,`operator`,`changeLog`,`remark`,`logTime`,`status`,`paymentStatus`
-		from `OrderOperateLogs`
+		from `orderoperatelogs`
 		where `id` = #{id}
+	</select>
+	<select id='getProductIdVdiew' parameterType="java.lang.String" resultMap="orderOperateLogsResult">
+	SELECT
+		p.cOrderSn,
+		o.operator,
+		o.changeLog,
+		o.remark,
+		o.logTime
+	FROM
+		orderoperatelogs o,
+		orderproducts p
+	WHERE
+	o.orderProductId = p.id
+	and p.id =#{productId}
+	ORDER BY o.logTime DESC
+	</select>
+
+	<select id="getLogsNew" parameterType="java.lang.Integer" resultMap="orderOperateLogsResult">
+		SELECT
+			*
+		FROM
+			orderoperatelogs
+		WHERE
+			id = (
+				SELECT
+					max(id)
+				FROM
+					orderoperatelogs
+				WHERE
+					orderProductId = #{orderProductId}
+			)
 	</select>
 </mapper>

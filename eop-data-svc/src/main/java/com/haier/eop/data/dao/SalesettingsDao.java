@@ -16,4 +16,5 @@ public interface SalesettingsDao {
     int updateByPrimaryKeySelective(Salesettings record);
     List<Salesettings> Listf(@Param("entity")Salesettings entity,@Param("start") int start, @Param("rows") int rows);
     int getPagerCountS(@Param("entity")Salesettings entity);
+    Salesettings findByWhere(String externalSkus);
 }

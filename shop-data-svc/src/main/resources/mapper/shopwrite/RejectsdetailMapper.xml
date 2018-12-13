@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.RejectsdetailDao" >
+
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.Rejectsdetail" >
+      <result property="id" column="id" />
+      <result property="core" column="core"/>
+      <result property="warehouseNumber" column="warehouse_number"/>
+      <result property="signinTime" column="signin_time"/>
+      <result property="servicelistApplyTime" column="servicelist_apply_time"/>
+      <result property="guaranteeDays" column="guarantee_days"/>
+      <result property="dismantlingTime" column="dismantling_time"/>
+      <result property="applyTime" column="apply_time"/>
+      <result property="groundingTime" column="grounding_time"/>
+      <result property="attachmentBarCode" column="attachment_bar_code"/>
+      <result property="oneCategory" column="one_category"/>
+      <result property="twoCategory" column="two_category"/>
+      <result property="threeCategory" column="three_category"/>
+      <result property="brand" column="brand"/>
+      <result property="commodityNumber" column="commodity_number"/>
+      <result property="commodityName" column="commodity_name"/>
+      <result property="reservoirType" column="reservoir_type"/>
+      <result property="uploadPerson" column="upload_person"/>
+      <result property="uploadTime" column="upload_time"/>
+  </resultMap>
+  <sql id="tb" >
+    rj_rejectsdetail
+  </sql>
+  <sql id="cols_exclude_id" >
+    core,warehouse_number,signin_time,servicelist_apply_time,guarantee_days,dismantling_time,apply_time,grounding_time,attachment_bar_code,one_category,two_category,three_category,brand,commodity_number,commodity_name,reservoir_type,upload_person,upload_time
+  </sql>
+  <sql id="vals" >
+    #{core},
+    #{warehouseNumber},
+    #{signinTime},
+    #{servicelistApplyTime},
+    #{guaranteeDays},
+    #{dismantlingTime},
+    #{applyTime},
+    #{groundingTime},
+    #{attachmentBarCode},
+    #{oneCategory},
+    #{twoCategory},
+    #{threeCategory},
+    #{brand},
+    #{commodityNumber},
+    #{commodityName},
+    #{reservoirType},
+    #{uploadPerson},
+    NOW()
+    </sql>
+
+    <sql id="jdwhere">
+        <if test="month==null || month=='全年'">
+            WHERE <![CDATA[ grounding_time >= #{preMonth} AND grounding_time <= #{nextMonth}  and guarantee_days>15  ]]>
+        </if>
+        <if test="month!=null and month!='全年'">
+        WHERE <![CDATA[ grounding_time > #{preMonth} AND grounding_time < #{nextMonth}  and guarantee_days >15  ]]>
+        </if>
+    </sql>
+
+    <sql id="hrwhere">
+        <if test="month==null || month=='全年'">
+            WHERE <![CDATA[ grounding_time >= #{preMonth} AND grounding_time <= #{nextMonth}  and guarantee_days<=15  ]]>
+        </if>
+        <if test="month!=null and month!='全年'">
+            WHERE <![CDATA[ grounding_time > #{preMonth} AND grounding_time < #{nextMonth}  and guarantee_days <=15  ]]>
+        </if>
+    </sql>
+
+    <sql id="awhere">
+        <if test="month==null || month=='全年'">
+            WHERE <![CDATA[ grounding_time >= #{preMonth} AND grounding_time <= #{nextMonth}  and reservoir_type='零库存售后入' ]]>
+        </if>
+        <if test="month!=null and month!='全年'">
+        WHERE <![CDATA[ grounding_time > #{preMonth} AND grounding_time < #{nextMonth}  and reservoir_type='零库存售后入' ]]>
+        </if>
+    </sql>
+    <sql id="Takepartjdwhere">
+        <if test="month==null || month=='全年'">
+            WHERE <![CDATA[ grounding_time >= #{preMonth} AND grounding_time <= #{nextMonth}  and reservoir_type='售后入' ]]>
+        </if>
+        <if test="month!=null and month!='全年'">
+        WHERE <![CDATA[ grounding_time > #{preMonth} AND grounding_time < #{nextMonth}  and reservoir_type='售后入' ]]>
+        </if>
+    </sql>
+    <sql id="Rejectionwhere">
+        <if test="month==null || month=='全年'">
+            WHERE <![CDATA[ grounding_time >= #{preMonth} AND grounding_time <= #{nextMonth}  and reservoir_type='大库入' ]]>
+        </if>
+        <if test="month!=null and month!='全年'">
+        WHERE <![CDATA[ grounding_time > #{preMonth} AND grounding_time < #{nextMonth}  and reservoir_type='大库入' ]]>
+        </if>
+    </sql>
+
+
+
+  <insert id="insert" parameterType="com.haier.shop.model.Rejectsdetail" >
+    insert into <include refid="tb" /> (
+     <include refid="cols_exclude_id" />
+    )
+    values (
+      <include refid="vals" />
+    )
+  </insert>
+
+    <update id="update" parameterType="com.haier.shop.model.Rejectsdetail">
+        UPDATE <include refid="tb" /> SET
+        core=#{core},
+        warehouse_number=#{warehouseNumber},
+        signin_time=#{signinTime},
+        servicelist_apply_time=#{servicelistApplyTime},
+        guarantee_days=#{guaranteeDays},
+        dismantling_time=#{dismantlingTime},
+        apply_time=#{applyTime},
+        grounding_time=#{groundingTime},
+        attachment_bar_code=#{attachmentBarCode},
+        one_category=#{oneCategory},
+        two_category=#{twoCategory},
+        three_category=#{threeCategory},
+        brand=#{brand},
+        commodity_number=#{commodityNumber},
+        commodity_name=#{commodityName},
+        reservoir_type=#{reservoirType},
+        upload_person=#{uploadPerson},
+        upload_time=NOW()
+        WHERE id=#{id}
+    </update>
+
+    <select id="count" parameterType="map" resultType="long">
+        select  count(1) from <include refid="tb" />
+    </select>
+
+    <select id="paging" parameterType="com.haier.shop.model.Rejectsdetail" resultType="com.haier.shop.model.Rejectsdetail">
+        SELECT
+        r.industry,
+        IFNULL(u.outqty, 0) outqty,
+        IFNULL(t.rejectnum, 0) rejectnum
+        FROM (SELECT industry
+        FROM rj_productcomparison
+        GROUP BY industry ORDER BY sort desc) r
+        LEFT JOIN
+        (SELECT
+        p.industry,
+        sum(o.outqty) outqty
+        FROM rj_productcomparison p
+        LEFT JOIN rj_outstoragelist o
+        ON p.three_category = o.three_category AND o.years = #{year} AND o.months = #{month}
+                GROUP BY p.industry) u ON r.industry = u.industry
+                LEFT JOIN
+                (SELECT
+                p.industry,
+                COUNT(r.three_category)
+                AS rejectnum
+                FROM rj_rejectsdetail r RIGHT JOIN rj_productcomparison p
+                ON r.three_category = p.three_category
+                AND <![CDATA[ r.grounding_time > #{preMonth} AND r.grounding_time < #{nextMonth} ]]>
+                GROUP BY p.industry) t ON r.industry = t.industry
+    </select>
+
+   <select id="findallbyattachmentBarCode" parameterType="com.haier.shop.model.Rejectsdetail" resultMap="BaseResultMap">
+       SELECT id,<include refid="cols_exclude_id" /> from <include refid="tb" />
+       WHERE  attachment_bar_code=#{attachmentBarCode}
+   </select>
+
+<select id="findyear" parameterType="com.haier.shop.model.Rejectsdetail" resultType="com.haier.shop.model.Rejectsdetail">
+    SELECT sum(t.outqty) outqty, sum(t.rejectnum) rejectnum
+    FROM (
+    SELECT
+    r.industry,
+    IFNULL(u.outqty, 0) outqty,
+    IFNULL(t.rejectnum, 0) rejectnum
+    FROM (SELECT industry
+    FROM rj_productcomparison
+    GROUP BY industry ORDER BY sort desc) r
+    LEFT JOIN
+    (SELECT
+    p.industry,
+    sum(o.outqty) outqty
+    FROM rj_productcomparison p
+    LEFT JOIN rj_outstoragelist o
+    ON p.three_category = o.three_category AND o.years = #{year} AND o.months = #{month}
+    GROUP BY p.industry) u ON r.industry = u.industry
+    LEFT JOIN
+    (SELECT
+    p.industry,
+    COUNT(r.three_category) AS rejectnum
+    FROM rj_rejectsdetail r RIGHT JOIN rj_productcomparison p
+    ON r.three_category = p.three_category
+    AND <![CDATA[ r.grounding_time > #{preMonth} AND r.grounding_time < #{nextMonth} ]]>
+    GROUP BY p.industry) t ON r.industry = t.industry) t
+
+
+</select>
+
+    <select id="importbad" parameterType="com.haier.shop.model.Rejectsdetail" resultMap="BaseResultMap" >
+        select id,<include refid="cols_exclude_id"/> from rj_rejectsdetail WHERE  <![CDATA[  grounding_time> #{preMonth} and grounding_time < #{nextMonth}  ]]>
+    </select>
+
+    <select id="responsibilityjd" parameterType="com.haier.shop.model.Rejectsdetail" resultType="int">
+        SELECT COUNT(1) from rj_rejectsdetail <include refid="jdwhere"/>
+    </select>
+    <select id="responsibilityhr" parameterType="com.haier.shop.model.Rejectsdetail" resultType="int">
+        SELECT COUNT(1) from rj_rejectsdetail <include refid="hrwhere"/>
+    </select>
+
+    <select id="afterwhere" parameterType="com.haier.shop.model.Rejectsdetail" resultType="int">
+        SELECT count(1) from rj_rejectsdetail <include refid="awhere"/>
+    </select>
+    <select id="Takepartjd" parameterType="com.haier.shop.model.Rejectsdetail" resultType="int">
+        SELECT count(1) from rj_rejectsdetail <include refid="Takepartjdwhere"/>
+    </select>
+    <select id="Rejection" parameterType="com.haier.shop.model.Rejectsdetail" resultType="int">
+        SELECT count(1) from rj_rejectsdetail <include refid="Rejectionwhere"/>
+    </select>
+
+</mapper>

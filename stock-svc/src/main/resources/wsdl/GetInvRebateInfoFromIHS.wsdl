@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="GetInvRebateInfoFromIHS" targetNamespace="http://www.example.org/GetInvRebateInfoFromIHS/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/GetInvRebateInfoFromIHS/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/GetInvRebateInfoFromIHS/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/GetInvRebateInfoFromIHS/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="GetInvRebateInfoFromIHS">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in" type="tns:InputType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetInvRebateInfoFromIHSResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="tns:OutputType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="InputType">
+        <xsd:sequence>
+          <xsd:element name="CustCode" type="xsd:string"/>
+          <xsd:element name="RegionCode" type="xsd:string"/>
+          <xsd:element name="InvCode" type="xsd:string"/>
+          <xsd:element name="CorpCode" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="OutputType">
+        <xsd:sequence>
+          <xsd:element name="Result" type="tns:DetailType"/>
+          <xsd:element name="FLAG" type="xsd:string"/>
+          <xsd:element name="MSG" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DetailType">
+        <xsd:sequence>
+          <xsd:element name="ReInvCode" type="xsd:string"/>
+          <xsd:element name="ReUnitPrice" type="xsd:string"/>
+          <xsd:element name="ReStockPrice" type="xsd:string"/>
+          <xsd:element name="ReRetailPrice" type="xsd:string"/>
+          <xsd:element name="ReActPrice" type="xsd:string"/>
+          <xsd:element name="ReBateRate" type="xsd:string"/>
+          <xsd:element name="ReBateMoney" type="xsd:string"/>
+          <xsd:element name="ReLossRate" type="xsd:string"/>
+          <xsd:element name="ReIsFL" type="xsd:string"/>
+          <xsd:element name="ReIsKPO" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="GetInvRebateInfoFromIHSRequest">
+    <WL5G3N0:part element="WL5G3N1:GetInvRebateInfoFromIHS" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="GetInvRebateInfoFromIHSResponse">
+    <WL5G3N0:part element="WL5G3N1:GetInvRebateInfoFromIHSResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="GetInvRebateInfoFromIHS">
+    <WL5G3N0:operation name="GetInvRebateInfoFromIHS">
+      <WL5G3N0:input message="WL5G3N1:GetInvRebateInfoFromIHSRequest"/>
+      <WL5G3N0:output message="WL5G3N1:GetInvRebateInfoFromIHSResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="GetInvRebateInfoFromIHSSOAP" type="WL5G3N1:GetInvRebateInfoFromIHS">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="GetInvRebateInfoFromIHS">
+      <WL5G3N2:operation soapAction="http://www.example.org/GetInvRebateInfoFromIHS/GetInvRebateInfoFromIHS"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="GetInvRebateInfoFromIHS">
+    <WL5G3N0:port binding="WL5G3N1:GetInvRebateInfoFromIHSSOAP" name="GetInvRebateInfoFromIHSSOAP">
+      <WL5G3N2:address location="http://10.135.1.110:7001/EAI/service/IHS/GetInvRebateInfoFromIHS_WS/GetInvRebateInfoFromIHS"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

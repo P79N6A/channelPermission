@@ -32,7 +32,7 @@
 
     <select id="getElectronicInvoiceLogsList" parameterType="Map" resultMap="InvoiceElectricLogDispItem">
         select SQL_CALC_FOUND_ROWS  iel.cOrderSn,iel.type,
-        CASE WHEN iel.addTime=0 THEN '' ELSE from_unixtime(iel.addTime) END as addTime,iel.success,iel.count,iel.lastMessage from InvoiceElectricLogs  iel,Invoices ins
+        CASE WHEN iel.addTime=0 THEN '' ELSE from_unixtime(iel.addTime) END as addTime,iel.success,iel.count,iel.lastMessage from invoiceelectriclogs  iel,invoices ins
         where 1=1 and iel.invoiceId=ins.id
         <if test="cOrderSn !=null and cOrderSn != ''">
             and ins.cOrderSn = #{cOrderSn}
@@ -62,14 +62,14 @@
 
     <select id="getByInvoiceIdAndType"  parameterType="Integer" resultMap="invoiceElectricLogsResult">
         SELECT `id`,`addTime`,`orderProductId`,`cOrderSn`,`invoiceId`,`type`,`pushData`,`returnData`,`analysisResult`,`verifyResult`,`success`,`count`,`lastTime`,`lastMessage`,`smsFlag`
-        FROM `InvoiceElectricLogs`
+        FROM `invoiceelectriclogs`
         where  `invoiceId`=#{invoiceId} and `type`=#{type}
         limit 1
     </select>
 
     <select id="getByInvoiceIdAndTypeList"  parameterType="Integer" resultMap="invoiceElectricLogsResult">
         SELECT `id`,`addTime`,`orderProductId`,`cOrderSn`,`invoiceId`,`type`,`pushData`,`returnData`,`analysisResult`,`verifyResult`,`success`,`count`,`lastTime`,`lastMessage`,`smsFlag`
-        FROM `InvoiceElectricLogs`
+        FROM `invoiceelectriclogs`
         where  `invoiceId`=#{invoiceId} and `type`=#{type}
         order by addTime desc
     </select>

@@ -1,6 +1,7 @@
 package com.haier.purchase.data.services.vechile;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,4 +57,36 @@ public class PurchaseAreaCenterInfoServiceImpl implements PurchaseAreaCenterInfo
 	}
 
 
+	@Override
+	public List<AreaCenterInfoDTO> getAreaCenterInfo(Map<String, Object> params) {
+		return areaCenterInfoDao.getAreaCenterInfo(params);
+	}
+
+	@Override
+	public Integer getAreaCenterInfoCount(Map<String, Object> params) {
+		return areaCenterInfoDao.getAreaCenterInfoCount(params);
+
+	}
+
+	@Override
+	public void updateSelectiveByDeliveryToCode(AreaCenterInfoDTO areaCenterInfoDTO) {
+		areaCenterInfoDao.updateSelectiveByDeliveryToCode(areaCenterInfoDTO);
+	}
+
+	@Override
+	public void openStatusAreaCenterInfo(Map<String, Object> params) {
+		areaCenterInfoDao.openStatusAreaCenterInfo(params);
+
+	}
+
+	@Override
+	public void closeStatusAreaCenterInfo(Map<String, Object> params) {
+		areaCenterInfoDao.closeStatusAreaCenterInfo(params);
+
+	}
+
+	@Override
+	public List<AreaCenterInfoDTO> getAreaCenterInfoExport(Map<String, Object> params) {
+		return areaCenterInfoDao.getAreaCenterInfoExport(params);
+	}
 }

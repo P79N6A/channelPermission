@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>库龄统计</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+  <script src="../static/js/easyui-extention_ws.js"></script>
+  <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+  <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+  <div id="datagridToolbar_stock_age">
+    <form id="datagridForm_stock_age" class="param-form">
+      <div class="search-panel">
+        <div class="search-row" style=" width: 330px;">
+        <span class="search-row-label" style=" width: 130px;">
+          库龄统计开始时间
+        </span>
+          <input class="easyui-datebox" name="startDate" id="startDate"/>
+        </div>
+        <div class="search-row" style=" width: 330px;">
+        <span class="search-row-label" style=" width: 130px;">
+          库龄统计结束时间
+        </span>
+          <input class="easyui-datebox" name="startDate" id="endDate"/>
+        </div>
+      </div>
+      <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure" onclick="onQuery()"
+         data-options="iconCls:'icon-search',plain:true">按天统计</a>
+      <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtMeasure" onclick="onExport()"
+         data-options="iconCls:'icon-save',plain:true">实时统计</a>
+      <a href="#" class="easyui-linkbutton" id="cxhongzhi"
+         data-options="iconCls:'icon-redo',plain:true">重置</a>
+    </form>
+
+
+  </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+  $(function () {
+
+
+
+  });
+  //重置
+  var resetMethod = function () {
+    $("#cxhongzhi").on('click', function (event) {
+      event.preventDefault();
+      $('#datagridForm_stock_age').form('reset');
+    });
+  };
+
+
+  //查询
+  function onQuery() {
+//    $.messager.alert('提示', $('#startDate').datebox('getValue'));
+    $.ajax({
+      type: 'get',
+      async: false,
+      url: '/stock/calByDay',
+      timeout : 12000000, //超时时间设置，单位毫秒，
+      data: {
+        startDate:  $('#startDate').datebox('getValue'),
+        endDate:  $('#endDate').datebox('getValue')
+      },
+      success: function (data) {
+        $.messager.alert('提示', data.message);
+      },
+      error:function(data){
+        $.messager.alert('错误', data);
+      }
+    });
+
+  }
+
+  //导出
+  function onExport() {
+    $.ajax({
+      type: 'get',
+      async: true,
+      url: '/stock/calByTime',
+      timeout : 12000000, //超时时间设置，单位毫秒，
+      data: {
+        startDate:  $('#startDate').datebox('getValue'),
+        endDate:  $('#endDate').datebox('getValue')
+      },
+      success: function (data) {
+        console.log(JSON.stringify(data))
+        $.messager.alert('提示', JSON.stringify(data));
+      },
+      error:function(data){
+        console.log(JSON.stringify(data));
+        $.messager.alert('错误', JSON.stringify(data));
+      }
+    });
+  }
+
+
+
+
+</script>
+</body>
+</html>

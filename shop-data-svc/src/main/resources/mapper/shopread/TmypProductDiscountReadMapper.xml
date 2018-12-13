@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.TmypProductDiscountReadDao">
+
+    <select id="getTmyp_ProductDiscountList"  parameterType="Map" resultType="com.haier.shop.model.TmypProductDiscountVo" >
+        SELECT
+        id , productName,productType,salePrice,purchasePrice,discount,
+        from_unixtime(addTime,'%Y-%m-%d %H:%i:%S') addTimeStr,
+        from_unixtime(modifyTime,'%Y-%m-%d %H:%i:%S') modifyTimeStr,
+        sku
+        FROM shop.tmyp_productdiscount  Where 1=1
+        <if test="product_Name != null and product_Name != ''">
+            and productName = #{product_Name}
+        </if>
+        <if test="product_Type != null and product_Type != ''">
+            and productType = #{product_Type}
+        </if>
+        <if test="sale_Price != null and sale_Price != ''">
+            and salePrice = #{sale_Price}
+        </if>
+        <if test="purchase_Price != null and purchase_Price != ''">
+            and purchasePrice = #{purchase_Price}
+        </if>
+        <if test="discount != null and discount != ''">
+            and discount = #{discount}
+        </if>
+        <if test="sku != null and sku != ''">
+            and sku = #{sku}
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            AND addTime > UNIX_TIMESTAMP(#{addTimeMin})
+        </if>
+        <if test="addTimeMax != null and addTimeMax != ''">
+            AND addTime  <![CDATA[  < ]]>   UNIX_TIMESTAMP(#{addTimeMax})
+        </if>
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+    <select id="findTmyp_ProductDiscountCNT" resultType="integer" parameterType="Map">
+        SELECT COUNT(id)
+        FROM shop.tmyp_productdiscount  Where 1=1
+
+        <if test="product_Name != null and product_Name != ''">
+            and productName = #{product_Name}
+        </if>
+        <if test="product_Type != null and product_Type != ''">
+            and productType = #{product_Type}
+        </if>
+        <if test="sale_Price != null and sale_Price != ''">
+            and salePrice = #{sale_Price}
+        </if>
+        <if test="purchase_Price != null and purchase_Price != ''">
+            and purchasePrice = #{purchase_Price}
+        </if>
+        <if test="discount != null and discount != ''">
+            and discount = #{discount}
+        </if>
+        <if test="sku != null and sku != ''">
+            and sku = #{sku}
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            AND addTime > UNIX_TIMESTAMP(#{addTimeMin})
+        </if>
+        <if test="addTimeMax != null and addTimeMax != ''">
+            AND addTime  <![CDATA[  < ]]>   UNIX_TIMESTAMP(#{addTimeMax})
+        </if>
+    </select>
+
+    <select id="getTmyp_ProductDiscountBySKU" parameterType="string" resultType="com.haier.shop.model.TmypProductDiscount">
+        SELECT
+        id, productName,productType,salePrice,purchasePrice,discount,
+         addTime,modifyTime,sku
+        FROM shop.tmyp_productdiscount
+         Where sku = #{sku}
+    </select>
+</mapper>

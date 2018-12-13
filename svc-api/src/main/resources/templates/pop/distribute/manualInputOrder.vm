@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/css/staticHtml.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>手动输入订单</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    
+    <style  type="text/css">
+     .tabs-wrap ul{
+         height: 36px;
+     }
+        .tab-header{
+            padding-top:0;
+        }
+        .tab li{
+            margin: 0;
+        }
+        .tab li a{
+            height: 36px;
+            line-height: 36px;
+        }
+   
+        a{
+            cursor: pointer;
+        }
+        .tableX{
+            border: 1px #d2d2d2 solid;
+            border-width: 1px 0 0 1px;
+            width: 100%;
+            border-spacing: 0;
+            display: table;
+            border-collapse: separate;
+        }
+        .tableX th{
+            width: 20%;
+            /* padding: 3px 5px; */
+            border: 1px #d2d2d2 solid;
+            border-width: 0 1px 1px 0;
+            text-align: center;
+        }
+        
+        .tableY td{
+            padding: 0;
+            border: 1px #d2d2d2 solid;
+            border-width: 0 1px 1px 0;
+        }
+
+        .tableY{
+            width: 100%;
+        }
+        .tableY td{
+            width: 33.3%;
+        }
+        .datagrid-wrap{
+            border:0;
+        }
+    </style>
+    
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+    </table>
+</div>
+
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">	
+			  渠道
+			</span>
+                <select class="easyui-combobox" name="channelCode" id="channelCode" style="width:174px;">
+                #foreach($cid in $cidList)
+					            		<option value="$cid.id">$cid.channelCode</option>
+					     			#end  
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  订单号
+			</span>
+                <input class="easyui-textbox" name="orderSn" id="orderSn" />
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			 发票状态
+			</span>
+               <select class="easyui-combobox" name="invoiceTypes" id="invoiceTypes" style="width:174px;">
+                    <option value="0">无</option>
+                    <option value="1">电子发票</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  开始时间
+			</span>
+                <input class="easyui-datebox" name="startDate" id="startDate" value=""/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  结束时间
+			</span>
+                <input class="easyui-datebox" name="endDate" id="endDate"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			订单状态
+			</span>
+			
+                <select class="easyui-combobox" name="orderStatus" id="orderStatus" style="width:174px;">
+                	<option value="-1">全部</option>
+                    <option value="0">未确认</option>
+                    <option value="1">已确认</option>
+                </select>
+                
+                <input name="pageIndex" id="pageIndex" type="hidden" value="1"/>
+                <input name="start" id="start" type="hidden"/>
+                <input name="size" id="size" type="hidden" />
+               
+            </div>
+            
+        </div>
+        <a href="#" class="easyui-linkbutton" id="queryButton" 
+           data-options="iconCls:'icon-search',plain:true" >查询</a>
+        <a href="#" class="easyui-linkbutton" id="searchBtn" 
+           data-options="iconCls:'icon-add',plain:true" onclick="onReleases()">添加</a>
+       
+    </form>
+</div>
+<div id="dialog-div" style="font-size:12px;line-height:1.5em;color:#333333;padding-top:18px;" >  
+	<form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form" style="border:0;margin:0 auto;width:90%;height:80%;">
+	 <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMe"
+           data-options="iconCls:'icon-save',plain:true" style=" float:right; " onclick="onSave()")>保存</a>
+	<fieldset>
+	
+		<legend>订单信息</legend>
+            <div class="search-panel">
+           		<input name="pageIndex" id="pageIndexs" type="hidden" value="1"/>
+                <input name="start" id="starts" type="hidden" />
+                <input name="size" id="sizes" type="hidden" />
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            订单号
+                        </span>
+                        <input class="easyui-textbox" name="orderSn" id="orderSns" style="width: 154px;" />
+                    </div>
+                    <div class="search-row">
+                            <span class="search-row-label">
+                              渠道
+                            </span>
+                            <select id="channelCodes" class="easyui-combobox" name="productCodes" style="width: 154px;" >
+					            	#foreach($cid in $cidList)
+					            		<option value="$cid.id">$cid.channelCode</option>
+					     			#end  
+                            </select>
+                    </div>
+                    </br>
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            订单金额
+                        </span>
+                        <input class="easyui-textbox" id="orderFee"  name="otherAccount" style="width: 154px;"/>
+                    </div>
+
+
+                    <div class="search-row">
+                        <span class="search-row-label">付款时间</span>
+                        <!-- <input value="value="${loan.contractBegintime}"" class="easyui-datebox" id="contractBegintime" name="periodCode" data-options="required:true,editable:false"/> -->
+                        <input class="easyui-datetimebox" id="payTime" style="width:154px" data-options="required:true,editable:false">
+                    </div>
+                 <div class="search-row">
+                        <span class="search-row-label">
+                            备注
+                        </span>
+                        <input class="easyui-textbox" id="notes" name="otherAccount" style="width: 154px;"/>
+                    </div>
+                
+            </div>
+            </fieldset>
+            <br>
+            
+            <fieldset>
+				<legend>收货信息</legend>
+            <div class="search-panel">
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            姓名
+                        </span>
+                        <input class="easyui-textbox" id="name" name="otherAccount" style="width: 154px;"/>
+                    </div>
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            电话
+                        </span>
+                        <input class="easyui-textbox" id="mobile" name="otherAccount" style="width: 154px;"/>
+                    </div>
+                    </br>
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            手机号
+                        </span>
+                        <input class="easyui-textbox" id="phone" name="otherAccount" style="width: 154px;" />
+                    </div>
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            邮编
+                        </span>
+                        <input class="easyui-textbox" id="zip" name="otherAccount" style="width: 154px;"/>
+                    </div>
+                    <br>
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            省份
+                        </span>
+                        <select id="province" name="province" class="easyui-combobox" style="width:154px;"></select>
+                    </div>
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            城市
+                        </span>
+                        <select id="citys" name="city" class="easyui-combobox" style="width:154px;"></select>
+                    </div>
+                    </br>
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            区县
+                        </span>
+                        <select id="county" name="county" class="easyui-combobox" style="width:154px;"></select>
+                    </div>
+                    
+
+                    
+                          
+                    <div class="search-row">
+                        <span class="search-row-label">
+                            详细地址
+                        </span>
+                        <input class="easyui-textbox" id="address" name="otherAccount" style="width: 154px;"/>
+                    </div>
+      
+            </div>
+            </fieldset>
+            <br>
+            <fieldset>
+				<legend>发票信息</legend>
+            <div class="search-panel">
+                    <div class="search-row">
+                            <span class="search-row-label">
+                              发票类型
+                            </span>
+                            <select class="easyui-combobox" id="invoiceType" name="productCode" style="width: 154px;">
+                                <option value="0">无</option>
+                                <option value="1">电子发票</option>
+                            </select>
+                    </div>
+                    <br>
+                    <div class="search-row">
+                        <span class="search-row-label" >
+                            发票抬头
+                        </span>
+                        <input class="easyui-textbox" id="invoiceTitle" name="otherAccount" style="width: 154px;"/>
+                    </div>
+                    <input id="orderId" type="text" hidden/>
+      
+            </div>
+ 			</fieldset>
+ 			<fieldset>
+				<legend>商品列表</legend>
+            <div class="search-panel" style="height:400px;overflow:auto;">
+             <input name="dataTypef" id="dataTypef" hidden/>
+                <a href="#" class="easyui-linkbutton" id="searchBtn"  data-options="iconCls:'icon-add',plain:true" onclick="Add()">添加</a>
+	                <table id="datagrides" style="border:0;">            
+                </table>
+            </div>
+            </fieldset>
+        </form>
+
+<div id="oDialog4" class="easyui-dialog" title="修改"
+     style="width: 270px; height: 305px;font-size:14px; padding: 0px 0px;overflow-y: hidden"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;display: block">
+
+
+        <div data-options="region:'center'" style="width:100%;height:100%;">
+			<br/>
+            &numsp;
+            <label >商品编码<span style="color: red;padding-right:15px">*</span></label>
+            
+            <input id="sku"   name="categoryName"  style="height:24px;width: 135px" readonly/>
+            
+            <br/>
+            <br/>
+            &numsp;
+            <label style="padding-right:20px">商品型号</label>
+            
+            <input id="productName"   name="productName"  style="height:24px;width: 134px;    padding-right: 1px" readonly/>
+            <br/>
+            <br/>
+            
+
+            
+            &numsp;
+            <label>单价<span style="color: red;padding-right:42px">*</span></label>
+            
+            <input id="price" name="price" style="height:25px;width: 135px" required="true"/>
+            
+          	<br/>
+            <br/>
+            &numsp;
+            <div class="search-row_nowidth mar_r6px">
+            
+                <label>数量<span style="color: red;padding-right:42px">*</span></label>
+                <input id="num" name="num" style="height:25px;width: 135px" required="true"/>
+            </div>
+
+            <form id="exportForm" action="#">
+             	<input id="channelId2" name="categoryId" type="text" hidden>
+             	<input id="categoryId2" name="categoryId" type="text" hidden>
+                <input id="brandId2" name="brandId" type="text" hidden>
+                <input id="sku2" name="sku" type="text" value="" hidden>
+                <input id="channelType2" name="channelType" typ="text" hidden>
+                <input id="policyYear2" name="policyYear" typ="text" hidden>
+                
+            </form>
+
+            <input id="id" type="text" hidden>
+            <input id="brandId" type="text" hidden>
+            <input id="categoryId" type="text" hidden>
+
+
+        </div>
+
+
+        <div id="dlg-buttons6" data-options="region:'south'" style="height:40px" align="right">
+            <a href="javascript:void(0)" class="easyui-linkbutton"
+               onclick="javascript:SetCodeValue4()" iconcls="icon-ok">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+               onclick="javascript: $('#oDialog4').dialog('close')"
+               iconcls="icon-cancel">关闭</a>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="oDialog" class="easyui-dialog" title="选择"
+     style="width: 500px; height: 440px; padding: 0px 0px; center:true;font-size:14px"
+     closed="true" center="true" modal="true">
+    <div class="easyui-layout" style="width:100%;height:100%;">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div data-options="region:'north'" style="height:40px">
+
+                <span class="search-row-label_80">商品编码</span>
+                <input id="sku1" style="width:100px" type="text" data-options="prompt:'商品编码'">
+                <span class="search-row-label_80">商品型号</span>
+                <input id="productName1" style="width:100px" type="text" data-options="prompt:'商品型号'">
+                <a href="#" class="easyui-linkbutton" onclick="product()"
+                   data-options="plain:true">查找</a>
+            </div>
+
+            <div data-options="region:'center'">
+                <table class="easyui-datagrid" id="code" style="width:600px;height:auto" fit="true"
+                       data-options="singleSelect:true,region:'center'">
+                    <thead>
+                    <tr>
+                        <th data-options="field:'ck',checkbox:true ,width:50,
+                            checkOnSelect: true,
+                            selectOnCheck :true">选择
+                        </th>
+                        <th data-options="field:'sku',width:200">商品编码</th>
+                        <th data-options="field:'productName',width:200">商品型号</th>
+                        <th data-options="field:'productTypeid',width:200" hidden>品类的id</th>
+
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div id="dlg-buttons1" data-options="region:'south'" style="height:35px" align="right">
+                <a href="javascript:void(0)" class="easyui-linkbutton"
+                   onclick="javascript:SetCodeValuep()" iconcls="icon-ok">确定</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-cancel"
+                   onclick="javascript:$('#oDialog').dialog('close')"
+                   iconcls="icon-cancel">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="../static/js/pop/distribute_order/manualInputOrder.js"></script>
+</body>
+
+</html>

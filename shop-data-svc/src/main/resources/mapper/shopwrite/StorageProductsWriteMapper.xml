@@ -3,14 +3,14 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.StorageProductsWriteDao">
 	<insert id="insert" parameterType="com.haier.shop.model.StorageProducts">
 		insert into
-		`StorageProducts`(`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`)
+		`storageproducts`(`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`)
 		values(#{sCode},#{storageId},#{sku},#{stock},#{stockBak},#{usedStock},#{productType},#{stockUpTime},unix_timestamp(),#{waitSyncToTaobao},0,unix_timestamp(),#{locksTB},#{locksSC},#{locksQY},#{shareStock},#{waQty})
 		<selectKey resultType="Integer" keyProperty="id" order="AFTER"
 			statementType="STATEMENT">select last_insert_id()</selectKey>
 	</insert>
 	<update id="updateAfterLesChanged" parameterType="com.haier.shop.model.StorageProducts">
 	<![CDATA[	
-		update `StorageProducts` set `storageId`=#{storageId},`stockBak`=`stock`,`stock`=#{stock},`stockUpTime`=#{stockUpTime},`waQty`=#{waQty},
+		update `storageproducts` set `storageId`=#{storageId},`stockBak`=`stock`,`stock`=#{stock},`stockUpTime`=#{stockUpTime},`waQty`=#{waQty},
 		`usedStock`= 
 		case when convert(`usedStock`,SIGNED) - #{usedStock} <= 0 then 0
 		when convert(`usedStock`,SIGNED) - #{usedStock} > 0 then convert(`usedStock`,SIGNED) - #{usedStock}
@@ -20,7 +20,7 @@
 	</update>
 	<update id="frozenStock" parameterType="com.haier.shop.model.StorageProducts">
 	<![CDATA[	
-	    update `StorageProducts` set `waitSyncToTaobao` = 1, 
+	    update `storageproducts` set `waitSyncToTaobao` = 1,
 	    `lastAvailableModifyTime` = unix_timestamp(),
 		`usedStock` =`usedStock` + #{forzen_qty}
 		where `id` = #{id} 
@@ -29,19 +29,19 @@
 	</update>
 	<update id="updateLocksQY" parameterType="com.haier.shop.model.StorageProducts">
 	<![CDATA[	
-	    update `StorageProducts` set `locksQY` =`locksQY` + #{locksQY}
+	    update `storageproducts` set `locksQY` =`locksQY` + #{locksQY}
 		where `id` = #{id} 
 	]]>
 	</update>
 	<update id="updateStockQty" parameterType="com.haier.shop.model.StorageProducts">
 		update
-		`StorageProducts` set
+		`storageproducts` set
 		`storageId`=#{storageId},`stockBak`=`stock`,`stock`=#{stock},`stockUpTime`=#{stockUpTime}
 		where `id` = #{id}
 	</update>
 	<update id="releaseFrozenQty" parameterType="map">
 	<![CDATA[
-		update `StorageProducts` set `waitSyncToTaobao`=1,`lastAvailableModifyTime`=unix_timestamp(),
+		update `storageproducts` set `waitSyncToTaobao`=1,`lastAvailableModifyTime`=unix_timestamp(),
 		`usedStock`= 
 		case when convert(`usedStock`,SIGNED) - #{releaseQty} <= 0 then 0
 		when convert(`usedStock`,SIGNED) - #{releaseQty} > 0 then convert(`usedStock`,SIGNED) - #{releaseQty}
@@ -52,7 +52,7 @@
 	</update>
 	<update id="releaseFrozenQtyForRRS" parameterType="map">
 	<![CDATA[
-		update `StorageProducts` set `stock`=`stock` - #{releaseQty}, `waitSyncToTaobao`=1,`lastAvailableModifyTime`=unix_timestamp(),
+		update `storageproducts` set `stock`=`stock` - #{releaseQty}, `waitSyncToTaobao`=1,`lastAvailableModifyTime`=unix_timestamp(),
 		`usedStock`= 
 		case when convert(`usedStock`,SIGNED) - #{releaseQty} <= 0 then 0
 		when convert(`usedStock`,SIGNED) - #{releaseQty} > 0 then convert(`usedStock`,SIGNED) - #{releaseQty}
@@ -61,6 +61,6 @@
 	]]>
 	</update>
 	<!-- <update id="update" parameterType="com.haier.cbs.stock.entity.StorageProducts">
-		update `StorageProducts` set `sCode`=#{sCode},`storageId`=#{storageId},`sku`=#{sku},`stock`=#{stock},`stockBak`=#{stockBak},`usedStock`=#{usedStock},`productType`=#{productType},`stockUpTime`=#{stockUpTime},`lastAvailableModifyTime`=#{lastAvailableModifyTime},`waitSyncToTaobao`=#{waitSyncToTaobao},`lastSyncToTaobaoTime`=#{lastSyncToTaobaoTime},`addTime`=#{addTime},`locksTB`=#{locksTB},`locksSC`=#{locksSC},`locksQY`=#{locksQY},`shareStock`=#{shareStock} 
+		update `storageproducts` set `sCode`=#{sCode},`storageId`=#{storageId},`sku`=#{sku},`stock`=#{stock},`stockBak`=#{stockBak},`usedStock`=#{usedStock},`productType`=#{productType},`stockUpTime`=#{stockUpTime},`lastAvailableModifyTime`=#{lastAvailableModifyTime},`waitSyncToTaobao`=#{waitSyncToTaobao},`lastSyncToTaobaoTime`=#{lastSyncToTaobaoTime},`addTime`=#{addTime},`locksTB`=#{locksTB},`locksSC`=#{locksSC},`locksQY`=#{locksQY},`shareStock`=#{shareStock}
 		where `id` = #{id} </update> -->
 </mapper>

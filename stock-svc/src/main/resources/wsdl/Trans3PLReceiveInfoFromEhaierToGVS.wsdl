@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="Trans3PLReceiveInfoFromEhaierToGVS"
+                     targetNamespace="http://www.example.org/Trans3PLReceiveInfoFromEhaierToGVS/"
+                     xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/"
+                     xmlns:WL5G3N1="http://www.example.org/Trans3PLReceiveInfoFromEhaierToGVS/"
+                     xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+    <WL5G3N0:types>
+        <xsd:schema targetNamespace="http://www.example.org/Trans3PLReceiveInfoFromEhaierToGVS/"
+                    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                    xmlns:tns="http://www.example.org/Trans3PLReceiveInfoFromEhaierToGVS/"
+                    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:element name="Trans3PLReceiveInfoFromEhaierToGVS">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="T_ZMMS0013" type="tns:ZMMS0013"/>
+                        <xsd:element name="Sysname" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Trans3PLReceiveInfoFromEhaierToGVSResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="RETURN" type="tns:ZMM_INBOUND_007_OUT"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:complexType name="ZMMS0013">
+                <xsd:sequence>
+                    <xsd:element name="ZWBDR" type="xsd:string"/>
+                    <xsd:element name="POSNR" type="xsd:string"/>
+                    <xsd:element name="ZSPDT" type="xsd:string"/>
+                    <xsd:element name="MATNR" type="xsd:string"/>
+                    <xsd:element name="MENGE" type="xsd:decimal"/>
+                    <xsd:element name="LGORT" type="xsd:string"/>
+                    <xsd:element name="ZFGLG" type="xsd:string"/>
+                    <xsd:element name="ZLSGI" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZMM_INBOUND_007_OUT">
+                <xsd:sequence>
+                    <xsd:element name="POSNR" type="xsd:string"/>
+                    <xsd:element name="ZLSGI" type="xsd:string"/>
+                    <xsd:element name="TYPE" type="xsd:string"/>
+                    <xsd:element name="MESSAGE" type="xsd:string"/>
+                    <xsd:element name="FaultDetail" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </WL5G3N0:types>
+    <WL5G3N0:message name="Trans3PLReceiveInfoFromEhaierToGVSRequest">
+        <WL5G3N0:part element="WL5G3N1:Trans3PLReceiveInfoFromEhaierToGVS" name="parameters"/>
+    </WL5G3N0:message>
+    <WL5G3N0:message name="Trans3PLReceiveInfoFromEhaierToGVSResponse">
+        <WL5G3N0:part element="WL5G3N1:Trans3PLReceiveInfoFromEhaierToGVSResponse" name="parameters"/>
+    </WL5G3N0:message>
+    <WL5G3N0:portType name="Trans3PLReceiveInfoFromEhaierToGVS">
+        <WL5G3N0:operation name="Trans3PLReceiveInfoFromEhaierToGVS">
+            <WL5G3N0:input message="WL5G3N1:Trans3PLReceiveInfoFromEhaierToGVSRequest"/>
+            <WL5G3N0:output message="WL5G3N1:Trans3PLReceiveInfoFromEhaierToGVSResponse"/>
+        </WL5G3N0:operation>
+    </WL5G3N0:portType>
+    <WL5G3N0:binding name="Trans3PLReceiveInfoFromEhaierToGVSSOAP" type="WL5G3N1:Trans3PLReceiveInfoFromEhaierToGVS">
+        <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <WL5G3N0:operation name="Trans3PLReceiveInfoFromEhaierToGVS">
+            <WL5G3N2:operation
+                    soapAction="http://www.example.org/Trans3PLReceiveInfoFromEhaierToGVS/Trans3PLReceiveInfoFromEhaierToGVS"/>
+            <WL5G3N0:input>
+                <WL5G3N2:body use="literal"/>
+            </WL5G3N0:input>
+            <WL5G3N0:output>
+                <WL5G3N2:body use="literal"/>
+            </WL5G3N0:output>
+        </WL5G3N0:operation>
+    </WL5G3N0:binding>
+    <WL5G3N0:service name="Trans3PLReceiveInfoFromEhaierToGVS">
+        <WL5G3N0:port binding="WL5G3N1:Trans3PLReceiveInfoFromEhaierToGVSSOAP"
+                      name="Trans3PLReceiveInfoFromEhaierToGVSSOAP">
+            <!--<WL5G3N2:address location="http://58.56.128.84:9001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=temp_service_0210"/>-->
+            <WL5G3N2:address
+                    location="http://10.135.1.110:7001/EAI/service/GVS/Trans3PLReceiveInfoFromEhaierToGVS/Trans3PLReceiveInfoFromEhaierToGVS?INT_CODE=EAI_INT_2010"/>
+        </WL5G3N0:port>
+    </WL5G3N0:service>
+</WL5G3N0:definitions>

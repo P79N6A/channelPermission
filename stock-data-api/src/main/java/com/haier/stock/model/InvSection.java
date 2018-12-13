@@ -1,5 +1,8 @@
 package com.haier.stock.model;
 
+import com.haier.stock.util.excel.Excel;
+import com.haier.stock.util.excel.ExcelTitle;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,6 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Excel(filename = "虚拟库位")
 public class InvSection implements Serializable{
 
     /**
@@ -14,6 +18,16 @@ public class InvSection implements Serializable{
      */
     private static final long serialVersionUID = 3431631072818009195L;
     private String id;
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
+    }
+
+    private String updateTimeStr;
     /**
      * 正品库
      */
@@ -25,7 +39,8 @@ public class InvSection implements Serializable{
 	/**
 	 * 库位编码
 	 */
-	private String secCode;
+    @ExcelTitle(titleName = "库位编码")
+    private String secCode;
 	/**
 	 * LES库位
 	 */
@@ -33,14 +48,28 @@ public class InvSection implements Serializable{
     /**
      * 库位名称
      */
+    @ExcelTitle(titleName = "库位名称")
     private String secName;
     /**
      * 状态
      */
     private Integer status;
+
+    public String getStatusExcel() {
+        return statusExcel;
+    }
+
+    public void setStatusExcel(String statusExcel) {
+        this.statusExcel = statusExcel;
+    }
+
+    @ExcelTitle(titleName = "状态")
+
+    private String statusExcel;
     /**
      * 仓库（TC）代码
      */
+    @ExcelTitle(titleName = "仓库编码")
     private String whCode;
     /**
      * 库位属性
@@ -49,10 +78,12 @@ public class InvSection implements Serializable{
     /**
      * 渠道编码
      */
+    @ExcelTitle(titleName = "渠道编码")
     private String channelCode;
     /**
      * 批次
      */
+    @ExcelTitle(titleName = "产品属性")
     private String itemProperty;
     /**
      * 
@@ -62,7 +93,7 @@ public class InvSection implements Serializable{
     private Date createTime;
 
     private String updateUser;
-
+    @ExcelTitle(titleName = "最后更新时间")
     private Date updateTime;
     /**
      * 销售组织编码
@@ -71,10 +102,12 @@ public class InvSection implements Serializable{
     /**
      * 付款方编码
      */
+    @ExcelTitle(titleName = "付款方编码")
     private String custCode;
     /**
      * 地区编码
      */
+    @ExcelTitle(titleName = "地区编码")
     private String regionCode;
     /**
      * 分渠道送达方
@@ -427,4 +460,41 @@ public class InvSection implements Serializable{
 	public void setId(String id) {
 		this.id = id;
 	}
+	private Integer page;
+    private Integer rows;
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getRows() {
+        return rows;
+    }
+
+    public void setRows(Integer rows) {
+        this.rows = rows;
+    }
+
+    public Integer getStart() {
+        return start;
+    }
+
+    public void setStart(Integer start) {
+        this.start = start;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    private Integer start;
+    private Integer size;
 }

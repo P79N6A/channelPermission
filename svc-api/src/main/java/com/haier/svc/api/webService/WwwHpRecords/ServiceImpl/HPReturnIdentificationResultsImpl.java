@@ -35,7 +35,7 @@ public class HPReturnIdentificationResultsImpl implements HPReturnIdentification
 		HPReturn_transfer hpRetun = (HPReturn_transfer) SpringContextUtil.getBean("hpReturnTransfer");
 			for (OrderRepairshpLogs rejectionLogs : bean) {
 				try {
-					hpRetun.insertHPrecords(rejectionLogs);//插入HP返回的鉴定结果到数据库
+//					hpRetun.insertHPrecords(rejectionLogs);//插入HP返回的鉴定结果到数据库
 				} catch (Exception e) {
 					log.error("New[To Sap]:接受HP返回鉴定信息发生异常InvThTransactionID：["
 							+ rejectionLogs.getId() + "]," + e.getMessage());

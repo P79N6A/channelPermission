@@ -15,4 +15,10 @@ public interface SequenceDao {
     public void updateSequence(Map map);
 
     public void insertOrUpdateSequence(Map map);
+
+    public Integer selectSequenceId();
+
+    String findMax();
+
+    int update3WDataMaxId(String max);
 }

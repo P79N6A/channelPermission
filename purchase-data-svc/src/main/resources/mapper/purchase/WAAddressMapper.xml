@@ -15,6 +15,7 @@
 		<result property="mobilePhone" column="mobilePhone" />
 		<result property="phone" column="phone" />
 		<result property="is_enabled" column="is_enabled" />
+
 	</resultMap>
 	<select id="getWAAddressInfo" parameterType="String" resultMap="waAddressResult">
 		select
@@ -32,7 +33,9 @@
 	</select>
 	<select id="getWAAddress" parameterType="Map" resultMap="waAddressResult">
 		select
-		`sCode`,`centerName`,`cCode`,`province`,`city`,`county`,`lesCode`,`address`,`city`,`zipCode`,`contact_cgodbm`,`contact_crm`,`mobilePhone`,`phone`,`is_enabled`
+		`sCode`,`centerName`,`cCode`,`province`,`city`,`county`,`lesCode`,`address`,`city`,
+		`zipCode`,`contact_cgodbm`,`contact_crm`,`mobilePhone`,`phone`,`is_enabled`
+		,`create_user` AS createUser,`update_user` AS updateUser,DATE_FORMAT(create_time,"%Y-%m-%d") AS createTime,DATE_FORMAT(update_time,"%Y-%m-%d")	AS updateTime
 		from `wa_address_t`
 		where
 		1=1
@@ -43,7 +46,7 @@
 			and centerName=#{waAddress.centerName}
 		</if>
 		<![CDATA[ AND is_enabled <> 4 ]]>
-		<if test="rows != null and rows !='' and index != null and index != ''">
+		<if test="rows != null  and index != null ">
 			LIMIT #{index},#{rows}
 		</if>
 	</select>
@@ -78,7 +81,11 @@
 		contact_crm,
 		mobilePhone,
 		phone,
-		is_enabled
+		is_enabled,
+		create_user,
+		create_time,
+		update_user,
+		update_time
 		)
 		VALUES(
 		#{waAddress.sCode},
@@ -94,7 +101,11 @@
 		#{waAddress.contact_crm},
 		#{waAddress.mobilePhone},
 		#{waAddress.phone},
-		0
+		0,
+		#{waAddress.createUser},
+		SYSDATE(),
+		#{waAddress.updateUser},
+		SYSDATE()
 		);
 	</insert>
 
@@ -116,6 +127,8 @@
 			contact_crm = #{waAddress.contact_crm},
 			mobilePhone = #{waAddress.mobilePhone},
 			phone = #{waAddress.phone}
+			update_user=#{waAddress.updateUser},
+			update_time= SYSDATE()
 		</set>
 		WHERE
 		sCode = #{waAddress.sCode}
@@ -163,5 +176,6 @@
 		count(1) from wa_address_t
 		WHERE
 		sCode = #{waAddress.sCode}
+		<![CDATA[ AND is_enabled <> 4 ]]>
 	</select>
 </mapper>

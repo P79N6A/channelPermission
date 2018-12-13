@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.AllocateDefectLogsWriteDao" >
+
+    <resultMap id="alloallocateResult" type="com.haier.shop.model.AllocateDefectLogs">
+        <result property="id" column="id"/>
+        <result property="addtime" column="addtime"/>
+        <result property="omsId" column="omsId"/>
+        <result property="operator" column="operator"/>
+        <result property="operate" column="operate"/>
+        <result property="db" column="db"/>
+        <result property="orderCode" column="orderCode"/>
+    </resultMap>
+
+    <select id="operateLog"  resultMap="alloallocateResult" >
+        SELECT
+        omsId,operator,operate,addtime,db,orderCode
+        from allocatedefectlogs a,oms_in_store_records oms
+        WHERE a.omsId = oms.id
+        and omsId = #{omsId}
+    </select>
+
+    <insert id="insertLog"  >
+        INSERT INTO allocatedefectlogs(omsId,operator,operate,addtime)
+        VALUES
+        (#{omsId},"系统",#{operate},now())
+    </insert>
+
+</mapper>

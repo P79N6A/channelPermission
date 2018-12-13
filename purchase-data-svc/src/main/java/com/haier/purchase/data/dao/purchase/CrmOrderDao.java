@@ -6,6 +6,7 @@ package com.haier.purchase.data.dao.purchase;
 import java.util.List;
 import java.util.Map;
 
+import com.haier.purchase.data.model.CrmOrderItem;
 import com.haier.purchase.data.model.CrmOrderVO;
 
 
@@ -27,4 +28,10 @@ public interface CrmOrderDao {
     public Integer getMaxFlowFlagInOrder(Map map);
 
     public Integer selectCrmOrderCount(String wp_order_id);
+
+	public void updateLbxs(CrmOrderItem dto);
+
+	public List<CrmOrderItem> findWaitUpdateLbxList();
+	
+	public List<CrmOrderItem> findWaitToSapList();
 }

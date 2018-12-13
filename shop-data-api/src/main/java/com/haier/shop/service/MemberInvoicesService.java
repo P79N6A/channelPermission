@@ -22,4 +22,8 @@ public interface MemberInvoicesService {
     MemberInvoices getByOrderId(Integer orderId);
 
     MemberInvoices checkPassedValuedInvoice(MemberInvoices memberInvoices);
+
+    int updateByTitleAndNumber(MemberInvoices memberInvoices);
+
+    Integer getIdByOrderId(Integer id);
 }

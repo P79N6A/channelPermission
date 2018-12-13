@@ -21,4 +21,20 @@ public interface OrderPriceGateReadDao {
 	String getBrandNameByBrandId(@Param("id") Integer id);
 	
 	String getCateNameByCateId(@Param("id") Integer id);
+
+	/**
+	 * 查询订单价格闸口列表
+	 * @param paramMap
+	 * @return
+	 */
+	List<OrderPriceGate> getOrderPriceGateList(@Param("params") Map<String, Object> paramMap);
+
+	/**
+	 * 获得条数[订单价格闸口列表]
+	 *
+	 * @return
+	 */
+	public int getRows(@Param("params")Map<String,Object> param);
+
+
 }

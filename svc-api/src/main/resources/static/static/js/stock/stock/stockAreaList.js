@@ -3,13 +3,13 @@ var datagridOptions_orderForecastGoal = {
     singleSelect: true,//多选
     url: '',
     columns: [[
-        {title: '城市 ', field: 'cityName', sortable: true},
-        {title: '区县 ', field: 'regionName', sortable: true},
-        {title: '库存类型', field: 'stockType', sortable: true},
-        {title: '库位/店铺', field: 'storeCode', sortable: true},
-        {title: '物料编码', field: 'sku', sortable: true},
-        {title: '存量', field: 'avaibleQty', sortable: true},
-        {title: '更新时间', field: 'updateTime', sortable: true, formatter: formatDatebox},
+        {title: '城市 ', field: 'cityName', sortable: false},
+        {title: '区县 ', field: 'regionName', sortable: false},
+        {title: '库存类型', field: 'stockType', sortable: false},
+        {title: '库位/店铺', field: 'storeCode', sortable: false},
+        {title: '物料编码', field: 'sku', sortable: false},
+        {title: '存量', field: 'avaibleQty', sortable: false},
+        {title: '更新时间', field: 'updateTime', sortable: false, formatter: formatDatebox},
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
     striped: true,
@@ -94,13 +94,13 @@ $("#searchBtn").on('click', function (event) {
             channelCode: channelCodeData
         },
         columns: [[
-            {title: '城市 ', field: 'cityName', sortable: true},
-            {title: '区县 ', field: 'regionName', sortable: true},
-            {title: '库存类型', field: 'stockType', sortable: true},
-            {title: '库位/店铺', field: 'storeCode', sortable: true},
-            {title: '物料编码', field: 'sku', sortable: true},
-            {title: '存量', field: 'avaibleQty', sortable: true},
-            {title: '更新时间', field: 'updateTime', sortable: true, formatter: formatDatebox},
+            {title: '城市 ', field: 'cityName', sortable: false},
+            {title: '区县 ', field: 'regionName', sortable: false},
+            {title: '库存类型', field: 'stockType', sortable: false},
+            {title: '库位/店铺', field: 'storeCode', sortable: false},
+            {title: '物料编码', field: 'sku', sortable: false},
+            {title: '存量', field: 'avaibleQty', sortable: false},
+            {title: '更新时间', field: 'updateTime', sortable: false, formatter: formatDatebox},
         ]],
     });
 });

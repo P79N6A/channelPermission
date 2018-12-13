@@ -1,5 +1,39 @@
 package com.haier.stock.services;
 
+import com.haier.common.ServiceResult;
+import com.haier.common.util.StringUtil;
+import com.haier.eis.model.BusinessException;
+import com.haier.eis.model.EisExternalSku;
+import com.haier.eis.model.EisInterfaceFinance;
+import com.haier.eis.model.EisInterfaceStatus;
+import com.haier.eis.model.EisStockBusinessQueue;
+import com.haier.eis.model.LesStockTransQueue;
+import com.haier.eis.service.EisExternalSkuService;
+import com.haier.eis.service.EisInterfaceFinanceService;
+import com.haier.eis.service.EisInterfaceStatusService;
+import com.haier.eis.service.EisLesStockTransQueueService;
+import com.haier.eis.service.EisStockBusinessQueueService;
+import com.haier.eis.service.LesStockTransQueueService;
+import com.haier.purchase.data.model.GoodsBackInfoResponse;
+import com.haier.purchase.data.model.PurchaseItem;
+import com.haier.purchase.data.model.PurchaseOrder;
+import com.haier.purchase.data.model.PurchaseOrderInfoItem;
+import com.haier.shop.model.ItemBase;
+import com.haier.shop.model.OrderProductsNew;
+import com.haier.shop.model.OrdersNew;
+import com.haier.stock.model.InvReservedConfig;
+import com.haier.stock.model.InvSection;
+import com.haier.stock.model.InvStockBatch;
+import com.haier.stock.model.InvStockChannel;
+import com.haier.stock.model.InvStockInOut;
+import com.haier.stock.model.InvStockTransaction;
+import com.haier.stock.model.InvTransferLine;
+import com.haier.stock.model.InventoryBusinessTypes;
+import com.haier.stock.service.StockReservedService;
+import com.haier.stock.service.StockService;
+import com.haier.stock.services.Helper.EisBuzHelper;
+import com.haier.stock.services.finance.PushReturnInfoToGVSHandler;
+import com.haier.stock.services.finance.SFHandler;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,20 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.haier.eis.model.EisStockBusinessQueue;
-import com.haier.eis.service.EisStockBusinessQueueService;
-import com.haier.purchase.data.model.PurchaseItem;
-import com.haier.purchase.data.model.PurchaseOrder;
-import com.haier.purchase.data.model.PurchaseOrderInfoItem;
-import com.haier.shop.model.OrderProductsNew;
-import com.haier.shop.model.OrdersNew;
-import com.haier.stock.model.InvSection;
-import com.haier.stock.model.InvStockChannel;
-import com.haier.stock.model.InvTransferLine;
-import com.haier.stock.model.InventoryBusinessTypes;
-import com.haier.stock.services.Helper.EisBuzHelper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,21 +50,11 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import com.haier.common.ServiceResult;
-import com.haier.common.util.StringUtil;
-import com.haier.eis.model.BusinessException;
-import com.haier.eis.model.EisExternalSku;
-import com.haier.eis.model.LesStockTransQueue;
-import com.haier.eis.service.EisExternalSkuService;
-import com.haier.eis.service.EisLesStockTransQueueService;
-import com.haier.purchase.data.model.GoodsBackInfoResponse;
-import com.haier.shop.model.ItemBase;
-import com.haier.stock.model.InvStockTransaction;
 
-
-@Service
+@Service("eISStockModel")
 public class EISStockModel {
 	   private Logger              logger   = LoggerFactory.getLogger(EISStockModel.class);
+     private static Pattern stockCheckpattern = Pattern.compile("^3.{2}4$");
 	   private LesStockTransQueue transQueue;
 	   @Autowired
 	   private StockCommonServiceImpl      stockCommonServiceImpl;
@@ -52,6 +62,7 @@ public class EISStockModel {
 	   private TransferLineServiceImpl  transferLineServiceImpl;
 	   @Autowired
 	   private OrderServiceImpl         orderServiceImpl;
+	   @Autowired
 	   private DataSourceTransactionManager transactionManagerEis;
 	   @Autowired
 	   private PurchaseOrderServiceImpl purchaseOrderServiceImpl;
@@ -67,13 +78,28 @@ public class EISStockModel {
 	   private EisLesStockTransQueueService          eisLesStockTransQueueService;
 	   @Autowired
 	   private StockCenterItemServiceImplNew          itemServiceImplNew;
+	   @Autowired
+     private EisInterfaceFinanceService eisInterfaceFinanceDao;
+	   @Autowired
+	   private PushReturnInfoToGVSHandler sfHandler;
+	   @Autowired
+     private LesStockTransQueueService lesStockTransQueueDao;
+
+  @Autowired
+  private EisInterfaceStatusService eisInterfaceStatusService;
+  @Autowired
+  private StockService stockService;
+  @Autowired
+  private StockReservedService stockReservedService;
+
+
 	   private String channel; //关联渠道
 	   private boolean isRelease = false; //是否需要释放库存，默认为否
-	   
+
        public boolean isRelease() {
 		return isRelease;
 		}
-	
+
 		public void setRelease(boolean isRelease) {
 			this.isRelease = isRelease;
 		}
@@ -153,7 +179,7 @@ public class EISStockModel {
         }
         return transProcess;
     }
-    
+
 
     /**
      * 拒收入库
@@ -179,7 +205,7 @@ public class EISStockModel {
         }
     }
 
-    
+
     /**
      * 调拨
      */
@@ -189,6 +215,7 @@ public class EISStockModel {
             super(transQueue);
         }
 
+        @Override
         boolean doWith() throws BusinessException {
             String channel;
             String corderSn = getTrans().getCorderSn();
@@ -273,7 +300,7 @@ public class EISStockModel {
             return true;
         }
     }
-    
+
     /**
      * 采购入库：
      * <ul>
@@ -394,7 +421,7 @@ public class EISStockModel {
             throw new BusinessException("无法识别的采购入库单据");
         }
     }
-    
+
     /**
      * 销售出库
      */
@@ -583,8 +610,8 @@ public class EISStockModel {
             try {
                 //3%4库位数据不处理
                 if (getTrans().getSecCode() != null) {
-                    Pattern pattern = Pattern.compile("^3.{2}4$");
-                    Matcher matcher = pattern.matcher(getTrans().getSecCode());
+
+                    Matcher matcher = stockCheckpattern.matcher(getTrans().getSecCode());
                     while (matcher.find()) {
                         updateTransUnidentified("库位问题");
                         return;
@@ -608,7 +635,7 @@ public class EISStockModel {
                 ServiceResult<ItemBase> rs = itemServiceImplNew.getItemBaseBySku(getTrans().getSku());
                 if (!rs.getSuccess()) {
                     throw new BusinessException("获取itemBase出现未知错误：" + rs.getMessage());
-                } 
+                }
                 ItemBase itemBase = rs.getResult();
                 if (itemBase == null) {
                     throw new BusinessException("无法识别的物料编码 " + getTrans().getSku());
@@ -747,21 +774,23 @@ public class EISStockModel {
             }
         }
     }
-    
+
     private OrdersNew getOrderById(Integer orderId) {
         ServiceResult<OrdersNew> rs2 = orderServiceImpl.getOrderById(orderId);
-        if (!rs2.getSuccess())
+        if (!rs2.getSuccess()){
             throw new BusinessException("向订单服务请求订单信息出现错误:" + rs2.getMessage());
+        }
         return rs2.getResult();
     }
-    
+
     private String getInvStockChannelCodeBySource(String source) {
         ServiceResult<String> rs3 = stockCommonServiceImpl.getChannelCodeByOrderSource(source);
-        if (!rs3.getSuccess())
+        if (!rs3.getSuccess()){
             throw new BusinessException("通过订单来源向库存服务请求渠道编码发生错误:" + rs3.getMessage());
+        }
         return rs3.getResult();
     }
-    
+
     /**
      * 确定出入库记录的渠道
      *
@@ -796,7 +825,7 @@ public class EISStockModel {
         }
         return goodsBackInfoResponse.getChannel();
     }
-    
+
     public void reviseLessStockTransChannel(int transId, String channel, String user) {
         LesStockTransQueue transQueue = eisLesStockTransQueueService.getById(transId);
         if (transQueue == null) {
@@ -811,4 +840,149 @@ public class EISStockModel {
             throw new BusinessException("此交易已经被处理");
         }
     }
+
+    /**
+     * Job：LES出入库后调用财务接口
+     */
+    public void processLesTransForFinance() {
+
+        List<EisInterfaceFinance> failedInterfaceFinances;
+        //        List<EisInterfaceFinance> unKnownInterfaceFinances = null;
+        List<LesStockTransQueue> transQueues;
+        try {
+            Map<String,Object> failParams = new HashMap<String,Object>(3);
+            failParams.put("status",EisInterfaceFinance.STATUS_FAILED);
+            failParams.put("isNotDN",true);
+            failParams.put("isNotTrans",true);
+            // 处理调用失败的
+            failedInterfaceFinances = eisInterfaceFinanceDao
+                .getByParams(failParams);
+            for (EisInterfaceFinance interfaceFinance : failedInterfaceFinances) {
+                try {
+                    sfHandler.handleRequest(interfaceFinance);
+                } catch (Exception e) {
+                    logger.error("Redo[To Sap]：重新发财务出现异常lesTransId["
+                            + interfaceFinance.getLesStockTransQueueId() + "]",
+                        e);
+                }
+            }
+
+            //处理新数据
+            /****去掉原来按最后id号取的逻辑改成按状态***/
+            Map<String,Object> initParams = new HashMap<String,Object>(2);
+            initParams.put("isNotDN",true);
+            initParams.put("isNotTrans",true);
+            transQueues = lesStockTransQueueDao.getForFinanceByParams(initParams);
+            for (LesStockTransQueue transQueue : transQueues) {
+                try {
+                    sfHandler.handleRequest(transQueue);
+                    lesStockTransQueueDao.updateAfterDoFinance(transQueue.getId());
+                } catch (Exception e) {
+                    logger.error("New[To Sap]:处理出入库记录发生异常lesTransId[" + transQueue.getId() + "]",
+                        e);
+                }
+            }
+
+            //处理状态未知
+            //            unKnownInterfaceFinances = eisInterfaceFinanceDao
+            //                .getByStatus(EisInterfaceFinance.STATUS_UNKNOWN);
+            //
+            //            for (EisInterfaceFinance interfaceFinance : unKnownInterfaceFinances)
+            //                sfHandler.handleRequest(interfaceFinance);
+
+            SFHandler.clear();//清楚网单号缓存
+
+        } catch (Exception e) {
+            SFHandler.clear();//清楚网单号缓存
+            logger.error("Les出入库后调用财务接口出现错误：", e);
+        }
+
+    }
+
+  public boolean syncStockReserved() {
+
+    //查询接口编码为sync_reserved_stock的数据
+    EisInterfaceStatus interfaceStatus = eisInterfaceStatusService
+        .getByInterfaceCode(EisInterfaceStatus.INTERFACE_CODE_SYNC_RESERVED_STOCK);
+    if (interfaceStatus == null) {
+      logger.error("无" + EisInterfaceStatus.INTERFACE_CODE_SYNC_RESERVED_STOCK + "接口状态记录");
+      return false;
+    }
+
+    //获取最后更新id
+    Integer lastId = interfaceStatus.getLastId();
+    InvReservedConfig config = new InvReservedConfig();
+    config.setStatus(InvReservedConfig.STATUS_ON);
+    //查询未已释放的数据
+    ServiceResult<List<InvReservedConfig>> reservedConfigResult = this.stockReservedService
+        .queryInvReservedConfigs(config);
+    //无预留配置信息
+    if (!reservedConfigResult.getSuccess() || reservedConfigResult.getResult() == null
+        || reservedConfigResult.getResult().size() <= 0) {
+      return true;
+    }
+    int pageSize = 1000;
+    int pageIndex = 1;
+    int startIndex;
+    DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+    def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+    ServiceResult<List<InvStockBatch>> stockBatchResult;
+    List<InvStockBatch> batchList;
+
+    while (true) {
+      startIndex = (pageIndex - 1) * pageSize;
+      stockBatchResult = stockService.queryInvStockBatchList(lastId, startIndex, pageSize);
+      batchList = stockBatchResult.getResult();
+      if (batchList.size() <= 0) {
+        logger
+            .info("syncStockReserved: 总共" + batchList.size() + "条, pageIndex:" + pageIndex);
+        break;
+      }
+      moveInvReservedRecord(batchList, def, interfaceStatus, reservedConfigResult.getResult());
+      pageIndex++;
+    }
+
+    return true;
+  }
+
+  private void moveInvReservedRecord(List<InvStockBatch> batchList,
+      DefaultTransactionDefinition def,
+      EisInterfaceStatus interfaceStatus, List<InvReservedConfig> configs) {
+    TransactionStatus status;
+    int error = 0;
+    for (InvStockBatch entry : batchList) {
+      status = transactionManagerEis.getTransaction(def);
+      try {
+        ServiceResult<Boolean> result = null;
+        if (entry.getBilltype() != null
+            //1.采购入库； 2.调拨入库
+            && (entry.getBilltype().equals(InvStockInOut.IN_PURCHASE_TYPE)
+            || entry.getBilltype().equals(InvStockInOut.IN_TRANSFER_TYPE))
+            && entry.getStockQty() > 0) {
+          //暂时只处理采购入库
+          result = this.stockReservedService.stockReservedToRelease(entry, configs);
+          logger.debug(entry.getRefno() + "," + result.getMessage());
+        }
+        if (result != null && !result.getSuccess()) {
+          error++;
+        }
+        updateLastBatchId(interfaceStatus, entry);
+
+        transactionManagerEis.commit(status);
+      } catch (Exception e) {
+        e.printStackTrace();
+        transactionManagerEis.rollback(status);
+      }
+    }
+    logger.info("moveInvReservedRecord: 预留总共" + batchList.size() + "条， 出错" + error + "条");
+
+  }
+
+  private void updateLastBatchId(EisInterfaceStatus interfaceStatus, InvStockBatch entry) {
+    interfaceStatus.setLastId(entry.getId());
+    interfaceStatus.setUpdateTime(new Date());
+    if (interfaceStatus.getLastId() > 0) {
+      eisInterfaceStatusService.update(interfaceStatus);
+    }
+  }
 }

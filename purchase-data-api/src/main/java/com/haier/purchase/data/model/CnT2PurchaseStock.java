@@ -9,6 +9,46 @@ public class CnT2PurchaseStock implements Serializable{
 	
 	private static final long serialVersionUID = 6623481866134743433L;
 
+	public String getVbeln() {
+		return vbeln;
+	}
+
+	public void setVbeln(String vbeln) {
+		this.vbeln = vbeln;
+	}
+
+	public String getMatnr() {
+		return matnr;
+	}
+
+	public void setMatnr(String matnr) {
+		this.matnr = matnr;
+	}
+
+	public String getMenge() {
+		return menge;
+	}
+
+	public void setMenge(String menge) {
+		this.menge = menge;
+	}
+
+	public String getLgort() {
+		return lgort;
+	}
+
+	public void setLgort(String lgort) {
+		this.lgort = lgort;
+	}
+
+	private String vbeln;
+	private String matnr;
+
+	private String menge;
+
+	private String lgort;
+
+
 	private Integer id;
 	
 	private String cnStockSyncsId;
@@ -24,7 +64,17 @@ public class CnT2PurchaseStock implements Serializable{
 	private Date addTime;
 	
 	private Date processTime;
-	
+
+	private String cnStockDnId;
+
+	public String getCnStockDnId() {
+		return cnStockDnId;
+	}
+
+	public void setCnStockDnId(String cnStockDnId) {
+		this.cnStockDnId = cnStockDnId;
+	}
+
 	public Integer getId() {
 		return id;
 	}

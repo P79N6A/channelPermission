@@ -23,6 +23,4 @@ public interface SysPermissionDao {
     int update(SysPermission perm);
 
     void create(SysPermission perm);
-
-     String findChannelIds(@Param("ownerId") int ownerId);
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.JsonUtil;
 import com.haier.common.util.StringUtil;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.stock.model.InvSection;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.InvStockLock;
@@ -441,6 +441,55 @@ public class StockCenterHopStockServiceImpl implements StockCenterHopStockServic
             log.error(LOG_MARK + "frozeStockQty:冻结库存时发生未知异常(refNo:" + refNo + ",sku:" + sku
                       + ",secCode" + secCode + ",frozenQty:" + frozenQty + ")：",
                 e);
+        }
+        return result;
+    }
+
+    /**
+     * 在修改网单库位时调用此方法
+     * @param sku 物料
+     * @param secCode 库位
+     * @param frozenQty 占用数量
+     * @param refNo 业务单据号
+     * @param channelCode 渠道编码
+     * @param billType 交易类型
+     * @param useRRS 是否使用日日顺库存
+     * @return
+     */
+    @Override
+    public ServiceResult<String> frozeStockQtyByNewsCode(String sku, String secCode, Integer frozenQty, String refNo, String channelCode, InventoryBusinessTypes billType, boolean useRRS) {
+        ServiceResult<String> result = new ServiceResult<String>();
+        try {
+            InvSection section = stockCommonModel.getSectionByCode(secCode);
+            String code = section.getChannelCode();
+            if (InvSection.CHANNEL_CODE_GD.equals(code) || InvSection.CHANNEL_CODE_HAIP.equals(code)
+                    //2017-05-02 净水库存--------START
+                    || InvSection.NEW_CHANNEL_CODE.contains(code)
+                //2017-05-02 净水库存--------END
+                    ) {
+                ServiceResult<Boolean> frozeResult = stockModel.frozeStockQty(sku, secCode, refNo,
+                        frozenQty, billType, "sys");
+                result.setSuccess(frozeResult.getSuccess());
+                result.setMessage(frozeResult.getMessage());
+                result.setResult(
+                        frozeResult.getSuccess() && frozeResult.getResult() ? secCode : null);
+                return result;
+            }
+
+            ServiceResult<Boolean> frozeResult = stockModel.frozeStockQty(sku, secCode, refNo,
+                    frozenQty, billType, "sys");
+            result.setSuccess(frozeResult.getSuccess());
+            result.setMessage(frozeResult.getMessage());
+            result.setResult(
+                    frozeResult.getSuccess() && frozeResult.getResult() ? secCode : null);
+            return result;
+        } catch (Exception e) {
+            result.setSuccess(false);
+            result.setResult(null);
+            result.setMessage("冻结库存失败：" + e.getMessage());
+            log.error(LOG_MARK + "frozeStockQty:冻结库存时发生未知异常(refNo:" + refNo + ",sku:" + sku
+                            + ",secCode" + secCode + ",frozenQty:" + frozenQty + ")：",
+                    e);
         }
         return result;
     }

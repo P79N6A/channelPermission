@@ -1116,9 +1116,9 @@ $(function () {
                     selectOnCheck: true,
                     checkOnSelect: true,
                     columns: [[
-                        {title: "网单号", field: "cOrderSn", sortable: true},
+                        {title: "网单号", field: "cOrderSn", sortable: false},
                         {
-                            title: "网单类型", field: "cOrderType", sortable: true, formatter: function (val, rowData, rowIndex) {
+                            title: "网单类型", field: "cOrderType", sortable: false, formatter: function (val, rowData, rowIndex) {
                             if (val == '1') {
                                 return '普通网单';
                             } else if (val == '2') {
@@ -1130,17 +1130,17 @@ $(function () {
                             }
                         }
                         },
-                        {title: "物料编号", field: "sku", sortable: true},
-                        {title: "商品名称", field: "productName", sortable: true},
-                        {title: "商品分类", field: "productCateName", sortable: true},
-                        {title: "数量", field: "number", sortable: true},
-                        {title: "含税单价", field: "price", sortable: true},
-                        {title: "含税金额", field: "amount", sortable: true},
-                        {title: "纳税人识别号", field: "taxPayerNumber", sortable: true},
-                        {title: "发票号", field: "invoiceNumber", sortable: true},
-                        {title: "税控码", field: "fiscalCode", sortable: true},
+                        {title: "物料编号", field: "sku", sortable: false},
+                        {title: "商品名称", field: "productName", sortable: false},
+                        {title: "商品分类", field: "productCateName", sortable: false},
+                        {title: "数量", field: "number", sortable: false},
+                        {title: "含税单价", field: "price", sortable: false},
+                        {title: "含税金额", field: "amount", sortable: false},
+                        {title: "纳税人识别号", field: "taxPayerNumber", sortable: false},
+                        {title: "发票号", field: "invoiceNumber", sortable: false},
+                        {title: "税控码", field: "fiscalCode", sortable: false},
                         {
-                            title: "发票类型", field: "type", sortable: true, formatter: function (val, rowData, rowIndex) {
+                            title: "发票类型", field: "type", sortable: false, formatter: function (val, rowData, rowIndex) {
                             if (val == '1') {
                                 return '增值税发票';
                             } else if (val == '2') {
@@ -1151,7 +1151,7 @@ $(function () {
                         }
                         },
                         {
-                            title: "电子发票标志", field: "electricFlag", sortable: true, formatter: function (val, rowData, rowIndex) {
+                            title: "电子发票标志", field: "electricFlag", sortable: false, formatter: function (val, rowData, rowIndex) {
                             if (val == '1') {
                                 return '电子发票';
                             } else if (val == '2') {
@@ -1162,7 +1162,7 @@ $(function () {
                         }
                         },
                         {
-                            title: "发票状态", field: "state", sortable: true, formatter: function (val, rowData, rowIndex) {
+                            title: "发票状态", field: "state", sortable: false, formatter: function (val, rowData, rowIndex) {
                             if (val == '0') {
                                 return '待开票';
                             } else if (val == '1') {
@@ -1177,7 +1177,7 @@ $(function () {
                         }
                         },
                         {
-                            title: "货票同行", field: "isTogether", sortable: true, formatter: function (val, rowData, rowIndex) {
+                            title: "货票同行", field: "isTogether", sortable: false, formatter: function (val, rowData, rowIndex) {
                             if (val == '1') {
                                 return '货票同行';
                             } else if (val == '2') {
@@ -1187,11 +1187,11 @@ $(function () {
                             }
                         }
                         },
-                        {title: "首次推送开票时间", field: "firstPushTime", sortable: true},
-                        {title: "开票时间", field: "billingTime", sortable: true},
-                        {title: "作废时间", field: "invalidTime", sortable: true},
+                        {title: "首次推送开票时间", field: "firstPushTime", sortable: false},
+                        {title: "开票时间", field: "billingTime", sortable: false},
+                        {title: "作废时间", field: "invalidTime", sortable: false},
                         {
-                            title: "推送状态", field: "success", sortable: true, formatter: function (val, rowData, rowIndex) {
+                            title: "推送状态", field: "success", sortable: false, formatter: function (val, rowData, rowIndex) {
                             if (val == '0') {
                                 return '未提交或提交失败';
                             } else if (val == '1') {
@@ -1202,7 +1202,7 @@ $(function () {
                         }
                         },
                         {
-                            title: "是否成功", field: "success", sortable: true, formatter: function (val, rowData, rowIndex) {
+                            title: "是否成功", field: "success", sortable: false, formatter: function (val, rowData, rowIndex) {
                             if (val == '0') {
                                 return '待推送';
                             } else if (val == '1') {
@@ -1212,9 +1212,9 @@ $(function () {
                             }
                         }
                         },
-                        {title: "推送次数", field: "tryNum", sortable: true},
+                        {title: "推送次数", field: "tryNum", sortable: false},
                         {
-                            title: "实时开票信息查询", field: "success", sortable: true, formatter: function (val, rowData, rowIndex) {
+                            title: "实时开票信息查询", field: "success", sortable: false, formatter: function (val, rowData, rowIndex) {
                             return '<a>实时开票信息查询</a>';
                         }
                         }

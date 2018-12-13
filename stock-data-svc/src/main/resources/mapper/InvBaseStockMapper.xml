@@ -100,10 +100,10 @@
         stock.item_property = 10
         <if test="entity!=null">
             <if test="entity.secCode != null and entity.secCode !=''">
-                <![CDATA[ and stock.sec_Code LIKE CONCAT('%', #{entity.secCode} ,'%') ]]>
+                <![CDATA[ and stock.sec_Code LIKE CONCAT( #{entity.secCode} ,'%') ]]>
             </if>
             <if test="entity.stockSku != null and entity.stockSku !=''">
-                <![CDATA[ and stock.sku LIKE CONCAT('%', #{entity.stockSku} ,'%') ]]>
+                <![CDATA[ and stock.sku LIKE CONCAT( #{entity.stockSku} ,'%') ]]>
             </if>
 
             <if test='entity.stockQtyCode =="AB"'>
@@ -123,17 +123,17 @@
             </if>
 
             <if test='entity.avaiableQtyCode =="AB"'>
-                <if test="entity.avaiableQty != null and entity.avaiableQty !=''">
+                <if test="entity.avaiableQty != null">
                     <![CDATA[  and (stock.stock_qty-stock.frozen_qty)> #{entity.avaiableQty}]]>
                 </if>
             </if>
             <if test='entity.avaiableQtyCode =="AA"'>
-                <if test="entity.avaiableQty != null and entity.avaiableQty !=''">
+                <if test="entity.avaiableQty != null">
                     <![CDATA[  and (stock.stock_qty-stock.frozen_qty) = #{entity.avaiableQty}]]>
                 </if>
             </if>
             <if test='entity.avaiableQtyCode =="BA"'>
-                <if test="entity.avaiableQty != null and entity.avaiableQty !=''">
+                <if test="entity.avaiableQty != null">
                     <![CDATA[  and (stock.stock_qty-stock.frozen_qty) < #{entity.avaiableQty}]]>
                 </if>
             </if>
@@ -142,10 +142,10 @@
                 <![CDATA[ and stock.item_property = #{entity.stockItemProperty} ]]>
             </if>
             <if test="entity.productTypeName != null and entity.productTypeName !=''">
-                <![CDATA[ and stock.product_type_name LIKE CONCAT('%', #{entity.productTypeName} ,'%') ]]>
+                <![CDATA[ and stock.product_type_name LIKE CONCAT( #{entity.productTypeName} ,'%') ]]>
             </if>
             <if test="entity.productName != null and entity.productName !=''">
-                <![CDATA[ and stock.product_name LIKE CONCAT('%', #{entity.productName} ,'%') ]]>
+                <![CDATA[ and stock.product_name LIKE CONCAT( #{entity.productName} ,'%') ]]>
             </if>
         </if>
     </sql>
@@ -158,6 +158,7 @@
         stock.sec_name AS secName,
         stock.stock_qty AS stockStockQty,
         stock.frozen_qty AS stockFrozenQty,
+				stock.item_property AS stockItemProperty,
         stock.create_time AS createTime,
         stock.update_time AS updateTime
         FROM
@@ -182,7 +183,8 @@
         stock.create_time AS createTime,
         stock.update_time AS updateTime,
         stock.product_type_name AS cbsCategory,
-        stock.product_name AS productName
+        stock.product_name AS productName,
+				stock.item_property AS stockItemProperty
         FROM
         inv_stock stock
         <include refid="where_fragement_machine"/>
@@ -211,10 +213,10 @@
 		WHERE
 			1 = 1
 		<if test="baseStock.secCode != null and baseStock.secCode !=''">
-				and stock.sec_Code like '%${baseStock.secCode}%'
+				and stock.sec_Code like '${baseStock.secCode}%'
 		</if>
 		<if test="baseStock.sku != null and baseStock.sku !=''">
-				and stock.sku like '%${baseStock.sku}%'
+				and stock.sku like '${baseStock.sku}%'
 		</if>
 		<if test="baseStock.stockQty != null">
 				and stock.stock_qty > #{baseStock.stockQty}
@@ -232,7 +234,7 @@
 				and stock.product_type_name like '${baseStock.cbsCategory}%'
 		</if>
 		<if test="baseStock.productName != null and baseStock.productName !=''">
-				and stock.product_name like '%${baseStock.productName}%'
+				and stock.product_name like '${baseStock.productName}%'
 		</if>
 		<if test="baseStock.startDate!=null and baseStock.startDate!='' ">
 				and stock.update_time &gt;= #{baseStock.startDate}
@@ -266,10 +268,10 @@
 		WHERE
 			stock.item_property = 10
 		<if test="invStock.secCode != null and invStock.secCode !=''">
-				and stock.sec_Code like '%${invStock.secCode}%'
+				and stock.sec_Code like '${invStock.secCode}%'
 		</if>
 		<if test="invStock.sku != null and invStock.sku !=''">
-				and stock.sku like '%${invStock.sku}%'
+				and stock.sku like '${invStock.sku}%'
 		</if>
 		<if test="invStock.stockQty != null">
 				and stock.stock_qty > #{invStock.stockQty}
@@ -281,7 +283,7 @@
 				and stock.product_type_name like '${invStock.cbsCategory}%'
 		</if>
 		<if test="invStock.productName != null and invStock.productName !=''">
-				and stock.product_name like '%${invStock.productName}%'
+				and stock.product_name like '${invStock.productName}%'
 		</if>
 		<if test="pager.pageSize != null and pager.pageSize &gt; 0">
 				limit #{pager.start},#{pager.pageSize}
@@ -317,7 +319,7 @@
 				and log.ref_no = #{log.refNo}
 		</if>
 		<if test="log.secName != null and log.secName !='' ">
-				and log.sec_name = '%${log.secName}%'
+				and log.sec_name = '${log.secName}%'
 		</if>
 		<if test="log.startCreateTime != null and log.startCreateTime !=''">
 				and log.create_time &gt;#{log.startCreateTime}
@@ -377,22 +379,37 @@
 		WHERE 1=1
         <!-- <if test="entity!=null">  -->
             <if test="secCode != null and secCode !=''">
-                <![CDATA[ and stock.sec_Code LIKE CONCAT('%', #{secCode} ,'%') ]]>
+                <![CDATA[ and stock.sec_Code LIKE CONCAT(#{secCode} ,'%') ]]>
             </if>
             <if test="sku != null and sku !=''">
-                <![CDATA[ and stock.sku LIKE CONCAT('%', #{sku} ,'%') ]]>
+                <![CDATA[ and stock.sku LIKE CONCAT( #{sku} ,'%') ]]>
             </if>
-            
+
+            <!-- 2018-06-05 加入 selectType的查询 和老系统一样 start -->
+						<if test="selectType != null and selectType !=''">
+							<![CDATA[ and stock.frozen_qty > stock.stock_qty ]]>
+						</if>
+						<!-- 2018-06-05 加入 selectType的查询 和老系统一样 end -->
+
            <!--  <if test="stockQty != null and stockQty !=''">
                 <![CDATA[ and stock.stock_qty LIKE CONCAT('%', #{stockQty} ,'%') ]]>
             </if>
             <if test="frozenQty != null and frozenQty !=''">
                 <![CDATA[ and stock.frozen_qty LIKE CONCAT('%', #{frozenQty} ,'%') ]]>
             </if> -->
-            
-            <if test="startDate != null and startDate !='' and endDate != null and endDate !='' ">
+
+						<!-- 2018-06-04 开始时间和结束时间分开查询 修改 start -->
+            <!--<if test="startDate != null and startDate !='' and endDate != null and endDate !='' ">
                 <![CDATA[ and stock.create_time BETWEEN  #{startDate} and #{endDate} ]]>
-            </if>
+            </if>-->
+						<if test="startDate!=null and startDate!='' ">
+							 and stock.create_time &gt;= #{startDate}
+						</if>
+						<if test="endDate!=null and endDate!='' ">
+							 and stock.create_time &lt;= #{endDate}
+						</if>
+						<!-- 2018-06-04 开始时间和结束时间分开查询 修改 start -->
+
 
             <if test='actualSelect =="AB"'>
                 <if test="stockQty != null">
@@ -410,7 +427,8 @@
                 </if>
             </if>
 
-            <if test='frozenSelect =="AB"'>
+						<!-- 2018-06-04 冻结库存sql条件有问题 修改 start -->
+            <!--<if test='frozenSelect =="AB"'>
                 <if test="frozenQty != null and frozenQty !=''">
                     <![CDATA[  and (stock.stock_qty-stock.frozen_qty)> #{frozenQty}]]>
                 </if>
@@ -424,16 +442,33 @@
                 <if test="frozenQty != null and frozenQty !=''">
                     <![CDATA[  and (stock.stock_qty-stock.frozen_qty) < #{frozenQty}]]>
                 </if>
-            </if>
+            </if>-->
+
+						<if test='frozenSelect =="AB"'>
+							<if test="frozenQty != null and frozenQty !=''">
+								<![CDATA[ and stock.frozen_qty> #{frozenQty}]]>
+							</if>
+						</if>
+						<if test='frozenSelect =="AA"'>
+							<if test="frozenQty != null and frozenQty !=''">
+								<![CDATA[ and stock.frozen_qty = #{frozenQty}]]>
+							</if>
+						</if>
+						<if test='frozenSelect =="BA"'>
+							<if test="frozenQty != null and frozenQty !=''">
+								<![CDATA[ and stock.frozen_qty < #{frozenQty}]]>
+							</if>
+						</if>
+						<!-- 2018-06-04 冻结库存sql条件有问题 修改 end -->
 
             <if test="stockItemProperty !='' and stockItemProperty !=null">
                 <![CDATA[ and stock.item_property = #{entity.stockItemProperty} ]]>
             </if>
             <if test="productTypeName != null and productTypeName !=''">
-                <![CDATA[ and stock.product_type_name LIKE CONCAT('%', #{productTypeName} ,'%') ]]>
+                <![CDATA[ and stock.product_type_name LIKE CONCAT( #{productTypeName} ,'%') ]]>
             </if>
             <if test="productName != null and productName !=''">
-                <![CDATA[ and stock.product_name LIKE CONCAT('%', #{productName} ,'%') ]]>
+                <![CDATA[ and stock.product_name LIKE CONCAT(#{productName} ,'%') ]]>
             </if>
        <!--  </if> -->
 	</sql>
@@ -442,10 +477,10 @@
 		WHERE 1=1
             <if test="entity!=null"> 
         <if test="entity.secCode != null and entity.secCode !=''"> 
-            <![CDATA[ and stock.sec_Code LIKE CONCAT('%', #{entity.secCode} ,'%') ]]>
+            <![CDATA[ and stock.sec_Code LIKE CONCAT( #{entity.secCode} ,'%') ]]>
          </if> 
          <if test="entity.stockSku != null and entity.stockSku !=''"> 
-            <![CDATA[ and stock.sku LIKE CONCAT('%', #{entity.stockSku} ,'%') ]]>
+            <![CDATA[ and stock.sku LIKE CONCAT( #{entity.stockSku} ,'%') ]]>
          </if> 
          <if test='entity.stockQtyCode =="AB"'> 
              <if test="entity.stockStockQty != null"> 
@@ -463,28 +498,28 @@
              </if> 
          </if> 
          <if test='entity.avaiableQtyCode =="AB"'> 
-             <if test="entity.avaiableQty != null and entity.avaiableQty !=''"> 
-                <![CDATA[ and (stock.stock_qtystock.frozen_qty)> #{entity.avaiableQty}]]>
+             <if test="entity.avaiableQty != null">
+                <![CDATA[ and (stock.stock_qty-stock.frozen_qty)> #{entity.avaiableQty}]]>
              </if> 
          </if> 
          <if test='entity.avaiableQtyCode =="AA"'> 
-             <if test="entity.avaiableQty != null and entity.avaiableQty !=''"> 
-                <![CDATA[ and (stock.stock_qtystock.frozen_qty) = #{entity.avaiableQty}]]>
+             <if test="entity.avaiableQty != null">
+                <![CDATA[ and (stock.stock_qty-stock.frozen_qty) = #{entity.avaiableQty}]]>
              </if> 
          </if> 
          <if test='entity.avaiableQtyCode =="BA"'> 
-             <if test="entity.avaiableQty != null and entity.avaiableQty !=''"> 
-                <![CDATA[ and (stock.stock_qtystock.frozen_qty) < #{entity.avaiableQty}]]>
+             <if test="entity.avaiableQty != null">
+                <![CDATA[ and (stock.stock_qty-stock.frozen_qty) < #{entity.avaiableQty}]]>
              </if> 
          </if> 
          <if test=" entity.stockItemProperty !='' "> 
             <![CDATA[ and stock.item_property = #{entity.stockItemProperty} ]]>
          </if> 
          <if test="entity.productTypeName != null and entity.productTypeName !=''"> 
-            <![CDATA[ and stock.product_type_name LIKE CONCAT('%', #{entity.productTypeName} ,'%') ]]>
+            <![CDATA[ and stock.product_type_name LIKE CONCAT(#{entity.productTypeName} ,'%') ]]>
          </if> 
          <if test="entity.productName != null and entity.productName !=''"> 
-            <![CDATA[ and stock.product_name LIKE CONCAT('%', #{entity.productName} ,'%') ]]>
+            <![CDATA[ and stock.product_name LIKE CONCAT(#{entity.productName} ,'%') ]]>
          </if> 
      </if>
 
@@ -520,10 +555,10 @@
 		WHERE
 		1 = 1
 		<if test="baseStock.secCode != null and baseStock.secCode !=''">
-			and stock.sec_Code like '%${baseStock.secCode}%'
+			and stock.sec_Code like '${baseStock.secCode}%'
 		</if>
 		<if test="baseStock.sku != null and baseStock.sku !=''">
-			and stock.sku like '%${baseStock.sku}%'
+			and stock.sku like '${baseStock.sku}%'
 		</if>
 		<if test="baseStock.stockQty != null">
 			and stock.stock_qty > #{baseStock.stockQty}
@@ -544,7 +579,7 @@
 			and stock.product_type_name like '${baseStock.cbsCategory}%'
 		</if>
 		<if test="baseStock.productName != null and baseStock.productName !=''">
-			and stock.product_name like '%${baseStock.productName}%'
+			and stock.product_name like '${baseStock.productName}%'
 		</if>
 		<if test="baseStock.startDate!=null and baseStock.startDate!='' ">
 			and stock.update_time &gt;= #{baseStock.startDate}
@@ -572,10 +607,10 @@
 		WHERE
 		1 = 1
 		<if test="baseStock.secCode != null and baseStock.secCode !=''">
-			and stock.sec_Code like '%${baseStock.secCode}%'
+			and stock.sec_Code like '${baseStock.secCode}%'
 		</if>
 		<if test="baseStock.sku != null and baseStock.sku !=''">
-			and stock.sku like '%${baseStock.sku}%'
+			and stock.sku like '${baseStock.sku}%'
 		</if>
 		<if test="baseStock.stockQty != null">
 			and stock.stock_qty > #{baseStock.stockQty}
@@ -596,7 +631,7 @@
 			and stock.product_type_name like '${baseStock.cbsCategory}%'
 		</if>
 		<if test="baseStock.productName != null and baseStock.productName !=''">
-			and stock.product_name like '%${baseStock.productName}%'
+			and stock.product_name like '${baseStock.productName}%'
 		</if>
 		<if test="baseStock.startDate!=null and baseStock.startDate!='' ">
 			and stock.update_time &gt;= #{baseStock.startDate}

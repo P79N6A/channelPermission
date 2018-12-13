@@ -1,6 +1,21 @@
 package com.haier.vehicle.util;
 
-import com.google.common.collect.Lists;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
@@ -11,19 +26,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Lists;
 
 @SuppressWarnings("all")
 public class XmlUtils {
@@ -202,6 +205,32 @@ public class XmlUtils {
 			return getClassField(superClass, fieldName);
 		}
 		return null;
+	}
+	
+	/**
+	 * 将list的xml转为list
+	 * @param xml
+	 * @param cls
+	 * @return
+	 * @throws Exception
+	 */
+	public static Object xmlStrToList(String xml, Class cls) throws Exception {
+		List<Object> lists = new ArrayList<>();
+		Document doc = DocumentHelper.parseText(xml);
+		Element et = doc.getRootElement();
+		String root = et.getName();
+		// 查看返回码是否为真.
+		
+		Iterator<Element> it = et.elementIterator();  
+        // 遍历  
+        while (it.hasNext()) {  
+            // 获取某个子节点对象  
+            Element e = it.next();  
+            Object obj = xmlStrToBean(e.asXML(), cls);
+            // 对子节点进行遍历  
+            lists.add(obj);
+        }
+		return lists;
 	}
 
 	/**

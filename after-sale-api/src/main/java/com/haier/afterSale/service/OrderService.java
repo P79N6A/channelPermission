@@ -2,9 +2,11 @@ package com.haier.afterSale.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.haier.common.ServiceResult;
 import com.haier.shop.model.HpSignTimeInterface;
+import com.haier.shop.model.MemberInvoices;
 import com.haier.shop.model.OrderProductsAttributes;
 import com.haier.shop.model.OrderProductsNew;
 import com.haier.shop.model.OrderRepairsNew;
@@ -144,4 +146,60 @@ public interface OrderService {
      * @return
      */
     ServiceResult<OrdersNew> getOrder(Integer orderId);
+    
+    /**
+     * 根据订单号修改订单来源编号
+     * @param 
+     * @return
+     */
+    ServiceResult<Boolean> updateSourceOrderNumber(String inputSourceOrderNumber,String sourceOrderNumber,String orderNumber,String userName,Integer id);
+    
+    /**
+     * 根据订单号修改支付状态
+     * @param 
+     * @return
+     */
+    ServiceResult<Boolean> updatePayState(String spanState,String selectState,String orderNumber,String userName,Integer id);
+    
+    /**
+     * 根据订单号修改备注信息
+     * @param 
+     * @return
+     */
+    ServiceResult<Boolean> updateNotes(String notes,String textNotes,String orderNumber,String userName,Integer id);
+    
+    /**
+     * 根据订单号修改发票地址信息
+     * @param 
+     * @return
+     */
+    ServiceResult<Boolean> updateInvoiceAddress(String userName,String province,String citys,String county,String newAddress,Orders orders);
+    
+    /**
+     * 根据订单号修改发票状态
+     * @param 
+     * @return
+     */
+    ServiceResult<Boolean> updateInvoiceState(String userName,String orderNumber,Integer id,String isLockI);
+    
+    /**
+     * 根据订单号修改发票信息
+     * @param 
+     * @return
+     */
+    ServiceResult<Boolean> updateInvoiceInfo(String userName,String orderNumber,Integer id,MemberInvoices memberInvoices,String invoiceTypeI);
+    
+    /**
+     * 根据订单号修改收货人信息
+     * @param 
+     * @return
+     */
+    ServiceResult<Boolean> updateAddress(String userName,String orderNumber,Integer id,Orders orders);
+    
+    /**
+     * 根据订单号修改收货人信息
+     * @param 
+     * @return
+     */
+    ServiceResult<Map<String, Object>> doBatchConfirmationPayment(String cOrderSns,Map<String, Object> modelMap,String userName);
 }

@@ -50,4 +50,54 @@ select `region_id`,`region_name`,`city_id`,`city_name`,`province_id`,`province_n
 from `ord_wf_region`
 </select>
 
+    <select id="getCommissionerTrade" parameterType="String" resultType="java.util.Map">
+        select distinct owr.gm_name as value
+        from `ord_wf_region` owr inner join person_trade_cfg ptc on ptc.trade=owr.gm_name
+        where 1=1
+        <if test="areaCommissioner != null and areaCommissioner != ''">
+            and ptc.commissioner = #{areaCommissioner} and `gm_name` != ''
+        </if>
+    </select>
+    <select id="getSCodeTradeWl" resultType="java.util.Map">
+        select distinct sec_code,sec_name,gm_name,wlqy_name
+        from ord_wf_region
+    </select>
+    <select id="getSmallChannelPeopleTrade" parameterType="String" resultType="java.util.Map">
+        select distinct owr.gm_name as value
+        from `ord_wf_region` owr inner join person_trade_cfg ptc on ptc.trade=owr.gm_name
+        where 1=1
+        <if test="areaCommissioner != null and areaCommissioner != ''">
+            and ptc.small_channel_people = #{areaCommissioner} and `gm_name` != ''
+        </if>
+    </select>
+    <select id="getSCodeByLes" parameterType="String" resultType="java.util.Map">
+        select distinct `sec_name` as value
+        from `ord_wf_region`
+        where `wlqy_name` = #{les} and `sec_name` != ''
+    </select>
+    <select id="getCateInfo" resultType="java.util.Map">
+        select id,parentId,cateName from productcates
+    </select>
+    <select id="getStoreIdAndName" resultType="java.util.Map">
+        select owner_id,store_name from sg_store
+    </select>
+    <select id="getCommissioner" parameterType="String" resultType="java.util.Map">
+        select distinct ptc.commissioner as value
+        from `ord_wf_region` owr inner join person_trade_cfg ptc on ptc.trade=owr.gm_name
+        where 1=1
+      <!--  <if test="area == '东区' or area == '西区' or area == '南区' or area == '北区'">
+            and `qy_name` = #{area} and ptc.commissioner != ''
+        </if>
+        <if test="area == '华东' or area == '华北' or area == '华南' or area == '山东' or area == '东北' or area == '中南' or area == '西南' or area == '西北'">
+            and `wlqy_name` = #{area} and ptc.commissioner != ''
+        </if>-->
+    </select>
+
+    <select id="getLoginPersonChannel" parameterType="String" resultType="String">
+        select channel
+        from person_channel_cfg
+        where people=#{userName}
+        limit 1
+    </select>
+
 </mapper>

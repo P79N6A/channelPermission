@@ -21,4 +21,12 @@
         #{count,jdbcType=INTEGER}, #{lastTime,jdbcType=VARCHAR},#{dataStatus,jdbcType=INTEGER},
         #{vomCount,jdbcType=INTEGER}, #{acceptCount,jdbcType=INTEGER})
     </insert>
+
+    <update id="addCountBySkuAndLbx" parameterType="com.haier.shop.model.HpSignTimeInterface" >
+        update hp_sign_time_interface
+        set count = #{count,jdbcType=INTEGER},
+        last_time = #{lastTime,jdbcType=VARCHAR}
+        where sku = #{sku} and lbx_no = #{lbxNo}
+        and tb_no = #{tbNo}
+    </update>
 </mapper>

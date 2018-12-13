@@ -12,4 +12,6 @@ public interface WwwHpRecordsWriteDao {
 
     int update(WwwHpRecords wwwHpRecords);
 
+    public Integer Rejectionsinglereset(Integer id);
+
 }

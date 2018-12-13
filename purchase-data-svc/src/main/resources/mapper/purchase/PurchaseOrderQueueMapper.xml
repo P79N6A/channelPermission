@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.PurchaseOrderQueueDao">
+    <resultMap id="purchaseOrderQueueResult" type="com.haier.purchase.data.model.PurchaseOrderQueue">
+        <result property="id" column="id"/>
+        <result property="poItemId" column="po_item_id"/>
+        <result property="poId" column="po_id"/>
+        <result property="status" column="status"/>
+        <result property="lesNo" column="les_no"/>
+        <result property="lesMsg" column="les_msg"/>
+        <result property="poTime" column="po_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.haier.purchase.data.model.PurchaseOrderQueue">
+        insert into
+        `purchase_order_queue`(`po_item_id`,`po_id`,`status`,`les_no`,`les_msg`,`po_time`,`create_time`,`update_time`)
+        values(#{poItemId},#{poId},0,#{lesNo},#{lesMsg},#{poTime},#{createTime},#{updateTime})
+    </insert>
+
+    <select id="getRowCount" resultType="Integer">
+        <![CDATA[
+        select count(`id`)
+        from `purchase_order_queue`
+        where `po_time` >= #{startTime} and `po_time` < #{endTime}
+        ]]>
+        <if test="status != -2">
+            and `status`=#{status}
+        </if>
+    </select>
+
+    <select id="findPurchaseOrderQueueByCondition" resultMap="purchaseOrderQueueResult">
+        <![CDATA[
+          select `id`,`po_item_id`,`po_id`,`status`,`les_no`,`les_msg`,`po_time`,`create_time`,`update_time`
+          from `purchase_order_queue`
+          where `po_time` >= #{startTime} and `po_time` < #{endTime}
+        ]]>
+        <if test="status != -2">
+            and `status`=#{status}
+        </if>
+        <if test="pager != null">
+            limit #{pager.start},#{pager.pageSize}
+        </if>
+    </select>
+
+    <select id="getByPoItemId" parameterType="Integer" resultMap="purchaseOrderQueueResult">
+        select `id`,`po_item_id`,`po_id`,`status`,`les_no`,`les_msg`,`po_time`,`create_time`,`update_time`
+        from `purchase_order_queue`
+        where `po_item_id` = #{poItemId} limit 1
+    </select>
+
+    <select id="findPurchaseOrderQueue" resultMap="purchaseOrderQueueResult">
+        <![CDATA[
+		select `id`,`po_item_id`,`po_id`,`status`,`les_no`,`les_msg`,`po_time`,`create_time`,`update_time`
+		from `purchase_order_queue`
+		where `status` <> 1
+		]]>
+    </select>
+
+    <select id="get" parameterType="Integer" resultMap="purchaseOrderQueueResult">
+        select `id`,`po_item_id`,`po_id`,`status`,`les_no`,`les_msg`,`po_time`,`create_time`,`update_time`
+        from `purchase_order_queue`
+        where `id` = #{id}
+    </select>
+
+    <update id="updatePurchaseOrderQueueStatus" parameterType="com.haier.purchase.data.model.PurchaseOrderQueue">
+        <![CDATA[
+		update `purchase_order_queue` set `status`=#{status},`les_no`=#{lesNo},`les_msg`=#{lesMsg},`update_time`=#{updateTime}
+		where `id` = #{id} and `status` <> 1
+		]]>
+    </update>
+</mapper>

@@ -70,6 +70,24 @@ public class InputTypes {
     protected String               add2;
     protected String               add3;
     protected List<?>              imslist;
+    protected String remark1;
+    protected Integer remark8;
+
+    public String getRemark1() {
+        return remark1;
+    }
+
+    public void setRemark1(String remark1) {
+        this.remark1 = remark1;
+    }
+
+    public Integer getRemark8() {
+        return remark8;
+    }
+
+    public void setRemark8(Integer remark8) {
+        this.remark8 = remark8;
+    }
 
     /**
      * Gets the value of the pname property.

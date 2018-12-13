@@ -85,7 +85,8 @@ public class InvTransferLine implements Serializable {
     public static Integer TRANSFER_REASON_XN = 3;
     /** 调拨原因：3W */
     public static Integer TRANSFER_REASON_3W = 4;
-
+    /** 调拨原因：3W */
+    public static Integer TRANSFER_REASON_YP = 5;
     /** 发起部门 SC */
     public static String REQ_DEP_SC = "SC";
     /** 发起部门 TB */
@@ -279,6 +280,18 @@ public class InvTransferLine implements Serializable {
     public void setChannelTo(String channelTo) {
         this.channelTo = channelTo;
     }
+
+
+    public BigDecimal getSalesAmount() {
+        return salesAmount;
+    }
+
+    public void setSalesAmount(BigDecimal salesAmount) {
+        this.salesAmount = salesAmount;
+    }
+
+    private BigDecimal  salesAmount;
+
 
     /*  *//**
                      * 设置 渠道ID，表示调拨哪个渠道的货。

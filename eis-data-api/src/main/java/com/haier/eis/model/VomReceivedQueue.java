@@ -160,11 +160,13 @@ public class VomReceivedQueue implements Serializable {
     public static final int STATUS_FAIL  = 2;
 
     public static final int STATUS_SYNCH = 3;
+    //不做处理的数据
+    public static final int STATUS_NO = 4;
 
     private Integer         status;
 
     /**
-     * 获取 状态：0：未处理 1：完成 2：失败 3：已同步采购系统。
+     * 获取 状态：0：未处理 1：完成 2：失败 3：已同步采购系统。4:不处理
      */
     public Integer getStatus() {
         return this.status;

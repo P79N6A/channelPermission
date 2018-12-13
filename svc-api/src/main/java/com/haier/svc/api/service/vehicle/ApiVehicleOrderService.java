@@ -29,12 +29,14 @@ import com.haier.purchase.data.model.vehcile.DepartmentInfoDTO;
 import com.haier.purchase.data.model.vehcile.Entry3wOrder;
 import com.haier.purchase.data.model.vehcile.ExportVehicleDTO;
 import com.haier.purchase.data.model.vehcile.MaterielInfoDTO;
+import com.haier.purchase.data.model.vehcile.PurchaseProductPaymentDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderDetailsDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderHistoryDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderZqDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderZqDetailsDTO;
 import com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO;
+import com.haier.purchase.data.model.vehcile.VehiclePushToSAP;
 import com.haier.purchase.data.service.vechile.PurchaseVehicleOrderDetailService;
 import com.haier.svc.api.controller.util.WebUtil;
 import com.haier.svc.api.controller.util.date.DateUtil;
@@ -107,15 +109,15 @@ public class ApiVehicleOrderService {
 	}
 
 	public String getUserId() {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
-				.getRequestAttributes()).getRequest();
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
 		int userId = WebUtil.currentUserId(request);
 		return String.valueOf(userId);
 	}
 
 	private String getUserName() {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
-				.getRequestAttributes()).getRequest();
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
 		String userName = WebUtil.currentUserName(request);
 		return userName;
 	}
@@ -144,8 +146,19 @@ public class ApiVehicleOrderService {
 	 * @return List<VehicleOrderDTO>
 	 */
 	public JSONObject historyOrder(VehicleOrderDTO condition, PagerInfo pager) {
-		List<VehicleOrderDTO> list = vehicleOrderDao.getPageByCondition(
-				condition, pager.getStart(), pager.getPageSize());
+		List<VehicleOrderDTO> list = vehicleOrderDao.getPageByCondition(condition, pager.getStart(),
+				pager.getPageSize());
+		// 遍历查询ZQ子表的remark,用于在页面中判断是否有取消按钮
+		for (VehicleOrderDTO dto : list) {
+			boolean flag = DateUtil.getCancelOrder(dto.getOrderTime());
+			if (flag) {
+				// 可取消
+				dto.setRemark("1");
+			} else {
+				// 不可取消
+				dto.setRemark("0");
+			}
+		}
 		long count = vehicleOrderDao.getPagerCount(condition);
 		return jsonResult(list, count);
 	}
@@ -156,10 +169,9 @@ public class ApiVehicleOrderService {
 	 * @param condition
 	 * @return List<VehicleOrderDTO>
 	 */
-	public JSONObject getPagerByCondition(VehicleOrderDTO condition,
-			PagerInfo pager) {
-		List<VehicleOrderDTO> list = vehicleOrderDao.getPageByCondition(
-				condition, pager.getStart(), pager.getPageSize());
+	public JSONObject getPagerByCondition(VehicleOrderDTO condition, PagerInfo pager) {
+		List<VehicleOrderDTO> list = vehicleOrderDao.getPageByCondition(condition, pager.getStart(),
+				pager.getPageSize());
 		long count = vehicleOrderDao.getPagerCount(condition);
 		return jsonResult(list, count);
 	}
@@ -170,19 +182,18 @@ public class ApiVehicleOrderService {
 	 * @return
 	 */
 	public JSONObject productGroup() {
-		List<VehicleProductPaymentDTO> list = vehicleProductPaymentDao
-				.getList();
+		List<PurchaseProductPaymentDTO> list = vehicleProductPaymentDao.getList();
 		JSONObject temp = new JSONObject();
 		JSONObject res = new JSONObject();
 		JSONArray array = new JSONArray();
-		for (VehicleProductPaymentDTO o : list) {
+		for (PurchaseProductPaymentDTO o : list) {
 			JSONObject json = new JSONObject();
 			JSONObject inner = new JSONObject();
 			inner.put("paymentCode", o.getPaymentCode());
 			inner.put("paymentName", o.getPaymentName());
-			json.put("text", o.getProductGroupName());
-			json.put("value", o.getProductGroup());
-			temp.put(o.getProductGroup(), inner);
+			json.put("text", o.getProductName());
+			json.put("value", o.getProductCode());
+			temp.put(o.getProductCode(), inner);
 			array.add(json);
 		}
 		res.put("array", array);
@@ -205,17 +216,13 @@ public class ApiVehicleOrderService {
 				sendMap = new HashMap<String, String>();
 				for (Object o : array) {
 					Map<String, String> map = (Map<String, String>) o;
-					sendMap.put(map.get("TMCS2S_SENDTO"),
-							map.get("TMCSE_YJMFID"));
+					sendMap.put(map.get("TMCS2S_SENDTO"), map.get("TMCSE_YJMFID"));
 				}
 			}
 			for (Object o : array) {
 				JSONObject temp = (JSONObject) o;
 				JSONObject json = new JSONObject();
-				json.put(
-						"text",
-						temp.get("TMCS2S_SENDTO") + ":"
-								+ temp.get("TMCSE_NAME"));
+				json.put("text", temp.get("TMCS2S_SENDTO") + ":" + temp.get("TMCSE_NAME"));
 				json.put("value", temp.get("TMCS2S_SENDTO"));
 				result.add(json);
 			}
@@ -263,12 +270,10 @@ public class ApiVehicleOrderService {
 	 */
 
 	public JSONObject carCode(String base, String sendTo) {
-		ServiceResult<String> result = vehicleAppService.getCarCode(base,
-				sendTo);
+		ServiceResult<String> result = vehicleAppService.getCarCode(base, sendTo);
 		JSONObject temp = new JSONObject();
 		if (result.getSuccess()) {
-			temp.put("array",
-					toComboboxJson(result.getResult(), "LIBTITLE", "LIBKEY"));
+			temp.put("array", toComboboxJson(result.getResult(), "LIBTITLE", "LIBKEY"));
 			temp.put("data", result.getResult());
 			temp.put("success", true);
 		}
@@ -282,10 +287,9 @@ public class ApiVehicleOrderService {
 		return obj;
 	}
 
-	public JSONObject itemCheck(String materielCode, String deliveryCode,
-			String baseCode, int count) {
-		ServiceResult<String> resStr = vehicleAppService.getproList(
-				this.getSoldToCode(), deliveryCode, materielCode, baseCode);
+	public JSONObject itemCheck(String materielCode, String deliveryCode, String baseCode, int count) {
+		ServiceResult<String> resStr = vehicleAppService.getproList(this.getSoldToCode(), deliveryCode, materielCode,
+				baseCode);
 		JSONObject result = new JSONObject();
 		boolean res = true;
 		if (resStr.getSuccess()) {
@@ -342,7 +346,7 @@ public class ApiVehicleOrderService {
 				saveOrderDetail(entity, materielCodes);
 			} else {
 				json.put("success", false);
-				json.put("msg","未获取到配送中心编码");
+				json.put("msg", "未获取到配送中心编码");
 			}
 		} catch (BusinessException e) {
 			json.put("success", false);
@@ -357,8 +361,7 @@ public class ApiVehicleOrderService {
 		VehicleOrderDTO order = vehicleOrderDao.getOneByCondition(orderCon);
 		VehicleOrderDetailsDTO detailCon = new VehicleOrderDetailsDTO();
 		detailCon.setOrderNo(order.getOrderNo());
-		List<VehicleOrderDetailsDTO> details = vehicleOrderDetailDao
-				.getListByCondition(detailCon);
+		List<VehicleOrderDetailsDTO> details = vehicleOrderDetailDao.getListByCondition(detailCon);
 		JSONObject json = new JSONObject();
 		json.put("details", details);
 		json.put("order", order);
@@ -377,7 +380,7 @@ public class ApiVehicleOrderService {
 				entity.setDistributionCentre(condition.getRrsCenterCode());
 			} else {
 				json.put("success", false);
-				json.put("msg","未获取到配送中心编码");
+				json.put("msg", "未获取到配送中心编码");
 			}
 			saveOrder(entity);
 		} catch (BusinessException e) {
@@ -406,33 +409,31 @@ public class ApiVehicleOrderService {
 		VehicleOrderDTO dto = vehicleOrderDao.getOneByCondition(condition);
 		ServiceResult<String> res = vehicleAppService.checkCar(map);
 		JSONObject data = new JSONObject();
+		List<String> list = JSONArray.parseArray(res.getResult(), String.class);
 		if (res.getSuccess()) {
-			List<String> list = JSONArray.parseArray(res.getResult(),
-					String.class);
+			// List<String> list = JSONArray.parseArray(res.getResult(),
+			// String.class);
 			data.put("orderId", dto.getOrderId().toString());
 			data.put("imgUrl", list.get(0));
 			data.put("success", true);
 			data.put("orderNo", entity.getOrderNo());
 		} else {
 			data.put("success", false);
+			data.put("imgUrl", list);
 			data.put("msg", res.getMessage());
 		}
 		return data;
 	}
 
 	private void saveOrder(VehicleOrderDTO entity) throws BusinessException {
-		PlanInDate planInDate = systemCenterService
-				.getPlanInDateByTypeId(PlanInDateEnum.ZCDH.getCode());
-		if (planInDate == null || planInDate.getValue() == null
-				|| "".equals(planInDate.getValue())) {
+		PlanInDate planInDate = systemCenterService.getPlanInDateByTypeId(PlanInDateEnum.ZCDH.getCode());
+		if (planInDate == null || planInDate.getValue() == null || "".equals(planInDate.getValue())) {
 			throw new BusinessException("整车直发到货周未设置,请设置到货周!");
 		}
 		if (null == entity.getOrderId()) {
 			String orderNo = vehicleOrderDao.getVehicleOrderNo("ZKTM");
-			DepartmentInfoDTO dep = departmentInfoDao
-					.getOneByDeliveryToCode(entity.getDeliveryCode());
-			AreaCenterInfoDTO area = areaCenterInfoDao
-					.getOneByDeliveryToCode(entity.getDeliveryCode());
+			DepartmentInfoDTO dep = departmentInfoDao.getOneByDeliveryToCode(entity.getDeliveryCode());
+			AreaCenterInfoDTO area = areaCenterInfoDao.getOneByDeliveryToCode(entity.getDeliveryCode());
 			entity.setOrderNo(orderNo);
 			entity.setCorpCode(dep.getOrganizationCode());
 			entity.setCorpName(dep.getOrganizationName());
@@ -442,8 +443,7 @@ public class ApiVehicleOrderService {
 			entity.setType("ZGOZ");
 			entity.setSoldToCode(getSoldToCode());
 			entity.setSoldToName(getSoldToName());
-			entity.setDateOfArrival(DateUtil.getArrivalDate(Integer
-					.parseInt(planInDate.getValue())));
+			entity.setDateOfArrival(DateUtil.getArrivalDate(Integer.parseInt(planInDate.getValue())));
 			entity.setOrderTime(new Date());
 			entity.setCreateBy(getUserId());
 			entity.setCreateTime(new Date());
@@ -451,12 +451,9 @@ public class ApiVehicleOrderService {
 			entity.setLastUpdateBy(getUserId());
 			vehicleOrderDao.insertSelective(entity);
 		} else {
-			entity.setDateOfArrival(DateUtil.getArrivalDate(Integer
-					.parseInt(planInDate.getValue())));
-			DepartmentInfoDTO dep = departmentInfoDao
-					.getOneByDeliveryToCode(entity.getDeliveryCode());
-			AreaCenterInfoDTO area = areaCenterInfoDao
-					.getOneByDeliveryToCode(entity.getDeliveryCode());
+			entity.setDateOfArrival(DateUtil.getArrivalDate(Integer.parseInt(planInDate.getValue())));
+			DepartmentInfoDTO dep = departmentInfoDao.getOneByDeliveryToCode(entity.getDeliveryCode());
+			AreaCenterInfoDTO area = areaCenterInfoDao.getOneByDeliveryToCode(entity.getDeliveryCode());
 			entity.setCorpCode(dep.getOrganizationCode());
 			entity.setCorpName(dep.getOrganizationName());
 			entity.setAreaCode(area.getAreaCode());
@@ -470,11 +467,9 @@ public class ApiVehicleOrderService {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		for (Object e : arr) {
 			JSONObject obj = (JSONObject) e;
-			map.put(String.valueOf(obj.get("materielId")),
-					Integer.valueOf((String) obj.get("quantity")));
+			map.put(String.valueOf(obj.get("materielId")), Integer.valueOf((String) obj.get("quantity")));
 		}
-		List<MaterielInfoDTO> list = materielInfoDao
-				.selectByKeys(new ArrayList<String>(map.keySet()));
+		List<MaterielInfoDTO> list = materielInfoDao.selectByKeys(new ArrayList<String>(map.keySet()));
 		if (entity.getOrderId() != null) {
 			vehicleOrderDetailDao.deleteByOrderId(entity.getOrderId());
 			entity = vehicleOrderDao.getOneById(entity.getOrderId());
@@ -490,8 +485,8 @@ public class ApiVehicleOrderService {
 				VehicleOrderDetailsDTO dto = new VehicleOrderDetailsDTO();
 				paymentDTO.setProductGroup(e.getProductGroupCode());
 				e.setCount(map.get(e.getMaterielId().toString()));
-				VehicleProductPaymentDTO tempDto = vehicleProductPaymentDao
-						.getOneByCondition(paymentDTO);
+				PurchaseProductPaymentDTO tempDto = vehicleProductPaymentDao
+						.getPurchasePaymentOneByCondition(paymentDTO);
 				dto.setOrderNo(entity.getOrderNo());
 				dto.setAmount(e.getSumPrice());
 				dto.setMaterielId(e.getMaterielId().toString());
@@ -514,8 +509,10 @@ public class ApiVehicleOrderService {
 				dto.setTotalVolume(e.getTotalVolume());
 				dto.setBrand(e.getBrandCode());
 				dto.setStatus(entity.getStatus());
-				dto.setPaymentCode(tempDto.getPaymentCode());
-				dto.setPaymentName(tempDto.getPaymentName());
+				if (tempDto != null) {
+					dto.setPaymentCode(tempDto.getPaymentCode());
+					dto.setPaymentName(tempDto.getPaymentName());
+				}
 				dto.setCreateBy(getUserId());
 				dto.setLastUpdateBy(getUserId());
 				dto.setCreateTime(new Date());
@@ -531,20 +528,62 @@ public class ApiVehicleOrderService {
 	}
 
 	public JSONObject updateStatus(String orderNo, String status) {
+		JSONObject res = new JSONObject();
 		VehicleOrderDTO order = new VehicleOrderDTO();
 		order.setOrderNo(orderNo);
+		order = vehicleOrderDao.getOneByCondition(order);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if ("18".equals(status)) {
+			boolean flag = DateUtil.getCancelOrder(order.getCreateTime());
+			if (!flag) {
+				res.put("success", false);
+				res.put("msg", "当前时间不可取消订单！");
+			}
+			resultMap = vehicleOrderDao.cancelOrder(order);
+		}
 		order.setStatus(status);
+		/** 撤销begin */
+		// ZK主表
 		int c = vehicleOrderDao.updateSelectiveByOrderNo(order);
-		JSONObject res = new JSONObject();
+
 		if (c != 1) {
 			res.put("success", false);
 			res.put("msg", "数据处理失败！");
 		} else {
+			// ZK子表
 			VehicleOrderDetailsDTO orderDetail = new VehicleOrderDetailsDTO();
 			orderDetail.setOrderNo(order.getOrderNo());
 			orderDetail.setStatus(order.getStatus());
 			vehicleOrderDetailDao.updateByOrderNo(orderDetail);
 			res.put("success", true);
+			res.put("msg", "操作成功");
+		}
+		if ("18".equals(status)) {
+			/** 撤销end */
+			if ("S".equals(resultMap.get("code"))) {
+				/** 取消需要在撤销的基础上再对ZQ、ZQ子表进行处理 */
+				VehicleOrderZqDTO entity = new VehicleOrderZqDTO();
+				entity.setOrderNo(orderNo);
+				VehicleOrderZqDTO zqOrder = vehicleOrderZqDao.getOneByCondition(entity);
+				if (zqOrder != null) {
+					zqOrder.setStatus(status);
+					int a = vehicleOrderZqDao.updateSelectiveById(zqOrder);
+					if (a != 1) {
+						res.put("success", false);
+						res.put("msg", "数据处理失败！");
+					} else {
+						VehicleOrderZqDetailsDTO zqOrderDetail = new VehicleOrderZqDetailsDTO();
+						zqOrderDetail.setZqOrderNo(zqOrder.getZqOrderNo());
+						zqOrderDetail.setStatus(status);
+						vehicleOrderZqDetailsDao.updateSelectiveByZqOrderNo(zqOrderDetail);
+						res.put("success", true);
+						res.put("msg", resultMap.get("message"));
+					}
+				}
+			} else {
+				res.put("success", false);
+				res.put("msg", resultMap.get("message"));
+			}
 		}
 		return res;
 	}
@@ -556,8 +595,7 @@ public class ApiVehicleOrderService {
 		condition.setOrderNo(orderNo);
 		detailsCondition.setOrderNo(orderNo);
 		VehicleOrderDTO orderDTO = vehicleOrderDao.getOneByCondition(condition);
-		List<VehicleOrderDetailsDTO> details = vehicleOrderDetailDao
-				.getListByCondition(detailsCondition);
+		List<VehicleOrderDetailsDTO> details = vehicleOrderDetailDao.getListByCondition(detailsCondition);
 		List<VehicleOrderHistoryDTO> histotryList = new ArrayList<VehicleOrderHistoryDTO>();
 		json.put("order", orderDTO);
 		if (details != null && details.size() > 0) {
@@ -566,8 +604,7 @@ public class ApiVehicleOrderService {
 				BeanUtils.copyProperties(detail, historyDto);
 				VehicleOrderZqDetailsDTO entity = new VehicleOrderZqDetailsDTO();
 				entity.setZqItemNo(detail.getItemNo().replaceAll("ZK", "ZQ"));
-				List<VehicleOrderZqDetailsDTO> zqDetailsList = vehicleOrderZqDetailsDao
-						.listByCondition(entity);
+				List<VehicleOrderZqDetailsDTO> zqDetailsList = vehicleOrderZqDetailsDao.listByCondition(entity);
 				if (zqDetailsList != null && zqDetailsList.size() > 0) {
 					historyDto.setZqItemNo(zqDetailsList.get(0).getZqItemNo());
 					historyDto.setZqStatus(zqDetailsList.get(0).getStatus());
@@ -577,21 +614,18 @@ public class ApiVehicleOrderService {
 				if (!"".equals(detail.getVbelnDn1())) {
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("cnStockSyncsId", detail.getItemNo());
-					List<Cn3wPurchaseStock> cn3wPurchaseStockList = vehicleJobService
-							.queryCn3wPurchaseStock(map);
-					if (cn3wPurchaseStockList != null
-							&& cn3wPurchaseStockList.size() > 0) {
-						historyDto.setSapStatus(cn3wPurchaseStockList.get(0)
-								.getStatus() + "");
+					List<Cn3wPurchaseStock> cn3wPurchaseStockList = vehicleJobService.queryCn3wPurchaseStock(map);
+					if (cn3wPurchaseStockList != null && cn3wPurchaseStockList.size() > 0) {
+						historyDto.setSapStatus(cn3wPurchaseStockList.get(0).getStatus() + "");
 					}
 				}
 
 				Map<String, Object> map = new HashMap<>();
 				map.put("entryOrderId", detail.getLbx());
-				List<Entry3wOrder> entryList = purchaseVehicleOrderDetailService
-						.queryEntry3wOrder(map);
+				List<Entry3wOrder> entryList = purchaseVehicleOrderDetailService.queryEntry3wOrder(map);
 				if (entryList != null && entryList.size() > 0) {
 					historyDto.setLbxStatus(entryList.get(0).getStatus());
+					historyDto.setLbxActualQty(entryList.get(0).getActualQty());
 				}
 				histotryList.add(historyDto);
 			}
@@ -612,12 +646,10 @@ public class ApiVehicleOrderService {
 		JSONObject json = new JSONObject();
 		VehicleOrderDTO orderEntity = new VehicleOrderDTO();
 		orderEntity.setOrderNo(orderNo);
-		VehicleOrderDTO orderDTO = vehicleOrderDao
-				.getOneByCondition(orderEntity);
+		VehicleOrderDTO orderDTO = vehicleOrderDao.getOneByCondition(orderEntity);
 		VehicleOrderDetailsDTO detailEntity = new VehicleOrderDetailsDTO();
 		detailEntity.setOrderNo(orderNo);
-		List<VehicleOrderDetailsDTO> details = vehicleOrderDetailDao
-				.getListByCondition(detailEntity);
+		List<VehicleOrderDetailsDTO> details = vehicleOrderDetailDao.getListByCondition(detailEntity);
 		List<InsertOrderToOMSItem> list = null;
 		try {
 			list = getInsertOrderToOMSItem(orderDTO, details);
@@ -629,11 +661,9 @@ public class ApiVehicleOrderService {
 		boolean res = true;
 		if (list != null) {
 			for (InsertOrderToOMSItem e : list) {
-				ServiceResult<String> resStr = vehicleInsertOrderToOMSService
-						.sendOrderToOms(e);
+				ServiceResult<String> resStr = vehicleInsertOrderToOMSService.sendOrderToOms(e);
 				if (resStr.getSuccess()) {
-					Map<String, String> obj = (Map<String, String>) JSONObject
-							.parse(resStr.getResult());
+					Map<String, String> obj = (Map<String, String>) JSONObject.parse(resStr.getResult());
 					obj.get("billCode");
 					VehicleOrderDetailsDTO temp = new VehicleOrderDetailsDTO();
 					temp.setItemNo(e.getBillCode());
@@ -668,20 +698,16 @@ public class ApiVehicleOrderService {
 
 	}
 
-	private List<InsertOrderToOMSItem> getInsertOrderToOMSItem(
-			VehicleOrderDTO orderDTO, List<VehicleOrderDetailsDTO> details)
-			throws BusinessException {
+	private List<InsertOrderToOMSItem> getInsertOrderToOMSItem(VehicleOrderDTO orderDTO,
+			List<VehicleOrderDetailsDTO> details) throws BusinessException {
 		String custMgr = "01417887";
 		if (MapUtils.isEmpty(sendMap)) {
 			getSendTo();
 		}
-		AreaCenterInfoDTO areaDto = areaCenterInfoDao
-				.getOneByDeliveryToCode(orderDTO.getDeliveryCode());
+		AreaCenterInfoDTO areaDto = areaCenterInfoDao.getOneByDeliveryToCode(orderDTO.getDeliveryCode());
 		List<InsertOrderToOMSItem> list = new ArrayList<InsertOrderToOMSItem>();
-		PlanInDate planInDate = systemCenterService
-				.getPlanInDateByTypeId(PlanInDateEnum.ZCDH.getCode());
-		if (planInDate == null || planInDate.getValue() == null
-				|| "".equals(planInDate.getValue())) {
+		PlanInDate planInDate = systemCenterService.getPlanInDateByTypeId(PlanInDateEnum.ZCDH.getCode());
+		if (planInDate == null || planInDate.getValue() == null || "".equals(planInDate.getValue())) {
 			throw new BusinessException("整车直发到货周未设置,请设置到货周!");
 		}
 		for (VehicleOrderDetailsDTO e : details) {
@@ -696,8 +722,7 @@ public class ApiVehicleOrderService {
 			item.setCustMgr(custMgr);
 			item.setProMgr(custMgr);
 			item.setProDeputy(custMgr);
-			item.setPlanInDate(DateUtil.getT2Date(Integer.parseInt(planInDate
-					.getValue())));
+			item.setPlanInDate(DateUtil.getT2Date(Integer.parseInt(planInDate.getValue())));
 			item.setOrderCode("");
 			item.setCustCode(this.getSoldToCode());
 			item.setCustDest(orderDTO.getDeliveryCode());
@@ -719,8 +744,7 @@ public class ApiVehicleOrderService {
 		return list;
 	}
 
-	private void saveZQ(VehicleOrderDTO order,
-			List<VehicleOrderDetailsDTO> details) {
+	private void saveZQ(VehicleOrderDTO order, List<VehicleOrderDetailsDTO> details) {
 		VehicleOrderZqDTO zqOrder = new VehicleOrderZqDTO();
 		BeanUtils.copyProperties(order, zqOrder);
 		zqOrder.setType("ZGOZ");
@@ -749,8 +773,8 @@ public class ApiVehicleOrderService {
 	 */
 	public JSONObject productList(PagerInfo pager, MaterielInfoDTO condition) {
 		if (StringUtils.isNotBlank(condition.getDeliveryToCode())) {
-			List<MaterielInfoDTO> list = materielInfoDao.getPageByCondition(
-					condition, pager.getStart(), pager.getPageSize());
+			List<MaterielInfoDTO> list = materielInfoDao.getPageByCondition(condition, pager.getStart(),
+					pager.getPageSize());
 			long total = materielInfoDao.getPagerCount(condition);
 			if (list != null && !list.isEmpty()) {
 				setItemPrice(condition.getDeliveryToCode(), list);
@@ -770,37 +794,35 @@ public class ApiVehicleOrderService {
 		Map<String, String> map = new HashMap<String, String>();
 		if (null != items && !items.isEmpty()) {
 			for (MaterielInfoDTO e : items) {
-				DepartmentInfoDTO dep = departmentInfoDao
-						.getOneByDeliveryToCode(deliveryToCode);
-				AreaCenterInfoDTO area = areaCenterInfoDao
-						.getOneByDeliveryToCode(deliveryToCode);
-				map.put("custCode", deliveryToCode);
+				DepartmentInfoDTO dep = departmentInfoDao.getOneByDeliveryToCode(deliveryToCode);
+				AreaCenterInfoDTO area = areaCenterInfoDao.getOneByDeliveryToCode(deliveryToCode);
+				VehicleProductPaymentDTO paymentDTO = new VehicleProductPaymentDTO();
+				paymentDTO.setProductGroup(e.getProductGroupCode());
+				PurchaseProductPaymentDTO tempDto = vehicleProductPaymentDao
+						.getPurchasePaymentOneByCondition(paymentDTO);
+				map.put("custCode", tempDto.getPaymentCode());
 				map.put("regionCode", area.getAreaCode());
 				map.put("invCode", e.getMaterielCode());
 				map.put("corpCode", dep.getOrganizationCode());
 				// 获取物料相关金额
 				String str = vehicleGetPriceFromCRMService.getPriceFromCrm(map);
-				Map<String, String> json = (Map<String, String>) JSONObject
-						.parse(str);
-				e.setPrice(Double.parseDouble(StringUtils.isBlank(json
-						.get("reUnitPrice")) ? "0" : json.get("reUnitPrice")));// 开票价
-				e.setBateRate(Double.parseDouble(StringUtils.isBlank(json
-						.get("reBateRate")) ? "0" : json.get("reBateRate")));// 直采扣点
-				e.setStockPrice(Double.parseDouble(StringUtils.isBlank(json
-						.get("reStockPrice")) ? "0" : json.get("reStockPrice"))); // 采购价
-				e.setRetailPrice(Double.parseDouble(StringUtils.isBlank(json
-						.get("reRetailPrice")) ? "0" : json
-						.get("reRetailPrice"))); // 供价,零售价
-				e.setActPrice(Double.parseDouble(StringUtils.isBlank(json
-						.get("reActPrice")) ? "0" : json.get("reActPrice"))); // 执行价
-				e.setBateMoney(Double.parseDouble(StringUtils.isBlank(json
-						.get("reBateMoney")) ? "0" : json.get("reBateMoney"))); // 单台台返金额
-				e.setLossRate(Double.parseDouble(StringUtils.isBlank(json
-						.get("reLossRate")) ? "0" : json.get("reLossRate"))); // 折扣扣率
-				e.setIsfl(Integer.parseInt(StringUtils.isBlank(json
-						.get("reIsFL")) ? "0" : json.get("reIsFL"))); // 返利类型
-				e.setIskpo(Integer.parseInt(StringUtils.isBlank(json
-						.get("reIsKPO")) ? "0" : json.get("reIsKPO"))); // 商用空调标志
+				Map<String, String> json = (Map<String, String>) JSONObject.parse(str);
+				e.setPrice(Double
+						.parseDouble(StringUtils.isBlank(json.get("reUnitPrice")) ? "0" : json.get("reUnitPrice")));// 开票价
+				e.setBateRate(
+						Double.parseDouble(StringUtils.isBlank(json.get("reBateRate")) ? "0" : json.get("reBateRate")));// 直采扣点
+				e.setStockPrice(Double
+						.parseDouble(StringUtils.isBlank(json.get("reStockPrice")) ? "0" : json.get("reStockPrice"))); // 采购价
+				e.setRetailPrice(Double
+						.parseDouble(StringUtils.isBlank(json.get("reRetailPrice")) ? "0" : json.get("reRetailPrice"))); // 供价,零售价
+				e.setActPrice(
+						Double.parseDouble(StringUtils.isBlank(json.get("reActPrice")) ? "0" : json.get("reActPrice"))); // 执行价
+				e.setBateMoney(Double
+						.parseDouble(StringUtils.isBlank(json.get("reBateMoney")) ? "0" : json.get("reBateMoney"))); // 单台台返金额
+				e.setLossRate(
+						Double.parseDouble(StringUtils.isBlank(json.get("reLossRate")) ? "0" : json.get("reLossRate"))); // 折扣扣率
+				e.setIsfl(Integer.parseInt(StringUtils.isBlank(json.get("reIsFL")) ? "0" : json.get("reIsFL"))); // 返利类型
+				e.setIskpo(Integer.parseInt(StringUtils.isBlank(json.get("reIsKPO")) ? "0" : json.get("reIsKPO"))); // 商用空调标志
 			}
 		}
 	}
@@ -817,8 +839,7 @@ public class ApiVehicleOrderService {
 	}
 
 	public List<ExportVehicleDTO> selectVehicleExport(Map<String, Object> params) {
-		List<ExportVehicleDTO> result = vehicleOrderDao
-				.selectVehicleExport(params);
+		List<ExportVehicleDTO> result = vehicleOrderDao.selectVehicleExport(params);
 		for (ExportVehicleDTO e : result) {
 			if (e.getWhCode() == null) {
 				e.setWhCode(vehicleOrderDao.getWhCode(e.getDeliveryCode()));
@@ -830,8 +851,7 @@ public class ApiVehicleOrderService {
 
 	public JSONArray whCode() {
 		AreaCenterInfoDTO entity = new AreaCenterInfoDTO();
-		List<AreaCenterInfoDTO> dtoList = areaCenterInfoDao
-				.getListByCondition(entity);
+		List<AreaCenterInfoDTO> dtoList = areaCenterInfoDao.getListByCondition(entity);
 		JSONArray array = new JSONArray();
 		for (AreaCenterInfoDTO o : dtoList) {
 			JSONObject json = new JSONObject();
@@ -843,10 +863,208 @@ public class ApiVehicleOrderService {
 	}
 
 	public int updateVblenSpare(String itemNo, String vbelnSpare) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("itemNo", itemNo);
-		map.put("vbelnSpare", vbelnSpare);
-		return vehicleOrderDetailDao.updateByItemNo(map);
+		return vehicleOrderDetailDao.updateVbelnSpareByItemNo(itemNo, vbelnSpare);
+	}
+
+	public ServiceResult<List<Cn3wPurchaseStock>> findPushToSAPList(Map<String, Object> params) {
+
+		ServiceResult<List<Cn3wPurchaseStock>> result = new ServiceResult<List<Cn3wPurchaseStock>>();
+		// Integer start = null, size = null;
+		// PagerInfo pager = (PagerInfo) params.get("pager");
+		// if (pager != null) {
+		// start = pager.getStart();
+		// size = pager.getPageSize();
+		// }
+		// params.put("start",start);
+		// params.put("size",size);
+
+		// if (pager != null) {
+		// pager.setRowsCount(vehicleOrderDao.findPushToSAPListCount(params));
+		// }
+		int pagecount = vehicleOrderDao.findPushToSAPListCount(params);
+		PagerInfo pager = new PagerInfo();
+		pager.setRowsCount(pagecount);
+		// result.setPager(pi);
+		// return result;
+
+		result.setPager(pager);
+		result.setResult(vehicleOrderDao.findPushToSAPList(params));
+		return result;
+	}
+
+	public JSONObject checkOrder(String orderNo, String vbelnDn1, Date sDate, Date eDate, int page, int rows) {
+		JSONObject json = new JSONObject();
+		List<String> orderNos = new ArrayList<>();
+		if (StringUtils.isNotBlank(orderNo)) {
+			for (String no : orderNo.replaceAll("，", ",").split(",")) {
+				if (StringUtils.isNotBlank(no)) {
+					orderNos.add(no);
+				}
+			}
+		}
+		List<String> vbelnDn1s = new ArrayList<>();
+		if (StringUtils.isNotBlank(vbelnDn1)) {
+			for (String no : vbelnDn1.replaceAll("，", ",").split(",")) {
+				if (StringUtils.isNotBlank(no)) {
+					vbelnDn1s.add(no);
+				}
+			}
+		}
+		VehicleOrderDTO condition = new VehicleOrderDTO();
+		condition.setOrderNos(orderNos.size() == 0 ? null : orderNos);
+		condition.setVbelnDn1s(vbelnDn1s.size() == 0 ? null : vbelnDn1s);
+		condition.setStartOrderTime(sDate);
+		condition.setEndOrderTime(eDate);
+		List<VehicleOrderHistoryDTO> list = vehicleOrderDao.getChangeDNPageByCondition(condition, page, rows);
+		Long count = vehicleOrderDao.getChangeDNPagerCount(condition);
+		json.put("rows", list);
+		json.put("total", count);
+
+		return json;
+
+		// VehicleOrderDTO condition = new VehicleOrderDTO();
+		// VehicleOrderDetailsDTO detailsCondition = new
+		// VehicleOrderDetailsDTO();
+		// JSONObject json = new JSONObject();
+		// condition.setOrderNo(orderNo);
+		//
+		//
+		// detailsCondition.setOrderNo(orderNo);
+		// detailsCondition.setStartOrderTime(sDate);
+		// detailsCondition.setEndOrderTime(eDate);
+		// VehicleOrderDTO orderDTO =
+		// vehicleOrderDao.getOneByCondition(condition);
+		//// List<VehicleOrderDetailsDTO> details = vehicleOrderDetailDao
+		//// .getListByCondition(detailsCondition);
+		// List<VehicleOrderDetailsDTO> details2 =
+		// vehicleOrderDetailDao.getPageByCondition(detailsCondition, page,
+		// rows);
+		// List<String> orderList = new ArrayList<>();
+		// for(VehicleOrderDetailsDTO dto : details2){
+		// orderList.add(dto.getOrderNo());
+		// }
+		// List<VehicleOrderHistoryDTO> histotryList = new
+		// ArrayList<VehicleOrderHistoryDTO>();
+		//// json.put("order", orderDTO);
+		// if (details2 != null && details2.size() > 0) {
+		// for (VehicleOrderDetailsDTO detail : details2) {
+		// VehicleOrderHistoryDTO historyDto = new VehicleOrderHistoryDTO();
+		// BeanUtils.copyProperties(detail, historyDto);
+		// VehicleOrderZqDetailsDTO entity = new VehicleOrderZqDetailsDTO();
+		// entity.setZqItemNo(detail.getItemNo().replaceAll("ZK", "ZQ"));
+		// List<VehicleOrderZqDetailsDTO> zqDetailsList =
+		// vehicleOrderZqDetailsDao
+		// .listByCondition(entity);
+		// if (zqDetailsList != null && zqDetailsList.size() > 0) {
+		// historyDto.setZqItemNo(zqDetailsList.get(0).getZqItemNo());
+		// historyDto.setZqStatus(zqDetailsList.get(0).getStatus());
+		// historyDto.setRemark(zqDetailsList.get(0).getRemark());
+		// historyDto.setVbelnDn5(zqDetailsList.get(0).getVbelnDn5());
+		// }
+		// if (!"".equals(detail.getVbelnDn1())) {
+		// Map<String, Object> map = new HashMap<String, Object>();
+		// map.put("cnStockSyncsId", detail.getItemNo());
+		// List<Cn3wPurchaseStock> cn3wPurchaseStockList = vehicleJobService
+		// .queryCn3wPurchaseStock(map);
+		// if (cn3wPurchaseStockList != null
+		// && cn3wPurchaseStockList.size() > 0) {
+		// historyDto.setSapStatus(cn3wPurchaseStockList.get(0)
+		// .getStatus() + "");
+		// }
+		// }
+		//
+		// Map<String, Object> map = new HashMap<>();
+		// map.put("entryOrderId", detail.getLbx());
+		// List<Entry3wOrder> entryList = purchaseVehicleOrderDetailService
+		// .queryEntry3wOrder(map);
+		// if (entryList != null && entryList.size() > 0) {
+		// historyDto.setLbxStatus(entryList.get(0).getStatus());
+		// historyDto.setLbxActualQty(entryList.get(0).getActualQty());
+		// }
+		// histotryList.add(historyDto);
+		// }
+		// }
+		//
+		// json.put("details", histotryList);
+		// 扣款单号 VehicleOrderZqDetailsDTO.zqItemNo
+		// 85单 VehicleOrderZqDetailsDTO.vbelnDn1
+		// LBX单号VehicleOrderZqDetailsDTO.lbx
+		// LBX入库时间VehicleOrderZqDetailsDTO.zspdt
+		// 闸口信息VehicleOrderZqDetailsDTO.remark
+		// 总金额 VehicleOrderZqDetailsDTO.amount
+		// 扣款状态 VehicleOrderZqDetailsDTO.status
+		// return json;
+	}
+
+	public Long getChangeDNTotal(String orderNo, String vbelnDn1, Date sDate, Date eDate) {
+		List<String> orderNos = new ArrayList<>();
+		if (StringUtils.isNotBlank(orderNo)) {
+			for (String no : orderNo.replaceAll("，", ",").split(",")) {
+				if (StringUtils.isNotBlank(no)) {
+					orderNos.add(no);
+				}
+			}
+		}
+		List<String> vbelnDn1s = new ArrayList<>();
+		if (StringUtils.isNotBlank(vbelnDn1)) {
+			for (String no : vbelnDn1.replaceAll("，", ",").split(",")) {
+				if (StringUtils.isNotBlank(no)) {
+					vbelnDn1s.add(no);
+				}
+			}
+		}
+		VehicleOrderDTO condition = new VehicleOrderDTO();
+		condition.setOrderNos(orderNos.size() == 0 ? null : orderNos);
+		condition.setVbelnDn1s(vbelnDn1s.size() == 0 ? null : vbelnDn1s);
+		condition.setStartOrderTime(sDate);
+		condition.setEndOrderTime(eDate);
+		Long count = vehicleOrderDao.getChangeDNPagerCount(condition);
+		return count;
+	}
+
+	public List<VehicleOrderHistoryDTO> getChangeDNList(String orderNo, String vbelnDn1, Date sDate, Date eDate,
+			int page, int rows) {
+		List<String> orderNos = new ArrayList<>();
+		if (StringUtils.isNotBlank(orderNo)) {
+			for (String no : orderNo.replaceAll("，", ",").split(",")) {
+				if (StringUtils.isNotBlank(no)) {
+					orderNos.add(no);
+				}
+			}
+		}
+		List<String> vbelnDn1s = new ArrayList<>();
+		if (StringUtils.isNotBlank(vbelnDn1)) {
+			for (String no : vbelnDn1.replaceAll("，", ",").split(",")) {
+				if (StringUtils.isNotBlank(no)) {
+					vbelnDn1s.add(no);
+				}
+			}
+		}
+		VehicleOrderDTO condition = new VehicleOrderDTO();
+		condition.setOrderNos(orderNos.size() == 0 ? null : orderNos);
+		condition.setVbelnDn1s(vbelnDn1s.size() == 0 ? null : vbelnDn1s);
+		condition.setStartOrderTime(sDate);
+		condition.setEndOrderTime(eDate);
+		return vehicleOrderDao.getChangeDNPageByCondition(condition, page, rows);
+	}
+
+	public int updateVbelnSpareByItemNo(String itemNo, String vbelnSpare) {
+		return vehicleOrderDetailDao.updateVbelnSpareByItemNo(itemNo, vbelnSpare);
+	}
+
+	public boolean vbelnExists(String itemNo, String vbelnSpare) {
+		return vehicleOrderDetailDao.vbelnExists(itemNo, vbelnSpare);
+	}
+
+	public ServiceResult<List<VehiclePushToSAP>> findPushToSAPList2(Map<String, Object> params) {
+		ServiceResult<List<VehiclePushToSAP>> result = new ServiceResult<List<VehiclePushToSAP>>();
+		int pagecount = vehicleOrderDao.findPushToSAPListCount2(params);
+		PagerInfo pager = new PagerInfo();
+		pager.setRowsCount(pagecount);
+
+		result.setPager(pager);
+		result.setResult(vehicleOrderDao.findPushToSAPList2(params));
+		return result;
 	}
 
 }

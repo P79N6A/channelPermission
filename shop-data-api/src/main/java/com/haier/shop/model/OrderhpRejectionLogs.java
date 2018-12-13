@@ -67,12 +67,28 @@ public class OrderhpRejectionLogs implements Serializable {
     
     private String depCharge;
     
+    private String repairHPRecordsID;//HP回传鉴定表主键
     
-    
-    
+    private String virtualEntryState;//标识虚入虚出 处理状态 :默认:default   虚入成功:enterSuccess  虚出成功:outSuccess'
 
     
-    public String getHpLesId() {
+    public String getVirtualEntryState() {
+		return virtualEntryState;
+	}
+
+	public void setVirtualEntryState(String virtualEntryState) {
+		this.virtualEntryState = virtualEntryState;
+	}
+
+	public String getRepairHPRecordsID() {
+		return repairHPRecordsID;
+	}
+
+	public void setRepairHPRecordsID(String repairHPRecordsID) {
+		this.repairHPRecordsID = repairHPRecordsID;
+	}
+
+	public String getHpLesId() {
 		return hpLesId;
 	}
 

@@ -89,4 +89,26 @@ public interface OrderProductsReadDao {
 	List<OrderProducts> findSortCount();
 
 	List<OrderProducts> findIndustryCount();
+
+    /**
+     * 根据TB单号获取网单信息
+     * @param tbOrderSn
+     * @return
+     */
+    OrderProducts getOrderProductsByTbNo(@Param("tbOrderSn") String tbOrderSn);
+
+    OrderProducts findOPBycOrderSnAndSku(@Param("cOrderSn") String cOrderSn, @Param("sku")String sku);
+
+    /**
+     * 导出功能根据sourceOrderSn获取tbOrderSn
+     * @param paramMap
+     * @return
+     */
+    List<Map<String,Object>> getTBOrderSnBySourceOrderSn(@Param("params")Map<String,Object> paramMap);
+
+    /**
+     * 获取物流模式
+     * @return
+     */
+    List<Map<String,Object>> getshippingMode();
 }

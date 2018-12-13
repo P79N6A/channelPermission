@@ -35,4 +35,8 @@ public interface PopProductService {
     int selectByproductCode(int channelId, String productCode, int id);
 
     Product checkSkuAndChannel(String sku, String channelCode);
+    public List<String> selectSkuByChannelId(Integer id);
+    public List<String> seletSkuAll();
+
+	Product checkSkuAndChannelID(String sku, String channelId);
 }

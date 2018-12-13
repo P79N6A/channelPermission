@@ -7,14 +7,14 @@
 		<result property="parentPath" column="parentPath" />
 	</resultMap>
   <insert id="insert" parameterType="com.haier.shop.model.OrderrepairHPrecords" >
-    insert into OrderRepairHPRecords (id, siteId, addTime, 
+    insert into orderrepairhprecords (siteId, addTime,
       orderProductId, orderRepairId, netPointCode, 
       checkResult, quality, machineNum, 
       inspector, inspectTime, success, 
       checkType, packResult, response, 
       hpOrderFail, source, woId, 
       hpOrderRemark,repairsHPLogsId)
-    values (#{id,jdbcType=INTEGER}, #{siteId,jdbcType=INTEGER}, #{addTime,jdbcType=INTEGER}, 
+    values (#{siteId,jdbcType=INTEGER}, unix_timestamp(now()) , 
       #{orderProductId,jdbcType=INTEGER}, #{orderRepairId,jdbcType=INTEGER}, #{netPointCode,jdbcType=VARCHAR}, 
       #{checkResult,jdbcType=TINYINT}, #{quality,jdbcType=TINYINT}, #{machineNum,jdbcType=VARCHAR}, 
       #{inspector,jdbcType=VARCHAR}, #{inspectTime,jdbcType=VARCHAR}, #{success,jdbcType=TINYINT}, 
@@ -27,10 +27,10 @@
  
 
 <select id="findBadProductCount" resultType="Integer" parameterType="java.lang.String">
-SELECT IFNULL(count(*),0) from Orders o  
-LEFT JOIN OrderProducts opro
+SELECT IFNULL(count(*),0) from orders o
+LEFT JOIN orderproducts opro
 on opro.orderid = o.id
-LEFT JOIN OrderRepairHPRecords orhp
+LEFT JOIN orderrepairhprecords orhp
 on orhp.orderProductId = opro.id
 where (orhp.quality='5' or orhp.quality='6') and FROM_UNIXTIME(o.addtime)  between #{begintime} and #{endtime}
   </select>
@@ -38,57 +38,74 @@ where (orhp.quality='5' or orhp.quality='6') and FROM_UNIXTIME(o.addtime)  betwe
 
 <select id="findsign" resultMap="BaseResult" >
 		SELECT IFNULL(count(opro.productType),0) sign,
-		pc.parentPath
-		 from Orders o  
-		LEFT JOIN OrderProducts opro
+		pc.rootId
+		 from orders o
+		LEFT JOIN orderproducts opro
 		on opro.orderid = o.id
-		LEFT JOIN OrderRepairHPRecords orhp
+		LEFT JOIN orderrepairhprecords orhp
 		on orhp.orderProductId = opro.id
-		LEFT JOIN OrderRepairs ore 
+		LEFT JOIN orderrepairs ore
 		on opro.id = ore.orderProductId
-		LEFT JOIN ProductTypes pt
+		LEFT JOIN producttypes pt
 		on pt.attrCateId = opro.productType
-		LEFT JOIN ProductCates pc
+		LEFT JOIN productcates pc
 		on pc.cateName = pt.typeName
 		where (quality='5' or quality='6') and ore.typeFlag = '5' 
   </select>
   <select id="findreject" resultMap="BaseResult" >
 		SELECT IFNULL(count(opro.productType),0) reject,
-		pc.parentPath 
-		from Orders o  
-		LEFT JOIN OrderProducts opro
+		pc.rootId
+		from orders o
+		LEFT JOIN orderproducts opro
 		on opro.orderid = o.id
-		LEFT JOIN OrderRepairHPRecords orhp
+		LEFT JOIN orderrepairhprecords orhp
 		on orhp.orderProductId = opro.id
-		LEFT JOIN OrderRepairs ore 
+		LEFT JOIN orderrepairs ore
 		on opro.id = ore.orderProductId
-		LEFT JOIN ProductTypes pt
+		LEFT JOIN producttypes pt
 		on pt.attrCateId = opro.productType
-		LEFT JOIN ProductCates pc
+		LEFT JOIN productcates pc
 		on pc.cateName = pt.typeName
 		where (quality='5' or quality='6') and ore.typeFlag = '4' 
   </select>
   
 <update id="updataRepaiHp" parameterType="com.haier.shop.model.OrderrepairHPrecords">
-	UPDATE OrderRepairHPRecords
+	UPDATE orderrepairhprecords
 	SET 
-	<if test="ThreeAppraisal!=null and ThreeAppraisal !=''">
-	 ThreeAppraisal = #{ThreeAppraisal,jabcType=VARCHAR},
-	 ThreeAppraisalDate = curdate(),
+	<if test="threeAppraisal !=null and threeAppraisal  !=''">
+	 ThreeAppraisal = #{threeAppraisal,jdbcType=VARCHAR},
+	 ThreeAppraisalDate = curdate()
 	</if>
-	 <if test="TwoAppraisal!=null and TwoAppraisal!=''">
-	 TwoAppraisal =#{TwoAppraisal},
-	 TwoAppraisalDate = curdate(),
+	 <if test="twoAppraisal !=null and twoAppraisal !=''">
+	 TwoAppraisal =#{twoAppraisal},
+	 TwoAppraisalDate = curdate()
 	</if>
-	 checkType = #{checkType}
 	WHERE
 		id = #{id}
 </update>
   
 	<update id="updataOutOfStorage" parameterType="java.lang.String">
-	UPDATE OrderRepairHPRecords
-	SET OutOfStorageFlag =#{OutOfStorageFlag},
-	 OutOfStorageTime = unix_timestamp(now())
+	UPDATE orderrepairhprecords
+	SET OutOfStorageFlag =#{OutOfStorageFlag}
+	<if test="OutOfStorageFlag !='3'">
+	, OutOfStorageTime = curdate()
+	 </if>
+	 <if test="OutOfStorageFlag =='3'">
+	 ,ThreeOutOfStorageTime =curdate()
+	 </if>
 	where id=#{id}
+	</update>
+	
+	<update id="updataPushRejects" parameterType="java.lang.String">
+	UPDATE orderrepairhprecords
+	SET pushRejectsStatus = '1'
+	WHERE  id=#{id}
+	</update>
+	
+	<update id="UpdaVirtualEntryState" parameterType="java.lang.String">
+	UPDATE orderhprejectionlogs
+	SET virtualEntryState = #{virtualEntryState}
+	WHERE
+		id = #{id}
 	</update>
 </mapper>

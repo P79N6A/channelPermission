@@ -45,6 +45,13 @@
 		select
 		row_id,interface_date,interface_name,interface_message
 		<include refid="findInterfaceLogSQLCond"></include>
+		<if test="interfaceLogList !=null">
+			AND row_id IN
+			<foreach collection="interfaceLogList" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY interface_date DESC
 		<if test="m!=null and n!=null">
 			limit ${m},${n}
 		</if>

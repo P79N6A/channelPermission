@@ -17,12 +17,12 @@
     </resultMap>
     <select id="getByOrderProductId" parameterType="Integer" resultMap="shippingStatusSyncLogsResult">
         select `id`,`orderId`,`orderProductId`,`shippingNum`,`customerCode`,`customerName`,`addTime`,`httpStatus`,`count`,`requestData`,`requestXmlData`,`lastRequestTime`
-        from `ShippingStatusSyncLogs`
+        from `shippingstatussynclogs`
         where `orderProductId` = #{orderProductId} limit 1
     </select>
     <select id="getByOrderId" parameterType="Integer" resultMap="shippingStatusSyncLogsResult">
         select `id`,`orderId`,`orderProductId`,`shippingNum`,`customerCode`,`customerName`,`addTime`,`httpStatus`,`count`,`requestData`,`requestXmlData`,`lastRequestTime`
-        from `ShippingStatusSyncLogs`
+        from `shippingstatussynclogs`
         where `orderId` = #{orderId} limit 1
     </select>
 </mapper>

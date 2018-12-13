@@ -1,9 +1,12 @@
 package com.haier.afterSale.model;
 
+import java.text.SimpleDateFormat;
 /**
  * Created by zhangbo on 2017/11/6.
  */
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -147,5 +150,39 @@ public class Ustring {
 		}
 		return obj.toString();
 	}
+	
+	 public static String timeStamp(){  
+         long time = System.currentTimeMillis();
+         String t = String.valueOf(time/1000);  
+         return t;  
+     }  
+	 public static String timeStamp2Date(String seconds,String format) {  
+         if(seconds == null || seconds.isEmpty() || seconds.equals("null")){  
+            return "";  
+        }  
+          if(format == null || format.isEmpty()){
+               format = "yyyy-MM-dd HH:mm:ss";
+           }   
+           SimpleDateFormat sdf = new SimpleDateFormat(format);  
+           Calendar c = Calendar.getInstance();  
+           c.setTime(new Date(Long.valueOf(seconds+"000")));  
+           c.add(Calendar.DAY_OF_MONTH, 1);// 今天+1天 
+           Date tomorrow = c.getTime();  
+           return sdf.format(tomorrow);  
+       }
+    public static String timeStamp3Date(String seconds,String format) {
+        if(seconds == null || seconds.isEmpty() || seconds.equals("null")){
+            return "";
+        }
+        if(format == null || format.isEmpty()){
+            format = "yyyy-MM-dd HH:mm:ss";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date(Long.valueOf(seconds+"000")));
+        c.add(Calendar.DAY_OF_MONTH, 3);// 今天+1天
+        Date tomorrow = c.getTime();
+        return sdf.format(tomorrow);
+    }
 }
 

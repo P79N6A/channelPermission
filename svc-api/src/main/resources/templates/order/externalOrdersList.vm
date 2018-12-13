@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>3W订单接入人工处理列表</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false,border:false">
+    <table id="datagrid">
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth">
+			<span class="search-row-label">
+			  淘宝店铺
+			</span>
+                <select class="easyui-combobox"  editable="false" name="taoBaoShop" id="taoBaoShop" style="width: 250px;">
+                    <option value="">全部</option>
+                    <option value="1">海尔官方淘宝旗舰店</option>
+                    <option value="4">海尔热水器专卖店</option>
+                    <option value="7">淘宝网统帅日日顺乐家专卖店</option>
+                    <option value="8">海尔官方旗舰店:营销02(分销平台)</option>
+                    <option value="12">海尔新宝旗舰店</option>
+                    <option value="13">海尔新宝旗舰店分销平台</option>
+                    <option value="15">统帅日日顺分销平台</option>
+                    <option value="16">mooka模卡官方旗舰店</option>
+                    <option value="17">海尔洗衣机旗舰店</option>
+                    <option value="18">海尔冰冷旗舰店</option>
+                    <option value="21">海尔空调旗舰店</option>
+                    <option value="22">村淘海尔商家</option>
+                    <option value="23">生态授权店</option>
+                    <option value="26">mooka模卡分销</option>
+                    <option value="27">天猫卡萨帝旗舰店</option>
+                    <option value="28">海尔电视旗舰店</option>
+                    <option value="29">海尔厨房大电旗舰店</option>
+                    <option value="31">天猫小超人旗舰店</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <span class="search-row-label">
+                  同步状态
+                </span>
+                <select class="easyui-combobox"  editable="false" name="orderState" id="orderState" style="width: 190px;">
+                    <option value="1004" selected="true">同步失败(1004)</option>
+                    <option value="1005">不应同步(1005)</option>
+                    <option value="1001">未同步(1001)</option>
+                    <option value="1002">已同步到系统(1002)</option>
+                    <option value="1003">已完成同步(1003)</option>
+                    <option value="1006">等待继续同步(1006)</option>
+                    <option value="1009">回传发货状态失败(1009)</option>
+                    <option value="110">同步异常-需要开发人员介入解决(110)</option>
+                </select>
+            </div>
+
+            <div class="search-row_nowidth">
+			<span class="search-row-label">
+			  来源订单号
+			</span>
+                <input class="easyui-textbox" id="sourceOrderSn" name="sourceOrderSn" style="width: 180px;"/>
+            </div>
+
+            <div class="search-row_nowidth">
+					<span class="search-row-label">
+					  写入时间
+					</span>
+                <input class="easyui-datebox" id="addTimeMin" name="addTimeMin" editable="false"/>
+            </div>
+            <div class="search-row_nowidth">
+					<span class="search-row-label">
+					  至
+					</span>
+                <input class="easyui-datebox" id="addTimeMax" name="addTimeMax" editable="false"/>
+            </div>
+
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="add_Externalorders"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="update_Externalorders"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+    </form>
+</div>
+<div id="update_externalOrders_info" data-options="title:'修改',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:450px;height:300px;"
+     closed="true" buttons="#dlg-address_info_u">
+    <form id="update_externalOrders_info_form" method="post">
+        <div class="fitem" style="width:360px;">
+            <label for="up_sourceOrderSn" class="col-sm-2 control-label">来源订单号</label>
+        <input id ="up_sourceOrderSn" name="up_sourceOrderSn" value=""  type="text" readonly = "true" style="width:250px;height:30px"/>
+        </div>
+        <div class="fitem" style="width:360px;">
+            <label for="up_orderState" class="col-sm-2 control-label" >同步状态</label>
+            <select class="easyui-combobox"  editable="false" name="up_orderState" id="up_orderState" style="width: 250px;height:30px">
+                <option value="1004" selected="true">同步失败(1004)</option>
+                <option value="1005">不应同步(1005)</option>
+                <option value="1001">未同步(1001)</option>
+                <option value="1002">已同步到系统(1002)</option>
+                <option value="1003">已完成同步(1003)</option>
+                <option value="1006">等待继续同步(1006)</option>
+                <option value="1009">回传发货状态失败(1009)</option>
+                <option value="110">同步异常-需要开发人员介入解决(110)</option>
+            </select>
+        </div>
+        <div class="fitem" style="width:360px;">
+            <label class="col-sm-2 control-label" for="up_errorLog">错误日志</label>
+            <textarea name="up_errorLog" id="up_errorLog"  style="height: 115px;width: 250px;"></textarea>
+        </div>
+
+    </form>
+    <div id="dlg-address_info_u">
+        <a href="#" class="easyui-linkbutton"  id="externalOrders_info_update" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#update_externalOrders_info').dialog('close')">取消</a>
+    </div>
+</div>
+<script src="../static/js/order/externalOrdersList.js"></script>
+</body>
+</html>

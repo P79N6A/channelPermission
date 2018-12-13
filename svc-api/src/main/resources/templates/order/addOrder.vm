@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+   
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>复制订单</title>
+    <script src="../static/third/jquery.js"></script>
+	<script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+	
+
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    
+    
+	<script src="../static/third/bootstrap/js/bootstrap-table.min.js"></script>
+	<script src="../static/third/bootstrap/js/bootstrap-editable.js"></script>
+	<script src="../static/third/bootstrap/js/bootstrap-table-editable.js"></script>
+	<script src="../static/third/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+	
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+	
+	<style>
+		.input_form{
+			width: 60%;
+		}
+		.radio label{
+			margin-right:15px; 
+		}
+		.fixed-table-loading{
+			display: none;
+		}
+	</style>
+</head>
+<body class="iframe-body">
+<div style="padding: 20px;width: 100%;height: 100%;overflow: auto;">
+	<div>
+		<ol class="breadcrumb">
+			<li class="active">基本信息</li>
+		</ol>
+		<form class="form-horizontal" id="baseInfo">
+			<div class="form-group">
+				<label for="orderUserName" class="col-sm-2 control-label">下单人（用户名）</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control input_form" name="orderUserName" id="orderUserName" placeholder="用户名">
+					<input type="hidden" id='id' name='id' value="${order.id}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="userEmail" class="col-sm-2 control-label">Email</label>
+				<div class="col-sm-10">
+					<input type="email" class="form-control input_form" name="userEmail" id="userEmail" placeholder="Email">
+				</div>
+			</div>
+	
+			 <div class="form-group">
+				<label for="orderValidPeriod" class="col-sm-2 control-label">订单过期时间</label>
+				<div class="col-sm-10">
+					<div class="radio input_form">
+						<label>
+							<input type="radio" name="orderValidPeriod" id="orderValidPeriod2" value="2" checked>2天
+						</label>
+						<label>
+							<input type="radio" name="orderValidPeriod" id="orderValidPeriod3" value="3" checked>3天
+						</label>
+						<label>
+							<input type="radio" name="orderValidPeriod" id="orderValidPeriod4" value="4" checked>4天
+						</label>
+						<label>
+							<input type="radio" name="orderValidPeriod" id="orderValidPeriod5" value="5" checked>5天
+						</label>
+						<label>
+							<input type="radio" name="orderValidPeriod" id="orderValidPeriod6" value="6" checked>6天
+						</label>
+					</div>
+				</div>
+			</div> 
+			<!-- <div class="form-group">
+				<label for="payType" class="col-sm-2 control-label">支付方式</label>
+				<div class="col-sm-10">
+					<div class="radio input_form">
+						<label>
+							<input type="radio" name="payType" id="optionsRadios1" value="1" checked>银联支付
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="2">电子钱包
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="3">微信支付
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="4">货到付款
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="5">PC端支付宝
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="6">移动端支付宝
+						</label>
+	
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="7">商城快捷通
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="8">建行信用卡分期
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="9">商城微信
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="10">顺逛白条
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="11">联行支付
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="12">内部结算单
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="13">余额支付
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="14">礼品卡支付
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="15">线下付款
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="16">客户预付货款
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="17">建行网银支付
+						</label>
+						<label>
+							<input type="radio" name="payType" id="optionsRadios2" value="18">光大信用卡分期
+						</label>
+					</div>
+				</div>
+			</div>  -->
+			<div class="form-group">
+				<label for="isTmallDayOrder" class="col-sm-2 control-label">是否天猫日日单</label>
+				<div class="col-sm-10">
+					<div class="radio input_form">
+						<label>
+							<input type="radio" name="isProduceDaily" id="isProduceDaily" value="1" checked>是
+						</label>
+						<label>
+							<input type="radio" name="isProduceDaily" id="isProduceDailyNot" value="0">否
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="isGift" class="col-sm-2 control-label">是否赠品</label>
+				<div class="col-sm-10">
+					<div class="radio input_form">
+						<label>
+							<input type="radio" name="isGift" id="isGift" value="1" checked>是
+						</label>
+						<label>
+							<input type="radio" name="isGift" id="isGiftNot" value="0">否
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">所属产业</label>
+				<div class="col-sm-10">
+                    <select id="industrys" name="industrys" class="easyui-combobox" style="width:180px;" >
+                        <option value="" selected="">---所属产业---</option>
+                        <option value="C200076226" >冰箱</option>
+                        <option value="C200076227">冷柜</option>
+                        <option value="C200076228">洗衣机</option>
+                        <option value="C200076229">家用空调</option>
+                        <option value="C200076230">热水器</option>
+                        <option value="C200076231">厨电</option>
+                        <option value="C200076232">彩电</option>
+                        <option value="C200076233">商用空调及其他</option>
+                        <option value="C20170825">海尔集团电子商务有限公司(赠品)</option>
+                    </select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">订单来源</label>
+				<div class="col-sm-10">
+				<select id="source" name="source" class="easyui-combobox" style="width:180px;" >
+                    <option value="" selected=selected>---订单来源---</option>
+                    <!--国美-->
+                    <option value="GMZX">国美海尔官方旗舰店</option>
+                    <option value="GMZXTS">国美统帅官方旗舰店</option>
+                    <!--苏宁-->
+                    <option value="SNYG">苏宁统帅官方旗舰店</option>
+                    <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
+                    <option value="SNQDZX">海尔渠道中心</option>
+                    <!--当当-->
+                    <option value="DDW">海尔当当旗舰店</option>
+                    <!--京东-->
+                    <option value="JDHEGQ">京东海尔官方旗舰店</option>
+                    <option value="JDHEBXGQ">京东海尔集团冰箱官方旗舰店</option>
+                    <!--天猫-->
+                    <option value="TBSC">海尔官方淘宝旗舰店</option>
+                    <option value="TBXCR">天猫小超人旗舰店</option>
+                    <option value="TBCFDD">海尔厨房大电旗舰店</option>
+                    <option value="TBZYKT">淘宝中央空调</option>
+                    <option value="TOPBOILER">海尔热水器专卖店</option>
+                    <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
+                    <option value="TOPFENXIAO">海尔官方旗舰店(分销平台)</option>
+                    <option value="TMMK">mooka模卡官方旗舰店</option>
+                    <option value="TMTV">海尔电视旗舰店</option>
+                    <option value="TMKSD">天猫卡萨帝旗舰店</option>
+                    <option value="FRIDGE">海尔冰冷旗舰店</option>
+                    <option value="AIR">海尔空调旗舰店</option>
+                    <option value="GQGYS">海尔官方旗舰店供应商</option>
+                    <option value="XSST">淘宝WA线上生态授权店</option>
+                    <option value="WASHER">海尔洗衣机旗舰店</option>
+                </select>
+				</div>
+			</div>
+	
+	
+			<div class="form-group">
+				<label for="originOrderNum" class="col-sm-2 control-label">来源订单号</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control input_form" name="sourceOrderSn" id="sourceOrderSn" value="${order.sourceOrderSn}" placeholder="">
+				</div>
+			</div>
+	
+			<!-- <div class="form-group">
+								<label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+								<div class="col-sm-10">
+									<input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-10">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox"> Remember me
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-10">
+									<button type="submit" class="btn btn-default">Sign in</button>
+								</div>
+							</div> -->
+		</form>
+	</div>
+	<div>
+		<ol class="breadcrumb">
+			<li class="active">收货信息</li>
+		</ol>
+		<form class="form-horizontal" id="receiptInfo">
+			<div class="form-group">
+				<label for="receiver" class="col-sm-2 control-label">收货人</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control input_form" name="consignee" id="consignee" value="${order.consignee}" placeholder="收货人">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">地区</label>
+				<div class="col-sm-10">
+					<input id="province" name="province" class="easyui-combobox"  value="${order.province}" style="width:200px;"/>
+					<input id="citys" name="city" class="easyui-combobox" value="${order.city}" style="width:200px;"/>
+					<input id="region" name="region" class="easyui-combobox" value="${order.region}" style="width:200px;"/>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="address" class="col-sm-2 control-label">详细地址</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control input_form" name="address" id="address" value="${order.address}" placeholder="详细地址">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="postalCode" class="col-sm-2 control-label">邮政编码</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control input_form" name="zipcode" id="zipcode" value="${order.zipcode}" placeholder="">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">电话</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control input_form" name="mobile" id="mobile" value="${order.mobile}" placeholder="">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">手机</label>
+				<div class="col-sm-10">
+					<input type="number" class="form-control input_form" name="phone" id="phone" value="${order.phone}" placeholder="">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">配送时间</label>
+				<div class="col-sm-10">
+					<select id="deliverTime" name="deliverTime" class="form-control input_form">
+						<option>工作日、双休、节假日均可配送</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+					</select>
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<div>
+		<ol class="breadcrumb">
+			<li class="active">商品信息</li>
+		</ol>
+		<form class="form-horizontal" id="productInfo">
+			<div class="form-group">
+				<label for="receiver" class="col-sm-2 control-label">选择商品</label>
+				<div class="col-sm-10">
+					<table id="table"></table>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div>
+		<ol class="breadcrumb">
+			<li class="active">发票信息</li>
+		</ol>
+		<form class="form-horizontal" id="invoiceInfo">
+			<div class="form-group">
+				<label for="isInvoice" class="col-sm-2 control-label">是否开具发票</label>
+				<div class="col-sm-10">
+					<div class="radio input_form">
+						<label>
+							<input type="radio" name="isInvoice" id="isInvoice" value="1" checked>是
+						</label>
+						<label>
+							<input type="radio" name="isInvoice" id="isInvoiceNot" value="0">否
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="electricFlag" class="col-sm-2 control-label">是否开具电子发票</label>
+				<div class="col-sm-10">
+					<div class="radio input_form">
+						<label>
+							<input type="radio" name="electricFlag" id="isElectronicInvoice" value="1" checked>是
+						</label>
+						<label>
+							<input type="radio" name="electricFlag" id="isElectronicInvoiceNot" value="0">否
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">发票内容</label>
+				<div class="col-sm-10">
+					<select id="invoiceType" name="invoiceType"  class="form-control input_form">
+						<option value="1">普通发票</option>
+						<option value="2">增值税发票</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="productInvoiceTogether" class="col-sm-2 control-label">货票同行</label>
+				<div class="col-sm-10">
+					<div class="radio input_form">
+						<label>
+							<input type="radio" name="isTogether" id="productInvoiceTogether" value="1" checked>是
+						</label>
+						<label>
+							<input type="radio" name="isTogether" id="productInvoiceTogetherNot" value="2">否
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="invoiceTitle" class="col-sm-2 control-label">发票抬头</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control input_form" name="invoiceTitle" id="invoiceTitle" value="$!{invoices.invoiceTitle}" placeholder="发票抬头">
+				<input type="hidden" id="invpiceId" name ="invpiceId" value="$!{invoices.id}" >
+				</div>
+			</div>
+		
+	
+		</form>
+	</div>
+	<div>
+		<ol class="breadcrumb">
+			<li class="active">其他信息</li>
+		</ol>
+		<form class="form-horizontal" id="otherInfo">
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">关联订单号</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control input_form" name="connectOrderNum" id="connectOrderNum" value="${orderSn}" placeholder="关联订单号">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">备注</label>
+				<div class="col-sm-10">
+						<textarea id="remark" name="remark" class="form-control input_form" rows="3"></textarea>
+				</div>
+			</div>
+	
+		</form>
+	</div>
+	<div style="margin-top: 30px;">
+		<div class="form-group">
+			<div class="col-sm-10" style="text-align: center;">
+				<button id="saveOrder" onclick="save();" class="btn btn-default">保存订单信息</button>
+                <button id="closeOrder" onclick="closeOrders()" class="btn btn-default">关闭</button>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+
+<script type="text/javascript">
+	$("#table").bootstrapTable({ // 对应table标签的id
+	 url: "/orderOperation/copyProductViewData?orderSn="+ '${orderSn}',  //获取表格数据的url
+	//data: [${productsVo}],  //List<Map>   Map
+    cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+    striped: true,  //表格显示条纹，默认为false
+    sortOrder: 'desc', // 排序规则
+    columns: [
+        {
+            field: 'productName', // 返回json数据中的name
+            title: '商品名称', // 表格表头显示文字
+            align: 'center', // 左右居中
+            valign: 'middle', // 上下居中
+            width:200
+        },
+        {
+            field: 'price',
+            title: '单价（节能补贴后）',
+            align: 'center',width:200,
+            valign: 'middle',
+            editable: {
+                type: 'text',
+                title: '单价（节能补贴后）',
+                validate: function (v) {
+                    if (!v) return '单价不能为空';
+
+                }
+            }
+        },
+        {
+            field: 'number',
+            title: '数量',
+            align: 'center',width:200,
+            valign: 'middle',
+            editable: {
+                type: 'text',
+                title: '数量',
+                validate: function (v) {
+                    if (!v) return '数量不能为空';
+
+                }
+            }
+        },
+        {
+            field: 'shippingFee',
+            title: '运费',
+            align: 'center',width:200,
+            valign: 'middle',
+            editable: {
+                type: 'text',
+                title: '运费',
+                validate: function (v) {
+                    if (!v) return '运费不能为空';
+
+                }
+            }
+        },
+        {
+            field: 'limitedPrice',
+            title: '限价',
+            align: 'center',width:200,
+            valign: 'middle',
+            editable: {
+                type: 'text',
+                title: '限价',
+                validate: function (v) {
+                    if (!v) return '限价不能为空';
+
+                }
+            }
+        },
+        {
+            field: 'money',
+            title: '价格',
+            align: 'center',width:200,
+            valign: 'middle',
+            editable: {
+                type: 'text',
+                title: '价格',
+                validate: function (v) {
+                    if (!v) return '价格不能为空';
+
+                }
+            }
+        },
+        {
+            title: "操作",
+            align: 'center',
+            valign: 'middle',
+            width: 160, // 定义列的宽度，单位为像素px
+            formatter: function (value, row, index) {
+                return '<button class="btn btn-primary btn-sm" onclick="del(\'' + row.stdId + '\')">删除</button>';
+            }
+        }
+    ],
+    onLoadSuccess: function(){  //加载成功时执行
+          console.info("加载成功");
+    },
+    onLoadError: function(){  //加载失败时执行
+          console.info("加载数据失败");
+    }
+
+})
+$.extend($.fn.datagrid.methods, {
+    editCell: function(jq,param){
+        return jq.each(function(){
+            var opts = $(this).datagrid('options');
+            var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
+            for(var i=0; i<fields.length; i++){
+                var col = $(this).datagrid('getColumnOption', fields[i]);
+                col.editor1 = col.editor;
+                if (fields[i] != param.field){
+                    col.editor = null;
+                }
+            }
+            $(this).datagrid('beginEdit', param.index);
+            for(var i=0; i<fields.length; i++){
+                var col = $(this).datagrid('getColumnOption', fields[i]);
+                col.editor = col.editor1;
+            }
+        });
+    }
+});
+
+var editIndex = undefined;
+function endEditing(){
+    if (editIndex == undefined){return true}
+    if ($('#dg').datagrid('validateRow', editIndex)){
+        $('#dg').datagrid('endEdit', editIndex);
+        editIndex = undefined;
+        return true;
+    } else {
+        return false;
+    }
+}
+function onClickCell(index, field){
+    if (endEditing()){
+        $('#dg').datagrid('selectRow', index)
+                .datagrid('editCell', {index:index,field:field});
+        editIndex = index;
+    }
+}
+
+
+
+function slideUpSlideClk(t) {
+	var $this = $(t);
+	if ($this.hasClass('open')) {
+		$this.removeClass('open');
+		setTimeout(function () {
+			$this.addClass('close');
+		}, 0);
+		$(".search-panel").slideUp();
+	} else {
+		$this.removeClass('close');
+		setTimeout(function () {
+			$this.addClass('open');
+		}, 0);
+		$(".search-panel").slideDown();
+	}
+	setTimeout(function () {
+		$('#datagrid_orderForecastGoal').datagrid('resize');
+	}, 500);
+}
+if("${order.isProduceDaily}"=="1"){
+	
+	/* $("#isTmallDayOrder").attr("checked","checked"); */
+	$('#isProduceDaily').attr("checked","checked");
+	/* $("#rdo1").removeAttr("checked"); */
+}else {
+	$('#isProduceDailyNot').attr("checked","checked");
+	/* $("#isTmallDayOrderNot").attr("checked","checked"); */
+}
+
+if("${invoices.electricFlag}"=="1"){
+	$("#electricFlag").attr("checked","checked");
+}else {
+	$("#electricFlag").attr("checked","checked");
+}
+if("${invoices.isTogether}"=="1"){
+	$("#productInvoiceTogether").attr("checked","checked");
+}else {
+	$("#productInvoiceTogetherNot").attr("checked","checked");
+}
+/* if("${invoices.isTogether}"!=null&& "${invoices.isTogether}"!="" ){
+$("#invoiceTitle").val("${invoices.isTogether}");
+} */
+
+showPro();
+
+
+$('#province').combobox({
+    onChange : function(newValue, oldValue) {			
+     if (newValue) {
+         showCity(newValue,"")
+         $("#citys").combobox("clear")
+         $("#region").combobox("clear")					
+     }
+    }
+    });
+
+$('#citys').combobox({
+    onChange : function(newValue, oldValue) {			
+     if (newValue) {
+    	 showCounty(String(newValue),"")
+     }
+    }
+});
+
+
+//三级联动省市区
+function showPro(){
+    $.ajax({
+        url : '/manualInputOrder/getRegions',
+         dataType: 'json',  
+         success: function (jsonstr) {  
+        	 var tempCombox=[{"code":'',"name":"please","childs":[{}]}];
+        	 $.each(jsonstr.rows,function(i,val){
+        		 if(val.regionType == 1){
+        			 if(val.parentId==0){
+        			 tempCombox.push({"value":val.id,"text":val.regionName,"childs":[{}]});
+        			 $("#province").combobox("loadData", tempCombox);
+        			 }
+        		 }
+        	 });
+            }
+        
+         
+    });
+}
+
+
+function showCity(newValue,newMaufalg){
+	$.ajax({
+		 url : '/manualInputOrder/getRegions',
+         dataType: 'json',  
+         success: function (jsonstr) {  
+        	 var tempCombox=[{"code":'',"name":"please","childs":[{}]}];
+        	 for(var i=0;i<jsonstr.rows.length;i++){
+        		 if(newMaufalg=="jz"){
+        			 if(jsonstr.rows[i].id == newValue){
+            			 tempCombox.push({"value":jsonstr.rows[i].id,"text":jsonstr.rows[i].regionName,"childs":[{}]});
+            			 $("#citys").combobox("loadData", tempCombox);
+            		 }  
+        		 }else {
+        			 if(jsonstr.rows[i].parentId == newValue){
+            			 tempCombox.push({"value":jsonstr.rows[i].id,"text":jsonstr.rows[i].regionName,"childs":[{}]});
+            			 $("#citys").combobox("loadData", tempCombox);
+            		 } 
+        		 }
+        	 };
+            }
+        
+         
+    });
+}
+
+
+
+
+function showCounty(newValue,newMaufalg){
+	$.ajax({
+        url : '/manualInputOrder/getRegions',
+         dataType: 'json',  
+         success: function (jsonstr) {  
+        	 var tempCombox=[{"code":'',"name":"please","childs":[{}]}];
+        	 for(var i=0;i<jsonstr.rows.length;i++){
+        		 if(newMaufalg=="jz"){
+        			 if(jsonstr.rows[i].id == newValue){
+            			 tempCombox.push({"value":jsonstr.rows[i].id,"text":jsonstr.rows[i].regionName,"childs":[{}]});
+            			 $("#region").combobox("loadData", tempCombox);
+            		 }  
+        		 }else {
+        		 if(jsonstr.rows[i].parentId == newValue){
+        			 tempCombox.push({"value":jsonstr.rows[i].code,"text":jsonstr.rows[i].regionName,"childs":[{}]});
+        			 $("#region").combobox("loadData", tempCombox);
+        		 }
+        		 }
+        	 };
+            }
+        
+         
+    });         
+   		
+            
+}
+
+if("${order.city}"!=null && "${order.city}"!=""){
+	showCity("${order.city}","jz");
+}
+if("${order.region}"!=null && "${order.region}"!=""){
+showCounty("${order.region}","jz");
+}
+</script>
+<script src="../static/js/order/addOrder.js"></script>
+</body>
+</html>

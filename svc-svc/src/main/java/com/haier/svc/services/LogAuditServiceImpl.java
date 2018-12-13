@@ -4,7 +4,9 @@ package com.haier.svc.services;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -478,7 +480,15 @@ public class LogAuditServiceImpl implements LogAuditService {
 
     }
 
+    @Override
+    public Map<String, Object> queryLogAudit(Map<String, Object> params) {
+        return purchaseLogAuditService.queryLogAudit(params);
+    }
 
-	
+    @Override
+    public List<LogAuditInfo> queryLogAuditExcle(Map<String, Object> params) {
+        return purchaseLogAuditService.queryLogAuditExcle(params);
+    }
+
 
 }

@@ -3,15 +3,33 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.OrderProductsWriteDao">
 
     <update id="updateForsyncInvoice" parameterType="com.haier.shop.model.OrderProducts">
-        update `OrderProducts`
+        update `orderproducts`
         set
         `isMakeReceipt`=#{isMakeReceipt},`receiptNum`=#{receiptNum},`receiptAddTime`=#{receiptAddTime},`systemRemark`=#{systemRemark}
         where `id` = #{id}
     </update>
 
     <update id="updateMakeReceiptType" parameterType="com.haier.shop.model.OrderProducts">
-        UPDATE `OrderProducts`
+        UPDATE `orderproducts`
         SET `makeReceiptType` = #{makeReceiptType}
         WHERE `id` = #{id}
     </update>
+
+    <update id="updateCorderSnById" parameterType="com.haier.shop.model.OrderProducts">
+        UPDATE `orderproducts`
+        SET `cOrderSn` = #{cOrderSn}
+        WHERE `id` = #{oPid}
+    </update>
+
+    <update id="updateCorderSnById2" >
+        UPDATE `orderproducts`
+        SET `cOrderSn` = #{cOrderSn}
+        WHERE `id` = #{oPid}
+    </update>
+    <update id="updateOrderProductsPriceAndProductAmount" parameterType="map">
+        UPDATE `orderproducts`
+        SET `price` = #{price} , `productAmount` = #{money}
+        WHERE `id` = #{id}
+    </update>
+
 </mapper>

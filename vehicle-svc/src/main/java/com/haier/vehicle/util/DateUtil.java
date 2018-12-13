@@ -37,6 +37,27 @@ public class DateUtil {
         return new SimpleDateFormat("yyyy-MM-dd").format(getArrivalDate(dateNum));
     }
     
+	public static String getFormatDate(java.util.Date myDate) {
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(
+				"yyyyMMdd");
+		return formatter.format(myDate);
+	}
+	
+	public static String getFormatDate2(java.util.Date myDate) {
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(
+				"yyyy-MM-dd");
+		return formatter.format(myDate);
+	}
+    
+    public static String getFormatDateTime(java.util.Date myDate) {
+        java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return formatter.format(myDate);
+    }
+    
+    public static String getFormatDateTime2(java.util.Date myDate) {
+        java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
+        return formatter.format(myDate);
+    }
 //    public static void main(String[] args) {
 //    	getT2Date();
 //	}

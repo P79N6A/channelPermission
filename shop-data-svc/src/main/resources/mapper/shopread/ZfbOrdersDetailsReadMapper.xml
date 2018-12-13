@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.ZfbOrdersDetailsReadDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.ZfbOrdersDetails" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="accounts_no" property="accountsNo" jdbcType="VARCHAR" />
+    <result column="business_no" property="businessNo" jdbcType="VARCHAR" />
+    <result column="orderSn" property="ordersn" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="member_login_id" property="memberLoginId" jdbcType="VARCHAR" />
+    <result column="income_money" property="incomeMoney" jdbcType="DECIMAL" />
+    <result column="expenditure_money" property="expenditureMoney" jdbcType="DECIMAL" />
+    <result column="account_balance" property="accountBalance" jdbcType="DECIMAL" />
+    <result column="payment_code" property="paymentCode" jdbcType="VARCHAR" />
+    <result column="payment_name" property="paymentName" jdbcType="VARCHAR" />
+    <result column="business_type_code" property="businessTypeCode" jdbcType="VARCHAR" />
+    <result column="business_type_name" property="businessTypeName" jdbcType="VARCHAR" />
+    <result column="remake" property="remake" jdbcType="LONGVARCHAR" />
+    <result column="taobao_business_type" property="taobaoBusinessType" jdbcType="VARCHAR" />
+    <result column="matching_status" property="matchingStatus" jdbcType="TINYINT" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, accounts_no, business_no, orderSn, product_name, create_time, member_login_id, 
+    income_money, expenditure_money, account_balance, payment_code, payment_name, business_type_code, 
+    business_type_name, remake, taobao_business_type,shop_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from zfb_orders_details
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="getFindQueryOrderList" resultMap="BaseResultMap" parameterType="com.haier.shop.model.QueryZFBOrderParameter" >
+    select 
+    <include refid="Base_Column_List" />
+    from zfb_orders_details
+    where 1=1  
+    	 <if test="orderSn  != null and orderSn !=''">
+                and orderSn=#{orderSn}
+         </if>
+
+      <if test="memberLoginId  != null and memberLoginId !=''">
+          and member_login_id  like  concat(concat('%',#{memberLoginId}),'%')
+      </if>
+      <if test="businessTypeCode  != null and businessTypeCode !=''">
+          and business_type_code=#{businessTypeCode}
+      </if>
+      <if test="remake  != null and remake !=''">
+          and remake like  concat(concat('%',#{remake}),'%')
+      </if>
+
+      <if test="incomeMoneymin != null and incomeMoneymin != ''">
+          and income_money <![CDATA[ >= ]]> #{incomeMoneymin}
+      </if>
+      <if test="incomeMoneymax != null and incomeMoneymax != ''">
+          and  income_money <![CDATA[  <= ]]> #{incomeMoneymax}
+      </if>
+
+      <if test="expenditureMoneymin != null and expenditureMoneymin != ''">
+          and expenditure_money >= #{expenditureMoneymin}
+      </if>
+      <if test="expenditureMoneymax != null and expenditureMoneymax != ''">
+          and  expenditure_money <![CDATA[  <= ]]>  #{expenditureMoneymax}
+      </if>
+      <if test="shopName != null and shopName != ''">
+          and shop_name=#{shopName}
+      </if>
+         <if test="addTimeBegine != null and addTimeBegine != ''">
+                and create_time &gt;= #{addTimeBegine}
+            </if>
+            <if test="addTimeEnd != null and addTimeEnd != ''">
+                and  create_time &lt;= #{addTimeEnd}
+            </if>
+         <if test="page  != null and rows  != null">
+            Limit #{page} , #{rows}
+         </if>
+  </select>
+  <select id="getFindQueryOrderListCount" resultType="Integer" parameterType="com.haier.shop.model.QueryZFBOrderParameter" >
+    select 
+    count(1)
+    from zfb_orders_details
+    where 1=1	
+    	<if test="orderSn  != null and orderSn !=''">
+                and orderSn=#{orderSn}
+         </if>
+
+
+      <if test="memberLoginId  != null and memberLoginId !=''">
+          and member_login_id  like  concat(concat('%',#{memberLoginId}),'%')
+      </if>
+      <if test="businessTypeCode  != null and businessTypeCode !=''">
+          and business_type_code=#{businessTypeCode}
+      </if>
+      <if test="remake  != null and remake !=''">
+          and remake like  concat(concat('%',#{remake}),'%')
+      </if>
+
+      <if test="incomeMoneymin != null and incomeMoneymin != ''">
+          and income_money <![CDATA[ >= ]]> #{incomeMoneymin}
+      </if>
+      <if test="incomeMoneymax != null and incomeMoneymax != ''">
+          and  income_money <![CDATA[  <= ]]> #{incomeMoneymax}
+      </if>
+
+      <if test="expenditureMoneymin != null and expenditureMoneymin != ''">
+          and expenditure_money >= #{expenditureMoneymin}
+      </if>
+      <if test="expenditureMoneymax != null and expenditureMoneymax != ''">
+          and  expenditure_money <![CDATA[  <= ]]>  #{expenditureMoneymax}
+      </if>
+	  <if test="shopName != null and shopName != ''">
+          and shop_name=#{shopName}
+      </if>
+
+         <if test="addTimeBegine != null and addTimeBegine != ''">
+                and create_time &gt;= #{addTimeBegine}
+            </if>
+            <if test="addTimeEnd != null and addTimeEnd != ''">
+                and  create_time &lt;=  #{addTimeEnd}
+            </if>
+         
+  </select>
+  
+  
+  
+  
+  
+  
+  <select id="getReportFormList" resultMap="BaseResultMap" parameterType="com.haier.shop.model.QueryZFBOrderParameter" >
+    select 
+    member_login_id,sum(income_money) as income_money,sum(expenditure_money) as expenditure_money,business_type_name,remake,shop_name
+    from zfb_orders_details
+    where 1=1  
+      <if test="addTimeBegine != null and addTimeBegine != ''">
+          and create_time &gt;= #{addTimeBegine}
+      </if>
+      <if test="addTimeEnd != null and addTimeEnd != ''">
+          and  create_time &lt;= #{addTimeEnd}
+      </if>
+      <if test="memberLoginId  != null and memberLoginId !=''">
+          and member_login_id in (#{memberLoginId})
+      </if>
+      <if test="memberLoginId  == ''">
+          and member_login_id in ('淘宝（中国）软件有限公司(r-qudao@taobao.com)','浙江天猫技术有限公司(tmall-weibo@service.taobao.com)',
+				  '阿里巴巴(中国)软件有限公司(cuntao-3c@alibaba-inc.com)','中国扶贫基金会(weibo@fupin.org.cn)',
+				  '深圳壹基金公益基金会(donation00@one-foundation.com)','重庆市蚂蚁小微小额贷款有限公司(f53_hbfq@service.aliyun.com)',
+				  '浙江天猫技术有限公司(jifenb2c@taobao.com)','浙江天猫技术有限公司(pinpaiticheng@taobao.com)',
+				  '浙江天猫技术有限公司(p-o2oisv@service.taobao.com)','浙江天猫技术有限公司(ju.tuangou@service.taobao.com)',
+				  '浙江天猫技术有限公司(p-tmall-kefujifen@service.taobao.com)','杭州阿里妈妈软件服务有限公司(n-htcs@service.taobao.com)',
+				  '杭州阿里妈妈软件服务有限公司(n-p-choujian@service.taobao.com)','杭州阿里妈妈软件服务有限公司(n-p-ztc@service.taobao.com)',
+				  '杭州阿里妈妈软件服务有限公司(n-r-tbke@service.taobao.com)','淘宝（中国）软件有限公司(p-tanxdsp@service.taobao.com)',
+				  '浙江天猫技术有限公司(pinpaiticheng@taobao.com)','浙商财产保险股份有限公司(xingzhengfeiyong@zsins.com)',
+				  '支付宝(中国)网络技术有限公司(systemrevenue@alipay.com)','众安在线财产保险股份有限公司(za_zfbf3_fjr@zhongan.com)',
+				  '众安在线财产保险股份有限公司(za_zfbs3_fjr@zhongan.com)')
+      </if>
+      <if test="shopName != null and shopName != ''">
+          and shop_name=#{shopName}
+      </if>
+      <if test="businessTypeCode != null and businessTypeCode != ''">
+          and business_type_code=#{businessTypeCode}
+      </if>
+      <if test="remake  != null and remake !=''">
+          and remake like  concat(concat('%',#{remake}),'%')
+      </if>
+      group by shop_name,member_login_id,business_type_name
+      <if test="page  != null and rows  != null">
+         Limit #{page} , #{rows}
+      </if>
+  </select>
+  
+  <select id="getReportFormListCount" resultType="Integer" parameterType="com.haier.shop.model.QueryZFBOrderParameter" >
+    select count(1) from (
+		select count(1)
+		from zfb_orders_details where 1=1
+	  <if test="addTimeBegine != null and addTimeBegine != ''">
+          and create_time &gt;= #{addTimeBegine}
+      </if>
+      <if test="addTimeEnd != null and addTimeEnd != ''">
+          and  create_time &lt;= #{addTimeEnd}
+      </if>
+      <if test="memberLoginId  != null and memberLoginId !=''">
+          and member_login_id in (#{memberLoginId})
+      </if>
+      <if test="memberLoginId  == ''">
+          and member_login_id in ('淘宝（中国）软件有限公司(r-qudao@taobao.com)','浙江天猫技术有限公司(tmall-weibo@service.taobao.com)',
+				  '阿里巴巴(中国)软件有限公司(cuntao-3c@alibaba-inc.com)','中国扶贫基金会(weibo@fupin.org.cn)',
+				  '深圳壹基金公益基金会(donation00@one-foundation.com)','重庆市蚂蚁小微小额贷款有限公司(f53_hbfq@service.aliyun.com)',
+				  '浙江天猫技术有限公司(jifenb2c@taobao.com)','浙江天猫技术有限公司(pinpaiticheng@taobao.com)',
+				  '浙江天猫技术有限公司(p-o2oisv@service.taobao.com)','浙江天猫技术有限公司(ju.tuangou@service.taobao.com)',
+				  '浙江天猫技术有限公司(p-tmall-kefujifen@service.taobao.com)','杭州阿里妈妈软件服务有限公司(n-htcs@service.taobao.com)',
+				  '杭州阿里妈妈软件服务有限公司(n-p-choujian@service.taobao.com)','杭州阿里妈妈软件服务有限公司(n-p-ztc@service.taobao.com)',
+				  '杭州阿里妈妈软件服务有限公司(n-r-tbke@service.taobao.com)','淘宝（中国）软件有限公司(p-tanxdsp@service.taobao.com)',
+				  '浙江天猫技术有限公司(pinpaiticheng@taobao.com)','浙商财产保险股份有限公司(xingzhengfeiyong@zsins.com)',
+				  '支付宝(中国)网络技术有限公司(systemrevenue@alipay.com)','众安在线财产保险股份有限公司(za_zfbf3_fjr@zhongan.com)',
+				  '众安在线财产保险股份有限公司(za_zfbs3_fjr@zhongan.com)')
+      </if>
+      <if test="shopName != null and shopName != ''">
+          and shop_name=#{shopName}
+      </if>
+      <if test="businessTypeCode != null and businessTypeCode != ''">
+          and business_type_code=#{businessTypeCode}
+      </if>
+      <if test="remake  != null and remake !=''">
+          and remake like  concat(concat('%',#{remake}),'%')
+      </if>
+      group by shop_name,member_login_id,business_type_name) as a 
+  </select>
+  
+</mapper>

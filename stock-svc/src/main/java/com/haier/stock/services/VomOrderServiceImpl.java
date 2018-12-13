@@ -22,10 +22,6 @@ public class VomOrderServiceImpl implements VomOrderService {
     private VOMOrderModel          vomOrderModel;
 
 
-    public void setVomOrderModel(VOMOrderModel vomOrderModel) {
-        this.vomOrderModel = vomOrderModel;
-    }
-
     public ServiceResult<Boolean> synVomStatus(Map<String, Object> paramMap) {
         ServiceResult<Boolean> serviceResult = new ServiceResult<Boolean>();
         serviceResult = vomOrderModel.synVomStatus(paramMap);

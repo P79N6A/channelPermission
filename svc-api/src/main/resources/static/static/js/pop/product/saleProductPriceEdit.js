@@ -166,7 +166,7 @@ function SaveMasterUnit(messig) {
     var channelid2 = $("#channelId").combobox('getText');
     var productcode1 = $("#productCode").val();
     var onSale = $("#onSale").combobox('getValue');
-
+    var saleprice=$("#salePrice").val();
     var rows = $('#gridView').datagrid('getChanges');
     var provinces = "", citys = "", ids = "", saleIds = "", countys = "", regionIds = "", supplyPrices = "",
         salePrices = "", limitPrices = "",
@@ -182,14 +182,13 @@ function SaveMasterUnit(messig) {
         countys += rows[i].county + ",";
         regionIds += rows[i].regionid + ",";
         supplyPrices += rows[i].supplyprice + ",";
-        salePrices += rows[i].saleprice + ",";
+        salePrices += rows[i].salePrices + ",";
         limitPrices += rows[i].limitprice + ",";
         priceStartTimes += rows[i].pricestarttime + ",";
         priceEndTimes += rows[i].priceendtime + ",";
         rowstatus += rows[i].rowstatus + ",";
     }
     rows.productDetail = $('#gridView').datagrid('getChanges');
-
     $.ajax({
         type: 'POST',
         url: url,
@@ -206,6 +205,7 @@ function SaveMasterUnit(messig) {
             'productTypeName': productTypeId2,
             'departmentName': $("#departmentName").val(),
             'onSale': onSale,
+            'salePrice':saleprice,
 
             'citys': citys,
             'provinces': provinces,
@@ -236,6 +236,9 @@ function SaveMasterUnit(messig) {
                 autoAlt("保存成功!");
                 BingSearchUnit(data);
             } else {
+            	if(data==-1){
+            		autoAlt("保存失败，原因：" + "该渠道已存在SPU为此的商品！");
+            	}else
                 autoAlt("保存失败，原因：" + data);
             }
         }

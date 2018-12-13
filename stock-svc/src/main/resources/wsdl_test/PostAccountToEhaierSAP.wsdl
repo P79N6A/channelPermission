@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="PostAccountToEhaierSAP"
+	targetNamespace="http://www.example.org/PostAccountToEhaierSAP/"
+	xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/PostAccountToEhaierSAP/"
+	xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+	<WL5G3N0:types>
+		<xsd:schema targetNamespace="http://www.example.org/PostAccountToEhaierSAP/"
+			xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/PostAccountToEhaierSAP/"
+			xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:element name="PostAccountToEhaierSAP">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="unbounded" minOccurs="0"
+							name="T_ZMMS0102" type="tns:ZMMS0102" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="PostAccountToEhaierSAPResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="unbounded" minOccurs="0"
+							name="T_ZMMS0108" type="tns:ZMMS0108" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="ZMMS0102">
+				<xsd:sequence>
+					<xsd:element name="ZSPNB" type="xsd:string" />
+					<xsd:element name="ZSPIT" type="xsd:string" />
+					<xsd:element name="ZLSGI" type="xsd:string" />
+					<xsd:element name="ZSPDT" type="xsd:string" />
+					<xsd:element name="BUKRS" type="xsd:string" />
+					<xsd:element name="MATNR" type="xsd:string" />
+					<xsd:element name="MENGE" type="xsd:decimal" />
+					<xsd:element name="LGORT" type="xsd:string" />
+					<xsd:element name="ZFGLG" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ZMMS0108">
+				<xsd:sequence>
+					<xsd:element name="ZSPNB" type="xsd:string" />
+					<xsd:element name="ZSPIT" type="xsd:string" />
+					<xsd:element name="ZLSGI" type="xsd:string" />
+					<xsd:element name="ZTYPE" type="xsd:string" />
+					<xsd:element name="ZMSG" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</WL5G3N0:types>
+	<WL5G3N0:message name="PostAccountToEhaierSAPRequest">
+		<WL5G3N0:part element="WL5G3N1:PostAccountToEhaierSAP"
+			name="parameters" />
+	</WL5G3N0:message>
+	<WL5G3N0:message name="PostAccountToEhaierSAPResponse">
+		<WL5G3N0:part element="WL5G3N1:PostAccountToEhaierSAPResponse"
+			name="parameters" />
+	</WL5G3N0:message>
+	<WL5G3N0:portType name="PostAccountToEhaierSAP">
+		<WL5G3N0:operation name="PostAccountToEhaierSAP">
+			<WL5G3N0:input message="WL5G3N1:PostAccountToEhaierSAPRequest" />
+			<WL5G3N0:output message="WL5G3N1:PostAccountToEhaierSAPResponse" />
+		</WL5G3N0:operation>
+	</WL5G3N0:portType>
+	<WL5G3N0:binding name="PostAccountToEhaierSAPSOAP"
+		type="WL5G3N1:PostAccountToEhaierSAP">
+		<WL5G3N2:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<WL5G3N0:operation name="PostAccountToEhaierSAP">
+			<WL5G3N2:operation
+				soapAction="http://www.example.org/PostAccountToEhaierSAP/PostAccountToEhaierSAP" />
+			<WL5G3N0:input>
+				<WL5G3N2:body use="literal" />
+			</WL5G3N0:input>
+			<WL5G3N0:output>
+				<WL5G3N2:body use="literal" />
+			</WL5G3N0:output>
+		</WL5G3N0:operation>
+	</WL5G3N0:binding>
+	<WL5G3N0:service name="PostAccountToEhaierSAP">
+		<WL5G3N0:port binding="WL5G3N1:PostAccountToEhaierSAPSOAP"
+			name="PostAccountToEhaierSAPSOAP">
+			<!-- <WL5G3N2:address
+				location="${pom.eai.url}/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EAI_INT_0529" />-->
+			<WL5G3N2:address
+				location="http://10.135.1.110:7001/EAI/service/GVS/PostAccountToEhaierSAP/PostAccountToEhaierSAP" />
+		</WL5G3N0:port>
+	</WL5G3N0:service>
+</WL5G3N0:definitions>

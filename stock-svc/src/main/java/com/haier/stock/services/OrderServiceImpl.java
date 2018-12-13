@@ -1,5 +1,6 @@
 package com.haier.stock.services;
 
+import com.haier.shop.model.OrderProducts;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -349,4 +350,29 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+
+    @Override
+    public ServiceResult<List<OrderProductsNew>> getByPdOrderStatusPaging(Integer pdOrderStatus,
+        Integer minId, Integer size) {
+        return orderModel.getByPdOrderStatusPaging(pdOrderStatus, minId, size);
+    }
+
+    @Override
+    public ServiceResult<OrdersNew> getOrder(Integer orderId) {
+        ServiceResult<OrdersNew> result = new ServiceResult<OrdersNew>();
+        try {
+            result.setResult(orderModel.getOrder(orderId));
+        } catch (Exception e) {
+            log.error("获取订单信息(orderId:" + orderId + ")时，发生未知异常：", e);
+            result.setMessage("服务器发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Boolean> updateRRSById(OrderProductsNew orderProducts) {
+        return orderModel.updateRRSById(orderProducts);
+    }
+
 }

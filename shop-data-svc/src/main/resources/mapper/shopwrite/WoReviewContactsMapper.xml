@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.workorder.WoReviewContactsDao" >
+  <resultMap id="ReviewContacts" type="com.haier.shop.dto.ReviewContacts" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+    <result column="question1Level1" property="question1level1" jdbcType="VARCHAR" />
+    <result column="question1Level2" property="question1level2" jdbcType="VARCHAR" />
+    <result column="orderCome" property="ordercome" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="managerUserId1" property="manageruserid1" jdbcType="VARCHAR" />
+    <result column="isSend1" property="issend1" jdbcType="VARCHAR" />
+    <result column="managerUserId2" property="manageruserid2" jdbcType="VARCHAR" />
+    <result column="isSend2" property="issend2" jdbcType="VARCHAR" />
+    <result column="delFlag" property="delflag" jdbcType="VARCHAR" />
+    <result column="addTime" property="addtime" jdbcType="VARCHAR" />
+    <result column="addUser" property="adduser" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updatetime" jdbcType="VARCHAR" />
+    <result column="updateUser" property="updateuser" jdbcType="VARCHAR" />
+    <result column="remark1" property="remark1" jdbcType="VARCHAR" />
+    <result column="remark2" property="remark2" jdbcType="VARCHAR" />
+    <result column="remark3" property="remark3" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ReviewContactsDto" type="com.haier.shop.dto.ReviewContactsDto"
+		extends="ReviewContacts">
+		<result column="user_name" property="username" jdbcType="VARCHAR"  />
+		<result column="mobile" property="phone" jdbcType="VARCHAR"  />
+		<result column="email" property="email" jdbcType="VARCHAR"  />
+		<result column="userName1" property="username1" jdbcType="VARCHAR"  />
+		<result column="phone1" property="phone1" jdbcType="VARCHAR"  />
+		<result column="email1" property="email1" jdbcType="VARCHAR"  />
+		<result column="userName2" property="username2" jdbcType="VARCHAR"  />
+		<result column="phone2" property="phone2" jdbcType="VARCHAR"  />
+		<result column="email2" property="email2" jdbcType="VARCHAR"  />
+	</resultMap>
+
+  <sql id="Base_Column_List" >
+    id, userId, question1Level1, question1Level2, orderCome, company, managerUserId1,
+    isSend1, managerUserId2, isSend2, delFlag, addTime, addUser, updateTime, updateUser,
+    remark1, remark2, remark3
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ReviewContacts" >
+    select
+    <include refid="Base_Column_List" />
+    from wo_reviewcontacts
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="Long" >
+    delete from wo_reviewcontacts
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert">
+    insert into wo_reviewcontacts (id, userId, question1Level1,
+      question1Level2, orderCome, company,
+      managerUserId1, isSend1, managerUserId2,
+      isSend2, delFlag, addTime,
+      addUser, updateTime, updateUser,
+      remark1, remark2, remark3
+      )
+    values (#{id}, #{userid,jdbcType=VARCHAR}, #{question1level1,jdbcType=VARCHAR},
+      #{question1level2,jdbcType=VARCHAR}, #{ordercome,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR},
+      #{manageruserid1,jdbcType=VARCHAR}, #{issend1,jdbcType=VARCHAR}, #{manageruserid2,jdbcType=VARCHAR},
+      #{issend2,jdbcType=VARCHAR}, 0, now(),
+      #{adduser,jdbcType=VARCHAR}, now(), #{updateuser,jdbcType=VARCHAR},
+      #{remark1,jdbcType=VARCHAR}, #{remark2,jdbcType=VARCHAR}, #{remark3,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <update id="deleteReviewContacts">
+    update wo_reviewcontacts
+    set delFlag=1
+    where id in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item.id}
+    </foreach>
+  </update>
+
+  <update id="updatemanagerUserId">
+    update wo_reviewcontacts
+    <set>
+      <if test="manageruserid1 != null" >
+        managerUserId1 = #{manageruserid1,jdbcType=VARCHAR},
+      </if>
+      <if test="manageruserid2 != null" >
+        managerUserId2 = #{manageruserid2,jdbcType=VARCHAR},
+      </if>
+      <if test="issend1 != null" >
+        isSend1 = #{issend1,jdbcType=VARCHAR},
+      </if>
+      <if test="issend2 != null" >
+        isSend2 = #{issend2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where  userId= #{userid,jdbcType=VARCHAR}
+    and delFlag=0
+  </update>
+
+  <update id="updatedel">
+        update wo_reviewcontacts
+        set delFlag=1
+        where id= #{id,jdbcType=VARCHAR}
+        and delFlag=0
+    </update>
+
+  <update id="updateById">
+    update wo_reviewcontacts
+    <set>
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <!-- where  userId= #{userid1,jdbcType=VARCHAR} -->
+    where  userId= (select userId from (select userId from wo_reviewcontacts where Id= #{id,jdbcType=VARCHAR}) as a)
+    and delFlag=0
+  </update>
+
+  <sql id="Base_Column_List_r" >
+    r.id, r.userId, r.question1Level1, r.question1Level2, r.orderCome, r.company, r.managerUserId1, 
+    r.isSend1, r.managerUserId2, r.isSend2, r.delFlag, r.addTime, r.addUser, r.updateTime, r.updateUser, 
+    r.remark1, r.remark2, r.remark3
+  </sql>
+  <insert id="insertSelective">
+    insert into wo_reviewcontacts
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="question1level1 != null" >
+        question1Level1,
+      </if>
+      <if test="question1level2 != null" >
+        question1Level2,
+      </if>
+      <if test="ordercome != null" >
+        orderCome,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="manageruserid1 != null" >
+        managerUserId1,
+      </if>
+      <if test="issend1 != null" >
+        isSend1,
+      </if>
+      <if test="manageruserid2 != null" >
+        managerUserId2,
+      </if>
+      <if test="issend2 != null" >
+        isSend2,
+      </if>
+      <if test="delflag != null" >
+        delFlag,
+      </if>
+      <if test="addtime != null" >
+        addTime,
+      </if>
+      <if test="adduser != null" >
+        addUser,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+      <if test="updateuser != null" >
+        updateUser,
+      </if>
+      <if test="remark1 != null" >
+        remark1,
+      </if>
+      <if test="remark2 != null" >
+        remark2,
+      </if>
+      <if test="remark3 != null" >
+        remark3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="question1level1 != null" >
+        #{question1level1,jdbcType=VARCHAR},
+      </if>
+      <if test="question1level2 != null" >
+        #{question1level2,jdbcType=VARCHAR},
+      </if>
+      <if test="ordercome != null" >
+        #{ordercome,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="manageruserid1 != null" >
+        #{manageruserid1,jdbcType=VARCHAR},
+      </if>
+      <if test="issend1 != null" >
+        #{issend1,jdbcType=VARCHAR},
+      </if>
+      <if test="manageruserid2 != null" >
+        #{manageruserid2,jdbcType=VARCHAR},
+      </if>
+      <if test="issend2 != null" >
+        #{issend2,jdbcType=VARCHAR},
+      </if>
+      <if test="delflag != null" >
+        #{delflag,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        #{addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="adduser != null" >
+        #{adduser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateuser != null" >
+        #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null" >
+        #{remark3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update wo_reviewcontacts
+    <set >
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="question1level1 != null" >
+        question1Level1 = #{question1level1,jdbcType=VARCHAR},
+      </if>
+      <if test="question1level2 != null" >
+        question1Level2 = #{question1level2,jdbcType=VARCHAR},
+      </if>
+      <if test="ordercome != null" >
+        orderCome = #{ordercome,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="manageruserid1 != null" >
+        managerUserId1 = #{manageruserid1,jdbcType=VARCHAR},
+      </if>
+      <if test="issend1 != null" >
+        isSend1 = #{issend1,jdbcType=VARCHAR},
+      </if>
+      <if test="manageruserid2 != null" >
+        managerUserId2 = #{manageruserid2,jdbcType=VARCHAR},
+      </if>
+      <if test="issend2 != null" >
+        isSend2 = #{issend2,jdbcType=VARCHAR},
+      </if>
+      <if test="delflag != null" >
+        delFlag = #{delflag,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        addTime = #{addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="adduser != null" >
+        addUser = #{adduser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateuser != null" >
+        updateUser = #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        remark1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        remark2 = #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null" >
+        remark3 = #{remark3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" >
+    update wo_reviewcontacts
+    set userId = #{userid,jdbcType=VARCHAR},
+      question1Level1 = #{question1level1,jdbcType=VARCHAR},
+      question1Level2 = #{question1level2,jdbcType=VARCHAR},
+      orderCome = #{ordercome,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      managerUserId1 = #{manageruserid1,jdbcType=VARCHAR},
+      isSend1 = #{issend1,jdbcType=VARCHAR},
+      managerUserId2 = #{manageruserid2,jdbcType=VARCHAR},
+      isSend2 = #{issend2,jdbcType=VARCHAR},
+      delFlag = #{delflag,jdbcType=VARCHAR},
+      addTime = #{addtime,jdbcType=VARCHAR},
+      addUser = #{adduser,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=VARCHAR},
+      updateUser = #{updateuser,jdbcType=VARCHAR},
+      remark1 = #{remark1,jdbcType=VARCHAR},
+      remark2 = #{remark2,jdbcType=VARCHAR},
+      remark3 = #{remark3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <sql id="search_where">
+			<if test="record.userid != null">
+			 	and userId = #{record.userid} 
+			</if>
+ 			<if test="record.question1level1 != null">
+			 	and question1Level1 = #{record.question1level1} 
+			</if>
+			<if test="record.question1level2 != null">
+			 	and question1Level2 = #{record.question1level2} 
+			</if>
+			<if test="record.ordercome != null">
+			 	and orderCome like concat('%',#{record.ordercome},'%') 
+			</if>
+			<if test="record.company != null">
+			 	and company like concat('%',#{record.company},'%')  
+			</if>
+			<if test="record.manageruserid1 != null">
+			 	and managerUserId1 = #{record.manageruserid1} 
+			</if>
+			<if test="record.manageruserid2 != null">
+			 	and managerUserId2 = #{record.manageruserid2} 
+			</if> 
+			<if test="record.username != null">
+			 	and user.user_name like concat('%',#{record.username},'%')
+			</if> 
+			<if test="record.username1 != null">
+			 	and u.user_name like concat('%',#{record.username1},'%')
+			</if> 
+			<if test="record.username2 != null">
+			 	and u1.user_name like concat('%',#{record.username2},'%')
+			</if>
+	</sql>
+	<sql id="search_where1">
+			<if test="record.userid != null">
+			 	and userId = #{record.userid} 
+			</if>
+ 			<if test="record.question1level1 != null">
+			 	and question1Level1 = #{record.question1level1}
+			</if>
+			<if test="record.question1level2 != null">
+			 	and question1Level2 = #{record.question1level2} 
+			</if>
+			<if test="record.ordercome != null">
+			 	and orderCome = #{record.ordercome} 
+			</if>
+			<if test="record.company != null">
+			 	and company =#{record.company}
+			</if>
+			<if test="record.manageruserid1 != null">
+			 	and managerUserId1 = #{record.manageruserid1} 
+			</if>
+			<if test="record.manageruserid2 != null">
+			 	and managerUserId2 = #{record.manageruserid2} 
+			</if> 
+			<if test="record.username != null">
+			 	and user.user_name =#{record.username}
+			</if> 
+			<if test="record.username1 != null">
+			 	and u.user_name =#{record.username1}
+			</if> 
+			<if test="record.username2 != null">
+			 	and u1.user_name =#{record.username2}
+			</if>
+	</sql>
+	<sql id="pagination_Tail">
+		<if test="pager != null">
+	  		<![CDATA[ limit #{pager.start},#{pager.pageSize}]]>
+	  	</if> 
+	</sql>
+	<!-- 模糊查找 -->
+	<select id="findPageList" resultMap="ReviewContactsDto">
+		select 
+		* ,
+		u.user_name as userName1,
+		u.mobile as phone1,
+		u.email as email1,
+		u1.user_name as userName2,
+		u1.mobile as phone2,
+		u1.email as email2
+			from `wo_reviewcontacts` as r
+			left join `wo_user` as user
+			on userId=user.user_id
+			and user.status = 0
+			left join `wo_user` as u
+			on r.managerUserId1=u.user_id
+			and u.status = 0
+			left join `wo_user` as u1
+			on r.managerUserId2=u1.user_id
+			and u1.status = 0
+		  where 1 = 1
+		  and r.delFlag = 0
+		<include refid="search_where" />
+		order by userId,r.updateTime desc
+		<include refid="pagination_Tail" />
+	</select>
+	<select id="findPageCount" resultType="int">
+		select count(1) 
+			from `wo_reviewcontacts` as r
+			left join `wo_user` as user
+			on userId=user.user_id
+			and user.status = 0
+			left join `wo_user` as u
+			on r.managerUserId1=u.user_id
+			and u.status = 0
+			left join `wo_user` as u1
+			on r.managerUserId2=u1.user_id
+			and u1.status = 0
+		  where 1 = 1
+		  and r.delFlag = 0
+		<include refid="search_where" />
+	</select>
+	
+	<!-- 精确查找 -->
+	<select id="findList" resultMap="ReviewContactsDto">
+		select 
+		r.* ,
+		u.user_name as userName1,
+		u.mobile as phone1,
+		u.email as email1,
+		u1.user_name as userName2,
+		u1.mobile as phone2,
+		u1.email as email2
+			from `wo_reviewcontacts` as r
+			left join `wo_user` as user
+			on userId=user.user_id
+			and user.status = 0
+			left join `wo_user` as u
+			on r.managerUserId1=u.user_id
+			and u.status = 0
+			left join `wo_user` as u1
+			on r.managerUserId2=u1.user_id
+			and u1.status = 0
+		  where 1 = 1
+		  and r.delFlag = 0
+		<include refid="search_where1" />
+		order by userId,r.updateTime desc
+	</select>
+	
+	
+	
+	<select id="validateByList" resultMap="ReviewContactsDto">
+		SELECT r.id as id,question1Level1,question1Level2,orderCome,company,r.userId as userid, 
+				user.user_name,
+				u.user_name as userName1,
+				u.mobile as phone1,
+				u.email as email1,
+				u1.user_name as userName2,
+				u1.mobile as phone2,
+				u1.email as email2
+		from `wo_reviewcontacts` as r
+					left join `wo_user` as user
+					on userId=user.user_id
+					and user.status = 0
+					left join `wo_user` as u
+					on r.managerUserId1=u.user_id
+					and u.status = 0
+					left join `wo_user` as u1
+					on r.managerUserId2=u1.user_id
+					and u1.status = 0
+		where
+		<foreach item="item" index="index" collection="list"
+			separator="or">
+			(
+			r.question1Level1=#{item.question1level1}
+			and r.question1Level2=#{item.question1level2}
+			and instr(concat(',',r.orderCome,','),',${item.ordercome},')>0
+			and instr(concat(',',r.company,','),',${item.company},')>0
+			and r.delFlag = 0
+			)
+		</foreach>
+		
+
+	</select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.ExternalOrdersReadDao">
+    <select id="getRowCnts" resultType="int">
+        select
+        FOUND_ROWS();
+    </select>
+
+    <select id="getExternalOrdersList"  parameterType="Map" resultType="com.haier.shop.model.ExternalOrdersVo" >
+        SELECT
+        e.id,e.configId,e.orderSn,e.sourceOrderSn,e.hasShipped,e.orderState,e.errorLog,
+        from_unixtime(e.syncTime,'%Y-%m-%d %H:%i:%S') syncTimeStr,
+        e.syncCount, e.addTime, e.creator,e.type,e.orderStatus
+        FROM shop.externalorders e Where 1=1
+        <if test="orderState != null and orderState != ''">
+            and e.orderState = #{orderState}
+        </if>
+        <if test="taoBaoShop != null and taoBaoShop != ''">
+            and e.configId = #{taoBaoShop}
+        </if>
+        <if test="sourceOrderSn != null and sourceOrderSn != ''">
+            and e.sourceOrderSn = #{sourceOrderSn}
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            and  e.addTime >= STR_TO_DATE(#{addTimeMin,jdbcType=VARCHAR},"%Y-%m-%d ")
+        </if>
+        <if test="addTimeMax != null and addTimeMax != ''">
+            and e.addTime <![CDATA[  <= ]]>  STR_TO_DATE(#{addTimeMax,jdbcType=VARCHAR},"%Y-%m-%d ")
+        </if>
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+    <select id="findExternalOrdersCNT" resultType="integer" parameterType="Map">
+        SELECT COUNT(e.id)
+        FROM shop.externalorders e Where 1=1
+
+        <if test="orderState != null and orderState != ''">
+            and e.orderState = #{orderState}
+        </if>
+        <if test="taoBaoShop != null and taoBaoShop != ''">
+            and e.configId = #{taoBaoShop}
+        </if>
+        <if test="sourceOrderSn != null and sourceOrderSn != ''">
+            and e.sourceOrderSn = #{sourceOrderSn}
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            and  e.addTime >= STR_TO_DATE(#{addTimeMin,jdbcType=VARCHAR},"%Y-%m-%d ")
+        </if>
+        <if test="addTimeMax != null and addTimeMax != ''">
+            and e.addTime <![CDATA[  <= ]]>  STR_TO_DATE(#{addTimeMax,jdbcType=VARCHAR},"%Y-%m-%d ")
+        </if>
+    </select>
+</mapper>

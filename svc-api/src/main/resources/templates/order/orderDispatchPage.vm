@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title></title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+##  <script src="../static/js/easyui-extention.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderPriceGate" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+  <table id="datagrid_orderPriceGate"></table>
+</div>
+
+<div id="datagridToolbar_orderPriceGate">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="paramForm_orderPriceGate" class="param-form">
+    <div class="search-panel">
+      <div class="search-row_nowidth">
+        <span class="search-row-label">网单或TB编号</span>
+        <input class="easyui-textbox" name="cOrderSn" id="cOrderSn"/>
+      </div>
+      <div class="search-row_nowidth">
+        <span class="search-row-label">传入时间</span>
+        <input class="easyui-datetimebox" name="createTimeMin" id="createTimeMin"/>
+      </div>
+      <div class="search-row_nowidth">
+        <span class="search-row-label">至</span>
+        <input class="easyui-datetimebox" name="createTimeMax" id="createTimeMax"/>
+      </div>
+
+    </div>
+    <h5 style="color: red;margin-left: 12px;margin-top: 10px;margin-bottom: 10px;">温馨提示:天猫订单请输入TB单号，其他订单请输入网单号。</h5>
+    
+    <a href="#" class="easyui-linkbutton" id="searchBtn_orderPriceGate"
+       data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_orderPriceGate"
+       data-options="iconCls:'icon-redo',plain:true">重置</a>
+    <a href="#" class="easyui-linkbutton" id="exportBtn_orderPriceGate"
+       data-options="iconCls:'icon-save',plain:true">签收</a>
+    <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+    <input id="exportData" name="exportData" type="hidden"/>
+  </form>
+</div>
+<script type="text/javascript">
+  function slideUpSlideClk(t) {
+    var $this = $(t);
+    if ($this.hasClass('open')) {
+        $this.removeClass('open');
+      setTimeout(function () {
+          $this.addClass('close');
+      }, 0);
+      $(".search-panel").slideUp();
+    } else {
+        $this.removeClass('close');
+      setTimeout(function () {
+          $this.addClass('open');
+      }, 0);
+      $(".search-panel").slideDown();
+    }
+    setTimeout(function () {
+      $('#datagrid_orderPriceGate').datagrid('resize');
+    }, 500);
+  }
+
+</script>
+<script src="../static/js/order/orderDispatchIndex.js"></script>
+</body>
+</html>

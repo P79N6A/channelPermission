@@ -17,4 +17,53 @@
 		from order_price_product_group_industry
 	</select>
 
+	<select id="getOrderPriceIndustry" resultType="java.util.Map">
+		SELECT
+		DISTINCT industry_code,industry_name
+		FROM
+		`order_price_product_group_industry`
+	</select>
+
+	<select id="getOrderPriceProductGroupIndustryList" parameterType="java.util.Map" resultMap="orderPriceProductGroupIndustryResult" statementType="PREPARED">
+		select id,`industry_code`,industry_name,`product_group`,product_group_name
+		from order_price_product_group_industry
+		<include refid="commonQuery"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+
+	<sql id="commonQuery">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="industry !=null and industry !='' ">
+				AND industry_code = #{industry}
+			</if>
+			<if test="productGroup !=null and productGroup !='' ">
+				AND product_group = #{productGroup}
+			</if>
+		</trim>
+	</sql>
+
+	<select id="getOrderPriceProductGroupIndustryListCount" parameterType="java.util.Map" resultType="Integer" statementType="PREPARED">
+		select count(*) count
+		from order_price_product_group_industry
+		<include refid="commonQuery"/>
+	</select>
+
+	<select id="getOrderPriceProductGroup" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+		DISTINCT product_group,product_group_name
+		FROM
+		`order_price_product_group_industry`
+		<where>
+			<if test="industry !=null and industry !='' ">
+				industry_code =#{industry }
+			</if>
+		</where>
+	</select>
+
+	<select id="getOrderPriceSourceChannelList" resultType="java.util.Map">
+		SELECT
+		order_source,order_source_name,channel_code,channel_name
+		FROM
+		`order_price_source_channel`
+	</select>
 </mapper>

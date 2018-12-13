@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>日志信息管理</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <!--<link rel="stylesheet" type="text/css" href="/resources/lib/easyui/themes/color.css">-->
+    <!--     <link rel="stylesheet" type="text/css" href="/resources/lib/easyui/demo.css"> -->
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+	
+</head>
+<body class="iframe-body">
+    <table id="dg" title="" class="easyui-datagrid"  style="width:100%;height:100%;"
+            data-options="toolbar:'#toolbar',pagination:true,rownumbers:true,singleSelect:false,pageSize:50,pageList:[50,100,200]
+            " >
+        <thead>
+            <tr>
+                <th field="username" width="85" >操作人</th>
+                <th field="logtime" width="150" >操作时间</th>
+                <th field="mkname" width="150" formatter="format">模块名</th>
+                <th field="type" width="150" formatter="status_format" >操作类型</th>
+                <th field="content" width="580" >操作相关记录</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="toolbar">
+        <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_circle fa fa-map-marker"></div>
+        </div>
+    <div id="filter" style="padding:5px">
+    <form id="search" name="search" class="easyui-form" method="get" novalidate>
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">操作人：</span>
+                <input class="easyui-text" id="username_search" name="username_search" style="width: 174px;"  size=10 >
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">开始时间：</span>
+                <input type="text" id="startTime_search" name="startTime_search" class="easyui-datetimebox" data-options="formatter:ww4" size=13 style="width:174px;" editable="false"/>
+
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">结束时间：</span>
+                <input type="text" id="endTime_search" name="endTime_search" class="easyui-datetimebox" data-options="formatter:ww4" size=13 style="width:174px;" editable="false"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">模块名：</span>
+                <select  class="easyui-combobox" style="width:174px" id="mk_search" name="mk_search" panelHeight="auto" data-options="editable:false">
+                    <option>-请选择-</option>
+                    <option value='1'>人员信息管理</option>
+                    <option value='2'>人员责任配置管理</option>
+                    <option value='3'>工单管理</option>
+                    <option value='4'>订单来源管理</option>
+                    <option value='5'>区县工贸管理</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">操作记录内容：</span>
+                <input type="text" id="id_search" name="id_search" class="easyui-text" size=10  style="width: 174px;">
+
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true" onclick="searchReview()">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderOp"
+           data-options="iconCls:'icon-redo',plain:true"onclick="reset()">重置</a>
+
+
+
+    </form>
+    </div>
+    </div>
+
+<script>
+function slideUpSlideClk(t) {
+    var $this = $(t);
+    if ($this.hasClass('open')) {
+        $this.removeClass('open');
+        setTimeout(function () {
+            $this.addClass('close');
+        }, 0);
+        $(".search-panel").slideUp();
+    } else {
+        $this.removeClass('close');
+        setTimeout(function () {
+            $this.addClass('open');
+        }, 0);
+        $(".search-panel").slideDown();
+    }
+    setTimeout(function () {
+        $('#dg').datagrid('resize');
+    }, 500);
+}
+</script>
+<script src="../static/js/report/workOrderLog.js"></script>
+
+</body>
+</html>

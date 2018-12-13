@@ -16,6 +16,8 @@ public interface LesStockInfoDao {
     public void updateInOutInfo(GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity info);
 
     public void insertInOutInfo(GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity info);
+    
+    public void insertInOutInfoTmp(GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity info);
 
     public Integer selectInOutInfo(GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity info);
 
@@ -42,4 +44,33 @@ public interface LesStockInfoDao {
      * @return
      */
     public String selectLastSyncTime();
+
+    /**
+     * 将数据从临时表转移到正式表
+     * @author zhangming
+     */
+	public void moveInOutInfoFromTmp();
+
+	/**
+	 * 移除临时表
+	 * @author zhangming
+	 */
+	public void clearInOutInfoTmp();
+
+	/**
+	 * 将数据插入临时表
+	 * @param entity
+	 */
+	public void insertStockInfoTmp(GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity entity);
+
+	/**
+	 * 将数据从临时表转移到正式表
+	 */
+	public void moveStockInfoFromTmp();
+
+	/**
+	 * 移除临时表
+	 * @author zhangming
+	 */
+	public void clearStockInfoTmp();
 }

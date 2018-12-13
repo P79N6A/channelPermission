@@ -1,17 +1,12 @@
 package com.haier.logistics.service;
 
 import com.haier.common.ServiceResult;
-import com.haier.purchase.data.model.LesFiveYardInfo;
-import com.haier.shop.model.ItemAttribute;
-import com.haier.shop.model.ItemBase;
 import com.haier.shop.model.NetPoints;
-import com.haier.shop.model.ProductBase;
 import com.haier.shop.model.ProductCates;
 import com.haier.shop.model.ProductTypesNew;
 import com.haier.shop.model.ProductsNew;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author 李超

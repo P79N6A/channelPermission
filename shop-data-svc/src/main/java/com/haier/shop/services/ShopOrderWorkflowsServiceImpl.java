@@ -1,11 +1,15 @@
 package com.haier.shop.services;
 
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+import com.haier.common.PagerInfo;
+import com.haier.shop.dao.shopread.OrderWorkflowRegionReadDao;
 import com.haier.shop.dao.shopread.OrderWorkflowsReadDao;
 import com.haier.shop.dao.shopwrite.OrderWorkflowsWriteDao;
 
+import com.haier.shop.model.OrderWorkflowRegion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,9 @@ public class ShopOrderWorkflowsServiceImpl implements ShopOrderWorkflowsService 
 
     @Autowired
     private OrderWorkflowsReadDao orderWorkflowsReadDao;
+
+    @Autowired
+    OrderWorkflowRegionReadDao orderWorkflowRegionReadDao;
     /**
      * 根据主键，获取订单全流程监控信息
      * @param id
@@ -33,6 +40,7 @@ public class ShopOrderWorkflowsServiceImpl implements ShopOrderWorkflowsService 
      * @param orderProductId 网单id
      * @return
      */
+    @Override
     public OrderWorkflows getByOrderProductId(Integer orderProductId){
         return orderWorkflowsReadDao.getByOrderProductId(orderProductId);
     }
@@ -335,4 +343,208 @@ public class ShopOrderWorkflowsServiceImpl implements ShopOrderWorkflowsService 
 
     public   Integer updateIsTimeoutFree(Integer orderProductId, Integer isTimeoutFree){
         return orderWorkflowsWriteDao.updateIsTimeoutFree(orderProductId, isTimeoutFree); }
+
+    /**
+     * 获取及时率报表逆向数据列表
+     */
+    public List<Map<String, Object>> getOntimeRateReverseList(Map<String, Object> paramMap)
+            throws ParseException {
+        String nodeType = (String) paramMap.get("nodeType");
+        Calendar startCalendar = Calendar.getInstance();
+        Calendar endCalendar = Calendar.getInstance();
+        startCalendar.setTime(new Date(dateToInteger((String) paramMap.get("startDate")) * 1000L));
+        endCalendar.setTime(new Date(dateToInteger((String) paramMap.get("endDate")) * 1000L));
+        if ("audit".equals(nodeType) || "invoice".equals(nodeType)) {
+            startCalendar.add(Calendar.DATE, -1);
+            endCalendar.add(Calendar.DATE, -1);
+        } else if ("hp".equals(nodeType)) {
+            startCalendar.add(Calendar.DATE, -2);
+            endCalendar.add(Calendar.DATE, -2);
+        } else if ("les".equals(nodeType)) {
+            startCalendar.add(Calendar.DATE, -7);
+            endCalendar.add(Calendar.DATE, -7);
+        } else if ("orderclose".equals(nodeType)) {
+            startCalendar.add(Calendar.DATE, -11);
+            endCalendar.add(Calendar.DATE, -11);
+        } else if ("refund".equals(nodeType)) {
+            startCalendar.add(Calendar.DATE, -3);
+            endCalendar.add(Calendar.DATE, -3);
+        }
+        paramMap.put("startDate", startCalendar.getTimeInMillis() / 1000);
+        paramMap.put("endDate", endCalendar.getTimeInMillis() / 1000 + 23 * 60 * 60 + 59 * 60 + 59);
+        List<Map<String, Object>> resultList = orderWorkflowsReadDao.getOntimeRateReverse(paramMap);
+        //多次申请退换货以最后一次考核
+        Map<Object, Object> tempMap = new HashMap<Object, Object>();
+        List<Long> tempList = new ArrayList<Long>();
+        for (Map<String, Object> map : resultList) {
+            if (tempMap.get(map.get("orderProductId")) == null) {
+                tempMap.put(map.get("orderProductId"), map.get("id"));
+            } else if ((Long) tempMap.get(map.get("orderProductId")) < (Long) map.get("id")) {
+                tempList.add((Long) tempMap.get(map.get("orderProductId")));
+                tempMap.put(map.get("orderProductId"), map.get("id"));
+            }
+        }
+        Iterator<Map<String, Object>> it = resultList.iterator();
+        while (it.hasNext()) {
+            Map<String, Object> map = it.next();
+            for (Long id : tempList) {
+                if (id == (Long) map.get("id"))
+                    it.remove();
+            }
+        }
+        return resultList;
+    }
+
+
+    /**
+     * 获取及时率报表逆向数据列表
+     */
+    public List<Map<String, Object>> getOntimeRateReverseListNew(Map<String, Object> paramMap,Boolean need) throws ParseException {
+        String nodeType = (String) paramMap.get("nodeType");
+        if (need) {
+            Calendar startCalendar = Calendar.getInstance();
+            Calendar endCalendar = Calendar.getInstance();
+            startCalendar
+                    .setTime(new Date(dateToInteger((String) paramMap.get("startDate")) * 1000L));
+            endCalendar.setTime(new Date(dateToInteger((String) paramMap.get("endDate")) * 1000L));
+            if ("audit".equals(nodeType) || "invoice".equals(nodeType)) {
+                startCalendar.add(Calendar.DATE, -1);
+                endCalendar.add(Calendar.DATE, -1);
+            } else if ("hp".equals(nodeType)) {
+                startCalendar.add(Calendar.DATE, -2);
+                endCalendar.add(Calendar.DATE, -2);
+            } else if ("les".equals(nodeType)) {
+                startCalendar.add(Calendar.DATE, -7);
+                endCalendar.add(Calendar.DATE, -7);
+            } else if ("orderclose".equals(nodeType)) {
+                startCalendar.add(Calendar.DATE, -9);
+                endCalendar.add(Calendar.DATE, -9);
+            } else if ("refund".equals(nodeType)) {
+                startCalendar.add(Calendar.DATE, -3);
+                endCalendar.add(Calendar.DATE, -3);
+            } else if ("blp".equals(nodeType)) {//不良品
+                startCalendar.add(Calendar.DATE, -15);
+                endCalendar.add(Calendar.DATE, -15);
+            }
+            //22库及时率增加
+            else if ("22storehouse".equals(nodeType)) {
+                //22库及时率
+                startCalendar.add(Calendar.DATE, -22);
+                endCalendar.add(Calendar.DATE, -22);
+            } else if ("recheckquality".equals(nodeType)) {
+                //二次质检
+                startCalendar.add(Calendar.DATE, -5);
+                endCalendar.add(Calendar.DATE, -5);
+            } else if ("transmitbox".equals(nodeType)) {
+                //转箱
+                startCalendar.add(Calendar.DATE, -15);
+                endCalendar.add(Calendar.DATE, -15);
+            } else if ("transmitstock".equals(nodeType)) {
+                //转库
+                startCalendar.add(Calendar.DATE, -2);
+                endCalendar.add(Calendar.DATE, -2);
+            }
+            paramMap.put("startDate", startCalendar.getTimeInMillis() / 1000);
+            paramMap.put("endDate",
+                    endCalendar.getTimeInMillis() / 1000 + 23 * 60 * 60 + 59 * 60 + 59);
+        }
+
+        List<Map<String, Object>> resultList = null;
+        if ("blp".equals(nodeType)) {//不良品
+            resultList = orderWorkflowsReadDao.getOntimeRateReverseBlp(paramMap);
+        }else if ("hp".equals(nodeType)) {
+            resultList = orderWorkflowsReadDao.getOntimeRateReverseHp(paramMap);
+            if (resultList != null && resultList.size() > 1) {
+                deleteMuli(resultList, "hpId");
+            }
+        }else if ("orderclose".equals(nodeType)) {
+            resultList = orderWorkflowsReadDao.getOntimeRateReverseOrderclose(paramMap);
+            if (resultList != null && resultList.size() > 1) {
+                deleteMuli(resultList, "hpId");
+            }
+        }
+        return resultList;
+    }
+
+    private void deleteMuli(List<Map<String, Object>> resultList, String subId) {
+        int beforeMainId = 0;
+        int beforeSubId = 0;
+        int nowMainId = 0;
+        int nowSubId = 0;
+
+        Iterator<Map<String, Object>> it = resultList.iterator();
+        while (it.hasNext()) {
+            Map<String, Object> map = it.next();
+            nowMainId = Integer.parseInt(map.get("id").toString());
+            nowSubId = map.get(subId) == null ? 0 : Integer.parseInt(map.get(subId).toString());
+            if (beforeMainId == nowMainId) {
+                if (nowSubId < beforeSubId) {
+                    it.remove();
+                }
+            }
+            beforeMainId = nowMainId;
+            beforeSubId = nowSubId;
+        }
+
+    }
+    /**
+     * 根据网单号获取及时率报表逆向数据列表
+     */
+    @Override
+    public List<Map<String, Object>> getOntimeRateReverseListByOrderSn(Map<String, Object> paramMap)
+            throws Exception {
+        List<Map<String, Object>> resultList = orderWorkflowsReadDao
+                .getOntimeRateReverseByOrderSn(paramMap);
+        //多次申请退换货以最后一次考核
+        Map<Object, Object> tempMap = new HashMap<Object, Object>();
+        List<Long> tempList = new ArrayList<Long>();
+        for (Map<String, Object> map : resultList) {
+            if (tempMap.get(map.get("orderProductId")) == null) {
+                tempMap.put(map.get("orderProductId"), map.get("id"));
+            } else if ((Long) tempMap.get(map.get("orderProductId")) < (Long) map.get("id")) {
+                tempList.add((Long) tempMap.get(map.get("orderProductId")));
+                tempMap.put(map.get("orderProductId"), map.get("id"));
+            }
+        }
+        Iterator<Map<String, Object>> it = resultList.iterator();
+        while (it.hasNext()) {
+            Map<String, Object> map = it.next();
+            for (Long id : tempList) {
+                if (id == (Long) map.get("id"))
+                    it.remove();
+            }
+        }
+        return resultList;
+    }
+    @Override
+    public Integer getOntimeRateReverseDetailCount(Map<String, Object> paramMap){
+        return orderWorkflowsReadDao.getOntimeRateReverseDetailCount(paramMap);
+    }
+
+    @Override
+    public Integer getOntimeRateReverseDetailCountNew(Map<String, Object> paramMap){
+        return orderWorkflowsReadDao.getOntimeRateReverseDetailCountNew(paramMap);
+    }
+
+    @Override
+    public List<Map<String, Object>> getOntimeRateReverseDetail(Map<String, Object> paramMap){
+        return  orderWorkflowsReadDao.getOntimeRateReverseDetail(paramMap);
+    }
+
+    @Override
+    public List<Map<String, Object>> getOntimeRateReverseDetailNew(Map<String, Object> paramMap){
+        return  orderWorkflowsReadDao.getOntimeRateReverseDetailNew(paramMap);
+    }
+
+    @Override
+    public List<OrderWorkflowRegion> getOwfRegion() {
+        return orderWorkflowRegionReadDao.getOwfRegion();
+    }
+
+    //--------------------------------------------private-------------------------------------------
+    private Integer dateToInteger(String str) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        Date date = format.parse(str);
+        return ((Long) (date.getTime() / 1000)).intValue();
+    }
 }

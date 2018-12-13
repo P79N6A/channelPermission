@@ -5,10 +5,10 @@
 	<insert id="addPurchaseStock">
 		INSERT INTO
 		cn_t2_purchase_stock
-		(id,cn_stock_syncs_id,push_data,return_data,status,message,add_time,process_time)
+		(id,cn_stock_syncs_id,push_data,return_data,status,message,add_time,process_time,cn_stock_dn_id)
 		VALUES
 		(#{id},#{cnStockSyncsId},#{pushData},#{returnData},#{status},
-		#{message},#{addTime},#{processTime})
+		#{message},#{addTime},#{processTime},#{cnStockDnId})
 	</insert>
 
 	<update id="updateCnT2PurchaseStock" parameterType="String">
@@ -37,6 +37,33 @@
 		</set>
 		WHERE cn_stock_syncs_id = #{cnStockSyncsId}
 	</update>
+	
+	<update id="updateCnT2PurchaseStockById">
+		UPDATE
+		cn_t2_purchase_stock
+		<set>
+			<if test="pushData != null ">
+                <![CDATA[ push_data = #{pushData}, ]]>
+			</if>
+			<if test="returnData != null ">
+                <![CDATA[ return_data = #{returnData}, ]]>
+			</if>
+			<if test="status != null">
+                <![CDATA[ status = #{status}, ]]>
+			</if>
+			<if test="message != null">
+                <![CDATA[ message = #{message}, ]]>
+			</if>
+			<!-- <if test="addTime != null addTime !='' "> -->
+			<!-- <![CDATA[ add_time = #{addTime}, ]]> -->
+			<!-- </if> -->
+			<if test="processTime != null">
+                <![CDATA[ process_time = #{processTime}, ]]>
+			</if>
+
+		</set>
+		WHERE id = #{id}
+	</update>
 
 	<select id="queryCnT2PurchaseStock" parameterType="String"
 		resultType="com.haier.purchase.data.model.CnT2PurchaseStock">
@@ -49,6 +76,67 @@
 		</if>
 		<if test="status != null  ">
                 <![CDATA[ and status = #{status} ]]>
+		</if>
+		<if test="pushData != null  ">
+                <![CDATA[ and push_data like concat('%', #{pushData},'%') ]]>
+		</if>
+		<if test="cnStockDnId != null  ">
+			<![CDATA[ and cn_stock_dn_id = #{cnStockDnId} ]]>
+		</if>
+	</select>
+
+	<select id="getPurchaseStockList" parameterType="java.util.Map"
+			resultType="com.haier.purchase.data.model.CnT2PurchaseStock">
+		select
+		id,cn_stock_syncs_id as cnStockSyncsId,push_data as pushData,return_data as returnData,status,message,add_time as addTime,process_time as processTime
+		from cn_t2_purchase_stock
+		where 1=1
+		<if test="cnStockSyncsId != null and cnStockSyncsId !='' ">
+			<![CDATA[ and cn_stock_syncs_id LIKE CONCAT(CONCAT('%',#{cnStockSyncsId},'%')) ]]>
+		</if>
+		<if test="status != null and status != '' ">
+			<![CDATA[ and status = #{status} ]]>
+		</if>
+		<if test="pushData != null  and pushData != ''">
+			<![CDATA[ and push_data like concat('%', #{pushData},'%') ]]>
+		</if>
+		<if test="startDate != null  and startDate != ''">
+			<![CDATA[ and process_time >= #{startDate}]]>
+		</if>
+		<if test="endDate != null  and endDate != ''">
+			<![CDATA[ and process_time <= #{endDate} ]]>
+		</if>
+		<if test="cnStockSyncsIdlist!=null">
+			AND cn_stock_syncs_id in
+			<foreach item="item" index="index" collection="cnStockSyncsIdlist" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+
+	<select id="getCnT2PurchaseStockCNT" parameterType="java.util.Map"
+			resultType="Integer">
+		select
+			count(1)
+		from cn_t2_purchase_stock
+		where 1=1
+		<if test="cnStockSyncsId != null and cnStockSyncsId !='' ">
+			<![CDATA[ and cn_stock_syncs_id LIKE CONCAT(CONCAT('%',#{cnStockSyncsId},'%')) ]]>
+		</if>
+		<if test="status != null  and status !=''">
+			<![CDATA[ and status = #{status} ]]>
+		</if>
+		<if test="pushData != null  and pushData !=''">
+			<![CDATA[ and push_data like concat('%', #{pushData},'%') ]]>
+		</if>
+		<if test="startDate != null  and startDate !=''">
+			<![CDATA[ and process_time >= #{startDate}]]>
+		</if>
+		<if test="endDate != null  and endDate !=''">
+			<![CDATA[ and process_time <= #{endDate} ]]>
 		</if>
 
 	</select>

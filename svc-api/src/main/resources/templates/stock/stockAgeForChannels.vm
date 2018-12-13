@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>库龄统计报表</title>
+    <title>库龄统计报表-库存到渠道</title>
     <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
     <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
     <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
@@ -20,17 +20,24 @@
     <script src="../static/js/utils.js"></script>
     #*<script src="../static/js/easyui-extention.js"></script>*#
     <script src="../static/js/customConfig.js"></script>
+
+    <style>
+    .panel-header{
+        border:0 !important;
+        background: #fcfcfc !important;
+    }
+    </style>
 </head>
 <body class="easyui-layout">
-<table id="dataGrid" title="库龄统计-库存到渠道                               金额单位：（人民币）万元 数据类型：正品)"></table>
+<table id="dataGrid" title="库龄统计-库存到渠道                               金额单位：（人民币）万元 数据类型：正品"></table>
 
 <div id="tb" style="padding:5px;height:auto">
     <form id="filterForm">
         报表日期
         <input id="date" name="date" class="easyui-datebox" required="required"
                data-options="formatter:myformatter,parser:myparser"/>
-        <a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="">查询</a>
-        <a id='export' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
+        <a id='search' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="">查询</a>
+        <a id='export' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">导出</a>
     </form>
 </div>
 
@@ -59,6 +66,7 @@ function onShowDetail(param, param_name) {
         success: function (data) {
             win.document.open();
             win.document.write(data);
+            win.document.charset="UTF-8";
             win.document.close();
         }
     });

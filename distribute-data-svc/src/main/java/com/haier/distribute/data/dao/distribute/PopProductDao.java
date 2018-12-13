@@ -34,4 +34,8 @@ public interface PopProductDao extends BaseDao<Product>{
     Product checkSkuAndChannel(String sku, String channelCode);
     //推送商品信息
 	List<ProductTiming> pushProductInfo(int channelId);
+	public List<String> selectAllSku();
+	public List<String> selectSkuByChannelId(@Param("channelId") Integer id);
+	public List<String> seletSkuAll();
+	Product checkSkuAndChannelId(String sku, String channelId);
 }

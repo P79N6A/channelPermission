@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>预测备料详细信息</title>
+    
+    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/default/easyui.css">
+  <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css">
+  <script type="text/javascript" src="../static/js/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
+<script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+
+</head>
+<body>
+<table id="dataGrid"></table>
+<div id="tb" style="padding:5px;height:auto">
+    <form id="filterForm" action="#">
+        <a id='export' href="javascript:onExport();" class="easyui-linkbutton" iconCls="icon-save">下载</a>
+        <a id='goback' href="javascript:history.go(-1);" class="easyui-linkbutton" iconCls="icon-save">返回</a>
+		<!-- 提报周 -->
+        <input id="report_year_week_hidden" name="report_year_week_hidden" type="hidden" value="$!report_year_week">
+       	<!--  开始周 -->
+		<input id="start_week_hidden" name="start_week_hidden" type="hidden" value="$!start_week">
+		<!-- 结束周 -->
+		<input id="end_week_hidden" name="end_week_hidden" type="hidden" value="$!end_week">
+		<!-- 产品组ID -->
+		<input id="product_group_id_hidden" name="product_group_id_hidden" type="hidden" value="$!product_group_id">
+		<!-- 渠道ID -->
+		<input id="ed_channel_id_hidden" name="ed_channel_id_hidden" type="hidden" value="$!ed_channel_id">
+		<!-- 提报人 -->
+		<input id="create_user_hidden" name="create_user_hidden" type="hidden" value="$!create_user">
+    </form>
+</div>
+
+<script type="text/javascript">
+
+
+
+function onExport() {
+    $('#filterForm').attr("action", '/purchase/exportPurchasePredictStockDetailList');
+    $('#filterForm').submit();
+}
+//返回调用画面
+function onGoBack(){
+  var url = '$!url';
+  window.location.href=url;
+ }
+var datagrid;
+$(function () {
+    datagrid = $('#dataGrid').datagrid({
+        url: "/purchase/findPredictingStockDetailList",
+        fit: true,
+        fitColumns: false,
+        toolbar: $('#tb'),
+        singleSelect: true,
+        nowrap: false,
+        rownumbers: true,
+        queryParams: {
+            report_year_week: "$!report_year_week",
+            start_week: "$!start_week",
+            end_week: "$!end_week",
+            product_group_id: "$!product_group_id",
+            ed_channel_id: "$!ed_channel_id",
+            create_user: "$!create_user"
+        },
+        columns: [
+            [
+                {
+                    field: 'report_year_week',
+                    title: '提报周',
+                    width: 80,
+                    align: 'center'
+                },
+                {
+                    field: 'ed_channel_name',
+                    title: '渠道',
+                    width: 80,
+                    align: 'center'
+                },
+                {
+                    field: 'product_group_name',
+                    title: '产品组',
+                    width: 80,
+                    align: 'center'
+                },
+                {
+                    field: 'materials_id',
+                    title: '物料编号',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'brand_name',
+                    title: '品牌',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'material_description',
+                    title: '型号',
+                    width: 200,
+                    align: 'center'
+                },
+                {
+                    field: 't3_require_prediction',
+                    title: 'T+3周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't4_require_prediction',
+                    title: 'T+4周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't5_require_prediction',
+                    title: 'T+5周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't6_require_prediction',
+                    title: 'T+6周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't7_require_prediction',
+                    title: 'T+7周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't8_require_prediction',
+                    title: 'T+8周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't9_require_prediction',
+                    title: 'T+9周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't10_require_prediction',
+                    title: 'T+10周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't11_require_prediction',
+                    title: 'T+11周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't12_require_prediction',
+                    title: 'T+12周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 't13_require_prediction',
+                    title: 'T+13周',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 'flow_flag_name',
+                    title: '状态',
+                    width: 80,
+                    align: 'center'
+                },
+                {
+                    field: 'error_msg',
+                    title: '失败信息',
+                    width: 200,
+                    align: 'left'
+                }
+            ]
+        ]
+    });
+});
+</script>
+</body>

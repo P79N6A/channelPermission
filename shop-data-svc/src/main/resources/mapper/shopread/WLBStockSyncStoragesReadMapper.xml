@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.WLBStockSyncStoragesReadDao">
+	<resultMap id="wLBStockSyncStoragesResult" type="com.haier.shop.model.WlbstocksyncstoragesVo">
+		<result property="id" column="id" />
+		<result property="storageId" column="storageId" />
+		<result property="sCode" column="sCode" />
+		<result property="taobaoStoreCode" column="taobaoStoreCode" />
+		<result property="source" column="source" />
+		<result property="addTime" column="addTime" />
+		<result property="storagesName" column="name" />
+	</resultMap>
+<!--	<select id="get" parameterType="Integer" resultMap="storagesResult">
+		select `id`,`isFreightInvoice`,`isSupportCod`,`name`,`code`,`type`,`centerCode`,`taobaoStoreCode`,`centerCity`,`industryCode`,`industryName`,`area`,`limitTime`,`remark`
+		from `storages`
+		where `id` = #{id}
+	</select>
+	<select id="getByCode" parameterType="String" resultMap="storagesResult">
+		select `id`,`isFreightInvoice`,`isSupportCod`,`name`,`code`,`type`,`centerCode`,`taobaoStoreCode`,`centerCity`,`industryCode`,`industryName`,`area`,`limitTime`,`remark`
+		from `storages`
+		where `code` = #{code}
+	</select>
+
+	<select id="getBywwwCode" parameterType="String" resultType="java.lang.String">
+		select `centerCode`
+		from `storages`
+		where `wwwCode` = #{wwwCode}
+	</select>
+	<select id="queryCenterCode" resultType="java.lang.String" parameterType="java.lang.String">
+	SELECT
+		s.centerCode
+	FROM
+		netpoints p,
+		storages s
+	where 
+		p.TCCode = s.`code`
+	and p.netPointN8=#{netPointN8}
+	</select>
+	
+	<select id="queryCode" parameterType="java.lang.String" resultType="java.lang.String" >
+		SELECT
+			s.`code`
+		FROM
+		storages s
+		where 
+		 s.`centerCode`=#{centerCode,jdbcType=VARCHAR}
+		 and isSupportCod='1'
+	</select>-->
+
+	<select id="getRowCnts" resultType="int">
+        select
+        FOUND_ROWS();
+    </select>
+	<select id="getStockSyncStorageList"  parameterType="Map" resultMap="wLBStockSyncStoragesResult">
+		SELECT
+		SQL_CALC_FOUND_ROWS
+		w.id, s.name,w.sCode, w.taobaoStoreCode, w.source,w.addTime
+		FROM  `wlbstocksyncstorages` w left join storages  s on  w.storageId = s.id
+		where 1=1
+		<if test="storageName != null and storageName != ''">
+			and s.name = #{storageName}
+		</if>
+		<if test="storageCode != null and storageCode != ''">
+			and w.sCode = #{storageCode}
+		</if>
+		<if test="taoBaoStorageCode != null and taoBaoStorageCode != ''">
+			and w.taobaoStoreCode = #{taoBaoStorageCode}
+		</if>
+		<if test="taoBaoShop != null and taoBaoShop != ''">
+			and source = #{taoBaoShop}
+		</if>
+		<if test="m!=null and n!=null">
+			Limit ${m},${n}
+		</if>
+	</select>
+
+</mapper>

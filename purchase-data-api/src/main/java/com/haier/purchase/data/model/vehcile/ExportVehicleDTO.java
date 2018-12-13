@@ -22,6 +22,7 @@ public class ExportVehicleDTO implements Serializable {
 	private String productGroupName; // 产品组名称
 	private String brand; // 品牌
 	private Integer qty; // 数量
+	private Integer actualQty;//lbx实收数量
 	private double unitPrice; // 含税开票价
 	private double amount; // 总金额
 	private double volume; // 体积
@@ -41,6 +42,7 @@ public class ExportVehicleDTO implements Serializable {
 	private Date dateOfArrival; //到货日期
 	private String lbxStatus;	//lbx入库状态
 	private String sapStatus;	//推送sap状态
+	private String lbxErrMsg;
 
 	public String getOrderNo() {
 		return orderNo;
@@ -320,5 +322,21 @@ public class ExportVehicleDTO implements Serializable {
 
 	public void setVbelnSpare(String vbelnSpare) {
 		this.vbelnSpare = vbelnSpare;
+	}
+
+    public String getLbxErrMsg() {
+        return lbxErrMsg;
+    }
+
+    public void setLbxErrMsg(String lbxErrMsg) {
+        this.lbxErrMsg = lbxErrMsg;
+    }
+
+	public Integer getActualQty() {
+		return actualQty;
+	}
+
+	public void setActualQty(Integer actualQty) {
+		this.actualQty = actualQty;
 	}
 }

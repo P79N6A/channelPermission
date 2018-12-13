@@ -90,5 +90,12 @@ public interface InvoicesDao {
      * @return
      */
     Invoices get(Integer id);
-
+    /**
+	 * 根据网单查询发票信息
+	 * @param productId
+	 * @return
+	 */
+    Invoices selectInvoiceView(String productId);
+    
+    int selectCountView(String productId);//查询发票是否已经被作废
 }

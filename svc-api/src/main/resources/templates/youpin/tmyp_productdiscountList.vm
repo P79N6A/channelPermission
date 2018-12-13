@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>优品折扣率维护</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false,border:false">
+    <table id="datagrid">
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row_nowidth">
+			<span class="search-row-label">
+			  商品型号名称
+			</span>
+                <input class="easyui-textbox" id="product_Name" name="product_Name" style="width: 180px;"/>
+            </div>
+            <div class="search-row_nowidth">
+			<span class="search-row-label">
+			  商品类型
+			</span>
+                <input class="easyui-textbox" id="product_Type" name="product_Type" style="width: 180px;"/>
+            </div>
+            <div class="search-row_nowidth">
+			<span class="search-row-label">
+			  零售价
+			</span>
+                <input class="easyui-textbox" id="sale_Price" name="sale_Price" style="width: 180px;"/>
+            </div>
+            <div class="search-row_nowidth">
+			<span class="search-row-label">
+			  采购价
+			</span>
+                <input class="easyui-textbox" id="purchase_Price" name="purchase_Price" style="width: 180px;"/>
+            </div>
+            <div class="search-row_nowidth">
+			<span class="search-row-label">
+			  折扣率
+			</span>
+                <input class="easyui-textbox" id="discount" name="discount" style="width: 180px;"/>
+            </div>
+            <div class="search-row_nowidth">
+			<span class="search-row-label">
+			  sku物料
+			</span>
+                <input class="easyui-textbox" id="sku" name="sku" style="width: 180px;"/>
+            </div>
+
+
+            <div class="search-row">
+					<span class="search-row-label">
+					  添加时间
+					</span>
+                <input class="easyui-datebox" id="addTimeMin" name="addTimeMin" editable="false"/>
+            </div>
+            <div class="search-row">
+					<span class="search-row-label">
+					  至
+					</span>
+                <input class="easyui-datebox" id="addTimeMax" name="addTimeMax" editable="false"/>
+            </div>
+
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="add_TmypProductDiscount"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="update_TmypProductDiscount"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+    </form>
+</div>
+<div id="update_tmypProductDiscount_info" data-options="title:'修改',iconCls:'icon-edit', resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:450px;height:350px;"
+     closed="true" buttons="#dlg-address_info_u">
+    <form id="update_externalOrders_info_form" method="post">
+        <input id="id" name="id" type="hidden"/>
+        <div class="fitem" style="width:360px;">
+            <label for="up_productName" class="col-sm-2 control-label">商品品牌型号名称：</label>
+        <input id ="up_productName" name="productName" value=""  type="text" style="width:250px;height:30px"/>
+        </div>
+        <div class="fitem" style="width:360px;">
+            <label for="up_productType" class="col-sm-2 control-label">商品类型：</label>
+        <input id ="up_productType" name="productType" value=""  type="text"  style="width:250px;height:30px"/>
+        </div>
+        <div class="fitem" style="width:360px;">
+            <label for="up_salePrice" class="col-sm-2 control-label">零售价：</label>
+            <input id ="up_salePrice" name="salePrice" value=""  type="text"  style="width:250px;height:30px"/>
+        </div>
+        <div class="fitem" style="width:360px;">
+            <label for="up_purchasePrice" class="col-sm-2 control-label">采购价：</label>
+            <input id ="up_purchasePrice" name="purchasePrice" value=""  type="text"  style="width:250px;height:30px"/>
+        </div>
+        <div class="fitem" style="width:360px;">
+            <label for="up_discount" class="col-sm-2 control-label">折扣率：</label>
+            <input id ="up_discount" name="discount" value=""  type="text"  style="width:250px;height:30px"/>
+        </div>
+        <div class="fitem" style="width:360px;">
+            <label for="up_sku" class="col-sm-2 control-label">sku物料：</label>
+            <input id ="up_sku" name="sku" value=""  type="text"  style="width:250px;height:30px"/>
+        </div>
+    </form>
+    <div id="dlg-address_info_u">
+        <a href="#" class="easyui-linkbutton"  id="tmypProductDiscount_info_update" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeDialog()">取消</a>
+##        javascript:$('#update_tmypProductDiscount_info').dialog('close')
+    </div>
+</div>
+<script src="../static/js/youpin/tmyp_productdiscountList.js"></script>
+<script type="application/javascript">
+
+</script>
+</body>
+</html>

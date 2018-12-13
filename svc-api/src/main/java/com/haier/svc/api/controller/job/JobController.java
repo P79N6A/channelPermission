@@ -1,6 +1,7 @@
 package com.haier.svc.api.controller.job;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,10 +9,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.jsondoc.core.annotation.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,10 +23,14 @@ import com.google.gson.Gson;
 import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
 import com.haier.svc.api.controller.util.HttpJsonResult;
+import com.haier.svc.api.controller.util.SpringContextUtil;
 import com.haier.svc.api.controller.util.job.CronExpressionManager;
 import com.haier.svc.job.model.JobLog;
+import com.haier.svc.job.model.SysJob;
 import com.haier.svc.job.model.SysJobEx;
 import com.haier.svc.job.service.JobService;
+
+import net.sf.json.JSONObject;
 @Controller
 @Api(name = "定时任务模块", description = "JobController")
 @RequestMapping(value = "Job")
@@ -280,8 +286,53 @@ public class JobController {
         cronManager.init();
         String plan = cronManager.parseExpression(cronExp);
         HttpJsonResult<Map<String, Object>> result = new HttpJsonResult<Map<String, Object>>();
-//        String res = plan.replace("---","\n");
-        result.setMessage(plan);
+        String res = plan.replace("---","\n");
+        result.setMessage(res);
         return result;
+    }
+    
+    @GetMapping("/runOnce")
+    @ResponseBody
+    public Map<String, String> runOnce(Integer jobId){
+    	Map<String, String> map = new HashMap<>();
+    	
+    	SysJob job = jobService.getById(jobId);
+    	if(job == null){
+    		map.put("result", "failed");	
+    		map.put("msg", "未找到相应的job。");
+    	}else{
+			String intf = job.getCfgData().get("interface").toString();
+			String method = job.getCfgData().get("method").toString();
+			try{
+				Object bean = SpringContextUtil.getApplicationContext().getBean(Class.forName(intf));
+				if(bean == null){
+					map.put("result", "failed");	
+					map.put("msg", "未找到" + intf + "的实例，请检查是否在模块中引用。");
+				}else{
+					Method m = bean.getClass().getDeclaredMethod(method, new Class<?>[]{});
+					if(m == null){
+						map.put("result", "failed");	
+						map.put("msg", "未找到方法" + method + "，请检查。");
+					}else{
+						m.setAccessible(true);
+						Object result = m.invoke(bean, new Object[]{});
+						String resultStr = "";
+						try{
+							resultStr = JSONObject.fromObject(result).toString();
+						}catch(Exception e){
+							
+						}
+						map.put("result", "success");
+						map.put("msg", "执行成功。" + (StringUtils.isBlank(resultStr) ? "" : "执行结果：" + resultStr));
+					}
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+				map.put("result", "failed");	
+				map.put("msg", e.getMessage());
+			}
+    	}
+    	
+    	return map;
     }
 }

@@ -1,305 +1,297 @@
-var datagridData_orderPriceGate = {
-    'data': {
-        'records': [
-            {
-                'orderSource': '淘宝海尔官方旗舰店', sortable: true,
-                'channelCode': '天猫', sortable: true,
-                'industry': '海尔集团电子商务有限公司（商用空调+其他）', sortable: true,
-                'productType': '商用空调', sortable: true,
-                'orderNo': '170322142436956', sortable: true,
-                'orderStatus': '已确认', sortable: true,
-                'sorderNo': '网单170121212', sortable: true,
-                'sku': 'GAORD7D1C', sortable: true,
-                'kindName': '热水器', sortable: true,
-                'model': '海尔电热水器', sortable: true,
-                'sPrice': '1589', sortable: true,
-                'shopPromotion': '0', sortable: true,
-                'platformPromotion': '0', sortable: true,
-                'sProductAmount': '1589', sortable: true,
-                'sAmount': '1', sortable: true,
-                'lowDifferOrPromotion': '160', sortable: true,
-                'lowPrice': '1599', sortable: true,
-                'makeOrderTime': '2017-03-22 14:24:36', sortable: true,
-                'beGateTime': '2017-03-22 14-35-22', sortable: true,
-                'beGateReason': '网单销售价低于报单价', sortable: true,
-                'gateStatus': '放行', sortable: true,
-                'gateType': '保本价', sortable: true,
-                'openGatePerson': '代颖', sortable: true,
-                'responsePerson': '高洪波', sortable: true,
-                'openGateReason': '不良品换机', sortable: true,
-                'openGateTime': '2017-3-22 14：55：10', sortable: true,
-            },
-            {
-                'orderSource': '淘宝海尔官方旗舰店', sortable: true,
-                'channelCode': '天猫', sortable: true,
-                'industry': '海尔集团电子商务有限公司（商用空调+其他）', sortable: true,
-                'productType': '商用空调', sortable: true,
-                'orderNo': '170322142436956', sortable: true,
-                'orderStatus': '已确认', sortable: true,
-                'sorderNo': '网单170121212', sortable: true,
-                'sku': 'GDSA7D1C', sortable: true,
-                'kindName': '热水器', sortable: true,
-                'model': '海尔电热水器', sortable: true,
-                'sPrice': '1589', sortable: true,
-                'shopPromotion': '0', sortable: true,
-                'platformPromotion': '0', sortable: true,
-                'sProductAmount': '1589', sortable: true,
-                'sAmount': '1', sortable: true,
-                'lowDifferOrPromotion': '203', sortable: true,
-                'lowPrice': '1599', sortable: true,
-                'makeOrderTime': '2017-03-22 14:24:36', sortable: true,
-                'beGateTime': '2017-03-22 14-35-22', sortable: true,
-                'beGateReason': '网单销售价低于报单价', sortable: true,
-                'gateStatus': '放行', sortable: true,
-                'gateType': '保本价', sortable: true,
-                'openGatePerson': '代颖', sortable: true,
-                'responsePerson': '高洪波', sortable: true,
-                'openGateReason': '不良品换机', sortable: true,
-                'openGateTime': '2017-3-22 14：55：10', sortable: true,
-            },
-            {
-                'orderSource': '淘宝海尔官方旗舰店', sortable: true,
-                'channelCode': '天猫', sortable: true,
-                'industry': '海尔集团电子商务有限公司（商用空调+其他）', sortable: true,
-                'productType': '家用空调', sortable: true,
-                'orderNo': '17567342436956', sortable: true,
-                'orderStatus': '已确认', sortable: true,
-                'sorderNo': '网单170121212', sortable: true,
-                'sku': 'GSFSD7D1C', sortable: true,
-                'kindName': '热水器', sortable: true,
-                'model': '海尔电热水器', sortable: true,
-                'sPrice': '1589', sortable: true,
-                'shopPromotion': '0', sortable: true,
-                'platformPromotion': '0', sortable: true,
-                'sProductAmount': '1589', sortable: true,
-                'sAmount': '1', sortable: true,
-                'lowDifferOrPromotion': '232', sortable: true,
-                'lowPrice': '1599', sortable: true,
-                'makeOrderTime': '2017-03-22 14:24:36', sortable: true,
-                'beGateTime': '2017-03-22 14-35-22', sortable: true,
-                'beGateReason': '网单销售价低于报单价', sortable: true,
-                'gateStatus': '放行', sortable: true,
-                'gateType': '保本价', sortable: true,
-                'openGatePerson': '代颖', sortable: true,
-                'responsePerson': '高洪波', sortable: true,
-                'openGateReason': '不良品换机', sortable: true,
-                'openGateTime': '2017-3-22 14：55：10', sortable: true,
-            },
-            {
-                'orderSource': '淘宝海尔官方旗舰店', sortable: true,
-                'channelCode': '天猫', sortable: true,
-                'industry': '海尔集团电子商务有限公司（商用空调+其他）', sortable: true,
-                'productType': '家用空调', sortable: true,
-                'orderNo': '5757552436956', sortable: true,
-                'orderStatus': '已确认', sortable: true,
-                'sorderNo': '网单170121212', sortable: true,
-                'sku': 'GAJGHJD1C', sortable: true,
-                'kindName': '热水器', sortable: true,
-                'model': '海尔电热水器', sortable: true,
-                'sPrice': '1589', sortable: true,
-                'shopPromotion': '0', sortable: true,
-                'platformPromotion': '0', sortable: true,
-                'sProductAmount': '1589', sortable: true,
-                'sAmount': '1', sortable: true,
-                'lowDifferOrPromotion': '110', sortable: true,
-                'lowPrice': '1599', sortable: true,
-                'makeOrderTime': '2017-03-22 14:24:36', sortable: true,
-                'beGateTime': '2017-03-22 14-35-22', sortable: true,
-                'beGateReason': '网单销售价低于报单价', sortable: true,
-                'gateStatus': '放行', sortable: true,
-                'gateType': '保本价', sortable: true,
-                'openGatePerson': '代颖', sortable: true,
-                'responsePerson': '高洪波', sortable: true,
-                'openGateReason': '不良品换机', sortable: true,
-                'openGateTime': '2017-3-22 14：55：10', sortable: true,
-            },
-            {
-                'orderSource': '淘宝海尔官方旗舰店', sortable: true,
-                'channelCode': '天猫', sortable: true,
-                'industry': '海尔集团电子商务有限公司（商用空调+其他）', sortable: true,
-                'productType': '商用空调', sortable: true,
-                'orderNo': '170322142436956', sortable: true,
-                'orderStatus': '已确认', sortable: true,
-                'sorderNo': '网单170121212', sortable: true,
-                'sku': 'GDSA7D1C', sortable: true,
-                'kindName': '热水器', sortable: true,
-                'model': '海尔电热水器', sortable: true,
-                'sPrice': '1589', sortable: true,
-                'shopPromotion': '0', sortable: true,
-                'platformPromotion': '0', sortable: true,
-                'sProductAmount': '1589', sortable: true,
-                'sAmount': '1', sortable: true,
-                'lowDifferOrPromotion': '203', sortable: true,
-                'lowPrice': '1599', sortable: true,
-                'makeOrderTime': '2017-03-22 14:24:36', sortable: true,
-                'beGateTime': '2017-03-22 14-35-22', sortable: true,
-                'beGateReason': '网单销售价低于报单价', sortable: true,
-                'gateStatus': '放行', sortable: true,
-                'gateType': '保本价', sortable: true,
-                'openGatePerson': '代颖', sortable: true,
-                'responsePerson': '高洪波', sortable: true,
-                'openGateReason': '不良品换机', sortable: true,
-                'openGateTime': '2017-3-22 14：55：10', sortable: true,
-            },
-            {
-                'orderSource': '淘宝海尔官方旗舰店', sortable: true,
-                'channelCode': '天猫', sortable: true,
-                'industry': '海尔集团电子商务有限公司（商用空调+其他）', sortable: true,
-                'productType': '家用空调', sortable: true,
-                'orderNo': '17567342436956', sortable: true,
-                'orderStatus': '已确认', sortable: true,
-                'sorderNo': '网单170121212', sortable: true,
-                'sku': 'GSFSD7D1C', sortable: true,
-                'kindName': '热水器', sortable: true,
-                'model': '海尔电热水器', sortable: true,
-                'sPrice': '1589', sortable: true,
-                'shopPromotion': '0', sortable: true,
-                'platformPromotion': '0', sortable: true,
-                'sProductAmount': '1589', sortable: true,
-                'sAmount': '1', sortable: true,
-                'lowDifferOrPromotion': '232', sortable: true,
-                'lowPrice': '1599', sortable: true,
-                'makeOrderTime': '2017-03-22 14:24:36', sortable: true,
-                'beGateTime': '2017-03-22 14-35-22', sortable: true,
-                'beGateReason': '网单销售价低于报单价', sortable: true,
-                'gateStatus': '放行', sortable: true,
-                'gateType': '保本价', sortable: true,
-                'openGatePerson': '代颖', sortable: true,
-                'responsePerson': '高洪波', sortable: true,
-                'openGateReason': '不良品换机', sortable: true,
-                'openGateTime': '2017-3-22 14：55：10', sortable: true,
-            },
-            {
-                'orderSource': '淘宝海尔官方旗舰店', sortable: true,
-                'channelCode': '天猫', sortable: true,
-                'industry': '海尔集团电子商务有限公司（商用空调+其他）', sortable: true,
-                'productType': '家用空调', sortable: true,
-                'orderNo': '5757552436956', sortable: true,
-                'orderStatus': '已确认', sortable: true,
-                'sorderNo': '网单170121212', sortable: true,
-                'sku': 'GAJGHJD1C', sortable: true,
-                'kindName': '热水器', sortable: true,
-                'model': '海尔电热水器', sortable: true,
-                'sPrice': '1589', sortable: true,
-                'shopPromotion': '0', sortable: true,
-                'platformPromotion': '0', sortable: true,
-                'sProductAmount': '1589', sortable: true,
-                'sAmount': '1', sortable: true,
-                'lowDifferOrPromotion': '110', sortable: true,
-                'lowPrice': '1599', sortable: true,
-                'makeOrderTime': '2017-03-22 14:24:36', sortable: true,
-                'beGateTime': '2017-03-22 14-35-22', sortable: true,
-                'beGateReason': '网单销售价低于报单价', sortable: true,
-                'gateStatus': '放行', sortable: true,
-                'gateType': '保本价', sortable: true,
-                'openGatePerson': '代颖', sortable: true,
-                'responsePerson': '高洪波', sortable: true,
-                'openGateReason': '不良品换机', sortable: true,
-                'openGateTime': '2017-3-22 14：55：10', sortable: true,
-            },
-
-        ], 'totalCount': 7
-    }
-};
-
 var datagridOptions_orderPriceGate = {
     fit: true,
     fitColumns: true,
     singleSelect: false,
-    //url: '/order/orderPriceGate/p',
     frozenColumns: [[{
         field: 'id', checkbox: true
     }]],
     columns: [[
-        {title: '渠道', field: 'channelCode', sortable: true},
-        {title: '订单来源', field: 'orderSource', sortable: true},
-        {title: '产业', field: 'industry', sortable: true},
-        {title: '产品组', field: 'productType', sortable: true},
-        {title: '订单号', field: 'orderNo', sortable: true},
-        {title: '订单状态', field: 'orderStatus', sortable: true},
-        {title: '网单号', field: 'sorderNo', sortable: true},
-        {title: '物料编码', field: 'sku', sortable: true},
-        {title: '品类名称', field: 'kindName', sortable: true},
-        {title: '型号', field: 'model', sortable: true},
-        {title: '网单单价', field: 'sPrice', sortable: true},
-        {title: '商城优惠券', field: 'shopPromotion', sortable: true},
-        {title: '平台优惠券', field: 'platformPromotion', sortable: true},
-        {title: '网单表productAmount', field: 'sProductAmount', sortable: true},
-        {title: '网单数量', field: 'sAmount', sortable: true},
-        {title: '保本价差额/费用池优惠券', field: 'lowDifferOrPromotion', sortable: true},
-        {title: '保本价', field: 'lowPrice', sortable: true},
-        {title: '下单时间', field: 'makeOrderTime', sortable: true},
-        {title: '被闸时间', field: 'beGateTime', sortable: true},
-        {title: '被闸原因', field: 'beGateReason', sortable: true},
-        {title: '闸口状态', field: 'gateStatus', sortable: true},
-        {title: '闸口类型', field: 'gateType', sortable: true},
-        {title: '放行操作', field: 'openGatePerson', sortable: true},
-        {title: '责任人', field: 'responsePerson', sortable: true},
-        {title: '放行原因', field: 'openGateReason', sortable: true},
-        {title: '放行时间', field: 'openGateTime', sortable: true},
+      {title: '渠道', field: 'channelCode', sortable: false},
+      {title: '订单来源', field: 'orderSource', sortable: false},
+      {title: '产业', field: 'industryCode', sortable: false},
+      {title: '产品组', field: 'productGroup', sortable: false},
+      {title: '订单号', field: 'orderSn', sortable: false},
+      {title: '网单号', field: 'corderSn', sortable: false},
+      {title: '物料编码', field: 'sku', sortable: false},
+      {title: '品类名称', field: 'cateName', sortable: false},
+      {title: '品牌名称', field: 'brandName', sortable: false},
+      {title: '订单状态', field: 'orderStatus', sortable: false},
+      {title: '网单状态', field: 'orderProductStatus', sortable: false},
+      {title: '型号', field: 'productName', sortable: false},
+      {title: '网单单价', field: 'orderProductPrice', sortable: false},
+      {title: '网单数量', field: 'orderProductNumber', sortable: false},
+      {title: '商城优惠券金额', field: 'couponAmount', sortable: false},
+      {title: '平台承担优惠券金额', field: 'platformCouponAmount', sortable: false},
+      {title: '网单付款金额', field: 'orderProductAmount', sortable: false},
+      {title: '保本价', field: 'guaranteePrice', sortable: false},
+      {title: '保本价差额/费用池优惠券', field: 'subductionPrice', sortable: false},
+      {title: '下单时间', field: 'orderAddTime', sortable: false},
+      {title: '被闸时间', field: 'createTime', sortable: false},
+      {title: '被闸原因', field: 'lockReason', sortable: false},
+      {title: '放行操作人', field: 'operator', sortable: false},
+      {title: '责任人', field: 'responsiblePerson', sortable: false},
+      {title: '放行原因', field: 'unlockReason', sortable: false},
+      {title: '放行时间', field: 'unlockTime', sortable: false},
+      {title: '闸口状态', field: 'gateStatus', sortable: false},
+      {title: '闸口类型', field: 'gateType', sortable: false}
     ]],
     toolbar: '#datagridToolbar_orderPriceGate',
     striped: true,
+    autoRowHeight: true,
+    nowrap: true,
     pagination: true,
     rownumbers: true,
+    pageSize: 10,
+    pageList: [10,20, 50, 100, 200, 300],
 };
 $(function () {
     var datagrid = $('#datagrid_orderPriceGate').datagrid(datagridOptions_orderPriceGate);
-    datagrid.datagrid('loadData', datagridData_orderPriceGate);
-    //创建表头的菜单
-    //CustomConfig.load(datagrid,"OrderPriceGate");
-    //$("#searchPanel_orderPriceGate").panel('resize');
 
-    /*$("#searchBtn_orderPriceGate").on('click', function (event) {
-     var param = $('#paramForm_orderPriceGate').serializeObject();
-     datagrid.datagrid({queryParams: param});
-     event.preventDefault();
-     });*/
-    $("#addBtn_orderPriceGate").on('click', function (event) {
-        $('#addForm_orderPriceGate').form('reset');
-        $('#addForm_orderPriceGate').find('[__actType]').val('add');
-        $('#addDlg_orderPriceGate').dialog({'title': '新增'});
-        $('#addDlg_orderPriceGate').dialog('open');
-    });
-    $("#addDlgSaveBtn_orderPriceGate").on('click', function () {
-        if (!$('#addForm_orderPriceGate').form('validate')) {
-            return;
-        }
-        var actType = $('#addForm_orderPriceGate').find('[__actType]').val();
-        if (actType === 'add') {
-            alert('新增成功');
-        } else {
-            alert('编辑成功');
-        }
-        $('#addDlg_orderPriceGate').dialog('close');
-    });
-    $("#editBtn_orderPriceGate").on('click', function () {
-        var selected = datagrid.datagrid('getSelected');
-        $('#addDlg_orderPriceGate').dialog({'title': '修改'});
-        if (selected !== null) {
-            $('#addForm_orderPriceGate').form('load', selected);
-            $('#addForm_orderPriceGate').find('[__actType]').val('edit');
-            $('#addDlg_orderPriceGate').dialog('open');
-        } else {
-            alert('请选择一条数据');
-        }
-    });
-    $("#deleteBtn_orderPriceGate").on('click', function (event) {
-        event.preventDefault();
-        var selected = datagrid.datagrid('getSelected');
-        if (selected !== null) {
-            confirm('确定删除？', function (r) {
-                if (r) {
-                    alert('删除成功');
-                }
-            })
-
-        } else {
-            alert('请选择一条数据');
-        }
-    });
     $("#resetBtn_orderPriceGate").on('click', function (event) {
         event.preventDefault();
         $('#paramForm_orderPriceGate').form('reset');
     });
+
+  $("#unlockBtn_orderPriceGate").on('click', function (event) {
+    var selected = datagrid.datagrid('getSelections');
+    if (selected.length > 0) {
+      var corderSn="";
+      for(var i=0;i<selected.length;i++){
+        if (corderSn != "") {
+          corderSn = corderSn + "," +selected[i].orderSn+"@"+selected[i].corderSn;
+        } else {
+          corderSn = selected[i].orderSn+"@"+selected[i].corderSn;
+        }
+      }
+      $("#cOrderNo").val(corderSn);
+      $("#responsiblePerson").textbox('clear');
+      $("#reason").textbox('clear');
+      $('#addDlg_orderPriceGate').dialog('open');
+    }else {
+      alert('请选择一条数据');
+    }
+  });
+
+  $("#addDlgSaveBtn_orderPriceGate").on('click', function () {
+    if (!$('#addForm_orderPriceGate').form('validate')) {
+      return;
+    }
+    var  postParam = {
+        'responsiblePerson': $("#responsiblePerson").val(),
+        'reason': $("#reason").val(),
+        'cOrderSns': $("#cOrderNo").val()
+      }
+    if(jQuery("#responsiblePerson").val().trim() == ""){
+      alert('请输入责任人姓名');
+      return false;
+    }else if(jQuery("#responsiblePerson").val().trim().length > 10){
+      alert('责任人姓名不能超过10个汉字');
+      return false;
+    }else if(jQuery("#reason").val().trim() == ""){
+      alert('请输入放行原因');
+      return false;
+    }else if(jQuery("#reason").val().trim().length > 200){
+      alert('放行原因不能超过200个汉字');
+      return false;
+    }else{
+      $.ajax({
+        type: "post",
+        url: '/guaranteePriceUnLockController/unLockGuaranteePrice',
+        data: postParam,
+        dataType: 'json',
+        success: function (data) {
+          if (data.success == true) {
+            alert("解锁成功");
+          } else {
+            alert("解锁失败:"+ data.message);
+          }
+        },
+        error: function () {
+          alert("请求错误");
+        }
+      });
+      $('#addDlg_orderPriceGate').dialog('close');
+      $('#datagrid_orderPriceGate').datagrid('reload');
+    }
+
+  });
+
 });
+
+$("#searchBtn_orderPriceGate").on('click', function (event) {
+  checkDate();
+  //加载分页
+  datagrid = $('#datagrid_orderPriceGate').datagrid({
+    url: "/guaranteePriceUnLockController/getGuaranteePriceList",
+    fit: true,
+    fitColumns: true,
+    singleSelect: false,//多选
+    striped: true,
+    autoRowHeight: true,
+    nowrap: true,
+    pagination: true,
+    rownumbers: true,
+    pageSize: 10,
+    pageList: [10,20, 50, 100, 200, 300],
+    queryParams: {
+      startDate: $("#startTime").val(),
+      endDate: $("#endTime").val(),
+      channel: $('#channel').combobox('getValue'),
+      source: $('#source').combobox('getValue'),
+      industry: $('#industry').combobox('getValue'),
+      productGroup: $('#productGroup').combobox('getValue'),
+      orderSn: $("#orderNo").val(),
+      cOrderSn: $("#sorderNo").val(),
+      gateStatus: $("#isGate option:selected").val(),
+      gateType: $("#gateType option:selected").val(),
+    },
+    frozenColumns: [[{
+      field: 'id', checkbox: true
+    }]],
+    columns: [[
+      {title: '渠道', field: 'channelCode', sortable: false},
+      {title: '订单来源', field: 'orderSource', sortable: false},
+      {title: '产业', field: 'industryCode', sortable: false},
+      {title: '产品组', field: 'productGroup', sortable: false},
+      {title: '订单号', field: 'orderSn', sortable: false},
+      {title: '网单号', field: 'corderSn', sortable: false},
+      {title: '物料编码', field: 'sku', sortable: false},
+      {title: '品类名称', field: 'cateName', sortable: false},
+      {title: '品牌名称', field: 'brandName', sortable: false},
+      {title: '订单状态', field: 'orderStatus', sortable: false},
+      {title: '网单状态', field: 'orderProductStatus', sortable: false},
+      {title: '型号', field: 'productName', sortable: false},
+      {title: '网单单价', field: 'orderProductPrice', sortable: false},
+      {title: '网单数量', field: 'orderProductNumber', sortable: false},
+      {title: '商城优惠券金额', field: 'couponAmount', sortable: false},
+      {title: '平台承担优惠券金额', field: 'platformCouponAmount', sortable: false},
+      {title: '网单付款金额', field: 'orderProductAmount', sortable: false},
+      {title: '保本价', field: 'guaranteePrice', sortable: false},
+      {title: '保本价差额/费用池优惠券', field: 'subductionPrice', sortable: false},
+      {title: '下单时间', field: 'orderAddTime', sortable: false},
+      {title: '被闸时间', field: 'createTime', sortable: false},
+      {title: '被闸原因', field: 'lockReason', sortable: false},
+      {title: '放行操作人', field: 'operator', sortable: false},
+      {title: '责任人', field: 'responsiblePerson', sortable: false},
+      {title: '放行原因', field: 'unlockReason', sortable: false},
+      {title: '放行时间', field: 'unlockTime', sortable: false},
+      {title: '闸口状态', field: 'gateStatus', sortable: false,
+        formatter: function (val) {
+          if (val == "0") {
+            return "失效";
+          } else if (val == "1") {
+            return "生效";
+          }
+        }
+      },
+      {title: '闸口类型', field: 'gateType', sortable: false,
+        formatter: function (val) {
+          if (val == "1") {
+            return "保本价";
+          } else if (val == "2") {
+            return "费用池";
+          }
+        }
+      }
+    ]],
+  });
+});
+
+$(document).ready(function(){
+  getGuaranteePriceChannel();
+  $("#channel").combobox({
+    onChange: function (newValue, oldValue) {
+      var channelCode = $("#channel").combobox('getValue')
+      if (channelCode == ''){
+        $('#source').combobox('clear');
+        var sourceSelect =[{ 'text':'请选择','id':''}];
+        $("#source").combobox("loadData", sourceSelect);
+      }
+      else {
+        getGuaranteePriceSource(channelCode);
+      }
+    }
+  })
+
+  $("#source").combobox({
+    onChange: function (newValue, oldValue) {
+      var sourceCode = $("#source").combobox('getValue')
+      if (sourceCode == ''){
+        $('#industry').combobox('clear');
+        var industrySelect =[{ 'text':'请选择','id':''}];
+        $("#industry").combobox("loadData", industrySelect);
+      }
+      else {
+        $('#industry').combobox('clear');
+        jQuery.getJSON("/guaranteePriceUnLockController/getOrderPriceIndustryBySource?source="+sourceCode, function(result){
+          var industrySelect =[{ 'text':'请选择','id':''}];
+          for(var i=0;i<result.data.length;i++){
+            industrySelect.push({"text":result.data[i].industry_name,"id":result.data[i].industry_code});
+          }
+          $("#industry").combobox("loadData", industrySelect);
+        });
+      }
+    }
+  })
+
+  $("#industry").combobox({
+    onChange: function (newValue, oldValue) {
+      var industryCode = $("#industry").combobox('getValue')
+      if (industryCode == ''){
+        $('#productGroup').combobox('clear');
+        var productGroupSelect =[{ 'text':'请选择','id':''}];
+        $("#productGroup").combobox("loadData", productGroupSelect);
+      }
+      else {
+        $('#productGroup').combobox('clear');
+        jQuery.getJSON("/guaranteePriceUnLockController/getOrderPriceProductGroup?industry="+industryCode, function(result){
+          var productGroupSelect =[{ 'text':'请选择','id':''}];
+          for(var i=0;i<result.data.length;i++){
+            productGroupSelect.push({"text":result.data[i].product_group_name,"id":result.data[i].product_group});
+          }
+          $("#productGroup").combobox("loadData", productGroupSelect);
+        });
+      }
+    }
+  })
+
+});
+
+function getGuaranteePriceChannel(){
+  $('#channel').combobox('clear');
+  jQuery.getJSON("/guaranteePriceUnLockController/getGuaranteePriceChannel", function(result){
+    var channelSelect =[{ 'text':'请选择','id':''}];
+    for(var i=0;i<result.data.length;i++){
+      channelSelect.push({"text":result.data[i].channel_name,"id":result.data[i].channel_code});
+    }
+    $("#channel").combobox("loadData", channelSelect);
+  });
+
+}
+
+function getGuaranteePriceSource(channel){
+  $('#source').combobox('clear');
+  jQuery.getJSON("/guaranteePriceUnLockController/getGuaranteePriceSource?channel="+channel, function(result){
+    var sourceSelect =[{ 'text':'请选择','id':''}];
+    for(var i=0;i<result.data.length;i++){
+      sourceSelect.push({"text":result.data[i].order_source_name,"id":result.data[i].order_source});
+    }
+    $("#source").combobox("loadData", sourceSelect);
+  });
+}
+
+//日期大小比较，开始日期必须小于等于结束日期
+function checkDate(){
+  var startDate=jQuery("#startTime").val();
+  var endDate=jQuery("#endTime").val();
+  if(startDate!=""&&endDate!=""){
+    var s=new Date(startDate.replace(/\-/g,"\/"));
+    var e=new Date(endDate.replace(/\-/g,"\/"));
+    if(s>e){
+      alert("开始日期必须小于或等于结束日期！");
+      return false;
+    }
+  }
+  return true;
+}
+

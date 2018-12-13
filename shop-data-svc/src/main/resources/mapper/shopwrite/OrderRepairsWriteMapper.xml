@@ -3,7 +3,7 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.OrderRepairsWriteDao">
 
     <update id="updateReceiptInfo" parameterType="com.haier.shop.model.OrderRepairs">
-        update `OrderRepairs`
+        update `orderrepairs`
         set
         `receiptStatus`=#{receiptStatus},`receiptTime`=#{receiptTime}
         where `id` = #{id}
@@ -11,26 +11,25 @@
     
       
   <update id="updataStatus" parameterType="java.lang.String">
-  	UPDATE OrderRepairs
+  	UPDATE orderrepairs
 	SET handleStatus =#{status},
 		handleTime =unix_timestamp(now()),
+		finishTime =unix_timestamp(now()),
 	handleRemark = #{handleRemark}
 	WHERE
 		id = #{id}
   
   </update>
-    <insert id="insertSelective" parameterType="com.haier.shop.model.OrderRepairsVo" >
-        insert into OrderRepairs
+    <insert id="insertSelective" parameterType="com.haier.shop.model.OrderRepairsVo" useGeneratedKeys="true" keyProperty="id">
+        insert into orderrepairs
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
+         <!--    <if test="id != null" >
                 id,
-            </if>
+            </if> -->
             <if test="siteId != null" >
                 siteId,
             </if>
-            <if test="addTime != null" >
                 addTime,
-            </if>
             <if test="memberId != null" >
                 memberId,
             </if>
@@ -144,15 +143,13 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
+          <!--   <if test="id != null" >
                 #{id,jdbcType=INTEGER},
-            </if>
+            </if> -->
             <if test="siteId != null" >
                 #{siteId,jdbcType=INTEGER},
             </if>
-            <if test="addTime != null" >
-                #{addTime,jdbcType=INTEGER},
-            </if>
+                unix_timestamp(now()),
             <if test="memberId != null" >
                 #{memberId,jdbcType=INTEGER},
             </if>
@@ -267,16 +264,24 @@
         </trim>
     </insert>
     <update id="updatePushHp" parameterType="com.haier.shop.model.OrderRepairsVo" >
-        UPDATE OrderRepairs
+        UPDATE orderrepairs
         set
         requestServiceDate =UNIX_TIMESTAMP(#{requeStservieDateTS,jdbcType=VARCHAR}),
-        requestServiceRemark =#{requestServiceRemark,jdbcType=VARCHAR},
-        offlineFlag =#{offlineFlag},
-        offlineReason = #{offlineReason},
-        offlineAmount = #{offlineAmount},
-        offlineRemark =#{offlineRemark},
-        receiptStatus = #{receiptStatus,jdbcType=VARCHAR},
-        storageStatus =#{storageStatus,jdbcType=VARCHAR}
+        requestServiceRemark =#{requestServiceRemark,jdbcType=VARCHAR}
+         <if test="offlineFlag != null" >
+        ,offlineFlag =#{offlineFlag}
+        </if>
+        <if test="offlineReason != null" >
+        ,offlineReason = #{offlineReason}
+        </if>
+         <if test="offlineAmount != null" >
+        ,offlineAmount = #{offlineAmount}
+        </if>
+        <if test="offlineRemark != null" >
+        ,offlineRemark =#{offlineRemark}
+        </if>
+       <!--  receiptStatus = #{receiptStatus,jdbcType=VARCHAR},
+        storageStatus =#{storageStatus,jdbcType=VARCHAR} -->
         <if test="hpFirstAddTime != null and hpFirstAddTime !=''" >
             ,hpFirstAddTime = unix_timestamp(now())
         </if>
@@ -287,15 +292,15 @@
         id = #{id}
     </update>
     <update id="updateStatus" parameterType="java.lang.String">
-        UPDATE OrderRepairs
+        UPDATE orderrepairs
         SET receiptStatus = #{receiptStatus,jdbcType=VARCHAR},
         storageStatus =#{storageStatus,jdbcType=VARCHAR}
         WHERE
         id=#{id,jdbcType=VARCHAR}
     </update>
     	<update id="updataPushSap" parameterType="java.lang.String">
-    	UPDATE OrderRepairs
-		SET pushSAP = '1',
+    	UPDATE orderrepairs
+		SET pushSAP = #{pushSap},
 		 pushSAPAddTime = unix_timestamp(now())
 		where 
 			id=#{id}
@@ -303,10 +308,47 @@
     	
     	
 	<update id="RepairsTermination" parameterType="java.lang.String">
-	UPDATE OrderRepairs
-	SET handleStatus = '6',
+	UPDATE orderrepairs
+	SET handleStatus = #{handleStatus},
 	 handleRemark = #{handleRemark,jdbcType=VARCHAR}
 	WHERE
 		id = #{id}
+	</update>
+
+    <update id="RepairsRminatereverse" parameterType="java.lang.String">
+        UPDATE orderrepairs
+        SET handleStatus = #{handleStatus},
+        handleRemark = #{handleRemark,jdbcType=VARCHAR},
+        terminationReason=#{terminationReason}
+        WHERE
+        id = #{id}
+    </update>
+    <update id="updateHandleStatus" parameterType="java.lang.String">
+        UPDATE orderrepairs
+        SET handleStatus = #{handleStatus}
+        WHERE
+        id = #{id}
+    </update>
+	
+	<update id="updataOrderRepairsStatus" parameterType="java.lang.String" >
+	UPDATE orderrepairs
+	SET 
+	<if test="receiptStatus !=null and receiptStatus !=''">
+	 receiptTime =unix_timestamp(now()),
+	receiptStatus = #{receiptStatus},
+	</if>
+	<if test="storageStatus !=null and storageStatus !=''">
+	storageStatus =#{storageStatus},
+	storageTime=unix_timestamp(now()),
+	</if>
+        modified = CURRENT_TIMESTAMP
+	WHERE
+		id = #{id}
+	</update>
+    <update id="updateExchange" parameterType="java.lang.Integer">
+		update orderrepairs
+		set exchangeStatus = 1
+		where id = #{repairId}
+
 	</update>
 </mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.SNOdsTMFXPeculiarCategoryDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.SNOdsTMFXPeculiarCategory" >
+
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SKU" property="sku" jdbcType="VARCHAR" />
+    <result column="CATEGORY" property="category" jdbcType="VARCHAR" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="FLAG" property="flag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+
+    id, sku, category, create_by, create_time, update_by, update_time, flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2018-05-14 16:26
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from sn_ods_tmfx_peculiar_category
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2018-05-14 16:26
+    -->
+    delete from sn_ods_tmfx_peculiar_category
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.haier.shop.model.SNOdsTMFXPeculiarCategory" >
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2018-05-14 16:26
+    -->
+    insert into sn_ods_tmfx_peculiar_category
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        id,
+      <if test="sku != null" >
+        sku,
+      </if>
+      <if test="category != null" >
+        category,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      REPLACE(UUID(),'-',''),
+      <if test="sku != null" >
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.shop.model.SNOdsTMFXPeculiarCategory" >
+
+    update sn_ods_tmfx_peculiar_category
+    <set >
+      <if test="sku != null" >
+        sku = #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        category = #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <sql id="pagingSql" >
+    from sn_ods_tmfx_peculiar_category t
+
+  </sql>
+  <sql id="pagingWhere">
+    <where>
+      1=1
+      <if test="param.flag!=null and param.flag!=''">
+        and flag = #{param.flag,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+  <select id="count" parameterType="map" resultType="long">
+    select  count(1)
+    <include refid="pagingSql" />
+    <include refid="pagingWhere" />
+  </select>
+  <select id="paging"   resultMap="BaseResultMap" >
+    SELECT
+    id, sku, category, create_by, create_time, update_by, update_time,
+    flag
+    <include refid="pagingSql" />
+    <include refid="pagingWhere" />
+    order by
+
+    t.id desc
+    LIMIT #{page.start}, #{page.pageSize}
+
+  </select>
+
+
+  <select id="export"   resultType="map" >
+    SELECT
+    id, sku, category, create_by, date_format(create_time,'%Y-%m-%d %H:%i:%S') create_time, update_by,date_format(update_time,'%Y-%m-%d %H:%i:%S') update_time,
+    case flag when 'Y' then '有效' else '无效' end flag
+    <include refid="pagingSql" />
+    <include refid="pagingWhere" />
+    order by
+    <!--        <if test="sort !=null and sort !=''">
+                ${sort} ${order},
+            </if>-->
+    t.id desc
+
+
+  </select>
+
+
+  <select id="queryBySkuCategory" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM sn_ods_tmfx_peculiar_category
+    WHERE flag = 'Y'
+    <if test="sku!=null and sku!=''">
+      and sku = #{sku,jdbcType=VARCHAR}
+    </if>
+    <if test="category!=null and category!=''">
+      and category = #{category,jdbcType=VARCHAR}
+    </if>
+    LIMIT 1
+  </select>
+  <select id="queryPeculiarCategoryAllList" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM sn_ods_tmfx_peculiar_category
+    WHERE flag = 'Y'
+  </select>
+
+
+
+  <update id="delBatch">
+    update sn_ods_tmfx_peculiar_category
+    set flag = 'N'
+    where id in
+    <foreach collection="list" item="id" open="(" close=")" separator="," index="index">
+      #{id}
+    </foreach>
+  </update>
+</mapper>

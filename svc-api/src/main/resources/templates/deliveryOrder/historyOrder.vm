@@ -262,6 +262,16 @@
 <script src="../vehicle/third/quicklink/quick_links.js"></script>
 
 <script type="text/javascript">
+
+    $(document).ready(function(){
+        $(".textbox-text").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+        $(".txt").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+    });
+
     var opt = function () {
         return '<button class="zcCart-btn" href="javascript:void(0)">撤销</button>'
     }
@@ -272,11 +282,17 @@
 
 
     var showWhat = function (val, row, index) {
-        return '<button class="zcCart-btn" style="margin-right:15px" onclick="detail(\'' + row.orderNo + '\')">查看详情</button>'
+    var str = '<button class="zcCart-btn" style="margin-right:15px" onclick="detail(\'' + row.orderNo + '\')">详情</button>';
+    if(row.remark == '1' && (row.status == 4 || row.status == 80)){
+    	str += '<button class="zcCart-btn" style="margin-top:3px;margin-right:15px;background-color:#ef1111" onclick="tempCancel(\'' + row.orderNo + '\')">取消</button>';
+    }
+        return str;
     }
 
     var showStatus = function (val, row, index) {
-        return showStatus.status[val]
+    	if(showStatus.status)
+	        return showStatus.status[val];
+    	return '';
     }
 
     var formatDate = function (val, row, index) {
@@ -305,13 +321,13 @@
         fit: true,
         fitColumns: false,
         columns: [[
-            {title: '采购单号', field: 'itemNo', sortable: true, align: 'center', width: 200},
-            {title: '扣款单号', field: 'zqItemNo', sortable: true, align: 'center', width: 200},
-            {title: '一次DN1', field: 'vbelnDn1', sortable: true, align: 'center', width: 200},
-            {title: '二次DN5', field: 'vbelnDn5', sortable: true, align: 'center', width: 200},
-            {title: '预约LBX备用DN', field: 'vbelnSpare', sortable: true, align: 'center', width: 200},
-            {title: 'LBX单号', field: 'lbx', sortable: true, align: 'center', width: 200},
-            {title: 'LBX入库时间', field: 'zspdt', sortable: true, align: 'center', width: 200,
+            {title: '采购单号', field: 'itemNo',  align: 'center', width: 200},
+            {title: '扣款单号', field: 'zqItemNo',  align: 'center', width: 200},
+            {title: '一次DN1', field: 'vbelnDn1',  align: 'center', width: 200},
+            {title: '二次DN5', field: 'vbelnDn5',  align: 'center', width: 200},
+            {title: '预约LBX备用DN', field: 'vbelnSpare',  align: 'center', width: 200},
+            {title: 'LBX单号', field: 'lbx',  align: 'center', width: 200},
+            {title: 'LBX入库时间', field: 'zspdt',  align: 'center', width: 200,
             formatter : function(value) {
             		if(value !=null && value!=""){
             			var date = new Date(value);
@@ -343,7 +359,8 @@
 	                        
 	                    }},
 	        
-            {title: 'LBX入库状态', field: 'lbxStatus', sortable: true, align: 'center', width: 200,
+            {title: 'LBX入库数量', field: 'lbxActualQty',  align: 'center', width: 200},
+            {title: 'LBX入库状态', field: 'lbxStatus',  align: 'center', width: 200,
             	formatter : function(value) {
 	                    	if(value == "NEW"){
 	                    		return "未开始处理";
@@ -377,13 +394,13 @@
 	                    }
             	
             	},
-            {title: '型号', field: 'materielName', sortable: true, align: 'center', width: 200},
-            {title: '开票价', field: 'unitPrice', sortable: true, align: 'center', width: 200},
-            {title: '数量', field: 'qty', sortable: true, align: 'center', width: 200},
-            {title: '总金额', field: 'amount', sortable: true, align: 'center', width: 200},
-            {title: '提交状态', field: 'status', sortable: true, align: 'center', width: 200, formatter: showStatus},
-            {title: '扣款状态', field: 'zqStatus', sortable: true, align: 'center', width: 200, formatter: showStatus},
-            {title: '推送sap状态', field: 'sapStatus', sortable: true, align: 'center', width: 200,
+            {title: '型号', field: 'materielName',  align: 'center', width: 200},
+            {title: '开票价', field: 'unitPrice',  align: 'center', width: 200},
+            {title: '数量', field: 'qty',  align: 'center', width: 200},
+            {title: '总金额', field: 'amount',  align: 'center', width: 200},
+            {title: '提交状态', field: 'status',  align: 'center', width: 200, formatter: showStatus},
+            {title: '扣款状态', field: 'zqStatus',  align: 'center', width: 200, formatter: showStatus},
+            {title: '推送sap状态', field: 'sapStatus',  align: 'center', width: 200,
             	formatter : function(value) {
 	                    	if(value == "1"){
 	                    		return "推送SAP成功";
@@ -398,7 +415,7 @@
 	                    	}
 	                    }
             },
-            {title: '信息', field: 'remark', sortable: true, align: 'center', width: 200}
+            {title: '信息', field: 'remark',  align: 'center', width: 200}
         ]],
         striped: true
     }
@@ -438,6 +455,25 @@
             }
         })
     }
+    
+     var tempCancel = function (orderNo) {
+	    confirm("确定取消吗？", function (r) {
+	        if (r) {
+	            $.ajax({
+	                url: "/vehicle/updateStatus",
+	                data: {orderNo: orderNo, status: "18"},
+	                dataType: "json",
+	                type: "post",
+	                success: function (data) {
+	                	alert(data.msg);
+	                    if (data.success) {
+	                        $("#searchBtn").click();
+	                    } 
+	                }
+	            })
+	        }
+	    })
+	}
 
     function slideUpSlideClk(t) {
         var $this =

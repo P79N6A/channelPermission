@@ -12,4 +12,10 @@ public interface OrderCenterHpDispatchService {
      * @return
      */
     ServiceResult<Boolean> processNetPoint();
+
+    /**
+     * 处理VOM回传的VOM派工后返回的网点数据
+     * @return
+     */
+    ServiceResult<Boolean> processNewNetPoint();
 }

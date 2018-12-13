@@ -345,4 +345,16 @@ public class MemberInvoices implements Serializable {
         this.electricFlag = electricFlag;
     }
 
+    /**
+     * 增值税发票备注
+     */
+    private String vatremark;
+
+    public String getVatremark() {
+        return vatremark;
+    }
+
+    public void setVatremark(String vatremark) {
+        this.vatremark = vatremark;
+    }
 }

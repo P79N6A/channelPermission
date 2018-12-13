@@ -11,6 +11,7 @@ import com.haier.stock.model.InvSection;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.InvStockInOut;
 import com.haier.svc.api.controller.stock.mode.StockModel;
+import com.haier.svc.api.controller.util.ExcelExportUtil;
 import com.haier.svc.api.controller.util.ExcelReader;
 import com.haier.svc.api.controller.util.HttpJsonResult;
 import jxl.Cell;
@@ -62,24 +63,12 @@ public class UploadStockInOutsController {
     void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        OutputStream os = response.getOutputStream();
-        try {
-            response.reset();
-            response.setHeader("Content-Disposition",
-                    "attachment; filename=stock_in_out_template.xls");
-            response.setContentType("application/octet-stream; charset=utf-8");
-            String path = request.getSession().getServletContext()
-                    .getRealPath("/xls/stock_in_out_template.xls");
-            File file = ResourceUtils.getFile("classpath:xls/stock_in_out_template.xls");
-            os.write(FileUtils.readFileToByteArray(file));
-            os.flush();
-        } finally {
-            if (os != null) {
-                os.close();
-            }
-        }
+        String fileName = "stock_in_out_template";
+        String sheetName = "导入模板";
+        ExcelExportUtil.downloadDataTemplate(null, request, response,
+            fileName, sheetName, checkStr);
     }
-    private static final String checkStr = "物料编号,库位,渠道（商城:SC；大客户:DKH；天猫：TB；京东：JD；易迅：YX）,数量,入库时间,入库单号,类型（ZBCR  采购入库订单,ZGI6  调拨出库订单, ZGR6  调拨入库订单）";
+    private static final String checkStr = "物料编号,库位,渠道（商城:SC；大客户:DKH；天猫：TB；京东：JD；易迅：YX）,数量,入库时间,入库单号,类型（ZBCR  采购入库订单，ZGI6  调拨出库订单，ZGR6  调拨入库订单）";
     @RequestMapping(value = { "/doUpload" }, method = { RequestMethod.POST })
     @ResponseBody
     public HttpJsonResult<List<Map<String, Object>>> upload1(HttpServletRequest request,

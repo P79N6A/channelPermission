@@ -49,8 +49,8 @@
 		o2o.last_try_time,
 		o2o.`last_message`,
 		o2o.modify_time
-		from o2o_order_close_queues o2o INNER JOIN Orders os on os.id=o2o.order_id  and (os.paymentCode ='giftCard' or os.paymentCode ='balance' or os.paymentCode ='cod')
- 		INNER JOIN OrderProducts op on op.id=o2o.order_product_id and op.`lessShipTime` = 0 
+		from o2o_order_close_queues o2o INNER JOIN orders os on os.id=o2o.order_id  and (os.paymentCode ='giftCard' or os.paymentCode ='balance' or os.paymentCode ='cod')
+ 		INNER JOIN orderproducts op on op.id=o2o.order_product_id and op.`lessShipTime` = 0
   		where o2o.type=2 and o2o.success=0 
   		<if test="flag == 0">
   			and o2o.count &lt; 30 and o2o.count &gt; 0
@@ -261,14 +261,14 @@
 		select 
 			`id`,`brandName`
 		from 
-			`Brands`
+			`brands`
 	</select>
 	
 	<select id="getProductCates" resultType="java.util.Map">
 		select 
 			`id`,`cateName`
 		from 
-			`ProductCates`
+			`productcates`
 	</select>
 	
 	<select id="getCountOcqByTypeAndOrderProductId" parameterType="java.util.Map"  resultType="java.lang.Integer">
@@ -278,22 +278,22 @@
 		<![CDATA[ 
 		select os.id as orderId,op.id as orderProductId,ors.id as orderRepairId,ors.finishTime
 		from
-		OrderRepairs ors
+		orderrepairs ors
 		inner join 
-		OrderProducts op on ors.orderProductId=op.id
+		orderproducts op on ors.orderProductId=op.id
 		inner join
-		Orders os on ors.orderId=os.id
+		orders os on ors.orderId=os.id
 		where ors.handleStatus = 3 and ors.storageStatus = 2 and ors.finishTime >  #{lastTime} 
 		and os.source='SCFX' and op.stockType='WA'
 		
 		union all
 		select os.id as orderId,op.id as orderProductId,ors.id as orderRepairId,ors.finishTime
 		from
-		OrderRepairs ors
+		orderrepairs ors
 		inner join
-		OrderProducts op on ors.orderProductId=op.id
+		orderproducts op on ors.orderProductId=op.id
 		inner join
-		Orders os on ors.orderId=os.id
+		orders os on ors.orderId=os.id
 		where ors.handleStatus = 3 and ors.storageStatus = 2 and ors.finishTime >  #{lastTime} 
 		and op.o2oType in (2,3,4,5,50,60)
 		
@@ -301,11 +301,11 @@
 		
 		select os.id as orderId,op.id as orderProductId,ors.id as orderRepairId,ors.finishTime
 		from
-		OrderRepairs ors
+		orderrepairs ors
 		inner join
-		OrderProducts op on ors.orderProductId=op.id
+		orderproducts op on ors.orderProductId=op.id
 		inner join
-		Orders os on ors.orderId=os.id
+		orders os on ors.orderId=os.id
 		where ors.storageTime >  #{lastTime} and ors.storageStatus > 100 
 		and os.source='SCFX' and op.stockType='WA'
 		
@@ -313,11 +313,11 @@
 		
 		select os.id as orderId,op.id as orderProductId,ors.id as orderRepairId,ors.finishTime
 		from
-		OrderRepairs ors
+		orderrepairs ors
 		inner join
-		OrderProducts op on ors.orderProductId=op.id
+		orderproducts op on ors.orderProductId=op.id
 		inner join
-		Orders os on ors.orderId=os.id
+		orders os on ors.orderId=os.id
 		where ors.storageTime >  #{lastTime} and ors.storageStatus > 100 
 		and op.o2oType in (2,3,4,5,50,60)
 		
@@ -360,5 +360,10 @@
 			close.id
 		limit #{unSendQueryNum}
 	</select>
-
+	<select id="getProductCatesOrderBy" resultType="java.util.Map">
+		select
+		`id`,`cateName`
+		from
+		`productcates` WHERE parentId=0
+	</select>
 </mapper>

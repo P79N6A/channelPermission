@@ -1,6 +1,10 @@
 package com.haier.shop.service;
 
-import com.haier.common.ServiceResult;
+import com.haier.shop.model.ExternalOrders;
+import com.haier.shop.model.ExternalOrdersVo;
+
+import java.util.List;
+import java.util.Map;
 
 /*
 *
@@ -21,4 +25,41 @@ public interface ExternalOrdersService {
      * @return
      */
     Integer updateAtferShipped(Integer orderId);
+
+    /**
+     * 根据原订单号获取外部订单对象
+     * @param sourceOrderSn
+     * @return
+     */
+    public ExternalOrders getExternalOrdersBySourceOrderSn(String sourceOrderSn);
+
+    /**
+     * 分页查询错误来源订单
+     * @param params
+     * @return
+     */
+    List<ExternalOrdersVo> getExternalOrdersList(Map<String,Object> params);
+
+    /**
+     * 添加
+     * @param extOrder
+     * @return
+     */
+    int insertExternalOrdersInfo(ExternalOrders extOrder);
+
+    /**
+     * 修改
+     * @param sourceOrderSn
+     * @param orderState
+     * @param errorLog
+     * @return
+     */
+    Integer updateShopOrdersInfo(String sourceOrderSn, Integer orderState, String errorLog);
+
+    /**
+     * 查询总条数
+     * @param params
+     * @return
+     */
+    Integer findExternalOrdersCNT(Map<String,Object> params);
 }

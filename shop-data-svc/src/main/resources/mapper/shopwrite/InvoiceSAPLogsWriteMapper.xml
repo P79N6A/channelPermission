@@ -3,19 +3,19 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.InvoiceSAPLogsWriteDao">
 
     <insert id="insert" parameterType="com.haier.shop.model.InvoiceSAPLogs">
-        insert into `InvoiceSAPLogs`(`addTime`,`invoiceId`,`cOrderType`,`orderProductId`,`diffId`,`pushType`,`pushData`,`returnData`,`success`,`count`,`lastTime`,`lastMessage`)
+        insert into `invoicesaplogs`(`addTime`,`invoiceId`,`cOrderType`,`orderProductId`,`diffId`,`pushType`,`pushData`,`returnData`,`success`,`count`,`lastTime`,`lastMessage`)
         values(#{addTime},#{invoiceId},#{cOrderType},#{orderProductId},#{diffId},#{pushType},#{pushData},#{returnData},#{success},#{count},#{lastTime},#{lastMessage})
     </insert>
 
     <update id="updateInvoiceSAPLogs" parameterType="com.haier.shop.model.InvoiceSAPLogs">
-        update `InvoiceSAPLogs`
+        update `invoicesaplogs`
         set
         pushType=#{pushType},count=#{count},lastTime=#{lastTime},lastMessage=#{lastMessage},success=#{success},pushData=#{pushData},returnData=#{returnData}
         WHERE id=#{id}
     </update>
 
     <update id="resetCount" parameterType="java.lang.Integer">
-        update `InvoiceSAPLogs` set `count`=0
+        update `invoicesaplogs` set `count`=0
         where
         `id`= #{id}
     </update>

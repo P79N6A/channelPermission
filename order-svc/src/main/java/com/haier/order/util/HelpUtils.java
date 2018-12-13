@@ -1,5 +1,21 @@
 package com.haier.order.util;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import com.haier.shop.model.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.DateUtil;
@@ -9,28 +25,21 @@ import com.haier.eis.model.EisInterfaceDataLog;
 import com.haier.eis.model.EisInterfaceQueueData;
 import com.haier.eis.service.EisInterfaceDataLogService;
 import com.haier.eis.service.EisInterfaceQueueDataService;
+import com.haier.order.model.Ustring;
 import com.haier.order.services.OrderCenterInvoiceNewServiceImpl;
 import com.haier.order.services.OrderCenterItemServiceImpl;
 import com.haier.order.services.OrderCenterOrderServiceImpl;
 import com.haier.order.services.OrderCenterStockCommonServiceImpl;
-import com.haier.shop.model.*;
-import com.haier.shop.service.*;
+import com.haier.shop.service.CustomerCodesService;
+import com.haier.shop.service.GroupOrdersService;
+import com.haier.shop.service.OrdersNewService;
+import com.haier.shop.service.ProductActivitiesService;
+import com.haier.shop.service.ShopMemberInvoicesService;
+import com.haier.shop.service.ShopTaoBaoGroupsService;
 import com.haier.stock.model.InvChannel2OrderSource;
 import com.haier.stock.model.InvSection;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.InvWarehouse;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.URL;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 //import com.haier.shop.model.OrdersNew;
 //import com.haier.shop.model.*;
@@ -815,4 +824,176 @@ public class HelpUtils {
 //    public void setInvoiceService(OrderThirdCenterInvoiceNewService invoiceService) {
 //        this.invoiceService = invoiceService;
 //    }
-}
+    
+    /**
+     * 获取网单编号
+     * @param id
+     * @return
+     */
+    public static String getCOrderSn() {
+        //序列号,不足6位补0,超过6位取末尾6位\
+    	  StringBuffer flag = new StringBuffer();  
+		for (int i = 0; i <= 100; i++)   
+		{
+		    String sources = Ustring.getString(Calendar.getInstance().getTimeInMillis()); // 加上一些字母，就可以生成pc站的验证码了  
+		    Random rand = new Random();  
+		    for (int j = 0; j < 6; j++)   
+		    {  
+		        flag.append(sources.charAt(rand.nextInt(9)) + "");  
+		    }  
+		}  
+        String seq = flag.toString();
+        int len = seq.length();
+        if (len > 6) {
+            seq = seq.substring(len - 6);
+        }
+        //日期
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
+//        String sDate = sdf.format(new Date());
+        Calendar date = Calendar.getInstance();
+        String year = String.valueOf(date.get(Calendar.YEAR)).substring(2, 4);
+        String month = String .valueOf(date.get(Calendar.MONTH) + 1 + 24);
+        String day = String.valueOf(date.get(Calendar.DAY_OF_MONTH));
+        if(day.length() == 1){
+            day = "0" + day;
+        }
+        return "WD" + year + month + day + seq;
+    }
+    
+    /**
+     * 获取网单编号
+     * @param id
+     * @return
+     */
+    public static String getOrderNo() {
+        //序列号,不足6位补0,超过6位取末尾6位\
+    	  StringBuffer flag = new StringBuffer();  
+		for (int i = 0; i <= 100; i++)   
+		{
+		    String sources = Ustring.getString(Calendar.getInstance().getTimeInMillis()); // 加上一些字母，就可以生成pc站的验证码了  
+		    Random rand = new Random();  
+		    for (int j = 0; j < 8; j++)   
+		    {  
+		        flag.append(sources.charAt(rand.nextInt(9)) + "");  
+		    }  
+		}  
+        String seq = flag.toString();
+        int len = seq.length();
+        if (len > 8) {
+            seq = seq.substring(len - 8);
+        }
+        //日期
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
+//        String sDate = sdf.format(new Date());
+        Calendar date = Calendar.getInstance();
+        String year = String.valueOf(date.get(Calendar.YEAR)).substring(2, 4);
+        String month = String .valueOf(date.get(Calendar.MONTH) + 1 + 24);
+        String day = String.valueOf(date.get(Calendar.DAY_OF_MONTH));
+        if(day.length() == 1){
+            day = "0" + day;
+        }
+        return  year + month + day + seq;
+    }
+
+    /**
+     * 获取赠品订单编号
+     * @return
+     */
+    public static String getOrderSn() {
+        //序列号,不足6位补0,超过6位取末尾6位\
+        StringBuffer flag = new StringBuffer();
+        String sources = Ustring.getString(Calendar.getInstance().getTimeInMillis());
+        Random rand = new Random();
+        flag.append(sources);
+        for (int i=0;i<3;i++){
+            flag.append(rand.nextInt(10));
+        }
+
+        return  flag.toString();
+    }
+    
+    public Orders isPanOrder(Orders orders){
+    	if(orders.getPoiId()==null){
+			orders.setPoiId(" ");
+		}
+		if(orders.getReceiptInfo()==null){
+			orders.setReceiptInfo(" ");
+		}
+		if(orders.getDelayShipTime()==null){
+			orders.setDelayShipTime(0);
+		}
+		if(orders.getCouponCode()==null){
+			orders.setCouponCode(" ");
+		}
+		if(orders.getCouponCodeValue() ==null){
+			orders.setCouponCodeValue("0.00");
+		}
+		if(orders.getRemark()==null){
+			orders.setRemark(" ");
+		}
+		
+		if(orders.getCkCode()==null){
+			orders.setCkCode(" ");
+		}
+		if(orders.getOrderYwType()==null){
+			orders.setOrderYwType("0");
+		}
+    	return orders;
+    }
+    public OrderProducts isPanOrderProduct(OrderProducts products){
+        if(products.getIsTest()==null){
+            products.setIsTest(0);//是否是测试网单
+        }
+        if(products.getSupportOneDayLimit()==null){
+            products.setSupportOneDayLimit(0);//是否支持24小时限时达
+        }
+        if(products.getUnlockedNumber()==null){
+            products.setUnlockedNumber(0);
+        }
+        if(products.getCouponCodeValue() ==null){
+            products.setCouponCodeValue("0.00");
+        }
+        if(products.getSCode()==null){
+            products.setSCode(" ");
+        }
+        if(products.getInvoiceNumber()==null){
+            products.setInvoiceNumber(" ");
+        }
+        if(products.getExpressName()==null){
+            products.setExpressName(" ");
+        }
+        if(products.getItemShareAmount()==null){
+            products.setItemShareAmount(new BigDecimal(0.00));
+        }
+        if(products.getExpressName()==null){
+            products.setExpressName(" ");
+        }
+        if(products.getLessOrderSn()==null){
+            products.setLessOrderSn(" ");
+        }
+        if(products.getWaitGetLesShippingInfo() ==null){
+            products.setWaitGetLesShippingInfo(0);
+        }
+        if(products.getOutping()==null){
+            products.setOutping(" ");
+        }
+        if(products.getGetLesShippingCount()==null){
+            products.setGetLesShippingCount(0);
+        }
+        if(products.getReceiptNum()==null){
+            products.setReceiptNum(" ");
+        }
+        if(products.getReceiptAddTime()==null){
+            products.setReceiptAddTime(" ");
+        }
+        if(products.getSplitRelateCOrderSn()==null){
+            products.setSplitRelateCOrderSn(" ");
+        }
+        if(products.getScode()==null){
+        	products.setScode(" ");
+        }
+        products.setEsAmount(new BigDecimal(0.00));
+        products.setCouponAmount(new BigDecimal(0.00));
+        return products;
+    }
+    }

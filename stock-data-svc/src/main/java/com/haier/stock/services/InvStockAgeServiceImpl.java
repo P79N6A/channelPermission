@@ -1,5 +1,8 @@
 package com.haier.stock.services;
 
+import com.haier.common.BusinessException;
+import com.haier.common.ServiceResult;
+import com.mysql.jdbc.StringUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +44,19 @@ public class InvStockAgeServiceImpl implements InvStockAgeService {
 
 	@Override
 	public Integer updatePrice(InvStockAge invStockAge) {
-		// TODO Auto-generated method stub
+
+		if (invStockAge == null) {
+			throw new BusinessException("库齡对象不能为空。");
+		}
+		if (invStockAge.getPrice() == null) {
+			throw new BusinessException("采购单价不能为空。");
+		}
+		if (StringUtils.isNullOrEmpty(invStockAge.getSku())) {
+			throw new BusinessException("物料编码不能为空。");
+		}
+		if (StringUtils.isNullOrEmpty(invStockAge.getSecCode())) {
+			throw new BusinessException("库位编码不能为空。");
+		}
 		return invStockAgeDao.updatePrice( invStockAge);
 	}
 
@@ -121,6 +136,21 @@ public class InvStockAgeServiceImpl implements InvStockAgeService {
 	public List<HaierStockExceedCacheVO> findStockTotal() {
 		// TODO Auto-generated method stub
 		return invStockAgeDao.findStockTotal();
+	}
+
+	@Override
+	public ServiceResult<Integer> updatePriceForStockAge(InvStockAge stockAge) {
+		ServiceResult<Integer> result = new ServiceResult<Integer>();
+		try {
+			result.setResult(this.updatePrice(stockAge));
+		} catch (BusinessException be) {
+			result.setSuccess(false);
+			result.setMessage(be.getMessage());
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setMessage("出现未知异常:" + e.getMessage());
+		}
+		return result;
 	}
 
 }

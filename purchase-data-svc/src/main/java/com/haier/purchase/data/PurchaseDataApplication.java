@@ -8,9 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @ImportResource("classpath:/spring/framework-dubbo-provider.xml")
+@EnableTransactionManagement
 public class PurchaseDataApplication {
 
 	public static void main(String[] args) {

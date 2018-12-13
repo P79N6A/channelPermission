@@ -198,7 +198,7 @@ public class ConfirmOrderModel {
                     @Override
                     public Object doBusiness() {
                         List<OrderProductsNew> orderProductsList = orderIdOrderProductsMap
-                                .get(orders.getId());
+                                .get(Integer.parseInt(orders.getId()));
                         if (null == orderProductsList || orderProductsList.isEmpty()) {
                             return null;
                         }
@@ -648,7 +648,8 @@ public class ConfirmOrderModel {
                         couponPrice = couponPrice.add(new BigDecimal(op.getPoints())
                                 .divide(new BigDecimal(100), 2, BigDecimal.ROUND_UNNECESSARY));
                     }
-                    OrderProductsAttributes attribute = orderProductsAttributesService
+                    //2018-06-26 网单扩展属性表不用了 相关逻辑删除 start
+                    /*OrderProductsAttributes attribute = orderProductsAttributesService
                             .getByOrderProductId(op.getId());
                     if (attribute != null) {
                         if (attribute.getSeashellAmt() != null) {
@@ -660,7 +661,8 @@ public class ConfirmOrderModel {
                         if (attribute.getDiamondAmt() != null) {
                             couponPrice = couponPrice.add(attribute.getDiamondAmt());
                         }
-                    }
+                    }*/
+                    //2018-06-26 网单扩展属性表不用了 相关逻辑删除 end
                     //商城优惠券金额
                     scCouponPrice = couponPrice;
                     //平台承担优惠券金额为0,初值即0
@@ -1516,7 +1518,7 @@ public class ConfirmOrderModel {
                         "日日单", "日日单到货前，暂时不传HP或LES。", null));
                 continue;
             }
-
+            //2018/9/3 测试定金尾款 暂时注释掉 换成定金发VOM这款代码就需要注释掉
             if (orderProducts.getShippingOpporunity().intValue() == 1) {
                 orderOperateLogsService.insert(this.constructOperateLog(orders, orderProducts, "系统",
                         "定金订单", "尾款发货模式，暂时不传HP或LES。", null));
@@ -1553,6 +1555,19 @@ public class ConfirmOrderModel {
                 throw new BusinessException("调用判断是否为基地库直发订单失败，回滚事务");
             }
 
+            //****2018/8/29需求修改，大家电派工改为OMS进行派工，只需要给OMS下发订单，然后从回传订单状态数据中，解析网单数据***start
+            //加入LES队列
+            /*LesQueues lesResult = lesQueuesService.getLesQueueByOpId(orderProducts.getId());
+            if (null != lesResult && lesResult.getId() > 0) {
+                it.remove();
+                continue;
+            }
+            lesQueuesList = addListLes(orderProducts, lesQueues, mysqlTime, lesQueuesList);*/
+            /*if (lesQueuesService.getCountByOpId(orderProducts.getId()) > 0) {
+                it.remove();
+                continue;
+            }
+            lesQueuesList = addListLes(orderProducts, lesQueues, mysqlTime, lesQueuesList);*/
             if ("B2C".equalsIgnoreCase(orderProducts.getShippingMode())) {
                 //加入LES队列
                 if (lesQueuesService.getCountByOpId(orderProducts.getId()) > 0) {
@@ -1577,6 +1592,8 @@ public class ConfirmOrderModel {
             //保存LES队列
             lesQueuesService.insert(lesQueuesList);
         }
+        //****2018/8/29需求修改，大家电派工改为OMS进行派工，只需要给OMS下发订单，然后从回传订单状态数据中，解析网单数据***end
+
     }
 
     /**
@@ -2002,7 +2019,8 @@ public class ConfirmOrderModel {
                                 && OrderProductsNew.TYPE_WA
                                 .equalsIgnoreCase(orderProducts.getStockType())) {
 
-                            OrderProductsAttributes attribute = orderProductsAttributesService
+                            //2018-06-26 网单扩展属性表不用了 相关逻辑删除 start
+                            /*OrderProductsAttributes attribute = orderProductsAttributesService
                                     .getByOrderProductId(orderProducts.getId());
                             if (attribute != null) {
                                 productsMap.put(orderProducts.getId(), config.getCustomerId());
@@ -2010,7 +2028,8 @@ public class ConfirmOrderModel {
                                 attribute.setCustomerId(config.getCustomerId());//客户id
                                 attribute.setIsDispatching(config.getIsDispatching());//是否指定派工  0不指定  1指定 默认0
                                 orderProductsAttributesService.update(attribute);
-                            }
+                            }*/
+                            //2018-06-26 网单扩展属性表不用了 相关逻辑删除 end
                         }
                     }
                 } catch (Exception e) {

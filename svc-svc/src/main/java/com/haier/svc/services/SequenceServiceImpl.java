@@ -27,6 +27,11 @@ public class SequenceServiceImpl implements SequenceService {
     }
 
     @Override
+    public Integer selectSequenceId() {
+        return purchaseSequenceService.selectSequenceId();
+    }
+
+    @Override
     public void insertSequence(Map map) {
         purchaseSequenceService.insertSequence(map);
     }

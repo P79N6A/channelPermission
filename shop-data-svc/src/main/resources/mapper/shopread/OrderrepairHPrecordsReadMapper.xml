@@ -16,12 +16,36 @@
     <result column="success" property="success" jdbcType="TINYINT" />
     <result column="checkType" property="checkType" jdbcType="TINYINT" />
     <result column="packResult" property="packResult" jdbcType="TINYINT" />
-    <result column="response" property="response" jdbcType="TINYINT" />
+    <result column="response" property="response" jdbcType="TINYINT" /> 
     <result column="hpOrderFail" property="hpOrderFail" jdbcType="TINYINT" />
     <result column="source" property="source" jdbcType="VARCHAR" />
     <result column="woId" property="woId" jdbcType="VARCHAR" />
     <result column="addTimeTs" property="addTimeTs" jdbcType="VARCHAR" />
-    <result column="hpOrderRemark" property="hporderremark" jdbcType="LONGVARCHAR" />
+    <result column="hpOrderRemark" property="hpOrderRemark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMapVO" type="com.haier.shop.model.OrderrepairHPrecordsVO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="siteId" property="siteId" jdbcType="INTEGER" />
+    <result column="addTime" property="addTime" jdbcType="INTEGER" />
+    <result column="orderProductId" property="orderProductId" jdbcType="INTEGER" />
+    <result column="orderRepairId" property="orderRepairId" jdbcType="INTEGER" />
+    <result column="netPointCode" property="netPointCode" jdbcType="VARCHAR" />
+    <result column="checkResult" property="checkResult" jdbcType="TINYINT" />
+    <result column="quality" property="quality" jdbcType="TINYINT" />
+    <result column="machineNum" property="machineNum" jdbcType="VARCHAR" />
+    <result column="inspector" property="inspector" jdbcType="VARCHAR" />
+    <result column="inspectTime" property="inspectTime" jdbcType="VARCHAR" />
+    <result column="success" property="success" jdbcType="TINYINT" />
+    <result column="checkType" property="checkType" jdbcType="TINYINT" />
+    <result column="packResult" property="packResult" jdbcType="TINYINT" />
+    <result column="response" property="response" jdbcType="TINYINT" />
+    <result column="hpOrderFail" property="hpOrderFail" jdbcType="TINYINT" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="woId" property="woId" jdbcType="VARCHAR" /> 
+    <result column="addTimeTs" property="addTimeTs" jdbcType="VARCHAR" />
+    <result column="hpOrderRemark" property="hpOrderRemark" jdbcType="LONGVARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     id, siteId, addTime, orderProductId, orderRepairId, netPointCode, checkResult, quality,
@@ -31,11 +55,11 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
-    from OrderRepairHPRecords
+    from orderrepairhprecords
     where id = #{id,jdbcType=INTEGER}
   </select>
-
-  <select id="selectByHpreCordsId" parameterType="java.lang.String" resultMap="BaseResultMap">
+ 
+  <select id="selectByHpreCordsId" parameterType="java.lang.String" resultMap="BaseResultMapVO">
 	  SELECT
 		h.hpOrderRemark,
 		h.checkType,
@@ -44,30 +68,41 @@
 		h.netPointCode,
 		h.machineNum,
 		h.checkResult,
-		h.quality
+		h.quality,
+		h.packResult,
+		h.hpOrderFail,
+		h.inspector
 	FROM
-		OrderRepairHPRecords h
-	where orderRepairId =#{id，jdbcType=VARCHAR}
+	  orderrepairhprecords h
+	where orderRepairId =#{id,jdbcType=VARCHAR}
   </select>
   <select id="queryRejectsPropelling" resultType="com.haier.shop.model.OrderrepairHPrecordsVO">
 		SELECT
-			p.orderProductId,
-			p.orderRepairId,
-			p.checkResult,
-			p.quality,
-			p.success,
-			p.checkType,
-			p.TwoAppraisal,
-			p.TwoAppraisalDate,
-			p.packResult
+		  p.orderProductId,
+		  p.orderRepairId,
+		  p.checkResult,
+		  p.quality,
+		  p.success,
+		  p.checkType,
+		  p.TwoAppraisal,
+		  p.TwoAppraisalDate,
+		  p.packResult,
+		  p.id
 		FROM
-			OrderRepairHPRecords p,
-			OrderRepairs s
+	  orderrepairhprecords p,
+	  orderrepairs s,
+	  orderproducts o,
+    orderworkflows w
 		WHERE
-			p.orderRepairId = s.id
-		AND p.quality = '3'
-		and s.handleStatus!='6'
-		and p.pushRejectsStatus='0'
+		  p.orderRepairId = s.id
+		  AND o.id = s.orderProductId
+		  AND o.id = w.orderProductId
+		  AND p.quality IN ('5', '6')
+		  AND s.handleStatus != '6'
+		  AND p.pushRejectsStatus = '0'
+		  AND w.userAcceptTime = 0
+		  AND o.stocktype = '3W'
+		AND p.checkResult = '1'
 	</select>
 
 	<select id="queryThreeAppraisal" resultType="com.haier.shop.model.OrderrepairHPrecordsVO">
@@ -80,15 +115,15 @@
 		p.checkType,
 		p.TwoAppraisal,
 		p.TwoAppraisalDate,
-		p.packResult
+		p.packResult,p.id
 	FROM
-		OrderRepairHPRecords p,
-		OrderRepairs s
+		orderrepairhprecords p,
+		orderrepairs s
 	WHERE
 		p.orderRepairId = s.id
-	AND p.quality = '2'
-	AND p.TwoAppraisal = '1'
-	and packResult='3'
+	AND p.ThreeAppraisal = '0'
+	and packResult='2'
+	and p.checkType='3'
 	and s.handleStatus!='6'
 	</select>
 
@@ -105,16 +140,17 @@
 			i.id  invoIceId,
 			p.cOrderSn
 		FROM
-			OrderProducts p,
-			OrderRepairs r,
-			OrderRepairHPRecords h
-		left join Invoices i on h.orderProductId = i.orderProductId
+		 orderproducts p,
+		 orderrepairs r,
+		 orderrepairhprecords h
+		left join invoices i on h.orderProductId = i.orderProductId
 		where
-			h.TwoAppraisal='0' is null
+			h.TwoAppraisal='0' 
 		and h.quality='2'
 		and h.orderProductId = p.id
 		and h.orderRepairId = r.id
 		and r.handleStatus !='6'
+		AND  h.checkResult='1'
   </select>
 
   <select id="queryPushSAP" resultType="com.haier.shop.model.OrderrepairHPrecordsVO">
@@ -130,10 +166,10 @@
 		p.isReceipt,
 		FROM_UNIXTIME(r.addTime, '%Y-%m-%d %H:%i:%S')   addTimeTs
 	FROM
-		OrderRepairHPRecords h,
-		OrderRepairs r,
-		OrderProducts p,
-		Orders o
+	  orderrepairhprecords h,
+	  orderrepairs r,
+	  orderproducts p,
+	  orders o
 	WHERE
 		h.orderRepairId = r.id
 	AND h.orderProductId = p.id
@@ -144,21 +180,45 @@
 	SELECT
 		r.id,
 		h.quality,
-		a.tb_order_sn tbOrderSn,
-		s.id orderRepairId
+		s.id orderRepairId,	
+		h.TwoAppraisal,
+		s.repairSn,
+		h.checkType,
+		h.orderProductId
 	FROM
-		OrderRepairHPRecords h,
-		OrderProducts r,
-		OrderProductsAttributes a,
-		OrderRepairs s
+	  orderrepairhprecords h,
+	  orderproducts r,
+	  orderrepairs s
+	WHERE
+		h.orderProductId = r.id
+	AND s.id = h.orderRepairId
+	AND s.pushSap = '0'
+	AND s.handleStatus != '6'
+	AND h.quality = '2'
+	AND h.TwoAppraisal ='1'
+	AND h.checkType = '1'
+  </select>
+  <select id="querynotOutBoxOrederSn" resultType="com.haier.shop.model.OrderrepairHPrecordsVO">
+	SELECT
+		r.id,
+		h.quality,
+		a.tb_order_sn tbOrderSn,
+		s.id orderRepairId,	
+		h.TwoAppraisal
+	FROM
+	  orderrepairhprecords h,
+	  orderproducts r,
+	  orderproductsattributes a,
+	  orderrepairs s
 	WHERE
 		h.orderProductId = r.id
 	AND r.id = a.order_product_id
 	AND s.id = h.orderRepairId
 	AND s.pushSap = '0'
 	AND s.handleStatus != '6'
-	AND h.quality = '2'
-	AND h.TwoAppraisal = '1'
+	AND h.quality = '1'
+	AND h.TwoAppraisal ='0'
+	AND s.id=#{id,jdbcType=VARCHAR}
   </select>
 
 
@@ -186,12 +246,276 @@
 		TwoAppraisalDate,
 		repairsHPLogsId,
 		ThreeAppraisal,
-		ThreeAppraisalDate
+		ThreeAppraisalDate,
+		checkResult
 	FROM
-		OrderRepairHPRecords
+	orderrepairhprecords
 	WHERE
-		checkResult = '1'
-	AND  quality='2'
-	AND OutOfStorageFlag='0'
+		quality IN ('2', '0')
+	AND OutOfStorageFlag = '0'
+	AND checkType IN ('1', '3')
 	</select>  
+	
+	
+	<select id="queryNotOutBoxQuality"  resultType="com.haier.shop.model.OrderrepairHPrecordsVO">
+			SELECT
+				h.id,
+				p.id orderProductId,
+				h.orderRepairId,
+				h.checkResult,
+				h.quality,
+				h.success,
+				h.checkType,
+				h.TwoAppraisal,
+				p.cOrderSn,
+				p.sku,
+				p.oid,
+				i.id invoIceId,
+				o.sourceOrderSn,
+				o.orderStatus,
+				r.repairSn,
+				p.stockType
+			FROM
+		orderrepairhprecords h,
+		orderrepairs r,
+		orders o,
+		orderproducts p
+			LEFT JOIN invoices i ON p.id = i.orderProductId
+			WHERE
+				h.quality = '1'
+			AND h.orderRepairId = r.id
+			AND r.orderProductId = p.id
+			AND o.id = r.orderId
+			AND r.handleStatus != '6'
+			AND h.OutOfStorageFlag = '0'
+			AND h.checkType = '1'
+			AND r.pushSap = '0'
+			AND h.checkResult = '1'
+	</select>
+
+	<select id="findByOid"  resultMap="BaseResultMapVO">
+			SELECT
+				p.id orderProductId,
+				r.id orderRepairId,
+				p.cOrderSn,
+				p.sku,
+				p.oid,
+				p.tbOrderSn,
+				o.sourceOrderSn,
+				o.orderStatus,
+				r.repairSn,
+				r.vomRepairSn
+			FROM
+		orderrepairs r,
+		orders o,
+		orderproducts p
+
+			WHERE
+			 r.orderProductId = p.id
+			AND o.id = r.orderId
+			AND r.handleStatus = '2'
+			and r.pushSAP = 0
+			and p.oid = #{oid}
+	</select>
+
+	<select id="findInvoice"  resultType="com.haier.shop.model.OrderrepairHPrecordsVO">
+			SELECT
+			i.id invoIceId,
+				i.statusType,
+				i.success invoiceSuccess
+			from invoices i
+						WHERE
+			orderProductId = #{orderProductId}
+			order by id desc
+			limit 1
+
+	</select>
+
+	
+	<select id="SigninInvalidatedInvoiceView" resultType="com.haier.shop.model.OrderrepairHPrecordsVO">
+		SELECT
+			h.id,
+			h.orderProductId,
+			h.orderRepairId,
+			h.checkResult,
+			h.quality,
+			h.success,
+			h.checkType,
+			h.TwoAppraisal,
+			p.cOrderSn,
+			p.sku,
+			p.oid,
+			i.id invoIceId,
+			o.sourceOrderSn,
+			o.orderStatus,
+			r.repairSn
+		FROM
+		orderrepairhprecords h,
+		orderrepairs r,
+		orders o,
+		orderproducts p,
+		invoices i
+		WHERE
+			h.quality = '1'
+		AND p.id = i.orderProductId
+		AND h.orderRepairId = r.id
+		AND r.orderProductId = p.id
+		AND o.id = r.orderId
+		AND r.handleStatus != '6'
+		AND h.OutOfStorageFlag = '1'
+		AND h.checkType = '1'
+		AND r.pushSap = '0'
+		and i.success!='1'
+		and i.statusType!='4'
+		AND (h.hpOrderFail IS null OR h.hpOrderFail='0')
+		AND h.checkResult = '1'
+	</select>
+		
+	
+	
+	<select id="quertNotOutBoxStockPishSAP" resultType="com.haier.shop.model.OrderrepairHPrecordsVO">
+	SELECT
+		h.id,
+		h.orderProductId,
+		h.orderRepairId,
+		h.checkResult,
+		h.quality,
+		h.success,
+		h.checkType,
+		h.TwoAppraisal,
+		p.cOrderSn,
+		r.repairSn
+	FROM
+		orderrepairhprecords h,
+		orderrepairs r,
+		orderproducts p
+	WHERE
+		h.quality = '1'
+	AND h.orderRepairId = r.id
+	AND r.orderProductId = p.id
+	AND r.handleStatus != '6'
+	AND OutOfStorageFlag = '1'
+	AND checkType = '1'
+	AND r.pushSap = '0'
+	AND (h.hpOrderFail IS null OR h.hpOrderFail='0')
+	AND h.checkResult = '1'
+	</select>
+
+	<select id="queryThreeOutOfStorage" resultType="com.haier.shop.model.OrderrepairHPrecordsVO">
+	SELECT
+		r.repairSn,
+		r.id orderRepairId,
+		h.id,
+		p.cOrderSn,
+		p.id  orderProductId
+	FROM
+		orderrepairhprecords h,
+		orderrepairs r,
+		orderproducts p
+	WHERE
+		r.id = h.orderRepairId
+	AND r.orderProductId = p.id
+	<!-- AND h.checkResult = '1'
+	AND h.quality = '2' -->
+	AND h.checkType = '3'
+	AND h.packResult = '2'
+	AND h.ThreeAppraisal = '1'
+	AND h.OutOfStorageFlag not in ('3','4')
+	</select>
+	<select id="queryTenLibrary" resultType="com.haier.shop.model.OrderrepairHPrecordsVO" parameterType="java.lang.String">
+	SELECT
+		r.repairSn,
+		r.id orderRepairId,
+		h.id,
+		p.cOrderSn,
+		p.id  orderProductId
+	FROM
+		orderrepairhprecords h,
+		orderrepairs r,
+		orderproducts p
+	WHERE
+		r.id = h.orderRepairId
+	AND r.orderProductId = p.id
+	AND h.checkType = '3'
+	AND h.packResult = '2'
+	AND h.ThreeAppraisal = '1'
+	AND h.OutOfStorageFlag = '3'
+	AND r.id = #{id}
+	</select>
+	<select id="queryRepairOrderInfo" resultType="com.haier.shop.model.OrderrepairHPrecordsVO" parameterType="java.lang.String">
+	SELECT
+		r.repairSn,
+		r.id orderRepairId,
+		h.id,
+		p.cOrderSn,
+		p.id  orderProductId
+	FROM
+		orderrepairhprecords h,
+		orderrepairs r,
+		orderproducts p
+	WHERE
+		r.id = h.orderRepairId
+	AND r.orderProductId = p.id
+	AND r.id = #{id}
+	</select>
+	<select id="queryB2CTenLibrary" resultType="com.haier.shop.model.OrderrepairHPrecordsVO" parameterType="java.lang.String">
+	SELECT
+		r.repairSn,
+		r.id orderRepairId,
+		h.id,
+		p.cOrderSn,
+		p.id  orderProductId
+	FROM
+		orderrepairhprecords h,
+		orderrepairs r,
+		orderproducts p
+	WHERE
+		r.id = h.orderRepairId
+	AND r.orderProductId = p.id
+	AND h.checkType = '3'
+	AND h.packResult = '2'
+	AND h.ThreeAppraisal = '1'
+	AND h.OutOfStorageFlag = '3'
+	AND r.id = #{id}
+	</select>
+	
+	
+	<select id="queryChangeTheboxUnbox" resultType="com.haier.shop.model.OrderrepairHPrecordsVO" parameterType="java.lang.String"> 
+	SELECT
+		r.repairSn,
+		r.id orderRepairId,
+		h.id,
+		p.cOrderSn,
+		p.id  orderProductId
+	FROM
+		orderrepairhprecords h,
+		orderrepairs r,
+		orderproducts p
+	WHERE
+		r.id = h.orderRepairId
+	AND r.orderProductId = p.id
+	AND h.checkType = '3'
+	AND h.packResult = '2'
+	AND h.ThreeAppraisal = '1'
+	AND r.id =#{id}
+	</select>
+	
+	<select id="queryjudgeRejects" parameterType="java.lang.String" resultType="int">
+	SELECT
+		count(1)
+	FROM
+		orderrepairhprecords
+	WHERE checkType ='1'
+	and quality in ('5','6')
+	and orderRepairId=#{orderRepairId}
+	</select>
+	
+	<select id="queryOrderHAdd1" parameterType="java.lang.String" resultType="int">
+		SELECT
+			count(1)
+		FROM
+		orderrepairhprecords
+		WHERE checkType ='1'
+		and orderRepairId=#{orderRepairId}
+	</select>
 </mapper>

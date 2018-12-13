@@ -149,12 +149,22 @@
         FROM product_payment
         <include refid="where_fragement_equals"/>
     </select>
+    
+    <select id="getPurchasePaymentOneByCondition" resultType="com.haier.purchase.data.model.vehcile.PurchaseProductPaymentDTO">
+        SELECT
+        product_code as productCode,product_name as productName,payment_code as paymentCode,payment_name as paymentName
+        FROM purchase_product_payment
+        where 1=1
+        <if test="entity.productGroup != null and entity.productGroup !='' ">
+             <![CDATA[ and product_code  = #{entity.productGroup} ]]>
+        </if>
+    </select>
 
     <!-- 获取LIST -->
-    <select id="getList" resultMap="productPaymentMap">
+    <select id="getList" resultType="com.haier.purchase.data.model.vehcile.PurchaseProductPaymentDTO">
         SELECT
-        <include refid="Base_Column_List"/>
-        FROM product_payment
+        product_code as productCode,product_name as productName,payment_code as paymentCode,payment_name as paymentName
+        FROM purchase_product_payment
     </select>
 
 

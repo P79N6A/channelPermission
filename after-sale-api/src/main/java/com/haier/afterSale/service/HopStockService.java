@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.haier.common.ServiceResult;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 /*import com.haier.svc.bean.pop.InvStockLock;
 import com.haier.svc.bean.pop.InventoryBusinessTypes;
 import com.haier.svc.bean.pop.Stock;*/

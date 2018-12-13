@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.OdsGateGrossprofitDao">
+
+    <resultMap id="BaseResultMap" type="com.haier.shop.dto.OdsGateGrossprofitDto">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="BRAND" property="brand" jdbcType="VARCHAR"/>
+        <result column="CATE_GORY" property="cateGory" jdbcType="VARCHAR"/>
+        <result column="GROSS_PROFIT" property="grossProfit" jdbcType="DECIMAL"/>
+        <result column="BEGIN_TIME" property="beginTime"/>
+        <result column="END_TIME" property="endTime"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="CREATE_BY" property="createBy"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+        <result column="UPDATE_BY" property="updateBy"/>
+        <result column="IP" property="ip"/>
+        <result column="REMARK" property="remark"/>
+        <result column="flag" property="flag"/>
+    </resultMap>
+    <resultMap id="BaseResultMap2" type="com.haier.shop.model.OdsGateGrossprofit">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+
+        <result column="GROSS_PROFIT" property="grossProfit" jdbcType="DECIMAL"/>
+
+    </resultMap>
+    <sql id="tb" >
+        ods_gate_grossprofit
+    </sql>
+
+    <sql id="cols_exclude_id">
+      brand,
+      cate_gory,
+      gross_profit,
+      begin_time,
+      end_time,
+      create_time,
+      create_by,
+      ip
+    </sql>
+
+    <sql id="vals">
+        #{brand},
+        #{cateGory},
+        #{grossProfit},
+        #{beginTime},
+        #{endTime},
+        NOW(),
+        #{createBy},
+        #{ip}
+    </sql>
+
+    <sql id="pagingSqlColumn">
+        <![CDATA[
+         SELECT t.id,t.brand,t.cate_gory,t.gross_profit,DATE_FORMAT( t.begin_time, '%Y-%m-%d %H:%i:%S') begin_time,DATE_FORMAT( t.end_time, '%Y-%m-%d %H:%i:%S') end_time,DATE_FORMAT( t.create_time, '%Y-%m-%d %H:%i:%S') create_time,t.create_by,DATE_FORMAT( t.update_time, '%Y-%m-%d %H:%i:%S') update_time,t.update_by,t.ip,if (NOW()>t.begin_time and NOW()<t.end_time,'有效','无效')flag
+        ]]>
+    </sql>
+
+    <sql id="pagingSql" >
+        from <include refid="tb" /> t
+    </sql>
+
+    <sql id="pagingWhere">
+        <where>
+            1=1
+            <if test="param.brand!=null and param.brand!=''">
+                and brand = #{param.brand,jdbcType=VARCHAR}
+            </if>
+            <if test="param.cateGory!=null and param.cateGory!=''">
+                and cate_gory = #{param.cateGory,jdbcType=VARCHAR}
+            </if>
+            <!--<if test="param.flag!=null and param.flag!=''">-->
+                <if test="param.flag =='Y'.toString()">
+                    <![CDATA[
+                        and NOW()<t.end_time
+                        and NOW()>t.begin_time
+                     ]]>
+                </if>
+                <if test="param.flag =='N'.toString()">
+                    <![CDATA[
+                       and (NOW()>t.end_time
+                       or NOW()<t.begin_time)
+                    ]]>
+                </if>
+            <!--</if>-->
+        </where>
+    </sql>
+
+
+
+
+    <select id="count" parameterType="map" resultType="long">
+        select  count(1)
+        <include refid="pagingSql" />
+        <include refid="pagingWhere" />
+    </select>
+
+    <select id="paging"  resultMap="BaseResultMap" >
+        <![CDATA[
+        SELECT t.id,t.brand,t.cate_gory,t.gross_profit,DATE_FORMAT( t.begin_time, '%Y-%m-%d %H:%i:%S') begin_time,DATE_FORMAT( t.end_time, '%Y-%m-%d %H:%i:%S') end_time,t.create_by,if (NOW()>t.begin_time and NOW()<t.end_time,'有效','无效')flag
+        ]]>
+        <include refid="pagingSql" />
+        <include refid="pagingWhere" />
+        ORDER BY t.CREATE_TIME desc
+        LIMIT #{page.start}, #{page.pageSize}
+    </select>
+
+    <insert id="insert" parameterType="com.haier.shop.model.OdsGateGrossprofit" >
+        insert into <include refid="tb" /> (
+        id,<include refid="cols_exclude_id" />
+        )
+        values (
+        REPLACE(UUID(),'-',''),<include refid="vals" />
+        )
+    </insert>
+
+    <update id="update" parameterType="com.haier.shop.model.OdsGateGrossprofit" >
+        update <include refid="tb" />
+        <set >
+            <if test="brand != null" >
+                brand = #{brand},
+            </if>
+
+            <if test="cateGory != null" >
+                cate_gory = #{cateGory},
+            </if>
+
+            <if test="grossProfit != null" >
+                gross_profit = #{grossProfit},
+            </if>
+            <if test="beginTime != null" >
+                begin_time = #{beginTime},
+            </if>
+            <if test="endTime != null" >
+                end_time = #{endTime},
+            </if>
+            update_time = NOW(),
+            update_by = #{updateBy},
+            <if test="ip != null" >
+                ip = #{ip}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="queryGrossprofitByBrandAndCateGory" parameterType="com.haier.shop.model.OdsGateGrossprofit" resultMap="BaseResultMap2">
+        SELECT GROSS_PROFIT FROM
+        ods_gate_grossprofit
+        WHERE 1=1
+        and BRAND = #{brand}
+        and CATE_GORY = #{cateGory}
+        and now() BETWEEN BEGIN_TIME and END_TIME
+        limit 1
+    </select>
+
+    <select id="queryRepetition" resultType="com.haier.shop.model.OdsGateGrossprofit">
+        <include refid="pagingSqlColumn" />
+        FROM  <include refid="tb" /> t
+        WHERE 1=1
+        <if test="brand!=null and brand!=''">
+            and brand = #{brand}
+        </if>
+        <if test="cateGory!=null and cateGory!=''">
+            and cate_gory = #{cateGory}
+        </if>
+        <if test="grossProfit!=null and grossProfit!=''">
+            and gross_profit = #{grossProfit}
+        </if>
+        <if test="beginTime!=null ">
+            and begin_time = #{beginTime}
+        </if>
+        <if test="endTime!=null ">
+            and end_time = #{endTime}
+        </if>
+    </select>
+
+    <insert id="bulkImport" parameterType="java.util.List">
+        INSERT  INTO  <include refid="tb" />
+        (
+          id,brand, cate_gory, gross_profit, begin_time, end_time, create_time, create_by
+        )select * from
+        <foreach collection="list" item="opm" separator="union" open="(" close=")" index="index">
+            select
+            REPLACE(UUID(),'-','') t1,#{opm.brand} t2,#{opm.cateGory} t3,
+            #{opm.grossProfit}t4,#{opm.beginTime} t5,#{opm.endTime} t6,NOW() t7,#{opm.createBy} t8
+            FROM dual
+        </foreach>
+        t
+    </insert>
+
+
+
+
+
+
+
+
+
+</mapper>

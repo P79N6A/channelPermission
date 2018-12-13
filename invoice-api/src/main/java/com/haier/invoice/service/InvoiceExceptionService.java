@@ -24,4 +24,9 @@ public interface InvoiceExceptionService {
      * @return
      */
     List<InvoiceExceptionDispItem> getInvoiceExceptionList(Map<String, Object> paramMap);
+
+    /**
+     * 获得条数
+     */
+    public int getCount();
 }

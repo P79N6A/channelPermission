@@ -25,4 +25,11 @@ public interface VomShippingStatusDao {
      */
     List<VomShippingStatus> getByProcessStatus3W(@Param("process_status") Integer processStatus);
     Integer insert(VomShippingStatus shippingStatus);
+
+    /**
+     * 根据网单号查询是否已下发顺丰
+     * @param orderNo
+     * @return
+     */
+    int queryCountByOrderNo(@Param("orderNo") String orderNo);
 }

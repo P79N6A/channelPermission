@@ -6,6 +6,7 @@ import com.haier.shop.model.OrdersVo;
 import com.haier.shop.model.QueryOrderParameter;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ShopOrdersService {
 
@@ -30,6 +31,28 @@ public interface ShopOrdersService {
      */
     public OrdersVo queryVOMTransMission(String id);
 
+    public OrdersVo queryRepairVOMInfo(String id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public OrdersVo queryb2cVOM(String id);
+
+    /**
+     *
+     * @param sCode
+     * @return
+     */
+    public Map queryFiveYard(String sCode);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Map queryMinHpRecordId(String id);
     /**
      * 根据id获取订单对象
      * @param id
@@ -50,4 +73,31 @@ public interface ShopOrdersService {
      * @return
      */
     int updateSmConfirmStatus(Orders orders);
+
+    /**
+     * 根据订单号查询地区国标码
+     * @param orderSn
+     * @return
+     */
+    public Map getRegionByOrderSn(String orderSn);
+    /**
+     * 根据网单id查询订单信息
+     * @param productId
+     * @return
+     */
+    Orders  selectOrderView(String productId);
+    
+    int insertOrders(Orders orders);//插入信息到订单
+
+    int updataOrdersStatus(String id);
+
+    int getRowCnts();
+
+    Orders getBySourceOrderSn(String sourceOrderSn);
+
+    Integer updateMemberinvoicesId(Integer orderId,Integer memberinvoicesId);
+
+    Orders getIdAndOhterByOrderSn(String orderSn);
+
+    Orders getOrderByRelationOrderSn(String connectOrderNum);
 }

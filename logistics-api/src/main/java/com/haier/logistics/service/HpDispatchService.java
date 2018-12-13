@@ -3,13 +3,20 @@ package com.haier.logistics.service;
 import com.haier.common.ServiceResult;
 
 public interface HpDispatchService {
+
     /**
-     * 记录处理结果
-     * @param requestXml 接收的数据
-     * @param responseXml 处理结果
-     * @param message 处理消息
-     * @param flag 成功与失败标识 1-成功；0-失败
-     * @return
+     *
+     * 保存从hp系统推送过来的网点数据，二期被启用，改成从VOM获取返回节点数据
+     * @param requestXml 解析数据
+     * @return 处理结果
      */
+    @Deprecated
     public ServiceResult<String> saveNetPoint(String requestXml);
+
+    /**
+     * 保存从VOM推送的派工返回的网点数据
+     * @param json  解析数据
+     * @return 处理结果
+     */
+    public ServiceResult<String> saveNetPointFromVom(String json);
 }

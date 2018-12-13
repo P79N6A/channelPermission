@@ -101,10 +101,6 @@ public class StocksyncProstorage implements Serializable {
 		this.source = source;
 	}
 
-
-
- 
-
 	public Integer getIsOn() {
 		return isOn;
 	}

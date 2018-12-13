@@ -46,8 +46,8 @@ public class StockReservedConfigController {
     @RequestMapping(value = { "/getStockReservedList" })
     JSONObject queryStockReservedList(String schannelCode,String sref,String sstatus,Integer page, Integer rows)throws Exception{
         Map map=new HashMap();
-        map.put("schannelCode",schannelCode);
-        map.put("sref",sref);
+        map.put("schannelCode",schannelCode.trim());
+        map.put("sref",sref.trim());
         map.put("sstatus",sstatus);
         if (Ustring.isEmpty(map.get("schannelCode").toString())){
             map.put("schannelCode",null);
@@ -98,7 +98,7 @@ public class StockReservedConfigController {
         String ref = request.getParameter("ref1");
         //优先检查单号
         //1.单号单独检查，不与渠道冲突
-        String refMsg = checkRef(ref, StringUtil.isEmpty(id, true) ? null : Integer.parseInt(id));
+        String refMsg = checkRef(ref, StringUtil.isEmpty(id, true) ? 0 : Integer.parseInt(id));
         if (refMsg != null) {
             jsonResult.setMessage(refMsg);
             return jsonResult;
@@ -106,7 +106,7 @@ public class StockReservedConfigController {
         //2.检查渠道时， 单号为空， 否则单号已经检查过
         String channelMsg = StringUtil.isEmpty(ref) ? checkChannel(
                 request.getParameter("channelCode1"),
-                StringUtil.isEmpty(id, true) ? null : Integer.parseInt(id)) : null;
+                StringUtil.isEmpty(id, true) ? 0 : Integer.parseInt(id)) : null;
         if (channelMsg != null) {
             jsonResult.setMessage(channelMsg);
             return jsonResult;
@@ -146,11 +146,11 @@ public class StockReservedConfigController {
         ServiceResult<List<InvReservedConfig>> result = this.stockReservedModel
                 .queryReservedConfigs(config);
         if (result.getResult() != null && result.getResult().size() > 0) {
-            if (id == null) {
+            if (id == 0) {
                 return "新增的单号已经存在";
             } else {
                 InvReservedConfig conf = result.getResult().get(0);
-                if (conf.getId() == id) {
+                if (conf.getId().intValue() == id) {
                     return null;
                 } else {
                     return "修改的单号已经存在";
@@ -187,7 +187,7 @@ public class StockReservedConfigController {
                     break;
                 }
             }
-            if (id == null && channelExist) {
+            if (id == 0 && channelExist) {
                 return "新增的渠道已存在";
             }
 

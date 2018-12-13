@@ -1,5 +1,6 @@
 package com.haier.stock.services;
 
+import com.haier.common.ServiceResult;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,13 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 		// TODO Auto-generated method stub
 		return invStockAgeDao.getStockAgeList(params);
 	}
+
+	@Override
+	public Integer getStockAgeListCounts(Map<String, Object> params) {
+		return invStockAgeDao.getCount(params);
+	}
+
+	@Override
 	public List<Map<String, Object>> countStockGroupBySkuWithChannel(Date date, String channel){
 		return invStockAgeDao.countStockGroupBySkuWithChannel(date, channel);
 	}
@@ -46,6 +54,7 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param
 	 * @return
 	 */
+	@Override
 	public List<Map<String, Object>> countStockGroupToChannelsToProducts(Date startdate,Date enddate){
 		return invStockAgeDao.countStockGroupToChannelsToProducts(startdate,enddate);
 	}
@@ -54,6 +63,7 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param
 	 * @return
 	 */
+	@Override
 	public List<Map<String, Object>> sumStockGroupToChannelsToProducts(Date startdate, Date enddate){
 		return invStockAgeDao.sumStockGroupToChannelsToProducts(startdate,enddate);
 		}
@@ -62,6 +72,7 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param
 	 * @return
 	 */
+	@Override
 	public List<Map<String, Object>> totalStockGroupToChannelsToProducts(Date startdate, Date enddate){
 		return invStockAgeDao.totalStockGroupToChannelsToProducts(startdate,enddate);
 	}
@@ -70,6 +81,7 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param
 	 * @return
 	 */
+	@Override
 	public List<Map<String, Object>> subSumStockGroupToChannelsToProducts(Date startdate, Date enddate){
 		return invStockAgeDao.subSumStockGroupToChannelsToProducts(startdate,enddate);
 	}
@@ -78,6 +90,7 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param
 	 * @return
 	 */
+	@Override
 	public List<Map<String, Object>> countStockGroupToProductsToChannels(Date startdate, Date enddate){
 		return invStockAgeDao.countStockGroupToProductsToChannels(startdate,enddate);
 	}
@@ -86,6 +99,7 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param
 	 * @return
 	 */
+	@Override
 	public List<Map<String, Object>> sumStockGroupToProductsToChannels(Date startdate, Date enddate){
 		return invStockAgeDao.sumStockGroupToProductsToChannels(startdate,enddate);
 	}
@@ -94,6 +108,7 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param
 	 * @return
 	 */
+	@Override
 	public List<Map<String, Object>> totalStockGroupToProductsToChannels(Date startdate, Date enddate){
 		return invStockAgeDao.totalStockGroupToProductsToChannels(startdate,enddate);
 	}
@@ -102,6 +117,7 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param
 	 * @return
 	 */
+	@Override
 	public List<Map<String, Object>> subSumStockGroupToProductsToChannels(Date startdate, Date enddate){
 		return invStockAgeDao.subSumStockGroupToProductsToChannels(startdate,enddate);
 	}
@@ -110,6 +126,7 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param date
 	 * @return
 	 */
+	@Override
 	public List<Map<String, Object>> countStockGroupBySku(Date date){
 		return invStockAgeDao.countStockGroupBySku(date);
 	}
@@ -118,15 +135,19 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	 * @param date
 	 * @return
 	 */
+	@Override
 	public List<InvStockAgeLog> countStockGroupByChannelWhthSku(Date date, String productGroupName){
 		return invStockAgeDao.countStockGroupByChannelWhthSku(date,productGroupName);
 	}
+	@Override
 	public List<InvStockAge> getBySkuAndSCode(String secCode,String sku){
 		return invStockAgeDao.getBySkuAndSCode(secCode,sku);
 	}
+	@Override
 	public Integer updateDate(InvStockAge invStockAge){
 		return invStockAgeDao.updateDate(invStockAge);
 	}
+	@Override
 	public Integer insert(InvStockAge invStockAge){
 		return invStockAgeDao.insert(invStockAge);
 	}
@@ -141,5 +162,22 @@ public class StockInvStockAgeServiceImpl implements StockInvStockAgeService{
 	public Integer update(InvStockAge invStockAge) {
 		
 		return invStockAgeDao.update(invStockAge);
+	}
+
+	@Override
+	public List<InvStockAge> getStockAgeListByMap(Map param) {
+		return invStockAgeDao.getStockAgeListByMap(param);
+	}
+
+	@Override
+	public ServiceResult<List<String>> getProductGroupsInStockAge(String productType) {
+		ServiceResult<List<String>> rs = new ServiceResult<List<String>>();
+		try {
+			rs.setResult(invStockAgeDao.getProductGroupsByProductType(productType));
+		} catch (Exception e) {
+			rs.setSuccess(false);
+			rs.setError("获取库龄报表中的产品组信息出现未知异常：", e.getMessage());
+		}
+		return rs;
 	}
 }

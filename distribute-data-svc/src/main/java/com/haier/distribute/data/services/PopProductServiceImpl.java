@@ -70,4 +70,15 @@ public class PopProductServiceImpl implements PopProductService {
 	public Product checkSkuAndChannel(String sku, String channelCode) {
 		return popProductDao.checkSkuAndChannel(sku,channelCode);
 	}
+	public List<String> selectSkuByChannelId(Integer id){
+		return popProductDao.selectSkuByChannelId(id);
+	}
+	public List<String> seletSkuAll(){
+			return popProductDao.seletSkuAll();
+	}
+
+	@Override
+	public Product checkSkuAndChannelID(String sku, String channelId) {
+		return popProductDao.checkSkuAndChannelId(sku,channelId);
+	}
 }

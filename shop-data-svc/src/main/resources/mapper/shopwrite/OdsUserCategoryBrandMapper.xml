@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.OdsUserCategoryBrandDao">
+    <resultMap id="BaseResultMap" type="com.haier.shop.model.OdsUserCategoryBrand">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userid" jdbcType="VARCHAR"/>
+        <result column="cate_gory" property="cateGory" jdbcType="VARCHAR"/>
+        <result column="brand" property="brand" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryUserCategoryBrandList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT cate_gory,brand FROM ods_user_category_brand WHERE USER_ID =#{userId}
+    </select>
+
+</mapper>

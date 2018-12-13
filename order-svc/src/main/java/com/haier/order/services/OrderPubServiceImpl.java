@@ -12,15 +12,7 @@ import com.haier.order.model.AutoCodConfirmModel;
 import com.haier.order.service.OrderPubService;
 
 
-/**
- * OMS订单接口实现类
- *                       
- * @Filename: OrderPubServiceImpl.java
- * @Version: 1.0
- * @Author: yaoyu
- * @Email: yaoyu@ehaier.com
- *
- */
+
 @Service
 public class OrderPubServiceImpl implements OrderPubService {
     private static Logger log = LoggerFactory.getLogger(OrderPubServiceImpl.class);
@@ -42,7 +34,7 @@ public class OrderPubServiceImpl implements OrderPubService {
             result.setMessage("服务器发生异常：" + e.getMessage());
             result.setSuccess(false);
             result.setResult(false);
-        } finally {
+        } finally {	
             ReadWriteRoutingDataSourceHolder.clearIsAlwaysMaster();
         }
         return result;

@@ -19,12 +19,18 @@ public interface T2OrderQueryDao {
 	 * @return
 	 */
 	List<T2OrderItem> findT2OrderMultipleList(Map<String, Object> params);
-
 	/**
-	 * 获得条数
+	 * 获取入库时间为空的订单
+	 * @param params
 	 * @return
 	 */
-	int getRowCnts();
+	CrmOrderItem getIsNullWaInTime(Map<String, Object> params);
+	/**
+	 * 获得条数
+	 * @param params 
+	 * @return
+	 */
+	int getRowCnts(Map<String, Object> params);
 
 	/**
 	 * 手工关单
@@ -70,4 +76,8 @@ public interface T2OrderQueryDao {
      * @return
      */
     public int findPOListCNT(Map<String, Object> params);
+
+    List<T2OrderItem> findT2OrderMultipleExportList(Map<String, Object> params);
+
+	Integer getByOrderId(String orderId);
 }

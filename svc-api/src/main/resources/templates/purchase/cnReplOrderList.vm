@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>预约计划入库</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
+
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+        collapsible:false">
+    <table id="datagrid">
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  货品ID
+			</span>
+                <input class="easyui-textbox" id="scItemId" name="scItemId"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  货品编码
+			</span>
+                <input class="easyui-textbox" id="scItemCode" name="scItemCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  货品名称
+			</span>
+                <input class="easyui-textbox" id="scItemName" name="scItemName"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  85单号
+			</span>
+                <input class="easyui-textbox" id="entryOrderCode" name="entryOrderCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  LBX号
+			</span>
+                <input class="easyui-textbox" id="entryOrderId" name="entryOrderId"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              补货单号
+            </span>
+                <input class="easyui-textbox" id="replNo" name="replNo"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  创建时间
+			</span>
+                <input class="easyui-datetimebox" id="gmtCreateMin" name="gmtCreateMin" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datetimebox" id="gmtCreateMax" name="gmtCreateMax" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  修改时间
+			</span>
+                <input class="easyui-datetimebox" id="gmtModifiedMin" name="gmtModifiedMin" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datetimebox" id="gmtModifiedMax" name="gmtModifiedMax" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  最晚入库时间
+			</span>
+                <input class="easyui-datetimebox" id="deadLineMin" name="deadLineMin" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datetimebox" id="deadLineMax" name="deadLineMax" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  确认入库时间
+			</span>
+                <input class="easyui-datetimebox" id="confirmDeadLineMin" name="confirmDeadLineMin" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datetimebox" id="confirmDeadLineMax" name="confirmDeadLineMax" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  基地仓编码
+			</span>
+                <input class="easyui-textbox" id="fromStoreCode" name="fromStoreCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  菜鸟仓编码
+			</span>
+                <input class="easyui-textbox" id="storeCode" name="storeCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  菜鸟仓名称
+			</span>
+                <input class="easyui-textbox" id="storeName" name="storeName"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  处理状态
+			</span>
+                <select class="easyui-combobox" id="state" name="state" style="width:178px;" data-options="editable:false,panelHeight:'auto'">
+                    <option value="-1" selected="true">全部</option>
+                    <option value="1">初始状态</option>
+                    <option value="2">生成85单号</option>
+                    <option value="3">已推送85单号</option>
+                    <option value="4">已获取lbx号</option>
+                    <option value="10">正在补货</option>
+                    <option value="50">完成补货</option>
+                    <option value="11">取消补货</option>
+                    <option value="12">补货异常</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <!--<a href="#" class="easyui-linkbutton" id="export"-->
+        <!--data-options="iconCls:'icon-save',plain:true">导出</a>-->
+        <!--<input id="exportData" name="exportData" type="hidden"/>-->
+        <!--<input id="ids" name="ids" type="hidden"/>-->
+    </form>
+</div>
+<div id="replOrderConfirmHtml" style="display:none" title="确认补货单"></div>
+<script src="../static/js/purchase/cnReplOrderList.js"></script>
+</body>
+</html>

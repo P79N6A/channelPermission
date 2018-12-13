@@ -42,6 +42,8 @@ public interface VehicleOrderDetailDao {
 	int updateZqStatus(@Param("itemNo")String itemNo, @Param("orderStatus")String orderStatus);
 
 	int updateByItemNo(Map<String, String> map);
+	
+	int updateVbelnSpareByItemNo(@Param("itemNo")String itemNo, @Param("vbelnSpare")String vbelnSpare);
 
 	public void addPurchaseStock(Cn3wPurchaseStock cn3wPurchaseStock);
 
@@ -84,6 +86,12 @@ public interface VehicleOrderDetailDao {
 	int selectZqCount(@Param("zqItemNo")String zqItemNo, @Param("orderStatus")String status);
 
 	void updateByOrderNo(VehicleOrderDetailsDTO order);
+
+	List<VehicleOrderDetailsDTO> getByVbeln(@Param("vbeln") String vbeln);
+
+	void updateEntry3wOrderById(Cn3wPurchaseStock cn3wPurchaseStock);
+
+	int vbelnExists(@Param("itemNo") String itemNo, @Param("vbelnSpare") String vbelnSpare);
 
 
 }

@@ -95,7 +95,6 @@ public class MemStockLockController {
         String endLockTime = request.getParameter("endTime");
         String lockQty =request.getParameter("lockQty");
         int size = Integer.parseInt(Ustring.getString0(request.getParameter("size")));
-        int start =Integer.parseInt(Ustring.getString0(request.getParameter("start")));
         if(!"".equals(lockQty)&&null!=lockQty){
         	stockLock.setLockQty(Integer.parseInt(lockQty));	
         }
@@ -104,33 +103,20 @@ public class MemStockLockController {
         	
         if (size <= 0) {
         	size=20;
-		}
-        if(start>0){
-        	start=((start-1)  * size);
-        	if(start==0){
-        		start =1;
-        	}
-		}else {
-			start =1;
-		}
-        
-        
+        }
+
+
+
         stockLock.setSku(sku == null ? "" : sku.trim());
         stockLock.setSecCode(secCode == null ? "" : secCode.trim().toUpperCase());
         stockLock.setOptUser(optUser == null ? "" : optUser.trim());
         stockLock.setRefno(refNo == null ? "" : refNo.trim());
-        PagerInfo pager = new PagerInfo(size, start);
-        if(pager.getPageIndex()==1) {
-        	modelMap.put("start",0);
-       }else {
-    	   modelMap.put("start", pager.getPageIndex());
-       }
-        modelMap.put("size", pager.getPageSize());
+        PagerInfo pager = new PagerInfo(size, pageIndex);
+
         List<InvStockLockEx> stockLockList = memStockLockModel.queryMemStockLockList(stockLock,pager);
-        modelMap.put("rowList", stockLockList);
-        modelMap.put("total", pager);
+
         Gson gson=new Gson();
-        json.put("total", pager.getRowsCount()-1);
+        json.put("total", pager.getRowsCount());
         json.put("rows", gson.toJson(stockLockList));
         return json;
     }

@@ -6,14 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.haier.purchase.data.service.PurchaseCommonService;
 import org.apache.log4j.LogManager;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -31,7 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.dubbo.common.json.JSONArray;
 import com.alibaba.dubbo.common.json.ParseException;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.google.gson.Gson;
 import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
@@ -98,7 +99,14 @@ public class T2OrderQueryController {
 	CommPurchase commPurchase;
     
 	 @RequestMapping("/PageJump")
-	 public String PageJump(){
+	 public String PageJump(HttpServletRequest request, Map<String, Object> modelMap){
+		 Map<String, Object> authMap = new HashMap<>();
+			commPurchase.getAuthMap(request, "", "", "", authMap);
+			try {
+				modelMap.put("authMap", JSON.json(authMap));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		 return  "purchase/t2OrderQuery";
 	 }
 
@@ -208,8 +216,8 @@ public class T2OrderQueryController {
             // 权限Map
             Map<String, Object> authMap = new HashMap<String, Object>();
             // 取得产品组权限List和渠道权限List
-            //CommPurchase.getAuthMap(purchaseCommonService,request,product_group_id,
-                    //ed_channel_id, category_id, authMap);
+            commPurchase.getAuthMap(request,product_group_id,
+                    ed_channel_id, category_id, authMap);
             params.put("arrival_start_week", startDay);
             params.put("arrival_end_week", endDay);
             if (report_start_week != null && !"".equals(report_start_week)) {
@@ -220,9 +228,14 @@ public class T2OrderQueryController {
             }
             params.put("report_year_week_start", report_start_week);
             params.put("report_year_week_end", report_end_week);
-            //params.put("ed_channel_id", authMap.get("channel"));
-            params.put("ed_channel_id", ed_channel_id);
-            params.put("product_group_id", product_group_id);
+            if(authMap.get("channel") != null){
+            	String[] channels = (String[]) authMap.get("channel");
+            	Set<String> channelSet = new HashSet(Arrays.asList(channels));
+            }
+            params.put("ed_channel_id", authMap.get("channel"));
+//            params.put("ed_channel_id", ed_channel_id);
+            params.put("product_group_id", authMap.get("productGroup"));
+//            params.put("product_group_id", product_group_id);
             params.put("order_id", order_id);
             params.put("oms_order_id", oms_order_id);
             params.put("brand_id", brand_id);
@@ -243,8 +256,8 @@ public class T2OrderQueryController {
             params.put("custom_order_id", custom_order_id);
             params.put("customization", customization);
             params.put("order_type", order_type);
-            //params.put("category_id", authMap.get("cbsCatgory"));
-            params.put("category_id", category_id);
+            params.put("category_id", authMap.get("cbsCategory"));
+//            params.put("category_id", category_id);
             params.put("m", (page - 1) * rows);
             params.put("n", rows);
             
@@ -367,6 +380,13 @@ public class T2OrderQueryController {
         modelMap.put("poDetailData", poDetailData);
         String url = request.getHeader("referer");
         modelMap.put("url", url);
+        Map<String, Object> authMap = new HashMap<>();
+		commPurchase.getAuthMap(request, "", "", "", authMap);
+		try {
+			modelMap.put("authMap", JSON.json(authMap));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         return "purchase/t2OrderQueryPoList";
     }
     
@@ -445,8 +465,8 @@ public class T2OrderQueryController {
             // 权限Map
             Map<String, Object> authMap = new HashMap<String, Object>();
             // 取得产品组权限List和渠道权限List
-            //commPurchase.getAuthMap(purchaseCommonService, request, product_group, channel,
-                    //category_id, authMap);
+            commPurchase.getAuthMap(request, product_group, channel,
+                    category_id, authMap);
             params.put("report_start_week", startDay);
             params.put("report_end_week", endDay);
             params.put("product_group_id", authMap.get("productGroup"));
@@ -462,7 +482,7 @@ public class T2OrderQueryController {
             params.put("datestorge_start", datestorge_start);
             params.put("datestorge_end", datestorge_end);
             params.put("brand_id", brand_id);
-            params.put("category_id", authMap.get("cbsCatgory"));
+            params.put("category_id", authMap.get("cbsCategory"));
             params.put("materials_desc", materials_desc);
             params.put("source_order_id", source_order_id);
             params.put("order_id", order_id);
@@ -884,50 +904,47 @@ public class T2OrderQueryController {
       }
 
       }
-    
-    @RequestMapping(value = {"/exportAllT2OrderList.export"})
-    void exportAllT2OrderList(@RequestParam(required = false) String arrival_start_week_save,
-            @RequestParam(required = false) String arrival_end_week_save,
-            @RequestParam(required = false) String datestart_save,
-            @RequestParam(required = false) String dateend_save,
-            @RequestParam(required = false) String ed_channel_id_save,
-            @RequestParam(required = false) String product_group_id_save,
-            @RequestParam(required = false) String wp_order_id_save,
-            @RequestParam(required = false) String oms_order_id_save,
-            @RequestParam(required = false) String brand_save,
-            @RequestParam(required = false) String materials_id_save,
-            @RequestParam(required = false) String materials_description_save,
-            @RequestParam(required = false) String storage_id_save,
-            @RequestParam(required = false) String flow_flag_save,
-            @RequestParam(required = false) String shipment_combination_id_save,
-            @RequestParam(required = false) String gvs_order_id_save,
-            @RequestParam(required = false) String custom_order_id_save,
-            @RequestParam(required = false) String customization_save,
-            @RequestParam(required = false) String order_type_save,
-            @RequestParam(required = false) String cbs_category_save,
-            @RequestParam(required = false) String order_category_save,
-            @RequestParam(required = false) String exportData,
-            @RequestParam(required = false) String[] source_Index,
-            HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    @RequestMapping(value = {"/exportAllT2OrderQueryList.export"})
+    void exportAllT2QueryOrderList(@RequestParam(required = false) String arrival_year_week_start_save,
+                              @RequestParam(required = false) String arrival_year_week_end_save,
+                              @RequestParam(required = false) String datestart_save,
+                              @RequestParam(required = false) String dateend_save,
+                              @RequestParam(required = false) String ed_channel_id_save,
+                              @RequestParam(required = false) String product_group_id_save,
+                              @RequestParam(required = false) String wp_order_id,
+                              @RequestParam(required = false) String oms_order_id_save,
+                              @RequestParam(required = false) String brand_save,
+                              @RequestParam(required = false) String materials_id,
+                              @RequestParam(required = false) String materials_description,
+                              @RequestParam(required = false) String storage_id,
+                              @RequestParam(required = false) String flow_flag_save,
+                              @RequestParam(required = false) String shipment_combination_id,
+                              @RequestParam(required = false) String gvs_order_id,
+                              @RequestParam(required = false) String custom_order_id,
+                              @RequestParam(required = false) String customization_save,
+                              @RequestParam(required = false) String order_type_save,
+                              @RequestParam(required = false) String cbs_catgory_save,
+                              @RequestParam(required = false) String order_category_save,
+                              HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String startDay = "";
         String endDay = "";
-
         Map<String, Object> params = new HashMap<String, Object>();
         // Boolean startweekblag = false;
         // Boolean endweekblag = false;
-        if (arrival_start_week_save != null && !"".equals(arrival_start_week_save)) {
-            String startWeek = CommUtil.getWeekOfYear_Sunday_Normal(arrival_start_week_save, null,
+        if (arrival_year_week_start_save != null && !"".equals(arrival_year_week_start_save)) {
+            String startWeek = CommUtil.getWeekOfYear_Sunday_Normal(arrival_year_week_start_save, null,
                     "1");
-            arrival_start_week_save = startWeek.replace("年", "").replace("周", "");
-            startDay = CommUtil.weekToStartDateDay(arrival_start_week_save);
+            arrival_year_week_start_save = startWeek.replace("年", "").replace("周", "");
+            startDay = CommUtil.weekToStartDateDay(arrival_year_week_start_save);
             // System.out.println("startDay:" + startDay);
             // startweekblag = true;
         }
-        if (arrival_end_week_save != null && !"".equals(arrival_end_week_save)) {
-            String endtWeek = CommUtil.getWeekOfYear_Sunday_Normal(arrival_end_week_save, null, "1");
-            arrival_end_week_save = endtWeek.replace("年", "").replace("周", "");
-            endDay = CommUtil.weekToEndDateDay(arrival_end_week_save);
+        if (arrival_year_week_end_save != null && !"".equals(arrival_year_week_end_save)) {
+            String endtWeek = CommUtil.getWeekOfYear_Sunday_Normal(arrival_year_week_end_save, null, "1");
+            arrival_year_week_end_save = endtWeek.replace("年", "").replace("周", "");
+            endDay = CommUtil.weekToEndDateDay(arrival_year_week_end_save);
             // System.out.println("endDay:" + endDay);
             // endweekblag = true;
         }
@@ -943,28 +960,30 @@ public class T2OrderQueryController {
         // 权限Map
         Map<String, Object> authMap = new HashMap<String, Object>();
         // 取得产品组权限List和渠道权限List
-        //commPurchase.getAuthMap(purchaseCommonService,request,product_group_id,
-                //ed_channel_id, category_id, authMap);
+        commPurchase.getAuthMap(request,product_group_id_save,
+                ed_channel_id_save, cbs_catgory_save, authMap);
         params.put("arrival_start_week", startDay);
         params.put("arrival_end_week", endDay);
         if (datestart_save != null && !"".equals(datestart_save)) {
-        	datestart_save = datestart_save.replace("年", "").replace("周", "");
+            datestart_save = datestart_save.replace("年", "").replace("周", "");
         }
         if (dateend_save != null && !"".equals(dateend_save)) {
-        	dateend_save = dateend_save.replace("年", "").replace("周", "");
+            dateend_save = dateend_save.replace("年", "").replace("周", "");
         }
         params.put("report_year_week_start", datestart_save);
         params.put("report_year_week_end", dateend_save);
-        //params.put("ed_channel_id", authMap.get("channel"));
-        params.put("product_group_id", AllToNull(product_group_id_save));
-        params.put("order_id", wp_order_id_save);
+        params.put("ed_channel_id", authMap.get("channel"));
+//        params.put("ed_channel_id", ed_channel_id_save);
+        params.put("product_group_id", authMap.get("productGroup"));
+//        params.put("product_group_id", product_group_id_save);
+        params.put("order_id", wp_order_id);
         params.put("oms_order_id", oms_order_id_save);
-        params.put("brand_id", AllToNull(brand_save));
-        params.put("materials_id", materials_id_save);
-        params.put("materials_desc", materials_description_save);
-        params.put("storage_id", storage_id_save);
+        params.put("brand_id", brand_save);
+        params.put("materials_id", materials_id);
+        params.put("materials_desc", materials_description);
+        params.put("storage_id", storage_id);
         // 订单类别
-        params.put("order_category", AllToNull(order_category_save));
+        params.put("order_category", order_category_save);
         String[] flow_flag_list = null;
         if (flow_flag_save != null && !"".equals(flow_flag_save)) {
             // flow_flag转化为数组
@@ -972,33 +991,292 @@ public class T2OrderQueryController {
         }
         params.put("flow_flag", flow_flag_list);
 
-        params.put("shipment_combination_id", shipment_combination_id_save);
-        params.put("gvs_order_id", gvs_order_id_save);
-        params.put("custom_order_id", custom_order_id_save);
-        params.put("customization", AllToNull(customization_save));
-        params.put("order_type", AllToNull(order_type_save));
-        
-/*        if (source_Index != null && "on".equals(source_Index[0])) {
-        	HSSFWorkbook wb = getPODetailsData(params);
-				//getPoData(wb,response);
-        	
-        	ByteArrayOutputStream os = new ByteArrayOutputStream();
+        params.put("shipment_combination_id", shipment_combination_id);
+        params.put("gvs_order_id", gvs_order_id);
+        params.put("custom_order_id", custom_order_id);
+        params.put("customization", customization_save);
+        params.put("order_type", order_type_save);
+        params.put("category_id", authMap.get("cbsCategory"));
+//        params.put("category_id", cbs_catgory_save);
+
+        HSSFWorkbook  wb= getDetailsQueryData(params);
+
+        SimpleDateFormat sdf =  new SimpleDateFormat("yyyyMMddHHmmss");
+        java.util.Date date=new java.util.Date();
+        String str=sdf.format(date);
+        String fileName = "订单列表"+str;
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
             wb.write(os);
             byte[] content = os.toByteArray();
             InputStream is = new ByteArrayInputStream(content);
-        	
-	        BufferedInputStream bis = null;
-	        BufferedOutputStream bos = null;
-	        bis = new BufferedInputStream(is);
-	        bos = new BufferedOutputStream(response.getOutputStream());
-	        byte[] buff = new byte[2048];
-	        int bytesRead;
-	        // Simple read/write loop.
-	        while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-	            bos.write(buff, 0, bytesRead);
-	        }
-        }*/
 
+            ExportExcelUtil.exportCommon(is,fileName,response);
+        } catch (IOException e) {
+            logger.error("错误", e);
+        }
+    }
+
+    /**
+     * T+2审核提交画面导出数据处理（将不同DB中检索出的数据组织在一起） 李超
+     *
+     * @param  <String, Object> params 检索条件中的参数
+     * @return result 需要显示或导出数据结果
+     */
+    public HSSFWorkbook getDetailsQueryData(Map<String, Object> params) {
+        Integer pageIndex = 0;
+        List<T2OrderItem> t2OrderItemsList= new ArrayList<>();
+
+        while (true){
+            params.put("m",1000*pageIndex);
+            params.put("n",1000);
+            pageIndex++;
+            List<T2OrderItem> list = t2OrderQueryService.getT2OrderListExportData(params);
+            if(list.isEmpty()||list.size()==0){
+                break;
+            }
+            t2OrderItemsList.addAll(list);
+        }
+
+        // 获得条数
+        List<T2OrderItem> orderList = new ArrayList<T2OrderItem>();
+        if (t2OrderItemsList!=null&&t2OrderItemsList.size()!=0) {
+            orderList = t2OrderItemsList;
+        }
+        // 1.创建一个workbook，对应一个Excel文件
+        HSSFWorkbook wb = new HSSFWorkbook();
+        // 2.在workbook中添加一个sheet，对应Excel中的一个sheet
+        HSSFSheet sheet = wb.createSheet("订单列表");
+        int length = ExportData.orderListQuery.length;
+        for (int i = 0; i <length; i++) {
+            sheet.setColumnWidth(i, (int)(21.57*256));
+        }
+
+        // 3.在sheet中添加表头第0行，老版本poi对excel行数列数有限制short
+        HSSFRow row = sheet.createRow((int) 0);
+        // 4.创建单元格，设置值表头，设置表头居中
+        HSSFCellStyle style = wb.createCellStyle();
+        // 居中格式
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
+        style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        style.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        style.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边
+        // 设置表头
+        for(int i=0;length-1>=i;i++){
+            HSSFCell cell = row.createCell(i);
+            cell.setCellValue(ExportData.orderListQuery[i]);
+            cell.setCellStyle(style);
+        }
+        Map<String, String> orderCategoryMap = commPurchase.getValueMeaningMap(
+                dataDictionaryService, ORDER_CATEGORY);
+
+        Map<String, String> invstockchannelmap = new HashMap<String, String>();// 渠道
+
+//         commPurchase.getChannelMap(invstockchannelmap);
+        invstockchannelmap = t2OrderService
+                .getChannelMapByCode(invstockchannelmap);
+        invstockchannelmap = t2OrderService.getChannelMapByCode(invstockchannelmap);
+        // 品牌数据存入HashMap
+        Map<String, String> brandMap = new HashMap<String, String>();
+        // 取得品牌
+        commPurchase.getBrandMap(brandMap);
+
+        Map<String, String> trueOrFalseMap = commPurchase.getValueMeaningMap(
+                dataDictionaryService, TRUE_FALSE_DISTINCT);
+
+        Map<String, String> flowFlagMap = commPurchase.getValueMeaningMap(
+                dataDictionaryService, T2_ORDER_STATUS);
+
+        Map<String, String> productgroupmap = new HashMap<String, String>();// 产品组
+        commPurchase.getProductMap(productgroupmap);
+
+        //向单元格里添加数据
+        for(short i=0;i<orderList.size();i++){
+            row = sheet.createRow(i+1);
+            row.createCell(0).setCellValue(orderCategoryMap.get(String.valueOf(orderList.get(i).getOrder_category())));
+            row.createCell(1).setCellValue(flowFlagMap.get(String.valueOf(orderList.get(i).getFlow_flag())));
+            row.createCell(2).setCellValue(orderList.get(i).getOrder_id());
+            row.createCell(3).setCellValue(orderList.get(i).getOrder_num_73());
+            row.createCell(4).setCellValue(orderList.get(i).getSend_flag());
+            row.createCell(5).setCellValue(orderList.get(i).getChannel_commit_time_display());
+            row.createCell(6).setCellValue(orderList.get(i).getChannel_commit_user());
+            row.createCell(7).setCellValue(orderList.get(i).getAudit_time_display());
+            row.createCell(8).setCellValue(orderList.get(i).getAudit_user());
+            row.createCell(9).setCellValue(orderList.get(i).getOrder_close_time_display());
+            row.createCell(10).setCellValue(orderList.get(i).getOrder_close_user());
+            row.createCell(11).setCellValue(orderList.get(i).getOms_order_id());
+            row.createCell(12).setCellValue(orderList.get(i).getCustom_desc());
+            row.createCell(13).setCellValue("重庆新日日顺家电销售有限公司");
+            row.createCell(14).setCellValue(orderList.get(i).getTransmit_desc());
+            // 提报周
+            String report_year_week = orderList.get(i).getReport_year_week();
+            if(!"".equals(report_year_week)){
+                // 编辑提报年
+                row.createCell(15).setCellValue(report_year_week.substring(0, 4) + "年");
+                row.createCell(16).setCellValue(report_year_week.substring(4) + "周");
+            }
+
+            String arrivalWeek = CommUtil.getWeekOfYear_Sunday_Normal(
+                    orderList.get(i).getLatest_arrive_date_display(), null, "1");
+
+            row.createCell(17).setCellValue(arrivalWeek);
+            row.createCell(18).setCellValue(arrivalWeek);
+            row.createCell(19).setCellValue(orderList.get(i).getIndustry_trade_desc());
+            row.createCell(20).setCellValue(invstockchannelmap.get(orderList.get(i).getEd_channel_id()));
+            // row.createCell(18).setCellValue(orderList.get(i).getEd_channel_name());
+            row.createCell(21).setCellValue(orderList.get(i).getCategory_id());
+            row.createCell(22).setCellValue(productgroupmap.get(orderList.get(i).getProduct_group_id()));
+            //row.createCell(20).setCellValue(orderList.get(i).getProduct_group_name());
+            row.createCell(23).setCellValue(brandMap.get(orderList.get(i).getBrand_id()));
+            //row.createCell(21).setCellValue(orderList.get(i).getBrand_id());
+            row.createCell(24).setCellValue(orderList.get(i).getMaterials_id());
+            row.createCell(25).setCellValue(orderList.get(i).getMaterials_desc());
+            row.createCell(26).setCellValue(orderList.get(i).getOrder_type_name());
+            row.createCell(27).setCellValue(String.valueOf(orderList.get(i).getT2_delivery_prediction()));
+            row.createCell(28).setCellValue(String.valueOf(orderList.get(i).getPrice()));
+            row.createCell(29).setCellValue(String.valueOf(orderList.get(i).getAmount()));
+            row.createCell(30).setCellValue(orderList.get(i).getStorage_id());
+            row.createCell(31).setCellValue(orderList.get(i).getStorage_name());
+            row.createCell(32).setCellValue(orderList.get(i).getArrival_storage_desc());
+            row.createCell(33).setCellValue(orderList.get(i).getSeries_id());
+            row.createCell(34).setCellValue(orderList.get(i).getStatus());
+            row.createCell(35).setCellValue(orderList.get(i).getLatest_arrive_date_display());
+            row.createCell(36).setCellValue(orderList.get(i).getPlan_deliver_date_display());
+            row.createCell(37).setCellValue(orderList.get(i).getPromise_arrive_date_display());
+            row.createCell(38).setCellValue(orderList.get(i).getActual_deliver_date_display());
+            row.createCell(39).setCellValue(orderList.get(i).getPredict_arrive_date_display());
+            row.createCell(40).setCellValue(orderList.get(i).getIndustry_trade_take_date_display());
+            row.createCell(41).setCellValue(orderList.get(i).getCustom_sign_date_display());
+            row.createCell(42).setCellValue(orderList.get(i).getReturn_order_date_display());
+            row.createCell(43).setCellValue(orderList.get(i).getLatest_arrive_date_display());
+            row.createCell(44).setCellValue(orderList.get(i).getFactory_id());
+            row.createCell(45).setCellValue(orderList.get(i).getFactory_name());
+            row.createCell(46).setCellValue(orderList.get(i).getShipment_combination_id());
+            if(orderList.get(i).getSign_num() != null){
+                row.createCell(47).setCellValue(String.valueOf(orderList.get(i).getSign_num()));
+            }else {
+                row.createCell(47).setCellValue("");
+            }
+//             row.createCell(45).setCellValue(String.valueOf(orderList.get(i).getSign_num()));
+            row.createCell(48).setCellValue(orderList.get(i).getNo_pass_reason());
+            row.createCell(49).setCellValue(orderList.get(i).getGvs_order_id());
+            row.createCell(50).setCellValue(orderList.get(i).getDn_id());
+            row.createCell(51).setCellValue(orderList.get(i).getCustpodetailcode());
+            row.createCell(52).setCellValue(orderList.get(i).getCommit_time_display());
+            row.createCell(53).setCellValue(trueOrFalseMap.get(String.valueOf(orderList.get(i) .getCustomization())));
+            //  row.createCell(51).setCellValue(orderList.get(i).getCustomization_name());
+            row.createCell(54).setCellValue(orderList.get(i).getSatisfy_type_name());
+            if (orderList.get(i).getWAqty() != null){
+                row.createCell(55).setCellValue(String.valueOf(orderList.get(i).getWAqty()));
+            }else {
+                row.createCell(55).setCellValue("");
+            }
+//             row.createCell(53).setCellValue(String.valueOf(orderList.get(i).getWAqty()));
+            row.createCell(56).setCellValue(orderList.get(i).getError_msg());
+            row.createCell(57).setCellValue(orderList.get(i).getPass_reason());
+
+        }
+        return wb;
+
+    }
+
+    @RequestMapping(value = {"/exportAllT2OrderList.export"})
+    void exportAllT2OrderList(@RequestParam(required = false) String arrival_year_week_start_save,
+            @RequestParam(required = false) String arrival_year_week_end_save,
+            @RequestParam(required = false) String datestart_save,
+            @RequestParam(required = false) String dateend_save,
+            @RequestParam(required = false) String ed_channel_id_save,
+            @RequestParam(required = false) String product_group_id_save,
+            @RequestParam(required = false) String wp_order_id,
+            @RequestParam(required = false) String oms_order_id_save,
+            @RequestParam(required = false) String brand_save,
+            @RequestParam(required = false) String materials_id,
+            @RequestParam(required = false) String materials_description,
+            @RequestParam(required = false) String storage_id,
+            @RequestParam(required = false) String flow_flag_save,
+            @RequestParam(required = false) String shipment_combination_id,
+            @RequestParam(required = false) String gvs_order_id,
+            @RequestParam(required = false) String custom_order_id,
+            @RequestParam(required = false) String customization_save,
+            @RequestParam(required = false) String order_type_save,
+            @RequestParam(required = false) String cbs_catgory_save,
+            @RequestParam(required = false) String order_category_save,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    	String startDay = "";
+        String endDay = "";
+        Map<String, Object> params = new HashMap<String, Object>();
+        // Boolean startweekblag = false;
+        // Boolean endweekblag = false;
+        if (arrival_year_week_start_save != null && !"".equals(arrival_year_week_start_save)) {
+            String startWeek = CommUtil.getWeekOfYear_Sunday_Normal(arrival_year_week_start_save, null,
+                    "1");
+            arrival_year_week_start_save = startWeek.replace("年", "").replace("周", "");
+            startDay = CommUtil.weekToStartDateDay(arrival_year_week_start_save);
+            // System.out.println("startDay:" + startDay);
+            // startweekblag = true;
+        }
+        if (arrival_year_week_end_save != null && !"".equals(arrival_year_week_end_save)) {
+            String endtWeek = CommUtil.getWeekOfYear_Sunday_Normal(arrival_year_week_end_save, null, "1");
+            arrival_year_week_end_save = endtWeek.replace("年", "").replace("周", "");
+            endDay = CommUtil.weekToEndDateDay(arrival_year_week_end_save);
+            // System.out.println("endDay:" + endDay);
+            // endweekblag = true;
+        }
+        // if (startweekblag && endweekblag) {
+        //
+        // } else {
+        // if (startweekblag) {
+        // arrival_end_week = arrival_start_week;
+        // } else {
+        // arrival_start_week = arrival_end_week;
+        // }
+        // }
+        // 权限Map
+        Map<String, Object> authMap = new HashMap<String, Object>();
+        // 取得产品组权限List和渠道权限List
+        commPurchase.getAuthMap(request,product_group_id_save,
+        		ed_channel_id_save, cbs_catgory_save, authMap);
+        params.put("arrival_start_week", startDay);
+        params.put("arrival_end_week", endDay);
+        if (datestart_save != null && !"".equals(datestart_save)) {
+            datestart_save = datestart_save.replace("年", "").replace("周", "");
+        }
+        if (dateend_save != null && !"".equals(dateend_save)) {
+            dateend_save = dateend_save.replace("年", "").replace("周", "");
+        }
+        params.put("report_year_week_start", datestart_save);
+        params.put("report_year_week_end", dateend_save);
+        params.put("ed_channel_id", authMap.get("channel"));
+//        params.put("ed_channel_id", ed_channel_id_save);
+        params.put("product_group_id", authMap.get("productGroup"));
+//        params.put("product_group_id", product_group_id_save);
+        params.put("order_id", wp_order_id);
+        params.put("oms_order_id", oms_order_id_save);
+        params.put("brand_id", brand_save);
+        params.put("materials_id", materials_id);
+        params.put("materials_desc", materials_description);
+        params.put("storage_id", storage_id);
+        // 订单类别
+        params.put("order_category", order_category_save);
+        String[] flow_flag_list = null;
+        if (flow_flag_save != null && !"".equals(flow_flag_save)) {
+            // flow_flag转化为数组
+            flow_flag_list = flow_flag_save.split(",");
+        }
+        params.put("flow_flag", flow_flag_list);
+
+        params.put("shipment_combination_id", shipment_combination_id);
+        params.put("gvs_order_id", gvs_order_id);
+        params.put("custom_order_id", custom_order_id);
+        params.put("customization", customization_save);
+        params.put("order_type", order_type_save);
+        params.put("category_id", authMap.get("cbsCategory"));
+//        params.put("category_id", cbs_catgory_save);
+        
         HSSFWorkbook  wb= getDetailsData(params);
         
         SimpleDateFormat sdf =  new SimpleDateFormat("yyyyMMddHHmmss");  
@@ -1087,82 +1365,84 @@ public class T2OrderQueryController {
              row.createCell(0).setCellValue(orderCategoryMap.get(String.valueOf(orderList.get(i).getOrder_category())));  
              row.createCell(1).setCellValue(flowFlagMap.get(String.valueOf(orderList.get(i).getFlow_flag())));  
              row.createCell(2).setCellValue(orderList.get(i).getOrder_id());  
-             row.createCell(3).setCellValue(orderList.get(i).getChannel_commit_time_display());  
-             row.createCell(4).setCellValue(orderList.get(i).getChannel_commit_user());  
-             row.createCell(5).setCellValue(orderList.get(i).getAudit_time_display());  
-             row.createCell(6).setCellValue(orderList.get(i).getAudit_user());  
-             row.createCell(7).setCellValue(orderList.get(i).getOrder_close_time_display());  
-             row.createCell(8).setCellValue(orderList.get(i).getOrder_close_user()); 
-             row.createCell(9).setCellValue(orderList.get(i).getOms_order_id());  
-             row.createCell(10).setCellValue(orderList.get(i).getCustom_desc());  
-             row.createCell(11).setCellValue("重庆新日日顺家电销售有限公司");
-             row.createCell(12).setCellValue(orderList.get(i).getTransmit_desc());             
+             row.createCell(3).setCellValue(orderList.get(i).getOrder_num_73());  
+             row.createCell(4).setCellValue(orderList.get(i).getSend_flag());  
+             row.createCell(5).setCellValue(orderList.get(i).getChannel_commit_time_display());  
+             row.createCell(6).setCellValue(orderList.get(i).getChannel_commit_user());  
+             row.createCell(7).setCellValue(orderList.get(i).getAudit_time_display());  
+             row.createCell(8).setCellValue(orderList.get(i).getAudit_user());  
+             row.createCell(9).setCellValue(orderList.get(i).getOrder_close_time_display());  
+             row.createCell(10).setCellValue(orderList.get(i).getOrder_close_user()); 
+             row.createCell(11).setCellValue(orderList.get(i).getOms_order_id());  
+             row.createCell(12).setCellValue(orderList.get(i).getCustom_desc());  
+             row.createCell(13).setCellValue("重庆新日日顺家电销售有限公司");
+             row.createCell(14).setCellValue(orderList.get(i).getTransmit_desc());             
              // 提报周
              String report_year_week = orderList.get(i).getReport_year_week();
              if(!"".equals(report_year_week)){
              	// 编辑提报年
-                 row.createCell(13).setCellValue(report_year_week.substring(0, 4) + "年");
-                 row.createCell(14).setCellValue(report_year_week.substring(4) + "周");
+                 row.createCell(15).setCellValue(report_year_week.substring(0, 4) + "年");
+                 row.createCell(16).setCellValue(report_year_week.substring(4) + "周");
              }
              
              String arrivalWeek = CommUtil.getWeekOfYear_Sunday_Normal(
            		  orderList.get(i).getLatest_arrive_date_display(), null, "1");
 
-             row.createCell(15).setCellValue(arrivalWeek);
-             row.createCell(16).setCellValue(arrivalWeek);
-             row.createCell(17).setCellValue(orderList.get(i).getIndustry_trade_desc());
-             row.createCell(18).setCellValue(invstockchannelmap.get(orderList.get(i).getEd_channel_id()));  
+             row.createCell(17).setCellValue(arrivalWeek);
+             row.createCell(18).setCellValue(arrivalWeek);
+             row.createCell(19).setCellValue(orderList.get(i).getIndustry_trade_desc());
+             row.createCell(20).setCellValue(invstockchannelmap.get(orderList.get(i).getEd_channel_id()));  
             // row.createCell(18).setCellValue(orderList.get(i).getEd_channel_name());
-             row.createCell(19).setCellValue(orderList.get(i).getCategory_id());  
-             row.createCell(20).setCellValue(productgroupmap.get(orderList.get(i).getProduct_group_id()));  
+             row.createCell(21).setCellValue(orderList.get(i).getCategory_id());  
+             row.createCell(22).setCellValue(productgroupmap.get(orderList.get(i).getProduct_group_id()));  
              //row.createCell(20).setCellValue(orderList.get(i).getProduct_group_name());  
-             row.createCell(21).setCellValue(brandMap.get(orderList.get(i).getBrand_id()));  
+             row.createCell(23).setCellValue(brandMap.get(orderList.get(i).getBrand_id()));  
              //row.createCell(21).setCellValue(orderList.get(i).getBrand_id());  
-             row.createCell(22).setCellValue(orderList.get(i).getMaterials_id());  
-             row.createCell(23).setCellValue(orderList.get(i).getMaterials_desc());  
-             row.createCell(24).setCellValue(orderList.get(i).getOrder_type_name());  
-             row.createCell(25).setCellValue(String.valueOf(orderList.get(i).getT2_delivery_prediction()));  
-             row.createCell(26).setCellValue(String.valueOf(orderList.get(i).getPrice())); 
-             row.createCell(27).setCellValue(String.valueOf(orderList.get(i).getAmount()));  
-             row.createCell(28).setCellValue(orderList.get(i).getStorage_id());  
-             row.createCell(29).setCellValue(orderList.get(i).getStorage_name());
-             row.createCell(30).setCellValue(orderList.get(i).getArrival_storage_desc());
-             row.createCell(31).setCellValue(orderList.get(i).getSeries_id());
-             row.createCell(32).setCellValue(orderList.get(i).getStatus());
-             row.createCell(33).setCellValue(orderList.get(i).getLatest_arrive_date_display());
-             row.createCell(34).setCellValue(orderList.get(i).getPlan_deliver_date_display());
-             row.createCell(35).setCellValue(orderList.get(i).getPromise_arrive_date_display());
-             row.createCell(36).setCellValue(orderList.get(i).getActual_deliver_date_display());
-             row.createCell(37).setCellValue(orderList.get(i).getPredict_arrive_date_display());  
-             row.createCell(38).setCellValue(orderList.get(i).getIndustry_trade_take_date_display());  
-             row.createCell(39).setCellValue(orderList.get(i).getCustom_sign_date_display());  
-             row.createCell(40).setCellValue(orderList.get(i).getReturn_order_date_display());  
-             row.createCell(41).setCellValue(orderList.get(i).getLatest_arrive_date_display());  
-             row.createCell(42).setCellValue(orderList.get(i).getFactory_id());  
-             row.createCell(43).setCellValue(orderList.get(i).getFactory_name());  
-             row.createCell(44).setCellValue(orderList.get(i).getShipment_combination_id());
+             row.createCell(24).setCellValue(orderList.get(i).getMaterials_id());  
+             row.createCell(25).setCellValue(orderList.get(i).getMaterials_desc());  
+             row.createCell(26).setCellValue(orderList.get(i).getOrder_type_name());  
+             row.createCell(27).setCellValue(String.valueOf(orderList.get(i).getT2_delivery_prediction()));  
+             row.createCell(28).setCellValue(String.valueOf(orderList.get(i).getPrice())); 
+             row.createCell(29).setCellValue(String.valueOf(orderList.get(i).getAmount()));  
+             row.createCell(30).setCellValue(orderList.get(i).getStorage_id());  
+             row.createCell(31).setCellValue(orderList.get(i).getStorage_name());
+             row.createCell(32).setCellValue(orderList.get(i).getArrival_storage_desc());
+             row.createCell(33).setCellValue(orderList.get(i).getSeries_id());
+             row.createCell(34).setCellValue(orderList.get(i).getStatus());
+             row.createCell(35).setCellValue(orderList.get(i).getLatest_arrive_date_display());
+             row.createCell(36).setCellValue(orderList.get(i).getPlan_deliver_date_display());
+             row.createCell(37).setCellValue(orderList.get(i).getPromise_arrive_date_display());
+             row.createCell(38).setCellValue(orderList.get(i).getActual_deliver_date_display());
+             row.createCell(39).setCellValue(orderList.get(i).getPredict_arrive_date_display());  
+             row.createCell(40).setCellValue(orderList.get(i).getIndustry_trade_take_date_display());  
+             row.createCell(41).setCellValue(orderList.get(i).getCustom_sign_date_display());  
+             row.createCell(42).setCellValue(orderList.get(i).getReturn_order_date_display());  
+             row.createCell(43).setCellValue(orderList.get(i).getLatest_arrive_date_display());  
+             row.createCell(44).setCellValue(orderList.get(i).getFactory_id());  
+             row.createCell(45).setCellValue(orderList.get(i).getFactory_name());  
+             row.createCell(46).setCellValue(orderList.get(i).getShipment_combination_id());
              if(orderList.get(i).getSign_num() != null){
-                 row.createCell(45).setCellValue(String.valueOf(orderList.get(i).getSign_num()));
+                 row.createCell(47).setCellValue(String.valueOf(orderList.get(i).getSign_num()));
              }else {
-                 row.createCell(45).setCellValue("");
+                 row.createCell(47).setCellValue("");
              }
 //             row.createCell(45).setCellValue(String.valueOf(orderList.get(i).getSign_num()));
-             row.createCell(46).setCellValue(orderList.get(i).getNo_pass_reason());  
-             row.createCell(47).setCellValue(orderList.get(i).getGvs_order_id());
-             row.createCell(48).setCellValue(orderList.get(i).getDn_id());
-             row.createCell(49).setCellValue(orderList.get(i).getCustpodetailcode());
-             row.createCell(50).setCellValue(orderList.get(i).getCommit_time_display());
-             row.createCell(51).setCellValue(trueOrFalseMap.get(String.valueOf(orderList.get(i) .getCustomization())));
+             row.createCell(48).setCellValue(orderList.get(i).getNo_pass_reason());  
+             row.createCell(49).setCellValue(orderList.get(i).getGvs_order_id());
+             row.createCell(50).setCellValue(orderList.get(i).getDn_id());
+             row.createCell(51).setCellValue(orderList.get(i).getCustpodetailcode());
+             row.createCell(52).setCellValue(orderList.get(i).getCommit_time_display());
+             row.createCell(53).setCellValue(trueOrFalseMap.get(String.valueOf(orderList.get(i) .getCustomization())));
            //  row.createCell(51).setCellValue(orderList.get(i).getCustomization_name());
-             row.createCell(52).setCellValue(orderList.get(i).getSatisfy_type_name());
+             row.createCell(54).setCellValue(orderList.get(i).getSatisfy_type_name());
              if (orderList.get(i).getWAqty() != null){
-                 row.createCell(53).setCellValue(String.valueOf(orderList.get(i).getWAqty()));
+                 row.createCell(55).setCellValue(String.valueOf(orderList.get(i).getWAqty()));
              }else {
-                 row.createCell(53).setCellValue("");
+                 row.createCell(55).setCellValue("");
              }
 //             row.createCell(53).setCellValue(String.valueOf(orderList.get(i).getWAqty()));
-             row.createCell(54).setCellValue(orderList.get(i).getError_msg());
-             row.createCell(55).setCellValue(orderList.get(i).getPass_reason());
+             row.createCell(56).setCellValue(orderList.get(i).getError_msg());
+             row.createCell(57).setCellValue(orderList.get(i).getPass_reason());
              
            }
 		return wb;
@@ -1199,7 +1479,7 @@ public class T2OrderQueryController {
             @RequestParam(required = false) String datestorge_start,
             @RequestParam(required = false) String datestorge_end,
             @RequestParam(required = false) String brand,
-            @RequestParam(required = false) String cbscategory,
+            @RequestParam(required = false) String cbsCategory,
             @RequestParam(required = false) String materials_desc,
             @RequestParam(required = false) Integer rows,
             @RequestParam(required = false) Integer page,
@@ -1207,9 +1487,9 @@ public class T2OrderQueryController {
             HttpServletResponse response) {
 
         // 权限Map
-        //Map<String, Object> authMap = new HashMap<String, Object>();
+        Map<String, Object> authMap = new HashMap<String, Object>();
         // 取得产品组权限List,渠道权限List和品类List
-        //commPurchase.getAuthMap(purchaseCommonService, request, product_group_id_save,ed_channel_id_save, cbsCategory_save, authMap);
+        commPurchase.getAuthMap(request, product_group,channel, cbsCategory, authMap);
         Map<String, Object> params = new HashMap<String, Object>();
         
         String startDay = "";
@@ -1248,13 +1528,13 @@ public class T2OrderQueryController {
             }
         }
         // 权限Map
-        Map<String, Object> authMap = new HashMap<String, Object>();
+//        Map<String, Object> authMap = new HashMap<String, Object>();
         
         params.put("flow_flag", flow_flag_list);
         params.put("report_start_week", startDay);
         params.put("report_end_week", endDay);
-        params.put("product_group_id", AllToNull(product_group));
-        params.put("ed_channel_id", AllToNull(channel));
+        params.put("product_group_id", authMap.get("productGroup"));
+        params.put("ed_channel_id", authMap.get("channel"));
         params.put("wp_order_id", AllToNull(order_id));
         params.put("storage_id", storage_id);
         params.put("materials_id", materials_id);
@@ -1266,9 +1546,9 @@ public class T2OrderQueryController {
         params.put("datestorge_start", datestorge_start);
         params.put("datestorge_end", datestorge_end);
         params.put("brand_id", AllToNull(brand));
-        params.put("category_id", AllToNull(cbscategory));
+        params.put("category_id", authMap.get("cbsCategory"));
         params.put("materials_desc", materials_desc);    
-        HSSFWorkbook  wb=getPODetailsData(params);
+        HSSFWorkbook  wb=getPODetailsExportData(params);
         SimpleDateFormat sdf =  new SimpleDateFormat("yyyyMMddHHmmss");  
           java.util.Date date=new java.util.Date();  
           String str=sdf.format(date); 
@@ -1326,7 +1606,100 @@ public class T2OrderQueryController {
       }
  		
     }
-    
+    HSSFWorkbook getPODetailsExportData(Map<String, Object> params) {
+
+        Integer pageIndex = 0;
+        List<CrmOrderItem> t2CrmOrderItemList= new ArrayList<>();
+
+        while (true){
+            params.put("m",1000*pageIndex);
+            params.put("n",1000);
+            pageIndex++;
+            List<CrmOrderItem> list = t2OrderQueryService.getPOExportList(params);
+            if(list.isEmpty()||list.size()==0){
+                break;
+            }
+            t2CrmOrderItemList.addAll(list);
+        }
+        List<CrmOrderItem> predictstocklist =new ArrayList<CrmOrderItem>();
+        if (t2CrmOrderItemList.size()!=0 && t2CrmOrderItemList != null) {
+            predictstocklist = t2CrmOrderItemList;
+        }
+        // 1.创建一个workbook，对应一个Excel文件
+        HSSFWorkbook wb = new HSSFWorkbook();
+        // 2.在workbook中添加一个sheet，对应Excel中的一个sheet
+        HSSFSheet sheet = wb.createSheet("订单列表");
+        int length = CrmExportData.poListExportQuery.length;
+        for (int i = 0; i <length; i++) {
+
+            sheet.setColumnWidth(i, (int)(21.57*256));
+
+        }
+        // 3.在sheet中添加表头第0行，老版本poi对excel行数列数有限制short
+        HSSFRow row = sheet.createRow((int) 0);
+        // 4.创建单元格，设置值表头，设置表头居中
+        HSSFCellStyle style = wb.createCellStyle();
+        // 居中格式
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
+        style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        style.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        style.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边
+        // 设置表头
+        for(int i=0;length-1>=i;i++){
+            HSSFCell cell = row.createCell(i);
+            cell.setCellValue(CrmExportData.poListExportQuery[i]);
+            cell.setCellStyle(style);
+        }
+        // 渠道和产品组数据存入HashMap
+        Map<String, String> productgroupmap = new HashMap<String, String>();
+        Map<String, String> invstockchannelmap = new HashMap<String, String>();
+        // 取得产品组
+        commPurchase.getProductMap(productgroupmap);
+        // 取得渠道
+//          commPurchase.getChannelMap(invstockchannelmap);
+        invstockchannelmap = t2OrderService
+                .getChannelMapByCode(invstockchannelmap);
+
+        Map<String, String> flowFlagMap = commPurchase.getValueMeaningMap(
+                dataDictionaryService, T2_ORDER_STATUS);
+        //向单元格里添加数据
+        for(short i=0;i<predictstocklist.size();i++){
+            row = sheet.createRow(i+1);
+            row.createCell(0).setCellValue(predictstocklist.get(i).getOrder_id());
+            row.createCell(1).setCellValue(predictstocklist.get(i).getPo_id());
+            row.createCell(2).setCellValue(predictstocklist.get(i).getBill_order_id());
+            row.createCell(3).setCellValue(predictstocklist.get(i).getBill_time_display());
+            row.createCell(4).setCellValue(predictstocklist.get(i).getSo_id());
+            row.createCell(5).setCellValue(predictstocklist.get(i).getDn_id());
+            row.createCell(6).setCellValue(invstockchannelmap.get(predictstocklist.get(i).getEd_channel_id()));
+            row.createCell(7).setCellValue(predictstocklist.get(i).getCategory_id());
+            row.createCell(8).setCellValue(productgroupmap.get(predictstocklist.get(i).getProduct_group_id()));
+            row.createCell(9).setCellValue(predictstocklist.get(i).getMaterials_id());
+            row.createCell(10).setCellValue(predictstocklist.get(i).getMaterials_desc());
+            row.createCell(11).setCellValue(predictstocklist.get(i).getQty());
+            row.createCell(12).setCellValue(String.valueOf(predictstocklist.get(i).getPrice()));
+            row.createCell(13).setCellValue(String.valueOf(predictstocklist.get(i).getT2_amount()));
+            row.createCell(14).setCellValue(String.valueOf(predictstocklist.get(i).getAmount()));
+            row.createCell(15).setCellValue(String.valueOf(predictstocklist.get(i).getTotal()));
+            row.createCell(16).setCellValue(predictstocklist.get(i).getStorage_id());
+            row.createCell(17).setCellValue(predictstocklist.get(i).getStorage_name());
+            row.createCell(18).setCellValue(flowFlagMap.get(String.valueOf(predictstocklist.get(i).getFlow_flag())));
+            //row.createCell(18).setCellValue(predictstocklist.get(i).getFlow_flag_name());
+            row.createCell(19).setCellValue(predictstocklist.get(i).getRrs_out_time_display());
+            row.createCell(20).setCellValue(predictstocklist.get(i).getWa_in_time_display());
+            row.createCell(21).setCellValue(check(predictstocklist.get(i).getWAqty()));
+//            row.createCell(22).setCellValue(SapStatus(predictstocklist.get(i).getSapStatus()));
+//            row.createCell(23).setCellValue(predictstocklist.get(i).getSapMessage());
+//            row.createCell(24).setCellValue(predictstocklist.get(i).getSapProcessTime());
+
+
+        }
+        return wb;
+
+    }
     HSSFWorkbook getPODetailsData(Map<String, Object> params) {
        ServiceResult<List<CrmOrderItem>> result = t2OrderQueryService.getPOList(params);
         
@@ -1398,11 +1771,34 @@ public class T2OrderQueryController {
               row.createCell(18).setCellValue(flowFlagMap.get(String.valueOf(predictstocklist.get(i).getFlow_flag()))); 
               //row.createCell(18).setCellValue(predictstocklist.get(i).getFlow_flag_name());
               row.createCell(19).setCellValue(predictstocklist.get(i).getRrs_out_time_display());  
-              row.createCell(20).setCellValue(predictstocklist.get(i).getWa_in_time_display());  
+              row.createCell(20).setCellValue(predictstocklist.get(i).getWa_in_time_display());
+              row.createCell(21).setCellValue(check(predictstocklist.get(i).getWAqty()));
+              row.createCell(22).setCellValue(SapStatus(predictstocklist.get(i).getSapStatus()));
+              row.createCell(23).setCellValue(predictstocklist.get(i).getSapMessage());
+              row.createCell(24).setCellValue(predictstocklist.get(i).getSapProcessTime());
 
-            }
+
+          }
 		return wb;
    
+    }
+
+    public String check(Integer param){
+        if(param==null){
+            return "";
+        }else {
+            return String.valueOf(param);
+        }
+    }
+    public String SapStatus(int param){
+        if(param==1){
+            return "成功";
+        }else if(param==0){
+            return "未推送";
+        }else if(param==2){
+            return "推送失败";
+        }
+        return "";
     }
 	 public String AllToNull(String param){
 			

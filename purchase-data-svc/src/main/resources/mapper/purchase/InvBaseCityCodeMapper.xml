@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.InvBaseCityCodeDao">
+	<resultMap id="invBaseCityCodeResult" type="com.haier.purchase.data.model.InvBaseCityCode">
+		<result property="id" column="id" />
+		<result property="city_code" column="city_code" />
+		<result property="storage_id" column="storage_id" />
+		<result property="city_desc" column="city_desc" />
+		<result property="ehaier_city_code" column="ehaier_city_code" />
+		<result property="is_enabled" column="is_enabled" />
+	</resultMap>
+	<select id="getAllInvBaseCityCode" parameterType="java.util.Map"
+		resultMap="invBaseCityCodeResult">
+		SELECT city_code,
+		storage_id,
+		city_desc,
+		ehaier_city_code
+		FROM
+		inv_base_city_code
+		WHERE
+		1=1
+		<if test="city_code !=null and city_code != ''">
+			AND city_code = #{city_code}
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND storage_id = #{storage_id}
+		</if>
+		<if test="city_desc !=null and city_desc != ''">
+			AND city_desc like '%${city_desc}%'
+		</if>
+		<if test="ehaier_city_code !=null and ehaier_city_code != ''">
+			AND ehaier_city_code = #{ehaier_city_code}
+		</if>
+	</select>
+	<select id="getInvBaseCityCode" parameterType="java.util.Map"
+		resultMap="invBaseCityCodeResult">
+		SELECT city_code,
+		storage_id,
+		city_desc,
+		ehaier_city_code,
+		is_enabled
+		FROM
+		inv_base_city_code
+		WHERE
+		1=1
+		<if test="city_code !=null and city_code != ''">
+			AND city_code = #{city_code}
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND storage_id = #{storage_id}
+		</if>
+		<if test="city_desc !=null and city_desc != ''">
+			AND city_desc like '%${city_desc}%'
+		</if>
+		<if test="ehaier_city_code !=null and ehaier_city_code != ''">
+			AND ehaier_city_code = #{ehaier_city_code}
+		</if>
+		<![CDATA[ AND is_enabled <> 4 ]]>
+		<if test="index !=null and rows !=null">
+			LIMIT #{index},#{rows}
+		</if>
+	</select>
+	<select id="selectInvBaseCityCode" parameterType="java.util.Map"
+		resultMap="invBaseCityCodeResult">
+		SELECT city_code,
+		storage_id,
+		city_desc,
+		ehaier_city_code
+		FROM
+		inv_base_city_code
+		WHERE
+		1=1
+		<if test="city_code !=null and city_code != ''">
+			AND city_code = #{city_code}
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND storage_id = #{storage_id}
+		</if>
+		<if test="city_desc !=null and city_desc != ''">
+			AND city_desc like '%${city_desc}%'
+		</if>
+		<if test="ehaier_city_code !=null and ehaier_city_code != ''">
+			AND ehaier_city_code = #{ehaier_city_code}
+		</if>
+		AND is_enabled = 0
+	</select>
+	<select id="getInvBaseCityCodeCount" parameterType="Map"
+		resultType="java.lang.Integer">
+		SELECT
+		count(0)
+		FROM
+		inv_base_city_code
+		WHERE
+		1=1
+		<if test="city_code !=null and city_code != ''">
+			AND city_code = #{city_code}
+		</if>
+		<if test="storage_id !=null and storage_id != ''">
+			AND storage_id = #{storage_id}
+		</if>
+		<if test="city_desc !=null and city_desc != ''">
+			AND city_desc like '%${city_desc}%'
+		</if>
+		<if test="ehaier_city_code !=null and ehaier_city_code != ''">
+			AND ehaier_city_code = #{ehaier_city_code}
+		</if>
+		<![CDATA[ AND is_enabled <> 4 ]]>
+	</select>
+	<insert id="insertInvBaseCityCode" parameterType="com.haier.purchase.data.model.InvBaseCityCode">
+		INSERT INTO
+		inv_base_city_code (
+		city_code,
+		storage_id,
+		city_desc,
+		ehaier_city_code,
+		is_enabled
+		)
+		VALUES(
+		#{city_code},
+		#{storage_id},
+		#{city_desc},
+		#{ehaier_city_code},
+		0
+		);
+	</insert>
+	<update id="updateInvBaseCityCode" parameterType="Map">
+		UPDATE inv_base_city_code
+		<set>
+			<if test="storage_id != null and storage_id != ''">
+				storage_id = #{storage_id},
+			</if>
+			<if test="city_desc != null and city_desc != ''">
+				city_desc = #{city_desc},
+			</if>
+			<if test="ehaier_city_code != null and ehaier_city_code != ''">
+				ehaier_city_code = #{ehaier_city_code},
+			</if>
+		</set>
+		WHERE
+		city_code = #{city_code}
+	</update>
+	<update id="deleteInvBaseCityCode" parameterType="Map">
+		UPDATE inv_base_city_code SET is_enabled = 4
+		WHERE city_code in
+		<foreach collection="deleteList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="enabledInvBaseCityCode" parameterType="Map">
+		UPDATE inv_base_city_code SET is_enabled = 0
+		WHERE is_enabled = 1 AND
+		city_code in
+		<foreach collection="enabledList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="unenabledInvBaseCityCode" parameterType="Map">
+		UPDATE inv_base_city_code SET is_enabled = 1
+		WHERE is_enabled = 0 AND
+		city_code in
+		<foreach collection="unenabledList" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<select id="exportInvBaseCityCode" parameterType="java.util.Map"
+		resultMap="invBaseCityCodeResult">
+		SELECT city_code,
+		storage_id,
+		city_desc,
+		ehaier_city_code,
+		is_enabled
+		FROM
+		inv_base_city_code
+		WHERE
+		1=1
+		<if test="exportList!=null and exportList!=''">
+			AND city_code in
+			<foreach collection="exportList" item="item" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<![CDATA[ AND is_enabled <> 4 ]]>
+	</select>
+	<select id="checkMainKey" parameterType="Map" resultType="java.lang.Integer">
+		SELECT
+		count(1) from inv_base_city_code
+		where city_code = #{city_code}
+	</select>
+</mapper>

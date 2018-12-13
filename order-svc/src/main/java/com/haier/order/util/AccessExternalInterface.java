@@ -1,5 +1,6 @@
 package com.haier.order.util;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.haier.shop.model.CancelInputType;
 import com.haier.shop.model.InputTypes;
 import com.haier.stock.model.InvMachineSet;
@@ -183,7 +184,13 @@ public class AccessExternalInterface {
         } else {
             urlab = "";
         }
-        sb.append("<remark1><![CDATA[" + input.getMATNR() + urlab + "]]></remark1>");//备用字段    --F1全款订单，F2尾款订单，F3超时免单订单，F4开箱验货（多个逗号隔开）
+        //***2018-06-07-新加推送物流标识---remark1后新加HB，remark8为1则表示vom回传到新系统---start
+        if(StringUtils.isBlank(input.getMATNR())&&StringUtils.isBlank(urlab)){
+            sb.append("<remark1>HB</remark1>");//备用字段
+        }else {
+            sb.append("<remark1><![CDATA[" + input.getMATNR() + urlab + ",HB]]></remark1>");//备用字段    --F1全款订单，F2尾款订单，F3超时免单订单，F4开箱验货（多个逗号隔开）
+        }
+        //***2018-06-07-新加推送物流标识---remark1后新加HB，remark8为1则表示vom回传到新系统---end
         sb.append("<remark2><![CDATA[" + input.getCOMTYP() + "]]></remark2>");//备用字段    --品牌
         sb.append("<remark3><![CDATA[" + input.getSOURCEEXT() + "]]></remark3>");//备用字段    --订单来源
         sb.append("<remark4></remark4>");//备用字段    --不填
@@ -195,7 +202,9 @@ public class AccessExternalInterface {
         sb.append("<remark5></remark5>");//备用字段    --不填
         sb.append("<remark6></remark6>");//备用字段    --不填
         sb.append("<remark7></remark7>");//备用字段    --不填
-        sb.append("<remark8></remark8>");//备用字段    --不填
+        //***2018-06-07-新加推送物流标识---remark1后新加HB，remark8为1则表示vom回传到新系统---start
+        sb.append("<remark8>1</remark8>");//备用字段    --不填
+        //***2018-06-07-新加推送物流标识---remark1后新加HB，remark8为1则表示vom回传到新系统---end
         sb.append("<items>");
         if (imsList != null && imsList.size() > 0) {
             for (int i = 0; i < imsList.size(); i++) {

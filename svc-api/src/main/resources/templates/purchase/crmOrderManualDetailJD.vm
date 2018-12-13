@@ -1,0 +1,643 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>CRM手工采购订单</title>
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+##    <style>
+##        .row {
+##            padding-top:10px;
+##            height:30px;
+##            width:98%;
+##        }
+##        .lable {
+##            text-align:right;
+##            width:5%;
+##        }
+##        .content {
+##            padding-left:10px;
+##            text-align:left;
+##            width:10%;
+##        }
+##        .unRequiedInput{
+##            background-color:#EEEEEE;
+##        }
+##    </style>
+</head>
+
+<body>
+<div id="tb" style="padding:5px;height:auto;">
+    <div style="color:red;margin:20px 100px;">请务必先填写物料编码,再填写WA库位码!</div>
+    <form id="filterForm" action="#">
+        <input type="hidden" id="operatorType" name="operatorType" value="$!operatorType"/>
+        <input type="hidden" id="hiddenCustCode" />
+        <input type="hidden" id="hiddenPaymentName" />
+        <input type="hidden" id="type" name="type" value="jd"/>
+        <table border="0"  cellpadding="0" cellspacing="0" style="padding:5px;height:auto;width:90%;">
+            <tr class="row">
+                <td class="lable" style="width:17%;">WP订单号</td>
+                <td class="content" style="width:50%;">
+                    <input id="wp_order_id" name="crmOrderManualItem.wp_order_id" style="width:97%;" value="$!crmOrderManualDetailItem.wp_order_id" class="unRequiedInput">
+                </td>
+                <td class="lable" style="width:20%;">来源单号</td>
+                <td class="content" style="width:10%;">
+                    <input id="source_order_id" name="crmOrderManualItem.source_order_id"  style="width:97%;"></input>
+                </td>
+
+            </tr>
+            <tr class="row">
+                <td class="lable">分公司</td>
+                <td class="content">
+                    <input id="corpName" name="crmOrderManualItem.corpName"  style="width:97%;" value="$!crmOrderManualDetailItem.corpName" class="unRequiedInput">
+                    <input id="corpCode" name="crmOrderManualItem.corpCode" value="$!crmOrderManualDetailItem.corpCode"  type="hidden">
+                </td>
+                <td class="lable">工贸</td>
+                <td class="content">
+                    <input id="industry_trade_desc" name="crmOrderManualItem.industry_trade_desc" style="width:97%;" value="$!crmOrderManualDetailItem.industry_trade_desc" class="unRequiedInput">
+                    <input id="areaId" name="crmOrderManualItem.regionId"  value="$!crmOrderManualDetailItem.regionId" type="hidden">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">订单类型</td>
+                <td class="content">
+                    <input id="billType" name="crmOrderManualItem.billType" class="easyui-combobox" editable="false" style="width:195px">
+                    </input>
+                </td>
+                <td class="lable">配送方式</td>
+                <td class="content">
+                    <input id="sap_flow_num" name="crmOrderManualItem.sap_flow_num" class="easyui-combobox" editable="false" style="width:195px">
+                    </input>
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">付款方</td>
+                <td class="content">
+                    <input id="payment_name" name="crmOrderManualItem.payment_name" style="width:97%;" value="$!crmOrderManualDetailItem.payment_name" class="unRequiedInput">
+                    <input id="custCode" name="crmOrderManualItem.custCode" value="$!crmOrderManualDetailItem.custCode" type="hidden">
+                </td>
+                <td class="lable">送达方</td>
+                <td class="content">
+                    <input id="esale_name" name="crmOrderManualItem.esale_name" style="width:97%;" value="$!crmOrderManualDetailItem.esale_name" class="unRequiedInput">
+                    <input id="destCode" name="crmOrderManualItem.destCode" value="$!crmOrderManualDetailItem.destCode" type="hidden"">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">物料编码</td>
+                <td class="content">
+                    <input id="materials_id" name="crmOrderManualDetailItem.materials_id" style="width:97%;" value="$!crmOrderManualDetailItem.materials_id"  required="true"  >
+                </td>
+                <td class="lable">型号</td>
+                <td class="content">
+                    <input id="materials_desc" name="crmOrderManualDetailItem.materials_desc" style="width:97%;" value="$!crmOrderManualDetailItem.materials_desc" class="unRequiedInput">
+                </td>
+            </tr>
+
+            <tr class="row">
+                <td class="lable">日日顺库位码</td>
+                <td class="content">
+                    <input id="whCode" name="crmOrderManualItem.whCode" value="$!crmOrderManualDetailItem.whCode" class="easyui-validatebox" style="width:190px">
+                    </input>
+<!--                     <input id="ed_channel_id" name="crmOrderManualDetailItem.ed_channel_id" value="JD" type="hidden" ></input> -->
+                </td>
+                <td class="lable">渠道</td>
+                <td class="content">
+                	<input id="ed_channel_id" name="crmOrderManualDetailItem.ed_channel_id" class="easyui-validatebox" style="width:95px" ></input>
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">客户经理</td>
+                <td class="content">
+                    <input id="custMgr" name="crmOrderManualItem.custMgr" value="$!crmOrderManualDetailItem.custMgr" style="width:97%;" class="unRequiedInput">
+                </td>
+                <td class="lable">产品经理</td>
+                <td class="content">
+                    <input id="porMgr" name="crmOrderManualItem.porMgr" value="$!crmOrderManualDetailItem.porMgr" style="width:97%;" class="unRequiedInput">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">产品代表</td>
+                <td class="content">
+                    <input id="proDputy" name="crmOrderManualItem.proDputy" value="$!crmOrderManualDetailItem.proDputy" style="width:97%;"  class="unRequiedInput">
+                </td>
+                <td class="lable">是否商用空调</td>
+                <td class="content">
+                    <input id="isKPOName" name="crmOrderManualDetailItem.isKPOName" style="width:97%;" value="$!crmOrderManualDetailItem.isKPOName" class="unRequiedInput">
+                    <input id="isKPO" name="crmOrderManualDetailItem.isKPO" value="$!crmOrderManualDetailItem.isKPO" type="hidden">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">预计到货日期</td>
+                <td class="content">
+                    <input id="planInDate_display" name="crmOrderManualItem.planInDate_display" value="$!crmOrderManualDetailItem.planInDate_display" style="width:97%;" class="unRequiedInput">
+                </td>
+                <td class="lable">预算体</td>
+                <td class="content">
+                    <input id="budgetOrgName" name="crmOrderManualItem.budgetOrgName" style="width:97%;"  value="$!crmOrderManualDetailItem.budgetOrgName" class="unRequiedInput">
+                    <input id="budgetOrg" name="crmOrderManualItem.budgetOrg" value="$!crmOrderManualDetailItem.budgetOrg" type="hidden">
+                    <input id="regionId" name="b"  type="hidden">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">预算种类</td>
+                <td class="content">
+                    <input id="budgetSortName" name="crmOrderManualItem.budgetSortName" value="月度直扣(占PL市场费用)" style="width:97%;"  class="unRequiedInput">
+                    <input id="budgetSort" name="crmOrderManualItem.budgetSort" value="$!crmOrderManualDetailItem.budgetSort" type="hidden">
+                </td>
+                <td class="lable">销售组织</td>
+                <td class="content">
+                    <input id="saleOrgCode" name="crmOrderManualItem.saleOrgCode" value="$!crmOrderManualDetailItem.saleOrgCode" type="hidden">
+                    <input id="branch" name="c" value="$!crmOrderManualDetailItem.corpName" style="width:97%;"  class="unRequiedInput">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">开单人</td>
+                <td class="content">
+                    <input id="maker" name="crmOrderManualItem.maker" style="width:97%;" value="$!crmOrderManualDetailItem.maker" class="unRequiedInput">
+                </td>
+                <td class="lable">关联单号</td>
+                <td class="content">
+                    <input id="releBillCode" name="crmOrderManualItem.releBillCode" value="$!crmOrderManualDetailItem.releBillCode" style="width:97%;" class="unRequiedInput">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">配送中心</td>
+                <td class="content">
+                    <input id="rrs_distribution_name" name="crmOrderManualItem.rrs_distribution_name" style="width:97%;" value="$!crmOrderManualDetailItem.rrs_distribution_name" class="unRequiedInput">
+                    <input id="destCenter" name="crmOrderManualItem.destCenter" value="$!crmOrderManualDetailItem.destCenter" type="hidden"">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">WA库位码</td>
+                <td class="content">
+                    <input id="estorge_id" name="crmOrderManualItem.estorge_id" value="$!crmOrderManualDetailItem.estorge_id" style="width:97%;" class="easyui-validatebox" required="true">
+                </td>
+                <td class="lable">WA库位名</td>
+                <td class="content">
+                    <input id="estorge_name" name="crmOrderManualItem.estorge_name" value="$!crmOrderManualDetailItem.estorge_name" style="width:97%;" class="unRequiedInput">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">品牌</td>
+                <td class="content">
+                    <input id="brand_name" name="crmOrderManualDetailItem.brand_name" style="width:97%;" value="$!crmOrderManualDetailItem.brand_name" class="unRequiedInput">
+                    <input id="brand_id" name="crmOrderManualDetailItem.brand_id" value="$!crmOrderManualDetailItem.brand_id" type="hidden"/>
+                </td>
+                <td class="lable">产品组</td>
+                <td class="content">
+                    <input id="product_group_name" name="crmOrderManualDetailItem.product_group_name" style="width:97%;" value="$!crmOrderManualDetailItem.product_group_name" class="unRequiedInput">
+                    <input id="product_group_id" name="crmOrderManualDetailItem.product_group_id" value="$!crmOrderManualDetailItem.product_group_id" type="hidden"/>
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">批次</td>
+                <td class="content">
+                    <input id="invState" name="" style="width:97%;" value="正品" class="unRequiedInput">
+                </td>
+                <td class="lable">价税合计</td>
+                <td class="content">
+                    <input id="sumMoney" name="crmOrderManualDetailItem.sumMoney" style="width:97%;" value="$!crmOrderManualDetailItem.sumMoney" class="unRequiedInput">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">数量</td>
+                <td class="content">
+                    <input id="qty" name="crmOrderManualDetailItem.qty" style="width:97%;" value="$!crmOrderManualDetailItem.qty" class="easyui-validatebox" min="0"  maxlength="7" required="true" decimalSeparator="">
+                </td>
+                <td class="lable">开票价格</td>
+                <td class="content">
+                    <input id="unitPrice" name="crmOrderManualDetailItem.unitPrice" style="width:97%;" value="$!crmOrderManualDetailItem.unitPrice" class="unRequiedInput">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">供价</td>
+                <td class="content">
+                    <input id="retailPrice" name="crmOrderManualDetailItem.retailPrice" style="width:97%;" value="$!crmOrderManualDetailItem.retailPrice" class="unRequiedInput">
+                </td>
+                <td class="lable">执行价</td>
+                <td class="content">
+                    <input id="actPrice" name="crmOrderManualDetailItem.actPrice" style="width:97%;" value="$!crmOrderManualDetailItem.actPrice" class="unRequiedInput">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">直扣</td>
+                <td class="content">
+                    <input id="bateRate" name="crmOrderManualDetailItem.bateRate" style="width:97%;" value="$!crmOrderManualDetailItem.bateRate" class="unRequiedInput">
+                </td>
+                <td class="lable">台返金额</td>
+                <td class="content">
+                    <input id="bateMoney" name="crmOrderManualDetailItem.bateMoney" style="width:97%;" value="$!crmOrderManualDetailItem.bateMoney" class="unRequiedInput">
+                </td>
+            </tr>
+            <tr class="row">
+
+                <td class="lable">折扣</td>
+                <td class="content">
+                    <input id="lossRate" name="crmOrderManualDetailItem.lossRate" style="width:97%;" value="$!crmOrderManualDetailItem.lossRate" class="unRequiedInput">
+                </td>
+                <td class="lable">是否返利</td>
+                <td class="content">
+                    <input id="isFLName" name="crmOrderManualDetailItem.isFLName" style="width:97%;" value="$!crmOrderManualDetailItem.isFLName" class="unRequiedInput">
+                    <input id="isFL" name="crmOrderManualDetailItem.isFL" value="$!crmOrderManualDetailItem.isFL" type="hidden">
+                </td>
+            </tr>
+            <tr class="row">
+                <td class="lable">SO</td>
+                <td class="content">
+                    <input id="so_id" name="crmOrderManualDetailItem.so_id" style="width:97%;"  class="unRequiedInput">
+                </td>
+                <td class="lable">DN</td>
+                <td class="content">
+                    <input id="dn_id" name="crmOrderManualDetailItem.dn_id" style="width:97%;"  class="unRequiedInput">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:center;padding-top:10px;">
+                    <a id='saveButton' href="#" class="easyui-linkbutton" iconCls="icon-save">保存</a>
+                    <a id='gobackButton' href="#" class="easyui-linkbutton" iconCls="icon-back" onclick="onGoBack()">返回</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+//     	$('input').addClass('textbox_');
+        if($("#estorge_id").val()){
+            var listData = eval('$!rrsListJd');
+            $("#whCode").combobox({
+                data:listData,
+                valueField:'whCode',
+                textField:'whCode',
+                panelHeight:'auto',
+                editable:false,
+                required:'true'
+            });
+        }
+        $(".unRequiedInput").attr("readonly","readonly");
+        //取得渠道列表
+        jQuery.getJSON("/purchase/getChannelsByAuth", function(result){
+            var channel = result.data;
+            $("#ed_channel_id").combobox({
+                data:channel,
+                valueField:'channelCode',
+                textField:'name',
+                panelHeight:'auto',
+                editable:false,
+                required:'true',
+                value:'$!crmOrderManualDetailItem.ed_channel_id',
+                onChange: function (value,o) {
+                    //判断渠道是否为空 内容为微店、商城的情况 重新赋值 lupeng20170314
+                    if(value=='SC' || value=='RS'){
+                        $("#custCode").val('C200130028');//付款方
+                        $("#payment_name").val('海尔集团电子商务有限公司(顺逛全产业)');//付款方代码
+                    }else if($("#materials_id").val()!=''){
+                        //物料不为空的情况取物料填写时候获取的值
+                        $("#custCode").val($("#hiddenCustCode").val());
+                        $("#payment_name").val($("#hiddenPaymentName").val());
+                    }
+                }
+            });
+        });
+        //取得订单类型列表
+        var valueSetId = "bill_type";
+        jQuery.getJSON("/purchase/getByValueSetId"+ "?valueSetId=" + valueSetId, function(result){
+            var count = result.totalCount;
+            var dataList = result.data;
+            $("#billType").combobox({
+                data:dataList,
+                valueField:'value',
+                textField:'value_meaning',
+                panelHeight:'auto',
+                editable:false,
+                value:'$!crmOrderManualDetailItem.billType'
+            });
+        });
+        //取得配送方式列表
+        var valueSetId = "sap_flow_num";
+        jQuery.getJSON("/purchase/getByValueSetId"+ "?valueSetId=" + valueSetId, function(result){
+            var count = result.totalCount;
+            var dataList = result.data;
+            $("#sap_flow_num").combobox({
+                data:dataList,
+                valueField:'value',
+                textField:'value_meaning',
+                panelHeight:'auto',
+                editable:false,
+                value:'$!crmOrderManualDetailItem.sap_flow_num'
+            });
+        });
+        var operatorType = $("#operatorType").val();
+        if(operatorType!="add" && operatorType!="modify"){
+            $("#gobackButton").hide();
+        }
+    });
+    //填入WA库位码，焦点离开后的数据处理
+    $("#estorge_id").blur(function(){
+        var estorge_id = $("#estorge_id").val();
+        if(estorge_id!=''&&estorge_id!='null'&&estorge_id!='undefined'){
+            jQuery.ajax({
+                url: "/CrmOrderManual/getDataByEstorgeId",   // 提交的页面
+                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                data:{"estorge_id":estorge_id,"product_group_id":$("#product_group_id").val(),"materials_id":$("#materials_id").val(),"qty":$("#qty").val(),"custCode":$("#custCode").val(), 'type': 'jd'},
+                success: function (data) {
+                    var result = data.totalCount;
+                    //通过WA库位码取值成功
+                    if(result==1){
+                        var obj = jQuery.parseJSON(data.data);
+                        console.log(obj);
+                        $("#corpCode").val(obj.corpCode);
+                        $("#regionId").val(obj.regionId);
+                        //$("#custCode").val(obj.custCode);
+                        $("#destCode").val(obj.destCode);
+                        $("#estorge_name").val(obj.estorge_name);
+                        $("#destCenter").val(obj.destCenter);
+                        $("#estorge_name").val(obj.estorge_name);
+                        $("#corpName").val(obj.corpName);
+                        $("#industry_trade_desc").val(obj.industry_trade_desc);
+                        //$("#payment_name").val(obj.payment_name);
+                        $("#esale_name").val(obj.esale_name);
+                        $("#rrs_distribution_name").val(obj.rrs_distribution_name);
+                        $("#areaId").val(obj.areaId);
+                        $("#saleOrgCode").val(obj.sale_org_id);
+                        $("#branch").val(obj.branch);
+                        $("#budgetOrg").val(obj.budgetOrg);
+                        $("#budgetOrgName").val(obj.budgetOrgName);
+                        if(obj.budgetOrg!=''&&obj.budgetOrg!='null'&&obj.budgetOrg!='undefined') {
+                            $("#budgetSort").val(30);
+                            $("#budgetSortName").val('月度直扣(占PL市场费用)');
+                        };
+
+                        $("#sumMoney").val(obj.sumMoney);
+                        $("#unitPrice").val(obj.unitPrice);
+                        $("#stockPrice").val(obj.stockPrice);
+                        $("#retailPrice").val(obj.retailPrice);
+                        $("#actPrice").val(obj.actPrice);
+                        $("#bateRate").val(obj.bateRate);
+                        $("#bateMoney").val(obj.bateMoney);
+                        $("#lossRate").val(obj.lossRate);
+                        $("#isFL").val(obj.isFL);
+                        $("#isKPO").val(obj.isKPO);
+                        $("#isFLName").val(obj.isFLName);
+                        $("#isKPOName").val(obj.isKPOName);
+                        $("#whCode").combobox({
+                            data:obj.rrsListJd,
+                            valueField:'whCode',
+                            textField:'whCode',
+                            panelHeight:'auto',
+                            editable:false,
+                            required:'true'
+                        });
+                    }else{
+                        //通过WA库位码取值失败
+                        $("#estorge_id").val("");
+                        if(data.message){$.messager.alert('提示',data.message,'error');}
+                    }
+                }
+            });
+        }
+    });
+    //填入物料编码，焦点离开后的数据处理
+    $("#materials_id").blur(function(){
+        var materials_id = $("#materials_id").val();
+        if(materials_id!=''&&materials_id!='null'&&materials_id!='undefined'){
+            jQuery.ajax({
+                url: "/CrmOrderManual/getDataByMaterialsId",   // 提交的页面
+                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                data:{"materials_id":$("#materials_id").val(),"area_id":$("#areaId").val(),
+                    "region_id":$("#regionId").val(),"custCode":$("#custCode").val(),"corpCode":$("#corpCode").val(),"qty":$("#qty").val()},
+                success: function (data) {
+					console.log(data);
+                    var result = data.totalCount;
+                    if(result==1){
+                        //通过物料号取值成功
+                        var obj = jQuery.parseJSON(data.data);
+                        $("#materials_desc").val(obj.materials_desc);
+                        $("#brand_name").val(obj.brand_name);
+                        //判断渠道是否为空 内容为微店、商城的情况 重新赋值 lupeng20170314
+                        if($("#ed_channel_id").combobox("getValues")=='SC' || $("#ed_channel_id").combobox("getValues")=='RS'){
+                            $("#custCode").val('C200130028');//付款方代码
+                            $("#payment_name").val('海尔集团电子商务有限公司(顺逛全产业)');//付款方名称
+                        }else{
+                            $("#payment_name").val(obj.payment_name);//付款方
+                            $("#custCode").val(obj.custCode);//付款方代码
+                            //用于先输入物料号，选择渠道的时候用户有多次选择错误的情况
+                            $("#hiddenCustCode").val(obj.custCode);//预留付款编码
+                            $("#hiddenPaymentName").val(obj.payment_name);//预留付款名称
+                        }
+                        $("#brand_id").val(obj.brand_id);
+                        $("#product_group_name").val(obj.product_group_name);
+                        $("#product_group_id").val(obj.product_group_id);
+                        $("#budgetOrg").val(obj.budgetOrg);
+                        $("#budgetOrgName").val(obj.budgetOrgName);
+                        if(obj.budgetOrg!=''&&obj.budgetOrg!='null'&&obj.budgetOrg!='undefined') {
+                            $("#budgetSort").val(30);
+                            $("#budgetSortName").val('月度直扣(占PL市场费用)');
+                        };
+                        $("#sumMoney").val(obj.sumMoney);
+                        $("#unitPrice").val(obj.unitPrice);
+                        $("#stockPrice").val(obj.stockPrice);
+                        $("#retailPrice").val(obj.retailPrice);
+                        $("#actPrice").val(obj.actPrice);
+                        $("#bateRate").val(obj.bateRate);
+                        $("#bateMoney").val(obj.bateMoney);
+                        $("#lossRate").val(obj.lossRate);
+                        $("#isFL").val(obj.isFL);
+                        $("#isKPO").val(obj.isKPO);
+                        $("#isFLName").val(obj.isFLName);
+                        $("#isKPOName").val(obj.isKPOName);
+
+                    }else{
+                        //通过物料号取值失败
+                        $("#materials_id").val("");
+                        if(data.message){$.messager.alert('提示',data.message,'error');}
+                    }
+                }
+            });
+        }
+    });
+
+    //填入来源单号，焦点离开后的数据处理
+    $("#source_order_id").blur(function(){
+        var source_order_id= $("#source_order_id").val();
+        if(source_order_id!=''&&source_order_id!='null'&&source_order_id!='undefined'){
+            jQuery.ajax({
+                url: "/CrmOrderManual/getDataBySourceOrderId",   // 提交的页面
+                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                data:{"source_order_id":source_order_id, type: 'jd'},
+                beforeSend: function(){
+                    var win = $.messager.progress({
+                        title:'请等待',
+                        msg:'来源单号匹配中...',
+                        text:'处理中',
+                        interval:700
+                    });
+                },
+                complete: function(){
+                    //AJAX请求完成时隐藏loading提示
+                    $(document).ready(function(){$.messager.progress('close');});
+                },
+                success: function (data) {
+                    var result = data.totalCount;
+                    //通过来源单号取值成功
+                    if(result==1){
+                        var obj = jQuery.parseJSON(data.data);
+                        $("#corpCode").val(obj.corpCode);
+                        $("#regionId").val(obj.industry_trade_id);
+                        $("#destCode").val(obj.transmit_id);
+                        $("#estorge_name").val(obj.storage_name);
+                        $("#destCenter").val(obj.destCenter);
+                        $("#corpName").val(obj.branch);
+                        $("#industry_trade_desc").val(obj.industry_trade_desc);
+                        //判断渠道是否为空 内容为微店、商城的情况 重新赋值 lupeng20170314
+                        if($("#ed_channel_id").combobox("getValues")=='SC' || $("#ed_channel_id").combobox("getValues")=='RS'){
+                            $("#custCode").val('C200130028');//付款方代码
+                            $("#payment_name").val('海尔集团电子商务有限公司(顺逛全产业)');//付款方名称
+                        }else{
+                            $("#payment_name").val(obj.payment_name);
+                            $("#custCode").val(obj.payment_id);
+                        }
+                        $("#esale_name").val(obj.transmit_desc);
+                        $("#rrs_distribution_name").val(obj.rrs_distribution_name);
+                        $("#areaId").val(obj.areaId);
+                        $("#saleOrgCode").val(obj.sale_org_id);
+                        $("#branch").val(obj.branch);
+                        $("#budgetOrg").val(obj.budgetOrg);
+                        $("#budgetOrgName").val(obj.getBudgetorg_name);
+                        if(obj.budgetOrg!=''&&obj.budgetOrg!='null'&&obj.budgetOrg!='undefined') {
+                            $("#budgetSort").val(30);
+                            $("#budgetSortName").val('月度直扣(占PL市场费用)');};
+
+                        $("#materials_id").val(obj.materials_id);
+                        $("#materials_desc").val(obj.materials_desc);
+                        $("#estorge_id").val(obj.storage_id);
+                        $("#qty").val(obj.qty);
+                        $("#brand_name").val(obj.brand_name);
+
+                        $("#sumMoney").val(obj.sumMoney);
+                        $("#unitPrice").val(obj.unitPrice);
+                        $("#stockPrice").val(obj.stockPrice);
+                        $("#retailPrice").val(obj.retailPrice);
+                        $("#actPrice").val(obj.actPrice);
+                        $("#bateRate").val(obj.bateRate);
+                        $("#bateMoney").val(obj.bateMoney);
+                        $("#lossRate").val(obj.lossRate);
+                        $("#isFL").val(obj.isFL);
+                        $("#isKPO").val(obj.isKPO);
+                        $("#isFLName").val(obj.isFLName);
+                        $("#isKPOName").val(obj.isKPOName);
+                        $("#brand_name").val(obj.brand_name);
+                        $("#brand_id").val(obj.brand_id);
+                        $("#product_group_name").val(obj.product_group_name);
+                        $("#product_group_id").val(obj.product_group_id);
+                        $("#whCode").combobox({
+                            data:obj.rrsListJd,
+                            valueField:'whCode',
+                            textField:'whCode',
+                            panelHeight:'auto',
+                            editable:false,
+                            required:'true'
+                        });
+                        $("#ed_channel_id").combobox('setValue',obj.ed_channel_id);
+                        $("#materials_id").attr("class","unRequiedInput");
+                        $("#materials_id").attr("readonly","readonly");
+                        $("#ed_channel_id").combobox('readonly',true);
+                        $('#qty').validatebox('disableValidation');
+                        $('#qty').validatebox('enableValidation');
+                        $('#estorge_id').validatebox('disableValidation');
+                        $('#estorge_id').validatebox('enableValidation');
+                    }else{
+                        //通过来源单号取值失败
+                        $("#source_order_id").val("");
+                        if(data.message){$.messager.alert('提示',data.message,'error');}
+                        $("#materials_id").attr("class","");
+                        $("#materials_id").attr("readonly",false);
+                        $("#ed_channel_id").combobox('readonly',false);
+                    }
+                }
+            });
+        }
+    });
+
+    //来源单号为空，控制物料和渠道可写
+    $('#source_order_id').on("input",function(){
+        if(!$('#source_order_id').val().trim().length){
+            $("#materials_id").attr("class","");
+            $("#materials_id").attr("readonly",false);
+            $("#ed_channel_id").combobox('readonly',false);
+        }
+    });
+
+
+    //填入数量，计算价税合计
+    $("#qty").blur(function(){
+        var qty = $('#qty').val();
+        var unitPrice = $("#unitPrice").val();
+        var sumMoney = parseFloat(qty * unitPrice).toFixed(2);
+        $("#sumMoney").val(sumMoney);
+    });
+    //点击保存
+    $('#saveButton').click(function(){
+        var flag = $("#filterForm").form('validate');
+        if(flag){
+            jQuery.ajax({
+                url: "/CrmOrderManual/addCRMOrderManualDetail",   // 提交的页面
+                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                data:$("#filterForm").serialize(),
+                dataType: "json",
+                beforeSend: function(){
+                    var win = $.messager.progress({
+                        title:'请等待',
+                        msg:'数据保存中...',
+                        text:'处理中',
+                        interval:700
+                    });
+                },
+                complete: function(){
+                    //AJAX请求完成时隐藏loading提示
+                    $(document).ready(function(){$.messager.progress('close');});
+                },
+                success: function (data) {
+                    var result = data.message;
+                    if(result){$.messager.alert('提示',result,'info', function(){
+                        if(data.totalCount==1){
+                            //提示完成后，跳转查询页面
+                            $('#filterForm').attr("action", '/CrmOrderManual/toCrmOrderManualQueryListJD');
+                            $('#filterForm').submit();
+                        }
+                    });}
+                }
+            });
+        }else{
+            $.messager.alert('提示',"请输入完整数据",'error');
+        }
+    });
+    //返回调用画面
+    function onGoBack(){
+        var url = '$!url';
+        window.location.href=url;
+    }
+
+</script>
+<style>
+/* .textbox_{ */
+/* margin: 0px 46px 0px 0px; padding-top: 0px; padding-bottom: 0px; height: 30.0194px; line-height: 30.0194px;  */
+/* } */
+</style>
+</body>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>3PL采购网单管理</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+  <script src="../static/js/easyui-extention_ws.js"></script>
+  <script src="../static/js/i18n/zh_CN.js"></script>
+
+</head>
+
+<body class="iframe-body">
+
+<div id="purchaseItem" class="easyui-panel" style="width:100%;height:100%;" data-options="iconCls:'glyphicon glyphicon-search',collapsed:false, collapsible:false">
+  <table id="purchaseItemTable">
+  </table>
+</div>
+
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="filterForm" class="param-form" target="name">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          网单开始日期
+        </span>
+        <input class="easyui-datebox" name="startDate" id="startDate"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          网单结束日期
+        </span>
+        <input class="easyui-datebox" name="endDate" id="endDate"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+			    采购网单号
+        </span>
+        <input class="easyui-textbox" name="poItemNo" id="poItemNo"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+			    订单来源号
+        </span>
+        <input class="easyui-textbox" name="sourceSn" id="sourceSn"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+			    渠道
+        </span>
+        <input class="easyui-combobox" name="channel" id="channel"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+			    供应商
+        </span>
+        <input class="easyui-textbox" name="supplier" id="supplier"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+			    物料
+        </span>
+        <input class="easyui-textbox" name="sku" id="sku"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+			    采购网单状态
+        </span>
+        <select class="easyui-combobox" name="status" id="status" style="width:100px">
+          <option value="">全部</option>
+          <option value="10">新建</option>
+          <option value="15">确认</option>
+          <option value="20">入库中</option>
+          <option value="100">完成</option>
+          <option value="200">取消</option>
+        </select>
+      </div>
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn" data-options="iconCls:'icon-search',plain:true" >查询</a>
+    <a href="#" class="easyui-linkbutton" id="submitBtn" data-options="iconCls:'icon-edit',plain:true" >提交</a>
+    <a href="#" class="easyui-linkbutton" id="cancelBtn" data-options="iconCls:'icon-remove',plain:true" >取消</a>
+    <a href="#" class="easyui-linkbutton" id="exportBtn" data-options="iconCls:'icon-save',plain:true" >导出</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn" data-options="iconCls:'icon-redo',plain:true">重置</a>
+    <font color="red">注意：查询条件采购网单号不为空或采购订单来源号不为空时，以采购网单号查询或以采购订单来源号为条件查询，其它参数无效！</font>
+  </form>
+  <iframe name="name" id="iframe" style="display: none"></iframe>
+</div>
+
+
+<div id="addDlg_purchaseItem" data-options="title:'查询采购订单明细所属订单',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:1000px;height:420px;"
+     closed="true" buttons="#dlg-buttons_orderPriceSourceChannel">
+  <table id="purchaseOrder">
+  </table>
+</div>
+
+<script type="text/javascript">
+  function slideUpSlideClk(t) {
+    var $this = $(t);
+    if ($this.hasClass('open')) {
+        $this.removeClass('opebin');
+      setTimeout(function () {
+          $this.addClass('close');
+      }, 0);
+      $(".search-panel").slideUp();
+    } else {
+        $this.removeClass('close');
+      setTimeout(function () {
+          $this.addClass('open');
+      }, 0);
+      $(".search-panel").slideDown();
+    }
+    setTimeout(function () {
+      $('#dg').datagrid('resize');
+    }, 500);
+  }
+
+</script>
+<script src="../static/js/purchase/purchaseItem.js"></script>
+</head>
+</body>
+</html>

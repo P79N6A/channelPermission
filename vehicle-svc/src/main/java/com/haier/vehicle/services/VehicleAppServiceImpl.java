@@ -62,6 +62,10 @@ public class VehicleAppServiceImpl implements VehicleAppService {
 				result1.setSuccess(false);
 				result1.setMessage(json.get("message").toString());
 				return result1;
+			} else if(json.get("data") == null || json.get("code") == null){
+				result1.setSuccess(false);
+				result1.setMessage("获取送达方接口异常！");
+				return result1;
 			} else {
 				String longfeiCATNAME = json.get("data").toString();
 				Map longfeiCATNAMEJson = (Map) JSON.parse(longfeiCATNAME);
@@ -123,7 +127,11 @@ public class VehicleAppServiceImpl implements VehicleAppService {
 				result1.setSuccess(false);
 				result1.setMessage(json.get("message").toString());
 				return result1;
-			} else {
+			}  else if(json.get("data") == null || json.get("code") == null){
+				result1.setSuccess(false);
+				result1.setMessage("获取基地接口异常！");
+				return result1;
+			}else {
 				String longfeiCATNAME = json.get("data").toString();
 				Map longfeiCATNAMEJson = (Map) JSON.parse(longfeiCATNAME);
 				String url = rrsLocation + "basecode"; // 365地址 POM文件配置
@@ -434,6 +442,7 @@ public class VehicleAppServiceImpl implements VehicleAppService {
 					if (!"true".equals(map2.get("success").toString())) {
 						result1.setSuccess(false);
 						result1.setMessage(map2.get("Info").toString());
+						result1.setResult(map2.get("items").toString());
 						return result1;
 					}
 					result1.setSuccess(true);

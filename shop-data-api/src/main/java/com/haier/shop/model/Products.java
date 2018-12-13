@@ -12,30 +12,38 @@ public class Products implements Serializable{
 
     private Integer siteId;
 
-    private String productName;
+    private String productName = "";
 
-    private Boolean stockToTaotao;
+    private Boolean stockToTaotao = false;
 
-    private Integer lastSyncTime;
+    private Integer lastSyncTime = 0;
 
-    private String taobaoId;
+    private String taobaoId = "";
 
-    private String wlbItemId;
+    private String wlbItemId = "";
 
-    private String productActivityInfo;
+    private String productActivityInfo = "";
 
-    private String productTitle;
+    private String productTitle = "";
 
-    private String productTags;
+    private String productTags = "";
 
-    private Integer brandId;
+    private Integer brandId = 0;
 
-    private String defaultImageFileId;
+    private String defaultImageFileId = "";
 
-    private String detailImageFileId;
+    private String detailImageFileId = "";
 
-    private BigDecimal externalSalePrice;
-    
+    private BigDecimal externalSalePrice = BigDecimal.ZERO;
+
+    private String sellingPoint = "";
+
+    private String productDetail = "";
+
+    private String productBlockDetail = "";
+
+    private String productDetail2 = "";
+
     /**
      * 获取 外部套装促销价格
      * @return
@@ -59,69 +67,75 @@ public class Products implements Serializable{
 		this.sceneImageFileId = sceneImageFileId;
 	}
 
-	private String sceneImageFileId;
+	private String sceneImageFileId = "";
 
-    private Integer productTypeId;
+    private Integer productTypeId = 0;
 
     private Integer addTime;
 
-    private Integer lastModify;
+    private Integer lastModify = 0 ;
 
-    private Integer productCateId;
+    private Integer productCateId = 0;
 
-    private String productCatePath;
+    private String productCatePath = "";
 
-    private Byte onSale;
+    private Byte onSale = 0;
 
-    private Boolean isStar;
+    private Boolean isStar = false;
 
-    private Boolean isHot;
+    private Boolean isHot = false;
 
-    private Boolean isBest;
+    private Boolean isBest= false;
 
-    private Boolean isNew;
+    private Boolean isNew = false;
 
-    private Boolean isSpecial;
+    private Boolean isSpecial = false;
 
-    private Boolean isDelete;
+    private Boolean isDelete = false;
 
-    private Boolean bookable;
+    private Boolean bookable = false;
 
-    private Integer bookDays;
+    private Integer bookDays = 0 ;
 
-    private Boolean isForbidArrivalNotice;
+    private Boolean isForbidArrivalNotice = false;
 
-    private BigDecimal supplyPrice;
+    private BigDecimal supplyPrice = BigDecimal.ZERO;
 
-    private BigDecimal packagePrice;
+    private BigDecimal packagePrice = BigDecimal.ZERO;
 
-    private BigDecimal saleGuidePrice;
+    private BigDecimal saleGuidePrice = BigDecimal.ZERO;
 
-    private BigDecimal energySubsidyAmount;
+    private BigDecimal energySubsidyAmount = BigDecimal.ZERO;
 
-    private String energySubsidyProductName;
+    private String energySubsidyProductName = "";
     			  
-    private BigDecimal internalPrice;
+    private BigDecimal internalPrice = BigDecimal.ZERO;
 
-    private BigDecimal rankPrice;
+    private BigDecimal rankPrice = BigDecimal.ZERO;
 
-    private String rankGroups;
+    private String rankGroups = "";
 
     private String sku;
 
-    private Boolean storageType;
+    private Integer storageType = 0;
 
-    private String memberRanks;
+    private String memberRanks = "";
 
-    private String similarProductIds;
+    private String similarProductIds = "";
 
-    private String rejectReason;
+    private String modifiedFields = "";
 
-    private Byte state;
+    private String rejectReason = "";
 
-    private Integer saleNum;
+    private String keywords = "";
 
-    private Integer virtualSaleNum;
+    private String cities = "";
+
+    private Byte state = 0;
+
+    private Integer saleNum = 0;
+
+    private Integer virtualSaleNum = 0;
 
     public Integer getVirtualSaleNum() {
 		return virtualSaleNum;
@@ -135,45 +149,54 @@ public class Products implements Serializable{
 		return serialVersionUID;
 	}
 
-	private Integer commentNum;
+	private Integer commentNum = 0;
 
-    private BigDecimal gradeAvg;
+    private BigDecimal gradeAvg = BigDecimal.ZERO;
 
-    private Integer heroitteCommentNum;
+    private Integer heroitteCommentNum = 0;
 
-    private BigDecimal heroitteAvg;
+    private BigDecimal heroitteAvg = BigDecimal.ZERO;
 
-    private String shippingMode;
+    private String shippingMode = "";
 
-    private Byte giftCardType;
+    private Byte giftCardType = 0;
 
-    private Integer giftCardAmount;
+    private Integer giftCardAmount = 0;
 
-    private Byte isVirtual;
+    private Byte isVirtual = 0;
 
-    private Boolean isNoLimitStockProduct;
+    private Boolean isNoLimitStockProduct = false;
 
-    private String sCode;
+    private String sCode = "";
 
-    private Boolean isNotConfirm;
+    private Boolean isNotConfirm = false;
 
-    private Integer packageId;
+	public Integer getIsSynch() {
+		return isSynch;
+	}
 
-    private BigDecimal specailPrice;
+	public void setIsSynch(Integer isSynch) {
+		this.isSynch = isSynch;
+	}
 
-    private Boolean multiStorage;
+	private Integer isSynch;
+    private Integer packageId = 0;
 
-    private Byte inspectType;
+    private BigDecimal specailPrice = BigDecimal.ZERO;
 
-    private BigDecimal limitedPrice;
+    private Boolean multiStorage = false;
 
-    private Boolean isNotPromotion;
+    private Byte inspectType = 0;
 
-    private Byte productO2OType;
+    private BigDecimal limitedPrice = BigDecimal.ZERO;
 
-    private Boolean isGift;
+    private Boolean isNotPromotion = false;
 
-    private String conTaxCode;
+    private Byte productO2OType = 0;
+
+    private Boolean isGift = false;
+
+    private String conTaxCode = "";
 
 	public Integer getId() {
 		return id;
@@ -471,11 +494,11 @@ public class Products implements Serializable{
 		this.sku = sku;
 	}
 
-	public Boolean getStorageType() {
+	public Integer getStorageType() {
 		return storageType;
 	}
 
-	public void setStorageType(Boolean storageType) {
+	public void setStorageType(Integer storageType) {
 		this.storageType = storageType;
 	}
 
@@ -682,8 +705,157 @@ public class Products implements Serializable{
 	public void setConTaxCode(String conTaxCode) {
 		this.conTaxCode = conTaxCode;
 	}
+	private String limitCityIds;
 
-	
+	public String getLimitCityIds() {
+		return limitCityIds;
+	}
 
-   
+	public void setLimitCityIds(String limitCityIds) {
+		this.limitCityIds = limitCityIds;
+	}
+
+	public String getSellingPoint() {
+		return sellingPoint;
+	}
+
+	public void setSellingPoint(String sellingPoint) {
+		this.sellingPoint = sellingPoint;
+	}
+
+	public String getProductDetail() {
+		return productDetail;
+	}
+
+	public void setProductDetail(String productDetail) {
+		this.productDetail = productDetail;
+	}
+
+    public String getProductBlockDetail() {
+        return productBlockDetail;
+    }
+
+    public void setProductBlockDetail(String productBlockDetail) {
+        this.productBlockDetail = productBlockDetail;
+    }
+
+    public String getProductDetail2() {
+        return productDetail2;
+    }
+
+    public void setProductDetail2(String productDetail2) {
+        this.productDetail2 = productDetail2;
+    }
+
+    public String getModifiedFields() {
+        return modifiedFields;
+    }
+
+    public void setModifiedFields(String modifiedFields) {
+        this.modifiedFields = modifiedFields;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getCities() {
+        return cities;
+    }
+
+    public void setCities(String cities) {
+        this.cities = cities;
+    }
+
+    public Boolean getStar() {
+        return isStar;
+    }
+
+    public void setStar(Boolean star) {
+        isStar = star;
+    }
+
+    public Boolean getHot() {
+        return isHot;
+    }
+
+    public void setHot(Boolean hot) {
+        isHot = hot;
+    }
+
+    public Boolean getBest() {
+        return isBest;
+    }
+
+    public void setBest(Boolean best) {
+        isBest = best;
+    }
+
+    public Boolean getNew() {
+        return isNew;
+    }
+
+    public void setNew(Boolean aNew) {
+        isNew = aNew;
+    }
+
+    public Boolean getSpecial() {
+        return isSpecial;
+    }
+
+    public void setSpecial(Boolean special) {
+        isSpecial = special;
+    }
+
+    public Boolean getDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(Boolean delete) {
+        isDelete = delete;
+    }
+
+    public Boolean getForbidArrivalNotice() {
+        return isForbidArrivalNotice;
+    }
+
+    public void setForbidArrivalNotice(Boolean forbidArrivalNotice) {
+        isForbidArrivalNotice = forbidArrivalNotice;
+    }
+
+    public Boolean getNoLimitStockProduct() {
+        return isNoLimitStockProduct;
+    }
+
+    public void setNoLimitStockProduct(Boolean noLimitStockProduct) {
+        isNoLimitStockProduct = noLimitStockProduct;
+    }
+
+    public Boolean getNotConfirm() {
+        return isNotConfirm;
+    }
+
+    public void setNotConfirm(Boolean notConfirm) {
+        isNotConfirm = notConfirm;
+    }
+
+    public Boolean getNotPromotion() {
+        return isNotPromotion;
+    }
+
+    public void setNotPromotion(Boolean notPromotion) {
+        isNotPromotion = notPromotion;
+    }
+
+    public Boolean getGift() {
+        return isGift;
+    }
+
+    public void setGift(Boolean gift) {
+        isGift = gift;
+    }
 }

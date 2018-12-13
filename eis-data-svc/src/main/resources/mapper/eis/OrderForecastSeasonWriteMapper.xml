@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.OrderForecastSeasonWriteDao">
+	<resultMap id="OrderForecastSeason" type="com.haier.eis.model.OrderForecastSeason">
+		<result property="id" column="id" />
+		<result property="trade" column="trade" />
+		<result property="sCode" column="sCode" />
+		<result property="productType" column="product_type" />
+		<result property="seasonWeek" column="season_week" />
+		<result property="seasonPer" column="season_per" />
+		<result property="SArea" column="SArea" />
+		<result property="productGroups" column="product_groups" />
+	</resultMap>
+	<insert id="InsertOrderForecastSeason" parameterType="java.util.List">
+	    insert into `order_forecast_season`(`trade`,`sCode`,`product_type`,`season_week`,`season_per`,`SArea`,`product_groups`)
+		values
+	   <foreach collection="list" item="item" index="index" separator=","> 
+	    (#{item.trade},#{item.sCode},#{item.productType},#{item.seasonWeek},#{item.seasonPer},#{item.SArea},#{item.productGroups})
+	   </foreach>
+	</insert>
+	<delete id="deleteOrderForecastSeason">
+	TRUNCATE TABLE order_forecast_season 
+	</delete>
+	
+	
+	
+</mapper>

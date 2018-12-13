@@ -46,6 +46,22 @@ public interface OrderRepairLESRecordsWriteDao {
      * @return
      */
     Integer updateOpCancelFlag(OrderRepairLESRecords orderRepairLESRecords);
+
+    /**
+     *
+     * @param id
+     * @param recordSn
+     * @return
+     */
+    Integer updateRepairLesRecordcn(@Param("id")String id, @Param("recordSn")String recordSn);
+
+    /**
+     *
+     * @param id
+     * @param success
+     * @return
+     */
+    Integer updateRepairLesRecordcnSuccess(@Param("id")String id, @Param("success")Integer success);
     /**
      * 更新推送状态信息
      * @return

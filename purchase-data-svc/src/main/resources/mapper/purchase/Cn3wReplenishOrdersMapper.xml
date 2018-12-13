@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.Cn3wReplenishOrdersDao">
+
+	<resultMap type="com.haier.purchase.data.model.Cn3wReplenishOrders" id="Cn3wReplenishOrdersResultMapper">
+		<result property="id" column="id" />
+		<result property="messageId" column="messageId" />
+		<result property="sc_item_id" column="sc_item_id" />
+		<result property="sc_item_code" column="sc_item_code" />
+		<result property="sc_item_name" column="sc_item_name" />
+		<result property="repl_no" column="repl_no" />
+		<result property="wpOrderId" column="wpOrderId" />
+		<result property="entryOrderCode" column="entryOrderCode" />
+		<result property="entryOrderId" column="entryOrderId" />
+		<result property="status" column="status" />
+		<result property="plan_repl_qty" column="plan_repl_qty" />
+		<result property="suggest_qty" column="suggest_qty" />
+		<result property="confirm_repl_qty" column="confirm_repl_qty" />
+		<result property="deadline" column="deadline" />
+		<result property="confirm_deadline" column="confirm_deadline" />
+		<result property="from_store_code" column="from_store_code" />
+		<result property="from_store_name" column="from_store_name" />
+		<result property="store_code" column="store_code" />
+		<result property="store_name" column="store_name" />
+		<result property="state" column="state" />
+		<result property="gmt_create" column="gmt_create" />
+		<result property="gmt_modified" column="gmt_modified" />
+		<result property="repl_order_type" column="repl_order_type" />
+		<result property="transport_type" column="transport_type" />
+		<result property="contact_name" column="contact_name" />
+		<result property="contact_phone" column="contact_phone" />
+		<result property="errorCode" column="errorCode" />
+		<result property="errorMsg" column="errorMsg" />
+		<result property="market_type" column="market_type" />
+		<result property="xiaoer_memo" column="xiaoer_memo" />
+		<result property="system_memo" column="system_memo" />
+		<result property="insertTime" column="insertTime" />
+		<result property="modifyTime" column="modifyTime" />
+		<result property="trycount" column="trycount" />
+	</resultMap>
+	
+	<select id="getByLBX" resultMap="Cn3wReplenishOrdersResultMapper">
+		select * from cn_3w_replenish_orders where entryOrderId = #{storeCode}
+	</select>
+</mapper>

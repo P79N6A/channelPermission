@@ -10,7 +10,11 @@ public interface MemberInvoicesWriteDao {
 
     void update(MemberInvoices memberInvoices);
 
+    void update1(MemberInvoices memberInvoices);
+
     int insert(MemberInvoices memberInvoices);
 
     void updateForsynInvoices(MemberInvoices memberInvoices);
+
+    int updateByTitleAndNumber(MemberInvoices memberInvoices);
 }

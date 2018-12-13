@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>添加库位</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+
+    <style>
+        .input_form{
+            width: 60%;
+        }
+        .input_form_short{
+            width: 20%;
+        }
+        .div div span{
+            position:absolute;
+            right:50%;
+        }
+        .radio label{
+            margin-right:15px;
+        }
+        .penel {
+            background: #b5bbc8;
+            color: #404040;
+            border: 1px solid #b5bbc8;
+            filter: none;
+        }
+        .breadcrumb {
+            position: relative;
+            margin-top: 5px;
+            top: 0;
+            right: 0;
+            float: none;
+            background: #b5bbc8;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body >
+<div >
+    <div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px; width:100%;  position: fixed;z-index: 20">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;font-weight: bold;">
+            	添加库位
+        </span>
+        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+               value="返回" onclick="window.history.back()" readonly="readonly"
+               style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+        #*<input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+               value="保存" id="addProduct" readonly="readonly"
+               style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>*#
+    </div>
+    <fieldset >
+        <hr/>
+    </fieldset>
+   <div>
+       <ol class="breadcrumb">
+           <li class="penel">基本信息</li>
+       </ol>
+       <form class="form-horizontal" id="baseInfo">
+           <div class="form-group">
+               <label for="storageName" class="col-sm-2 control-label">库位名称：</label>
+               <div class="col-sm-10">
+                   <input type="text" class="form-control input_form" name="storageName" id="storageName" onBlur="checkStorageName()" placeholder="库位名称">
+                   <h6 id="storageNameInfo"></h6>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="storageCode" class="col-sm-2 control-label">库位码：</label>
+               <div class="col-sm-10">
+                   <div>
+                        <input type="text" class="form-control input_form" name="storageCode" id="storageCode"   onBlur="checkStorageCode()" placeholder="库位码"">
+                       <h6 id="storageCodeInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="storageType" class="col-sm-2 control-label">库位类型：</label>
+               <div class="col-sm-10">
+                   <select id="storageType" name="storageType" panelHeight="auto" class="easyui-combobox">
+                       <option value="">请选择</option>
+                       <option value="1">大库</option>
+                       <option value="2">小库</option>
+                   </select>
+               </div>
+           </div>
+
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">所属中心：</label>
+               <div class="col-sm-10">
+                   <input id="province" name="province" v class="easyui-combobox" editable="false"  style="width:100px;" />
+                   <input id="citys" name="citys"  class="easyui-combobox"   editable="false" style="width:100px;"/>
+                   <h6 id="provinceInfo"  style="color: red" ></h6>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="centerCode" class="col-sm-2 control-label">中心代码：</label>
+               <div class="col-sm-10">
+                   <div>
+                        <input type="text" class="form-control input_form" name="centerCode" id="centerCode"  onBlur="" placeholder="中心代码"">
+                       <h6 id="centerCodeInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="centerCode" class="col-sm-2 control-label">工贸代码：</label>
+               <div class="col-sm-10">
+                   <div>
+                        <input type="text" class="form-control input_form" name="industryCode" id="industryCode"  onBlur="" placeholder="工贸代码"">
+                       <h6 id="industryCodeInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="centerCode" class="col-sm-2 control-label">工贸名称：</label>
+               <div class="col-sm-10">
+                   <div>
+                        <input type="text" class="form-control input_form" name="industryName" id="industryName"  onBlur="" placeholder="工贸名称">
+                       <h6 id="industryNameInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+
+           <div class="form-group">
+               <label for="storageType" class="col-sm-2 control-label">所属区域：</label>
+               <div class="col-sm-10">
+                   <select id="area" name="area" panelHeight="auto" class="easyui-combobox">
+                       <option value="">请选择</option>
+                       <option value="1">东区</option>
+                       <option value="2">西区</option>
+                       <option value="3">南区</option>
+                       <option value="4">北区</option>
+                   </select>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="storageType" class="col-sm-2 control-label">是否支持货到付款：</label>
+               <div class="col-sm-10">
+                   <select id="isSupportCod" name="isSupportCod" panelHeight="auto" class="easyui-combobox">
+                       <option value="">请选择</option>
+                       <option value="0">否</option>
+                       <option value="1">是</option>
+                   </select>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="contactAddress" class="col-sm-2 control-label">预计送达时间：</label>
+               <div class="col-sm-10">
+                   <div>
+                       <input type="text" class="form-control input_form" name="limitTime" id="limitTime"  onBlur="" placeholder="预计送达时间"">
+                       <h6 id="limitTimeInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="contactAddress" class="col-sm-2 control-label">备注：</label>
+               <div class="col-sm-10">
+                   <div>
+                       <input type="text" class="form-control input_form" name="remark" id="remark"  onBlur="" placeholder="备注"">
+                       <h6 id="remarkInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+
+           <div class="form-group">
+               <label for="provinceId" class="col-sm-2 control-label">库位覆盖城市：</label>
+
+               <select title="省份" id="provinceId" class="selectCity" size="15"  style="height:250px;width: 90px; border: 1px solid rgb(204, 204, 204);"  onchange="cityIdChanged(this);"	editable="false">
+                   <option value="0">请选择</option>
+                   <option value="13">安徽</option>
+                   <option value="2">北京</option>
+                   <option value="23">重庆</option>
+                   <option value="14">福建</option>
+                   <option value="25">贵州</option>
+                   <option value="20">广东</option>
+                   <option value="29">甘肃</option>
+                   <option value="21">广西</option>
+                   <option value="18">湖北</option>
+                   <option value="17">河南</option>
+                   <option value="22">海南</option>
+                   <option value="19">湖南</option>
+                   <option value="9">黑龙江</option>
+                   <option value="4">河北</option>
+                   <option value="15">江西</option>
+                   <option value="8">吉林</option>
+                   <option value="11">江苏</option>
+                   <option value="7">辽宁</option>
+                   <option value="6">内蒙古</option>
+                   <option value="31">宁夏</option>
+                   <option value="30">青海</option>
+                   <option value="24">四川</option>
+                   <option value="5">山西</option>
+                   <option value="10">上海</option>
+                   <option value="16">山东</option>
+                   <option value="28">陕西</option>
+                   <option value="3">天津</option>
+                   <option value="27">西藏</option>
+                   <option value="32">新疆</option>
+                   <option value="26">云南</option>
+                   <option value="12">浙江</option>
+               </select>
+               <select title="城市" id="cityId" class="selectCity"  onchange="regionIdChanged(this);" size="15" style="height:250px;width: 110px; border: 1px solid rgb(204, 204, 204);" editable="false">
+                   <option value="0">请选择</option>
+               </select>
+               <select title="区县" id="regionId" class="selectRegion" size="15" style="height:250px;width: 110px; border: 1px solid rgb(204, 204, 204);" editable="false">
+                   <option value="0">请选择</option>
+               </select>
+               <input name="add" class="button" style="width:20px;" id="add" value=">>" onclick="addRegion()" type="button">
+               <input name="del" class="button" style="width:20px;" id="del" value="<<" onclick="delRegion()" type="button">
+               <select title="库位覆盖城市" text="默认为空" name="regionIds[]" id="regionIds" class="selectCity" size="15" style="height:250px;width: 110px; border: 1px solid rgb(204, 204, 204);" multiple>
+               </select>
+               <input id="limitCityIds" name="limitCityIds" type="hidden" value="">
+
+           </div>
+
+
+       </form>
+   </div>
+
+    <div>
+            <div style="text-align: center">
+                <a id="saveBtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="onSaveStoragesInfo()">保存库位信息<a/>
+            </div>
+    </div>
+</div>
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+    }
+</style>
+<script src="../static/js/netpointstorage/storagesAdd.js"></script>
+</body>
+</html>

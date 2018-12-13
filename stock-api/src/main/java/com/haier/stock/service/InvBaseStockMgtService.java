@@ -21,7 +21,11 @@ public interface InvBaseStockMgtService {
 
     List<InvBaseStock> exportBaseStockList(InvBaseStock condition);
 
+    List<InvBaseStock> exportBaseStockListByCondition(InvBaseStock condition,Integer start,Integer size);
+
     List<InvBaseStock> exportMachineBaseStockList(InvBaseStock condition);
+
+    List<InvBaseStock> exportMachineBaseStockListByContion(InvBaseStock condition,Integer start,Integer size);
 
     JSONObject getInvBaseStockLogList(PagerInfo pager, InvBaseStockLog invBaseStockLog);
 

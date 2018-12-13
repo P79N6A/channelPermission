@@ -57,8 +57,24 @@ public class EisVomInOutStoreOrderServiceImpl implements EisVomInOutStoreOrderSe
     	return vomInOutStoreOrderDao.findInTime();
     }
 	@Override
-	public int queryVomInOut(String orderNo) {
+	public VomInOutStoreOrder queryVomInOut(String orderNo) {
 		// TODO Auto-generated method stub
 		return vomInOutStoreOrderDao.queryVomInOut(orderNo);
+	}
+	@Override
+	public VomInOutStoreOrder queryGetStoreCode(String storageType, String busType, String orderNo) {
+		// TODO Auto-generated method stub
+		return vomInOutStoreOrderDao.queryGetStoreCode(storageType, busType, orderNo);
+	}
+
+    @Override
+    public VomInOutStoreOrder getByStockInfoByOrderNo(String orderNo) {
+        return vomInOutStoreOrderDao.getByStockInfoByOrderNo(orderNo);
+    }
+
+	@Override
+	public VomInOutStoreOrder queryVomInTenlibrary(String orderNo) {
+		// TODO Auto-generated method stub
+		return vomInOutStoreOrderDao.queryVomInTenlibrary(orderNo);
 	}
 }

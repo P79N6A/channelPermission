@@ -1,11 +1,19 @@
 package com.haier.stock.model;
+import com.haier.purchase.data.service.PurchaseItemService;
+import com.haier.purchase.data.service.PurchaseT2OrderQueryService;
+import com.haier.stock.eai.getbominfofromlestoehaier.ZLESDCMS24;
+import com.haier.stock.service.InvTransferLineService;
+import com.haier.stock.service.StockService;
+import com.haier.stock.services.StockCommonServiceImpl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.xml.ws.Holder;
@@ -20,6 +28,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.haier.common.BusinessException;
+import com.haier.common.ServiceResult;
 import com.haier.common.util.DateUtil;
 import com.haier.common.util.JsonUtil;
 import com.haier.common.util.StringUtil;
@@ -30,9 +39,12 @@ import com.haier.eis.service.EisInterfaceStatusService;
 import com.haier.eis.service.EisStockTrans2ExternalService;
 import com.haier.eis.service.LesStockItemService;
 import com.haier.eis.service.LesStockTransQueueService;
+import com.haier.stock.canceltidan.JdeAndLesLoseValidityResponse;
+import com.haier.stock.createscordertoles.OutputType;
 import com.haier.stock.eai.transaccountcheckingfromcbstoles.GetKUCUNInfoFromLESToEHAIERResponseStockQty;
 import com.haier.stock.eai.transaccountcheckingfromcbstoles.GetKUCUNInfoFromLESToEHAIERResponseStockTrans;
 import com.haier.stock.service.StockCommonService;
+import com.haier.stock.service.TransferLineService;
 import com.haier.stock.services.Helper.EAIHandler;
 
 @Service
@@ -48,10 +60,23 @@ public class LesStockSyncModel {
 	@Autowired
 	private LesStockTransQueueService        LesStockTransQueueService;
 	@Autowired
-	private StockCommonService           stockCommonService;
+	private StockCommonServiceImpl stockCommonService;
 	@Autowired
 	private LesStockItemService              LesStockItemService;
-	
+	@Autowired
+	private TransferLineService transferLineService;
+	@Autowired
+	private LesStockTransQueueService        lesStockTransQueueDao;
+	@Autowired
+	private StockService stockService;
+
+	@Autowired
+	private InvTransferLineService invTransferLineService;
+	@Autowired
+	private PurchaseItemService purchaseItemService;
+	@Autowired
+	private PurchaseT2OrderQueryService purchaseT2OrderQueryService;
+
 	
 	 private Logger              logger   = LoggerFactory.getLogger(LesStockSyncModel.class);
 	 
@@ -317,8 +342,50 @@ public class LesStockSyncModel {
 				String msg = validLesStockTransQueue(stockTransQueue);
 				if (msg != null)
 					throw new BusinessException(msg);
-
-				stockTransQueue.setStatus(LesStockTransQueue.STATUS_UNDONE);
+				//2018-9-5校验订单是否是采购或者调拨
+				//如果是采购和调拨则校验是否存在于3W-CBS系统 如果不存在则存入表中不处理
+				Integer status = null;
+				//如果是采购
+				if (InventoryBusinessTypes.IN_PURCHASE.getCode().equals(billType)) {
+					//普通采购 VOM回传单号为85开头D结尾
+					//2018-09-10 按照旧系统 可能有SI单号或者PC单号
+					//2.CBS采购，根据SI单或者85DN单号获取关联的采购PO单获取渠道
+					//85D单号去掉D
+					//PC6000190000008,统帅金立PC单
+					Integer purchaseT2 = null;
+					String pCOrderSn = corderSn.matches("8.+(D.*)?")
+							? corderSn.substring(0, corderSn.length() - 1)
+							: corderSn.matches("(SI).+") ? corderSn
+							: corderSn.matches("(PC).+") ? corderSn : null;
+					if (pCOrderSn != null) {
+						purchaseT2 = purchaseT2OrderQueryService.getByOrderId(pCOrderSn);
+					}
+					//3PL采购
+					int purchaseItem = purchaseItemService.getByPoItemNo(corderSn);
+					//如果存在
+					if (purchaseT2 > 0 || purchaseItem > 0) {
+						status = LesStockTransQueue.STATUS_UNDONE;
+						//不存在
+					} else {
+						status = LesStockTransQueue.STATUS_NO;
+					}
+					//如果是调拨
+				} else if (InventoryBusinessTypes.OUT_TRANSFER.getCode().equals(billType)
+						|| InventoryBusinessTypes.IN_TRANSFER.getCode().equals(billType)){
+					//查询是否存在
+					int invTransferLine = invTransferLineService.getByLineNum(corderSn);
+					//如果存在
+					if (invTransferLine > 0) {
+						status = LesStockTransQueue.STATUS_UNDONE;
+						//不存在
+					} else {
+						status = LesStockTransQueue.STATUS_NO;
+					}
+					//其他情况
+				} else {
+					status = LesStockTransQueue.STATUS_UNDONE;
+				}
+				stockTransQueue.setStatus(status);
 			} catch (Exception e) {
 				stockTransQueue.setStatus(LesStockTransQueue.STATUS_ERROR);
 				stockTransQueue.setErrorMessage(e.getMessage());
@@ -420,6 +487,279 @@ public class LesStockSyncModel {
 	    public void seteisStockTrans2ExternalService(EisStockTrans2ExternalService eisStockTrans2ExternalService) {
 	        this.eisStockTrans2ExternalService = eisStockTrans2ExternalService;
 	    }
+	    
+	    /**
+	     * 取消调拨单到LES
+	     * @param lineNum
+	     * @param lesNum
+	     * @return
+	     */
+	    public boolean cancelTransferLine2Les(String lineNum, String lesNum) {
+	    	//TODO 把这里补充完整
+	        JdeAndLesLoseValidityResponse.Out out = eaiHandler.cancelTransferLineToLes(lineNum, lesNum);
+	        if (out == null) {
+	            throw new BusinessException("LES返回空");
+	        }
+	        if (!"S".equalsIgnoreCase(out.getFLAG())) {
+	            throw new BusinessException(out.getMESSAGE());
+	        }
+	        return true;
+	    }
+	    
+	    /**
+	     * Job：读取状态为30待传LES的调拨网单同步到LES
+	     */
+	    public void syncTransferLinesToLes() {
+	        ServiceResult<List<InvTransferLine>> rs = transferLineService
+	            .getTransferLineByLineStatus(InvTransferLine.LINE_STATUS_LES);
+	        if (!rs.getSuccess()) {
+	            logger.error("获取待同步LES调拨单列表失败：" + rs.getMessage());
+	            return;
+	        }
+	        List<InvTransferLine> transferLinesWaitForSyncToLes = rs.getResult();
+
+	        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+	        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+	        TransactionStatus status;
+
+	        for (InvTransferLine transferLine : transferLinesWaitForSyncToLes) {
+	            String secFrom = transferLine.getSecFrom();
+	            String secTo = transferLine.getSecTo();
+	            InvWarehouse warehouse1 = getWarehouse(secFrom);
+	            if (warehouse1 == null) {
+	                logger.error("同步调拨单到LES时出现异常（" + transferLine.getLineNum() + "），未获取到库位对应的仓库信息,库位："
+	                             + secFrom);
+	                continue;
+	            }
+	            transferLine.setSecFrom(warehouse1.getWhCode() + InvSection.CHANNEL_CODE_WA);
+	            String transferFrom = warehouse1.getCenterCode();
+	            InvWarehouse warehouse2 = getWarehouse(secTo);
+	            if (warehouse2 == null) {
+	                logger.error("同步调拨单到LES时出现异常（" + transferLine.getLineNum() + "），未获取到库位对应的仓库信息,库位："
+	                             + secTo);
+	                continue;
+	            }
+	            transferLine.setSecTo(warehouse2.getWhCode() + InvSection.CHANNEL_CODE_WA);
+	            if (transferLine.getTransferReason() != null
+	                && transferLine.getTransferReason().equals(InvTransferLine.TRANSFER_REASON_XN)) {
+	                try {
+	                    boolean isSuc = innerTransferSyncLesStockTrans(transferLine);
+	                } catch (Exception e) {
+	                    logger.info("记录虚拟调拨入库/出库记录出现错误" + e.getMessage());
+	                }
+	                continue;
+	            }
+
+	            String transferTo = warehouse2.getLesAccepter();
+	            OutputType outPut = eaiHandler.createTransferLineToLes(transferLine, transferFrom,
+	                transferTo);
+
+	            if ("1".equalsIgnoreCase(outPut.getFLAG())) {//成功
+	                String lessOrdersn = outPut.getVBELN();
+	                transferLine.setLesNum(lessOrdersn);
+	                transferLine.setLineStatus(InvTransferLine.LINE_STATUS_STORE_OUT);
+	                ServiceResult<Integer> result = transferLineService
+	                    .updateTransferLineAfterSyncToLes(transferLine, DateUtil.currentDateTime(),
+	                        "开单完成，LES单号:" + lessOrdersn);
+	                if (!result.getSuccess())
+	                    logger.error("更新调拨单（" + transferLine.getLineNum() + "）失败："
+	                                 + result.getMessage());
+	            } else {
+	                logger.error("同步调拨单到LES时出现异常（" + transferLine.getLineNum() + "），LES接口返回失败:"
+	                             + outPut.getFLAG() + " " + outPut.getMESSAGE());
+	            }
+	        }
+
+	        logger.info("SyncTransferLinesToLes Done! Count " + transferLinesWaitForSyncToLes.size());
+	    }
+	    
+	    
+	    private InvWarehouse getWarehouse(String secCode) {
+	        if (StringUtil.isEmpty(secCode))
+	            return null;
+	        String wh_code = secCode.substring(0, 2);
+	        ServiceResult<InvWarehouse> rs = stockCommonService.getWarehouse(wh_code);
+	        if (!rs.getSuccess()) {
+	            logger.error("通过库存服务获取仓库信息失败:" + rs.getMessage());
+	            throw new BusinessException("通过库存服务获取仓库信息失败！");
+	        }
+	        return rs.getResult();
+	    }
+	    
+	    private boolean innerTransferSyncLesStockTrans(InvTransferLine transferLine) {
+	        this.lesStockTransQueueDao.insert(createLesStockTransQueue(transferLine,
+	            InvStockInOut.OUT_TRANSFER_TYPE, InventoryBusinessTypes.OUT_TRANSFER.getMark()));
+	        logger.info("虚拟调拨[出库记录]: 调拨单号：" + transferLine.getLineNum());
+	        this.lesStockTransQueueDao.insert(createLesStockTransQueue(transferLine,
+	            InvStockInOut.IN_TRANSFER_TYPE, InventoryBusinessTypes.IN_TRANSFER.getMark()));
+	        logger.info("虚拟调拨[入库记录]： 调拨单号：" + transferLine.getLineNum());
+	        //更新调拨单状态 
+	        ServiceResult<Boolean> result = transferLineService.updateLineStatusByLineId(
+	            transferLine.getLineId(), InvTransferLine.LINE_STATUS_STORE_OUT);
+	        logger.info("同步虚拟调拨单,更新调拨单状态为待出库lineId[" + transferLine.getLineId() + "]"
+	                    + (result.getSuccess() ? "成功" : "失败"));
+	        return true;
+	    }
+	    
+	    /**
+	     * 虚拟调拨标识
+	     */
+	    private static final String XN_MARK = "XN";
+	    private LesStockTransQueue createLesStockTransQueue(InvTransferLine transferLine,
+                String billType, String mark) {
+			LesStockTransQueue lesStockTransQueue = new LesStockTransQueue();
+			lesStockTransQueue.setSku(transferLine.getItemCode());
+			lesStockTransQueue
+			.setSecCode(InvStockInOut.IN_TRANSFER_TYPE.equals(billType) ? transferLine.getSecTo()
+			: transferLine.getSecFrom());
+			lesStockTransQueue.setCorderSn(transferLine.getLineNum());
+			lesStockTransQueue.setChannelCode(LesStockTransQueue.CHANNEL_WA);
+			lesStockTransQueue.setOutping("");
+			lesStockTransQueue.setBillTime(new Date());
+			lesStockTransQueue.setBillType(billType);
+			lesStockTransQueue.setQuantity(transferLine.getTransferQty());
+			lesStockTransQueue.setLesBillNo(transferLine.getLineNum());
+			lesStockTransQueue.setMark(mark);
+			lesStockTransQueue.setCharg(InvSection.W10);//良品
+			lesStockTransQueue.setStatus(0);
+			lesStockTransQueue.setVersionCode(UUID.randomUUID().toString());
+			lesStockTransQueue.setAddTime(new Date());
+			lesStockTransQueue.setLesBatchId(0);
+			lesStockTransQueue.setData(XN_MARK);
+			return lesStockTransQueue;
+		}
+	    
+	    
+	    /**
+	     * Job：传递用于录入费用的调拨单信息到LES
+	     */
+	    public void transferLineToLesForFeeInput() {
+	        ServiceResult<List<InvTransferLine>> rs = transferLineService
+	            .getTransferLineByLineStatus(InvTransferLine.LINE_STATUS_CONFIRM);
+	        if (!rs.getSuccess()) {
+	            logger.error("用transferLineService获取待同步LES调拨单列表失败：" + rs.getMessage());
+	            return;
+	        }
+	        List<InvTransferLine> lines = rs.getResult();
+	        if (lines == null || lines.size() == 0) {
+	            if (logger.isInfoEnabled()) {
+	                logger.info("没有用于录入费用的调拨单需要传递到LES,Job退出");
+	            }
+	            return;
+	        }
+	        for (InvTransferLine line : lines) {
+	            String secFrom = line.getSecFrom();
+	            String secTo = line.getSecTo();
+	            line.setSecFrom(secFrom.substring(0, 2) + InvSection.CHANNEL_CODE_WA);
+	            line.setSecTo(secTo.substring(0, 2) + InvSection.CHANNEL_CODE_WA);
+	            InvWarehouse warehouseFrom = this.getWarehouse(line.getSecFrom());
+	            if (warehouseFrom == null) {
+	                logger.error("未获取到库位对应的仓库信息,库位：" + line.getSecFrom());
+	                continue;
+	            }
+	            String kunag = warehouseFrom.getCenterCode();//调出中心代码
+
+	            InvWarehouse warehouseTo = this.getWarehouse(line.getSecTo());
+	            if (warehouseTo == null) {
+	                logger.error("未获取到库位对应的仓库信息,库位：" + line.getSecTo());
+	                continue;
+	            }
+	            String kunnr = warehouseTo.getCenterCode();//调入中心代码
+	            boolean eaiRet = eaiHandler.transferLineToLesForFeeInput(line, kunag, kunnr);
+	            if (!eaiRet) {
+	                logger
+	                    .error("单号为"
+	                           + line.getLineNum()
+	                           + "的调拨单在进行传递用于录入费用的调拨单信息到LES时执行失败，请查看eaiHandler的transferLineToLesForFeeInput方法日志，下次Job会重新执行该操作");
+	                continue;
+	            }
+	            ServiceResult<Integer> ret = transferLineService
+	                .updateTransferLineAfterToLesForFeeInput(line);
+	            if (!ret.getSuccess()) {
+	                logger.error("传递调拨单号为" + line.getLineNum() + "的用于录入费用的调拨单信息到LES后更新调拨单状态失败："
+	                             + ret.getMessage());
+	            }
+	        }
+	    }
+
+	public Boolean doMachineSetsSyncFromLes() {
+		Date now = DateUtil.currentDate();
+		String inputDate = DateUtil.format(now, "yyyy-MM-dd");
+		List<InvMachineSet> machineSets = getBomInfoFromLes(inputDate);
+		int errCount = 0;
+		for (InvMachineSet machineSet : machineSets) {
+			ServiceResult<Boolean> rs = stockService.machineSetSync(machineSet);
+			if (!rs.getSuccess()) {
+				logger.error("库存服务同步套机记录错误，" + rs.getMessage());
+				errCount++;
+			}
+		}
+		logger.info("同步套机数据完成，可处理记录 " + machineSets.size() + ",错误记录 " + errCount);
+		return true;
+	}
+
+	private List<InvMachineSet> getBomInfoFromLes(String inputDate) {
+		List<InvMachineSet> retList = new ArrayList<InvMachineSet>();
+
+		List<ZLESDCMS24> bomInfos = eaiHandler.getBomInfoFromLes(inputDate);
+		if (bomInfos == null) {
+			logger.warn("从Les后去套机数据null，输入参数：" + inputDate);
+			return retList;
+		}
+
+		Map<ZLESDCMS24, String> errMap = new HashMap<ZLESDCMS24, String>();
+
+		for (ZLESDCMS24 bomInfo : bomInfos) {
+
+			String mainSku = bomInfo.getMATNR();//父sku
+			if (StringUtil.isEmpty(mainSku)) {
+				errMap.put(bomInfo, "main_sku为空");
+				continue;
+			}
+
+			String subSku = bomInfo.getIDNRK();//子sku
+			if (StringUtil.isEmpty(subSku)) {
+				errMap.put(bomInfo, "sub_sku为空");
+				continue;
+			}
+
+			String factoryCode = bomInfo.getWERKS();//工厂
+
+			String bomNum = bomInfo.getPOSNR();//bom 项目号
+			if (StringUtil.isEmpty(bomNum)) {
+				errMap.put(bomInfo, "bom项目号为空");
+				continue;
+			}
+
+			BigDecimal menge = bomInfo.getMENGE();//组件数量
+
+			String maktx1 = bomInfo.getMAKTX1();
+			String maktx2 = bomInfo.getMAKTX2();
+
+			String stlnr = bomInfo.getSTLNR();
+
+			InvMachineSet machineSet = new InvMachineSet();
+			machineSet.setMainSku(mainSku);
+			machineSet.setSubSku(subSku);
+			machineSet.setFactoryCode(factoryCode);
+			machineSet.setStlnr(stlnr);
+			machineSet.setPosnr(bomNum);
+			machineSet.setMenge(menge);
+			machineSet.setMaktx1(maktx1);
+			machineSet.setMaktx2(maktx2);
+			retList.add(machineSet);
+		}
+
+		if (errMap.size() > 0) {
+			for (Map.Entry<ZLESDCMS24, String> entry : errMap.entrySet()) {
+				ZLESDCMS24 zlesdcms24 = entry.getKey();
+				String msg = entry.getValue();
+				logger.warn("套机数据错误，" + msg + "。" + JsonUtil.toJson(zlesdcms24));
+			}
+		}
+
+		return retList;
+	}
 }
 
 	

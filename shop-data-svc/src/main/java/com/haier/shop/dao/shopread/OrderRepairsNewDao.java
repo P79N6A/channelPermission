@@ -87,6 +87,7 @@ public interface OrderRepairsNewDao {
      * @return
      */
     Integer updateForStatus(OrderRepairsNew orderRepairs);
-    
-   
+
+
+    int updateExchange(Integer repairId);
 }

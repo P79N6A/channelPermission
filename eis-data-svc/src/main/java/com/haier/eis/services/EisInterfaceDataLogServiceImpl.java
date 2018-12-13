@@ -8,6 +8,9 @@ import com.haier.eis.dao.eis.EisInterfaceDataLogDao;
 import com.haier.eis.model.EisInterfaceDataLog;
 import com.haier.eis.service.EisInterfaceDataLogService;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class EisInterfaceDataLogServiceImpl implements EisInterfaceDataLogService {
     @Autowired
@@ -33,6 +36,21 @@ public class EisInterfaceDataLogServiceImpl implements EisInterfaceDataLogServic
     public Integer insertAndReturnId(EisInterfaceDataLog log) {
         // TODO Auto-generated method stub
         return eisInterfaceDataLogDao.insertAndReturnId(log);
+    }
+
+    @Override
+    public List<EisInterfaceDataLog> getEisInterfaceList(Map<String, Object> params) {
+        return eisInterfaceDataLogDao.getEisInterfaceList(params);
+    }
+
+    @Override
+    public int getEisInterfaceCNT(Map<String, Object> params) {
+        return eisInterfaceDataLogDao.getEisInterfaceCNT(params);
+    }
+
+    @Override
+    public List<EisInterfaceDataLog> getEisInterfaceDataList(Map<String, Object> params) {
+        return eisInterfaceDataLogDao.getEisInterfaceDataList(params);
     }
 
 

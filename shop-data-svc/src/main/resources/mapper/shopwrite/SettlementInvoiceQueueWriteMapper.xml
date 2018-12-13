@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.SettlementInvoiceQueueWriteDao">
+	<resultMap id="settlementInvoiceQueueResult" type="com.haier.shop.model.SettlementInvoiceQueue">
+		<result property="id" column="id" />
+		<result property="invoicesId" column="invoicesId" />
+		<result property="statusType" column="statusType" />
+		<result property="success" column="success" />
+		<result property="count" column="count" />
+		<result property="addTime" column="add_time" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="lastMessage" column="last_message" />
+	</resultMap>
+
+	<insert id="insert" parameterType="com.haier.shop.model.SettlementInvoiceQueue">
+		insert into settlement_invoice_queue(`invoicesId`,`statusType`,`success`,`count`,`add_time`,`last_message`)values(#{invoicesId},#{statusType},#{success},#{count},now(),#{lastMessage})
+	</insert>
+
+	<update id="update" parameterType="com.haier.shop.model.SettlementInvoiceQueue">
+		update settlement_invoice_queue set `invoicesId`=#{invoicesId},`statusType`=#{statusType},`success`=#{success},`count`=#{count},`add_time`=#{addTime},`last_message`=#{lastMessage}
+		where id=#{id}
+	</update>
+
+
+</mapper>

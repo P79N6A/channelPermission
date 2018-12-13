@@ -46,6 +46,8 @@
     <result column="rejectReason" property="rejectReason" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="TINYINT" />
     <result column="saleNum" property="saleNum" jdbcType="INTEGER" />
+    <result column="is_synch" property="isSynch" jdbcType="INTEGER" />
+
     <result column="virtualSaleNum" property="virtualSaleNum" jdbcType="INTEGER" />
     <result column="commentNum" property="commentNum" jdbcType="INTEGER" />
     <result column="gradeAvg" property="gradeAvg" jdbcType="DECIMAL" />
@@ -161,12 +163,28 @@
     sCode, isNotConfirm, packageId, specailPrice, multiStorage, inspectType, limitedPrice, 
     isNotPromotion, productO2OType, isGift, conTaxCode
   </sql>
- 
+
+    <select id="seletSkuAll" resultType="java.lang.String">
+        select sku from products
+    </select>
+
+    <select id="selectBySku" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from products WHERE sku=#{sku};
+    </select>
+
+    <update id="updateProductBySku"  parameterType="java.lang.String">
+        UPDATE products
+        SET
+        is_synch = 1
+        WHERE
+        sku = #{sku}
+    </update>
+
   <select id="selectProducts" resultMap="BaseResultMap"  >
     select 
    
     <include refid="Base_Column_List" />
-    from Products
+    from products
     where 1=1
     and sku like #{sku,jdbcType=VARCHAR} 
     and productName	like #{productName,jdbcType=VARCHAR}
@@ -175,25 +193,25 @@
 		select
 	
 		<include refid="Base_Column_List" />
-		from Products
+		from products
 		where 1=1
 		<if test="sku != null and sku !='' ">
         <![CDATA[ and sku  like #{sku, jdbcType=VARCHAR}]]>
       </if>
       </select>
-  <select id="getBySku" parameterType="String" resultMap="BaseResultMap">
-    select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
-    from `Products`
-    where `sku` = #{sku} limit 1
-  </select>
-    <select id="getBySku1" parameterType="String" resultMap="BaseResultMap1">
+    <select id="getBySku" parameterType="String" resultMap="BaseResultMap">
         select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
-        from `Products`
+        from `products`
         where `sku` = #{sku} limit 1
     </select>
- <select id="getAllSkusListBySale" parameterType="map" resultMap="productBaseResult">
+    <select id="getBySku1" parameterType="String" resultMap="BaseResultMap1">
+        select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
+        from `products`
+        where `sku` = #{sku} limit 1
+    </select>
+    <select id="getAllSkusListBySale" parameterType="map" resultMap="productBaseResult">
 		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`
-		from `Products`
+		from `products`
 		where 1=1 
 		<if test="onSale != null and onSale !=''">
 			and `onSale`= #{onSale}
@@ -202,7 +220,7 @@
 	
 	<select id="getAllProductsBysCode" parameterType="String" resultMap="productBaseResult">
 		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`, scode, `multiStorage`,`shippingMode` 
-		from Products 
+		from products
 		where 
 		scode is not null and scode !='' and onSale=1 
 		<if test="sCode != null and sCode !=''">
@@ -211,22 +229,22 @@
 	</select>
 		<select id="getBaseBySku" parameterType="String" resultMap="productBaseResult">
 		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`, `scode`,`productO2OType`
-		from `Products`
+		from `products`
 		where `sku` = #{sku} order by id desc limit 1
 	</select>
 	<select id="get" parameterType="Integer" resultMap="BaseResultMap">
 		select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
-		from `Products`
+		from `products`
 		where `id` = #{id}
 	</select>
 	<select id="getAllProductInfo" resultMap="BaseResultMap">
 		select `id`,`productName`,`productCateId`,`productCatePath`,`sku`
-		from `Products`
+		from `products`
 	</select>
 	
 	<select id="getListBySkus" parameterType="map" resultMap="productBaseResult">
 		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`
-		from `Products`
+		from `products`
 		where `onSale`=1 
 			and `sku` in
 			<foreach collection="skuList" index="index" item="sku" open="("
@@ -235,6 +253,150 @@
 			</foreach>
 	
 	</select>
+	
+	<select id="queryProductList" parameterType="java.util.Map" resultType="java.util.Map" >
+    SELECT a.id,a.productName,a.storageType,b.cateName,d.brandName,c.typeName,a.sku,a.supplyPrice,a.saleGuidePrice,a.internalPrice,
+    a.limitedPrice,a.energySubsidyProductName,a.energySubsidyAmount,a.onSale,a.lastModify,
+    a.stockToTaotao,a.lastSyncTime,a.taobaoId,a.wlbItemId,a.productActivityInfo,a.productTitle,a.productTypeId,
+	a.addTime,a.productCateId,a.productCatePath,a.isSpecial,a.isDelete,a.packagePrice,
+	a.rejectReason,a.state,a.commentNum,a.gradeAvg,a.isVirtual,a.isNoLimitStockProduct,a.limitCityIds,
+	a.isNotConfirm,a.specailPrice,a.multiStorage,a.inspectType,a.isGift,a.conTaxCode,a.shippingMode
+    FROM products a
+    LEFT JOIN productcates b ON a.productCateId=b.id
+    LEFT JOIN producttypes c ON a.productTypeId=c.id
+    LEFT JOIN brands d ON a.brandId=d.id
+    <where>
+        <if test="productName != null and productName !=''">
+            productName LIKE CONCAT('%',#{productName},'%')
+        </if>
+        <if test="sku != null and sku !=''">
+            AND sku =#{sku}
+        </if>
+        <if test="brandId != null and brandId !=0">
+            AND brandId=#{brandId}
+        </if>
+        <if test="isVirtual != null and isVirtual !=-1">
+            AND isVirtual=#{isVirtual}
+        </if>
+        <if test="onSale != null and onSale !=-1">
+            AND onSale=#{onSale}
+        </if>
+        <if test="isGiftCardProduct != null and isGiftCardProduct > 0">
+            AND giftCardType &gt; 0
+        </if>
+        <if test="state != null and state !=-1">
+            AND state=#{state}
+        </if>
+        <if test="productCateId != null and productCateId !=0">
+            AND productCateId=#{productCateId}
+        </if>
+        <if test="productTypeId != null and productTypeId !=0">
+            AND productTypeId=#{productTypeId}
+        </if>
+        <if test="energySubsidy != null and energySubsidy > 0">
+            AND energySubsidyAmount &gt; 0
+        </if>
+        <if test="energySubsidy != null and energySubsidy == 0">
+            AND energySubsidyAmount = 0
+        </if>
+        <if test="storageType != null and storageType !=-1">
+            AND storageType=#{storageType}
+        </if>
+        <if test="isNoLimitStockProduct != null and isNoLimitStockProduct !=-1">
+            AND isNoLimitStockProduct=#{isNoLimitStockProduct}
+        </if>
+        <if test="isNotConfirm != null and isNotConfirm !=-1">
+            AND isNotConfirm=#{isNotConfirm}
+        </if>
+        <if test="multiStorage != null and multiStorage !=-1">
+            AND multiStorage=#{multiStorage}
+        </if>
+        <if test="taobaoId != null and taobaoId !=''">
+            AND taobaoId=#{taobaoId}
+        </if>
+    </where>
+		ORDER BY lastModify DESC 
+	<if test="page != null and rows != null">
+		LIMIT #{page} , #{rows}
+	</if>
+   </select>  
+ 
+   <select id="queryProductListCount" resultType="Integer"  >
+    SELECT 
+    COUNT(1)
+    FROM products a
+    LEFT JOIN productcates b ON a.productCateId=b.id
+    LEFT JOIN producttypes c ON a.productTypeId=c.id
+    LEFT JOIN brands d ON a.brandId=d.id
+    <where>
+        <if test="productName != null and productName !=''">
+            productName LIKE CONCAT('%',#{productName},'%')
+        </if>
+        <if test="sku != null and sku !=''">
+            AND sku =#{sku}
+        </if>
+        <if test="brandId != null and brandId !=0">
+            AND brandId=#{brandId}
+        </if>
+        <if test="isVirtual != null and isVirtual !=-1">
+            AND isVirtual=#{isVirtual}
+        </if>
+        <if test="onSale != null and onSale !=-1">
+            AND onSale=#{onSale}
+        </if>
+        <if test="isGiftCardProduct != null and isGiftCardProduct > 0">
+            AND giftCardType &gt; 0
+        </if>
+        <if test="state != null and state !=-1">
+            AND state=#{state}
+        </if>
+        <if test="productCateId != null and productCateId !=0">
+            AND productCateId=#{productCateId}
+        </if>
+        <if test="productTypeId != null and productTypeId !=0">
+            AND productTypeId=#{productTypeId}
+        </if>
+        <if test="energySubsidy != null and energySubsidy > 0">
+            AND energySubsidyAmount &gt; 0
+        </if>
+        <if test="energySubsidy != null and energySubsidy == 0">
+               AND energySubsidyAmount = 0
+        </if>
+        <if test="storageType != null and storageType !=-1">
+            AND storageType=#{storageType}
+        </if>
+        <if test="isNoLimitStockProduct != null and isNoLimitStockProduct !=-1">
+            AND isNoLimitStockProduct=#{isNoLimitStockProduct}
+        </if>
+        <if test="isNotConfirm != null and isNotConfirm !=-1">
+            AND isNotConfirm=#{isNotConfirm}
+        </if>
+        <if test="multiStorage != null and multiStorage !=-1">
+            AND multiStorage=#{multiStorage}
+        </if>
+        <if test="taobaoId != null and taobaoId !=''">
+            AND taobaoId=#{taobaoId}
+        </if>
+    </where>
+   </select> 
+   <select id="getOnSaleProductIds" resultType="java.util.Map">
+	   	select id,productName
+	    from products
+	    where onSale=1
+   </select>
+   <select id="findProductBySku" resultType="java.util.Map">
+	   	select 
+	   	<include refid="Base_Column_List" />
+	    from products
+	    where sku=#{sku}
+   </select>
+   <select id="findProductByName" resultType="java.util.Map">
+	   	select 
+	   	<include refid="Base_Column_List" />
+	    from products
+	    where productName=#{name}
+   </select>
+	
     <!-- 先解决 与Products 类似的问题-->
     <resultMap id="productsResult1" type="com.haier.shop.model.ProductsNew">
         <result property="id" column="id" />
@@ -312,18 +474,18 @@
     </resultMap>
     <select id="get1" parameterType="Integer" resultMap="productsResult1">
         select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
-        from `Products`
+        from `products`
         where `id` = #{id}
     </select>
 	<select id="getOnSaleBigProducts" resultMap="BaseResultMap">
 		select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
-		from `Products` s
+		from `products` s
 		where s.shippingMode = 'B2B2C' and s.productO2OType=1
 	</select>
 	
 	<select id="getAllSkusList" parameterType="java.util.Map" resultMap="productBaseResult">
 		select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`,`onSale`
-		from `Products`
+		from `products`
 		where 1=1 
 		<if test="onSale != null and onSale !=''">
 			and `onSale`= #{onSale}
@@ -338,7 +500,7 @@
 		<if test="(startTime != null and startTime !='') or (endTime != null and endTime !='')">
 		union
 			select `id`,`productName`,`brandId`,`productTypeId`,`addTime`,`lastModify`,`productCateId`,`sku`,`multiStorage`,`shippingMode`,`onSale`
-			from `Products`
+			from `products`
 			where 1=1 
 			<if test="onSale != null and onSale !=''">
 				and `onSale`= #{onSale}
@@ -351,4 +513,10 @@
 			</if>
 		</if>
 	</select>
+    <select id="getBySku2" parameterType="String" resultMap="BaseResultMap">
+        select `id`,`productName`,`brandId`,`productTypeId`,`productCateId`,`energySubsidyAmount`,`sku`,
+        `shippingMode`,`isGift`
+        from `products`
+        where `sku` = #{sku} limit 1
+    </select>
 </mapper>

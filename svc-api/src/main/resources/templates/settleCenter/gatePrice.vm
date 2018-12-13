@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>闸口价信息</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">品牌：</span>
+                <input id="brand" name="brand" class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">品类：</span>
+                <input id="cateGory" name="cateGory" class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">sku：</span>
+                <input id="sku" name="sku" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">大渠道：</span>
+                <select  id="bigChannel" class="easyui-combobox" name="bigChannel" style="width:120px;">
+                    <option value="" selected>&nbsp;</option>
+                    <option value="商城">商城</option>
+                    <option value="天猫">天猫</option>
+                    <option value="电商平台">电商平台</option>
+                    <option value="商城分销">商城分销</option>
+                    <option value="天猫分销">天猫分销</option>
+                    <option value="顺逛">顺逛</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">有效标志：</span>
+                <select  id="isValid" class="easyui-combobox" name="isValid" style="width:120px;" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="Y"  selected>有效</option>
+                    <option value="N">无效</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">开始时间：</span>
+                <input  name="beginTime" id="beginTime"  class="easyui-datebox" style="width:120px"  editable="false">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">结束时间：</span>
+                <input  name="endTime" id="endTime"  class="easyui-datebox" style="width:120px"  editable="false">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">是否冻结：</span>
+                <select  id="frozenFlag" class="easyui-combobox" name="frozenFlag" style="width:120px;" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="X">是</option>
+                    <option value="N">否</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">审核状态：</span>
+                <select  id="auditStatus" class="easyui-combobox" name="auditStatus" style="width:120px;" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="W">待审核</option>
+                    <option value="S">通过</option>
+                    <option value="F">拒绝</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">是否小于裸价：</span>
+                <select  id="isBigBarePrice" class="easyui-combobox" name="isBigBarePrice" style="width:120px;" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="Y">是</option>
+                    <option value="N">否</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">小于标准毛利：</span>
+                <select  id="isSmallNormal" class="easyui-combobox" name="isSmallNormal" style="width:120px;" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="Y">是</option>
+                    <option value="N">否</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">是否下市：</span>
+                <select  id="isLower" class="easyui-combobox" name="isLower" style="width:120px;" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="Y">是</option>
+                    <option value="N">否</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">执行天数：</span>
+                <input id="execDaysFrom" name="execDaysFrom" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">到：</span>
+                <input id="execDaysTo" name="execDaysTo" class="easyui-textbox" style="width:120px">
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="lowerBtn"
+           data-options="iconCls:'icon-edit',plain:true">下市</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="export"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+        <input id="exportData" name="exportData" type="hidden"/>
+        <input id="ids" name="ids" type="hidden"/>
+        <a href="#" class="easyui-linkbutton" id="importBtn"
+           data-options="iconCls:'icon-edit',plain:true">导入</a>
+    </form>
+</div>
+
+<div id="importExcel" class="easyui-dialog"
+     data-options="title:'报表导入',resizable:true,modal:true"
+     closed="true" style="width:500px;height:300px;">
+    <div class="import-panel">
+        <input type="hidden" id="rowId"/>
+        <table>
+            <tr>
+                <td colspan="2">
+                    请仔细阅读以下注意事项：
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    1、请使用最新的导入模板导入数据，最新模板为<a href='/static/excel/gatePrice.xls' target='_blank'>【闸口价信息导入模板.xls】</a>。
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    2、请直接在<b><span
+                        style="color:#dc143c">导入模板的基础上 拷贝粘贴实际业务数据，不要添加删除行或列，也不要更改模板的公式、格式等</span></b>。
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    3、模板中的<b><span style="color:#dc143c">数据不能超过2000行</span></b>，超过后请分成多个excel导入。
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>EXCEL 导入：</td>
+                <td>
+                    <input type="file" id="file" name="file" label="上传文件"/>
+                    <input type="hidden" id="uploadfileId">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button id="upload" href="javascript:void(0)"
+                            class="btn btn-default easyui-linkbutton c6 " style="width:250px">导入
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="userEdit" class="easyui-dialog"
+     closed="true" buttons="#userEdit-buttons">
+    <form id="fm" method="post" style="padding:10px 20px">
+        <div class="item">
+            <label style="width: 80px;">大渠道: </label>
+            <input name="bigChannel" class="easyui-textbox" readonly required="true">
+        </div>
+        <div class="item">
+            <label style="width: 80px;">品牌:</label>
+            <input name="brand"  class="easyui-textbox" readonly required="true">
+        </div>
+        <div class="item">
+            <label style="width: 80px;">品类:</label>
+            <input name="cateGory" class="easyui-textbox" readonly required="true">
+        </div>
+        <div class="item">
+            <label style="width: 80px;">物流模式:</label>
+            <input name="logisticsModel" class="easyui-textbox" readonly required="true">
+        </div>
+        <div class="item">
+            <label style="width: 80px;">SKU:</label>
+            <input name="sku" class="easyui-textbox" readonly required="true">
+        </div>
+        <div class="item">
+            <label style="width: 80px;">闸口价:</label>
+            <input name="gatePrice" id="gatePrice" class="easyui-textbox" required="true">
+        </div>
+        <div class="item">
+            <label style="width: 80px;">临时闸口价:</label>
+            <input name="tempGatePrice" id="tempGatePrice" class="easyui-textbox">
+        </div>
+        <div class="item">
+            <label style="width: 120px;">临时闸口价开始时间:</label>
+            <input  name="tempBeginTime" id="tempBeginTime"  class="easyui-datebox" style="width:150px"  disabled>
+        </div>
+        <div class="item">
+            <label style="width: 120px;">临时闸口价结束时间:</label>
+            <input  name="tempEndTime" id="tempEndTime"  class="easyui-datebox" style="width:150px"  disabled>
+        </div>
+        <input type="hidden" name="id" id="id">
+    </form>
+</div>
+<div id="userEdit-buttons">
+    <a id="save" href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#userEdit').dialog('close')" style="width:90px">取消</a>
+</div>
+<script src="../static/js/settleCenter/ajaxfileupload.js"></script>
+<script src="../static/js/settleCenter/gatePrice.js"></script>
+</body>
+</html>

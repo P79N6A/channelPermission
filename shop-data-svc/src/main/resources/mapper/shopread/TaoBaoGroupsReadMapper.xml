@@ -20,7 +20,7 @@
 		SELECT `id`,`siteId`,`groupName`,`sku`,`depositStartTime`,`depositEndTime`,
 		`balanceStartTime`,`balanceEndTime`,`depositAmount`,`balanceAmount`,`status`,
 		`shippingOpporunity`,`productSpecs`
-		FROM `TaoBaoGroups`
+		FROM `taobaogroups`
 		WHERE 1=1
 		<if test="sku != null and sku !=''">
 			AND sku LIKE CONCAT('%',#{sku},'%')
@@ -34,12 +34,12 @@
 		SELECT `id`,`siteId`,`groupName`,`sku`,`depositStartTime`,`depositEndTime`,
 		`balanceStartTime`,`balanceEndTime`,`depositAmount`,`balanceAmount`,`status`,
 		`shippingOpporunity`,`productSpecs`
-		FROM `TaoBaoGroups`
+		FROM `taobaogroups`
 		WHERE sku=#{sku} AND groupName=#{groupName}
 	</select>
 	
 	<select id="getTaoBaoGroupsListBySkuCount" resultType = "Integer">
-		SELECT count(*) FROM `TaoBaoGroups`
+		SELECT count(*) FROM `taobaogroups`
 		WHERE 1=1
 		<if test="sku  != null and sku !=''">
 			AND `sku` = #{sku}
@@ -48,11 +48,11 @@
 	<select id="getTaoBaoGroupsById" resultType="java.util.Map">
 		SELECT `siteId`, `groupName`, `sku`, `depositStartTime`, `depositEndTime`, `balanceStartTime`,
 		 `balanceEndTime`, `depositAmount`, `balanceAmount`, `status`, `shippingOpporunity`, 
-		 `productSpecs` FROM `TaoBaoGroups`
+		 `productSpecs` FROM `taobaogroups`
 		WHERE id=#{id}
 	</select>
 	<insert id="addTaoBaoGroups" parameterType="java.util.Map">
-		INSERT INTO `TaoBaoGroups` 
+		INSERT INTO `taobaogroups`
 		(`siteId`, `groupName`, `sku`, `depositStartTime`, `depositEndTime`, `balanceStartTime`,
 		 `balanceEndTime`, `depositAmount`, `balanceAmount`, `status`, `shippingOpporunity`, 
 		 `productSpecs`) VALUES 
@@ -61,21 +61,21 @@
 		 #{productSpecs});
 	</insert>
 	<update id="updateTaoBaoGroups" parameterType="java.util.Map">
-		UPDATE `TaoBaoGroups` SET 
+		UPDATE `taobaogroups` SET
 		`siteId`=#{siteId}, `groupName`=#{groupName}, `sku`=#{sku}, `depositStartTime`=#{depositStartTime},
 		`depositEndTime`=#{depositEndTime}, `balanceStartTime`=#{balanceStartTime}, `balanceEndTime`=#{balanceEndTime},
 		`depositAmount`=#{depositAmount}, `balanceAmount`=#{balanceAmount}, `status`=#{status},
 		`shippingOpporunity`=#{shippingOpporunity}, `productSpecs`=#{productSpecs} WHERE `id`=#{id};
 	</update>
 	<delete id="delTaoBaoGroups" parameterType="Integer">
-		DELETE FROM `TaoBaoGroups` WHERE `id` IN 
+		DELETE FROM `taobaogroups` WHERE `id` IN
         <foreach item="ids" collection="array" open="(" separator="," close=")">
             #{ids}
         </foreach>
 	</delete>
 	<select id="get" parameterType="Integer" resultMap="taoBaoGroupsResult">
 		select `id`,`siteId`,`groupName`,`sku`,`depositStartTime`,`depositEndTime`,`balanceStartTime`,`balanceEndTime`,`depositAmount`,`balanceAmount`,`status`,`shippingOpporunity`
-		from `TaoBaoGroups`
+		from `taobaogroups`
 		where `id` = #{id}
 	</select>
 </mapper>

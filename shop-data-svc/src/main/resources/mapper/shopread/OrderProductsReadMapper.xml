@@ -55,7 +55,7 @@
         <result property="isNoLimitStockProduct" column="isNoLimitStockProduct"/>
         <result property="shippingOpporunity" column="shippingOpporunity"/>
         <result property="isTimeoutFree" column="isTimeoutFree"/>
-        <result property="cbsSecCode" column="cbsSecCode"/>
+        <result property="cbsSecCode" column="isSAorZP"/>
         <result property="pdOrderStatus" column="pdOrderStatus"/>
         <result property="splitFlag" column="splitFlag"/>
         <result property="splitRelateCOrderSn" column="splitRelateCOrderSn"/>
@@ -67,7 +67,7 @@
         <result property="jfbAmount" column="jfbAmount"/>
         <result property="djAmount" column="djAmount"/>
         <result property="count" column="count"/>
-        <result property="parentId" column="parentId"/>
+        <result property="rootId" column="rootId"/>
     </resultMap>
 
     <resultMap id="BaseResultMap" type="com.haier.shop.model.OrderProductsVo" >
@@ -122,7 +122,7 @@
         <result column="isNoLimitStockProduct" property="isnolimitstockproduct" jdbcType="TINYINT" />
         <result column="shippingOpporunity" property="shippingopporunity" jdbcType="TINYINT" />
         <result column="isTimeoutFree" property="istimeoutfree" jdbcType="TINYINT" />
-        <result column="cbsSecCode" property="cbsseccode" jdbcType="VARCHAR" />
+        <result column="isSAorZP" property="cbsseccode" jdbcType="VARCHAR" />
         <result column="points" property="points" jdbcType="INTEGER" />
         <result column="modified" property="modified" jdbcType="TIMESTAMP" />
         <result column="splitFlag" property="splitflag" jdbcType="TINYINT" />
@@ -141,8 +141,8 @@
     </resultMap>
     <sql id="findOrderProductSQLCond" >
         FROM
-        OrderProducts p,
-        Orders o
+        orderproducts p,
+        orders o
         where o.id =p.orderId
         <if test="cOrderSn !=null and cOrderSn !=''">
             and p.cOrderSn like '%${cOrderSn}%'
@@ -267,21 +267,21 @@
         <if test="addTimeMin != null and addTimeMin != ''">
             and o.addTime >=  unix_timestamp(#{#{addTimeMin},jdbcType=VARCHAR})
         </if>
-        <if test="addTimeMix != null and addTimeMix != ''">
-            and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{#{addTimeMix},jdbcType=VARCHAR})
+        <if test="addTimeMax != null and addTimeMax != ''">
+            and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{#{addTimeMax},jdbcType=VARCHAR})
         </if>
     </sql>
 
     <select id="findIndustryCount" resultMap="orderProductsResult" >
-		select IFNULL(count(*),0) count,opro.sCode,pc.parentId  from OrderProducts opro
-		LEFT JOIN OrderRepairHPRecords orhp
+		select IFNULL(count(*),0) count,opro.sCode,pc.rootId  from orderproducts opro
+		LEFT JOIN orderrepairhprecords orhp
 		on orhp.orderProductId = opro.id
-		left join ProductTypes pt
-		on opro.productType = pt.attrCateId
-		LEFT JOIN ProductCates pc
+		left join producttypes pt
+		on opro.productType = pt.id
+		LEFT JOIN productcates pc
 		on pc.cateName = pt.typeName
 		where (quality='5' or quality='6') 
-		group by pc.parentId,opro.sCode
+		group by pc.rootId,opro.sCode
   </select>
     <select id="get" parameterType="Integer" resultMap="orderProductsResult">
         SELECT
@@ -337,7 +337,7 @@
         `isNoLimitStockProduct`,
         `shippingOpporunity`,
         `isTimeoutFree`,
-        `cbsSecCode`,
+        `isSAorZP`,
         `pdOrderStatus`,
         `splitFlag`,
         `splitRelateCOrderSn`,
@@ -348,13 +348,13 @@
         `hbAmount`,
         `jfbAmount`,
         `djAmount`
-        FROM `OrderProducts`
+        FROM `orderproducts`
         WHERE `id` = #{id}
     </select>
 
     <select id="getOrderIdByCOrderSn" parameterType="java.lang.String" resultType="java.lang.Integer">
         SELECT `orderId`
-        FROM `OrderProducts`
+        FROM `orderproducts`
         WHERE `cOrderSn` = #{cOrderSn}
         LIMIT 1
     </select>
@@ -413,7 +413,7 @@
         `isNoLimitStockProduct`,
         `shippingOpporunity`,
         `isTimeoutFree`,
-        `cbsSecCode`,
+        `isSAorZP`,
         `pdOrderStatus`,
         `splitFlag`,
         `splitRelateCOrderSn`,
@@ -424,7 +424,7 @@
         `hbAmount`,
         `jfbAmount`,
         `djAmount`
-        FROM `OrderProducts`
+        FROM `orderproducts`
         WHERE `cOrderSn` = #{cOrderSn}
         LIMIT 1
     </select>
@@ -483,7 +483,7 @@
         isNoLimitStockProduct,
         shippingOpporunity,
         isTimeoutFree,
-        cbsSecCode,
+        isSAorZP,
         points,
         modified,
         splitFlag,
@@ -491,15 +491,15 @@
         channelId,
         pdOrderStatus
         FROM
-        OrderProducts
+        orderproducts
         WHERE
         orderId = #{orderId}
     </select>
 
     <select id="getByIds" resultMap="orderProductsResult">
         select
-        `id`,`isTest`,`supportOneDayLimit`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`shippingOpporunity`,`isTimeoutFree`,`cbsSecCode`,`pdOrderStatus`,`splitFlag`,`splitRelateCOrderSn`,`stockType`,`o2oType`,`storeId`,`storeType`,`hbAmount`,`jfbAmount`,`djAmount`
-        from `OrderProducts`
+        `id`,`isTest`,`supportOneDayLimit`,`orderId`,`cOrderSn`,`isBook`,`cPaymentStatus`,`cPayTime`,`productType`,`productId`,`productName`,`sku`,`price`,`number`,`lockedNumber`,`unlockedNumber`,`productAmount`,`couponAmount`,`esAmount`,`cateId`,`brandId`,`netPointId`,`shippingFee`,`settlementStatus`,`receiptOrRejectTime`,`isWmsSku`,`sCode`,`tsCode`,`status`,`invoiceNumber`,`expressName`,`invoiceExpressNumber`,`shippingTime`,`lessOrderSn`,`waitGetLesShippingInfo`,`getLesShippingCount`,`outping`,`lessShipTime`,`closeTime`,`isReceipt`,`isMakeReceipt`,`receiptNum`,`receiptAddTime`,`makeReceiptType`,`shippingMode`,`lastTimeForShippingMode`,`lastEditorForShippingMode`,`systemRemark`,`externalSaleSettingId`,`isNoLimitStockProduct`,`shippingOpporunity`,`isTimeoutFree`,`isSAorZP`,`pdOrderStatus`,`splitFlag`,`splitRelateCOrderSn`,`stockType`,`o2oType`,`storeId`,`storeType`,`hbAmount`,`jfbAmount`,`djAmount`
+        from `orderproducts`
         where `id` in
         <foreach collection="ids" index="index" item="id" open="("
                  separator="," close=")">
@@ -508,7 +508,7 @@
     </select>
 
     <select id="getOrderProductIdsInfo" parameterType="java.util.Map" resultType="Integer">
-        select id from OrderProducts
+        select id from orderproducts
         where
         cOrderSn in
         <foreach collection="cOrderSns" index="index" item="cos" open="(" separator="," close=")">
@@ -517,7 +517,7 @@
     </select>
 
     <select id="getOrderId" parameterType="Integer" resultType="Integer">
-        select orderId from OrderProducts where id = #{opId}
+        select orderId from orderproducts where id = #{opId}
     </select>
 
     <select id="searchList" parameterType="com.haier.shop.model.OrderProductsVo" resultMap="BaseResultMap">
@@ -549,8 +549,8 @@
     </select>
     
     <select id="findsCode" resultMap="orderProductsResult" parameterType="Integer">
-       select opro.sCode from OrderProducts opro
-			LEFT JOIN OrderRepairHPRecords orhp
+       select opro.sCode from orderproducts opro
+			LEFT JOIN orderrepairhprecords orhp
 			on orhp.orderProductId = opro.id
 			where opro.productType= '31'
 			and quality='5' or quality='6'
@@ -590,9 +590,9 @@
         i.checkCode
 
         FROM
-        OrderProducts p,
-        Orders o ,
-        Invoices i
+        orderproducts p,
+        orders o ,
+        invoices i
         where
         o.id =p.orderId
         and i.orderProductId = p.id
@@ -602,8 +602,8 @@
         SELECT
         a.tb_order_sn
         FROM
-        OrderProducts p,
-        OrderProductsAttributes a
+        orderproducts p,
+        orderproductsattributes a
         where
         p.id = a.order_product_id
         and p.cOrderSn =#{orderSn,jdbcType=VARCHAR}
@@ -612,7 +612,7 @@
         SELECT
         count(1)
         FROM
-        WwwHpRecords
+        wwwhprecords
         WHERE
         hpTbSn =#{tbSn}
         and success ='0'
@@ -646,8 +646,8 @@
         p.receiptNum,
         p.receiptAddTime
         FROM
-        OrderProducts p,
-        Orders o
+        orderproducts p,
+        orders o
         where
         o.id =p.orderId
         and sku=#{sku,jdbcType=VARCHAR}
@@ -670,7 +670,7 @@
         p.esAmount,
         (IFNULL(p.number, 0) * IFNULL(p.price, 0) + IFNULL(p.shippingFee, 0) - IFNULL(p.esAmount, 0)) money
         FROM
-        OrderProducts p
+        orderproducts p
         WHERE
         p.cOrderSn =#{cOrderSn,jdbcType=VARCHAR}
     </select>
@@ -711,7 +711,7 @@ zhangbo
         SELECT orderSn,from_unixtime(addTime) as addTime,consignee,from_unixtime(firstConfirmTime) as firstConfirmTime,tradeSn,source,paymentStatus,
         from_unixtime(payTime) as payTime,paymentName,sellPeople,sellPeopleManner,sourceOrderSn,isProduceDaily,from_unixtime(bestShippingTime) as bestShippingTime,orderStatus,remark
         ,receiptConsignee,receiptAddress,receiptZipcode,receiptMobile,regionName,province,region,address,poiId,city,orderType
-        from Orders
+        from orders
         WHERE orderSn=#{orderSn}
     </select>
     <!--
@@ -721,7 +721,7 @@ zhangbo
         <result column="productName" property="productName"  /><!--商品名称-->
     </resultMap>
     <select id="selectCoupon" parameterType="java.lang.String" resultMap="CouponMap">
-        SELECT p.productName from OrderProducts p, Orders o WHERE o.id=p.orderId AND o.orderSn=#{orderSn}
+        SELECT p.productName from orderproducts p, orders o WHERE o.id=p.orderId AND o.orderSn=#{orderSn}
     </select>
     <!--
     订单操作日志
@@ -734,7 +734,7 @@ zhangbo
         <result column="remark" property="remark"  /><!--备注-->
     </resultMap>
     <select id="selectOrderOperateLogs" parameterType="java.lang.String" resultMap="OrderOperateLogsMap">
-        SELECT from_unixtime(l.logTime) AS logTime,p.cOrderSn,l.operator,l.changeLog,l.remark FROM OrderOperateLogs l,Orders o,OrderProducts p WHERE o.id=l.orderId AND
+        SELECT from_unixtime(l.logTime) AS logTime,p.cOrderSn,l.operator,l.changeLog,l.remark FROM orderoperatelogs l,orders o,orderproducts p WHERE o.id=l.orderId AND
         l.orderProductId=p.id AND o.orderSn=#{orderSn}
     </select>
     <!--
@@ -761,7 +761,7 @@ zhangbo
     </resultMap>
     <select id="selectPrudevtDatail" parameterType="java.lang.String" resultMap="commodityMap">
         SELECT q.shippingMode,q.cOrderSn,q.productName,q.sku,q.scode,q.tscode,q.productType,q.netpointid,q.pdorderstatus,
-        q.price,q.shippingfee,number,q.couponcodevalue,a.customer_id,q.orderpromotionamount FROM OrderProducts q,OrderProductsAttributes a,Orders o
+        q.price,q.shippingfee,number,q.couponcodevalue,a.customer_id,q.orderpromotionamount FROM orderproducts q,orderproductsattributes a,orders o
         WHERE a.is_self_sell=1 AND q.id=a.order_product_id AND o.id=q.orderId AND o.orderSn=#{orderSn}
     </select>
 
@@ -778,16 +778,21 @@ zhangbo
     </resultMap>
     <select id="check_cOrderSn_isExist" parameterType="java.util.List" resultMap="statusMap">
         <foreach collection="list" index="index" item="item" separator="union">
-            SELECT b.*,i.orderProductId AS orderProductId,i.id AS th_id FROM OrderRepairs i
-            RIGHT JOIN
-            (SELECT q.cOrderSn as cOrderSn,w.tb_order_sn as hpTbSn,q.sku AS sku,q.id AS id FROM
-            OrderProducts q
-            INNER JOIN
-            (SELECT order_product_id,tb_order_sn FROM OrderProductsAttributes
-            WHERE tb_order_sn=#{item.hpTbSn}) w
-            ON
-            w.order_product_id=q.id) b
-            ON b.id=i.orderProductId
+            SELECT
+            b.*,
+            i.orderProductId AS orderProductId,
+            i.id AS th_id
+            FROM
+            orderrepairs i
+            RIGHT JOIN (
+            SELECT
+            q.cOrderSn AS cOrderSn,
+            q.tbOrderSn AS hpTbSn,
+            q.sku AS sku,
+            q.id AS id
+            FROM
+            orderproducts q where tbOrderSn=#{item.hpTbSn}
+            ) b ON b.id = i.orderProductId
         </foreach>
     </select>
     <resultMap id="th_infoMap" type="java.util.Map">
@@ -804,16 +809,16 @@ zhangbo
         b.number,
         b.cOrderSn,
         b.orderId
-        FROM Orders w
+        FROM orders w
         INNER  JOIN
-        (SELECT orderId,number,cOrderSn FROM OrderProducts WHERE cOrderSn=#{cOrderSn}) b
+        (SELECT orderId,number,cOrderSn FROM orderproducts WHERE cOrderSn=#{cOrderSn}) b
         ON b.orderId=w.id
     </select>
     <select id="selectOrderSn" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT o.repairSn
-        FROM OrderRepairs o
+        FROM orderrepairs o
         RIGHT JOIN
-        (SELECT id FROM OrderProducts where
+        (SELECT id FROM orderproducts where
         cOrderSn=#{cOrderSn}) b
         ON b.id=o.orderProductId
         WHERE o.handleStatus!=1 OR o.handleStatus!=2
@@ -842,12 +847,12 @@ zhangbo
     <select id="datagrid_orderForecastGoal" parameterType="java.util.Map" resultMap="returnMap">
         SELECT
         r.regionName AS province,t.cOrderSn,t.orderSn,t.addTime,t.repairSn,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
-        FROM Regions r
+        FROM regions r
         INNER JOIN
-        (SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM OrderProducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM Orders o INNER JOIN
+        (SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM orderproducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM orders o INNER JOIN
         (SELECT a.addTime,a.orderId,a.orderProductId,a.id AS repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
         a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
-        FROM OrderRepairs a) b
+        FROM orderrepairs a) b
         ON
         o.id=b.orderId) c
         ON c.orderProductId=w.id) t
@@ -892,12 +897,12 @@ zhangbo
     <select id="datagrid_orderForecastGoalcount" parameterType="java.util.Map" resultMap="returnMap">
         SELECT
         r.regionName AS province,t.cOrderSn,t.orderSn,t.addTime,t.repairSn,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
-        FROM Regions r
+        FROM regions r
         INNER JOIN
-        (SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM OrderProducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM Orders o INNER JOIN
+        (SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM orderproducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM orders o INNER JOIN
         (SELECT a.addTime,a.orderId,a.orderProductId,a.id AS repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
         a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
-        FROM OrderRepairs a) b
+        FROM orderrepairs a) b
         ON
         o.id=b.orderId) c
         ON c.orderProductId=w.id) t
@@ -938,12 +943,12 @@ zhangbo
     <select id="export_ExcelOrderRepairs" parameterType="java.util.Map" resultMap="returnMap">
         SELECT
         r.regionName AS province,t.cOrderSn,t.orderSn,t.addTime,t.repairSn,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
-        FROM Regions r
+        FROM regions r
         INNER JOIN
-        (SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM OrderProducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM Orders o INNER JOIN
+        (SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM orderproducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM orders o INNER JOIN
         (SELECT a.addTime,a.orderId,a.orderProductId,a.id AS repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
         a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
-        FROM OrderRepairs a) b
+        FROM orderrepairs a) b
         ON
         o.id=b.orderId) c
         ON c.orderProductId=w.id) t
@@ -988,12 +993,12 @@ zhangbo
     </select>
     <select id="getOrderIdById" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         SELECT orderId
-        FROM OrderProducts
+        FROM orderproducts
         WHERE `id` = #{id}
     </select>
     <select id="getOpListByCOrderSnCount"  parameterType="Map"  resultType="Integer">
         SELECT count(0) count
-        FROM OrderProducts op
+        FROM orderproducts op
         WHERE 1=1
         <if test="params.cOrderSns != null and params.cOrderSns.size() &gt; 0">and op.cOrderSn in
             <foreach collection="params.cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
@@ -1003,7 +1008,7 @@ zhangbo
     </select>
     <select id="getOpListByCOrderSnSearch"  parameterType="Map"  resultType="Map">
         SELECT op.cOrderSn,op.sku,os.source,op.productAmount,op.number
-        FROM OrderProducts op LEFT OUTER JOIN Orders os ON op.orderId=os.id
+        FROM orderproducts op LEFT OUTER JOIN orders os ON op.orderId=os.id
         WHERE 1=1
         <if test="params.cOrderSns != null and params.cOrderSns.size() &gt; 0">and op.cOrderSn in
             <foreach collection="params.cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
@@ -1014,12 +1019,107 @@ zhangbo
     </select>
     <select id="getOpListByCOrderSn"  parameterType="Map"  resultType="Map">
         SELECT op.cOrderSn,op.sku,os.source,op.productAmount,op.number
-        FROM OrderProducts op LEFT OUTER JOIN Orders os ON op.orderId=os.id
+        FROM orderproducts op LEFT OUTER JOIN orders os ON op.orderId=os.id
         WHERE 1=1
         <if test="params.cOrderSns != null and params.cOrderSns.size() &gt; 0">and op.cOrderSn in
             <foreach collection="params.cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
                 #{cOrderSn}
             </foreach>
         </if>
+    </select>
+
+    <select id="getOrderProductsByTbNo" parameterType="java.lang.String" resultMap="orderProductsResult">
+        SELECT
+        `id`,
+        `isTest`,
+        `supportOneDayLimit`,
+        `orderId`,
+        `cOrderSn`,
+        `isBook`,
+        `cPaymentStatus`,
+        `cPayTime`,
+        `productType`,
+        `productId`,
+        `productName`,
+        `sku`,
+        `price`,
+        `number`,
+        `lockedNumber`,
+        `unlockedNumber`,
+        `productAmount`,
+        `couponAmount`,
+        `esAmount`,
+        `cateId`,
+        `brandId`,
+        `netPointId`,
+        `shippingFee`,
+        `settlementStatus`,
+        `receiptOrRejectTime`,
+        `isWmsSku`,
+        `sCode`,
+        `tsCode`,
+        `status`,
+        `invoiceNumber`,
+        `expressName`,
+        `invoiceExpressNumber`,
+        `shippingTime`,
+        `lessOrderSn`,
+        `waitGetLesShippingInfo`,
+        `getLesShippingCount`,
+        `outping`,
+        `lessShipTime`,
+        `closeTime`,
+        `isReceipt`,
+        `isMakeReceipt`,
+        `receiptNum`,
+        `receiptAddTime`,
+        `makeReceiptType`,
+        `shippingMode`,
+        `lastTimeForShippingMode`,
+        `lastEditorForShippingMode`,
+        `systemRemark`,
+        `externalSaleSettingId`,
+        `isNoLimitStockProduct`,
+        `shippingOpporunity`,
+        `isTimeoutFree`,
+        `isSAorZP`,
+        `pdOrderStatus`,
+        `splitFlag`,
+        `splitRelateCOrderSn`,
+        `stockType`,
+        `o2oType`,
+        `storeId`,
+        `storeType`,
+        `hbAmount`,
+        `jfbAmount`,
+        `djAmount`
+        FROM `orderproducts`
+        WHERE `tbOrderSn` = #{tbOrderSn}
+    </select>
+
+    <select id="findOPBycOrderSnAndSku" resultMap="orderProductsResult" >
+        SELECT
+        `id`,
+        `status`,
+        `cPaymentStatus`
+        FROM `orderproducts`
+        WHERE `cOrderSn` = #{cOrderSn}
+        and `sku` = #{sku}
+    </select>
+    <select id="getTBOrderSnBySourceOrderSn"  parameterType="Map"  resultType="Map">
+        SELECT concat('#',o.sourceOrderSn) as sourceOderSnStr,
+        op.tbOrderSn
+        from orders o INNER JOIN orderproducts op ON o.id=op.orderId
+        WHERE 1=1
+        <if test="params.sourceOrderSns != null and params.sourceOrderSns.size() &gt; 0">
+            and o.sourceOrderSn  in
+            <foreach collection="params.sourceOrderSns" index="index" item="sourceOrderSn" open="(" separator="," close=")">
+                #{sourceOrderSn}
+            </foreach>
+        </if>
+        and op.tbOrderSn  is not null and op.tbOrderSn !=''
+    </select>
+    <select id="getshippingMode" resultType="java.util.Map">
+        SELECT shippingMode from orderproducts GROUP BY shippingMode
     </select>
 </mapper>

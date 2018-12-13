@@ -104,7 +104,7 @@ public interface ShopMemberInvoicesService {
      * @param oldMemberInvoices
      * @param auditor
      */
-    void saveInvoiceOperate(List<OrderProducts> orderProductsList,MemberInvoices memberInvoices, MemberInvoices oldMemberInvoices, String auditor);
+    void saveInvoiceOperate(List<OrderProducts> orderProductsList,MemberInvoices memberInvoices, MemberInvoices oldMemberInvoices, String auditor,String userName);
 
     /**
      * 解锁发票信息 业务操作
@@ -113,4 +113,16 @@ public interface ShopMemberInvoicesService {
      * @return
      */
     String unlockMemberInvoices(Integer id, String userName);
+
+    /**
+     * 获得条数
+     */
+    public int getCount();
+
+    /**
+     * 根据抬头获取天猫优品用户发票信息
+     * @param invoiceTitle
+     * @return
+     */
+    MemberInvoices getMemberInvoiceByInvoiceTitleForYoupin(String invoiceTitle);
 }

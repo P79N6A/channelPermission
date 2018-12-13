@@ -21,21 +21,21 @@ import javax.xml.ws.Service;
                   targetNamespace = "http://www.example.org/PushReturnInfoToGVS/") 
 public class PushReturnInfoToGVS_Service extends Service {
 
-    public final static URL WSDL_LOCATION;
+//    public final static URL WSDL_LOCATION;
 
     public final static QName SERVICE = new QName("http://www.example.org/PushReturnInfoToGVS/", "PushReturnInfoToGVS");
     public final static QName PushReturnInfoToGVSSOAP = new QName("http://www.example.org/PushReturnInfoToGVS/", "PushReturnInfoToGVSSOAP");
-    static {
-        URL url = null;
-        try {
-            url = new URL("file:/D:/java/PushReturnInfoToGVS.wsdl");
-        } catch (MalformedURLException e) {
-            java.util.logging.Logger.getLogger(PushReturnInfoToGVS_Service.class.getName())
-                .log(java.util.logging.Level.INFO, 
-                     "Can not initialize the default wsdl from {0}", "file:/D:/java/PushReturnInfoToGVS.wsdl");
-        }
-        WSDL_LOCATION = url;
-    }
+//    static {
+//        URL url = null;
+//        try {
+//            url = new URL("file:/D:/java/PushReturnInfoToGVS.wsdl");
+//        } catch (MalformedURLException e) {
+//            java.util.logging.Logger.getLogger(PushReturnInfoToGVS_Service.class.getName())
+//                .log(java.util.logging.Level.INFO,
+//                     "Can not initialize the default wsdl from {0}", "file:/D:/java/PushReturnInfoToGVS.wsdl");
+//        }
+//        WSDL_LOCATION = url;
+//    }
 
     public PushReturnInfoToGVS_Service(URL wsdlLocation) {
         super(wsdlLocation, SERVICE);
@@ -45,9 +45,9 @@ public class PushReturnInfoToGVS_Service extends Service {
         super(wsdlLocation, serviceName);
     }
 
-    public PushReturnInfoToGVS_Service() {
-        super(WSDL_LOCATION, SERVICE);
-    }
+//    public PushReturnInfoToGVS_Service() {
+//        super(WSDL_LOCATION, SERVICE);
+//    }
     
 
 

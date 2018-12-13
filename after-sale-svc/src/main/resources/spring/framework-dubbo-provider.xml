@@ -11,6 +11,7 @@
     <!--广播注册中心暴露服务地址 -->
   <!--  <dubbo:registry id="demoRegistry" address="zookeeper://127.0.0.1:2181"/>-->
     <!--  暴露服务 -->
+                  <dubbo:provider id="payload" payload="167772160"/>
     			  <dubbo:service retries="0" interface="com.haier.afterSale.service.AfterSaleService"
                    ref="afterSaleServiceImpl"/>
 				  <dubbo:service retries="0" interface="com.haier.afterSale.service.EInvoiceService"
@@ -36,7 +37,7 @@
                    <dubbo:service retries="0" interface="com.haier.afterSale.service.OrderRepairService"
                      ref="orderRepairServiceImpl" version="1.0.0" timeout="1200000" />
                    <dubbo:service retries="0" interface="com.haier.afterSale.service.OrderService"
-                     ref="orderServiceImpl" version="1.0.0" timeout="1200000" />
+                     ref="orderServiceImpl" version="1.0.0" timeout="12000000" />
                    <dubbo:service retries="0" interface="com.haier.afterSale.service.OrderThirdCenterEStoreInfoService"
                      ref="orderThirdCenterEStoreInfoServiceImpl" version="1.0.0" timeout="1200000" />
                    <dubbo:service retries="0" interface="com.haier.afterSale.service.OrderThirdCenterItemService"
@@ -57,6 +58,32 @@
                      ref="stockCommonServiceImpl" version="1.0.0" timeout="1200000" />
                    <dubbo:service retries="0" interface="com.haier.afterSale.service.ThTransactionService"
                      ref="thTransactionServiceImpl" version="1.0.0" timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.CnDataDirectPushCenterService"
+                ref="cnDataDirectPushCenterServiceImpl" version="1.0.0" timeout="1200000" />
+
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.WaSeparateBillService"
+                ref="waSeparateBillServiceImpl" version="1.0.0" timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.OmsInStoreRecordCenterService"
+                ref="omsInStoreRecordCenterServiceImpl" version="1.0.0" timeout="1200000" />
+
                    <dubbo:service retries="0" interface="com.haier.afterSale.service.ReportDataCenterService"
-                     ref="reportDataCenterServiceImpl" version="1.0.0" timeout="1200000" />  
+                     ref="reportDataCenterServiceImpl" version="1.0.0" timeout="1200000" />
+             <dubbo:service retries="0" interface="com.haier.afterSale.service.OmsReceivedQueueService"
+                ref="omsReceivedQueueServiceImpl" version="1.0.0" timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.HandleDefectiveService"
+                ref="handleDefectiveServiceImpl"  timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.HPRejectionService"
+                ref="HPRejectionServiceImpl"  timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.PropellingRejectsService"
+                ref="propellingRejectsServiceImpl"  timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.TmallReturnService"
+                ref="tmallReturnServiceImpl"  timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.StockPushSAPService"
+                ref="stockPushSAPServiceImpl"  timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.CustomeAfterService"
+                ref="customeAfterServiceImpl"  timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.InitiatingTwoAppraisalHPService"
+                ref="initiatingTwoAppraisalHPServiceImpl"  timeout="1200000" />
+ <dubbo:service retries="0" interface="com.haier.afterSale.service.IReportService"
+                ref="reportServiceImpl" version="1.0.0" timeout="1200000" />
 </beans>

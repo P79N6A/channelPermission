@@ -12,6 +12,8 @@ import com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockTra
 
 
 public interface PurchaseLesStockInfoService {
+	
+	public void saveOrUpdateInfo(List<GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity> list, List<GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity> list2);
 
     public void updateInOutInfo(GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity info);
 

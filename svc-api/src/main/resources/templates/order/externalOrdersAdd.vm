@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>添加3W订单接入人工处理</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+
+    <style>
+        .input_form {
+            width: 60%;
+        }
+
+        .input_form_short {
+            width: 20%;
+        }
+
+        .div div span {
+            position: absolute;
+            right: 50%;
+        }
+
+        .radio label {
+            margin-right: 15px;
+        }
+
+        .penel {
+            background: #b5bbc8;
+            color: #404040;
+            border: 1px solid #b5bbc8;
+            filter: none;
+        }
+
+        .breadcrumb {
+            position: relative;
+            margin-top: 5px;
+            top: 0;
+            right: 0;
+            float: none;
+            background: #b5bbc8;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="paramForm_waAddressT" class="param-form"
+         style="background-color:#d2e0f0;height: 45px; width:100%;  position: fixed;z-index: 20">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;font-weight: bold;">
+            	添加3W订单接入
+        </span>
+        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+               value="返回" onclick="window.history.back()" readonly="readonly"
+               style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+    #*<input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+           value="保存" id="addProduct" readonly="readonly"
+           style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>*#
+    </div>
+    <fieldset>
+        <hr/>
+    </fieldset>
+    <div>
+        <ol class="breadcrumb">
+            <li class="penel">基本信息</li>
+        </ol>
+        <form class="form-horizontal" id="baseInfo">
+
+            <div class="form-group">
+                <label for="taoBaoShop" class="col-sm-2 control-label">淘宝店铺：</label>
+                <div class="col-sm-10">
+                    <select id="taoBaoShop" name="taoBaoShop" editable="false" class="easyui-combobox" style="width: 250px">
+                        <option value="">请选择</option>
+                        <option value="TBSC">海尔官方淘宝旗舰店</option>
+                        <option value="TOPBOILER">海尔热水器专卖店</option>
+                        <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
+                        <option value="TOPFENXIAO">海尔官方旗舰店:营销02(分销平台)</option>
+                        <option value="TOPXB">海尔新宝旗舰店</option>
+                        <option value="TOPFENXIAOXB">海尔新宝旗舰店分销平台</option>
+                        <option value="TONGSHUAIFX">统帅日日顺分销平台</option>
+                        <option value="TMMK">mooka模卡官方旗舰店</option>
+                        <option value="WASHER">海尔洗衣机旗舰店</option>
+                        <option value="FRIDGE">海尔冰冷旗舰店</option>
+                        <option value="AIR">海尔空调旗舰店</option>
+                        <option value="TBCT">村淘海尔商家</option>
+                        <option value="GQGYS">生态授权店</option>
+                        <option value="TMMKFX">mooka模卡分销</option>
+                        <option value="TMKSD">天猫卡萨帝旗舰店</option>
+                        <option value="TMTV">海尔电视旗舰店</option>
+                        <option value="TBCFDD">海尔厨房大电旗舰店</option>
+                        <option value="TBXCR">天猫小超人旗舰店</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="storageCode" class="col-sm-2 control-label">交易类型：</label>
+                <div class="col-sm-10">
+                    <select id="type" name="type" editable="false"  panelHeight="auto" style="width: 150px" class="easyui-combobox">
+                        <option value="">请选择</option>
+                        <option value="fixed">一口价</option>
+                        <option value="fx">分销</option>
+                        <option value="step">万人团</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="sourceOrderSn" class="col-sm-2 control-label">来源订单号：</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="sourceOrderSn" id="sourceOrderSn"
+                           placeholder="来源订单号">
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div>
+        <div style="text-align: center">
+            <a id="saveBtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-save'"
+               onclick="onSaveExternalOrdersInfo()">保存信息</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+    }
+</style>
+<script src="../static/js/order/externalOrdersdd.js"></script>
+</body>
+</html>

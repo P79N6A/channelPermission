@@ -21,6 +21,7 @@
         <result property="isLock" column="isLock" />
         <result property="orderId" column="orderId" />
         <result property="electricFlag" column="electricFlag" />
+        <result property="vatremark" column="vatremark" />
     </resultMap>
 
     <!--发票异常队列    -->
@@ -117,6 +118,7 @@
         <result property="auditTimeMax" column="auditTimeMax"/>
         <result property="auditor" column="auditor"/>
         <result property="orderSn" column="orderSn"/>
+        <result property="message" column="message"/>
     </resultMap>
 
     <!--订单开票列表  query  -->
@@ -182,21 +184,22 @@
 
     <select id="getByOrderId" parameterType="Integer" resultMap="MemberInvoicesResult">
         select `id`,`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`electricFlag`
-        from `MemberInvoices`
+        from `memberinvoices`
         where `orderId` = #{orderId}
         limit 1
     </select>
 
     <select id="getById" parameterType="Integer" resultMap="MemberInvoicesResult">
-        select `id`,`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`electricFlag`
-        from `MemberInvoices`
+        select `id`,`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`electricFlag`,`vatremark`
+        from `memberinvoices`
         where `id` = #{id}
     </select>
 
     <select id="getInvoiceTitleByOrderId" parameterType="Integer" resultType="java.lang.String">
         select `invoiceTitle`
-        from `MemberInvoices`
+        from `memberinvoices`
         where `orderId` = #{orderId}
+        limit 1
     </select>
 
     <!-- 订单发票列表 -->
@@ -216,12 +219,13 @@
         mi.registerPhone,
         mi.bankName,
         mi.bankCardNumber,
+        mi.message,
         CASE WHEN mi.addTime=0 THEN '' ELSE from_unixtime(mi.addTime) END as addTime,
         mi.state,
         mi.isLock,
         CASE WHEN mi.auditTime=0 THEN '' ELSE from_unixtime(mi.auditTime) END as auditTime,
         mi.auditor
-        from MemberInvoices mi inner JOIN Orders os on mi.orderId=os.id
+        from memberinvoices mi inner JOIN orders os on mi.orderId=os.id
         where 1=1
 
         <if test="ids != null and ids != ''">
@@ -247,7 +251,7 @@
         bankName,
         bankCardNumber
         FROM
-        MemberInvoices
+        memberinvoices
         WHERE
         invoiceType = "1"
         AND invoiceTitle = #{invoiceTitle}
@@ -258,7 +262,7 @@
 
     <select id="checkPassedValuedInvoice" parameterType="com.haier.shop.model.MemberInvoices" resultMap="MemberInvoicesResult">
         select `id`,`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`electricFlag`
-        from `MemberInvoices`
+        from `memberinvoices`
         where `invoiceType` = #{invoiceType}
         AND `invoiceTitle` = #{invoiceTitle}
         AND `taxPayerNumber` = #{taxPayerNumber}
@@ -339,19 +343,19 @@
         mi.bankCardNumber,
         mi.state
         FROM
-        OrderProducts op
-        LEFT JOIN Orders os
+        orderproducts op
+        LEFT JOIN orders os
         <if test="(orderSn == null or orderSn == '') and (cOrderSn == null or cOrderSn == '')">
             force index (addTime)
         </if>
         ON os.id = op.orderId
-        LEFT JOIN NetPoints np ON np.id = op.netPointId
-        LEFT JOIN Brands b ON b.id = op.brandId
-        LEFT JOIN Products p ON p.id = op.productId
-        LEFT JOIN ProductTypes pt ON pt.id = op.productType
-        LEFT JOIN ProductCates pc ON pc.id = op.cateId
-        LEFT JOIN MemberInvoices mi ON op.orderId = mi.orderId
-        LEFT JOIN Members m ON os.memberId = m.id
+        LEFT JOIN netpoints np ON np.id = op.netPointId
+        LEFT JOIN brands b ON b.id = op.brandId
+        LEFT JOIN products p ON p.id = op.productId
+        LEFT JOIN producttypes pt ON pt.id = op.productType
+        LEFT JOIN productcates pc ON pc.id = op.cateId
+        LEFT JOIN memberinvoices mi ON op.orderId = mi.orderId
+        LEFT JOIN members m ON os.memberId = m.id
         WHERE
         <![CDATA[
 				op.stockType NOT IN ('STORE')
@@ -361,7 +365,7 @@
 			AND op.productAmount >= 1
 			AND op.cateId <> '2842'
 			AND NOT EXISTS (
-				SELECT 1 FROM OrderRepairs ors
+				SELECT 1 FROM orderrepairs ors
 				 WHERE op.id = ors.orderProductId
 				   AND ors.handleStatus IN ( 1, 2, 3, 9 )
 				)
@@ -419,6 +423,22 @@
     </select>
 
     <select id="getElectricFlag" parameterType="Integer" resultType="Integer">
-        select count(0) from MemberInvoices where orderId=#{orderId} and electricFlag=1
+        select count(0) from memberinvoices where orderId=#{orderId} and electricFlag=1
+    </select>
+
+    <select id="getCount" resultType="int">
+	        SELECT
+	            FOUND_ROWS();
+	</select>
+    <select id="getIdByOrderId" parameterType="Integer" resultType="Integer">
+        select `id`
+        from `memberinvoices`
+        where `orderId` = #{orderId}
+        limit 1
+    </select>
+    <select id="getMemberInvoiceByInvoiceTitleForYoupin" parameterType="string" resultMap="MemberInvoicesResult">
+        select `id`,`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`electricFlag`
+		from `memberinvoices`
+		where invoiceTitle = #{invoiceTitle} limit 1
     </select>
 </mapper>

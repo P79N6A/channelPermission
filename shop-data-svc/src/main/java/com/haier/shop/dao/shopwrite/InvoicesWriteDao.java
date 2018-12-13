@@ -9,7 +9,6 @@ import java.util.Map;
 @Mapper
 public interface InvoicesWriteDao {
 
-    int insert(Invoices record);
 
     Integer updateInvoices(Invoices invoices);
 

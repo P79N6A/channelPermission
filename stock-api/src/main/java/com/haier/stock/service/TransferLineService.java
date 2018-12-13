@@ -44,7 +44,7 @@ public interface TransferLineService {
      * @param user
      * @return
      */
-    ServiceResult<Boolean> submitTransfer(String lineIds, String user, String isFirst);
+    ServiceResult<Boolean> submitTransfer(String lineIds, String user, Boolean isFirst);
 
     /**
      * 调拨管理-删除
@@ -245,4 +245,55 @@ public interface TransferLineService {
      * @return
      */
     ServiceResult<Boolean> cancelTransferLineToLesJob();
+
+    /**
+     * 根据调拨单号更新状态
+     * @param orderNo
+     * @param i
+     * @return
+     */
+    ServiceResult<Boolean> updateLineStatusByLineNum(String orderNo, int status);
+    
+    /**
+     * 根据调拨单号更新状态和实际入库数量
+     * @param orderNo
+     * @param i
+     * @return
+     */
+    ServiceResult<Boolean> updateLineStatusAndQtyByLineNum(String orderNo, int status, Integer qty);
+    
+    /**
+     * job，更新调拨单状态
+     * 调拨单推送LES后，状态转为待出库。通过定时任务将调拨单状态更改为待入库和已完成。
+     * 在EIS模块，对LES提供接口，接收调拨单状态数据，存放在db_eis.les_stock_trans_queue，直接从这个表取数。
+     * @author zhangming
+     */
+    ServiceResult<Boolean> updateStatusFromLES();
+
+    /**
+     * job,已完成的调拨单推送到SAP
+     * @return
+     */
+    ServiceResult<Boolean> orderFinishedPushToSAP();
+    /**
+     * job,出WA的调拨单推SAP
+     * @return
+     */
+    ServiceResult<Boolean> orderWAOutPushToSAP();
+    
+    /**
+     * job,入3W库推送SAP，用于3W调拨
+     * @return
+     */
+    ServiceResult<Boolean> orderIn3WPushToSAP();
+    
+    /**
+     * job，获取调拨单费用
+     * @return
+     */
+    ServiceResult<Boolean> queryTransferFeeFromHBDMToLES();
+
+    ServiceResult<Boolean> insertInvSals(String params);
+
+    ServiceResult<InvTransferLine> getYpInvTransferLineBySoLineNum(String lbx);
 }

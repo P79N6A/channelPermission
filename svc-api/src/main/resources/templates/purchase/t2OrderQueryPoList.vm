@@ -1,131 +1,186 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1">
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>PO查询</title>
-	<link rel="stylesheet" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css">
-    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css">
-    <script type="text/javascript" src="../static/third/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
-
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>PO单查询</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
 
 </head>
-<body>
-<div class="easyui-layout" data-options="fit : true,border : false">
-	<div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 182px;overflow: auto;" align="left">
-		<form id="filterForm" action="#"> 
-   		  	<table >
-	    	<tr>
-	    		<td>  到货开始周</td>
-	        	<td style="position: relative"><input id="report_year_week_start_txt" name ="report_year_week_start_txt"  style="position:absolute;width:130px;height: 16px;" readonly="readonly" class="text" zindex="1"/>
-	        		<input id="report_year_week_start" name="report_year_week_start"
-	               	data-options="formatter:myformatter_report_start,parser:myparser" editable="false"/>
-				</td>
-				<td>结束周</td>
-	     		<td style="position: relative">
-	  		  		 <input id="report_year_week_end_txt" name ="report_year_week_end_txt"  style="position:absolute;width:130px;height: 16px;" readonly="readonly" class="text" zindex="1"/>
-	     	 		 <input id="report_year_week_end" name="report_year_week_end"
-	              		 data-options="formatter:myformatter_report_end,parser:myparser" editable="false"/>
-				</td>
-				<td> 渠道</td>
-	     		<td> <input id="channel" name="channel" class="easyui-combobox" style="width:160px"/>
-				</td>
-				<td>  品类</td>
-		       	<td> 
-		       		<input id="cbsCategory" name="cbsCategory" class="easyui-combobox" style="width:160px"/> 
-				</td>
-				<td>产品组</td>
-	        	<td> <input id="product_group" name="product_group" class="easyui-combobox" style="width:160px"/>
-				</td>
-	    	</tr>
-			<tr>
-			<td>  WP订单号</td>
-       		<td> <input id="order_id" name="order_id" class="easyui-textbox" style="width:160px" /> 
-			</td>
-			<td>  品牌</td>
-	        <td> <input id="brand" name="brand" class="easyui-combobox" style="width:160px"/>
-			</td>
-			<td> WA库码</td>
-	        <td> <input id="storage_id" name="storage_id" class="easyui-textbox" style="width:160px"/>
-			</td>
-			<td>物料编码</td>
-	        <td> <input id="materials_id" name="materials_id" class="easyui-textbox" style="width:160px"/>   
-			</td>
-			<td> 型号</td>
-	        <td> <input id="materials_desc" name="materials_desc" class="easyui-textbox" style="width:160px"/>
-			</td>
-			</tr>
-			<tr>
-			<td>销售单号</td>
-	        <td> <input id="bill_order_id" name="bill_order_id" class="easyui-textbox" style="width:160px"/>
-			</td>
-			<td> 提单开始日期</td>
-	        <td> <input id="bill_time_start" name="bill_time_start"
-	               data-options="formatter:myformatter,parser:myparser" editable="false"/>
-			</td>
-			<td>结束日期</td>
-	        <td> <input id="bill_time_end" name="bill_time_end"
-	               data-options="formatter:myformatter,parser:myparser" editable="false"/></td>
-			
-			<td>入库开始日期</td>
-	        <td> <input id="datestorge_start" name="datestorge_start"
-	               data-options="formatter:myformatter,parser:myparser" editable="false"/>
-			</td>
-			<td>结束日期</td>
-	        <td> <input id="datestorge_end" name="datestorge_end"
-	               data-options="formatter:myformatter,parser:myparser" editable="false"/>
-			</td>
-			</tr>
-			<tr>
-			<td> SO</td>
-	        <td> <input id="so_id" name="so_id" class="easyui-textbox" style="width:160px" />  
-			</td>
-			<td> DN</td>
-	        <td> <input id="dn_id" name="dn_id" class="easyui-textbox" style="width:160px" /> 
-			</td>
-			<td>  状态</td>
-	   		<td>  <input id="flow_flag" name="flow_flag" class="easyui-combobox" style="width:160px"/>  
-			</td>
-			</tr>
-	   		<tr>
-	    		<td  colspan="10">
-				<a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
-	      	    <a id='export' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
-				<a id='exportall' href="#" class="easyui-linkbutton" iconCls="icon-save">全部导出</a>
-				</td>
-	       </tr>
-	       </table>
-	 		<input id="report_start_week_hidden" name="report_start_week_hidden" type="hidden">
-	 		<input id="report_end_week_hidden" name="report_end_week_hidden" type="hidden">
-	 		<input id="ed_channel_id_hidden" name="ed_channel_id_hidden" type="hidden">
-	        <input id="product_group_id_hidden" name="product_group_id_hidden" type="hidden">
-			<input id="wp_order_id_hidden" name="wp_order_id_hidden" type="hidden">
-	        <input id="storage_id_hidden" name="storage_id_hidden" type="hidden">
-	        <input id="flow_flag_hidden" name="flow_flag_hidden" type="hidden">
-	        <input id="materials_id_hidden" name="materials_id_hidden" type="hidden">
-	        <input id="bill_time_start_hidden" name="bill_time_start_hidden" type="hidden">
-	        <input id="bill_time_end_hidden" name="bill_time_end_hidden" type="hidden">
-	        <input id="bill_order_id_hidden" name="bill_order_id_hidden" type="hidden">
-	        <input id="so_id_hidden" name="so_id_hidden" type="hidden">
-			<input id="dn_id_hidden" name="dn_id_hidden" type="hidden">
-	        <input id="datestorge_start_hidden" name="datestorge_start_hidden" type="hidden">
-			<input id="datestorge_end_hidden" name="datestorge_end_hidden" type="hidden">
-			<input id="brand_id_hidden" name="brand_id_hidden" type="hidden">
-			<input id="category_id_hidden" name="category_id_hidden" type="hidden">
-			<input id="materials_desc_hidden" name="materials_desc_hidden" type="hidden">
-			<!-- 下面隐藏控件用来存放点击导出后的数据 -->
-			<input id="exportData" name="exportData" type="hidden"/>
-    </form>
-	</div>
-	<div data-options="region:'center',title:'PO查询结果',border:false">
-		<table id="dataGrid" ></table>
-	</div>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+    </table>
 </div>
 
-<script type="text/javascript"></script>
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel" style="font-size: 12px;">
+            <div class="search-row_nowidth mar_r6px">
+					<span class="search-row-label_80">
+						到货开始周
+					</span>
+                <input  id="report_year_week_start_txt"  name="report_year_week_start_txt" style="position:absolute;width:130px;height: 26px;"  readonly="readonly" class="text" zindex="1"/>
+                <input class="easyui-datebox" id="report_year_week_start" name="report_year_week_start" data-options="formatter:myformatter_report_start,parser:myparser" />
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+					<span class="search-row-label_80">
+						结束周
+					</span>
+                <input  id="report_year_week_end_txt"  name="report_year_week_end_txt" style="position:absolute;width:130px;height: 26px;"  readonly="readonly" class="text" zindex="1"/>
+                <input class="easyui-datebox" id="report_year_week_end" name="report_year_week_end" data-options="formatter:myformatter_report_end,parser:myparser" />
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">渠道</span>
+                <input id="channel" name="channel" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">品类</span>
+                <input id="cbsCategory" name="cbsCategory" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">产品组</span>
+                <input id="product_group" name="product_group" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">WP订单号</span>
+                <input id="order_id" name="order_id" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">品牌</span>
+                <input id="brand" name="brand" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">WA库码</span>
+                <input id="storage_id" name="storage_id" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">物料编码</span>
+                <input id="materials_id" name="materials_id" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">型号</span>
+                <input id="materials_desc" name="materials_desc" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">销售单号</span>
+                <input id="bill_order_id" name="bill_order_id" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+					<span class="search-row-label_80">
+						提单开始日期
+					</span>
+                <input class="easyui-datebox" id="bill_time_start" name="bill_time_start" data-options="formatter:myformatter,parser:myparser" />
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+					<span class="search-row-label_80">
+						结束日期
+					</span>
+                <input class="easyui-datebox" id="bill_time_end" name="bill_time_end" data-options="formatter:myformatter,parser:myparser" />
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+					<span class="search-row-label_80">
+						入库开始日期
+					</span>
+                <input class="easyui-datebox" id="datestorge_start" name="datestorge_start" data-options="formatter:myformatter,parser:myparser" />
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+					<span class="search-row-label_80">
+						结束日期
+					</span>
+                <input class="easyui-datebox" id="datestorge_end" name="datestorge_end" data-options="formatter:myformatter,parser:myparser" />
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">SO</span>
+                <input id="so_id" name="so_id" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">DN</span>
+                <input id="dn_id" name="dn_id" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">状态</span>
+                <input id="flow_flag" name="flow_flag" class="easyui-textbox" data-options="">
+            </div>
+
+            <input id="report_start_week_hidden" name="report_start_week_hidden" type="hidden">
+            <input id="report_end_week_hidden" name="report_end_week_hidden" type="hidden">
+            <input id="ed_channel_id_hidden" name="ed_channel_id_hidden" type="hidden">
+            <input id="product_group_id_hidden" name="product_group_id_hidden" type="hidden">
+            <input id="wp_order_id_hidden" name="wp_order_id_hidden" type="hidden">
+            <input id="storage_id_hidden" name="storage_id_hidden" type="hidden">
+            <input id="flow_flag_hidden" name="flow_flag_hidden" type="hidden">
+            <input id="materials_id_hidden" name="materials_id_hidden" type="hidden">
+            <input id="bill_time_start_hidden" name="bill_time_start_hidden" type="hidden">
+            <input id="bill_time_end_hidden" name="bill_time_end_hidden" type="hidden">
+            <input id="bill_order_id_hidden" name="bill_order_id_hidden" type="hidden">
+            <input id="so_id_hidden" name="so_id_hidden" type="hidden">
+            <input id="dn_id_hidden" name="dn_id_hidden" type="hidden">
+            <input id="datestorge_start_hidden" name="datestorge_start_hidden" type="hidden">
+            <input id="datestorge_end_hidden" name="datestorge_end_hidden" type="hidden">
+            <input id="brand_id_hidden" name="brand_id_hidden" type="hidden">
+            <input id="category_id_hidden" name="category_id_hidden" type="hidden">
+            <input id="materials_desc_hidden" name="materials_desc_hidden" type="hidden">
+            <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+            <input id="exportData" name="exportData" type="hidden"/>
+        </div>
+        <a href="javascript:void(0);" class="easyui-linkbutton" id="search" data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="javascript:void(0);" class="easyui-linkbutton" id="export" data-options="iconCls:'icon-save',plain:true">导出</a>
+        <a href="javascript:void(0);" class="easyui-linkbutton" id="exportall" data-options="iconCls:'icon-save',plain:true">全部导出</a>
+    </form>
+</div>
+<script type="text/javascript">
+    var authMap = $!{authMap};
+    if (authMap.productGroup.length == 1 && authMap.productGroup[0] == '') {
+        $.messager.alert('错误', '请联系管理员分配权限', 'error');
+    }
+    $(document).ready(function () {
+        $(".textbox-text").keyup(function () {
+            this.value = this
+                    .value
+                    .replace(/\s+/g, '');
+        });
+        $(".txt").keyup(function () {
+            this.value = this
+                    .value
+                    .replace(/\s+/g, '');
+        });
+    });
+</script>
 <script src="../static/js/report/t2OrderQueryPoList.js"></script>
+
 </body>
 </html>

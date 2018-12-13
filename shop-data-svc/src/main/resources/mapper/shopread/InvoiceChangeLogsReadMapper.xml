@@ -14,13 +14,13 @@
         SELECT
         *
         FROM
-        InvoiceChangeLogs
+        invoicechangelogs
         WHERE
         invoiceId = #{invoiceId}
         ORDER BY id DESC
     </select>
 
     <select id="get" resultMap="invoiceChangeLogsResult">
-        select `id`,`invoiceId`,`remark`,`addTime`,`operator` from InvoiceChangeLogs where `id`=#{id}
+        select `id`,`invoiceId`,`remark`,`addTime`,`operator` from invoicechangelogs where `id`=#{id}
     </select>
 </mapper>

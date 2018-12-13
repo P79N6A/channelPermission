@@ -17,6 +17,8 @@ public interface RegionsService  {
     int updateByPrimaryKeySelective(Regions record);
 
     int updateByPrimaryKey(Regions record);
+
+    int updateByParentId(Regions record);
     
     List<Regions> selectByParentId(Integer parentid);
     List<Regions> selectByParentPatchId(Integer patchId);
@@ -33,4 +35,12 @@ public interface RegionsService  {
 
     List<Regions> getByIds( String ids);
     Regions getRegions(Map<String, Object> params);
+    
+    String selectCode(String id);//根据主键查询国际编码
+
+    List<Regions> Listf(Regions entity, int start, int rows);
+
+    int getPagerCountS(Regions entity);
+
+    public List<Regions> getRegion(int id);
 }

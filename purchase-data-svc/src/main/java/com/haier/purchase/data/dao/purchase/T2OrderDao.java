@@ -402,4 +402,11 @@ public interface T2OrderDao {
     public List<T2OrderInterfaceLog> findPurchaseLog(Map<String,Object> map);
 
     public int getPurchaseLogRow(Map<String, Object> map);
+
+    /**
+     * 将haier_t2_order_t订单状态更新为flow_flag=80
+     */
+	public void updateHaierT2OrderStatus80FromLES();
+
+    List<T2OrderItem> getT2WdOrderId(Map<String, Object> params);
 }

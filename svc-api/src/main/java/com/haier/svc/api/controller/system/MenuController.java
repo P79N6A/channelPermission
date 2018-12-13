@@ -28,7 +28,7 @@ import com.haier.svc.api.form.MenuItemForm;
 import com.haier.svc.api.form.MenuModuleForm;
 
 @Controller
-@RequestMapping("menu")
+@RequestMapping("/menu")
 public class MenuController {
     private static org.apache.log4j.Logger log = org.apache.log4j.LogManager
                                                    .getLogger(MenuController.class);

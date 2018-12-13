@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.haier.shop.dao.shopwrite.InvoicesWriteDao">
      <update id="updateInvoices" parameterType="com.haier.shop.model.Invoices">
-          update `Invoices`
+          update `invoices`
           <trim prefix="set" suffixOverrides=",">
                `lastModifyTime`=UNIX_TIMESTAMP(now()),
                <if test="statusType != null">
@@ -61,7 +61,7 @@
      </update>
 
      <update id="eInvoiceBatchInvalid" parameterType="java.util.Map" statementType="PREPARED">
-          update `Invoices` set success=0,tryNum=0,statusType=4
+          update `invoices` set success=0,tryNum=0,statusType=4
           where
           cOrderSn in
           <foreach collection="cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
@@ -80,7 +80,7 @@
      </update>
 
      <update id="eInvoiceBatchReBilling" parameterType="java.util.Map" statementType="PREPARED">
-          update `Invoices` set success=0,tryNum=0
+          update `invoices` set success=0,tryNum=0
           where
           cOrderSn in
           <foreach collection="cOrderSns" index="index" item="cOrderSn" open="(" separator="," close=")">
@@ -90,12 +90,12 @@
      </update>
 
      <insert id="insertInvoice" parameterType="com.haier.shop.model.Invoices">
-          insert into `Invoices`(`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`)
+          insert into `invoices`(`isOld`,`isReInvoice`,`orderProductId`,`cOrderType`,`diffId`,`cOrderSn`,`memberInvoiceId`,`customerCode`,`invoiceTitle`,`taxPayerNumber`,`registerAddressAndPhone`,`bankNameAndAccount`,`remark`,`cOrderAddTime`,`sku`,`productName`,`productCateName`,`unit`,`number`,`price`,`amount`,`nonTaxPrice`,`nonTaxAmount`,`taxAmount`,`taxRate`,`type`,`isTogether`,`state`,`lessOrderSn`,`paymentName`,`sCode`,`orderType`,`invoiceNumber`,`billingTime`,`eaiWriteTime`,`drawer`,`eaiWriteState`,`invalidTime`,`firstPushTime`,`lastModifyTime`,`internalSettlement`,`branchOfficeCode`,`orderLineNumber`,`backupFieldA`,`backupFieldB`,`integralAmount`,`energySavingAmount`,`energySavingRemark`,`statusType`,`success`,`addTime`,`tryNum`,`electricFlag`,`invalidReason`)
           values(#{isOld},#{isReInvoice},#{orderProductId},#{cOrderType},#{diffId},#{cOrderSn},#{memberInvoiceId},#{customerCode},#{invoiceTitle},#{taxPayerNumber},#{registerAddressAndPhone},#{bankNameAndAccount},#{remark},#{cOrderAddTime},#{sku},#{productName},#{productCateName},#{unit},#{number},#{price},#{amount},#{nonTaxPrice},#{nonTaxAmount},#{taxAmount},#{taxRate},#{type},#{isTogether},#{state},#{lessOrderSn},#{paymentName},#{sCode},#{orderType},#{invoiceNumber},#{billingTime},#{eaiWriteTime},#{drawer},#{eaiWriteState},#{invalidTime},#{firstPushTime},#{lastModifyTime},#{internalSettlement},#{branchOfficeCode},#{orderLineNumber},#{backupFieldA},#{backupFieldB},#{integralAmount},#{energySavingAmount},#{energySavingRemark},#{statusType},#{success},#{addTime},#{tryNum},#{electricFlag},#{invalidReason})
      </insert>
 
      <update id="invoiceBatchModify" parameterType="java.util.Map" statementType="PREPARED">
-          update `Invoices`
+          update `invoices`
           <set>
                <if test="invoiceTitle !=null and invoiceTitle != '不变'.toString() " >
                     invoiceTitle = #{invoiceTitle},

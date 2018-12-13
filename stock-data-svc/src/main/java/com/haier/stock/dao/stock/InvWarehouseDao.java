@@ -1,9 +1,11 @@
 package com.haier.stock.dao.stock;
 
 import java.util.List;
+import java.util.Map;
 
 import com.haier.stock.model.InvWarehouse;
 import com.haier.stock.model.InvWarehouseInfo;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 
@@ -14,6 +16,7 @@ import com.haier.stock.model.InvWarehouseInfo;
  * @Email: zhen1.li@dhc.com.cn
  *
  */
+@Mapper
 public interface InvWarehouseDao {
 
     /**
@@ -35,4 +38,22 @@ public interface InvWarehouseDao {
     String getWhCodeByCenterCode(String centerCode);
 
 	 List<InvWarehouseInfo> findCenter();
+
+    List<InvWarehouse> getInvWarehouseInfo(Map<String, Object> param);
+
+    Integer getInvWarehouseCount(Map<String, Object> param);
+
+    int checkMainKey(Map<String, Object> param);
+
+    void createInvWarehouse(Map<String, Object> param);
+
+    void updateInvWarehouse(Map<String, Object> param);
+
+    void deleteInvWareHouse(Map<String, Object> param);
+
+    void openStatusInvWarehouse(Map<String, Object> param);
+
+    void closeStatusInvWarehouse(Map<String, Object> param);
+
+    List<InvWarehouse> getInvWarehouseExport(Map<String, Object> param);
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.haier.cbs.purchase.dao.SequenceDao">
+<mapper namespace="com.haier.purchase.data.dao.purchase.SequenceDao">
     <update id="clearSequence"  parameterType="java.util.Map">
         UPDATE sequence
         SET
@@ -13,12 +13,25 @@
         select seq from order_seq_t where order_id = #{order_id}
     </select>
 
+    <select id="selectSequenceId" resultType="java.lang.Integer">
+        select id from sequence where name ='WPOrderId'
+    </select>
+
+    <select id="findMax"  resultType="String">
+        select increment from sequence where name = "3WDataMaxId"
+    </select>
+
     <insert id="insertSequence" parameterType="java.util.Map">
         insert into order_seq_t(order_id,seq) values (#{order_id},1)
     </insert>
 
+
     <update id="updateSequence" parameterType="java.util.Map">
         update order_seq_t set seq=#{seq} where order_id=#{order_id}
+    </update>
+
+    <update id="update3WDataMaxId" parameterType="java.util.Map">
+        update sequence set increment=#{max} where name="3WDataMaxId"
     </update>
 
     <update id="insertOrUpdateSequence" parameterType="java.util.Map">

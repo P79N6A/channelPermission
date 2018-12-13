@@ -1,12 +1,16 @@
 package com.haier.shop.services;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.haier.shop.model.OrderProducts;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haier.shop.dao.shopwrite.OrderProductsNewDao;
+import com.haier.shop.model.OrderProductsVo;
 import com.haier.shop.model.OrderProductsNew;
 import com.haier.shop.service.OrderProductsNewService;
 
@@ -104,6 +108,23 @@ public class OrderProductsNewServiceImpl implements OrderProductsNewService {
         // TODO Auto-generated method stub
         return orderProductsNewDao.updateStatus(id, status);
     }
+
+    @Override
+    public Integer updatePaymentStatusByOrderId(Integer orderId, Integer cPaymentStatus) {
+        // TODO Auto-generated method stub
+        return orderProductsNewDao.updatePaymentStatusByOrderId(orderId, cPaymentStatus);
+    }
+
+    @Override
+    public int updateNum(Long newNum, BigDecimal productAmount,String orderProductId) {
+        return orderProductsNewDao.updateNum(newNum,productAmount,orderProductId);
+    }
+
+    @Override
+    public int updatesCodeBycOrderSn(String sCode, String cOrderSn) {
+        return orderProductsNewDao.updatesCodeBycOrderSn(sCode,cOrderSn);
+    }
+
 
     @Override
     public OrderProductsNew getByCOrderSn(String cOrderSn) {
@@ -209,4 +230,57 @@ public class OrderProductsNewServiceImpl implements OrderProductsNewService {
         return orderProductsNewDao.updateAfterSyncLes(orderProduct);
     }
 
+	@Override
+	public int insert(OrderProducts orderProducts) {
+		// TODO Auto-generated method stub
+		orderProductsNewDao.insertOrderProducts(orderProducts);
+		return orderProducts.getId();
+	}
+
+	@Override
+	public int interceptCancelClose(Integer id, Long closeTime) {
+		// TODO Auto-generated method stub
+		return orderProductsNewDao.interceptCancelClose(id, closeTime);
+	}
+
+    @Override
+    public void updateCOrderSn(OrderProducts orderProducts) {
+        orderProductsNewDao.updateCOrderSn(orderProducts);
+    }
+
+    /**
+     * 根据OrderId查询
+     * @param id
+     * @return
+     */
+    @Override
+    public OrderProductsNew getOrderId(Integer id) {
+        // TODO Auto-generated method stub
+        return orderProductsNewDao.getOrderId(id);
+    }
+
+    @Override
+    public List<OrderProductsNew> queryOccupyStockFail(Map<String, Object> params) {
+        return orderProductsNewDao.queryOccupyStockFail(params);
+    }
+
+    @Override
+    public Integer queryOccupyStockFailCount(Map<String, Object> params) {
+        return orderProductsNewDao.queryOccupyStockFailCount(params);
+    }
+
+    @Override
+    public List<OrderProductsNew> getByPdOrderStatusPaging(Integer pdOrderStatus, Integer minId, Integer size) {
+        return orderProductsNewDao.getByPdOrderStatusPaging(pdOrderStatus, minId, size);
+    }
+
+    @Override
+    public Integer updateRRSById(OrderProductsNew orderProducts) {
+        return orderProductsNewDao.updateRRSById(orderProducts);
+    }
+
+    @Override
+    public Integer getSuccessNum(Integer orderId) {
+        return orderProductsNewDao.getSuccessNum(orderId);
+    }
 }

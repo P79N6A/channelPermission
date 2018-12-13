@@ -165,4 +165,56 @@
 		CPUTM DESC
 	LIMIT 1,1
   </select>
+  
+  
+  <insert id="insertInOutInfoTmp" parameterType="com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity">
+	  insert into `les_in_out_t_tmp`(`MBLNR`,`ZEILE`,
+	  <if test="CPUDT !=null and CPUDT != ''">
+	  `CPUDT`,
+	  </if>
+	  <if test="CPUTM !=null and CPUTM != ''">
+	  `CPUTM`,
+	  </if>
+	  `MJAHR`,`BWART`,`SHKZG`,`MATNR`,`MATKL`,
+	  `CHARG`,`LFIMG`,`LGORT`,`KUNNR_SALETO`,`KUNNR_SENDTO`,
+	  `VBELN_SO`,`VBELN_DN`,`TKNUM`,`BSTNK`,`AUART`,`RESERVE1`,
+	  <if test="RESERVE2 !=null and RESERVE2 != ''">
+	  `RESERVE2`,
+	  </if>
+	  `BSTKD`)
+		values(#{MBLNR},#{ZEILE},
+		<if test="CPUDT !=null and CPUDT != ''">
+		#{CPUDT},
+		</if>
+		<if test="CPUTM !=null and CPUTM != ''">
+		#{CPUTM},
+		</if>
+		#{MJAHR},#{BWART},#{SHKZG},#{MATNR},#{MATKL},
+		#{CHARG},#{LFIMG},#{LGORT},#{KUNNRSALETO},#{KUNNRSENDTO},
+		#{VBELNSO},#{VBELNDN},#{TKNUM},#{BSTNK},#{AUART},#{RESERVE1},
+		<if test="RESERVE2 !=null and RESERVE2 != ''">
+		#{RESERVE2},
+		</if>
+		#{BSTKD});
+	</insert>
+	<insert id="moveInOutInfoFromTmp">
+		insert into `les_in_out_t`
+		select * from `les_in_out_t_tmp`
+		where mblnr not in (select mblnr from `les_in_out_t`)
+	</insert>
+	<delete id="clearInOutInfoTmp">
+		delete from `les_in_out_t_tmp`
+	</delete>
+	<insert id="insertStockInfoTmp" parameterType="com.haier.purchase.data.model.GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity">
+	  insert into `les_stock_t_tmp`(`KUNNR`,`LGORT_D`,`MATNR`,`CHARG_D`,`LFIMG`)
+		values(#{KUNNR},#{lgort},#{MATNR},#{charg},#{lfimg});
+	</insert>
+	<insert id="moveStockInfoFromTmp">
+		insert into `les_stock_t`
+		select * from `les_stock_t_tmp`
+		where concat(`KUNNR`,`LGORT_D`,`MATNR`,`CHARG_D`) not in (select concat(`KUNNR`,`LGORT_D`,`MATNR`,`CHARG_D`) as ppkk from `les_stock_t`)
+	</insert>
+	<delete id="clearStockInfoTmp">
+		delete from `les_stock_t_tmp`
+	</delete>
 </mapper>

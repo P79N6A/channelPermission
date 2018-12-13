@@ -1,9 +1,7 @@
 package com.haier.svc.api.controller.system;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +24,8 @@ import com.haier.common.ServiceResult;
 import com.haier.purchase.data.model.DataDictionary;
 import com.haier.svc.api.controller.util.HttpJsonResult;
 import com.haier.svc.api.controller.util.WebUtil;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * 系统管理功能
@@ -187,10 +187,10 @@ public class UserController {
 			user.setEmail(userEmail);
 			user.setPhone(userPhone);
 			user.setMobile(userMobile);
-			
+			user.setUpdateUser(getUserName());
 			// TODO: 取当前操作用户ID
 			ServiceResult<Boolean> srvResult = this.systemCenterService.updateUser(
-					user, 15);
+					user);
 			if (!srvResult.getSuccess()) {
 				result.setMessage(result.getMessage());
 				return result;
@@ -203,13 +203,40 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * 获取当前登录的用户
+	 */
+	private String getUserName() {
+		ServletRequestAttributes attr = (ServletRequestAttributes)
+				RequestContextHolder.currentRequestAttributes();
+		return (String) attr.getRequest().getSession().getAttribute("userName");
+	}
+
 	@RequestMapping(value = { "/create" }, method = { RequestMethod.POST })
 	@ResponseBody
-	public HttpJsonResult<SysUser> createUser(SysUser user) {
+	public HttpJsonResult<SysUser> createUser(
+			@RequestParam(required = false) String userName,//用户名
+			@RequestParam(required = false) Integer userStatus,//状态
+			@RequestParam(required = false) String loginId,//登录账号
+			@RequestParam(required = false) String userEmail,//邮箱
+			@RequestParam(required = false) String userPhone,//电话
+			@RequestParam(required = false) String userMobile//手机
+	) {
 		try {
 			// TODO: 取当前操作用户ID
 //			ServiceResult<Integer> result = this.systemCenterService.createUser(user,
 //					12);
+
+            SysUser user = new SysUser();
+            user.setUserName(userName);
+            user.setStatus(userStatus);
+            user.setLoginId(loginId);
+            user.setEmail(userEmail);
+            user.setPhone(userPhone);
+            user.setMobile(userMobile);
+            user.setPassword("");
+			user.setCreateUser(getUserName());
+			user.setUpdateUser(getUserName());
 			ServiceResult<Integer> result = this.systemCenterService.createUser(user);
 //			if (!result.getSuccess())
 //				return new HttpJsonResult<SysUser>(result.getMessage());
@@ -243,4 +270,25 @@ public class UserController {
 			
 		}
 	}
+
+	@ResponseBody
+    @RequestMapping(value = { "/findToLoginId" }, method = { RequestMethod.POST })
+	public void findToLoginId(@RequestParam(required = false) String loginId,HttpServletRequest request,HttpServletResponse response){
+        SysUser sysUser = systemCenterService.getUserByLoginId(loginId).getResult();
+        Map<String, Object> retMap = new HashMap<String, Object>();
+        if (sysUser != null){
+            retMap.put("message", "该用户已存在！不允许添加重复用户！");
+        }
+        Gson gson = new Gson();
+        response.addHeader("Content-type", "text/html;charset=utf-8");
+        try {
+            response.getWriter().write(gson.toJson(retMap.get("message")));
+            response.getWriter().flush();
+            response.getWriter().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

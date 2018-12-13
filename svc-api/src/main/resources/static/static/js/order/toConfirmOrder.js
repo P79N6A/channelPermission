@@ -6,8 +6,8 @@ var dataGrid = null;
  var searchselect = function () {
 	 var options = dataGrid.datagrid('getPager').data("pagination").options;
 	 var addTimeMin = $("#addTimeMin").datebox("getValue");//下单时间 开始
-	 var addTimeMix = $("#addTimeMix").datebox("getValue");//下单时间 截止
-	 if(addTimeMin>addTimeMix){
+	 var addTimeMax = $("#addTimeMax").datebox("getValue");//下单时间 截止
+	 if(addTimeMin>addTimeMax){
 		 alert("开始时间应小于结束时间");
 		 return;
 	 }
@@ -18,7 +18,7 @@ var dataGrid = null;
           data     : {
         	    orderSn :$("#orderSn").val().trim(),
       		  	addTimeMin:addTimeMin,
-      		  	addTimeMix :addTimeMix,
+      		  	addTimeMax :addTimeMax,
       		  	source :$("#source").datebox("getValue"),//订单来源
       		  	page  : options.pageNumber,
       		  	rows : options.pageSize

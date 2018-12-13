@@ -1,8 +1,535 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haier.shop.dao.shopwrite.OperationAreaWriteDao" >
+<insert id="insertOrderProducts" parameterType="com.haier.shop.model.OrderProducts" useGeneratedKeys="true" keyProperty="id">
+  INSERT INTO `shop`.`orderproducts`
+	(
+	<if test="isTest !=null">
+	`isTest`,
+	</if>
+	<if test="supportOneDayLimit !=null ">
+	 `supportOneDayLimit`,
+	</if>
+	<if test="orderId !=null">
+	 `orderId`,
+	</if>
+	<if test="cOrderSn !=null">
+	 `cOrderSn`,
+	</if>
+	<if test="isBook !=null">
+	 `isBook`,
+	 </if>
+	<if test="cPaymentStatus !=null">
+	 `cPaymentStatus`,
+	</if>
+	<if test="cPayTime !=null ">
+	 `cPayTime`,
+	</if>
+	<if test="productType !=null ">
+	 `productType`,
+	</if>
+	<if test="productId !=null ">
+	 `productId`,
+	</if>
+	<if test="productName !=null">
+	 `productName`,
+	</if>
+	<if test="sku !=null ">
+	 `sku`,
+	</if>
+	<if test="price !=null ">
+	 `price`,
+	</if>
+	<if test="number !=null">
+	 `number`,
+	</if>
+	<if test="lockedNumber !=null ">
+	 `lockedNumber`,
+	</if>
+		<if test="unlockedNumber !=null ">
+	 `unlockedNumber`,
+	</if>
+		<if test="productAmount !=null">
+	 `productAmount`,
+	</if>
+		<if test="couponAmount !=null ">
+	 `couponAmount`,
+	</if>
+		<if test="esAmount !=null">
+	 `esAmount`,
+	</if>
+		<if test="cateId !=null ">
+	 `cateId`,
+	</if>
+	<if test="brandId !=null ">
+	 `brandId`,
+	</if>
+	<if test="netPointId !=null ">
+	 `netPointId`,
+	</if>
+	<if test="shippingFee !=null">
+	 `shippingFee`,
+	</if>
+	<if test="settlementStatus !=null ">
+	 `settlementStatus`,
+	</if>
+	<if test="receiptOrRejectTime !=null ">
+	 `receiptOrRejectTime`,
+	</if>
+	<if test="isWmsSku !=null">
+	 `isWmsSku`,
+	</if>
+	<if test="sCode !=null">
+	 `sCode`,
+	</if>
+	<if test="tsCode !=null">
+	 `tsCode`,
+	</if>
 
 
+	<if test="tsShippingTime !=null ">
+	 `tsShippingTime`,
+	</if>
+	<if test="status !=null ">
+	 `status`,
+	</if>
+	<if test="invoiceNumber !=null">
+	 `invoiceNumber`,
+	</if>
+	<if test="expressName !=null">
+	 `expressName`,
+	</if>
+	<if test="invoiceExpressNumber !=null ">
+	 `invoiceExpressNumber`,
+	</if>
+	<if test="shippingTime !=null ">
+	 `shippingTime`,
+	</if>
+	<if test="lessOrderSn !=null ">
+	 `lessOrderSn`,
+	</if>
+	<if test="waitGetLesShippingInfo !=null">
+	 `waitGetLesShippingInfo`,
+	</if>
+	<if test="getLesShippingCount !=null">
+	 `getLesShippingCount`,
+	</if>
+	<if test="outping !=null">
+	 `outping`,
+	</if>
+	<if test="lessShipTime !=null ">
+	 `lessShipTime`,
+	</if>
+	<if test="closeTime !=null ">
+	 `closeTime`,
+	</if>
+	<if test="isReceipt !=null ">
+	 `isReceipt`,
+	</if>
+	<if test="isMakeReceipt !=null ">
+	 `isMakeReceipt`,
+	</if>
+	<if test="receiptNum !=null ">
+	 `receiptNum`,
+	</if>
+	<if test="receiptAddTime !=null ">
+	 `receiptAddTime`,
+	</if>
+	<if test="makeReceiptType !=null ">
+	 `makeReceiptType`,
+	</if>
+	<if test="shippingMode !=null ">
+	 `shippingMode`,
+	</if>
+	<if test="lastTimeForShippingMode !=null">
+	 `lastTimeForShippingMode`,
+	</if>
+	<if test="lastEditorForShippingMode !=null">
+	 `lastEditorForShippingMode`,
+	</if>
+	<if test="systemRemark !=null">
+	 `systemRemark`,
+	</if>
+	<if test="externalSaleSettingId !=null ">
+	 `externalSaleSettingId`,
+	</if>
+	<if test="isNoLimitStockProduct !=null ">
+	 `isNoLimitStockProduct`,
+	</if>
+	<if test="hpRegisterDate !=null ">
+	 `hpRegisterDate`,
+	</if>
+	<if test="hpFailDate !=null">
+	 `hpFailDate`,
+	</if>
+	<if test="hpFinishDate !=null ">
+	 `hpFinishDate`,
+	</if>
+	<if test="hpReservationDate !=null">
+	 `hpReservationDate`,
+	</if>
+	<if test="shippingOpporunity !=null ">
+	 `shippingOpporunity`,
+	</if>
+	<if test="isTimeoutFree !=null ">
+	 `isTimeoutFree`,
+	</if>
+	<if test="itemShareAmount !=null ">
+	 `itemShareAmount`,
+	</if>
+	<if test="lessShipTInTime !=null ">
+	 `lessShipTInTime`,
+	</if>
+	<if test="lessShipTOutTime !=null ">
+	 `lessShipTOutTime`,
+	</if>
+	<if test="cbsSecCode !=null">
+	 `isSAorZP`,
+	</if>
+	<if test="points !=null">
+	 `points`,
+	</if>
+	<if test="modified !=null">
+	 `modified`,
+	</if>
+	<if test="splitFlag !=null ">
+ 	`splitFlag`,
+	</if>
+	<if test="splitRelateCOrderSn !=null ">
+	 `splitRelateCOrderSn`,
+	</if>
+	<if test="channelId !=null ">
+	 `channelId`,
+	</if>
+	<if test="activityId2 !=null ">
+	 `activityId2`,
+	</if>
+	<if test="pdOrderStatus !=null">
+	 `pdOrderStatus`,
+	</if>
+	<if test="omsOrderSn !=null ">
+	 `omsOrderSn`,
+	</if>
+	<if test="couponCode !=null">
+	 `couponCode`,
+	</if>
+	<if test="couponCodeValue !=null ">
+	 `couponCodeValue`,
+	</if>
+	<if test="jfbAmount !=null ">
+	 `jfbAmount`,
+	</if>
+	<if test="djAmount !=null">
+	 `djAmount`,
+	</if>
+	<if test="hbAmount !=null ">
+	 `hbAmount`,
+	</if>
+	<if test="storeId !=null ">
+	 `storeId`,
+	</if>
+	<if test="storeType !=null ">
+	 `storeType`,
+	</if>
+	<if test="stockType !=null">
+	 `stockType`,
+	</if>
+	<if test="o2oType !=null">
+	 `o2oType`,
+	</if>
+	<if test="brokerageType !=null">
+	 `brokerageType`,
+	</if>
+	<if test="oid !=null ">
+	 `oid`,
+	</if>
+	<if test="tzSku !=null ">
+	 `tzSku`,
+	</if>
+	<if test="isCd !=null ">
+	 `isCd`,
+	</if>
+	<if test="tbOrderSn !=null">
+	 `tbOrderSn`,
+	</if>
+	 `addTime`
+	)
+	VALUES
+	(
+	<if test="isTest !=null">
+	#{isTest},
+	</if>
+	<if test="supportOneDayLimit !=null ">
+	 #{supportOneDayLimit},
+	</if>
+	<if test="orderId !=null">
+	 #{orderId},
+	</if>
+	<if test="cOrderSn !=null">
+	 #{cOrderSn},
+	</if>
+	<if test="isBook !=null">
+	 #{isBook},
+	 </if>
+	<if test="cPaymentStatus !=null">
+	 #{cPaymentStatus},
+	</if>
+	<if test="cPayTime !=null ">
+	 #{cPayTime},
+	</if>
+	<if test="productType !=null ">
+	 #{productType},
+	</if>
+	<if test="productId !=null ">
+	 #{productId},
+	</if>
+	<if test="productName !=null">
+	 #{productName},
+	</if>
+	<if test="sku !=null">
+	 #{sku},
+	</if>
+	<if test="price !=null ">
+	 #{price},
+	</if>
+	<if test="number !=null">
+	 #{number},
+	</if>
+	<if test="lockedNumber !=null ">
+	 #{lockedNumber},
+	</if>
+		<if test="unlockedNumber !=null ">
+	 #{unlockedNumber},
+	</if>
+		<if test="productAmount !=null">
+	 #{productAmount},
+	</if>
+		<if test="couponAmount !=null ">
+	 #{couponAmount},
+	</if>
+		<if test="esAmount !=null">
+	 #{esAmount},
+	</if>
+		<if test="cateId !=null ">
+	 #{cateId},
+	</if>
+	<if test="brandId !=null ">
+	 #{brandId},
+	</if>
+	<if test="netPointId !=null ">
+	 #{netPointId},
+	</if>
+	<if test="shippingFee !=null">
+	 #{shippingFee},
+	</if>
+	<if test="settlementStatus !=null ">
+	 #{settlementStatus},
+	</if>
+	<if test="receiptOrRejectTime !=null ">
+	 #{receiptOrRejectTime},
+	</if>
+	<if test="isWmsSku !=null">
+	 #{isWmsSku},
+	</if>
+	<if test="sCode !=null">
+	 #{sCode},
+	</if>
+	<if test="tsCode !=null">
+	 #{tsCode},
+	</if>
+	<if test="tsShippingTime !=null ">
+	 #{tsShippingTime},
+	</if>
+	<if test="status !=null ">
+	 #{status},
+	</if>
+	<if test="invoiceNumber !=null ">
+	 #{invoiceNumber},
+	</if>
+	<if test="expressName !=null">
+	 #{expressName},
+	</if>
+	<if test="invoiceExpressNumber !=null ">
+	 #{invoiceExpressNumber},
+	</if>
+	<if test="shippingTime !=null ">
+	 #{shippingTime},
+	</if>
+	<if test="lessOrderSn !=null ">
+	 #{lessOrderSn},
+	</if>
+	<if test="waitGetLesShippingInfo !=null">
+	 #{waitGetLesShippingInfo},
+	</if>
+	<if test="getLesShippingCount !=null">
+	 #{getLesShippingCount},
+	</if>
+	<if test="outping !=null ">
+	 #{outping},
+	</if>
+	<if test="lessShipTime !=null ">
+	 #{lessShipTime},
+	</if>
+	<if test="closeTime !=null ">
+	 #{closeTime},
+	</if>
+	<if test="isReceipt !=null ">
+	 #{isReceipt},
+	</if>
+	<if test="isMakeReceipt !=null ">
+	 #{isMakeReceipt},
+	</if>
+	<if test="receiptNum !=null ">
+	 #{receiptNum},
+	</if>
+	<if test="receiptAddTime !=null ">
+	 #{receiptAddTime},
+	</if>
+	<if test="makeReceiptType !=null ">
+	 #{makeReceiptType},
+	</if>
+	<if test="shippingMode !=null ">
+	 #{shippingMode},
+	</if>
+	<if test="lastTimeForShippingMode !=null">
+	 #{lastTimeForShippingMode},
+	</if>
+	<if test="lastEditorForShippingMode !=null">
+	 #{lastEditorForShippingMode},
+	</if>
+	<if test="systemRemark !=null ">
+	 #{systemRemark},
+	</if>
+	<if test="externalSaleSettingId !=null ">
+	 #{externalSaleSettingId},
+	</if>
+	<if test="isNoLimitStockProduct !=null ">
+	 #{isNoLimitStockProduct},
+	</if>
+	<if test="hpRegisterDate !=null ">
+	 #{hpRegisterDate},
+	</if>
+	<if test="hpFailDate !=null ">
+	 #{hpFailDate},
+	</if>
+	<if test="hpFinishDate !=null ">
+	 #{hpFinishDate},
+	</if>
+	<if test="hpReservationDate !=null">
+	 #{hpReservationDate},
+	</if>
+	<if test="shippingOpporunity !=null ">
+	 #{shippingOpporunity},
+	</if>
+	<if test="isTimeoutFree !=null ">
+	 #{isTimeoutFree},
+	</if>
+	<if test="itemShareAmount !=null ">
+	 #{itemShareAmount},
+	</if>
+	<if test="lessShipTInTime !=null ">
+	 #{lessShipTInTime},
+	</if>
+	<if test="lessShipTOutTime !=null ">
+	 #{lessShipTOutTime},
+	</if>
+	<if test="cbsSecCode !=null ">
+	 #{cbsSecCode},
+	</if>
+	<if test="points !=null ">
+	 #{points},
+	</if>
+	<if test="modified !=null">
+	 #{modified},
+	</if>
+	<if test="splitFlag !=null ">
+ 	#{splitFlag},
+	</if>
+	<if test="splitRelateCOrderSn !=null ">
+	 #{splitRelateCOrderSn},
+	</if>
+	<if test="channelId !=null ">
+	 #{channelId},
+	</if>
+	<if test="activityId2 !=null ">
+	 #{activityId2},
+	</if>
+	<if test="pdOrderStatus !=null">
+	 #{pdOrderStatus},
+	</if>
+	<if test="omsOrderSn !=null ">
+	 #{omsOrderSn},
+	</if>
+	<if test="couponCode !=null ">
+	 #{couponCode},
+	</if>
+	<if test="couponCodeValue !=null ">
+	 #{couponCodeValue},
+	</if>
+	<if test="jfbAmount !=null ">
+	 #{jfbAmount},
+	</if>
+	<if test="djAmount !=null">
+	 #{djAmount},
+	</if>
+	<if test="hbAmount !=null ">
+	 #{hbAmount},
+	</if>
+	<if test="storeId !=null ">
+	 #{storeId},
+	</if>
+	<if test="storeType !=null ">
+	 #{storeType},
+	</if>
+	<if test="stockType !=null ">
+	 #{stockType},
+	</if>
+	<if test="o2oType !=null">
+	 #{o2oType},
+	</if>
+	<if test="brokerageType !=null">
+	 #{brokerageType},
+	</if>
+	<if test="oid !=null ">
+	 #{oid},
+	</if>
+	<if test="tzSku !=null ">
+	 #{tzSku},
+	</if>
+	<if test="isCd !=null ">
+	 #{isCd},
+	</if>
+	<if test="tbOrderSn !=null ">
+	 #{tbOrderSn},
+	</if>
+	 now()
+	)
+ </insert>
+ 
+ <update id="updateStatus" parameterType="java.lang.String">
+	UPDATE orderproducts
+	SET `status` = #{Status}
+	WHERE
+	id=#{id}
+	</update>
+	<update id="updateHPQueuessuccess">
+		UPDATE hpqueues SET success=3 WHERE orderProductId=#{id}
+	</update>
+	<update id="updateOPStatus" >
+		UPDATE orderproducts SET unlockedNumber=#{lockedNumber},status=110 WHERE cOrderSn=#{cOrderSn}
+	</update>
+	<update id="updateLesQueuesIsStop">
+		UPDATE lesqueues SET isStop=3 WHERE id=#{id}
+	</update>
+	<insert id="insertOrderRepairLog">
+		INSERT INTO orderrepairlogs(addTime,orderRepairId,operator,operate,remark) VALUES (#{map.addTime},#{map.orderRepairId},#{map.userName},#{map.operate},#{map.remark})
+	</insert>
 
-	
-	</mapper>
+	<update id="updateRegion" >
+	    UPDATE orders SET province=#{province},city=#{city},region=#{region},markBuilding = 1,smConfirmStatus=4,regionName = #{regionName}
+		<if test="street !=0  ">
+			,street=#{street}
+		</if>
+	    WHERE orderSn =#{orderSn}
+	</update>
+</mapper>

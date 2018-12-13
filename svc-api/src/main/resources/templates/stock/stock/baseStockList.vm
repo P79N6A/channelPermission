@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
     <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
     <link rel="stylesheet" href="/static/css/common.css">
-    <title>orderForecastGoal</title>
+    <title>WA库存信息</title>
     <script src="/static/third/jquery.js"></script>
     <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
     <script src="/static/third/easyui/jquery.easyui.min.js"></script>
@@ -29,7 +29,7 @@
 </div>
 
 <div id="exportProduct">
-    <form id="exportForm" action="#">
+    <form id="exportForm" action="#" target="nm_iframe">
         <input id="secCodeData" name="secCodeData" type="text">
         <input id="skuData" name="skuData" type="hidden">
         <input id="stockQtyData" name="stockQtyData" type="hidden">
@@ -42,6 +42,7 @@
         <input id="code" name="code" type="hidden">
     </form>
 </div>
+<iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>
 <div id="datagridToolbar_orderForecastGoal">
     <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
         <div class="slide_line fa fa-window-minimize"></div>
@@ -74,7 +75,7 @@
 			<span class="search-row-label">
 			  实际库存
 			</span>
-                <select class="easyui-combobox" id="stockQtyCode" style="width:90px">
+                <select class="easyui-combobox" id="stockQtyCode" style="width:90px" panelHeight="auto">
                     <option value="">全部</option>
                     <option value="AB">大于</option>
                     <option value="AA">等于</option>
@@ -86,7 +87,7 @@
 			<span class="search-row-label">
 			  可用库存
 			</span>
-                <select class="easyui-combobox" id="avaiableQtyCode" style="width:90px">
+                <select class="easyui-combobox" id="avaiableQtyCode" style="width:90px" panelHeight="auto">
                     <option value="">全部</option>
                     <option value="AB">大于</option>
                     <option value="AA">等于</option>
@@ -98,7 +99,7 @@
 			<span class="search-row-label">
 			  商品属性
 			</span>
-                <select class="easyui-combobox" name="itemProperty" id="itemProperty" style="width: 174px;">
+                <select class="easyui-combobox" name="itemProperty" id="itemProperty" style="width: 174px;" panelHeight="auto">
                     <option value="">全部</option>
                     <option value="10">正品</option>
                     <option value="21">不良品</option>

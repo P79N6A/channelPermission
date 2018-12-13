@@ -6,7 +6,58 @@
         values(#{siteId},#{code},#{masterCode},#{centerCode},#{masterShippingTime},#{centerShippingTime})
     </insert>
     <update id="update" parameterType="com.haier.svc.bean.pop.hpDispatch.BigStoragesRela">
-        update `BigStoragesRela` set `siteId`=#{siteId},`Code`=#{code},`masterCode`=#{masterCode},`centerCode`=#{centerCode},`masterShippingTime`=#{masterShippingTime},`centerShippingTime`=#{centerShippingTime}
+        update `bigstoragesrela` set `siteId`=#{siteId},`Code`=#{code},`masterCode`=#{masterCode},`centerCode`=#{centerCode},`masterShippingTime`=#{masterShippingTime},`centerShippingTime`=#{centerShippingTime}
         where `id` = #{id}
     </update> -->
+    <insert id="createBigStoragesRela" parameterType="com.haier.shop.model.BigStoragesRela">
+      insert into bigstoragesrela (
+        siteId,
+        Code,
+        masterCode,
+        centerCode,
+        masterShippingTime,
+        masterDistance,
+        centerShippingTime,
+        centerDistance,
+        flag)
+      VALUES (
+        1,
+        #{code},
+        #{masterCode},
+        #{centerCode},
+        #{masterShippingTime},
+        #{masterDistance},
+        #{centerShippingTime},
+        #{centerDistance},
+        #{flag}
+      )
+    </insert>
+
+    <update id="updateBigStoragesRela" parameterType="com.haier.shop.model.BigStoragesRela">
+        update `bigstoragesrela`
+        set
+        <if test="code !=null and code != ''">
+            code = #{code},
+        </if>
+        <if test="masterCode !=null and masterCode != ''">
+            masterCode = #{masterCode},
+        </if>
+        <if test="centerCode !=null and centerCode != ''">
+            centerCode = #{centerCode},
+        </if>
+        <if test="masterShippingTime !=null and masterShippingTime != ''">
+            masterShippingTime = #{masterShippingTime},
+        </if>
+        <if test="masterDistance !=null and masterDistance != ''">
+            masterDistance = #{masterDistance},
+        </if>
+        <if test="centerShippingTime !=null and centerShippingTime != ''">
+            centerShippingTime = #{centerShippingTime},
+        </if>
+        <if test="centerDistance !=null and centerDistance != ''">
+            centerDistance = #{centerDistance},
+        </if>
+        flag = #{flag}
+        where `id` = #{id}
+    </update>
 </mapper>

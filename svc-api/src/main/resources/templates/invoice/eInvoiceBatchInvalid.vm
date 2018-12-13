@@ -42,7 +42,8 @@
                             success: function(result) {
                                 $("#dialog-message").dialog("close");
                                 jQuery("#cOrderSns_invoices").val("");
-                                alert(result.message);
+                                // alert(result.message);
+                                $("#msg").html(result.message);
                             }
                         });
                     }
@@ -69,6 +70,13 @@
 
     </script>
 
+<style>
+    .panel-header{
+        width: 98% !important;
+        margin: 10px auto;
+        border: 0;
+    }
+</style>
 </head>
 
 <body class="iframe-body">
@@ -88,8 +96,9 @@
 			  网单号<br/><span style="color: red">多条用“,”分割）</span>
 			</span>
                 <textarea rows="18" name="cOrderSns_invoices" id="cOrderSns_invoices" style="resize: none;width:600px;"></textarea>
-                <div style="margin-left:150px">
-                    <span style="color: red">【注意】发票必须是电子发票，已开票或作废失败，二次开票不要录入原网单号（执行完5分钟后，方可查看结果）</span><br/>
+                <div style="margin-left:120px">
+##                    <span style="color: red；line-height:30px;">【注意】发票必须是电子发票，已开票或作废失败，二次开票不要录入原网单号（执行完5分钟后，方可查看结果）</span><br/>
+                    <span style="color: red；line-height:30px;">【注意】发票必须是电子发票，已开票或作废失败（执行完5分钟后，方可查看结果）</span><br/>
                     <div class="clearfix"></div>
                     <div>
                         <a href="#" class="easyui-linkbutton" iconCls="icon-ok"  onClick="onSend_invoices()">提交</a>
@@ -98,7 +107,13 @@
             </div>
         </div>
     </form>
+    <div id="show" class="easyui-panel"  data-options="border:false" style="overflow-y: auto;height: 300px;color: red;
+    margin-left: 120px;overflow-x: auto;">
+        <p id="msg"></p>
+    </div>
 </div>
+
+
 <div id="dialog-message" title="请稍后" closed="true" style="display:none;">
     <div id="list" class="list2" style="background:#ffffff;overflow-x:auto;overflow-y:auto;">
     </div>

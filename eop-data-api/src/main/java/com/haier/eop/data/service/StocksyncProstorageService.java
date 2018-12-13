@@ -7,6 +7,7 @@ import com.haier.eop.data.model.StocksyncProstorage;
 
 public interface StocksyncProstorageService {
     int deleteByPrimaryKey(Integer id);
+    int deleteBySourceAndSku(String source,String sku);
     int insert(StocksyncProstorage record);
     int updateByPrimaryKeySelective(StocksyncProstorage record);
     List<StocksyncProstorage> Listf(StocksyncProstorage entity, int start, int rows);

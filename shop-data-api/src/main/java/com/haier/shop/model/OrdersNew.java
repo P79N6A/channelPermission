@@ -1994,4 +1994,16 @@ public class OrdersNew implements Serializable {
         this.ckCode = ckCode;
     }
 
+    /**
+     * lbx单号
+     */
+    private String lbxSn;
+
+    public String getLbxSn() {
+        return lbxSn;
+    }
+
+    public void setLbxSn(String lbxSn) {
+        this.lbxSn = lbxSn;
+    }
 }

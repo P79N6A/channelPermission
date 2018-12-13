@@ -372,7 +372,7 @@ $('#search').click(function () {
 	        singleSelect: false,
 	        checkOnSelect:true,
 	        pageSize: 100,
-	        pageList: [1,2,100,200,300],
+	        pageList: [100,200,300],
 	        nowrap: false,
 	        rownumbers: true,
 	        queryParams: {

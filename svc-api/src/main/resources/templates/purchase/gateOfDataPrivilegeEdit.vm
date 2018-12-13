@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>数据权限设置</title>
+    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css"/>
+  <script type="text/javascript" src="../static/third/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script type="text/javascript" src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.form.js"></script>
+</head>
+<body>
+	<form id="filterForm">
+		<table width="500" border="0" cellspacing="0" cellpadding="10"  align="center" style="margin-top:50px;">
+			<tr>
+				<td colspan="1" style="text-align:right;">
+					<input id="role_id" name="role_id" value='$!role_id' type="hidden"/>
+					<input id="operatorType" name="operatorType" value="$!operatorType" type="hidden"/>
+					岗位：
+				</td>
+				<td colspan="6">
+					<input id="roleName"  name="roleName" class="easyui-validatebox" style="width: 150px;" required="true">
+					</input>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="1" style="text-align:right;">
+					闸口忽视：
+				</td>
+				<td colspan="6">
+					<input id="gateLimit"  name="gateLimit" class="easyui-validatebox" style="width: 150px;">
+					</input>
+				</td>
+			</tr>
+			<tr style="text-align:center;">
+				<td>渠道</td>
+				<td></td>
+				<td>已选择</td>
+				<td></td>
+				<td>产品组</td>
+				<td></td>
+				<td>已选择</td>
+			</tr>
+			<tr>
+				<td width="220" align=center valign="top">
+					<select name="edChannelWaitSelectItem" id="edChannelWaitSelectItem" size=15 multiple="multiple" style="width: 180px;height:200px;">
+						 #foreach($channel in $!channelsList)
+						 <option value=$!{channel.channelCode}>$!{channel.name}</option>
+						 #end
+					</select>
+				</td>
+				<td width="60" style="text-align:center;padding:10px;">
+					<input type="button" value="&gt;"  onClick="MoveSingleItem(edChannelWaitSelectItem, edChannelSelectedItem)" style="width: 40px;"/>
+					<br>
+					<br>
+					<input type="button" value="&gt;&gt;"  onClick="MoveAllItems(edChannelWaitSelectItem, edChannelSelectedItem)" style="width: 40px;"/>
+					<br>
+					<br>
+					<input type="button" value="&lt;"  onClick="MoveSingleItem(edChannelSelectedItem, edChannelWaitSelectItem)" style="width: 40px;"/>
+					<br>
+					<br>
+					<input type="button" value="&lt;&lt;"  onClick="MoveAllItems(edChannelSelectedItem, edChannelWaitSelectItem)" style="width: 40px;"/>
+					<br>
+					<br>
+				</td>
+				<td width="220" align=center valign="top">
+					<select name="edChannelSelectedItem[]" id="edChannelSelectedItem" size=15 multiple='multiple' style="width: 180px;height:200px;">
+					</select>
+				</td>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				<td width="220" align=center valign="top">
+					<select name="productGroupWaitSelectItem" id="productGroupWaitSelectItem" size=15 multiple="multiple" style="width: 180px;height:200px;">
+						 #foreach($productGroup in $!productGroupList)
+						 <option value=$!{productGroup.value}>$!{productGroup.valueMeaning}</option>
+						 #end
+					</select>
+				</td>
+				<td width="60" style="text-align:center;padding:10px;">
+					<input type="button" value="&gt;" onClick="MoveSingleItem(productGroupWaitSelectItem, productGroupSelectedItem)" style="width: 40px;"/>
+					<br>
+					<br>
+					<input type="button" value="&gt;&gt;"  onClick="MoveAllItems(productGroupWaitSelectItem, productGroupSelectedItem)" style="width: 40px;"/>
+					<br>
+					<br>
+					<input type="button" value="&lt;"  onClick="MoveSingleItem(productGroupSelectedItem, productGroupWaitSelectItem)" style="width: 40px;"/>
+					<br>
+					<br>
+					<input type="button" value="&lt;&lt;"  onClick="MoveAllItems(productGroupSelectedItem, productGroupWaitSelectItem)" style="width: 40px;"/>
+					<br>
+					<br>
+				</td>
+				<td width="220" align=center valign="top">
+					<select name="productGroupSelectedItem[]" id="productGroupSelectedItem" size=15 multiple='multiple' style="width: 180px;height:200px;">
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="7" style="text-align:center;">
+					<a id='save' href="javascript:;" class="easyui-linkbutton" iconCls="icon-save"  onclick="save()">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			        <a id='cancel' href="javascript:;" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel()">取消</a>
+		        </td>
+			</tr>
+		</table>
+	</form>
+	<script type="text/javascript">
+		$(function(){
+			//初始化闸口秒杀list
+			var valueSetId = "true_or_false";
+			jQuery.getJSON("/purchase/getByValueSetId"+ "?valueSetId=" + valueSetId, function(result){
+				var count = result.totalCount;
+				var dataList = result.data;
+				$("#gateLimit").combobox({
+					 data:dataList,
+				     valueField:'value',
+					 textField:'value_meaning',
+					 panelHeight:'auto',
+					 editable:false,
+					 required:true,
+					 value:'$!gate_limit'
+				});
+			});
+			var operatorType = '$!operatorType';
+			if(operatorType=="modify"){
+				$('#roleName').validatebox({
+					required:false
+				});
+				$('#roleName').attr('disabled','disabled');
+				$('#roleName').val('$!roleName');}
+				
+				//$('#roleName').attr('required','false');}
+			var selectProductGroupIds = eval('$!selectProductGroupIds');
+			var selectChannelIds = eval('$!selectChannelIds');
+			$("#productGroupWaitSelectItem").val(selectProductGroupIds);
+			$("#edChannelWaitSelectItem").val(selectChannelIds);
+			MoveSingleItem(productGroupWaitSelectItem, productGroupSelectedItem);
+			MoveSingleItem(edChannelWaitSelectItem, edChannelSelectedItem);
+		});
+		function save(){
+			var role_id = $("#role_id").val();
+			var role_name = $("#roleName").val();
+			var gate_limit = $("#gateLimit").combobox('getValue');
+			//获取产品组选择后的值
+			var productGroupIds = new Array();
+			var productGroup = $('select[name="productGroupSelectedItem[]"] option').each(function () {
+				if($(this).val()!="")
+				{
+					productGroupIds.push($(this).val());
+				}
+			});
+			//获取渠道选择后的值
+			var channelIds = new Array();
+			var edChannel = $('select[name="edChannelSelectedItem[]"] option').each(function () {
+				if($(this).val()!="")
+				{
+					channelIds.push($(this).val());
+				}
+			});
+			var flag = true;
+		    if(!$("#filterForm").form('validate')){
+		        flag = false;
+		        $.messager.alert('错误','请选择角色和是否秒杀闸口！','error');
+		        return;
+		    }
+		    if(!productGroupIds.length > 0 || !channelIds.length > 0){
+		    	flag = false;
+		        $.messager.alert('错误','请选择产品组和渠道！','error');
+		        return;
+		    }
+			if(flag){
+				//保存数据
+				jQuery.ajax({
+		        	url: "/gate/saveGateOfDataPrivilege",   // 提交的页面
+					type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+					data:{"productGroupIds":JSON.stringify(productGroupIds),
+							  "channelIds":JSON.stringify(channelIds),
+							  "role_id":role_id,
+							  "role_name":role_name,
+							  "gate_limit":gate_limit,
+							  "operatorType":$("#operatorType").val()
+							  },
+					success: function (data) {
+						var result = data.message;
+						if(result){$.messager.alert('提示',result,'info', function(){
+							if(data.totalCount==1){
+								window.open("/gate/gotoGateOfDataPrivilege",'_self');
+							}
+						});}
+					}
+		 		});
+			}
+		}
+		function cancel(){
+			window.open("/gate/gotoGateOfDataPrivilege",'_self');
+		}
+		function MoveSingleItem(sel_source, sel_dest) {
+			if (sel_source.selectedIndex == -1) //源：没有点选任何项目
+				return;
+	
+			$('#'+$(sel_source).attr('id')+' option:selected').each(function(){
+				var newOption = new Option(this.text);
+				newOption.value = this.value;
+				sel_dest.options.add(newOption);
+				sel_source.options.remove(sel_source.selectedIndex);
+			});
+
+		}
+	
+		function MoveAllItems(sel_source, sel_dest) {
+	
+			//首先拷贝所有项目到目标：
+			var sel_source_len = sel_source.length;
+			for ( var j = 0; j < sel_source_len; j++) {
+				var SelectedText = sel_source.options[j].text;
+				var SelectedVal = sel_source.options[j].value;
+				var newOption = new Option(SelectedText);
+				newOption.value = SelectedVal;
+				sel_dest.options.add(newOption);
+			}
+	
+			//然后删除“源”所有项目：
+			while ((k = sel_source.length - 1) >= 0) {
+				sel_source.options.remove(k);
+			}
+		}
+	</script>
+</body>

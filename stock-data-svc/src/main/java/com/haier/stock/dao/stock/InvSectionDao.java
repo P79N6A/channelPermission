@@ -2,10 +2,11 @@ package com.haier.stock.dao.stock;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.haier.stock.model.InvSection;
-
+@Mapper
 public interface InvSectionDao extends BaseDao<InvSection> {
 
     int deleteByPrimaryKey(String secCode);
@@ -56,4 +57,9 @@ public interface InvSectionDao extends BaseDao<InvSection> {
     InvSection getByLesSecCodeAndChannelCode(@Param("les_sec_code") String lesSecCode,
                                              @Param("channelCode") String channelCode);
 
+    Integer countInvSectionWithLike(InvSection invSection);
+
+    List<InvSection> getInvSectionList(InvSection invSection);
+
+    List<InvSection> queryInvSectionExcel(InvSection invSection);
 }

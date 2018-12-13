@@ -35,42 +35,42 @@ $('#gridView').datagrid({
             width: 168,
             field: 'settingName',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '套装Sku',
             width: 151,
             field: 'externalSkus',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '套装来源',
             width: 158,
             field: 'configIds',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '套装开始时间',
             width: 162,
             field: 'startTime',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '套装结束时间',
             width: 162,
             field: 'endTime',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '是否生效',
             width: 120,
             field: 'effect',
             align: 'center'
-            , sortable: true,
+            , sortable: false,
             formatter: function (value, row, index) {
                 if (row.effect == 1) {
                     return "生效";
@@ -84,14 +84,14 @@ $('#gridView').datagrid({
             width: 162,
             field: 'addTime',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: 'id',
             width: 120,
             field: 'id',
             align: 'center'
-            , sortable: true,
+            , sortable: false,
             hidden:true
         },
         {
@@ -99,7 +99,7 @@ $('#gridView').datagrid({
             width: 120,
             field: 'ConfigIdsMM',
             align: 'center'
-            , sortable: true,
+            , sortable: false,
             hidden:true
            
         },
@@ -108,7 +108,7 @@ $('#gridView').datagrid({
             width: 120,
             field: 'productSpecs',
             align: 'center'
-            , sortable: true,
+            , sortable: false,
             hidden:true
            
         },
@@ -132,13 +132,9 @@ $(function () {
 
             var start = (pageNo - 1) * pageSize;//页码分页自增
             var externalSkus = $('#cexternalSkus').val();
-            var configIds = $('#cconfigIds').val();
-            if (externalSkus != "") {
-            	externalSkus =  externalSkus + "%";
-            }
-            if (configIds != "") {
-            	configIds = configIds+"%";
-            }
+            var configIds = $('#cconfigIds').combobox('getValue');
+
+
            
             var options = $('#gridView').datagrid('getPager').data("pagination").options;
             $.ajax({
@@ -402,8 +398,10 @@ function Delete() {
     }
 }
 function SetCodeValue4() {
-	
-	getsub();
+	if (getsub()){
+	    autoAlt('套装商品价格的格式不正确');
+	    return false;
+    }
 	var configIds = $('#configIds').combobox('getValues');
 	var productSpecs=$("#skuandamount").val();
 	var settingName=$("#settingName").val();
@@ -424,12 +422,20 @@ function SetCodeValue4() {
         autoAlt("套装设置名称不能为空");
         return false;
     }
+    if(settingName.length >255) {
+        autoAlt("套装设置名称不能超过255个汉字");
+        return false;
+    }
     if (startTime == "") {
         autoAlt("套装开始时间不能为空");
         return false;
     }
     if (endTime == "") {
         autoAlt("套装结束时间不能为空");
+        return false;
+    }
+    if(timestamp1-timestamp2>0){
+    	autoAlt("套装结束时间需要大于开始时间");
         return false;
     }
     if (configIds == "") {
@@ -498,8 +504,8 @@ function jiaoyan(sku){
 }
 
 function SearchClear() {
-    $('#cconfigIds').val('');
-    $('#cexternalSkus').val('');
+    $('#cconfigIds').combobox('select', '');
+    $('#cexternalSkus').textbox('setValue', '');
 }
 
 var count=0 ;
@@ -510,7 +516,7 @@ function additem(id)
     if(row != null )
     {
 		cell = row.insertCell();
-		cell.innerHTML="套装商品Sku：<font color=\"red\">*</font> <input id=\"Sku"+count+"\" type=\"text\" name=\"Sku"+count+"\" value= \"\" /> 商品价格：<font color=\"red\">*</font> <input id=\"amount"+count+"\" type=\"text\" name=\"amount"+count+"\"  maxlength= \"6\" onkeyup=\"keyUp(this)\" onkeypress=\"keyPress(this)\" onblue=\"onBlur(this)\"><input id=\"del"+count+"\" type=\"button\" value=\"删除\" onclick=\'deleteitem(this);\'>";
+		cell.innerHTML="套装商品Sku：<font color=\"red\">*</font> <input id=\"Sku"+count+"\" type=\"text\" name=\"Sku"+count+"\" value= \"\" /> 商品价格：<font color=\"red\">*</font> <input id=\"amount"+count+"\" type=\"text\" name=\"amount"+count+"\"  maxlength= \"10\" onkeyup=\"keyUp(this)\" onkeypress=\"keyPress(this)\" onblue=\"onBlur(this)\"><input id=\"del"+count+"\" type=\"button\" value=\"删除\" onclick=\'deleteitem(this);\'>";
 		count ++;
     }
 }
@@ -526,9 +532,20 @@ function getsub()
 	var skuAndAmount = "";
 	for (var i = 0 ;i<count;i++)
 	{
+	    if ( proof(document.getElementsByName("amount"+i)[0].value)){
+	        return true;
+        }
 		skuAndAmount += document.getElementsByName("Sku"+i)[0].value + "--" + document.getElementsByName("amount"+i)[0].value + ";";
 	}
 	document.getElementById("skuandamount").value = skuAndAmount;
+	return false;
+}
+
+function proof(v){
+    var num = new RegExp("^[0-9]+(.[0-9]{1,2})?$");
+    if(!num.test(v)){
+        return true;
+    }
 }
 
 function keyPress(ob) {
@@ -543,13 +560,8 @@ if(!ob.value.match(/^(?:[\+\-]?\d+(?:\.\d+)?|\.\d*?)?$/))ob.value=ob.o_value;els
 //主表查询
 function SearchUnit() {
 	 var externalSkus = $('#cexternalSkus').val();
-     var configIds = $('#cconfigIds').val();
-     if (externalSkus != "") {
-     	externalSkus =  externalSkus + "%";
-     }
-     if (configIds != "") {
-     	configIds = configIds+"%";
-     }
+     var configIds = $('#cconfigIds').combobox('getValue');
+
     var options = $('#gridView').datagrid('getPager').data("pagination").options;
     options.pageNumber = 1;
     $.ajax({

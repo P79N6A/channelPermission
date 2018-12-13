@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>添加订单</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+
+    <style>
+        .input_form{
+            width: 60%;
+        }
+        .radio label{
+            margin-right:15px;
+        }
+        .penel {
+            background: #b5bbc8;
+            color: #404040;
+            border: 1px solid #b5bbc8;
+            filter: none;
+        }
+        .breadcrumb {
+            position: relative;
+            margin-top: 5px;
+            top: 0;
+            right: 0;
+            float: none;
+            background: #b5bbc8;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body >
+<div >
+    <fieldset >
+        <div style="padding-top:5px;"><h5 style="font-weight: bold">&nbsp;&nbsp;&nbsp;&nbsp;添加订单</h5></div>
+        <div style="padding-top:10px;">&nbsp;&nbsp;&nbsp;&nbsp;您可以在这里添加一个订单,或者点击这里返回&nbsp;#*<a href="#" style="text-decoration: underline;color: blue" onclick="indent()">订单列表</a>*#。&nbsp;<a href="#" style="text-decoration: underline;color: blue" onclick="impotr()">批量导入订单</a></div>
+        <div><H4 style="color: red">&nbsp;&nbsp;&nbsp;从2012-03-24日10点30分开始后台添加的订单统一默认为预定订单,这样用户在前台没库存时也能付款。</H4></div>
+    </fieldset>
+   <div>
+       <ol class="breadcrumb">
+           <li class="penel">基本信息</li>
+       </ol>
+       <form class="form-horizontal" id="baseInfo">
+           <div class="form-group">
+               <label for="orderUserName" class="col-sm-2 control-label">下单人（用户名）</label>
+               <div class="col-sm-10">
+                   <input type="text" class="form-control input_form" name="orderUserName" id="orderUserName" onBlur="orderUserNames()" placeholder="用户名">
+                   <h6 id="orderUserNameInfo"></h6>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="userEmail" class="col-sm-2 control-label">Email</label>
+               <div class="col-sm-10">
+                   <div>
+                        <input type="email" class="form-control input_form" name="userEmail" id="userEmail" onkeyup="value = value.replace(/[\u4e00-\u9fa5]/g, '')"  onBlur="checkEmsil()" placeholder="Email"">
+                       <h6 id="userEmailInfo" style="color: red"></h6>
+                   </div>
+               </div>
+           </div>
+
+           <div class="form-group">
+               <label for="orderValidPeriod" class="col-sm-2 control-label">订单过期时间</label>
+               <div class="col-sm-10">
+                   <div class="radio input_form">
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod2" value="2" checked>2天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod3" value="3">3天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod4" value="4">4天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod5" value="5">5天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod6" value="6">6天
+                       </label>
+                       <label>
+                           <input type="radio" name="orderValidPeriod" id="orderValidPeriod6" value="7">7天
+                       </label>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="isTmallDayOrder" class="col-sm-2 control-label">是否天猫日日单</label>
+               <div class="col-sm-10">
+                   <div class="radio input_form">
+                       <label>
+                           <input type="radio" name="isProduceDaily" id="isProduceDaily" value="1" >是
+                       </label>
+                       <label>
+                           <input type="radio" name="isProduceDaily" id="isProduceDailyNot" value="0" checked>否
+                       </label>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="isGift" class="col-sm-2 control-label">是否赠品</label>
+               <div class="col-sm-10">
+                   <div class="radio input_form">
+                       <label>
+                           <input type="radio" name="idGift" id="idGift" value="1" >是
+                       </label>
+                       <label>
+                           <input type="radio" name="idGift" id="idGift" value="0" checked>否
+                       </label>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label">所属产业</label>
+               <div class="col-sm-10" style="font-size: 11px;">
+                   <select id="industrys" name="industrys" class="easyui-combobox" style="width:180px;" >
+                       <option value="" selected="">---所属产业---</option>
+                       <option value="C200076226" >冰箱</option>
+                       <option value="C200076227">冷柜</option>
+                       <option value="C200076228">洗衣机</option>
+                       <option value="C200076229">家用空调</option>
+                       <option value="C200076230">热水器</option>
+                       <option value="C200076231">厨电</option>
+                       <option value="C200076232">彩电</option>
+                       <option value="C200076233">商用空调及其他</option>
+                       <option value="C20170825">海尔集团电子商务有限公司(赠品)</option>
+                   </select>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="" class="col-sm-2 control-label" >订单来源</label>
+               <div class="col-sm-10" style="font-size: 11px;">
+                    <select id="source" name="source" class="easyui-combobox" style="width:180px;" >
+                        <option value="" selected=selected>---订单来源---</option>
+                         <!--国美-->
+                       <option value="GMZX">国美海尔官方旗舰店</option>
+                       <option value="GMZXTS">国美统帅官方旗舰店</option>
+                       <!--苏宁-->
+                       <option value="SNYG">苏宁统帅官方旗舰店</option>
+                       <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
+                       <option value="SNQDZX">苏宁渠道中心</option>
+                       <!--当当-->
+                       <option value="DDW">海尔当当旗舰店</option>
+                       <!--京东-->
+                       <option value="JDHEGQ">京东海尔官方旗舰店</option>
+                       <option value="JDHEBXGQ">京东海尔集团冰箱官方旗舰店</option>
+                        <!--天猫-->
+                        <option value="TBSC">海尔官方淘宝旗舰店</option>
+                        <option value="TBXCR">天猫小超人旗舰店</option>
+                        <option value="TBCFDD">海尔厨房大电旗舰店</option>
+                        <option value="TBZYKT">淘宝中央空调</option>
+                        <option value="TOPBOILER">海尔热水器专卖店</option>
+                        <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
+                        <option value="TOPFENXIAO">海尔官方旗舰店(分销平台)</option>
+                        <option value="TMMK">mooka模卡官方旗舰店</option>
+                        <option value="TMTV">海尔电视旗舰店</option>
+                        <option value="TMKSD">天猫卡萨帝旗舰店</option>
+                        <option value="FRIDGE">海尔冰冷旗舰店</option>
+                        <option value="AIR">海尔空调旗舰店</option>
+                        <option value="GQGYS">海尔官方旗舰店供应商</option>
+                        <option value="XSST">淘宝WA线上生态授权店</option>
+                        <option value="WASHER">海尔洗衣机旗舰店</option>
+                    </select>
+               </div>
+           </div>
+           <div class="form-group">
+               <label for="originOrderNum" class="col-sm-2 control-label">来源订单号</label>
+               <div class="col-sm-10">
+                   <input type="text" class="form-control input_form" name="sourceOrderSn" id="sourceOrderSn"  onBlur="checkSourceOrderSn()" onkeyup="value = value.replace(/[\u4e00-\u9fa5\!\@\#\$\%\^\&\*\|\:\>\<\.\,\?\/\\\=\+)]/g, '')" placeholder="来源订单号">
+                   <h6 id="sourceOrderSnInfo"  style="color: red" ></h6>
+               </div>
+           </div>
+       </form>
+   </div>
+    <div>
+        <ol class="breadcrumb">
+            <li class="penel">收货信息</li>
+        </ol>
+        <form class="form-horizontal" id="receiptInfo">
+            <div class="form-group">
+                <label for="receiver" class="col-sm-2 control-label">收货人</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="consignee" id="consignee" onBlur="checkconsignee()" placeholder="收货人"  ">
+                    <h6 id="consigneeInfo"  style="color: red"></h6>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">地区</label>
+                <div class="col-sm-10">
+                    <input id="province" name="province"  class="easyui-combobox" editable="false"  style="width:200px;" />
+                    <input id="citys" name="citys"  class="easyui-combobox" editable="false" style="width:200px;"/>
+                    <input id="county" name="county"  class="easyui-combobox" editable="false" style="width:200px;" data-options="onSelect: function(rec){
+##		        						checkProvice(rec)
+		        						}"/>
+                    <h6 id="provinceInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address" class="col-sm-2 control-label">详细地址</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="address" id="address" onBlur="checkaddress()"  placeholder="详细地址" >
+                    <h6 id="addressInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="postalCode" class="col-sm-2 control-label">邮政编码</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="zipcode" id="zipcode" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');"  onBlur="checkzipcode()" placeholder="邮政编码" >
+                    <h6 id="zipcodeInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">电话</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="mobile" id="mobile" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');"   placeholder="电话">
+                    <h6 id="mobileInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">手机</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="phone" id="phone" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" onBlur="checkphone()" placeholder="手机">
+                    <h6 id="phoneInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">配送时间</label>
+                <div class="col-sm-10">
+                    <select id="deliverTime" name="deliverTime" class="form-control input_form" >
+                        <option>工作日、双休、节假日均可配送</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                    <h6 id="deliverTimeInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div>
+        <ol class="breadcrumb">
+            <li class="penel">商品信息</li>
+        </ol>
+        <div style="padding-left: 120px">
+            <table id="tab" style="width: 90%"></table>
+        </div>
+        <div style="padding-left: 120px;padding-top: 10px">
+            <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="addProduct()">请点击选择订单商品</a>
+        </div>
+        <div style="padding-left: 120px;padding-top: 15px;color: red">
+            从2012-09-15 13:30分起,后台添加的商品如果是节能补贴商品(商品中设置了节能补贴名称和节能补贴<br>
+            金额),那么开票逻辑与商城前台节能补贴开票逻辑相同。"单价"请指定节能补贴后的单价, 例如商品物<br>
+            料编码BH006104Z设置了单台的节能补贴金额为200元, 节能补贴前的售价为4000元, 那么 "单价" 请指<br>
+            定3800元,节能补贴金额与应付金额会自动计算。
+        </div>
+    </div>
+
+    <div>
+
+        <ol class="breadcrumb">
+            <li class="active">发票信息</li>
+        </ol>
+        <form class="form-horizontal" id="invoiceInfo">
+            <div class="form-group">
+                <label for="isInvoice" class="col-sm-2 control-label">是否开具发票</label>
+                <div class="col-sm-10">
+                    <div class="radio input_form">
+                        <label>
+                             <input type="radio" name="isInvoice" id="isInvoice" value="1" checked="checked" disabled=“true“>是
+                        </label>
+                        <label>
+                             <input type="radio" name="isInvoice" id="isInvoice" value="0" disabled=“true“>否
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="electricFlag" class="col-sm-2 control-label">是否开具电子发票</label>
+                <div class="col-sm-10">
+                    <div class="radio input_form">
+                        <label>
+                            <input type="radio" name="isElectronicInvoice" id="isElectronicInvoice" value="1" checked>是
+                        </label>
+                        <label>
+                            <input type="radio" name="isElectronicInvoice" id="isElectronicInvoice" value="0">否
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">发票内容</label>
+                <div class="col-sm-10">
+                    <select id="InvoiceContent" name="InvoiceContent" class="form-control input_form" style="width: 162px">
+                    <option id="1">普通发票</option>
+                    <option id="2">增值税发票</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="productInvoiceTogether" class="col-sm-2 control-label">货票同行</label>
+                <div class="col-sm-10">
+                    <div class="radio input_form">
+                        <label>
+                            <input type="radio" name="productInvoiceTogether" id="productInvoiceTogether" value="1" checked>是
+                        </label>
+                        <label>
+                            <input type="radio" name="productInvoiceTogether" id="productInvoiceTogether" value="2">否
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div  id ="common">
+            <div class="form-group">
+                <label for="invoiceTitle" class="col-sm-2 control-label">发票抬头</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="invoiceTitle" id="invoiceTitle" onBlur="checkinvoiceTitle()" placeholder="发票抬头" >
+                    <input type="hidden" id="invpiceId" name ="invpiceId" " >
+                    <h6 id="invoiceTitleInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+            </div>
+
+
+            <div style="display: none;" id ="increase">
+                <div class="form-group">
+                    <label for="invoiceTitle" class="col-sm-2 control-label">公司名称</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control input_form" name="companyName" id="companyName" onBlur="companyNames()" placeholder="公司名称" >
+                        <input type="hidden" id="invpiceId" name ="invpiceId" " >
+                        <h6 id="invoiceTitleInfo"  style="color: red" ></h6>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="invoiceTitle" class="col-sm-2 control-label">纳税人识别号</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control input_form" name="taxPayerNumber" id="taxPayerNumber" onBlur="taxPayerNumbers()" placeholder="纳税人识别号" >
+                        <input type="hidden" id="invpiceId" name ="invpiceId" " >
+                        <h6 id="invoiceTitleInfo"  style="color: red" ></h6>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="invoiceTitle" class="col-sm-2 control-label">注册地址</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control input_form" name="registerAddress" id="registerAddress" onBlur="registerAddresss()" placeholder="注册地址" >
+                        <input type="hidden" id="invpiceId" name ="invpiceId" " >
+                        <h6 id="invoiceTitleInfo"  style="color: red" ></h6>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="invoiceTitle" class="col-sm-2 control-label">注册电话</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control input_form" name="registerPhone" id="registerPhone" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" onBlur="registerPhones()" placeholder="注册电话" >
+                        <input type="hidden" id="invpiceId" name ="invpiceId" " >
+                        <h6 id="invoiceTitleInfo"  style="color: red" ></h6>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="invoiceTitle" class="col-sm-2 control-label">开户银行</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control input_form" name="bankName" id="bankName" onBlur="bankNames()" placeholder="开户银行" >
+                        <input type="hidden" id="invpiceId" name ="invpiceId" " >
+                        <h6 id="invoiceTitleInfo"  style="color: red" ></h6>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="invoiceTitle" class="col-sm-2 control-label">开户账号</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control input_form" name="bankCardNumber" id="bankCardNumber" onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" onBlur="bankCardNumbers()" placeholder="开户账号" >
+                        <input type="hidden" id="invpiceId" name ="invpiceId" " >
+                        <h6 id="invoiceTitleInfo"  style="color: red" ></h6>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </form>
+    </div>
+
+    <div>
+        <ol class="breadcrumb">
+            <li class="active">其他信息</li>
+        </ol>
+        <form class="form-horizontal" id="otherInfo">
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">关联订单号</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="connectOrderNum" id="connectOrderNum"  onBlur="checkconnectOrderNum()" onkeyup="value = value.replace(/[\u4e00-\u9fa5\!\@\#\$\%\^\&\*\|\:\>\<\.\,\?\/\\\=\+)]/g, '')"   placeholder="关联订单号" >
+                    <h6 id="connectOrderNumInfo"  style="color: red" >当原已付款订单取消关闭后需要重新输入时需要输入原订单编号，以便做相应的关联，以方便日后查询需要。如果没有关联订单号，不需要输入信息。</h6>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">备注</label>
+                <div class="col-sm-10">
+                    <textarea id="remark" name="remark" class="form-control input_form" rows="3"></textarea>
+                    <h6 id="remarkInfo"  style="color: red" ></h6>
+                </div>
+            </div>
+            <div style="text-align: center">
+                <a id="saveBtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="onSaveOrderInfo()">保存订单信息</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="dialog-div"  style="position:relative;font-size:12px;line-height:1.5em;color:#333333;width: 80%;" >
+    <div >
+        <div style="background-color: pink;height:35px;text-align: center;margin-left: 10px;margin-top: 10px;margin-right: 10px;line-height: 35px; border-radius: 8px">
+        默认最多查询30条商品记录,如果未显示您想指定的产品,请缩小搜索条件
+        </div>
+        <div style="margin-left: 10px;margin-top: 10px">
+            <select id="ProductCates" class="easyui-combobox" name="ProductCates" style="width: 20%;" panelHeight="250px">
+                <option id="-1">选择商品分类</option>
+            </select>
+            <select id="Brands" class="easyui-combobox" name="Brands" style="width: 20%;" #*panelHeight="auto"*#>
+                <option id="-1">选择品牌</option>
+            </select>
+            <input class="easyui-textbox" name="productName" id="productName" style="width: 20%;" data-options="prompt:'商品名称'"/>
+            <input class="easyui-textbox" name="sku" id="sku" style="width: 20%;" data-options="prompt:'商品编码'"/>
+            <a id="btn1" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="selectProduct()" style="padding-right: 10px"> 搜索</a>
+        </div>
+        <div id="lmsisSb" style="margin-left: 10px"></div>
+        <div id="btn" style="bottom: 2px; text-align:right;width: 100%">
+            <hr />
+            <a id="determine" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"  onclick="Determine()">确定</a>
+            <a id="cancel" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="javascript:$('#dialog-div').dialog('close')">取消</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+    }
+</style>
+<script src="../static/js/order/additionOrder.js"></script>
+</body>
+</html>

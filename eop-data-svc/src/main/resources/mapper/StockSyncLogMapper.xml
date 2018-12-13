@@ -17,6 +17,7 @@
     <result column="system_info" property="systemInfo" jdbcType="VARCHAR" />
     <result column="text_info" property="textInfo" jdbcType="VARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, add_time, sse, sku, scode, channel_stock_num, ehaier_stock_num, unconfirm_stock_num, 
     final_stock_num, stock_sync_result,  system_info, text_info
@@ -24,31 +25,33 @@
  <select id="Listf" resultMap="BaseResultMap">
 SELECT id,addTime,sse,sku,sourceproductId,sCode,sourceStoreCode,channelStockNum,ehaierStockNum,
 			   unconfirmStockNum,finalStockNum,stockSyncResult,systemInfo,textInfo 
-		  FROM stocksynclog WHERE 1=1
-		AND addTime &gt;= #{addTimeStart}
-		AND addTime &lt;= #{addTimeEnd}
-		    <if test="sse != '' and sse != null">AND sse = #{sse}</if>
+		  FROM stocksynclog
+	 	<where>
+			<if test="sse != '' and sse != null">sse = #{sse}</if>
 		   <if test="sku != '' and sku != null">AND sku = #{sku}</if> 
 		   <if test="sourceProductId != '' and sourceProductId != null">AND sourceproductId = #{sourceProductId}</if> 
 		   <if test="sCode != '' and sCode != null">AND sCode = #{sCode}</if>
 		   <if test="sourceStoreCode != '' and sourceStoreCode != null">AND sourceStoreCode = #{sourceStoreCode}</if>
 		   <if test="stockSyncResult != ''and  stockSyncResult != null">AND stockSyncResult = #{stockSyncResult}</if>
-		   
-		   order by id asc
+			AND addTime &gt;= #{addTimeStart}
+			AND addTime &lt;= #{addTimeEnd}
+		</where>
 	<include refid="pagination" />
   </select>
 <select id="getPagerCountS" resultType="int">
 		SELECT count(id)
-		  FROM stocksynclog WHERE 1=1
-		   AND addTime &gt;= #{addTimeStart}
-		AND addTime &lt;= #{addTimeEnd}
-		    <if test="sse != '' and sse != null">AND sse = #{sse}</if>
+		  FROM stocksynclog
+		<where>
+		    <if test="sse != '' and sse != null">sse = #{sse}</if>
 		   <if test="sku != '' and sku != null">AND sku = #{sku}</if> 
 		   <if test="sourceProductId != '' and sourceProductId != null">AND sourceproductId = #{sourceProductId}</if> 
 		   <if test="sCode != '' and sCode != null">AND sCode = #{sCode}</if>
 		   <if test="sourceStoreCode != '' and sourceStoreCode != null">AND sourceStoreCode = #{sourceStoreCode}</if>
 		   <if test="stockSyncResult != ''and  stockSyncResult != null">AND stockSyncResult = #{stockSyncResult}</if>
-		   order by id asc
+			AND addTime &gt;= #{addTimeStart}
+			AND addTime &lt;= #{addTimeEnd}
+		</where>
 	</select>
+
 	<sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
 </mapper>

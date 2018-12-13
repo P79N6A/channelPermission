@@ -1,3 +1,4 @@
+
 package com.haier.distribute.services;
 
 import java.math.BigDecimal;
@@ -5,6 +6,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.haier.distribute.data.model.*;
 import com.haier.distribute.data.service.*;
@@ -38,6 +40,8 @@ public class DistributeCenterPopProductServiceImpl implements DistributeCenterPo
     private RegionsService regionsService;
     @Autowired
     private ProductsService productsService;
+    @Autowired
+    private ProductsShopService productsShopService;
     @Autowired
     private ChannelsService channelsService;
     @Autowired
@@ -205,6 +209,10 @@ public class DistributeCenterPopProductServiceImpl implements DistributeCenterPo
     public int addProduct(Product product) {
         //暂时没有登录人信息
         //product.setCreateBy(popOrderService.thisUserName());
+    	 Product validSkuAndChannel = popProductDao.checkSkuAndChannelID(product.getSku(), product.getChannelId().toString());
+         if (validSkuAndChannel != null) {
+        	 return -1;
+         }
         product.setCreateTime(new Date());
         int idd = popProductDao.insertSelective(product);
 //        int idd = product.getId();
@@ -477,7 +485,7 @@ public class DistributeCenterPopProductServiceImpl implements DistributeCenterPo
 
     @Override
     public JSONArray skuList(Products products) {
-        List<Products> list = productsService.selectProducts(products);
+        List<Products> list = productsShopService.selectProducts(products);
         JSONArray res = new JSONArray();
         for (Object o : list) {
             Products dto = (Products) o;
@@ -744,9 +752,27 @@ public class DistributeCenterPopProductServiceImpl implements DistributeCenterPo
     }
 
     @Override
-    public void addProductFromImport(Product productDTO) {
-        popProductDao.insert(productDTO);
-
+    public int addProductFromImport(Product productDTO) {
+         int id=popProductDao.insert(productDTO);
+         return id;
     }
+    
+    @Override
+    public List<PushData> findPushData(String channelName) {
+        List<PushData> list = channelsService.findPushData(channelName);
+   
+        return list;
+    }
+
+	@Override
+	public List<TsendInfoLog> channelCodeSelect(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return channelsService.channelCodeSelect(params);
+	}
+
+	@Override
+	public Producttypes getProductsTypeBySKU(String sku) {
+		  return productTypesService.getProductsTypeBySKU(sku);
+	}
 
 }

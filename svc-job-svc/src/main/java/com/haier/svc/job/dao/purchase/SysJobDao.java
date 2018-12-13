@@ -17,6 +17,8 @@ public interface SysJobDao {
      * @return Job列表
      */
     List<SysJob> find(@Param("name") String name, @Param("status") Integer status);
+    
+    SysJob findById(@Param("jobId") Integer jobId);
 
     /**
      * 查job配置记录数。

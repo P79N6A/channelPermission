@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.haier.distribute.data.dao.distribute.DepartmentProductTypeDao;
+import com.haier.distribute.data.dao.shop.ProductsShopDao;
 import com.haier.distribute.data.model.DepartmentProductType;
 import com.haier.distribute.data.service.DepartmentProductTypeService;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 public class DepartmentProductTypeServiceImpl implements DepartmentProductTypeService {
     @Autowired
     DepartmentProductTypeDao DepartmentProductTypeDao;
+    
+    @Autowired
+	ProductsShopDao productsShopDao;
 
     @Override
     public List<DepartmentProductType> selectproduct() {
@@ -35,7 +39,7 @@ public class DepartmentProductTypeServiceImpl implements DepartmentProductTypeSe
 
     @Override
     public DepartmentProductType getDepartment(Integer productTypeId) {
-        return DepartmentProductTypeDao.getDepartment(productTypeId);
+        return productsShopDao.getDepartment(productTypeId);
     }
 
 }

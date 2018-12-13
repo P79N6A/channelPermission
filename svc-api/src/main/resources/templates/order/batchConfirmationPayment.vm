@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>批量确认付款</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script type="text/javascript">
+        function onSend() {
+            if ($('#cOrderSns').val() == '') {
+                alert("订单号不能为空");
+                return false;
+            }
+
+            var url = "/operationArea/doBatchConfirmationPayment";
+            jQuery("#dialog-message").dialog("open");
+            $("#list").html("<div style='width:318px;height:130px;text-align:center;'><br/><br/>数据正在加载，请稍后。。。<br/><br/><div id='timecount' style='width:100%;height:20px;text-align:center;font-size:10pt;font-family:Arial,Helvetica,sans-serif;'></div><br/></div>");
+            $("#handleResultDetail").attr("style", "display:none;padding:5px;width:800px;height:400px;");
+
+            jQuery.ajax({
+                url: url,
+                data: $('#filterForm').serialize(),
+                type: "POST",
+                beforeSend: function () {
+                },
+                success: function (result) {
+                    $("#dialog-message").dialog("close");
+                    //alert(result.message);
+                    $("#handleResultDetail").html(result.message);
+                    $("#handleResultDetail").show();
+                    $("#handleResultDetail").dialog({
+                        collapsible: true,
+                        minimizable: false,
+                        maximizable: false
+                    });
+                    $("#cOrderSns").val("");
+                }
+            });
+            return false;
+        }
+
+        $(function () {
+            $("#dialog-message").dialog({
+                autoOpen: false,
+                modal: false,
+                closeOnEscape: false,
+                resizable: false,
+                minHeight: 130,
+                width: 320,
+                title: '请稍后'
+            });
+        });
+
+        $(document).ready(function () {
+            $('.h').attr('style', 'display:none;');
+        });
+        $(document).keydown(function (e) {
+            if (e.keyCode == 83 && e.ctrlKey && e.shiftKey && e.altKey) {
+                $('.h').attr('style', 'display:block;');
+            }
+            if (e.keyCode == 72 && e.ctrlKey && e.shiftKey && e.altKey) {
+                $('.h').attr('style', 'display:none;');
+            }
+        });
+    </script>
+    <style>
+    .panel-header{
+        width: 98% !important;
+        margin: 10px auto;
+        border: 0;
+    }
+    #submitButton:hover{
+        background-color:#f8f0f0;
+    }
+    </style>
+</head>
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;" title="批量确认付款"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row" style="width: 100%">
+			<span class="search-row-label" style="float:left;font-weight:bold;font-size:16px;">
+			  订单号:
+			</span>
+                <textarea rows="18" name="cOrderSns" id="cOrderSns" style="resize: none;width:600px;"></textarea>
+                <div style="margin-left:120px">
+                    <span style="color: red">在提交推送的订单号。</span><br/>
+                    <span style="color: red">每行一条子订单编号，多条用回车分割。</span>
+                    <div class="clearfix"></div>
+                    <input type="button" value="提交" id="submitButton" onClick="onSend()" style="margin-left:150px;padding: 5px 20px;border: 0;border-radius: 4px;">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="dialog-message" title="请稍后" closed="true" style="display:none;">
+    <div id="list" class="list2" style="background:#ffffff;overflow-x:auto;overflow-y:auto;">
+    </div>
+</div>
+
+<div id="handleResultDetail" style="display:none" title="结果">
+</div>
+
+<script src="../static/js/report/dmmtlPbcsMtlMeasureIndex.js"></script>
+</body>
+</html>

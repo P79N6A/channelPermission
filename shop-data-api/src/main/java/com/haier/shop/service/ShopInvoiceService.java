@@ -4,6 +4,7 @@ package com.haier.shop.service;
 import com.haier.common.BusinessException;
 import com.haier.shop.model.Invoices;
 import com.haier.shop.model.InvoicesDispItem;
+import com.haier.shop.model.OrderRepairs;
 
 import java.util.List;
 import java.util.Map;
@@ -109,4 +110,44 @@ public interface ShopInvoiceService {
      * @return
      */
     int invoiceBatchModify(Map<String, Object> params);
+    public List<OrderRepairs> getOrderRepairsByOrderProductId(Integer orderProductId);
+    
+    List<Invoices> getByOrderProductId(Integer opId);
+
+	int insertInvoices(Invoices invoices);
+
+    /**
+     * 天猫税控码查询(开票列表)
+     * @param params
+     * @return
+     */
+    Map<String,Object> getTianMaoFiscalCodeListByPage(Map<String,Object> params);
+
+    /**
+     * 查询导出发票信息
+     * @param params
+     * @return
+     */
+    List<Map<String,Object>> getExportTianMaoFiscalCodeList(Map<String,Object> params);
+
+    /**
+     * 税控码查询
+     * @param params
+     * @return
+     */
+    Map<String,Object> getFiscalCodeListByPage(Map<String,Object> params);
+
+    /**
+     * 根据差异网单ID查询invoice
+     * @param diffId
+     * @return
+     */
+    List<Invoices> getByDiffId(Integer diffId);
+
+    /**
+     * 根据网单号查询最新的invoice
+     * @param cOrderSn
+     * @return
+     */
+    Invoices getLatestInvoicesByCOrderSn(String cOrderSn);
 }

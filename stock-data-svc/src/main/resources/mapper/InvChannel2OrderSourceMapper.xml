@@ -55,4 +55,66 @@
 	<select id="getChannelNames" resultType="java.util.Map">
 		SELECT `order_source`, `note` FROM `inv_channel_2_order_source`
 	</select>
+
+	<select id="getInvChannel2OrderSource" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+		DISTINCT order_source,note
+		FROM
+		`inv_channel_2_order_source`
+		<where>
+			<if test="channelCode !=null and channelCode !='' ">
+				channel_code =#{channelCode }
+			</if>
+		</where>
+	</select>
+
+	<select id="queryInvChannel2OrderSourceListCount"  resultType="Integer">
+		SELECT count(0) count
+		FROM inv_channel_2_order_source
+		<where>
+			<if test="name !=null and !name.isEmpty()">
+				and note like CONCAT('%',#{name},'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="queryInvChannel2OrderSourceList"  resultMap="invChannelResult">
+		SELECT id,channel_code,order_source,note,sap_channel_code,customer_code,create_time
+		FROM inv_channel_2_order_source
+		<where>
+			<if test="id != null">and `id` = #{id}</if>
+			<if test="name !=null and !name.isEmpty()">
+				and note like CONCAT('%',#{name},'%')
+			</if>
+		</where>
+		<if test="size != null and size &gt; 0">
+			limit #{start},#{size}
+		</if>
+	</select>
+
+	<insert id="insert" parameterType="com.haier.stock.model.InvChannel2OrderSource">
+		INSERT INTO `inv_channel_2_order_source` (`channel_code`, `order_source`, `note`, `sap_channel_code`, `customer_code`, `create_time`)
+		VALUES (#{channelCode}, #{orderSource}, #{note}, #{sapChannelCode}, #{customerCode}, #{createTime});
+		<selectKey keyProperty="id" resultType="Integer" order="AFTER" statementType="STATEMENT">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.haier.stock.model.InvChannel2OrderSource">
+		update `inv_channel_2_order_source` set
+		`channel_code`=#{channelCode},
+		`order_source`=#{orderSource},
+		`note`=#{note},
+		`sap_channel_code`=#{sapChannelCode},
+		`customer_code`=#{customerCode},
+		`id` = #{id}
+		where `id` = #{id}
+	</update>
+
+	<select id="getInvStockChannel" resultType="java.util.Map">
+		SELECT
+		DISTINCT channel_code,name
+		FROM
+		`inv_stock_channel`
+	</select>
 </mapper>

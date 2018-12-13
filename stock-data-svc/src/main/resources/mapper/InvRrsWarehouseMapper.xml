@@ -79,4 +79,177 @@
 			and rrs_wh_code = #{rrs_wh_code}
 		</if>
 	</select>
+
+	<select id="getPurRrsWhByEstorgeId" resultMap="invRrsWarehouseResult">
+		SELECT
+		`rrs_wh_code`,
+		`rrs_wh_name`,
+		`estorge_id`,
+		`t2_default`,
+		`transport_prescription`,
+		`create_user`,
+		`create_time`,
+		`update_user`,
+		`update_time`,
+		`is_enabled`
+		FROM `inv_rrs_warehouse`
+		<where>
+			<if test="rrs_wh_code!=null and rrs_wh_code!=''">
+				and rrs_wh_code=#{rrs_wh_code}
+			</if>
+			<if test="rrs_wh_name!=null and rrs_wh_name!=''">
+				and rrs_wh_name like #{rrs_wh_name}
+			</if>
+			<if test="estorge_id!=null and estorge_id!=''">
+				and estorge_id=#{estorge_id}
+			</if>
+			<if test="t2_default !=null and t2_default != ''">
+				and t2_default = #{t2_default}
+			</if>
+			<if test="rrs_wh_code !=null and rrs_wh_code != ''">
+				and rrs_wh_code = #{rrs_wh_code}
+			</if>
+			<if test="transport_prescription !=null and transport_prescription!=''">
+				and transport_prescription=#{transport_prescription}
+			</if>
+			<if test="transport_prescription==0">
+				and transport_prescription=#{transport_prescription}
+			</if>
+			<![CDATA[ AND is_enabled <> 4 ]]>
+		</where>
+		ORDER by update_time DESC
+		<if test="index!=null ">
+			limit #{index},#{rows}
+		</if>
+	</select>
+
+	<select id="countTotal" resultType="Integer">
+		SELECT count(1)
+		FROM `inv_rrs_warehouse`
+		<where>
+			<if test="rrs_wh_name!=null and rrs_wh_name!=''">
+				and rrs_wh_name=#{rrs_wh_name}
+			</if>
+			<if test="estorge_id!=null and estorge_id!=''">
+				and estorge_id=#{estorge_id}
+			</if>
+			<if test="t2_default !=null and t2_default != ''">
+				and t2_default = #{t2_default}
+			</if>
+			<if test="rrs_wh_code !=null and rrs_wh_code != ''">
+				and rrs_wh_code = #{rrs_wh_code}
+			</if>
+			<if test="transport_prescription!=null and transport_prescription!=''">
+				and transport_prescription=#{transport_prescription}
+			</if>
+			<![CDATA[ AND is_enabled <> 4 ]]>
+		</where>
+	</select>
+
+	<select id="checkMainKey" parameterType="Map" resultType="java.lang.Integer">
+		SELECT
+		count(1) from inv_rrs_warehouse
+		WHERE
+		rrs_wh_code = #{rrs_wh_code}
+		<![CDATA[ AND is_enabled <> 4 ]]>
+	</select>
+
+	<insert id="insertInvRrsWarehouse" parameterType="Map">
+		INSERT INTO
+		inv_rrs_warehouse
+		(rrs_wh_code,
+		rrs_wh_name,
+		estorge_id,
+		t2_default,
+		transport_prescription,
+		create_user,create_time,
+		update_user,update_time
+		)
+		VALUES
+		(#{rrs_wh_code},
+		#{rrs_wh_name},
+		#{estorge_id},
+		#{t2_default},
+		#{transport_prescription},
+		#{create_user},CURRENT_TIMESTAMP(),
+		#{update_user},CURRENT_TIMESTAMP()
+		)
+	</insert>
+	<select id="countT2Status" parameterType="Map" resultType="Integer">
+		select
+		count(*) from inv_rrs_warehouse where t2_default=1 and
+		estorge_id=#{estorge_id} and rrs_wh_code <![CDATA[<>]]>
+		#{rrs_wh_code}
+		<![CDATA[ AND is_enabled <> 4 ]]>
+	</select>
+
+	<update id="updateInvRrsWarehouse" parameterType="Map">
+		UPDATE inv_rrs_warehouse
+		<set>
+			<if test="rrs_wh_name!=null and rrs_wh_name!=null">
+				rrs_wh_name=#{rrs_wh_name},
+			</if>
+			<if test="estorge_id!=null and estorge_id!=''">
+				estorge_id=#{estorge_id},
+			</if>
+			<if test="t2_default!=null and t2_default!=''">
+				t2_default=#{t2_default},
+			</if>
+			<if test="t2_default==null">
+				t2_default = null,
+			</if>
+
+			<if test="transport_prescription!=null and transport_prescription!=''">
+				transport_prescription=#{transport_prescription},
+			</if>
+			<if test="transport_prescription==0">
+				transport_prescription=#{transport_prescription},
+			</if>
+			<if test="update_user!=null and update_user!=''">
+				update_user=#{update_user},update_time=CURRENT_TIMESTAMP(),
+			</if>
+			<if test="is_enabled!=null and is_enabled!=''">
+				is_enabled=#{is_enabled}
+			</if>
+
+		</set>
+		where rrs_wh_code=#{rrs_wh_code}
+
+	</update>
+
+	<update id="deleteInvRrsWarehouse" parameterType="Map">
+		UPDATE
+		inv_rrs_warehouse SET is_enabled=#{is_enabled}
+		where rrs_wh_code
+		in
+		<foreach collection="deleteList" open="(" close=")" separator="," item="ditem">
+			#{ditem}
+		</foreach>
+	</update>
+
+	<select id="selectRrsWhByEstorgeExport" parameterType="Map"
+			resultMap="invRrsWarehouseResult">
+		SELECT
+		`rrs_wh_code`,
+		`rrs_wh_name`,
+		`estorge_id`,
+		`t2_default`,
+		`transport_prescription`,
+		`create_user`,
+		`create_time`,
+		`update_user`,
+		`update_time`,
+		`is_enabled`
+		FROM `inv_rrs_warehouse`
+		<![CDATA[ WHERE is_enabled <> 4 ]]>
+		<if test="exportList!=null and exportList.size()>0">
+			and rrs_wh_code in
+			<foreach collection="exportList" open="(" close=")"
+					 separator="," item="item">
+				#{item}
+			</foreach>
+		</if>
+		ORDER by update_time DESC
+
+	</select>
 </mapper>

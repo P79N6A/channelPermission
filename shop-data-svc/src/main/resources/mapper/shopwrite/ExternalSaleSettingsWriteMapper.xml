@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.ExternalSaleSettingsWriteDao" >
+
+    <insert id="insert" parameterType="com.haier.shop.model.ExternalSaleSettings" >
+        insert into externalsalesettings (siteId, settingName,
+        externalSkus, productSpecs, configIds,
+        addTime, type, startTime,
+        endTime, effect)
+        values (#{siteId,jdbcType=INTEGER}, #{settingName,jdbcType=VARCHAR},
+        #{externalSkus,jdbcType=VARCHAR}, #{productSpecs,jdbcType=VARCHAR}, #{configIds,jdbcType=VARCHAR},
+        #{addTime,jdbcType=INTEGER}, #{type,jdbcType=BIT}, #{startTime,jdbcType=INTEGER},
+        #{endTime,jdbcType=INTEGER}, #{effect,jdbcType=BIT})
+    </insert>
+    <insert id="insertSelective" parameterType="com.haier.shop.model.ExternalSaleSettings" >
+        insert into externalsalesettings
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="siteId != null" >
+                siteId,
+            </if>
+            <if test="settingName != null" >
+                settingName,
+            </if>
+            <if test="externalSkus != null" >
+                externalSkus,
+            </if>
+            <if test="productSpecs != null" >
+                productSpecs,
+            </if>
+            <if test="configIds != null" >
+                configIds,
+            </if>
+            <if test="addTime != null" >
+                addTime,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="startTime != null" >
+                startTime,
+            </if>
+            <if test="endTime != null" >
+                endTime,
+            </if>
+            <if test="effect != null" >
+                effect,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="siteId != null" >
+                #{siteId,jdbcType=INTEGER},
+            </if>
+            <if test="settingName != null" >
+                #{settingName,jdbcType=VARCHAR},
+            </if>
+            <if test="externalSkus != null" >
+                #{externalSkus,jdbcType=VARCHAR},
+            </if>
+            <if test="productSpecs != null" >
+                #{productSpecs,jdbcType=VARCHAR},
+            </if>
+            <if test="configIds != null" >
+                #{configIds,jdbcType=VARCHAR},
+            </if>
+            <if test="addTime != null" >
+                #{addTime,jdbcType=INTEGER},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=BIT},
+            </if>
+            <if test="startTime != null" >
+                #{startTime,jdbcType=INTEGER},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=INTEGER},
+            </if>
+            <if test="effect != null" >
+                #{effect,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.haier.shop.model.ExternalSaleSettings" >
+        update externalsalesettings
+        <set >
+            <if test="siteId != null" >
+                siteId = #{siteId,jdbcType=INTEGER},
+            </if>
+            <if test="settingName != null" >
+                settingName = #{settingName,jdbcType=VARCHAR},
+            </if>
+            <if test="externalSkus != null" >
+                externalSkus = #{externalSkus,jdbcType=VARCHAR},
+            </if>
+            <if test="productSpecs != null" >
+                productSpecs = #{productSpecs,jdbcType=VARCHAR},
+            </if>
+            <if test="configIds != null" >
+                configIds = #{configIds,jdbcType=VARCHAR},
+            </if>
+            <if test="addTime != null" >
+                addTime = #{addTime,jdbcType=INTEGER},
+            </if>
+            <if test="type != null" >
+                type = #{type,jdbcType=BIT},
+            </if>
+            <if test="startTime != null" >
+                startTime = #{startTime,jdbcType=INTEGER},
+            </if>
+            <if test="endTime != null" >
+                endTime = #{endTime,jdbcType=INTEGER},
+            </if>
+            <if test="effect != null" >
+                effect = #{effect,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.haier.shop.model.ExternalSaleSettings" >
+        update externalsalesettings
+        set siteId = #{siteId,jdbcType=INTEGER},
+        settingName = #{settingName,jdbcType=VARCHAR},
+        externalSkus = #{externalSkus,jdbcType=VARCHAR},
+        productSpecs = #{productSpecs,jdbcType=VARCHAR},
+        configIds = #{configIds,jdbcType=VARCHAR},
+        addTime = #{addTime,jdbcType=INTEGER},
+        type = #{type,jdbcType=BIT},
+        startTime = #{startTime,jdbcType=INTEGER},
+        endTime = #{endTime,jdbcType=INTEGER},
+        effect = #{effect,jdbcType=BIT}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from externalsalesettings
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+</mapper>

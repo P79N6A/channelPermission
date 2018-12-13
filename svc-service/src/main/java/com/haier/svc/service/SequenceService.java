@@ -10,6 +10,9 @@ public interface SequenceService {
 
     public Integer selectSequence(Map map);
 
+    public Integer selectSequenceId();
+
+
     public void insertSequence(Map map);
 
     public void updateSequence(Map map);

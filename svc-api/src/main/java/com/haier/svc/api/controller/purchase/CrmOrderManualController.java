@@ -5,6 +5,7 @@ import com.haier.purchase.data.model.*;
 import com.haier.shop.model.ItemBase;
 import com.haier.stock.model.InvRrsWarehouse;
 import com.haier.stock.model.InvWarehouse;
+import com.haier.stock.model.JdStorage;
 import com.haier.stock.service.StockCommonService;
 import com.haier.svc.api.controller.util.*;
 import com.haier.svc.api.controller.util.date.DateCal;
@@ -22,6 +23,7 @@ import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.dubbo.common.json.JSONArray;
 import com.alibaba.dubbo.common.json.ParseException;
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.JsonUtil;
@@ -43,6 +45,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 
 /**
@@ -103,19 +107,43 @@ public class CrmOrderManualController {
         private ProductPaymentService     productPaymentService;
 
         @RequestMapping(value = "/toCrmOrderManualQueryList")
-        public String CrmOrderManual(){
+        public String CrmOrderManual(HttpServletRequest request, Map<String, Object> modelMap){
+        	Map<String, Object> authMap = new HashMap<>();
+    		commPurchase.getAuthMap(request, "", "", "", authMap);
+    		try {
+    			modelMap.put("authMap", JSON.json(authMap));
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
             return "purchase/crmOrderManualQueryList";
         }
+        /**
+         * 跳转crm手工采购JD库页面
+         * @return
+         */
+        @RequestMapping(value = "/toCrmOrderManualQueryListJD")
+        public String CrmOrderManualJD(HttpServletRequest request, Map<String, Object> modelMap){
+        	Map<String, Object> authMap = new HashMap<>();
+    		commPurchase.getAuthMap(request, "", "", "", authMap);
+    		try {
+    			modelMap.put("authMap", JSON.json(authMap));
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+            return "purchase/crmOrderManualQueryListJD";
+        }
+
 
 
         /**
          * 跳转至CRM手工采购订单录入页面
          *
          * @param request
+         * @param type 类型：jd：CRM手工采购订单（京东）或者为空 			zhangming 2018-04-09
          */
         @RequestMapping(value = { "/gotoAddCRMOrderManualDetail" }, method = { RequestMethod.GET })
         String gotoAddCRMOrderManualDetail(@RequestParam(required = false) String modifyData,
-                                           HttpServletRequest request, Map<String, Object> modelMap) {
+                                           HttpServletRequest request, Map<String, Object> modelMap, String type) {
             logger.debug("CrmOrderManualControl:gotoAddCRMOrderManualDetail");
 
             // 通过共通方法获取产品组和品牌map待用
@@ -181,27 +209,39 @@ public class CrmOrderManualController {
                 crmOrderManualDetailItem.setIsKPOName(
                         trueOrFalseMap.get(String.valueOf(crmOrderManualDetailItem.getIsKPO())));
                 modelMap.put("crmOrderManualDetailItem", crmOrderManualDetailItem);
-                modelMap.put("rrsList",
-                        JsonUtil.toJson(getRrsList(crmOrderManualDetailItem.getEstorge_id())));
+                
+                if("jd".equalsIgnoreCase(type)){
+                	modelMap.put("rrsListJd",
+                            JsonUtil.toJson(getRrsListJd(crmOrderManualDetailItem.getEstorge_id())));
+                }else{
+                	modelMap.put("rrsList",
+                            JsonUtil.toJson(getRrsList(crmOrderManualDetailItem.getEstorge_id())));
+                }
             }
 
             String url = request.getHeader("referer");
             modelMap.put("url", url);
-            return "purchase/crmOrderManualDetail";
+            String returnPage = "purchase/crmOrderManualDetail";
+            if("jd".equalsIgnoreCase(type)){
+            	returnPage = "purchase/crmOrderManualDetailJD";
+            }
+            return returnPage;
         }
 
-        /**
-         * CRM手工采购订单录入
-         *
-         * @param request
-         */
-        @RequestMapping(value = { "/addCRMOrderManualDetail" }, method = { RequestMethod.POST })
-        @ResponseBody
-        HttpJsonResult<String> addCRMOrderManualDetail(@ModelAttribute("filterForm") CrmManualOrder crmManualOrder,
-                                                       @RequestParam(required = false) String operatorType,
-                                                       HttpServletRequest request,
-                                                       HttpServletResponse response) {
-            HttpJsonResult<String> result = new HttpJsonResult<String>();
+    /**
+     * CRM手工采购订单录入
+     *
+     * @param request
+     * @param type jd：京东单 或者为空
+     */
+    HttpJsonResult<String> importCRMOrderManualDetail (CrmManualOrder crmManualOrder,
+                                                   String operatorType,
+                                                   String type,
+                                                   HttpServletRequest request,
+                                                   HttpServletResponse response) {
+        HttpJsonResult<String> result = new HttpJsonResult<String>();
+        try {
+
             logger.debug("CrmOrderManualControl:addCRMOrderManualDetail");
 
             Map<String, Object> params = new HashMap<String, Object>();
@@ -213,6 +253,7 @@ public class CrmOrderManualController {
             CrmOrderManualItem crmOrderManualItem = crmManualOrder.getCrmOrderManualItem();
             CrmOrderManualDetailItem crmOrderManualDetailItem = crmManualOrder
                     .getCrmOrderManualDetailItem();
+
             // 验证来源单号和数量 star
             String sourceOrderId = crmOrderManualItem.getSource_order_id();
             if (StringUtils.isNotEmpty(sourceOrderId)) {
@@ -255,7 +296,7 @@ public class CrmOrderManualController {
             if (ADD_CRM_ORDER_MANUAL.equals(operatorType)) {
                 // WP订单号
                 crmOrderManualItem
-                        .setWp_order_id(commPurchase.getWPOrderId(purchaseCommonService, "C02"));
+                        .setWp_order_id(commPurchase.getManualWPOrderId(purchaseCommonService, "C02"));
                 //来源单号为空  置关联单号为手工采购单号
                 if (StringUtils.isEmpty(sourceOrderId)) {
                     crmOrderManualItem.setReleBillCode(crmOrderManualItem.getWp_order_id());//关联单号 （子单号）
@@ -270,7 +311,7 @@ public class CrmOrderManualController {
             } else if ("".equals(operatorType)) {
                 // WP订单号
                 crmOrderManualItem
-                        .setWp_order_id(commPurchase.getWPOrderId(purchaseCommonService, "C02"));
+                        .setWp_order_id(commPurchase.getManualWPOrderId(purchaseCommonService, "C02"));
                 operatorType = "add";
                 crmOrderManualItem.setCreate_user(user);
                 crmOrderManualDetailItem.setCreate_user(user);
@@ -286,18 +327,26 @@ public class CrmOrderManualController {
             order.setRegionCode(crmOrderManualItem.getRegionId());
             GVSOrderPriceResponse priceResponse = crmOrderManualService.quirePrice(order);
 
+            if(org.apache.commons.lang.StringUtils.isBlank(priceResponse.getReActPrice())){
+                result.setMessage("获得价格信息失败！");
+                return result;
+            }
+
             // 价格情报设定
             crmOrderManualDetailItem.setActPrice(new Float(priceResponse.getReActPrice()));
             crmOrderManualDetailItem.setBateMoney(new Float(priceResponse.getReBateMoney()));
             crmOrderManualDetailItem.setBateRate(new Float(priceResponse.getReBateRate()));
             crmOrderManualDetailItem.setIsFL(
-                    StringUtils.isNotEmpty(priceResponse.getReIsFL()) ? "0" : priceResponse.getReIsFL());
+                    org.apache.commons.lang.StringUtils.defaultIfEmpty(priceResponse.getReIsFL(), "0"));
             crmOrderManualDetailItem.setIsKPO(
-                    StringUtils.isNotEmpty(priceResponse.getReIsKPO()) ? "0" : priceResponse.getReIsKPO());
+                    org.apache.commons.lang.StringUtils.defaultIfEmpty(priceResponse.getReIsKPO(), "0"));
             crmOrderManualDetailItem.setLossRate(new Float(priceResponse.getReLossRate()));
             crmOrderManualDetailItem.setRetailPrice(new Float(priceResponse.getReRetailPrice()));
             crmOrderManualDetailItem.setStockPrice(new Float(priceResponse.getReStockPrice()));
             crmOrderManualDetailItem.setUnitPrice(new Float(priceResponse.getReUnitPrice()));
+
+            crmOrderManualDetailItem.setSumMoney(crmOrderManualDetailItem.getActPrice() * crmOrderManualDetailItem.getQty());
+
             // 设置系统标识码
             crmOrderManualItem.setSysFlag(301);
             // 库存类型
@@ -312,11 +361,21 @@ public class CrmOrderManualController {
             Map<String, Object> invRrsWarehouseParams = new HashMap<String, Object>();
             invRrsWarehouseParams.put("estorge_id", crmOrderManualItem.getEstorge_id());
             invRrsWarehouseParams.put("rrs_wh_code", crmOrderManualItem.getWhCode());
-            ServiceResult<List<InvRrsWarehouse>> invRrsWarehouseResult = purchaseBaseCommonService
-                    .getAllRrsWhByEstorgeId(invRrsWarehouseParams);
+            String planInDate = "";
+            if("jd".equalsIgnoreCase(type)){
+                //字段名不一样，所以再来一遍
+                invRrsWarehouseParams.put("estorageId", crmOrderManualItem.getEstorge_id());
+                ServiceResult<List<JdStorage>> invRrsWarehouseResult = purchaseBaseCommonService
+                        .getAllRrsWhByEstorgeIdJd(invRrsWarehouseParams);
+                planInDate = dateCal.decDay(
+                        -invRrsWarehouseResult.getResult().get(0).getTransportPrescription()) + " 00:00:00";
+            }else{
+                ServiceResult<List<InvRrsWarehouse>> invRrsWarehouseResult = purchaseBaseCommonService
+                        .getAllRrsWhByEstorgeId(invRrsWarehouseParams);
+                planInDate = dateCal.decDay(
+                        -invRrsWarehouseResult.getResult().get(0).getTransport_prescription()) + " 00:00:00";
+            }
 
-            String planInDate = dateCal.decDay(
-                    -invRrsWarehouseResult.getResult().get(0).getTransport_prescription()) + " 00:00:00";
             // crmOrderManualItem.setPlanInDateStr(planInDate);
             // crmOrderManualItem.setPlanInDate(CommUtil.getStringToDate(planInDate,
             // CommUtil.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS));
@@ -340,8 +399,16 @@ public class CrmOrderManualController {
             // 处理完毕的参数放入map
             params.put("CrmOrderManualItem", crmOrderManualItem);
             params.put("CrmOrderManualDetailItem", crmOrderManualDetailItem);
-
+            if(StringUtils.isEmpty(crmOrderManualItem.getCustCode())){
+                result.setMessage("请维护付款方");
+                return result;
+            }
+            if(StringUtils.isEmpty(crmOrderManualItem.getBudgetOrg())){
+                result.setMessage("请维护预算体编码");
+                return result;
+            }
             // 执行插入service
+//            System.out.println(JSONObject.toJSON(params));
             ServiceResult<Boolean> insertResult = crmOrderManualService.editCRMOrderManual(params);
 
             if (!insertResult.getSuccess() || insertResult.getResult() == false) {
@@ -350,25 +417,302 @@ public class CrmOrderManualController {
                 result.setMessage("保存失败！");
                 return result;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.warn("CRM手工订单京东，保存失败");
+            result.setMessage("保存失败！");
+        }
 
-            // CRM系统提交
-            crmOrderManualItem.setPlanInDateStr(planInDate);
-            List<CrmOrderManualDetailItem> crmOrderManualDetailItemList = new ArrayList<CrmOrderManualDetailItem>();
-            crmOrderManualDetailItemList.add(crmOrderManualDetailItem);
+        return result;
+    }
+    /**
+     * @Title: pushCrmCrmOrder
+     * @Description: 提交CRM
+     * @param request
+     * @param response
+     * @param openData
+     * @return void
+     * @throws
+     */
+    @RequestMapping(value = { "pushCrmCrmOrder" }, method = { RequestMethod.POST })
+    @ResponseBody
+    public HttpJsonResult<String> pushCrmCrmOrder(HttpServletRequest request, HttpServletResponse response,
+                                    @RequestParam(required = true) String openData) {
+        HttpJsonResult<String> result = new HttpJsonResult<String>();
+            try{
+                if (openData != null) {
+                    // 通过共通方法获取产品组和品牌map待用
+                    Map<String, String> productgroupMap = new HashMap<String, String>();
+                    Map<String, String> brandMap = new HashMap<String, String>();
+                    commPurchase.getProductMap(productgroupMap);
+                    commPurchase.getBrandMap(brandMap);
 
-            ServiceResult<Boolean> commitCRMResult = crmOrderManualService
-                    .insertWAOrderBillToCRM(crmOrderManualItem, crmOrderManualDetailItemList);
-            if (commitCRMResult.getSuccess() && commitCRMResult.getResult() != null
-                    && commitCRMResult.getResult() == true) {
+                    JSONArray openjson = (JSONArray) JSON.parse(openData);
+                    List<String> openList = new ArrayList<String>();
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    for (int i = 0; i < openjson.length(); i++) {
+                        openList.add(openjson.getString(i));
+                    }
+                    String errMsg="";
+                    boolean success=true;
+                    for(int i=0;i<openList.size();i++){
+                        // CRM系统提交
+                        CrmOrderManualItem crmOrderManualItem = crmOrderManualService.getCrmOrderManualItem(openList.get(i));
+                        List<CrmOrderManualDetailItem> crmOrderManualDetailItemList =crmOrderManualService.getcrmOrderManualDetailItem(openList.get(i));
+                        for(CrmOrderManualDetailItem detail:crmOrderManualDetailItemList){
+                            detail.setMaker("");
+                            detail.setProduct_group_name(productgroupMap.get(detail.getProduct_group_id()));
+                            detail.setBrand_name(brandMap.get(detail.getBrand_id()));
+                        }
 
-                result.setTotalCount(1);
-                // CRM系统提交成功
-                result.setMessage("保存成功,CRM系统提交成功！");
-            } else {
-                result.setTotalCount(1);
-                // CRM系统提交失败
-                result.setMessage("保存成功,CRM系统提交失败！"+commitCRMResult.getMessage());
-            }
+                        // 当前日期取得
+                        String currentDate = CommUtil.getCurrentDate("yyyy-MM-dd");
+                        // 上周日期取得
+                        DateCal dateCal = new DateCal(currentDate);
+                        String planInDate = "";
+                        Map<String, Object> invRrsWarehouseParams = new HashMap<String, Object>();
+
+                        //字段名不一样，所以再来一遍
+                        invRrsWarehouseParams.put("estorageId", crmOrderManualItem.getEstorge_id());
+                        ServiceResult<List<JdStorage>> invRrsWarehouseResult = purchaseBaseCommonService
+                                .getAllRrsWhByEstorgeIdJd(invRrsWarehouseParams);
+                        planInDate = dateCal.decDay(
+                                -invRrsWarehouseResult.getResult().get(0).getTransportPrescription()) + " 00:00:00";
+
+                        crmOrderManualItem.setPlanInDateStr(planInDate);
+
+                        ServiceResult<Boolean> commitCRMResult = crmOrderManualService
+                                .insertWAOrderBillToCRM(crmOrderManualItem, crmOrderManualDetailItemList);
+                        if (commitCRMResult.getSuccess() && commitCRMResult.getResult() != null
+                                && commitCRMResult.getResult() == true) {
+                            // CRM系统提交成功
+                        } else {
+                            success=false;
+                            errMsg += "第" + (i+1) + "条数据提交失败！" + "<br>";
+                        }
+                    }
+                    if(success){
+                        result.setSuccess(true);
+                    }else {
+                        result.setMessage(errMsg);
+                        result.setSuccess(false);
+                    }
+                }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.warn("CRM手工订单京东，提交失败");
+            result.setMessage("提交失败！");
+        }
+        return result;
+    }
+        /**
+         * CRM手工采购订单录入
+         *
+         * @param request
+         * @param type jd：京东单 或者为空
+         */
+        @RequestMapping(value = { "/addCRMOrderManualDetail" }, method = { RequestMethod.POST })
+        @ResponseBody
+        HttpJsonResult<String> addCRMOrderManualDetail(@ModelAttribute("filterForm") CrmManualOrder crmManualOrder,
+                                                       @RequestParam(required = false) String operatorType,
+                                                       String type,
+                                                       HttpServletRequest request,
+                                                       HttpServletResponse response) {
+            HttpJsonResult<String> result = new HttpJsonResult<String>();
+			try {
+				
+				logger.debug("CrmOrderManualControl:addCRMOrderManualDetail");
+
+				Map<String, Object> params = new HashMap<String, Object>();
+
+				// 取得提交者
+				String user = WebUtil.currentUserName(request);
+
+				// 从画面的form中获取两个entity
+				CrmOrderManualItem crmOrderManualItem = crmManualOrder.getCrmOrderManualItem();
+				CrmOrderManualDetailItem crmOrderManualDetailItem = crmManualOrder
+				        .getCrmOrderManualDetailItem();
+				// 验证来源单号和数量 star
+				String sourceOrderId = crmOrderManualItem.getSource_order_id();
+				if (StringUtils.isNotEmpty(sourceOrderId)) {
+				    Map<String, Object> condition = new HashMap<String, Object>();
+				    List<String> orderList = new ArrayList<String>();
+
+				    orderList.add(sourceOrderId);
+				    condition.put("order_list", orderList);
+				    condition.put("source_order_id", sourceOrderId);
+				    ServiceResult<List<T2OrderItem>> t2Items = t2OrderService.getT2OrderList(condition);
+				    List<T2OrderItem> t2OrderItem = t2Items.getResult();
+				    // 通过T2订单验证来源单号
+				    if (t2Items.getPager().getRowsCount() < 1) {
+				        result.setTotalCount(0);
+				        // 来源单号验证失败
+				        result.setMessage("来源单号不存在");
+				        return result;
+				    }
+				    // 验证数量
+				    Integer Count = haierInRrsItemService.getOrderNum(condition); // crm订单数量
+				    if (crmOrderManualDetailItem.getQty() > Count) {
+				        result.setTotalCount(0);
+				        // 数量验证失败
+				        result.setMessage("数量不能超过" + Count);
+				        return result;
+				    }
+				    int Qty = crmOrderManualDetailItem.getQty();
+				    if (Qty > 0) {
+				        String sourceOrderIdByPurchase = purchaseCommonService
+				                .getCrmSubOrderId(sourceOrderId, Qty);
+				        crmOrderManualItem.setSource_order_id(sourceOrderId);//来源单号
+				        crmOrderManualItem.setReleBillCode(sourceOrderIdByPurchase);//关联单号 （子单号）
+				    } else {
+				        crmOrderManualItem.setSource_order_id(sourceOrderId);//来源单号
+				        crmOrderManualItem.setReleBillCode(sourceOrderId);//关联单号 （子单号）
+				    }
+				}
+				// end
+				// 为两个entity设置创建用户
+				if (ADD_CRM_ORDER_MANUAL.equals(operatorType)) {
+				    // WP订单号
+				    crmOrderManualItem
+				            .setWp_order_id(commPurchase.getManualWPOrderId(purchaseCommonService, "C02"));
+				    //来源单号为空  置关联单号为手工采购单号
+				    if (StringUtils.isEmpty(sourceOrderId)) {
+				        crmOrderManualItem.setReleBillCode(crmOrderManualItem.getWp_order_id());//关联单号 （子单号）
+				    }
+				    // 设置创建用户
+				    crmOrderManualItem.setCreate_user(user);
+				    crmOrderManualDetailItem.setCreate_user(user);
+				} else if (MODIFY_CRM_ORDER_MANUAL.equals(operatorType)) {
+				    // 设置修改用户
+				    crmOrderManualItem.setModify_user(user);
+				    crmOrderManualDetailItem.setModify_user(user);
+				} else if ("".equals(operatorType)) {
+				    // WP订单号
+				    crmOrderManualItem
+				            .setWp_order_id(commPurchase.getManualWPOrderId(purchaseCommonService, "C02"));
+				    operatorType = "add";
+				    crmOrderManualItem.setCreate_user(user);
+				    crmOrderManualDetailItem.setCreate_user(user);
+				}
+				// 将订单号同时赋CRM手工采购单详情entity
+				crmOrderManualDetailItem.setWp_order_id(crmOrderManualItem.getWp_order_id());
+
+				// 价格情报取得
+				GVSOrderPriceRequire order = new GVSOrderPriceRequire();
+				order.setCorpCode(crmOrderManualItem.getSaleOrgCode());
+				order.setCustCode(crmOrderManualItem.getCustCode());
+				order.setInvCode(crmOrderManualDetailItem.getMaterials_id());
+				order.setRegionCode(crmOrderManualItem.getRegionId());
+				GVSOrderPriceResponse priceResponse = crmOrderManualService.quirePrice(order);
+				
+				if(org.apache.commons.lang.StringUtils.isBlank(priceResponse.getReActPrice())){
+					result.setMessage("获得价格信息失败！");
+				    return result;
+				}
+
+				// 价格情报设定
+				crmOrderManualDetailItem.setActPrice(new Float(priceResponse.getReActPrice()));
+				crmOrderManualDetailItem.setBateMoney(new Float(priceResponse.getReBateMoney()));
+				crmOrderManualDetailItem.setBateRate(new Float(priceResponse.getReBateRate()));
+				crmOrderManualDetailItem.setIsFL(
+				        org.apache.commons.lang.StringUtils.defaultIfEmpty(priceResponse.getReIsFL(), "0"));
+				crmOrderManualDetailItem.setIsKPO(
+						org.apache.commons.lang.StringUtils.defaultIfEmpty(priceResponse.getReIsKPO(), "0"));
+				crmOrderManualDetailItem.setLossRate(new Float(priceResponse.getReLossRate()));
+				crmOrderManualDetailItem.setRetailPrice(new Float(priceResponse.getReRetailPrice()));
+				crmOrderManualDetailItem.setStockPrice(new Float(priceResponse.getReStockPrice()));
+				crmOrderManualDetailItem.setUnitPrice(new Float(priceResponse.getReUnitPrice()));
+				
+				crmOrderManualDetailItem.setSumMoney(crmOrderManualDetailItem.getActPrice() * crmOrderManualDetailItem.getQty());
+				
+				// 设置系统标识码
+				crmOrderManualItem.setSysFlag(301);
+				// 库存类型
+				if ("ZGOR".equals(crmOrderManualItem.getBillType())) {
+				    crmOrderManualItem.setStock_type(6);
+				}
+				// 当前日期取得
+				String currentDate = CommUtil.getCurrentDate("yyyy-MM-dd");
+				// 上周日期取得
+				DateCal dateCal = new DateCal(currentDate);
+				// 运输时效取得
+				Map<String, Object> invRrsWarehouseParams = new HashMap<String, Object>();
+				invRrsWarehouseParams.put("estorge_id", crmOrderManualItem.getEstorge_id());
+				invRrsWarehouseParams.put("rrs_wh_code", crmOrderManualItem.getWhCode());
+				String planInDate = "";
+				if("jd".equalsIgnoreCase(type)){
+					//字段名不一样，所以再来一遍
+					invRrsWarehouseParams.put("estorageId", crmOrderManualItem.getEstorge_id());
+					ServiceResult<List<JdStorage>> invRrsWarehouseResult = purchaseBaseCommonService
+							.getAllRrsWhByEstorgeIdJd(invRrsWarehouseParams);
+					planInDate = dateCal.decDay(
+				            -invRrsWarehouseResult.getResult().get(0).getTransportPrescription()) + " 00:00:00";
+				}else{
+					ServiceResult<List<InvRrsWarehouse>> invRrsWarehouseResult = purchaseBaseCommonService
+							.getAllRrsWhByEstorgeId(invRrsWarehouseParams);
+					planInDate = dateCal.decDay(
+				            -invRrsWarehouseResult.getResult().get(0).getTransport_prescription()) + " 00:00:00";
+				}
+
+				// crmOrderManualItem.setPlanInDateStr(planInDate);
+				// crmOrderManualItem.setPlanInDate(CommUtil.getStringToDate(planInDate,
+				// CommUtil.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS));
+				// 根据产品组code取得品类
+				Map<String, String> categoryMap = new HashMap<String, String>();
+				commPurchase.getCategoryMap(categoryMap);
+				String categoryId = categoryMap.get(crmOrderManualDetailItem.getProduct_group_id());
+				crmOrderManualDetailItem.setCategory_id(categoryId);
+				crmOrderManualDetailItem.setInvState(10);
+
+				// 处理类型放入map
+				params.put("operatorType", operatorType);
+
+				//海华要求如果渠道是商城和顺逛custCode设置为C200130028  修改位置提前至add保存前  lupeng  2017/03/01
+				if (StringUtils.isNotEmpty(crmOrderManualDetailItem.getEd_channel_id())
+				        && (crmOrderManualDetailItem.getEd_channel_id().equalsIgnoreCase("SC")
+				        || crmOrderManualDetailItem.getEd_channel_id().equalsIgnoreCase("RS"))) {
+				    crmOrderManualItem.setCustCode("C200130028");
+				    crmOrderManualDetailItem.setCustCode("C200130028");
+				}
+				// 处理完毕的参数放入map
+				params.put("CrmOrderManualItem", crmOrderManualItem);
+				params.put("CrmOrderManualDetailItem", crmOrderManualDetailItem);
+
+				// 执行插入service
+				System.out.println(JSONObject.toJSON(params));
+				ServiceResult<Boolean> insertResult = crmOrderManualService.editCRMOrderManual(params);
+
+				if (!insertResult.getSuccess() || insertResult.getResult() == false) {
+				    result.setTotalCount(0);
+				    // 保存失败
+				    result.setMessage("保存失败！");
+				    return result;
+				}
+
+				// CRM系统提交
+				crmOrderManualItem.setPlanInDateStr(planInDate);
+				List<CrmOrderManualDetailItem> crmOrderManualDetailItemList = new ArrayList<CrmOrderManualDetailItem>();
+				crmOrderManualDetailItemList.add(crmOrderManualDetailItem);
+
+				ServiceResult<Boolean> commitCRMResult = crmOrderManualService
+				        .insertWAOrderBillToCRM(crmOrderManualItem, crmOrderManualDetailItemList);
+				if (commitCRMResult.getSuccess() && commitCRMResult.getResult() != null
+				        && commitCRMResult.getResult() == true) {
+
+				    result.setTotalCount(1);
+				    // CRM系统提交成功
+				    result.setMessage("保存成功,CRM系统提交成功！");
+				    result.setSuccess(true);
+				} else {
+				    result.setTotalCount(1);
+				    // CRM系统提交失败
+				    result.setMessage("保存成功,CRM系统提交失败！"+commitCRMResult.getMessage());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.warn("CRM手工订单京东，保存失败");
+				result.setMessage("保存失败！");
+			}
 
             return result;
         }
@@ -622,6 +966,7 @@ public class CrmOrderManualController {
          * @param request
          * @param whCode
          *            库位码
+         * @param type 订单类型：jd或者为空
          */
         @RequestMapping(value = { "/getDataByEstorgeId" }, method = { RequestMethod.POST })
         @ResponseBody
@@ -630,7 +975,8 @@ public class CrmOrderManualController {
                                                          @RequestParam(required = true) String product_group_id,
                                                          @RequestParam(required = true) String materials_id,
                                                          @RequestParam(required = true) String custCode,
-                                                         @RequestParam(required = true) String qty) {
+                                                         @RequestParam(required = true) String qty,
+                                                         String type) {
             HttpJsonResult<String> result = new HttpJsonResult<String>();
             if (estorge_id != null && !estorge_id.equals("")) {
 
@@ -676,7 +1022,11 @@ public class CrmOrderManualController {
                     Data.put("esale_name", transmit_desc);
                     Data.put("destCenter", distribution_center_id);
                     Data.put("rrs_distribution_name", distribution_center_desc);
-                    Data.put("rrsList", getRrsList(estorge_id));
+                    if("jd".equalsIgnoreCase(type)){
+                    	Data.put("rrsListJd", getRrsListJd(estorge_id));
+                    }else{
+                    	Data.put("rrsList", getRrsList(estorge_id));
+                    }
                     Data.put("areaId", invWarehouseResult.getResult().getArea_id());
                     Data.put("sale_org_id", invWarehouseResult.getResult().getSale_org_id());
                     Data.put("branch", invWarehouseResult.getResult().getBranch());
@@ -742,6 +1092,7 @@ public class CrmOrderManualController {
             }
             return result;
         }
+        
 
         /**
          * 根据来源单号获取数据（分公司，工贸，付款方，送达方，WA库位名，配送中心）
@@ -753,7 +1104,7 @@ public class CrmOrderManualController {
         @RequestMapping(value = { "/getDataBySourceOrderId" }, method = { RequestMethod.POST })
         @ResponseBody
         public HttpJsonResult<String> getDataBySourceOrderId(HttpServletRequest request,
-                                                             @RequestParam(required = true) String source_order_id) {
+                                                             @RequestParam(required = true) String source_order_id, String type) {
             HttpJsonResult<String> result = new HttpJsonResult<String>();
 
             if (source_order_id != null && !source_order_id.equals("")) {
@@ -914,7 +1265,11 @@ public class CrmOrderManualController {
                             Data.put("corpCode", invWarehouseResult.getResult().getSale_org_id());
                             Data.put("destCode", transmit_id);
                             Data.put("rrs_distribution_name", distribution_center_desc);
-                            Data.put("rrsList", getRrsList(storage_id));
+                            if("jd".equalsIgnoreCase(type)){
+                            	Data.put("rrsListJd", getRrsListJd(storage_id));
+                            }else{
+                            	Data.put("rrsList", getRrsList(storage_id));
+                            }
                             Data.put("areaId", invWarehouseResult.getResult().getArea_id());
                         }
                         // 数据集转化为json
@@ -956,6 +1311,28 @@ public class CrmOrderManualController {
             } else {
                 return null;
             }
+        }
+        
+        /**
+         * 通过JD电商库位码获取日日顺仓库List,适用JD
+         *
+         * @param estorge_id
+         *            WA库位码
+         * @return List<JdStorage>
+         */
+        List<JdStorage> getRrsListJd(String estorge_id) {
+        	//
+        	Map<String, Object> params = new HashMap<String, Object>();
+        	params.put("estorageId", estorge_id);
+        	ServiceResult<List<JdStorage>> invRrsResult = purchaseBaseCommonService
+        			.getAllRrsWhByEstorgeIdJd(params);
+        	
+        	if (invRrsResult.getSuccess() && invRrsResult.getResult() != null
+        			&& invRrsResult.getResult().size() > 0) {
+        		return invRrsResult.getResult();
+        	} else {
+        		return null;
+        	}
         }
 
         /**
@@ -1009,6 +1386,8 @@ public class CrmOrderManualController {
                   @RequestParam(required = false) String so_id,
                   @RequestParam(required = false) String dn_id,
                   @RequestParam(required = false) String source_order_id,
+                  @RequestParam(required = false) String rrsCode,
+                  @RequestParam(required = false) String type,
                   @RequestParam(required = false) Integer rows,
                   @RequestParam(required = false) Integer page, HttpServletRequest request,
                   HttpServletResponse response) throws java.text.ParseException {
@@ -1021,8 +1400,8 @@ public class CrmOrderManualController {
                 // 权限Map
                 Map<String, Object> authMap = new HashMap<String, Object>();
                 // 取得产品组权限List,渠道权限List和品类List
-//                commPurchase.getAuthMap(purchaseCommonService, request, product_group, channel,
-//                        category_id, authMap);
+                commPurchase.getAuthMap(request, product_group, channel,
+                        category_id, authMap);
                 Map<String, Object> params = new HashMap<String, Object>();
                 if (planInDate_end != null && !"".equals(planInDate_end)) {
                     DateCal dateCal_end = new DateCal(planInDate_end);
@@ -1034,14 +1413,26 @@ public class CrmOrderManualController {
                 params.put("materials_id", materials_id);
                 params.put("materials_desc", materials_desc);
                 params.put("brand_id", brand_id);
-                params.put("category_id", authMap.get("cbsCatgory"));
+                params.put("category_id", authMap.get("cbsCategory"));
                 params.put("bill_type", bill_type);
                 params.put("channel", authMap.get("channel"));
+                
+                //京东的CRM手工采购单，渠道限制为JD
+                if("JD".equalsIgnoreCase(type)){
+                	params.put("isJD", "JD".split(","));
+                }else{
+                    params.put("notJD", "JD".split(","));
+                }
                 params.put("product_group_id", authMap.get("productGroup"));
-                params.put("planInDate_start", planInDate_start);
-                params.put("planInDate_end", planInDate_end);
+                if(org.apache.commons.lang.StringUtils.isNotBlank(planInDate_start)){
+                	params.put("planInDate_start", planInDate_start);
+                }
+                if(org.apache.commons.lang.StringUtils.isNotBlank(planInDate_end)){
+                	params.put("planInDate_end", planInDate_end);
+                }
                 params.put("so_id", so_id);
                 params.put("dn_id", dn_id);
+                params.put("rrsCode", rrsCode);
                 params.put("source_order_id", source_order_id);
                 // flow_flag转化为数组
                 String[] flow_flag_list = null;
@@ -1122,6 +1513,83 @@ public class CrmOrderManualController {
                 throw new BusinessException("失败" + e.getMessage());
             }
         }
+        
+        
+        @RequestMapping("/importOrderManualJD")
+    	@ResponseBody
+    	public HttpJsonResult<Map<String, Object>> importOrderManualJD(MultipartHttpServletRequest req, HttpServletResponse resp) {
+    		HttpJsonResult<Map<String, Object>> result = new HttpJsonResult<Map<String, Object>>();
+    		try {
+    			MultipartFile file = req.getFile("file");
+
+    			String fileName = file.getOriginalFilename();
+    			int index = fileName.lastIndexOf(".");
+    			String fileExtName = fileName.substring(index + 1);
+    			if (!fileExtName.equalsIgnoreCase("xls")) {
+    				result.setMessage("选择导入文件扩展名必须为xls!");
+    				return result;
+    			}
+
+    			List<String[]> list = ExcelReader.readExcel(file.getInputStream(), 1);
+    			int size = list.size();
+    			for(int i = list.size() - 1; i >= 0; i--){
+    				if(StringUtils.isBlank(list.get(i)[1])){
+    					size--;
+    				}
+    			}
+    			if (size <= 1) {
+    				result.setMessage("很抱歉！你导入的Excel没有数据记录，请查看重新整理导入！");
+    				return result;
+    			}
+    			
+//    			for(int i = 1; i < list.size(); i++){
+//    				String[] s = list.get(i);
+//    				if(org.apache.commons.lang.StringUtils.isNotBlank(s[1])){
+//    					apiVehicleOrderService.updateVblenSpare(s[1], s[4]);
+//    				}
+//    			}
+    			
+                // 通过共通方法获取产品组和品牌map待用
+	            Map<String, String> productgroupMap = new HashMap<String, String>();
+	            Map<String, String> brandMap = new HashMap<String, String>();
+	            commPurchase.getProductMap(productgroupMap);
+	            commPurchase.getBrandMap(brandMap);
+	            
+	         // 获取是否区分map
+                Map<String, String> trueOrFalseMap = commPurchase
+                        .getValueMeaningMap(dataDictionaryService, TRUE_FALSE_DISTINCT);
+    			
+	            Map<String, Object> resultMap = crmOrderManualService.importCrmOrderManualJD(list, productgroupMap, brandMap);
+	            if(Boolean.valueOf(resultMap.get("result").toString()) == true){
+	            	List<CrmManualOrder> cmoList = (List<CrmManualOrder>) resultMap.get("list");
+	            	boolean success = true;
+	            	String errMsg = "";
+	            	for(int i = 0; i < cmoList.size(); i++){
+	            		CrmManualOrder cmo = cmoList.get(i);
+	            		cmo.getCrmOrderManualDetailItem().setIsFLName(trueOrFalseMap.get(cmo.getCrmOrderManualDetailItem().getIsFL()));
+	            		HttpJsonResult<String> jsonResult = importCRMOrderManualDetail(cmo, "add", "jd", req, resp);
+	            		if(jsonResult.getSuccess() == false){
+	            			success = false;
+	            			errMsg += "第" + (i+1) + "条数据导入失败！" + jsonResult.getMessage() + "<br>";
+	            		}
+	            	}
+	            	
+	            	if(success == false){
+	            		result.setMessage(errMsg);
+	            	}else{
+	            		result.setSuccess(true);
+	            	}
+	            }else{
+	            	result.setMessage(resultMap.get("msg").toString());
+	            }
+	            
+    		}  catch (Exception e) {
+    			e.printStackTrace();
+    			logger.warn("导入CRM手工订单时失败：", e);
+    			result.setMessage("导入CRM手工订单时失败");
+    		}
+    		return result;
+    	}
 
         /**
          * 获取CRM手工采购订单信息页面点击部分导出、导出Excel

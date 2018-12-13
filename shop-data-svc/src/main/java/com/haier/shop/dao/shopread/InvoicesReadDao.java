@@ -69,5 +69,51 @@ public interface InvoicesReadDao {
      * @return
      */
     List<InvoicesDispItem> showInvoiceInfo(Integer id);
+	/**
+	 * 根据网单查询发票信息
+	 * @param productId
+	 * @return
+	 */
+    Invoices selectInvoiceView(String productId);
+    /**
+     * 根据订单id 查询所有的网单
+     * @param orderId
+     * @return
+     */
+	List<Invoices> queryDataByOrderId(Integer orderId);
 
+    /**
+     * 天猫税控码查询(开票列表)
+     * @param params
+     * @return
+     */
+    List<InvoicesDispItem> getTianMaoFiscalCodeList(Map<String,Object> params);
+
+    /**
+     *
+     * @param params
+     * @return
+     */
+    List<Map<String,Object>> getExportTianMaoFiscalCodeList(Map<String,Object> params);
+
+    /**
+     * 税控码查询
+     * @param params
+     * @return
+     */
+    List<InvoicesDispItem> getFiscalCodeList(Map<String,Object> params);
+
+    /**
+     *根据差异网单ID查询invoice
+     * @param diffId
+     * @return
+     */
+    List<Invoices> getByDiffId(Integer diffId);
+
+    /**
+     * 根据网单号查询最新的invoice
+     * @param cOrderSn
+     * @return
+     */
+    Invoices getLatestInvoicesByCOrderSn(String cOrderSn);
 }

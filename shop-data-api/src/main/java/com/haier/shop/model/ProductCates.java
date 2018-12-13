@@ -16,6 +16,7 @@ public class ProductCates implements Serializable {
     private Integer siteId;
 
     private Integer parentId;
+	private int rootId;
 
     private String parentPath;
 
@@ -168,5 +169,12 @@ public class ProductCates implements Serializable {
 	}
 
 	private String deliveryDesc;
-    
+
+	public int getRootId() {
+		return rootId;
+	}
+
+	public void setRootId(int rootId) {
+		this.rootId = rootId;
+	}
 }

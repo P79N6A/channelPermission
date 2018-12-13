@@ -32,6 +32,16 @@ public class OrderWorkflowRegionServiceImpl implements OrderWorkflowRegionServic
     }
 
     @Override
+    public List<Map<String, String>> getSCodeTradeWl() {
+        return orderWorkflowRegionReadDao.getSCodeTradeWl();
+    }
+
+    @Override
+    public List<Map<String, String>> getSCodeByLes(String les) {
+        return orderWorkflowRegionReadDao.getSCodeByLes(les);
+    }
+
+    @Override
     public List<Map<String, String>> getTrade(String area) {
         return orderWorkflowRegionReadDao.getTrade(area);
     }
@@ -44,5 +54,34 @@ public class OrderWorkflowRegionServiceImpl implements OrderWorkflowRegionServic
     @Override
     public List<OrderWorkflowRegion> getOwfRegion() {
         return orderWorkflowRegionReadDao.getOwfRegion();
+    }
+
+    @Override
+    public List<Map<String, String>> getCommissioner(String area) {
+        return orderWorkflowRegionReadDao.getCommissioner(area);
+    }
+
+    @Override
+    public List<Map<String, String>> getCommissionerTrade(String areaCommissioner) {
+        return orderWorkflowRegionReadDao.getCommissionerTrade(areaCommissioner);
+    }
+
+    @Override
+    public List<Map<String, String>> getSmallChannelPeopleTrade(String areaCommissioner) {
+        return orderWorkflowRegionReadDao.getSmallChannelPeopleTrade(areaCommissioner);
+    }
+
+    @Override
+    public List<Map<String, Object>> getCateInfo() {
+        return orderWorkflowRegionReadDao.getCateInfo();
+    }
+    @Override
+    public List<Map<String, Object>> getStoreIdAndName() {
+        return orderWorkflowRegionReadDao.getStoreIdAndName();
+    }
+
+    @Override
+    public String getLoginPersonChannel(String userName) {
+        return orderWorkflowRegionReadDao.getLoginPersonChannel(userName);
     }
 }

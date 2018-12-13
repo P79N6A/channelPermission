@@ -6,6 +6,7 @@ package com.haier.purchase.data.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  *                       
@@ -57,7 +58,18 @@ public class CrmOrderItem implements Serializable {
     private BigDecimal        t2_amount;                              //样表金额
     private BigDecimal        t2_delivery_prediction;                 //数量
     private String            shipment_combination_id;                //一次运单号
-   //3w订单信息
+
+    public Integer getWAqty() {
+        return WAqty;
+    }
+
+    public void setWAqty(Integer WAqty) {
+        this.WAqty = WAqty;
+    }
+
+    private Integer           WAqty;                                  // 已入WA库数量
+
+    //3w订单信息
     private String subscribe_code;//预约码
 	private String w3_local_code;//3w库位码
 	private BigDecimal sign_num;//签收数量
@@ -73,6 +85,12 @@ public class CrmOrderItem implements Serializable {
     private int 			  sapStatus;							//推送sap状态
     private String 			  sapMessage;							//推送sap信息
     private String			  sapProcessTime;						//推送sap时间
+    
+    private String lbx;	
+    private String lbxStatus;	//入库单状态
+    private String inTime;		//3W入库时间
+    private String pushStatus;	//推送物流状态
+    
 	
 	
 	
@@ -711,5 +729,37 @@ public class CrmOrderItem implements Serializable {
 
 	public void setSapProcessTime(String sapProcessTime) {
 		this.sapProcessTime = sapProcessTime;
+	}
+
+	public String getLbx() {
+		return lbx;
+	}
+
+	public void setLbx(String lbx) {
+		this.lbx = lbx;
+	}
+
+	public String getLbxStatus() {
+		return lbxStatus;
+	}
+
+	public void setLbxStatus(String lbxStatus) {
+		this.lbxStatus = lbxStatus;
+	}
+
+	public String getInTime() {
+		return inTime;
+	}
+
+	public void setInTime(String inTime) {
+		this.inTime = inTime;
+	}
+
+	public String getPushStatus() {
+		return pushStatus;
+	}
+
+	public void setPushStatus(String pushStatus) {
+		this.pushStatus = pushStatus;
 	}
 }

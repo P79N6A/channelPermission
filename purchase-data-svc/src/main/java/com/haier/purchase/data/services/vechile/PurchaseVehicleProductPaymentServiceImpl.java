@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haier.purchase.data.dao.vehcile.VehicleProductPaymentDao;
+import com.haier.purchase.data.model.vehcile.PurchaseProductPaymentDTO;
 import com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO;
 import com.haier.purchase.data.service.vechile.PurchaseVehicleProductPaymentService;
 
@@ -45,6 +46,11 @@ public class PurchaseVehicleProductPaymentServiceImpl implements
 			VehicleProductPaymentDTO entity) {
 		return vehicleProductPaymentDao.getOneByCondition(entity);
 	}
+	
+	@Override
+	public PurchaseProductPaymentDTO getPurchasePaymentOneByCondition(VehicleProductPaymentDTO entity){
+		return vehicleProductPaymentDao.getPurchasePaymentOneByCondition(entity);
+	}
 
 	@Override
 	public List<VehicleProductPaymentDTO> getListByCondition(
@@ -69,7 +75,7 @@ public class PurchaseVehicleProductPaymentServiceImpl implements
 	}
 
 	@Override
-	public List<VehicleProductPaymentDTO> getList() {
+	public List<PurchaseProductPaymentDTO> getList() {
 		return vehicleProductPaymentDao.getList();
 	}
 

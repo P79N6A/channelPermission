@@ -7,7 +7,7 @@ import com.haier.common.ServiceResult;
 import com.haier.distribute.data.model.Brands;
 import com.haier.distribute.data.model.ProductCates;
 import com.haier.eis.model.EisExternalSku;
-import com.haier.purchase.data.model.LesFiveYardInfo;
+import com.haier.shop.model.LesFiveYardInfo;
 import com.haier.shop.model.ItemAttribute;
 import com.haier.shop.model.ItemBase;
 import com.haier.shop.model.NetPoints;

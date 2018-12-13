@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.CostPoolsUsedLogsReadDao">
+	<resultMap id="costPoolsUsedLogsResult" type="com.haier.shop.model.CostPoolsUsedLogs">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="type" column="type" />
+		<result property="channel" column="channel" />
+		<result property="chanye" column="chanYe" />
+		<result property="yearMonth" column="yearMonth" />
+		<result property="corderId" column="corderId" />
+		<result property="orderId" column="orderId" />
+		<result property="orderSn" column="orderSn" />
+		<result property="cOrderSn" column="cOrderSn" />
+		<result property="relationOrderSn" column="relationOrderSn" />
+		<result property="source" column="source" />
+		<result property="usedType" column="usedType" />
+		<result property="amount" column="amount" />
+		<result property="addTime" column="addTime" />
+		<result property="remark" column="remark" />
+		<result property="number" column="number" />
+	</resultMap>
+
+	<sql id="displayQueryCondition">
+		<if test="orderSn !=null and orderSn != ''">
+			AND orderSn = #{orderSn}
+		</if>
+		<if test="cOrderSn !=null and cOrderSn != ''">
+			AND cOrderSn = #{cOrderSn}
+		</if>
+		<if test="channel !=null and channel != ''">
+			AND channel = #{channel}
+		</if>
+		<if test="type !=null and type != ''">
+			AND type = #{type}
+		</if>
+		<if test="usedType !=null and usedType != ''">
+			AND usedType = #{usedType}
+		</if>
+        <if test="source !=null and source != ''">
+            AND source = #{source}
+        </if>
+        <if test="addTimeMin !=null and addTimeMin != ''">
+			AND addTime>=UNIX_TIMESTAMP(#{addTimeMin})
+        </if>
+        <if test="addTimeMax !=null and addTimeMax != ''">
+			AND addTime&lt;=UNIX_TIMESTAMP(#{addTimeMax})
+        </if>
+		<if test="chanYe !=null and chanYe != ''">
+			AND chanYe = #{chanYe}
+		</if>
+	</sql>
+
+	<select id="findCostPoolsUsedLogsByPage" parameterType="Map" resultMap="costPoolsUsedLogsResult">
+        SELECT SQL_CALC_FOUND_ROWS
+            id,
+            siteId,
+            type,
+            channel,
+            chanYe,
+            yearMonth,
+            corderId,
+            orderId,
+            orderSn,
+            cOrderSn,
+            relationOrderSn,
+            source,
+            usedType,
+            amount,
+            addTime,
+            remark,
+            number
+        from costpoolsusedlogs
+        where 1=1
+		<include refid="displayQueryCondition"/>
+		Order By addTime DESC
+		<if test="m!=null and n!=null">
+			Limit ${m},${n}
+		</if>
+	</select>
+
+	<select id="getTotal" resultType="int">
+        select
+        FOUND_ROWS();
+	</select>
+
+	<select id="getExportCostPoolsUsedLogsList" parameterType="Map" resultType="Map">
+		SELECT
+		id,
+		siteId,
+		type,
+		channel,
+		chanYe,
+		yearMonth,
+		corderId,
+		orderId,
+		orderSn,
+		cOrderSn,
+		relationOrderSn,
+		source,
+		usedType,
+		amount,
+		from_unixtime(addTime,'%Y-%m-%d %H:%i:%S') addTime,
+		remark,
+		number
+		from costpoolsusedlogs
+		where 1=1
+		<include refid="displayQueryCondition"/>
+		Order By addTime DESC
+		limit 5000
+	</select>
+
+	<select id="findLogsByOidCid" resultMap="costPoolsUsedLogsResult">
+		SELECT
+		id,
+		siteId,
+		type,
+		channel,
+		chanYe,
+		yearMonth,
+		corderId,
+		orderId,
+		orderSn,
+		cOrderSn,
+		relationOrderSn,
+		source,
+		usedType,
+		amount,
+		from_unixtime(addTime,'%Y-%m-%d %H:%i:%S') addTime,
+		remark,
+		number
+		from costpoolsusedlogs
+		where orderId = ${oid} and corderId = ${opid}
+		Order By addTime DESC
+		limit 1
+	</select>
+
+</mapper>

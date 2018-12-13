@@ -53,7 +53,7 @@ function addTab(tabTitle, tabAnchor, isNew) {
   }
   if (isNew === true || existTab == null || existTab.length < 1) {
     var contentDom = '<iframe title="' + tabTitle
-        + '" style="height:0;" class="main-frame" src="' + tabAnchor
+        + '" style="position:absolute;height:0;" class="main-frame" src="' + tabAnchor
         + '"></iframe>';
     $tabs.tabs('add', {
       title: tabTitle,
@@ -63,7 +63,7 @@ function addTab(tabTitle, tabAnchor, isNew) {
 
     });
     setTimeout(function () {
-      $("iframe[title='" + tabTitle + "']").css('height', '99%');
+      $("iframe[title='" + tabTitle + "']").css('height', '100%');
     }, 0);
   } else {
     $tabs.tabs('select', tabTitle);

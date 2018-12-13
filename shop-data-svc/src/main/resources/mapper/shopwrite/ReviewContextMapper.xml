@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.workorder.ReviewContextDao">
+
+	<resultMap id="reviewContextResult" type="com.haier.shop.model.ReviewContext">
+		<result property="id" column="id" />
+		<result property="reviewid" column="reviewid" />
+		<result property="context" column="context" />
+		<result property="addtime" column="addtime" />
+		<result property="adduser" column="adduser" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+    	id, reviewid, context, addtime, adduser
+  	</sql>
+	<select id="findReviewContextById" resultMap="reviewContextResult">
+		select 
+		<include refid="Base_Column_List" />
+			from `wo_reviewcontext`
+		  where 1 = 1
+		  <if test="reviewContext.id!=null">
+				and `id` <![CDATA[=]]> #{reviewContext.id}
+		  </if>
+	</select>
+	
+	<select id="getReviewContextByReviewId" resultMap="reviewContextResult">
+		select 
+		<include refid="Base_Column_List" /> 
+			from `wo_reviewcontext`
+		  where 1 = 1
+		  <if test="reviewId!=null">
+				and `reviewid` <![CDATA[=]]> #{reviewId}
+		  </if>
+		  order by addtime desc
+	</select>
+
+	<select id="getCountByReviewId" resultType="int">
+		select count(1) 
+			from `wo_reviewcontext`
+		  where 1 = 1
+		  <if test="reviewId!=null">
+				and `reviewid` <![CDATA[=]]> #{reviewId}
+		  </if>
+	</select>
+	
+	<select id="findPageCount" resultType="int">
+		select count(1) 
+			from `wo_reviewcontext`
+		  where 1 = 1
+		  <!-- <if test="startTime!=null">
+				and `insertTime` <![CDATA[>=]]> #{startTime}
+		  </if>
+		  <if test="endTime!=null">
+				and `insertTime` <![CDATA[<=]]> #{endTime}
+		  </if>
+		<include refid="search_where" /> -->
+	</select>
+	
+	<sql id="pagination_Tail">
+	  <![CDATA[ limit #{pager.start},#{pager.pageSize}]]>
+	</sql>
+
+
+	<insert id="addReviewContext">
+		insert into
+		wo_reviewcontext
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="reviewid != null">
+				reviewid,
+			</if>
+			<if test="context != null">
+				context,
+			</if>
+			<if test="addtime != null">
+				addtime,
+			</if>
+			<if test="adduser != null">
+				adduser,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="reviewid != null">
+				#{reviewid},
+			</if>
+			<if test="context != null">
+				#{context},
+			</if>
+			<if test="addtime != null">
+				#{addtime},
+			</if>
+			<if test="adduser != null">
+				#{adduser},
+			</if>
+		</trim>
+	</insert>
+
+
+
+	<!-- 		<select id="getCountByReviewId" resultType="int"> -->
+<!-- 		select count(1)  -->
+<!-- 			from `reviewcontext` -->
+<!-- 		  where 1 = 1 -->
+<!-- 		  <if test="reviewId!=null"> -->
+<!-- 				and `reviewid` <![CDATA[=]]> #{reviewId} -->
+<!-- 		  </if> -->
+<!-- 	</select> -->
+	
+	
+	
+		
+	<select id="getCountByReviewIdList" resultType="int"
+		parameterType="java.lang.String">
+		SELECT COUNT(1) FROM
+		(select DISTINCT(CONCAT(context,addtime,adduser))
+			from `wo_reviewcontext`
+		where 1 = 1 and
+		reviewid in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		and adduser <![CDATA[<>]]> '[系统]') as t
+	</select>
+	
+	<select id="findNewTimeCountByReviewId" resultMap="reviewContextResult">
+		select 
+		<include refid="Base_Column_List" /> 
+			from `wo_reviewcontext`
+		  where 1 = 1
+		  <if test="reviewId!=null">
+				and `reviewid` <![CDATA[=]]> #{reviewId}
+		  </if>
+		  and adduser <![CDATA[<>]]> '[系统]'
+		  order by addtime desc
+		  limit 0,1
+	</select>
+
+	<select id="querForReviewId" resultMap="reviewContextResult">
+		select context,addtime,adduser
+		from wo_reviewcontext where reviewid=#{id}
+		order by addtime desc
+
+	</select>
+
+	<!-- 批量添加评论信息 -->
+	<insert id="addReviewContextList" parameterType="java.util.List">
+		insert into
+		wo_reviewcontext
+		(id,reviewid,context,addtime,adduser)
+		values
+		<foreach collection="list" item="reviewcontext"
+			index="index" separator=",">
+			(#{reviewcontext.id},
+			#{reviewcontext.reviewid},
+			#{reviewcontext.context},
+			#{reviewcontext.addtime},
+			#{reviewcontext.adduser})
+		</foreach>
+	</insert>
+
+</mapper>

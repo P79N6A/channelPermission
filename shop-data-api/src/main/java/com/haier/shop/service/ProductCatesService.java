@@ -7,6 +7,8 @@ import com.haier.shop.model.ProductCates;
 
 public interface ProductCatesService {
 	 List<ProductCates> selectByProducttypesId();
+	List<ProductCates> selectCateName();
+
 	    List<ProductCates> selectByProducttypesSku(int id);
 
 	    ProductCates get(Integer id);
@@ -15,7 +17,7 @@ public interface ProductCatesService {
 	     * @return
 	     */
 	    List<ProductCates> getAllProductCates();
-	    
+
 
 	    /**
 	     * 获取parentId的所有子类的ID

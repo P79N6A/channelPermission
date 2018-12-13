@@ -82,6 +82,9 @@
 		<result property="cancelFlag" column="CANCEL_FLAG" />
 		<result property="waInTime" column="wa_in_time" />
 		<result property="mblnr" column="MBLNR" />
+		<result property="cn_t2_purchase_stock_id" column="ps_id" />
+		<result property="order_num_73" column="order_num_73" />
+		<result property="send_flag" column="send_flag" />
 	</resultMap>
 	<resultMap id="crmOrderResult" type="com.haier.purchase.data.model.CrmOrderItem">
 		<result property="order_id" column="order_id" />
@@ -132,29 +135,29 @@
 		<if test="report_year_week !=null and report_year_week != ''">
 			AND report_year_week = #{report_year_week}
 		</if>
-		<if test="ed_channel_id !=null and ed_channel_id != ''">
-			AND ed_channel_id = #{ed_channel_id}
-			<!-- AND ed_channel_id in -->
-			<!-- <foreach item="item" index="index" collection="ed_channel_id" -->
-			<!-- open="(" separator="," close=")"> -->
-			<!-- #{item} -->
-			<!-- </foreach> -->
+		<if test="ed_channel_id !=null and ed_channel_id.length > 0">
+<!-- 			AND ed_channel_id = #{ed_channel_id} -->
+			AND ed_channel_id in
+			<foreach item="item" index="index" collection="ed_channel_id"
+			open="(" separator="," close=")">
+			#{item}
+			</foreach>
 		</if>
-		<if test="product_group_id !=null and product_group_id != ''">
-			AND product_group_id = #{product_group_id}
-			<!-- AND product_group_id in -->
-			<!-- <foreach item="item" index="index" collection="product_group_id" -->
-			<!-- open="(" separator="," close=")"> -->
-			<!-- #{item} -->
-			<!-- </foreach> -->
+		<if test="product_group_id !=null and product_group_id.length > 0">
+<!-- 			AND product_group_id = #{product_group_id} -->
+			AND product_group_id in
+			<foreach item="item" index="index" collection="product_group_id"
+			open="(" separator="," close=")">
+			#{item}
+			</foreach>
 		</if>
-		<if test="cbsCategory !=null and cbsCategory != ''">
-			AND category_id = #{cbsCategory}
-			<!-- AND category_id in -->
-			<!-- <foreach item="item" index="index" collection="cbsCategory" -->
-			<!-- open="(" separator="," close=")"> -->
-			<!-- #{item} -->
-			<!-- </foreach> -->
+		<if test="cbsCategory !=null and cbsCategory.length > 0">
+<!-- 			AND category_id = #{cbsCategory} -->
+			AND category_id in
+			<foreach item="item" index="index" collection="cbsCategory"
+			open="(" separator="," close=")">
+			#{item}
+			</foreach>
 		</if>
 		<if test="order_id !=null and order_id != ''">
 			AND UPPER(order_id) LIKE CONCAT(CONCAT('%',UPPER
@@ -232,8 +235,11 @@
 		audit_depart_user,
 		import_count,
 		cancel_order_id,
-		cancel_flag
+		cancel_flag,
+		send_flag,
+		order_num_73
 		<include refid="findT2OrdersSQLCond" />
+		order by create_time desc
 		<if test="m!=null and n!=null">
 			limit ${m},${n}
 		</if>
@@ -605,7 +611,9 @@
 		3w.import_date WHEN DEFAULT(3w.import_date) THEN '' ELSE
 		date_format(3w.import_date,'%Y-%m-%d %H:%i:%S') END as import_date,
 		3w.import_user,
-		3w.push_sap_resoult
+		3w.push_sap_resoult,
+		t2.order_num_73,
+		t2.send_flag
 		<include refid="find3WListSQLCond" />
 		<if test="m!=null and n!=null">
 			limit ${m},${n}
@@ -639,11 +647,11 @@
 	<insert id="insert" parameterType="com.haier.purchase.data.model.T2OrderItem">
 		insert into
 		haier_t2_order_t
-		(storage_id,storage_name,materials_desc,T2_delivery_prediction,customization,satisfy_type_id,create_user,create_time,delete_flag,flow_flag,order_id,materials_id,brand_id,category_id,ed_channel_id,product_group_id,report_year_week,order_type_id,industry_trade_id,industry_trade_desc,custom_id,custom_desc,transmit_id,transmit_desc,distribution_center_id,distribution_center_desc,arrival_storage_id,arrival_storage_desc,price,amount,payment_id,payment_name,order_category,import_count,cancel_order_id,cancel_flag)
-		values(#{storage_id},#{storage_name},#{materials_desc},#{t2_delivery_prediction},#{customization},#{satisfy_type_id},#{create_user},current_timeStamp,#{delete_flag},#{flow_flag},#{order_id},#{materials_id},#{brand_id},#{category_id},#{ed_channel_id},#{product_group_id},#{report_year_week},#{order_type_id},#{industry_trade_id},#{industry_trade_desc},#{custom_id},#{custom_desc},#{transmit_id},#{transmit_desc},#{distribution_center_id},#{distribution_center_desc},#{arrival_storage_id},#{arrival_storage_desc},#{price},#{amount},#{payment_id},#{payment_name},#{order_category},#{t2_delivery_prediction},#{cancelOrderId},#{cancelFlag})
+		(storage_id,storage_name,materials_desc,T2_delivery_prediction,customization,satisfy_type_id,create_user,create_time,delete_flag,flow_flag,order_id,materials_id,brand_id,category_id,ed_channel_id,product_group_id,report_year_week,order_type_id,industry_trade_id,industry_trade_desc,custom_id,custom_desc,transmit_id,transmit_desc,distribution_center_id,distribution_center_desc,arrival_storage_id,arrival_storage_desc,price,amount,payment_id,payment_name,order_category,import_count,cancel_order_id,cancel_flag,send_flag,order_num_73)
+		values(#{storage_id},#{storage_name},#{materials_desc},#{t2_delivery_prediction},#{customization},#{satisfy_type_id},#{create_user},current_timeStamp,#{delete_flag},#{flow_flag},#{order_id},#{materials_id},#{brand_id},#{category_id},#{ed_channel_id},#{product_group_id},#{report_year_week},#{order_type_id},#{industry_trade_id},#{industry_trade_desc},#{custom_id},#{custom_desc},#{transmit_id},#{transmit_desc},#{distribution_center_id},#{distribution_center_desc},#{arrival_storage_id},#{arrival_storage_desc},#{price},#{amount},#{payment_id},#{payment_name},#{order_category},#{t2_delivery_prediction},#{cancelOrderId},#{cancelFlag},#{send_flag},#{order_num_73})
 	</insert>
 	<update id="updateRevokeFlag" parameterType="Map">
-		UPDATE haier_t2_order_t SET flow_flag=-30
+		UPDATE haier_t2_order_t SET flow_flag=-30, audit_user = #{audit_user}, audit_time = CURRENT_TIMESTAMP()
 		WHERE delete_flag = 0 AND
 		order_id in
 		<foreach collection="revokeList" item="item" index="index"
@@ -897,7 +905,9 @@
 		order_close_time_display,
 		t2.relevance_id,
 		t2.cancel_order_id,
-		t2.cancel_flag
+		t2.cancel_flag,
+		t2.order_num_73,
+		t2.send_flag
 		<include refid="findT2OrderMultipleListSQLCond" />
 		group by t2.order_id
 		ORDER BY
@@ -926,7 +936,9 @@
 		sync_status,
 		order_category,
 		cancel_order_id,
-		cancel_flag
+		cancel_flag,
+		order_num_73,
+		send_flag
 		FROM
 		haier_t2_order_t
 		WHERE
@@ -1019,6 +1031,13 @@
 		</if>
 		WHERE delete_flag = 0 AND order_id = #{order_id}
 	</update>
+
+	<select id="getT2WdOrderId" parameterType="Map" resultMap="t2OrderResult">
+		select `order_id`
+		from `haier_t2_order_t`
+		where
+		<![CDATA[create_time >=  #{createTime}]]>
+	</select>
 
 	<update id="updateStatusToOutRRS" parameterType="Map">
 		UPDATE
@@ -1349,6 +1368,8 @@
 		t2.category_id,
 		t2.product_group_id,
 		t2.t2_delivery_prediction,
+		t2.order_num_73,
+		t2.send_flag,
 		CASE WHEN crm.dn_id='' THEN
 		t2.custpodetailcode
 		WHEN crm.dn_id is NULL THEN t2.custpodetailcode
@@ -1530,35 +1551,22 @@
 	</update>
 
 	<select id="findT2OrdersToSap" parameterType="Map" resultMap="t2OrderResult">
-		SELECT
-		vod.order_id,
-		cot.wa_in_time,
-		vod.Materials_id,
-		vod.t2_delivery_prediction,
-		vod.Storage_id,
-		cot.Dn_id,
-		lio.MBLNR
-		FROM
-		haier_t2_order_t vod
-		LEFT JOIN
-		crm_order_t cot ON vod.order_id = cot.source_order_id
-		LEFT JOIN
-		les_in_out_t lio ON CONCAT(cot.dn_id, 'D') = CONCAT(lio.BSTNK,
-		'')
-		WHERE
-		vod.flow_flag = '80'
-		AND vod.order_id NOT IN (
-		SELECT
-		cn_stock_syncs_id
-		FROM
-		cn_t2_purchase_stock
-		WHERE
-		STATUS = '1'
-		)
-		AND
-		cot.Dn_id != ''
-		AND lio.mblnr != ''
-		AND cot.wa_in_time != ''
+	SELECT t.*
+		FROM (
+			SELECT vod.order_id, co.wa_in_time, vod.Materials_id, lio.LFIMG t2_delivery_prediction, vod.Storage_id
+				, co.Dn_id, vod.product_group_id, lio.MBLNR,  co.flow_flag, vod.send_flag, vod.order_num_73
+			FROM haier_t2_order_t vod
+				JOIN crm_order_t co ON vod.order_id = co.source_order_id
+				JOIN les_in_out_t lio ON CONCAT(co.dn_id, 'D') = lio.BSTNK
+ 		) t
+		WHERE t.flow_flag = '80'
+			AND t.Dn_id NOT IN (
+				SELECT cn_stock_dn_id
+				FROM cn_t2_purchase_stock
+				WHERE STATUS = '1'
+			)
+			AND t.Dn_id IS NOT NULL
+			AND t.wa_in_time IS NOT NULL
 	</select>
 
 	<insert id="insertT2OrderInterfaceLog" parameterType="Map">
@@ -1613,6 +1621,13 @@
         select
         interface_id,interface_name,interface_category,interface_date,interface_message
         <include refid="findT2OrderInterfaceLogSQLCond"></include>
+		<if test="purchaseLogList !=null">
+			AND interface_id IN
+			<foreach collection="purchaseLogList" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY interface_date DESC
         <if test="m!=null and n!=null">
             limit ${m},${n}
         </if>
@@ -1623,4 +1638,13 @@
         <include refid="findT2OrderInterfaceLogSQLCond" />
     </select>
 
+	<update id="updateHaierT2OrderStatus80FromLES" >
+		UPDATE haier_t2_order_t SET flow_flag = 80
+		WHERE order_id IN (
+		SELECT t.source_order_id
+		FROM crm_order_t t
+		WHERE CONCAT(t.dn_id, 'D') IN (
+		SELECT BSTNK
+		FROM les_in_out_t)) AND (flow_flag !=80 OR flow_flag IS NULL)
+	</update>
 </mapper>

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.haier.eop.data.service.StocksyncProstorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
@@ -20,9 +21,12 @@ public class EopCenterStocksyncproductsServiceImpl implements EopCenterStocksync
 	@Autowired
 	StocksyncproductsService stocksyncproductsService;
 	@Autowired
+	StocksyncProstorageService stocksyncProstorageService;
+	@Autowired
 	private ProductsService productsService;
 	@Override
-	public int deleteByPrimaryKey(Integer id) {
+	public int deleteByPrimaryKey(Integer id,String source,String sku) {
+		stocksyncProstorageService.deleteBySourceAndSku(source,sku);
 		stocksyncproductsService.deleteByPrimaryKey(id);
 		return 1;
 	}
@@ -30,6 +34,10 @@ public class EopCenterStocksyncproductsServiceImpl implements EopCenterStocksync
 	@Override
 	public int insert(Stocksyncproducts record) {
 		record.setAddTime(new Date());
+		Stocksyncproducts stocksyncproducts = stocksyncproductsService.getBySourceAndSku(record.getSource(),record.getSku());
+		if(stocksyncproducts!=null){
+			return 0;
+		}
 		stocksyncproductsService.insert(record);
 		return 1;
 	}

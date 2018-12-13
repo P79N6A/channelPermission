@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haier.common.PagerInfo;
-import com.haier.common.ServiceResult;
-import com.haier.common.util.DateUtil;
 import com.haier.eop.data.model.Salesettings;
 import com.haier.eop.data.model.Ustring;
 import com.haier.eop.data.service.SalesettingsService;
@@ -27,7 +25,8 @@ import com.haier.shop.model.Products;
 import com.haier.shop.service.ProductsService;
 @Service
 public class EopCenterSalesettingsServiceImpl implements EopCenterSalesettingsService {
-	 
+	private static org.apache.log4j.Logger log = org.apache.log4j.LogManager
+            .getLogger(EopCenterSalesettingsServiceImpl.class);
 	
 	@Autowired
 	SalesettingsService salesettingsService;
@@ -79,11 +78,21 @@ public class EopCenterSalesettingsServiceImpl implements EopCenterSalesettingsSe
             for (@SuppressWarnings("rawtypes")
             Iterator i = keys.iterator(); i.hasNext();) {
                 String key = (String) i.next(); //获取sku编号
-                BigDecimal price = new BigDecimal(Ustring.getString0(myMap.get(key).toString()));//外部促销价格
-                String skutrim = key.trim();
-                Products p = productsService.getBySku(skutrim);
-                p.setExternalSalePrice(price);
-                list.add(p);
+				BigDecimal price =new BigDecimal(0);
+				try{
+					price = new BigDecimal(Ustring.getString0(myMap.get(key).toString()));//外部促销价格
+					String skutrim = key.trim();
+					Products p = productsService.getBySku(skutrim);
+					if(p==null) {
+	                	log.info("套装管理列表查询,根据sku:"+skutrim+"查询不到数据");
+	                	continue;
+	                }
+					p.setExternalSalePrice(price);
+					list.add(p);
+				}catch (RuntimeException e){
+					log.error("套装管理列表查询价格有误，[productSpecs]:"+productSpecs+"；异常信息e："+e);
+				}
+
             }
         }
         return list;
@@ -141,92 +150,50 @@ public class EopCenterSalesettingsServiceImpl implements EopCenterSalesettingsSe
     			String configidsString[] = dto.getConfigIds().split(",");
     			for(int j = 0 ; j < configidsString.length; j++){
     				if("SNYG".equals(configidsString[j])){
-    					dto.setConfigIds("海尔统帅苏宁旗舰店");
+    					dto.setConfigIds("苏宁统帅官方旗舰店");
     				}
     				if("SNQDZX".equals(configidsString[j])){
     					dto.setConfigIds("海尔渠道中心");
     				}
     				if("GMZX".equals(configidsString[j])){
-    					dto.setConfigIds("海尔统帅国美旗舰店");
+    					dto.setConfigIds("国美海尔官方旗舰店");
     				}
     				if("GMZXTS".equals(configidsString[j])){
-    					dto.setConfigIds("海尔统帅国美官方旗舰店");
-    				}
-    				if("YHDZY".equals(configidsString[j])){
-    					dto.setConfigIds("海尔官方1号店自营");
-    				}
-    				if("YHDQWZY".equals(configidsString[j])){
-    					dto.setConfigIds("海尔官方1号店全网自营");
-    				}
-    				if("YHD".equals(configidsString[j])){
-    					dto.setConfigIds("海尔官方1号店旗舰店");
+    					dto.setConfigIds("国美统帅官方旗舰店");
     				}
     				if("SNHEGQ".equals(configidsString[j])){
-    					dto.setConfigIds("苏宁海尔旗舰店");
+    					dto.setConfigIds("苏宁海尔官方旗舰店");
     				}
-    				if("GMTSZYCW".equals(configidsString[j])){
-    					dto.setConfigIds("国美自营店(厨卫)");
+    				if("JDHEBXGQ".equals(configidsString[j])){
+    					dto.setConfigIds("京东海尔集团冰箱官方旗舰店");
     				}
-    				if("GMTSZYKT".equals(configidsString[j])){
-    					dto.setConfigIds("国美自营店(空调)");
-    				}
-    				if("GMTSZYBX".equals(configidsString[j])){
-    					dto.setConfigIds("国美自营店(冰箱)");
-    				}
-    				if("GMTSZYXYJ".equals(configidsString[j])){
-    					dto.setConfigIds("国美自营店(洗衣机)");
-    				}
-    				if("JD".equals(configidsString[j])){
-    					dto.setConfigIds("京东pop店");
-    				}
-    				if("YHDTS".equals(configidsString[j])){
-    					dto.setConfigIds("一号店统帅");
-    				}
+					if("JDHEGQ".equals(configidsString[j])){
+						dto.setConfigIds("京东海尔官方旗舰店");
+					}
     			}
     		}
     		else{ 
     			if("SNYG".equals(dto.getConfigIds())){
-    				dto.setConfigIds("海尔统帅苏宁旗舰店");
+    				dto.setConfigIds("苏宁统帅官方旗舰店");
     			}
     			if("SNQDZX".equals(dto.getConfigIds())){
     				dto.setConfigIds("海尔渠道中心");
     			}
     			if("GMZX".equals(dto.getConfigIds())){
-    				dto.setConfigIds("海尔统帅国美旗舰店");
+    				dto.setConfigIds("国美海尔官方旗舰店");
     			}
     			if("GMZXTS".equals(dto.getConfigIds())){
-    				dto.setConfigIds("海尔统帅国美官方旗舰店");
-    			}
-    			if("YHDZY".equals(dto.getConfigIds())){
-    				dto.setConfigIds("海尔官方1号店自营");
-    			}
-    			if("YHDQWZY".equals(dto.getConfigIds())){
-    				dto.setConfigIds("海尔官方1号店全网自营");
-    			}
-    			if("YHD".equals(dto.getConfigIds())){
-    				dto.setConfigIds("海尔官方1号店旗舰店");
+    				dto.setConfigIds("国美统帅官方旗舰店");
     			}
     			if("SNHEGQ".equals(dto.getConfigIds())){
-    				dto.setConfigIds("苏宁海尔旗舰店");
+    				dto.setConfigIds("苏宁海尔官方旗舰店");
     			}
-    			if("GMTSZYCW".equals(dto.getConfigIds())){
-    				dto.setConfigIds("国美自营店(厨卫)");
+    			if("JDHEBXGQ".equals(dto.getConfigIds())){
+    				dto.setConfigIds("京东海尔集团冰箱官方旗舰店");
     			}
-    			if("GMTSZYKT".equals(dto.getConfigIds())){
-    				dto.setConfigIds("国美自营店(空调)");
-    			}
-    			if("GMTSZYBX".equals(dto.getConfigIds())){
-    				dto.setConfigIds("国美自营店(冰箱)");
-    			}
-    			if("GMTSZYXYJ".equals(dto.getConfigIds())){
-    				dto.setConfigIds("国美自营店(洗衣机)");
-    			}
-    			if("JD".equals(dto.getConfigIds())){
-    				dto.setConfigIds("京东pop店");
-    			}
-    			if("YHDTS".equals(dto.getConfigIds())){
-    				dto.setConfigIds("一号店统帅");
-    			}
+				if("JDHEGQ".equals(dto.getConfigIds())){
+					dto.setConfigIds("京东海尔官方旗舰店");
+				}
     		}
             json.put("id", dto.getId());
             json.put("siteId",dto.getSiteId());

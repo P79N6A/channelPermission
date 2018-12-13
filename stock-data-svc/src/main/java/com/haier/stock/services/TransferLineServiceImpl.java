@@ -100,4 +100,19 @@ public class TransferLineServiceImpl implements StockTransferLineService {
     public Integer updateRemarkByLineId(Integer id, String remark) {
         return transferLineDao.updateRemarkByLineId(id,remark);
     }
+
+	@Override
+	public Integer updateLineStatusByLineNum(Map<String, Object> params) {
+		return transferLineDao.updateLineStatusByLineNum(params);
+	}
+
+    @Override
+    public Integer updateRemarkByLineNum(String lineNum, String remark) {
+        return transferLineDao.updateRemarkByLineNum(lineNum,remark);
+    }
+
+    @Override
+    public InvTransferLine getYpInvTransferLineBySoLineNum(String lbx) {
+        return transferLineDao.getYpInvTransferLineBySoLineNum(lbx);
+    }
 }

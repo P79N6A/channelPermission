@@ -1,0 +1,254 @@
+<!--列表数据-->
+<style>
+    @charset "utf-8";
+
+    body{ position:relative;padding-bottom:30px;
+    }
+
+
+    .tabbutton{
+        overflow:hidden;
+        padding:5px 0px 0px 5px;
+    }
+    .tabbutton input {
+        cursor:pointer;
+        float:left;
+        padding:2px 15px;
+        margin:0;
+        margin-left:0px;
+        color:#99bce8;
+        font-weight:bold;
+        font-size:12px;
+        font-family:微软雅黑;
+        border:1px solid #99bce8;
+    }
+
+    .tabbutton input:hover, .tabbutton input.cur {
+        color:black;
+    }
+
+    .toolbar{
+        overflow:hidden;
+        padding:0px 0px 2px 15px;
+    }
+
+    .toolbar input {
+        cursor:pointer;
+        float:left;
+        padding:2px 15px;
+        margin:0;
+        margin-left:0px;
+        color:black;
+        font-size:13px;
+        border:0px solid #99bce8;
+        width:70px;
+    }
+
+    .toolbar-separator {
+        width:1px;
+        height:10px;
+        z-index:1;
+        background-color: #000000;
+        border: 1px none #000000;
+    }
+
+
+    .list{
+        overflow-x:auto;
+        overflow-y:auto;
+        background:#ffffff;
+    }
+
+    .list tr:hover {
+        background:#d5e6ff;
+        color:#000000;
+    }
+
+    .tr-bg {
+        background:#f3f3f3;
+    }
+    .tr-bg-light {
+        background:#d5e6ff;
+    }
+
+    .list th {
+        padding:4px 5px 4px 8px;
+        text-align:center;
+        font-weight:normal;
+        color:#000000;
+        border-top:1px solid #99bce8;
+        border-bottom:1px solid #c5c5c5;
+        border-right:1px solid #c5c5c5;
+        min-width:90px;
+    }
+
+    .list td {
+        padding:5px;
+        min-width:50px;
+        text-align:center;
+    }
+
+
+
+    h3{ padding:0; margin:0; background:#99bce8;font-size:14px; font-weight:bold; color:#ffffff; text-indent:5px;}
+
+
+    input{ vertical-align:middle; width:100px; border:1px solid #B5B8C8;}
+
+    select{ vertical-align:middle; width:102px; border:1px solid #B5B8C8; }
+
+
+
+    fieldset,.pagelist{ margin:0; padding:0;repeat-x; overflow:hidden;}
+    fieldset{ margin:0px 2px 0px 2px; padding:0px 2px 0px 2px;}
+    fieldset table{background:none;}
+
+    .hidefieldset{ height:22px; }
+    legend{ padding:5px;}
+    a{color:15428b;}
+    a.take-action {
+        text-decoration:underline;
+    }
+    a.take-action:hover, a.take-action:active {
+        color:white;
+        background:#15428b;
+        padding:2px 3px;
+        text-decoration:none;
+    }
+    a.take-action:active {
+        background:#335682;
+    }
+    a.tool-toggle,.pagelist a{width:15px; height:15px;display:inline-block;
+         vertical-align:middle;}
+    a.tool-toggle-show{ background-position:0 -60px}
+    a.tool-toggle-show:hover{background-position:-15px -60px}
+    a.tool-toggle-hide{background-position:0 -75px}
+    a.tool-toggle-hide:hover{background-position:-15px -75px}
+
+    .pagelist{ position:absolute; bottom:0; width:99.8%;border:1px solid #99bce8; padding:3px 0; vertical-align:middle; }
+    a.firstpagedisabled{background-position:-15px -360px; margin-left:10px;}
+    a.firstpage{ background-position:0 -360px; margin-left:10px;}
+    a.prevpagedisabled{background-position:-15px -405px;}
+    a.prevpage{ background-position:0 -405px;}
+    a.nextpagedisabled{background-position:-15px -390px;}
+    a.nextpage{ background-position:0 -390px;}
+    a.lastpagedisabled{background-position:-15px -375px;}
+    a.lastpage{ background-position:0 -375px;}
+    a.refreshpage{background-position:0 -420px;}
+    .spaceline{ display:inline-block; width:1px; height:14px; font-size:0; overflow:hidden; background:white; border-left:1px solid #98c8ff; vertical-align:middle; margin:0 10px;}
+    .messageright{ float:right; margin-right:10px;}
+    .x-form-invalid-field {
+        border-color: #cc3300
+    }
+</style>
+<script>
+    function linkToDetail(repairId){
+        var win = window.open('about:blank');
+
+        var url=null;
+        if("$!{queryHistory}"=="true"){
+            url= "/historyles/getKpiOrderOntimeRateReverseLesReportDetailList";
+            data="repairId="+repairId+"&pageIndex=1&pageSize=10&sign=first&nodeType=les&startDate=$!request.getParameter('startDate')&endDate=$!request.getParameter('endDate')&timeoutType="+timeoutType+"&orderSnFlag=$!{orderSnFlag}";
+        }else{
+            url= "/orderles/getOrderOntimeRateReverseLesReportDetailList";
+            data="repairId="+repairId+"&pageIndex=1&pageSize=10&sign=first&nodeType=les";
+        }
+        jQuery.ajax({
+            url: url,
+            data: data,
+            type: "post",
+            success: function(data) {
+                win.document.open();
+                win.document.write(data);
+                win.document.close();
+            }
+        });
+    }
+
+</script>
+<table border="0" cellpadding="0" cellspacing="0" width="90%"  >
+    <tr>
+        #if($!queryHistory=="true")
+            <th rowspan="2">历史及时率</th>
+        #elseif($!queryHistory!="true")
+            <th rowspan="2">及时率</th>
+        #end
+        <th colspan="5">退换货LES入库及时率</th>
+    </tr>
+    <tr>
+        <th>应</th>
+        <th>实</th>
+        <th>差</th>
+        <th>及时率</th>
+        <th>完成率</th>
+    </tr>
+    <tr>
+        <td>合计</td>
+        <td><a href='javascript:void(0)' onClick='linkToDetail("$!{totalCountEntity.totalRepairId}");return false'>$!{totalCountEntity.total}</a></td>
+        <td><a href='javascript:void(0)' onClick='linkToDetail("$!{totalCountEntity.onTimeRepairId}");return false'>$!{totalCountEntity.onTime}</a></td>
+        <td><a href='javascript:void(0)' onClick='linkToDetail("$!{totalCountEntity.outTimeRepairId}");return false'>$!{totalCountEntity.outTime}</a></td>
+        <td>$!{totalCountEntity.ontimeRate}</td>
+        #if($!request.getParameter('nodeType') != 'refund')
+            <td>$!{totalCountEntity.finishRate}</td>
+        #end
+        #if($!request.getParameter('nodeType') == 'audit')
+            <td>$!{totalCountEntity.avgRate}</td>
+        #end
+    </tr>
+    #set($count=0)
+    #foreach($key in $countMap.keySet())
+        #if($count%2==0)
+        <tr class="tr-bg">
+        #else
+        <tr>
+        #end
+        #set($count=$count+1)
+        <td>$!{key}</td>
+        <td><a href='javascript:void(0)' onClick='linkToDetail("$!{countMap.get($key).totalRepairId}");return false'>$!{countMap.get($key).total}</a></td>
+        <td><a href='javascript:void(0)' onClick='linkToDetail("$!{countMap.get($key).onTimeRepairId}");return false'>$!{countMap.get($key).onTime}</a></td>
+        <td><a href='javascript:void(0)' onClick='linkToDetail("$!{countMap.get($key).outTimeRepairId}");return false'>$!{countMap.get($key).outTime}</a></td>
+        <td>$!{countMap.get($key).ontimeRate}</td>
+        #if($!request.getParameter('nodeType') != 'refund')
+            <td>$!{countMap.get($key).finishRate}</td>
+        #end
+        #if($!request.getParameter('nodeType') == 'audit')
+            <td>$!{countMap.get($key).avgRate}</td>
+        #end
+    </tr>
+    #end
+    <tr>
+        <th rowspan="2">入库超期</th>
+        <th rowspan="2">合计</th>
+        <th colspan="4">按单取货入库</th>
+    </tr>
+    <tr>
+        <th>质检</th>
+        <th>确认配车取货</th>
+        <th>拉回</th>
+        <th>入库</th>
+    </tr>
+    <tr>
+        <th>已完成已超期</th>
+        <td><a href='javascript:void(0)' onClick='linkToDetail("$!{totalCountEntity.cOutTimeRepairId}");return false'>$!{totalCountEntity.cOutTime}</a></td>
+        <td>/</td>
+        <td>/</td>
+        <td>/</td>
+        <td>/</td>
+    </tr>
+    <tr>
+        <th>未完成已超期</th>
+        <td><a href='javascript:void(0)' onClick='linkToDetail("$!{totalCountEntity.uOutTimeRepairId}");return false'>$!{totalCountEntity.uOutTime}</a></td>
+        <td>/</td>
+        <td>/</td>
+        <td>/</td>
+        <td>/</td>
+    </tr>
+    <tr>
+        <th>未完成未超期</th>
+        <td><a href='javascript:void(0)' onClick='linkToDetail("$!{totalCountEntity.uOnTimeRepairId}");return false'>$!{totalCountEntity.uOnTime}</a></td>
+        <td>/</td>
+        <td>/</td>
+        <td>/</td>
+        <td>/</td>
+    </tr>
+</table>

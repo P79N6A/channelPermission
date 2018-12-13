@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.haier.purchase.data.model.CrmOrderManualDetailItem;
 import com.haier.purchase.data.model.CrmOrderManualItem;
+import org.apache.ibatis.annotations.Param;
 
 
 /**
@@ -83,6 +84,8 @@ public interface CrmOrderManualDao {
      */
     public List<CrmOrderManualDetailItem> findCrmOrderManuals(Map<String, Object> params);
 
+    List<CrmOrderManualItem> getManualWdOrderId(String wpOrderId);
+
     /**
      * 获取CRM手工采购订单条数
      * @param params
@@ -107,4 +110,26 @@ public interface CrmOrderManualDao {
      * @param map
      */
     public void updateTimeFromCRM(Map map);
+
+    /**
+     * 查找要推送SAP的CRM手工订单
+     * @return
+     */
+	public List<CrmOrderManualDetailItem> findOrdersToSap();
+
+	/**
+	 * 根据wa入库信息将状态改为80
+	 */
+	public void updateStatus80FromLES();
+
+	/**
+	 * 根据wa入库信息更新入库时间
+	 */
+	public void updateTimeInWAFromLES();
+
+	public void updateCrmOrderManualAfterSync();
+
+    CrmOrderManualItem getCrmOrderManualItem(@Param("wp_order_id") String wp_order_id);
+
+    List<CrmOrderManualDetailItem> getcrmOrderManualDetailItem(@Param("wp_order_id") String wp_order_id);
 }

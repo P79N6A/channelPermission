@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>返利点位维护</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/ajaxfileupload.js"></script>
+    <style>
+        .i-mark {
+            font-size: 10px;
+        }
+        #importExecl table{
+            margin: 5px;
+        }
+        #importExecl button{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">
+                  产业
+                </span>
+                <select  id="industry1" name="industry"  class="easyui-combobox" style="width: 174px;">
+                    <option value="">&nbsp;</option>
+                    <option value="冰箱">冰箱</option>
+                    <option value="彩电">彩电</option>
+                    <option value="空调">空调</option>
+                    <option value="冷柜">冷柜</option>
+                    <option value="热水器">热水器</option>
+                    <option value="水家电">水家电</option>
+                    <option value="统帅">统帅</option>
+                    <option value="洗衣机">洗衣机</option>
+                    <option value="厨电">厨电</option>
+                    <option value="洗碗机">洗碗机</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  年度
+                </span>
+                <input id="year1"  name="year" class="easyui-combobox" style="width:174px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  期间
+                </span>
+                <select  id="month" class="easyui-combobox" name="month" style="width:174px;">
+                    <option value="">&nbsp;</option>
+                    <option value="01">1月</option>
+                    <option value="02">2月</option>
+                    <option value="03">3月</option>
+                    <option value="04">4月</option>
+                    <option value="05">5月</option>
+                    <option value="06">6月</option>
+                    <option value="07">7月</option>
+                    <option value="08">8月</option>
+                    <option value="09">9月</option>
+                    <option value="10">10月</option>
+                    <option value="11">11月</option>
+                    <option value="12">12月</option>
+                    <option value="Q1">Q1</option>
+                    <option value="Q2">Q2</option>
+                    <option value="Q3">Q3</option>
+                    <option value="Q4">Q4</option>
+                    <option value="N">N</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  生态店
+                </span>
+                <input id="ecologyShop1"  name="ecologyShop" class="easyui-textbox" style="width:174px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  类型
+                </span>
+                <select id="type1"  name="type" class="easyui-combobox" style="width:174px" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="y">年度</option>
+                    <option value="q">季度</option>
+                    <option value="m">月度</option>
+                    <option value="d">日期</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  是否删除
+                </span>
+                <select id="deleteTab"  name="deleteTab" class="easyui-combobox" style="width:174px" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="Y">已删除</option>
+                    <option value="N">未删除</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  审核状态
+                </span>
+                <select id="auditState"  name="auditState" class="easyui-combobox" style="width:174px" panelHeight="auto">
+                    <option value="">&nbsp;</option>
+                    <option value="B">待业务审核</option>
+                    <option value="F">待财务审核</option>
+                    <option value="A">审核通过</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                 SKU
+                </span>
+                <input id="sku"  name="sku" class="easyui-textbox" style="width:174px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  	奖励类型
+                </span>
+                <select id="rewardType"  name="rewardType" class="easyui-combobox" style="width:174px" panelHeight="auto">
+                      <option value="SKU">SKU</option>
+		                <option value="剩余型号">剩余型号</option>
+		                <option value="销额台阶">销额台阶</option>
+		                <option value="品类专卖店">品类专卖店</option>
+		                <option value="月度销额达标">月度销额达标</option>
+		                <option value="SKU销量台阶">SKU销量台阶</option>
+		                <option value="SKU销额台阶">SKU销额台阶</option>
+		                <option value="销量台阶">销量台阶</option>
+		                <option value="季返">季返</option>
+		                <option value="年返">年返</option>
+		                <option value="销额对赌">销额对赌</option>
+		                <option value="销量对赌">销量对赌</option>
+		                <option value="SKU销额对赌">SKU销额对赌</option>
+		                <option value="SKU销量对赌">SKU销量对赌</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderOp"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn"
+           data-options="iconCls:'icon-add',plain:true">新增</a>
+        <a href="#" class="easyui-linkbutton" id="delBtn"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="bAudit"
+           data-options="iconCls:'icon-man',plain:true">业务审核</a>
+        <a href="#" class="easyui-linkbutton" id="fAudit"
+           data-options="iconCls:'icon-man',plain:true">财务审核</a>
+        <a id="action" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">计算</a>
+        <a href="#" class="easyui-linkbutton" id="export"
+           data-options="iconCls:'icon-save',plain:true" onclick="exp()">导出</a>
+        <a href="#" class="easyui-linkbutton" id="import"
+           data-options="iconCls:'icon-save',plain:true">导入</a>
+      <span style="float:right;color:#F00;font-size: 12px;" id="logInfo" ></span>
+    </form>
+</div>
+<div id="importExecl" class="easyui-dialog"
+     closed="true">
+    <div class="import-panel">
+        <input type="hidden" id="rowId" value="{{_USER_.id}}"  />
+        <table>
+            <tr>
+                <td colspan="2">
+                    请仔细阅读以下注意事项：
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    1、请使用最新的导入模板导入数据，最新模板为<a href='/static/excel/odsTMFXPointMain.xlsx' target='_blank'>【返利政策点位维护导入.xlsx】</a>。
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    2、请直接在<b><span style="color:#dc143c">导入模板的基础上 拷贝粘贴实际业务数据，不要添加删除行或列，也不要更改模板的公式、格式等</span></b>。
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    3、模板中的<b><span style="color:#dc143c">数据不能超过2000行</span></b>，超过后请分成多个excel导入。
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td >EXCEL 导入：</td>
+                <td >
+                    <input type="file" id="file" name="file"  label="上传文件" />
+                    <input type="hidden" id="uploadfileId">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button id="upload" href="javascript:void(0)" class="btn btn-default easyui-linkbutton c6 "  style="width:250px">导入</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="userEdit" data-options="title:'',resizable:true,modal:true"
+     class="easyui-dialog add-dlg"
+     style="width:600px;height:300px;"
+     closed="true" buttons="#dlg-buttons">
+    <form id="fm" method="post">
+        <div class="fitem">
+            <label class="" style="width:100px">生态店：</label>
+            <input id="ecologyShop"  name="ecologyShop" class="easyui-textbox" style="width:100px">
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">年度：</label>
+            <input id="year"  name="year" class="easyui-combobox" style="width:100px" required="true">
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">期间起：</label>
+            <select  id="beginMonth" class="easyui-combobox" name="beginMonth" style="width:100px;"required="true">
+                <option value="01">1月</option>
+                <option value="02">2月</option>
+                <option value="03">3月</option>
+                <option value="04">4月</option>
+                <option value="05">5月</option>
+                <option value="06">6月</option>
+                <option value="07">7月</option>
+                <option value="08">8月</option>
+                <option value="09">9月</option>
+                <option value="10">10月</option>
+                <option value="11">11月</option>
+                <option value="12">12月</option>
+                <option value="Q1">Q1</option>
+                <option value="Q2">Q2</option>
+                <option value="Q3">Q3</option>
+                <option value="Q4">Q4</option>
+                <option value="N">N</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">期间止：</label>
+            <select  id="endMonth" class="easyui-combobox" name="endMonth" style="width:100px;"required="true">
+                <option value="01">1月</option>
+                <option value="02">2月</option>
+                <option value="03">3月</option>
+                <option value="04">4月</option>
+                <option value="05">5月</option>
+                <option value="06">6月</option>
+                <option value="07">7月</option>
+                <option value="08">8月</option>
+                <option value="09">9月</option>
+                <option value="10">10月</option>
+                <option value="11">11月</option>
+                <option value="12">12月</option>
+                <option value="Q1">Q1</option>
+                <option value="Q2">Q2</option>
+                <option value="Q3">Q3</option>
+                <option value="Q4">Q4</option>
+                <option value="N">N</option>
+            </select>
+        </div>
+        <div class="fitem" style="display: none">
+          <label class="" style="width:100px">期间起：</label>
+          <input  name="beginDate" id="beginDate"  class="easyui-datebox" style="width:100px;" required="true" ><i class="i-mark">(包含)</i>
+        </div>
+        <div class="fitem" style="display: none">
+          <label class="" style="width:100px">期间止：</label>
+          <input  name="endDate" id="endDate"  class="easyui-datebox" style="width:100px;" required="true" ><i class="i-mark">(包含)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">产业：</label>
+            <select  id="industry" name="industry"  class="easyui-combobox" style="width:100px;" required="true">
+                <option value="冰箱">冰箱</option>
+                <option value="彩电">彩电</option>
+                <option value="空调">空调</option>
+                <option value="冷柜">冷柜</option>
+                <option value="热水器">热水器</option>
+                <option value="水家电">水家电</option>
+                <option value="统帅">统帅</option>
+                <option value="洗衣机">洗衣机</option>
+                <option value="厨电">厨电</option>
+                <option value="洗碗机">洗碗机</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">SKU：</label>
+            <input  id="sku" name="sku"  class="easyui-textbox" style="width:100px;"/>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">型号描述：</label>
+            <input  id="modelDes" name="modelDes"  class="easyui-textbox" style="width:100px;"/>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">品牌：</label>
+            <input  id="brand" name="brand"  class="easyui-textbox" style="width:100px;" required="true"/>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">奖励类型：</label>
+            <select id="rewardType"  name="rewardType" class="easyui-combobox" style="width:100px" required="true" >
+                <option value="SKU">SKU</option>
+                <option value="剩余型号">剩余型号</option>
+                <option value="销额台阶">销额台阶</option>
+                <option value="品类专卖店">品类专卖店</option>
+                <option value="月度销额达标">月度销额达标</option>
+                <option value="SKU销量台阶">SKU销量台阶</option>
+                <option value="SKU销额台阶">SKU销额台阶</option>
+                <option value="销量台阶">销量台阶</option>
+                <option value="季返">季返</option>
+                <option value="年返">年返</option>
+                <option value="销额对赌">销额对赌</option>
+                <option value="销量对赌">销量对赌</option>
+                <option value="SKU销额对赌">SKU销额对赌</option>
+                <option value="SKU销量对赌">SKU销量对赌</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">类型：</label>
+            <select id="type"  name="type" class="easyui-combobox" style="width:100px" required="true">
+                <option value="y">年度</option>
+                <option value="q">季度</option>
+                <option value="m">月度</option>
+                <option value="d">日期</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">目标起：</label>
+            <input id="beginTarget"  name="beginTarget" class="easyui-numberbox"  style="width:100px"/><i class="i-mark">(包含)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">目标止：</label>
+            <select id="endTarget"  name="endTarget" class="easyui-combobox" style="width:100px">
+                <option value="∞">无限大</option>
+            </select><i class="i-mark">(不包含)</i>
+        </div>
+        <div class="fitem" style="display: none">
+            <label class="" style="width:100px">计算规则：</label>
+            <input  id="intervalRule"  name="intervalRule"  class="easyui-textbox"  style="width:100px"/><i class="i-mark"></i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">计算类型：</label>
+            <select id="calculationType"  name="calculationType" class="easyui-combobox" style="width:100px" required="true">
+              <option value="target">按目标</option>
+              <option value="actual">按实际</option>
+            </select>
+        </div>
+        <div class="fitem">
+          <label class="" style="width:100px">对赌目标：</label>
+          <input id="bettingTarget"  name="bettingTarget" class="easyui-numberbox" style="width:100px"  ><i class="i-mark"></i>
+        </div>
+        <div class="fitem">
+          <label class="" style="width:100px">对赌系数：</label>
+          <input id="bettingCoefficient"  name="bettingCoefficient" class="easyui-numberbox" style="width:100px"  precision="5"><i class="i-mark">(小数)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">基础点位：</label>
+            <input id="basePoint"  name="basePoint" class="easyui-numberbox" style="width:100px"  precision="5"><i class="i-mark">(小数)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">额外返点：</label>
+            <input id="extraRebate"  name="extraRebate" class="easyui-numberbox" style="width:100px" precision="5"><i class="i-mark">(小数)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">台阶点位：</label>
+            <input id="stepPoint"  name="stepPoint" class="easyui-numberbox" style="width:100px"  precision="5"><i class="i-mark">(小数)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">达标点位：</label>
+            <input id="markPoint"  name="markPoint" class="easyui-numberbox" style="width:100px"  precision="5"><i class="i-mark">(小数)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">固定金额：</label>
+            <input id="fixedAmount"  name="fixedAmount" class="easyui-numberbox" style="width:100px"  precision="5"/><i class="i-mark">(小数)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">SKU销额台阶：</label>
+            <input id="skuStepPoint"  name="skuStepPoint" class="easyui-numberbox" style="width:100px"  precision="5"/><i class="i-mark">(小数)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:100px">销量台阶：</label>
+            <input id="amountPoint"  name="amountPoint" class="easyui-numberbox" style="width:100px"  precision="5"/><i class="i-mark">(小数)</i>
+        </div>
+        <input type="hidden" name="id" id="id">
+    </form>
+    <div id="dlg-buttons">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#userEdit').dialog('close')">关闭</a>
+    </div>
+</div>
+<div id="actionEdit" class="easyui-dialog" style="width:320px;height:220px;padding:10px 20px"
+     closed="true" buttons="#actionEdit-buttons">
+    <div class="query-group">
+        <label class="query-label" style="width:60px">年度：</label>
+        <select id="year2"  name="year2" class="easyui-combobox" style="width:100px" required="true">
+            <option value="2017">2017年</option>
+            <option value="2018" selected>2018年</option>
+            <option value="2019">2019年</option>
+        </select>
+    </div>
+    <div class="query-group">
+        <label class="query-label" style="width:60px">期间：</label>
+        <select  id="month2" class="easyui-combobox" name="month2" style="width:100px;"required="true">
+            <option value="01">1月</option>
+            <option value="02">2月</option>
+            <option value="03">3月</option>
+            <option value="04">4月</option>
+            <option value="05">5月</option>
+            <option value="06">6月</option>
+            <option value="07">7月</option>
+            <option value="08">8月</option>
+            <option value="09">9月</option>
+            <option value="10">10月</option>
+            <option value="11">11月</option>
+            <option value="12">12月</option>
+            <option value="Q1">Q1</option>
+            <option value="Q2">Q2</option>
+            <option value="Q3">Q3</option>
+            <option value="Q4">Q4</option>
+            <option value="N">N</option>
+        </select>
+    </div>
+    <div class="query-group">
+        <label class="query-label" style="width:60px">类型：</label>
+        <select id="type2"  name="type2" class="easyui-combobox" style="width:100px" required="true">
+            <option value="y">年度</option>
+            <option value="q">季度</option>
+            <option value="m" selected>月度</option>
+        </select>
+    </div>
+</div>
+<div id="actionEdit-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#actionEdit').dialog('close')" >取消</a>
+    <a id="toAction" href="javascript:void(0)" class="btn btn-default easyui-linkbutton c6" iconCls="icon-ok" >执行</a>
+</div>
+<script type="application/javascript">
+    var dataGrid = $('#dg').datagrid({
+        url:"/pointMaintain/getList",
+        fit: true,
+        fitColumns : false,
+        pagination: true,
+        pageSize: 50,
+        pageList: [50, 100, 200 ],
+        pageNumber:1,
+        autoRowHeight : true,
+        striped : true,
+        toolbar : '#datagridToolbar',
+        rownumbers : true,
+        nowrap : false,
+        columns: [
+            [
+                {
+                    field: 'ck',
+                    title: '选择',
+                    checkbox: true
+                }, {
+                field: "id",
+                title: "id",
+                hidden: "true"
+            }, {
+                field: "ecologyShop",
+                title: "生态店",
+                width : 120
+            }, {
+                field: "year",
+                title: "年度",
+                width: 80
+            }, {
+                field: "beginMonth",
+                title: "期间起",
+                width: 72
+            }, {
+                field: "endMonth",
+                title: "期间止",
+                width: 72
+            }, {
+                field: "industry",
+                title: "产业  ",
+                width: 62
+            }, {
+                field: "sku",
+                title: "SKU  ",
+                width: 111
+            }, {
+                field: "modelDes",
+                title: "型号描述",
+                width: 196
+            }, {
+                field: "brand",
+                title: "品牌",
+                width: 100
+            }, {
+                field: "type",
+                title: "类型",
+                width: 62,
+                formatter: function(value, row, index) {
+                    if (value === "y") {
+                        return "年度";
+                    } else if (value === "m") {
+                        return "月度";
+                    } else  if (value === "q") {
+                        return "季度";
+                    } else  {
+                      return "日期";
+                    }
+                }
+            }, {
+                field: 'rewardType',
+                title: '奖励类型',
+                width: 86
+            }, {
+                field: "beginTarget",
+                title: "目标起",
+                width: 72
+            }, {
+                field: "endTarget",
+                title: "目标止",
+                width: 72
+            }, {
+                field: "basePoint",
+                title: "基础点位",
+                width: 86,
+                formatter: function(value, row, index) {
+                    if (value) {
+                        return (value * 100).toFixed(3) + '%';
+                    } else if (value === 0) {
+                        return '0.000%';
+                    }
+                }
+            }, {
+                field: "extraRebate",
+                title: "额外返点",
+                width: 86,
+                formatter: function(value, row, index) {
+                    if (value) {
+                        return (value * 100).toFixed(3) + '%';
+                    } else if (value === 0) {
+                        return '0.000%';
+                    }
+                }
+            }, {
+                field: "stepPoint",
+                title: "台阶点位",
+                width: 86,
+                formatter: function(value, row, index) {
+                    if (value) {
+                        return (value * 100).toFixed(3) + '%';
+                    } else if (value === 0) {
+                        return '0.000%';
+                    }
+                }
+            }, {
+                field: "markPoint",
+                title: "达标点位",
+                width: 86,
+                formatter: function(value, row, index) {
+                    if (value) {
+                        return (value * 100).toFixed(3) + '%';
+                    } else if (value === 0) {
+                        return '0.000%';
+                    }
+                }
+            }, {
+                field: "fixedAmount",
+                title: "固定金额",
+                width: 86,
+            }, {
+                field: "skuStepPoint",
+                title: "SKU销额台阶点位",
+                width: 143,
+                formatter: function(value, row, index) {
+                    if (value) {
+                        return (value * 100).toFixed(3) + '%';
+                    } else if (value === 0) {
+                        return '0.000%';
+                    }
+                }
+            }, {
+                field: "amountPoint",
+                title: "销量台阶点位",
+                width: 114,
+                formatter: function(value, row, index) {
+                    if (value) {
+                        return (value * 100).toFixed(3) + '%';
+                    } else if (value === 0) {
+                        return '0.000%';
+                    }
+                }
+            },{
+              field: "intervalRule",
+              title: "对赌计算规则",
+              width: 100,
+            }, {
+              field: "bettingTarget",
+              title: "对赌目标",
+              width: 80,
+            },{
+              field: "calculationType",
+              title: "对赌计算类型",
+              width: 80,
+              formatter: function(value, row, index) {
+                if (value === "target") {
+                  return "按目标";
+                } else if (value === "actual") {
+                  return "按实际";
+                } else{
+                  return "";
+                }
+              }
+            }, {
+              field: "bettingCoefficient",
+              title: "对赌系数",
+              width: 100,
+              formatter: function(value, row, index) {
+                if (value) {
+                  return (value * 100).toFixed(3) + '%';
+                } else if (value === 0) {
+                  return '0.000%';
+                }
+              }
+            },{
+                field: "deleteTab",
+                title: "标记删除",
+                width: 86,
+                formatter: function(value, row, index) {
+                    if (value === "Y") {
+                        return "已删除";
+                    } else if (value === "N") {
+                        return "未删除";
+                    }
+                }
+            }, {
+                field: "createTime",
+                title: "创建时间",
+                width: 93,
+                formatter: function(value, row, index) {
+                    return DateUtil.NumberToDate(value);
+                }
+            }, {
+                field: "createBy",
+                title: "创建人",
+                width: 86
+            }, {
+                field: "auditState",
+                title: "审核状态",
+                width: 90,
+                formatter: function(value, row, index) {
+                    if (value === "B") {
+                        return "待业务审核";
+                    } else if (value === "F") {
+                        return "待财务审核";
+                    } else if (value === "A") {
+                        return "审核通过";
+                    }
+                }
+            }, {
+                field: "auditBy",
+                title: "审核人",
+                width: 86
+            }, {
+                field: "auditTime",
+                title: "审核时间",
+                width: 86,
+                formatter: function(value, row, index) {
+                    return DateUtil.NumberToDate(value);
+                }
+            }
+            ]
+        ]
+    });
+
+
+    var DateUtil = (function() {
+        function DateUtil() {}
+
+        DateUtil.AddDays = function(date, days) {
+            var cdate, d, m, nd, y;
+            nd = new Date(date);
+            nd = nd.valueOf();
+            nd = nd + days * 24 * 60 * 60 * 1000;
+            nd = new Date(nd);
+            y = nd.getFullYear();
+            m = nd.getMonth() + 1;
+            d = nd.getDate();
+            if (m <= 9) {
+                m = "0" + m;
+            }
+            if (d <= 9) {
+                d = "0" + d;
+            }
+            cdate = y + "-" + m + "-" + d;
+            return cdate;
+        };
+
+        DateUtil.DaysBetween = function(DateOne, DateTwo) {
+            var cha;
+            cha = (Date.parse(DateOne) - Date.parse(DateTwo)) / 86400000;
+            return Math.abs(cha);
+        };
+
+        DateUtil.StringToDate = function(DateStr) {
+            var arys, converted, myDate;
+            converted = Date.parse(DateStr);
+            myDate = new Date(converted);
+            if (isNaN(myDate)) {
+                arys = DateStr.split('-');
+                myDate = new Date(arys[0], --arys[1], arys[2]);
+            }
+            return myDate;
+        };
+
+        DateUtil.NumberToDate = function(DateStr) {
+            if (DateStr) {
+                return new Date(DateStr).toLocaleString();
+            } else {
+                return '';
+            }
+        };
+
+        DateUtil.GetMonthBeginEnd = function(DateTemp) {
+            var beginDate, d, e, endDate, f;
+            d = new Date(DateTemp);
+            f = d.setDate(1);
+            f = new Date(f);
+            e = d.setDate(1);
+            e = new Date(e);
+            e = e.setMonth(d.getMonth() + 1) - 24 * 60 * 60 * 1000;
+            e = new Date(e);
+            beginDate = f.toLocaleDateString();
+            endDate = e.toLocaleDateString();
+            beginDate = beginDate.replace(/\//gm, '-').replace('骞�', '-').replace('鏈�', '-').replace('鏃�', '');
+            endDate = endDate.replace(/\//gm, '-').replace('骞�', '-').replace('鏈�', '-').replace('鏃�', '');
+            return [beginDate, endDate];
+        };
+
+        return DateUtil;
+
+    })();
+
+
+
+    $(document).ready(function () {
+      $("#rewardType").combobox({
+        onChange: function (n,o) {
+          if(n == '销额对赌' ||　n == '销量对赌' ||　n == 'SKU销额对赌' ||　n == 'SKU销量对赌'){
+                $("#intervalRule").parent().show();
+                $("#calculationType").parent().show();
+                $("#bettingTarget").parent().show();
+                $("#bettingCoefficient").parent().show();
+                $("#beginTarget").numberbox({
+                  min: 0,
+                  precision: 5
+                });
+          }else {
+                $("#intervalRule").parent().hide();
+                $("#calculationType").parent().hide();
+                $("#bettingCoefficient").parent().hide();
+                $("#bettingTarget").parent().hide();
+                $("#beginTarget").numberbox({
+                  min: 0,
+                  precision: 0
+                });
+          }
+          if(!$("#fm").find("[name='id']").val()){
+            $('#beginTarget').numberbox('enable');
+          }
+        }
+      });
+
+      $("#type").combobox({
+        onChange: function (n,o) {
+          if(n == 'd'){
+            $("#beginDate").parent().show();
+            $("#endDate").parent().show();
+            $("#beginMonth").parent().hide();
+            $("#endMonth").parent().hide();
+            if(!$("#fm").find("[name='id']").val()){
+              $('#beginDate').datebox('enable');
+              $('#endDate').datebox('enable');
+            }
+          }else {
+            $("#beginDate").parent().hide();
+            $("#endDate").parent().hide();
+            $("#beginMonth").parent().show();
+            $("#endMonth").parent().show();
+          }
+        }
+      });
+    });
+</script>
+<script src="../static/js/settleCenter/pointMaintain.js"></script>
+##<script src="../static/js/report/workOrder.js"></script>
+</body>
+</html>

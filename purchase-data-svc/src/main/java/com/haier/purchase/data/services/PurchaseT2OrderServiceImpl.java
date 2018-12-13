@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.haier.purchase.data.model.T2OrderInterfaceLog;
+import com.haier.purchase.data.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haier.purchase.data.dao.purchase.T2OrderDao;
-import com.haier.purchase.data.model.CrmOrderItem;
-import com.haier.purchase.data.model.HaierLimitHistoryItem;
-import com.haier.purchase.data.model.T2OrderItem;
 import com.haier.purchase.data.service.PurchaseT2OrderService;
 
 /**
@@ -597,6 +594,17 @@ public class PurchaseT2OrderServiceImpl implements PurchaseT2OrderService {
 			ex.printStackTrace();
 		}
 		return result;
+	}
+
+	@Override
+	public void updateStatus80FromLES() {
+		t2OrderDao.updateHaierT2OrderStatus80FromLES();
+//		t2OrderDao.updateHaierT2OrderStatus80FromLES();
+	}
+
+	@Override
+	public List<T2OrderItem> getT2WdOrderId(Map<String, Object> params) {
+		return t2OrderDao.getT2WdOrderId(params);
 	}
 
 }

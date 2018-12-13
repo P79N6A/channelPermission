@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.ReverseReportReadDao">
+    <sql id="commonQuerySmallChannel">
+		and (os.source='TMMK' or os.source='YHDQWZY' or os.source='YHDZY' or os.source='DDW' or os.source='DCYH' or os.source='SNYG'
+			or os.source='YLW' or os.source='GMTSZYBX' or os.source='GMTSZYCW' or os.source='GMTSZYYY' or os.source='GMTSZYKT'
+			or os.source='GMTSZYXYJ' or os.source='GMZX' or os.source='FRIDGE' or os.source='TOPDHSC' or os.source='WASHER'
+			or os.source='JDMK' or os.source='TMKSD' or os.source='ICBC' or os.source='YHD' or os.source='ZSH' or os.source='YIHAODIAN'
+			or os.source='115' or os.source='114' or os.source='CCBSC' or os.source='CCBSR' or os.source='113'
+			or os.source='CORPORATE_SJMG' or os.source='95533' or os.source='CORPORATE' or os.source='SNHEGQ' or os.source='TBCT'
+			or os.source='TBSC' or os.source='TOPFENXIAO' or os.source='TOPBUYBANG' or os.source='TOPBOILER' or os.source='TOPSHJD'
+			or os.source='TOPFENXIAODHSC' or os.source='TOPMOBILE' or os.source='AIR' or os.source='TOPXB' or os.source='GQGYS'
+			or os.source='TMMKFX' or os.source='TBQYG' or os.source='TMST' or os.source='TONGSHUAIFX' or os.source='TONGSHUAI'
+			or os.source='TSPC' or os.source='TSMOBILE' or os.source='YMX' or os.source='YHDTS' or os.source='TMTV' or os.source='TBCFDD'
+			or os.source='TBXCR' or os.source='GMZXTS')
+	</sql>
+    <sql id="commonQueryBigChannel">
+		and (os.source='1' or os.source='690CK' or os.source='C2BWASHER' or os.source='BLPMS' or os.source='HPB2B' or os.source='RRS'
+			or os.source='DXS' or os.source='BLPHH' or os.source='DBJ' or os.source='FLW' or os.source='HBSC' or os.source='SCHD'
+			or os.source='DALOU' or os.source='PCNEW' or os.source='COS' or os.source='112' or os.source='SCFX' or os.source='MOBILE'
+			or os.source='S_MOBILE' or os.source='YJYD' or os.source='SQXW' or os.source='MSTORE' or os.source='CK'
+			or os.source='CK_MOBILE' or os.source='VDCN' or os.source='XPZC' or os.source='KDGW' or os.source='YDYZ'
+			or os.source='ZPTH' or os.source='CHINAUNICOM')
+	</sql>
+
+    <select id="getOntimeRateReverse" parameterType="java.util.Map" resultType="java.util.Map">
+        select kpi.ors_id,kpi.timeout_type,kpi.center_name,os.region,ors.count
+        from ord_wf_kpidata kpi inner join orderrepairs ors on kpi.ors_id = ors.id inner join orders os on kpi.order_id = os.id
+        <if test="cateCode != null and cateCode.size() &gt; 0">
+            inner join orderproducts op on kpi.order_product_id = op.id
+        </if>
+        where kpi.date &gt;= #{startDate} and kpi.date &lt;= #{endDate} and kpi.node_type = #{nodeTypeQuery}
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="sourceCode != null and sourceCode.size() &gt; 0">and os.source in
+            <foreach collection="sourceCode" index="index" item="sc" open="(" separator="," close=")">
+                #{sc}
+            </foreach>
+        </if>
+        <if test="cateCode != null and cateCode.size() &gt; 0">and op.cateId in
+            <foreach collection="cateCode" index="index" item="cc" open="(" separator="," close=")">
+                #{cc}
+            </foreach>
+        </if>
+        <!-- 渠道筛选 0:大渠道，1:小渠道-->
+        <if test="channel != null and channel != '' and channel == 1 ">
+            <include refid="commonQuerySmallChannel"/>
+        </if>
+        <if test="channel != null and channel != '' and channel ==0 ">
+            <include refid="commonQueryBigChannel"/>
+        </if>
+    </select>
+    <select id="getOntimeRateReverseByOrderSn" parameterType="java.util.Map" resultType="java.util.Map">
+        select kpi.ors_id,kpi.timeout_type,kpi.center_name,os.region,ors.count
+        from  ord_wf_kpidata kpi inner join orderrepairs ors on kpi.ors_id = ors.id inner join orders os on kpi.order_id = os.id
+        where kpi.c_order_sn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and kpi.c_order_sn !=''
+        and kpi.node_type = #{nodeTypeQuery}
+        <!-- 渠道筛选 0:大渠道，1:小渠道-->
+        <if test="channel != null and channel != '' and channel == 1 ">
+            <include refid="commonQuerySmallChannel"/>
+        </if>
+        <if test="channel != null and channel != '' and channel ==0 ">
+            <include refid="commonQueryBigChannel"/>
+        </if>
+    </select>
+
+    <select id="getOntimeRateReverseDetailCount" parameterType="java.util.Map" resultType="Integer">
+        select count(kpi.id)
+        from ord_wf_kpidata kpi
+        where kpi.node_type = #{nodeTypeQuery}
+        <if test="orderSnFlag neq 'true'">
+            and kpi.date &gt;= #{startDate} and kpi.date &lt;= #{endDate}
+        </if>
+        <if test="timeoutType!=null and timeoutType!=-1 and timeoutType!=-2 and timeoutType!=-3">
+            and kpi.timeout_type=#{timeoutType}
+        </if>
+        <if test="timeoutType==-2">
+            and kpi.timeout_type &lt;&gt; 0
+        </if>
+        <if test="timeoutType==-3">
+            and kpi.timeout_type in (1,2)
+        </if>
+        and kpi.ors_id in
+        <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+            #{repairId}
+        </foreach>
+        <!-- 增加网单查询 -->
+        <if test="cOrderSn != null and cOrderSn!='' ">
+            and kpi.c_order_sn like CONCAT(CONCAT('%', #{cOrderSn}),'%')
+        </if>
+    </select>
+
+    <select id="getOntimeRateReverseDetail" resultType="java.util.Map">
+        select kpi.timeout_day as outTime,kpi.must_finish_time as mustFinishTime,kpi.real_finish_time as realFinishTime,kpi.timeout_type as timeoutType,ors.id,op.cOrderSn,os.province,os.orderType,os.region,op.productType,op.status,op.productName,op.price,op.sCode,ors.paymentStatus,ors.count as number,kpi.date,
+        ors.storageStatus,ors.receiptStatus as state,ors.typeActual,ors.addTime as applyTime,ors.handleTime,ors.handleStatus,ors.hpFirstAddTime,
+        orh.hpTime,orh.checkResult,orh.quality,orl.lesOutPingTime,op.cateId,op.stockType,
+        ors.receiptTime as invalidTime,ors.finishTime as endTime,ow.finishTime,ow.cancelTime,op.tbOrderSn as tb_order_sn,
+        np.netPointName, os.source ,ors.paymentTime,op.tsCode,ors.refundAmount,op.productAmount
+        from ord_wf_kpidata kpi inner join orderworkflows ow on kpi.order_product_id = ow.orderProductId inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+        inner join orderrepairs ors on kpi.ors_id = ors.id
+        left join netpoints np on op.netPointId=np.id
+        left join orderrepairlesrecords orl on ors.id=orl.orderRepairId and (orl.operate = 11 or orl.operate = 12) left join
+        (select
+        hpr.orderRepairId, hpr.addTime as hpTime, hpr.checkResult, hpr.quality
+        from
+        orderrepairhprecords hpr,
+        (select
+        orderRepairId, max(addTime) as hpTime
+        from
+        `orderrepairhprecords`
+        where
+        checkType = 1
+        group by orderRepairId) temp
+        where
+        hpr.orderRepairId = temp.orderRepairId
+        and hpr.addTime = temp.hpTime) orh on ors.id=orh.orderRepairId
+        where kpi.node_type = #{nodeTypeQuery}
+        <if test="orderSnFlag neq 'true'">
+            and kpi.date &gt;= #{startDate} and kpi.date &lt;= #{endDate}
+        </if>
+        <if test="timeoutType!=null and timeoutType!=-1 and timeoutType!=-2 and timeoutType!=-3">
+            and kpi.timeout_type=#{timeoutType}
+        </if>
+        <if test="timeoutType==-2">
+            and kpi.timeout_type &lt;&gt; 0
+        </if>
+        <if test="timeoutType==-3">
+            and kpi.timeout_type in (1,2)
+        </if>
+        and kpi.ors_id in
+        <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+            #{repairId}
+        </foreach>
+        <!-- 增加网单查询 -->
+        <if test="cOrderSn != null and cOrderSn!='' ">
+            and kpi.c_order_sn like CONCAT(CONCAT('%', #{cOrderSn}),'%')
+        </if>
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+</mapper>

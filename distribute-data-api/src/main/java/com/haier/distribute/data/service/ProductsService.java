@@ -11,7 +11,7 @@ public interface ProductsService {
 
     List<Products> selectProducts1(String sku, String productname);
 
-    List<Products> selectProducts(Products products);
+//    List<Products> selectProducts(Products products);
 
     /**
      * 根据sku获取产品对象

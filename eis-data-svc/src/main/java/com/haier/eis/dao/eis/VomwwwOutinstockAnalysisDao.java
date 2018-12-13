@@ -34,9 +34,20 @@ public interface VomwwwOutinstockAnalysisDao {
     List<VomwwwOutinstockAnalysis> getByCondition(@Param("queryMap") Map<String, Object> queryMap,
                                                   @Param("size") int size);
     /**
+     * 查询是否出库并且推送sap成功
+     * @return
+     */
+    List<VomwwwOutinstockAnalysis> outStockSap(String tbNo);
+    /**
      * 根据tb单号查询退货入库信息
      * @param tbNo
      * @return
      */
     VomwwwOutinstockAnalysis  quereyVOMthNO(String tbNo);
+    /**
+     * 根据thj号查询3W库存信息
+     * @param backNo
+     * @return
+     */
+    VomwwwOutinstockAnalysis  quereyBackNo(String backNo);
 }

@@ -384,7 +384,7 @@
 		1=1 and value_set_id = 'ProductGroup' 
 		and (value!='00' and value != '01' and value != '20'and value != '30'and value != '99')
 		<if test="type != null and type != ''">
-			AND material_type = #{type}
+			AND product_type = #{type}
 		</if>
 		<if test="product_group_id !=null and product_group_id != ''">
 			AND department = #{product_group_id}
@@ -396,8 +396,7 @@
 			AND is_auto_update = #{update}
 		</if>
 		<if test="materials_id !=null and materials_id != ''">
-			AND UPPER(material_code) LIKE CONCAT(CONCAT('%',UPPER
-			(#{materials_id})),'%')
+			AND material_code= #{materials_id}
 		</if>
 		<if test="materials_desc !=null and materials_desc != ''">
 			AND UPPER(material_description) LIKE CONCAT(CONCAT('%',UPPER
@@ -445,6 +444,7 @@
 			`is_auto_update`,
 			`product_type`,
 			`modifier`,
+			`price`,
 			 value,
 			 value_meaning,
 			 cbs_category
@@ -506,4 +506,11 @@
 			</if>
 		</where>
 	</select>
+
+	<select id="getByMaterialCode" parameterType="String" resultType="String">
+		select `department`
+		from `item_base`
+		where `material_code` = #{materialCode}
+	</select>
+
 </mapper>

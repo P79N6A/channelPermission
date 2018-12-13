@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>推送SAP结果查询</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+  <script src="../static/js/easyui-extention_ws.js"></script>
+  <script src="../static/js/i18n/zh_CN.js"></script>
+
+</head>
+
+<body class="iframe-body">
+
+<div id="pushSapResult" class="easyui-panel" style="width:100%;height:100%;" data-options="iconCls:'glyphicon glyphicon-search',collapsed:false, collapsible:false">
+  <table id="pushSapResultTable">
+  </table>
+</div>
+
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="filterForm" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          推送单号
+        </span>
+        <input class="easyui-textbox" name="corderSn" id="corderSn"/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+			    推送状态
+        </span>
+        <select class="easyui-combobox" name="status" id="status" style="width:100px">
+          <option value="">全部</option>
+          <option value="0">未知</option>
+          <option value="1">成功</option>
+          <option value="2">失败</option>
+          <option value="3">错误</option>
+          <option value="-1">特殊处理</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+			    交易类型
+        </span>
+        <select class="easyui-combobox" name="billType" id="billType" style="width:180px">
+          <option value="">全部</option>
+          <option value="ZBCC">销售出库</option>
+          <option value="YTIB">存性变更出库</option>
+          <option value="ZGI6">调拨出库</option>
+          <option value="BRSI">转运出库</option>
+          <option value="ZBJT">京东虚拟退货出库</option>
+          <option value="ZBCR">采购入库</option>
+          <option value="YTRB">存性变更入库</option>
+          <option value="ZBCT">退货入库</option>
+          <option value="ZBCJ">拒收入库</option>
+          <option value="ZGR6">调拨入库</option>
+          <option value="ZRSR">转运入库</option>
+          <option value="DBFF">调拨冻结</option>
+          <option value="XSFF">销售冻结</option>
+          <option value="SDFF">手动冻结</option>
+          <option value="DBRR">取消调拨释放</option>
+          <option value="XSRR">取消销售释放</option>
+          <option value="SDRR">取消手动释放</option>
+          <option value="RARR">重新分配库位释放</option>
+          <option value="YTR1">3W正品退仓</option>
+          <option value="SYNC">同步库存</option>
+          <option value="UN">未定义的</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          推送开始时间
+        </span>
+        <input class="easyui-datetimebox" name="startTime" id="startTime" value=""/>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          推送结束时间
+        </span>
+        <input class="easyui-datetimebox" name="endTime" id="endTime" value=""/>
+      </div>
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn" data-options="iconCls:'icon-search',plain:true" >查询</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn" data-options="iconCls:'icon-redo',plain:true">重置</a>
+  </form>
+</div>
+
+
+<script type="text/javascript">
+  function slideUpSlideClk(t) {
+    var $this = $(t);
+    if ($this.hasClass('open')) {
+        $this.removeClass('open');
+      setTimeout(function () {
+          $this.addClass('close');
+      }, 0);
+      $(".search-panel").slideUp();
+    } else {
+        $this.removeClass('close');
+      setTimeout(function () {
+          $this.addClass('open');
+      }, 0);
+      $(".search-panel").slideDown();
+    }
+    setTimeout(function () {
+      $('#dg').datagrid('resize');
+    }, 500);
+  }
+
+</script>
+<script src="../static/js/purchase/pushSapResult.js"></script>
+</head>
+</body>
+</html>

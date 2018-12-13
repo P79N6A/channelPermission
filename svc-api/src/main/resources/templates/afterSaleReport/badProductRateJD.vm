@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/fileinput.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <title>不良品发生率（京东）</title>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+               
+                        <form role="form">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <div class="col-md-3">
+                                        <label for="reportTime" style="line-height: 35px;">选择列表</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select id="reportTimeYear" class="form-control">
+                                            <option value="2017">2017年</option>
+                                            <option value="2018" selected>2018年</option>
+                                            <option value="2019">2019年</option>
+                                            <option value="2020">2020年</option>
+                                            <option value="2021">2021年</option>
+                                            <option value="2022">2022年</option> 
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select id="reportTimeMonth" class="form-control">
+                                            <option value="0">全年</option>
+                                            <option value="1">1月</option>
+                                            <option value="2">2月</option>
+                                            <option value="3">3月</option>
+                                            <option value="4">4月</option>
+                                            <option value="5">5月</option>
+                                            <option value="6">6月</option>
+                                            <option value="7">7月</option>
+                                            <option value="8">8月</option>
+                                            <option value="9">9月</option>
+                                            <option value="10">10月</option>
+                                            <option value="11">11月</option>
+                                            <option value="12">12月</option>
+                                        </select>
+                                    </div>
+                                </div>   
+                            </div>
+                        </form>
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form action="" role="form" id="badimput">
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <!-- <input type="text" class="easyui-filebox"> -->
+                            <div class="col-md-3">
+                                <label for="" style="line-height: 35px;">不良品数</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input id="input-b1" name="file" type="file" class="file" data-show-preview="false">
+                            </div>
+                            <div class="col-md-2">
+                                <a href="/static/excel/rjBLPInfo.xlsx" download="京东不良品导入模版.xlsx"><button type="button" class="btn btn-defaul" id="btn_b1">
+                                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 模板
+                                </button></a>
+                            </div>
+            
+                        </div>
+                        <div class="col-md-6">
+                            <!-- <input type="text" class="easyui-filebox"> -->
+            
+                            <div class="col-md-5">
+                                <div class="col-md-3">
+                                    <label for="" style="line-height: 35px;">从</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <select id="fromTimeBad" class="form-control">
+                                        <option value="1">1月</option>
+                                        <option value="2">2月</option>
+                                        <option value="3">3月</option>
+                                        <option value="4">4月</option>
+                                        <option value="5">5月</option>
+                                        <option value="6">6月</option>
+                                        <option value="7">7月</option>
+                                        <option value="8">8月</option>
+                                        <option value="9">9月</option>
+                                        <option value="10">10月</option>
+                                        <option value="11">11月</option>
+                                        <option value="12">12月</option>
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-5">
+                                <div class="col-md-3">
+                                    <label for="" style="line-height: 35px;">到</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <select id="toTimeBad" class="form-control">
+                                        <option value="1">1月</option>
+                                        <option value="2">2月</option>
+                                        <option value="3">3月</option>
+                                        <option value="4">4月</option>
+                                        <option value="5">5月</option>
+                                        <option value="6">6月</option>
+                                        <option value="7">7月</option>
+                                        <option value="8">8月</option>
+                                        <option value="9">9月</option>
+                                        <option value="10">10月</option>
+                                        <option value="11">11月</option>
+                                        <option value="12">12月</option>
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-defaul" id="btn_import_bad">
+                                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 导出
+                                </button>
+                                <input type="hidden" id="beginbad" name="beginbad"/>
+                                <input type="hidden" id="endbad" name="endbad"/>
+                                <input type="hidden" id="year" name="year"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form action="" role="form" id="outimput">
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <!-- <input type="text" class="easyui-filebox"> -->
+            
+                            <div class="col-md-3">
+                                <label for="" style="line-height: 35px;">出库数</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input id="input-b2" name="file" type="file" class="file" data-show-preview="false">
+                            </div>
+                            <div class="col-md-2">
+                                <a href="/static/excel/rjOutStore.xlsx" download="出库数导入模版.xlsx"><button type="button" class="btn btn-defaul" id="btn_b2">
+                                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 模板
+                                </button></a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="col-md-5">
+                                <div class="col-md-3">
+                                    <label for="" style="line-height: 35px;">从</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <select id="fromTimeOut" class="form-control">
+                                        <option value="1">1月</option>
+                                        <option value="2">2月</option>
+                                        <option value="3">3月</option>
+                                        <option value="4">4月</option>
+                                        <option value="5">5月</option>
+                                        <option value="6">6月</option>
+                                        <option value="7">7月</option>
+                                        <option value="8">8月</option>
+                                        <option value="9">9月</option>
+                                        <option value="10">10月</option>
+                                        <option value="11">11月</option>
+                                        <option value="12">12月</option>
+                                    </select>
+                                </div>
+                            
+                                
+                            </div>
+                            <div class="col-md-5">
+                                <div class="col-md-3">
+                                    <label for="" style="line-height: 35px;">到</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <select id="toTimeOut" class="form-control">
+                                        <option value="1">1月</option>
+                                        <option value="2">2月</option>
+                                        <option value="3">3月</option>
+                                        <option value="4">4月</option>
+                                        <option value="5">5月</option>
+                                        <option value="6">6月</option>
+                                        <option value="7">7月</option>
+                                        <option value="8">8月</option>
+                                        <option value="9">9月</option>
+                                        <option value="10">10月</option>
+                                        <option value="11">11月</option>
+                                        <option value="12">12月</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-defaul" id="btn_import_out">
+                                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 导出
+                                </button>
+                                <input type="hidden" id="beginout" name="beginout"/>
+                                <input type="hidden" id="endout" name="endout"/>
+                                <input type="hidden" id="years" name="years"/>
+                            </div>
+            
+                        </div>
+                    </div>
+                </form>
+            
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12" style="margin-top:20px;">
+                <div class="col-md-12">
+                    <div id="main" style="width: 100%;height:400px;"></div>
+                </div>
+                ## <div class="col-md-5">
+                ##     <table id="table"></table>
+                ## </div>
+               
+            </div>
+            <div class="col-md-12" style="margin-top:20px;">
+                ## <div class="col-md-7">
+                ##     <div id="main" style="width: 100%;height:400px;"></div>
+                ## </div>
+                <div class="col-md-12">
+                    <table id="table"></table>
+                </div>
+               
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-6" style="margin:20px 0;">
+                    <div id="pieDiv" style="width: 100%;height:400px;"></div>
+                </div>
+                <div class="col-md-6" style="margin:20px 0;">
+                    <div id="drawPieHandle" style="width: 100%;height:400px;"></div>
+                </div>
+                <div class="col-md-12" style="margin:20px 0;">
+                    <table id="pieTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+<script src="/static/third/jquery.js"></script>
+<script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/third/bootstrap/js/bootstrap-table.min.js"></script>
+<script src="/static/third/bootstrap/js/fileinput.min.js"></script>
+<script src="/static/third/bootstrap/js/zh.js"></script>
+<script src="/static/third/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/third/echarts/echarts.min.js"></script>
+<script src="/static/third/easyui/jquery.easyui.min.js"></script>
+
+
+
+<script src="/static/js/afterSaleReport/badProductRateJD.js"></script>
+</body>
+</html>

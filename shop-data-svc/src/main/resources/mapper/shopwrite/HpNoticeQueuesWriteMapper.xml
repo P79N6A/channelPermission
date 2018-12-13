@@ -4,7 +4,7 @@
 
 
 	<update id="update" parameterType="com.haier.shop.model.HpNoticeQueues" >
-	    update HPNoticeQueues
+	    update hpnoticequeues
 	    <set >
 	      <if test="orderProductId != null" >
 	        orderProductId = #{orderProductId},
@@ -38,7 +38,7 @@
   </update>
 
 	<update id="updateQueuesBySuccessAndOrderProId" >
-	    update HPNoticeQueues
+	    update hpnoticequeues
 	    set  count = 0 
 	    where orderProductId=#{orderProductId} and success='0' and count>=30
   </update>

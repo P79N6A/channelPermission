@@ -3,11 +3,11 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.InvoicesWwwLogsWriteDao">
 
 	<insert id="insert" parameterType="com.haier.shop.model.InvoicesWwwLogs">
-		insert into InvoicesWwwLogs(`order_product_id`,`order_id`,`order_sn`,`source_sn`,`source`,`success`,`flag`,`add_time`,`process_time`,`last_message`)values(#{orderProductId},#{orderId},#{orderSn},#{sourceSn},#{source},#{success},#{flag},#{addTime},#{processTime},#{lastMessage})
+		insert into invoiceswwwlogs(`order_product_id`,`order_id`,`order_sn`,`source_sn`,`source`,`success`,`flag`,`add_time`,`process_time`,`last_message`)values(#{orderProductId},#{orderId},#{orderSn},#{sourceSn},#{source},#{success},#{flag},#{addTime},#{processTime},#{lastMessage})
 	</insert>
 
 	<update id="updateInvoiceWwwLogs" parameterType="com.haier.shop.model.InvoicesWwwLogs">
-		update `InvoicesWwwLogs`
+		update `invoiceswwwlogs`
 		set `success`=#{success},`flag`=#{flag},`last_message`=#{lastMessage},`process_time`=#{processTime}
 		where `id`=#{id}
 	</update>

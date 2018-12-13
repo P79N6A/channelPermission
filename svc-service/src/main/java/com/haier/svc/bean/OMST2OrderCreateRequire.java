@@ -48,7 +48,7 @@ public class OMST2OrderCreateRequire implements Serializable {
     private String add15         = "";
     private String add16         = "";
     private String add17         = "";
-    private String add18         = "";
+    private String add18         = "";//标记是否系统定时任务执行。
 
 
     public String getBillCode() {

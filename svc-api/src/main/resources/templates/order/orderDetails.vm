@@ -21,7 +21,7 @@
 
 
     <link rel="stylesheet" href="../static/css/common.css"></link>
-    <title>orderForecastGoal</title>
+    <title>订单查询网单</title>
     <script src="../static/third/jquery.js"></script>
     <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
     <script src="../static/third/easyui/jquery.easyui.min.js"></script>
@@ -37,92 +37,224 @@
     <div id="orderDetail_div" style="padding-bottom: 20px;">
         <div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px ">
         <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;">
+        <input id="invoiceTitleSaves" type="hidden"></input>
+        <input id="taxPayerNumberSaves" type="hidden"></input>
+        <input id="registerAddressSaves" type="hidden"></input>
+        <input id="registerPhoneSaves" type="hidden"></input>
+        <input id="bankNameSaves" type="hidden"></input>
+        <input id="bankCardNumberSaves" type="hidden"></input>
             订单信息
+            <input id="hidden_consignee" type="hidden" value="$!bitMap.consignee"></input>
+			<input id="hidden_address"   type="hidden" value="$!bitMap.address"></input>
+			<input id="hidden_zipcode"   type="hidden" value="$!bitMap.zipcode"></input>
+			<input id="hidden_mobile"    type="hidden" value="$!bitMap.mobile"></input>
+			<input id="hidden_phone"     type="hidden" value="$!bitMap.phone"></input>
         </span>
-        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
-               value="返回" onclick="goback()"
-               style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;float: right;"/>
+##        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"  value="返回" onclick="goback()" style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;float: right;"/>
         </div>
+        <input type="hidden" id ="orderId" value="$!bitMap.id"/>
+        <input type="hidden" id ="invoiceOperation" value="$!bitMap.invoiceOperation"/>
+        <input type="hidden" id ="invoiceOperationType" value="$!bitMap.invoiceOperationType"/>
+        
         <div class="detail_content">
             <form class="param-form">
                 <div class="search-panel">
 
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">订单号：</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >订单号：</span>
                         <span class=""><input type="hidden" id ='orderSn' style="border: none;" readonly="readonly" value="$!bitMap.orderSn"/> </span>
                         <span class="">$!bitMap.orderSn</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">下单时间：</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >下单时间：</span>
                         <span>$!bitMap.addTime</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">下单人：</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >下单人：</span>
                         <span>$!bitMap.consignee</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">首次确认时间：</span>
-                        <span>$!bitMap.firstConfirmTime</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >首次确认时间：</span>
+                        <span>
+                        #if($!bitMap.firstConfirmTime == '1970-01-01 08:00:00')
+                        #else
+                            $!bitMap.firstConfirmTime
+                        #end
+                        </span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">交易流水号：</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >交易流水号：</span>
                         <span>$!bitMap.tradeSn</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">订单来源：</span>
-                        <span>$!bitMap.source</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >订单来源：</span>
+                        <span>
+                        #if($!bitMap.source =='TBSC')
+                        	海尔官方淘宝旗舰店
+                        #elseif($!bitMap.source =='TOPBOILER')
+                        	海尔热水器专卖店
+                        #elseif($!bitMap.source =='TONGSHUAI')
+                        	淘宝网统帅日日顺乐家专卖店
+                        #elseif($!bitMap.source =='TONGSHUA#elseifX')
+                        	统帅品牌商
+                        #elseif($!bitMap.source =='TOPXB')
+                        	海尔新宝旗舰店
+                        #elseif($!bitMap.source =='MOOKA')
+                        	mooka模卡官方旗舰店
+                        #elseif($!bitMap.source =='WASHER')
+                        	海尔洗衣机旗舰店
+                        #elseif($!bitMap.source =='FRIDGE')
+                        	海尔冰冷旗舰店
+                        #elseif($!bitMap.source =='AIR')
+                        	海尔空调旗舰店
+                        #elseif($!bitMap.source =='TBCT')
+                        	村淘海尔商家
+                        #elseif($!bitMap.source =='GQGYS')
+                            生态授权店
+                        #elseif($!bitMap.source =='TMKSD')
+                        	天猫卡萨帝旗舰店
+                        #elseif($!bitMap.source =='TMTV')
+                        	海尔电视旗舰店
+                        #elseif($!bitMap.source =='TBCFDD')
+                        	海尔厨房大电旗舰店
+                        #elseif($!bitMap.source =='TBXCR')
+                        	天猫小超人旗舰店
+                        #elseif($!bitMap.source =='TOPSHJD')
+                        	海尔生活电器专卖店
+                        #elseif($!bitMap.source =='TOPDHSC')
+                        	海尔生活家电旗舰店
+                        #elseif($!bitMap.source =='GMZX')
+                        	国美海尔官方旗舰店
+                        #elseif($!bitMap.source =='GMZXTS')
+                        	国美统帅官方旗舰店
+                        #elseif($!bitMap.source =='SNYG')
+                        	苏宁统帅官方旗舰店
+                        #elseif($!bitMap.source =='SNHEGQ')
+                        	苏宁海尔官方旗舰店
+                        #elseif($!bitMap.source =='SNQDZX')
+                        	苏宁渠道中心
+                        #elseif($!bitMap.source =='DDW')
+                        	当当
+                        #elseif($!bitMap.source =='JDHEBXGQ')
+                        	京东海尔集团冰箱官方旗舰店
+                        #elseif($!bitMap.source =='JDHEGQ')
+                            京东海尔官方旗舰店
+                        #elseif($!bitMap.source =='TMMK')
+                            模卡淘宝旗舰店
+                        #else
+                            $!bitMap.source
+                        #end
+                        </span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">是否付款：</span>
-                        <span>$!bitMap.paymentStatus</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >是否付款：</span>
+                        <span id="text_state">
+                        #if($!bitMap.paymentStatus ==  100)
+                            未付款
+                        #elseif($!bitMap.paymentStatus == 101)
+                            已付款
+                        #elseif($!bitMap.paymentStatus == 102)
+                            待退款
+                        #elseif($!bitMap.paymentStatus == 103)
+                            已退款
+                        #else
+                            $!bitMap.paymentStatus
+                        #end
+                        </span>
+                        <a href="#" class="easyui-linkbutton" id="money_is_pay">确认收款</a>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">付款时间：</span>
-                        <span>$!bitMap.payTime</span>
+                    <input type="hidden" id="span_state" value="$!bitMap.paymentStatus">
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >付款时间：</span>
+                        <span>
+                            #if($!bitMap.payTime == '1970-01-01 08:00:00')
+                            #else
+                                $!bitMap.payTime
+                            #end
+
+
+                        </span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">支付方式：</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >支付方式：</span>
                         <span>$!bitMap.paymentName</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">销售代表(可空)：</span>
-                        <span>$!bitMap.sellPeople</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >销售代表(可空)：</span>
+                        <span>$!bitMap.sellpeople</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">服务态度(可空)：</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >服务态度(可空)：</span>
                         <span>$!bitMap.sellPeopleManner</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">订单类型：</span>
-                        <span style="color: red;">$!bitMap.orderType</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >订单类型：</span>
+                        <span style="color: red;">
+                        #if($!bitMap.orderType ==  0)
+                            普通订单
+                        #elseif($!bitMap.orderType == 1)
+                            团购预付款订单
+                        #elseif($!bitMap.orderType == 2)
+                            团购尾款订单
+                        #elseif($!bitMap.orderType == 3)
+                            团购订单
+                        #elseif($!bitMap.orderType == 4)
+                            单订单模式的定金-尾款订单
+                        #else
+                            $!bitMap.orderType
+                        #end
+                        </span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">来源订单编号：</span>
-                        <span>$!bitMap.sourceOrderSn</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >来源订单编号：</span>
+                        <span id="inputSourceOrderNumber">$!bitMap.sourceOrderSn</span>
+                        <a href="#" class="easyui-linkbutton" id="addBtn_tbgroupbuy" data-options="iconCls:'icon-add',plain:true">修改</a>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">配送时效(天)：</span>
-                        <span>没有找到对应字段</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >配送时效(天)：</span>
+                        <span>$!bitMap.shippingTime</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">配送距离(公里)：</span>
-                        <span>没有找到对应字段</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >配送距离(公里)：</span>
+                        <span>$!bitMap.shippingDistance</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">是否日日单：</span>
-                        <span>$!bitMap.isProduceDaily</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >是否日日单：</span>
+                        <span>
+                        #if($!bitMap.isProduceDaily == 0)
+                            否
+                        #elseif($!bitMap.isProduceDaily == 1)
+                            是
+                        #else
+                            未定义
+                        #end
+                        </span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">用户预约时间：</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >用户预约时间：</span>
                         <span>$!bitMap.bestShippingTime</span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">订单状态：</span>
-                        <span style="color: red;">$!bitMap.orderStatus</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >订单状态：</span>
+                        <span style="color: red;">
+                        #if($!bitMap.orderStatus ==  200)
+                            未确认
+                        #elseif($!bitMap.orderStatus == 201)
+                            已确认
+                        #elseif($!bitMap.orderStatus == 202)
+                            已取消
+                        #elseif($!bitMap.orderStatus == 203)
+                            已完成
+                        #elseif($!bitMap.orderStatus == 204)
+                            部分缺货
+                        #else
+                            未定义
+                        #end
+                        </span>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">备注：</span>
-                        <span class="">$!bitMap.remark</span>
+                    <div class="search-row_padd10" style="width: 1080px">
+                        <span class="search-row-label_detail"  >备注：</span>
+                        <span class="" id="spanNotes">$!bitMap.remark</span>
                     </div>
                 </div>
             </form>
@@ -132,48 +264,118 @@
         <span style="padding-left: 15px;">
             发票邮寄地址
         </span>
+        <a href="#" class="easyui-linkbutton" id="update_invoice_address" data-options="iconCls:'icon-add',plain:true">修改</a>
         </div>
         <div class="detail_content">
             <form class="param-form">
                 <div class="search-panel">
 
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">收件人：</span>
-                        <span class="">$!bitMap.receiptConsignee</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >收件人：</span>
+                        <div class="autoheight" >
+                        <span class="" id="receiptConsignee">$!bitMap.receiptConsignee</span>
+                        </div>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">邮寄地址：</span>
-                        <span>$!bitMap.receiptAddress</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >邮寄地址：</span>
+                        <div class="autoheight" >
+                        <span id="receiptAddress">$!bitMap.receiptAddress</span>
+                        </div>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">邮编：</span>
-                        <span>$!bitMap.receiptZipcode</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >邮编：</span>
+                        <div class="autoheight" >
+                        <span id="receiptZipcode">$!bitMap.receiptZipcode</span>
+                        </div>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">联系电话：</span>
-                        <span>$!bitMap.receiptMobile</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >联系电话：</span>
+                        <div class="autoheight" >
+                        <span id="receiptMobile">$!bitMap.receiptMobile</span>
+                        </div>
                     </div>
                 </div>
             </form>
         </div>
         <div id="receipt" class="param-form" style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
             <span style="padding-left: 15px;">发票信息</span>
+            <a href="#" class="easyui-linkbutton" id="update_invoices" data-options="iconCls:'icon-add',plain:true">修改</a>
         </div>
+        <style>
+            .autoheight{
+                width: 235px;
+                float: right;
+                word-break: break-all;
+                white-space: normal;
+            }
+        </style>
         <div class="detail_content">
             <form class="param-form">
                 <div class="search-panel">
 
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">发票类型：</span>
-                        <span class="">$!bitMap.invoiceType</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail">发票类型：</span>
+                        <div class="autoheight" >
+                        <span class="" id="invoiceTypess">
+                            #if($!bitMap.invoiceType == 1)
+                                增票
+                            #elseif($!bitMap.invoiceType == 2)
+                                普票
+                            #end
+                        </span>
+                        </div>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">审核状态：</span>
-                        <span>$!bitMap.Mstate</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail">审核状态：</span>
+                        <div class="autoheight" >
+                        <span id="state_check">
+                            #if($!bitMap.Mstate == 0)
+                                待审核
+                            #elseif($!bitMap.Mstate == 1)
+                                审核通过
+                            #elseif($!bitMap.Mstate == 2)
+                                拒绝
+                            #elseif($!bitMap.Mstate == 3)
+                                需人工审核
+                            #end
+                        </span>
+                        </div>
                     </div>
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">发票抬头：</span>
-                        <span>$!bitMap.invoiceTitle</span>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >发票抬头：</span>
+                        <div class="autoheight" >
+                        <span id="invoiceTitles">$!bitMap.invoiceTitle</span>
+                        </div>
+                    </div>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >纳税人识别号：</span>
+                        <div class="autoheight" >
+                        <span id="invoicen">$!bitMap.taxPayerNumber</span>
+                        </div>
+                    </div>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >注册地址：</span>
+                        <div class="autoheight" >
+                        <span id="invoicez">$!bitMap.registerAddress</span>
+                        </div>
+                    </div>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >注册电话：</span>
+                        <div class="autoheight" >
+                        <span id="invoicezc">$!bitMap.registerPhone</span>
+                        </div>
+                    </div>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >开户银行：</span>
+                        <div class="autoheight" >
+                        <span id="invoicek">$!bitMap.bankName</span>
+                        </div>
+                    </div>
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >开户卡号：</span>
+                        <div class="autoheight" >
+                        <span id="invoicekh">$!bitMap.bankCardNumber</span>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -188,31 +390,95 @@
             <table id="datagrid_orderForecastLogs"></table>
         </div>
         <div class="search-panel" style="margin-left: 16px;color: red;margin-right: 26px;">
-            【订单商品总金额:￥558.00元】 【订单优惠金额:￥0.00元】 【订单使用积分:0】 【订单使用H码金额:￥0.00元】 【订单使用钻石:0.00】 【订单使用海贝积分:0.00】
-            【订单使用金融积分:0.00】 【订单使用礼品卡金额:￥0.00元】 【订单余额支付金额:￥0.00元】 【订单应付款金额:￥558.00元】 【订单已支付金额:￥558.00元】
+            【订单商品总金额:￥<span id="ddAmount"></span>元】
+            【订单优惠金额:￥<span id="ddccv"></span>元】
+            【订单使用积分:<span id="ddpoint"></span>】
+            【订单使用海贝积分:0.00】
+            【订单余额支付金额:￥0.00元】
+            【订单应付款金额:￥<span id="ddAmount2"></span>元】
+            【订单已支付金额:￥<span id="ddpaid"></span>元】
         </div>
         <div class="field-hints" style="margin-left: 16px;margin-right: 26px;">
             <p style="font-weight: bold;">注:
                 如果是外部订单（外部订单是指不是在www.ehaier.com下的订单，标志是：“外部订单号”不为空）则有可能
-                订单金额!=数量×商品价格+运费-外部优惠金额。因为外部订单传递的金额是计算后的，而且外部优惠金额没有同步存储到本系统中。
+                订单金额≠数量×商品价格+运费-外部优惠金额。因为外部订单传递的金额是计算后的，而且外部优惠金额没有同步存储到本系统中。
                 如果是商城订单（商城订单是指在www.ehaier.com下的订单，标志是：“外部订单号”为空）商城订单的订单金额严格遵循“数量×商品价格+运费-商城优惠券抵用金额“。</p>
         </div>
         <div id="receivePerson" class="param-form"
              style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
             <span style="padding-left: 15px;">收货人信息</span>
+            <a href="#" class="easyui-linkbutton" id="update_consignee" data-options="iconCls:'icon-add',plain:true">修改</a>
+            <a href="#" class="easyui-linkbutton" id="select_consignee" data-options="iconCls:'icon-add',plain:true">查询</a>
         </div>
         <div class="detail_content">
             <form class="param-form">
                 <div class="search-panel">
 
-                    <div class="search-row_padd10">
-                        <span class="search-row-label_detail" style="float: left">所在地：</span>
-                        <span class="">$!bitMap.regionName</span>
+                    <div class="search-row_padd10" style="width: 600px">
+                        <span class="search-row-label_detail"  >所在地：</span>
+                        <span class="" id="rename">$!bitMap.regionName</span>
+                        <input type="hidden" id="oldRegionName" value="$!bitMap.regionName">
                     </div>
-                    <div class="search-row_padd10" style="width: 600px;">
-                        <span class="search-row-label_detail"
-                              style="float: left;width: 300px">订单确认后的省、市、区县、街道、标建信息：</span>
-                        <span>河北，石家庄，长安区，POI_ID:$!bitMap.poiId</span>
+                    <br>
+                    <div class="search-row_padd10" style="width: 1200px;">
+
+                        <span class="search-row-label_detail" >
+                           收货地址: </span>
+                        #if($!bitMap.smConfirmStatus ==4 && $!bitMap.stockType != "3W" )
+                            <span class="" id="rename2">$!bitMap.regionName</span>
+                        #end
+                        #if($!bitMap.smConfirmStatus !=4 || $!bitMap.stockType == "3W")
+                        <span class="">
+                        <select id="getprovince" editable="false" class="easyui-combobox" data-options="valueField:'id', textField:'regionName'" >
+                            <option value="0" >请选择</option>
+                        </select>
+                        <select id="getcity" editable="false" class="easyui-combobox" data-options="valueField:'id', textField:'regionName'" >
+                            <option value="0" >请选择</option>
+                        </select>
+                        <select  id="getregion" editable="false" class="easyui-combobox" data-options="valueField:'id', textField:'regionName'" >
+                            <option value="0" >请选择</option>
+                        </select>
+                        </span>
+                        #if($!bitMap.source == "1" ||
+                            $!bitMap.source == "DALOU" ||
+                            $!bitMap.source == "DXS" ||
+                            $!bitMap.source == "MOBILE" ||
+                            $!bitMap.source == "BLPMS" ||
+                            $!bitMap.source == "SCFX" ||
+                            $!bitMap.source == "CK" ||
+                            $!bitMap.source == "CK_MOBILE" ||
+                            $!bitMap.source == "DBJ" ||
+                            $!bitMap.source == "PCNEW" ||
+                            $!bitMap.source == "YDYZ" ||
+                            $!bitMap.source == "SCHD"
+                        )
+                            <select id="getstreet" editable="false" class="easyui-combobox" data-options="valueField:'id', textField:'regionName'" >
+                                <option value="0" >请选择</option>
+                            </select>
+                            <input id="st" type="hidden" value="0">
+                        #end
+                            <input id="st" type="hidden" value="1">
+                            <select id="smCon" editable="false" class="easyui-combobox" data-options="readonly:'true',disabled:true">
+                                <option value="4" >待自动处理</option>
+                            </select>
+                            <input type="button" value="确定" onclick="uppcrs()">
+                        #end
+                        </span>
+                        <br>
+##                        <span class="search-row-label_detail" >
+##                           标建状态: </span>
+##                        #if($!bitMap.smConfirmStatus ==4)
+##                            成功
+##                        #else
+##                            失败
+##                        #end
+                        <br>
+                        <input type="hidden" value="$!bitMap.province" id="province1">
+                        <input type="hidden" value="$!bitMap.city" id="city1">
+                        <input type="hidden" value="$!bitMap.region" id="region1">
+                        <input type="hidden" value="$!bitMap.shippingMode" id="shippingMode">
+                        <span class="search-row-label_detail" >
+                           POI_ID:</span> $!bitMap.poiId
                     </div>
                 </div>
             </form>
@@ -225,17 +491,1159 @@
         <div style="width: 100%;height: 100px;overflow: auto">
             <table id="datagrid_Coupon"></table>
         </div>
+        <div id="order_notes" class="param-form" style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">修改订单备注信息</span>
+            <a href="#" class="easyui-linkbutton" id="order_notes_state" data-options="iconCls:'icon-add',plain:true">修改</a>
+        </div>
+        <div class="detail_content">
+                <div class="search-panel">
+                    <div class="search-row_padd10" style="width: 860px;height: 30px; margin-top: 5px;">
+                        <span class="search-row-label_detail"  >订单备注信息：</span>
+                        <span class="" id="notes">
+                        	$!bitMap.remark
+                        </span>
+                    </div>
+                </div>
+        </div>
+        
+        <div id="isPay" class="param-form" style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
+            <span style="padding-left: 15px;">付款状态修改</span>
+            <a href="#" class="easyui-linkbutton" id="update_pay_state" data-options="iconCls:'icon-add',plain:true">修改</a>
+        </div>
+        <div class="detail_content">
+                <div class="search-panel">
+                    <div class="search-row_padd10" style="width: 360px">
+                        <span class="search-row-label_detail"  >当前付款状态：</span>
+                        <span class="" id="pay">
+                           #if($!bitMap.paymentStatus ==  100)
+                            未付款
+                        #elseif($!bitMap.paymentStatus == 101)
+                            已付款
+                        #elseif($!bitMap.paymentStatus == 102)
+                            待退款
+                        #elseif($!bitMap.paymentStatus == 103)
+                            已退款
+                        #else
+                            $!bitMap.paymentStatus
+                        #end
+                        </span>
+                    </div>
+                </div>
+        </div>
         <div id="operateHistory" class="param-form"
              style="background-color:#d2e0f0;padding-top: 5px;padding-bottom: 5px; ">
             <span style="padding-left: 15px;">操作历史</span>
         </div>
-        <div style="width: 100%;height: 100px;overflow: auto">
+        <div style="width: 100%;overflow: auto">
             <table id="datagrid_Operating_history"></table>
         </div>
 
     </div>
     <div style="text-align: center;height: 35px;background-color:#e8e8e8;padding-top: 10px;">Powered by PEC</div>
 </div>
+
+<div id="update_notes" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:235px;"
+     closed="true" buttons="#dlg-update_notes">
+    <form id="update_tbgroupbuy" method="post">
+        <div class="fitem">
+            <label>订单备注信息：<span style="color: red;">*</span></label>
+            <textarea rows="3" cols="20" style="width: 372px; height: 74px;" id="textNotes">$!bitMap.remark</textarea>
+        </div>
+    </form>
+    <div id="dlg-update_notes">
+        <a href="#" class="easyui-linkbutton" id="update_order_notes" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#update_notes').dialog('close')">取消</a>
+    </div>
+</div>
+
+
+<div id="addDlg_tbgroupbuy" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:235px;"
+     closed="true" buttons="#dlg-buttons_tbgroupbuy">
+    <form id="addForm_tbgroupbuy" method="post">
+        <div class="fitem">
+            <label>来源订单编号<span style="color: red;">*</span></label>
+            <input id="sourceOrderNumber" class="easyui-textbox" name="sourceOrderNumber" required="true" data-options="validType:'length[2,25]'"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_tbgroupbuy">
+        <a href="#" class="easyui-linkbutton" id="update_sourceOrderNumber" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg_tbgroupbuy').dialog('close')">取消</a>
+    </div>
+</div>
+
+
+<div id="update_state" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:400px;height:235px;"
+     closed="true" buttons="#dlg-buttons_update">
+    <form id="update_states" method="post">
+        <div class="fitem">
+            <label>付款状态<span style="color: red;">*</span></label>
+            <select id="select_state" editable="false">
+			  <option value ="100">未付款</option>
+			  <option value ="101">已付款</option>
+			  <option value ="102">待退款</option>
+			  <option value ="103">已退款</option>
+			</select>
+        </div>
+    </form>
+    <div id="dlg-buttons_update">
+        <a href="#" class="easyui-linkbutton" id="update_statess" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#update_state').dialog('close')">取消</a>
+    </div>
+</div>
+
+<div id="update_invoice_ad" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:540px;height:390px;"
+     closed="true" buttons="#dlg-buttons_address">
+    <form id="update_invoice_ads" method="post">
+    	<div class="fitem">
+            <label>收件人</label>
+            <input id="addressee" class="easyui-textbox" name="addressee" data-options="validType:'length[2,25]'"/>
+        </div>
+        <div class="fitem">
+            <label>当前地址</label>
+            <input id="old_address" class="easyui-textbox" name="old_address" data-options="validType:'length[2,25]'"/>
+        </div>
+        <div class="search-row">
+            <span class="search-row-label" style="margin-left:-72px;margin-right:72px;">
+                省份
+            </span>
+            <select id="province" name="province" class="easyui-combobox" style="width:154px;" editable="false"></select>
+        </div>
+        <div class="search-row">
+            <span class="search-row-label" style="margin-left:-72px;margin-right:72px;">
+                城市
+            </span>
+            <select id="citys" name="city" class="easyui-combobox" style="width:154px;" editable="false"></select>
+        </div>
+        </br>
+        <div class="search-row">
+            <span class="search-row-label" style="margin-left:-72px;margin-right:72px;">
+                区县
+            </span>
+            <select id="county" name="county" class="easyui-combobox" style="width:154px;" editable="false"></select>
+        </div>
+        <div class="fitem">
+            <label>详细地址</label>
+            <input id="new_address" class="easyui-textbox" name="new_address"  maxlength="200" data-options="validType:'length[2,25]'"/>
+        </div>
+        <div class="fitem">
+            <label>邮编</label>
+            <input id="invoice_zip_code" class="easyui-textbox" name="invoice_zip_code" "/>
+        </div>
+        <div class="fitem">
+            <label>联系电话</label>
+            <input id="invoice_number" class="easyui-textbox" name="invoice_number" data-options="validType:'length[2,25]'"/>
+        </div>
+    </form>
+    <div id="dlg-buttons_address">
+        <a href="#" class="easyui-linkbutton" id="invoice_update" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#update_invoice_ad').dialog('close')">取消</a>
+    </div>
+</div>
+<div id="update_invoice" data-options="title:'修改',resizable:true,modal:true" fit="true" class="easyui-dialog add-dlg" style="width:80%;height:80%;"
+     closed="true" buttons="#dlg-buttons_a">
+     <input type="hidden" id="is_lock_i" value="$!bitMap.isLock" />
+     <input type="hidden" id="invoice_type_i" value="$!bitMap.invoiceType" />
+    <form id="update_invoice_d" method="post">
+        <div class="fitem" style="width:1000px;">
+            <label>锁定状态</label>
+            <span id="lock_s"></span>
+            <a href="#" class="easyui-linkbutton" id="lock_a" style="color:#191970"></a>
+            <br/>
+            <span style="color:#8E8E8E;margin-left:105px;">待锁定状态订单发票还可以修改，已锁定的订单发票信息不能再被修改。</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>订单编号</label>
+            <span style="color:#191970">$!bitMap.orderSn</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>下单人</label>
+            <span>$!bitMap.consignee</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>发票抬头</label>
+            <input id="invoices_raised_i" value="$!bitMap.invoiceTitle" type="text" style="width:500px;height:25px" onblur="getMemberInvoiceByInvoiceTitle(this.value)"/>
+            <br/>
+            <span style="color:#8E8E8E;margin-left:105px;">系统会根据发票抬头查询审核通过的增票历史记录，并自动填充表单。但增票的历史信息不一定与当前用户的增票信息完全一致</span>
+            <br/>
+            <span style="color:#8E8E8E;margin-left:105px;">，请业务人员认真审核后保存确认。</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>发票类型</label>
+            <input id="z" class="radio2" type="radio" name="radio2" value="1"  style="width:20px;" />增值税发票
+			<input id="p" class="radio2" type="radio" name="radio2" value="2"  style="width:20px;" checked/>普通发票
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>是否电子发票</label>
+            <span id="electric">$!bitMap.electricFlag</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>纳税人识别号</label>
+            <input id="tax_payer_number_i" value="$!bitMap.taxPayerNumber" type="text" style="width:500px;height:25px" />
+            <br/>
+            <span style="color:#8E8E8E;margin-left:105px;">当发票类型为"增值税发票"时此项必须填写</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>注册地址</label>
+            <input id="register_address_i" value="$!bitMap.registerAddress" type="text" style="width:500px;height:25px"/>
+            <br/>
+            <span style="color:#8E8E8E;margin-left:105px;">当发票类型为"增值税发票""增值税发票(普)"时此项必须填写</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>注册电话</label>
+            <input id="register_phone_i" value="$!bitMap.registerPhone" type="text" style="width:500px;height:25px"/>
+            <br/>
+            <span style="color:#8E8E8E;margin-left:105px;">当发票类型为"增值税发票""增值税发票(普)"时此项必须填写</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>开户银行</label>
+            <input id="bank_name_i" value="$!bitMap.bankName" type="text" style="width:500px;height:25px"/>
+            <br/>
+            <span style="color:#8E8E8E;margin-left:105px;">当发票类型为"增值税发票"时此项必须填写</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>开户卡号</label>
+            <input id="bank_card_number_i" value="$!bitMap.bankCardNumber" type="text" style="width:500px;height:25px"/>
+            <br/>
+            <span style="color:#8E8E8E;margin-left:105px;">当发票类型为"增值税发票"时此项必须填写</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>备注信息</label>
+            <textarea  style="width:500px;height:84px;" id="invoice_remark_i">$!bitMap.invoiceRemark</textarea>
+            <br/>
+            <span style="color:#8E8E8E;margin-left:105px;">此设置只针对"增值税发票"，普票无需审核，也无需备注信息</span>
+        </div>
+    </form>
+    <div id="dlg-buttons_a">
+        <a href="#" class="easyui-linkbutton" id="invoice_updatesss" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#update_invoice').dialog('close')">取消</a>
+    </div>
+</div>
+	<input id="hidden_invoices_raised"type="hidden">$!bitMap.invoiceTitle</input>
+    <input id="hidden_tax_payer_number"type="hidden">$!bitMap.taxPayerNumber</input>
+    <input id="hidden_register_address"type="hidden">$!bitMap.registerAddress</input>
+    <input id="hidden_register_phone"type="hidden">$!bitMap.registerPhone</input>
+    <input id="hidden_bank_name"type="hidden">$!bitMap.bankName</input>
+    <input id="hidden_invoice_remark"type="hidden">$!bitMap.invoiceRemark</input>
+    <input id="hidden_bank_card_number"type="hidden">$!bitMap.bankCardNumber</input>
+<div id="address_info" data-options="title:'修改',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:500px;height:390px;"
+     closed="true" buttons="#dlg-address_info">
+    <form id="address_info_a" method="post">
+        <div class="fitem" style="width:1000px;">
+            <label>收货人</label>
+            <span id="span_consignee">$!bitMap.consignee</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>详细地址</label>
+            <span id="span_address">$!bitMap.address</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>邮编</label>
+            <span id="span_zipcode">$!bitMap.zipcode</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>手机</label>
+            <span id="span_mobile">$!bitMap.mobile</span>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>电话</label>
+            <span id="span_phone">$!bitMap.phone</span>
+        </div>
+    </form>
+    <div id="dlg-address_info">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#address_info').dialog('close')">取消</a>
+    </div>
+</div>
+<div id="address_info_u" data-options="title:'修改',resizable:true,modal:true" class="easyui-dialog add-dlg" style="width:500px;height:390px;"
+     closed="true" buttons="#dlg-address_info_u">
+    <form id="address_info_form" method="post">
+        <div class="fitem" style="width:1000px;">
+            <label>收货人</label>
+            <input id="address_consignee" value="$!bitMap.consignee" type="text" style="width:200px;height:25px"/>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>详细地址</label>
+            <input id="address_address" value="$!bitMap.address" type="text" style="width:200px;height:25px"/>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>邮编</label>
+            <input id="address_zipcode" value="$!bitMap.zipcode" type="text" style="width:200px;height:25px"/>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>手机</label>
+            <input id="address_mobile" value="$!bitMap.mobile" type="text" style="width:200px;height:25px"/>
+        </div>
+        <div class="fitem" style="width:1000px;">
+            <label>电话</label>
+            <input id="address_phone" value="$!bitMap.phone" type="text" style="width:200px;height:25px"/>
+        </div>
+    </form>
+    <div id="dlg-address_info_u">
+    	<a href="#" class="easyui-linkbutton" id="address_info_update" iconCls="icon-ok">保存</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#address_info_u').dialog('close')">取消</a>
+    </div>
+</div>
+<script>
+
+	$("#update_consignee").on('click', function (event) {
+        $('#address_info_u').dialog({'title': '修改'});
+        $("#address_consignee").val($("#hidden_consignee").val());
+        $("#address_address").val($("#hidden_address").val());
+        $("#address_zipcode").val($("#hidden_zipcode").val());
+        $("#address_mobile").val($("#hidden_mobile").val());
+        $("#address_phone").val($("#hidden_phone").val());
+        $('#address_info_u').dialog('open');
+    });
+	$("#select_consignee").on('click', function (event) {
+        $('#address_info').dialog({'title': '查询'});
+		$("#span_consignee").text($("#hidden_consignee").val());
+        $("#span_address").text($("#hidden_address").val());
+        $("#span_zipcode").text($("#hidden_zipcode").val());
+        $("#span_mobile").text($("#hidden_mobile").val());
+        $("#span_phone").text($("#hidden_phone").val());
+        $('#address_info').dialog('open');
+    });
+
+    $(function(){
+    	$("#address_info_update").click(function(){
+	    	var address_consignee = $('#address_consignee').val();
+	    	var address_address = $('#address_address').val();
+	    	var address_zipcode = $('#address_zipcode').val();
+	    	var address_mobile = $('#address_mobile').val();
+	    	var address_phone = $('#address_phone').val();
+    		//订单号
+	    	var orderNumber = $('#orderSn').val();
+	    	//订单id
+	    	var orderId = $('#orderId').val();
+    		$.ajax({
+		         url      : "/operationArea/updateAddress",
+		         type     : 'POST',
+		         dataType : 'json',
+		         data     : {		address_mobile: address_mobile,
+						            address_consignee: address_consignee,
+						            address_address: address_address,
+						            address_zipcode: address_zipcode,
+						            address_phone: address_phone,
+						            orderId: orderId,
+						            orderNumber: orderNumber
+		         }, 
+		         success  : function(data) {
+		        	$('#address_info_u').dialog('close');
+		        	$("#hidden_consignee").val(address_consignee);
+		        	$("#hidden_address").val(address_address);
+		        	$("#hidden_zipcode").val(address_zipcode);
+		        	$("#hidden_mobile").val(address_mobile);
+		        	$("#hidden_phone").val(address_phone);
+		        	Operating_history();
+		         }
+		     });
+    	});
+        getall();
+    });
+        $('#getprovince').combobox({
+            onChange:function(record,o) {
+                var shippingMode = $('#shippingMode').val();
+                $.ajax({
+                    url      : "/operationArea/getRegion",
+                    type     : 'get',
+                    dataType : 'json',
+                    async:true,
+                    data     : {
+                        pid : record,
+                        shippingMode : shippingMode
+                    },
+                    success  : function(data) {
+                        $('#getcity').combobox('clear');
+                        $('#getcity').combobox("loadData", data);
+                        $('#getcity').combobox("setValue",data[0].id);
+
+                    }
+                });
+            }
+        });
+
+         $('#getcity').combobox({
+             onChange:function(record,o) {
+                 var shippingMode = $('#shippingMode').val();
+                $.ajax({
+                    url      : "/operationArea/getRegion",
+                    type     : 'get',
+                    dataType : 'json',
+                    async:true,
+                    data     : {
+                        pid : record,
+                        shippingMode :shippingMode
+                    },
+                    success  : function(data) {
+                        $('#getregion').combobox('clear');
+                        $('#getregion').combobox("loadData", data);
+                        $('#getregion').combobox("setValue",data[0].id);
+
+                    }
+                });
+            }
+         });
+
+        $('#getregion').combobox({
+            onChange:function(record,o) {
+                var shippingMode = $('#shippingMode').val();
+                $.ajax({
+                    url      : "/operationArea/getRegion",
+                    type     : 'get',
+                    dataType : 'json',
+                    async:true,
+                    data     : {
+                        pid : record,
+                        shippingMode : shippingMode
+                    },
+                    success  : function(data) {
+                        $('#getstreet').combobox('clear');
+                        $('#getstreet').combobox("loadData", data);
+                        $('#getstreet').combobox("setValue",data[0].id);
+
+                    }
+                });
+            }
+        });
+
+
+
+    function getall() {
+        var province = $("#province1").val();
+        var city = $("#city1").val();
+        var region = $("#region1").val();
+        var shippingMode = $('#shippingMode').val();
+        $.ajax({
+            url: "/operationArea/getRegion",
+            type: 'get',
+            dataType: 'json',
+            async:true,
+            data: {
+                pid: 0,
+                shippingMode : shippingMode
+            },
+            success: function (data) {
+                $('#getprovince').combobox('clear');
+                $('#getprovince').combobox("loadData", data);
+                $('#getprovince').combobox('setValue', province);
+
+                $.ajax({
+                    url: "/operationArea/getRegion",
+                    type: 'get',
+                    dataType: 'json',
+                    async:true,
+                    data: {
+                        pid: province,
+                        shippingMode : shippingMode
+                    },
+                    success: function (data) {
+                        $('#getcity').combobox('clear');
+                        $('#getcity').combobox("loadData", data);
+                        $('#getcity').combobox('setValue', city);
+
+                        $.ajax({
+                            url      : "/operationArea/getRegion",
+                            type     : 'get',
+                            dataType : 'json',
+                            async:true,
+                            data     : {
+                                pid : city,
+                                shippingMode : shippingMode
+                            },
+                            success  : function(data) {
+                                $('#getregion').combobox('clear');
+                                $('#getregion').combobox("loadData", data);
+                                $('#getregion').combobox("setValue",region);
+
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    //更新 地址 省市区街 状态 by orderSn
+    function uppcrs(){
+        var orderSn =  $('#orderSn').val();
+        var province = $('#getprovince').combobox("getValue");
+        var city = $('#getcity').combobox("getValue");
+        var region = $('#getregion').combobox("getValue");
+        var oldRegionName = $('#oldRegionName').val();
+        var orderId = $('#orderId').val();
+        var street = 0;
+        if (province == "" || province == 0){
+            alert("请选择省");
+        } if (city == "" || city == 0){
+            alert("请选择市");
+        } if (region == "" || region == 0){
+            alert("请选择区");
+        }
+        var st = $('#st').val();
+        if (st == 1){
+            street = 0
+        }
+        if (st == 0){
+            street = $('#getstreet').combobox("getValue");
+            if (street == ""|| street ==0){
+                alert("请选择街道");
+            }
+        }
+        if (orderSn == ""){
+            autoAlt("当前页面发生错误,请重新访问");
+            return false;
+        }
+        $.ajax({
+            url: "/operationArea/updateRegion",
+            type: 'post',
+            dataType: 'json',
+            data: {
+                province : province,
+                city : city,
+                region : region,
+                street : street,
+                orderSn : orderSn,
+                oldRegionName : oldRegionName,
+                orderId : orderId
+            },
+            success: function (data) {
+                if (data.success == true) {
+                    alert("保存成功");
+                    getNewName();
+                    Operating_history();
+                }else {
+                    alert("保存失败:" + data.msg);
+                }
+            }
+        });
+    }
+    function getNewName() {
+        var orderSn =  $('#orderSn').val();
+        $.ajax({
+            url: "/operationArea/getRegionName",
+            type: 'post',
+            dataType: 'text',
+            data: {
+                orderSn : orderSn
+            },
+            success: function (data) {
+                $("#rename").html(data);
+                $("#rename2").html(data);
+            }
+        });
+    }
+</script>
+<script>
+	function getMemberInvoiceByInvoiceTitle(invoiceTitle){
+		jQuery.ajax({
+             url: "/invoice/getMemberInvoiceByInvoiceTitle",
+             data:{
+             	"invoiceTitle": invoiceTitle
+             },
+             type: "GET",
+             success: function (data) {
+            	 if (data.memberInvoices != null){
+            		 $("#tax_payer_number_i").val(data.memberInvoices.taxPayerNumber);
+	            	 $("#register_address_i").val(data.memberInvoices.registerAddress);
+	            	 $("#register_phone_i").val(data.memberInvoices.registerPhone);
+	            	 $("#bank_name_i").val(data.memberInvoices.bankName);
+	            	 $("#bank_card_number_i").val(data.memberInvoices.bankCardNumber);
+	            	 
+	            	 $("#invoiceTitleSaves").val(invoiceTitle);
+	            	 $("#taxPayerNumberSaves").val(data.memberInvoices.taxPayerNumber);
+	            	 $("#registerAddressSaves").val(data.memberInvoices.registerAddress);
+	            	 $("#registerPhoneSaves").val(data.memberInvoices.registerPhone);
+	            	 $("#bankNameSaves").val(data.memberInvoices.bankName);
+	            	 $("#bankCardNumberSaves").val(data.memberInvoices.bankCardNumber);
+            	 }
+			}
+		});
+	}
+	$("#update_invoices").on('click', function (event) {
+	    var invoiceOperation = $("#invoiceOperation").val();
+	    
+	    var orderSn =  $('#orderSn').val();
+        $.ajax({
+            url: "/operationArea/netList",
+            type: 'post',
+            dataType: 'text',
+            data: {
+                orderSn : orderSn
+            },
+            success: function (data) {
+            var jsonData = JSON.parse(data);
+               if(jsonData.success == false){
+               		alert("对不起，该订单已有网单开票成功，无法编辑!");
+               		return false;
+               }else{
+               		$('#update_invoice').dialog('open');
+               }
+            }
+        });
+			<!--$('#update_invoice_d').form('reset');-->
+	        $('#update_invoice').dialog({'title': '修改'});
+	        var is_lock_i = $("#is_lock_i").val();
+	        if(is_lock_i==0){
+		        $("#lock_s").text("未锁定");
+		        $("#lock_a").text("锁定");
+		        $("#invoices_raised_i").removeAttr("disabled");
+		        $("#tax_payer_number_i").removeAttr("disabled");
+		        $("#register_address_i").removeAttr("disabled");
+		        $("#register_phone_i").removeAttr("disabled");
+		        $("#bank_name_i").removeAttr("disabled");
+		        $("#bank_card_number_i").removeAttr("disabled");
+		        $("#invoice_remark_i").removeAttr("disabled");
+		        $("#z").removeAttr("disabled");
+		        $("#p").removeAttr("disabled");
+	        }else if(is_lock_i==1){
+	        	$("#lock_s").text("已锁定");
+		        $("#lock_a").text("解锁");
+		        $("#invoices_raised_i").attr("disabled","true");
+		        $("#tax_payer_number_i").attr("disabled","true");
+		        $("#register_address_i").attr("disabled","true");
+		        $("#register_phone_i").attr("disabled","true");
+		        $("#bank_name_i").attr("disabled","true");
+		        $("#bank_card_number_i").attr("disabled","true");
+		        $("#invoice_remark_i").attr("disabled","true");
+		        $("#z").attr("disabled","true");
+		        $("#p").attr("disabled","true");
+	        }
+	        if(invoiceOperation==1){
+		        $("#invoices_raised_i").attr("disabled","true");
+		        $("#tax_payer_number_i").attr("disabled","true");
+		        $("#register_address_i").attr("disabled","true");
+		        $("#register_phone_i").attr("disabled","true");
+		        $("#bank_name_i").attr("disabled","true");
+		        $("#bank_card_number_i").attr("disabled","true");
+		        $("#invoice_remark_i").attr("disabled","true");
+		        $("#z").attr("disabled","true");
+		        $("#p").attr("disabled","true");
+	        }
+	        var electric = $("#electric").text();
+	        if(electric==0){
+	        	$("#electric").text("纸质发票");
+	        }else if(electric==1){
+	        	$("#electric").text("电子发票");
+	        }
+	        var invoice_type_i =$("#invoice_type_i").val();
+	        if(invoice_type_i==1){
+	        	$("#z").attr("checked","checked");
+	        }else if(invoice_type_i==2){
+	        	$("#p").attr("checked","checked");
+	        }
+    });
+    $(function(){
+    	$("#lock_a").click(function(){
+    		var is_lock_i = $("#is_lock_i").val();
+    		//订单号
+	    	var orderNumber = $('#orderSn').val();
+	    	//订单id
+	    	var orderId = $('#orderId').val();
+    		$.ajax({
+		         url      : "/operationArea/updateInvoiceState",
+		         type     : 'POST',
+		         dataType : 'json',
+		         data     : {		is_lock_i: is_lock_i,
+						            orderId: orderId,
+						            orderNumber: orderNumber
+		         }, 
+		         success  : function(data) {
+		        	$('#update_invoice').dialog('close');
+		        	if(is_lock_i==1){
+		        		$("#is_lock_i").val(0);
+		        	}else{
+		        		$("#is_lock_i").val(1);
+		        	}
+		        	Operating_history();
+		         }
+		     });
+    	});
+
+        function proof(v){
+            var special = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+            var chinese = new RegExp("[\u4e00-\u9fa5]");
+            if(special.test(v) || chinese.test(v)){
+                return true;
+            }
+        }
+        function proofnum(v){
+            var special = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+            var num = new RegExp("^[0-9]?$");
+
+            if(special.test(v) || num.test(v)){
+                return true;
+            }
+        }
+    	$("#invoice_updatesss").click(function(){
+    		var is_lock_i = $("#is_lock_i").val();
+    		if(is_lock_i==1){
+    			alert("发票信息已被锁定不可更改");
+    			return false;
+    		}
+    		var invoiceOperation = $("#invoiceOperation").val();
+    		
+    		var invoice_remark_i = $("#invoice_remark_i").val();
+    		var bank_card_number_i = $("#bank_card_number_i").val();
+    		var bank_name_i = $("#bank_name_i").val();
+    		var register_phone_i = $("#register_phone_i").val();
+    		var register_address_i = $("#register_address_i").val();
+    		var tax_payer_number_i = $("#tax_payer_number_i").val();
+    		var invoices_raised_i = $("#invoices_raised_i").val();
+			var invoice_type = $("input[name='radio2']:checked").val();
+			var invoiceOperationType = $("#invoiceOperationType").val();
+			var invoice_type_i =$("#invoice_type_i").val();
+			if(invoice_type==1){
+                if(invoices_raised_i==''){
+                    alert("发票抬头不可为空");
+                    return false;
+                }
+                if(tax_payer_number_i==''){
+                    alert("纳税人识别号不可为空");
+                    return false;
+                }
+                if(bank_name_i==''){
+                    alert("开户银行不可为空");
+                    return false;
+                }
+                if(bank_card_number_i==''){
+                    alert("开户卡号不可为空");
+                    return false;
+                }
+                if(register_address_i==''){
+                    alert("注册地址不可为空");
+                    return false;
+                }
+                if(register_phone_i==''){
+                    alert("注册电话不可为空");
+                    return false;
+                }
+
+			}
+			//订单号
+	    	var orderNumber = $('#orderSn').val();
+	    	//订单id
+	    	var orderId = $('#orderId').val();
+			
+			$.ajax({
+		         url      : "/operationArea/updateInvoiceInfo",
+		         type     : 'POST',
+		         dataType : 'json',
+		         data     : {		invoice_remark_i: invoice_remark_i,
+						            bank_card_number_i: bank_card_number_i,
+						            bank_name_i: bank_name_i,
+						            register_phone_i: register_phone_i,
+						            register_address_i: register_address_i,
+						            tax_payer_number_i: tax_payer_number_i,
+						            invoices_raised_i: invoices_raised_i,
+						            invoice_type: invoice_type,
+						            invoice_type_i:invoice_type_i,
+						            orderId: orderId,
+						            orderNumber: orderNumber
+		         }, 
+		         success  : function(data) {
+		             if (data.success == false){
+		                 alert(data.msg);
+                     }else {
+                         $('#update_invoice').dialog('close');
+                         $("#invoiceTitles").text(invoices_raised_i);
+                         if(invoice_type==1){
+                         	$("#invoiceTypess").text("增票");
+                         	$("#electric").text("纸质发票");
+                         	$("#state_check").text("待审核");
+                         }else{
+                         	$("#invoiceTypess").text("普票");
+                         	$("#electric").text("电子发票");
+                         }
+                         $("#invoice_type_i").val(invoice_type);
+                         $("#invoicen").text(tax_payer_number_i);
+                         $("#invoicez").text(register_address_i);
+                         $("#invoicezc").text(register_phone_i);
+                         $("#invoicek").text(bank_name_i);
+                         $("#invoicekh").text(bank_card_number_i);
+                         
+                        var invoiceTitleSaves = $("#invoiceTitleSaves").val();
+                        var taxPayerNumberSaves = $("#taxPayerNumberSaves").val();
+                        var registerAddressSaves = $("#registerAddressSaves").val();
+                        var registerPhoneSaves = $("#registerPhoneSaves").val();
+                        var bankNameSaves = $("#bankNameSaves").val();
+                        var bankCardNumberSaves = $("#bankCardNumberSaves").val();
+                         
+                         if(invoice_type==1 && invoices_raised_i== invoiceTitleSaves && tax_payer_number_i== taxPayerNumberSaves && 
+                         register_address_i== registerAddressSaves && register_phone_i== registerPhoneSaves && bank_name_i== bankNameSaves &&
+                         bank_card_number_i==bankCardNumberSaves){
+                         	$("#state_check").text("审核通过");
+                         	if(invoice_remark_i==""){
+                         		$("#invoice_remark_i").val("该增票信息先前已存在并审核通过,本订单增票信息自动审核通过");
+                         	}
+                         }
+                         Operating_history();
+                     }
+		         }
+		     });
+    	});
+    });
+</script>
+<script>
+    
+	$(function(){
+		showPro();
+		
+		$("#invoice_update").click(function(){
+			var addressee = $('#addressee').textbox('getValue');
+			var invoice_zip_code = $('#invoice_zip_code').textbox('getValue');
+			var invoice_number = $('#invoice_number').textbox('getValue');
+			var province = $('#province').combobox('getText');
+			var citys = $('#citys').combobox('getText');
+			var county = $('#county').combobox('getText');
+			var new_address = $('#new_address').textbox('getValue');
+
+
+			var addre = province + citys + county + new_address;
+			//订单号
+	    	var orderNumber = $('#orderSn').val();
+	    	//订单id
+	    	var orderId = $('#orderId').val();
+			if(!isEmpty(addre)){
+				if(isEmpty(province) || isEmpty(citys) || isEmpty(county) || isEmpty(new_address)){
+					alert("请填写完整地址");
+					return;
+				}
+			}
+			$.ajax({
+		         url      : "/operationArea/updateInvoiceAddress",
+		         type     : 'POST',
+		         dataType : 'json',
+		         data     : {		addressee: addressee,
+						            invoice_zip_code: invoice_zip_code,
+						            invoice_number: invoice_number,
+						            province: province,
+						            citys: citys,
+						            county: county,
+						            new_address: new_address,
+						            orderId: orderId,
+						            orderNumber: orderNumber
+		         }, 
+		         success  : function(data) {
+		        	$('#update_invoice_ad').dialog('close');
+		        	$("#receiptConsignee").text(addressee);
+		        	$("#receiptZipcode").text(invoice_zip_code);
+		        	$("#receiptMobile").text(invoice_number);
+		        	
+					if (!isEmpty(province)) {
+					    $("#receiptAddress").text(addre);
+					}
+		        	Operating_history();
+		         }
+		     });
+		});
+	});
+	
+	$("#update_invoice_address").on('click', function (event) {
+        $('#update_invoice_ads').form('reset');
+        $('#update_invoice_ad').dialog({'title': '修改'});
+        $('#update_invoice_ad').dialog('open');
+        $("#addressee").textbox("setValue", $('#receiptConsignee').text());
+        $("#old_address").textbox("setValue", $('#receiptAddress').text());
+        $("#invoice_zip_code").textbox("setValue", $('#receiptZipcode').text());
+        $("#invoice_number").textbox("setValue", $('#receiptMobile').text());
+        $('#old_address').textbox('textbox').attr('readonly',true);
+    });
+    
+    function showPro(){
+    	    $.ajax({
+    	        url : '/order/getRegions2',
+    	         dataType: 'json',
+    	         type:'POST',
+    	         success: function (jsonstr) {  
+    	        	 var tempCombox=[{"code":'',"name":"please","childs":[{}]}];
+    	        	 $.each(jsonstr.rows,function(i,val){
+    	        		 if(val.regionType == 1){
+    	        			 if(val.parentId==0){
+    	        			 tempCombox.push({"value":val.id,"text":val.regionName,"childs":[{}]});
+    	        			 $("#province").combobox("loadData", tempCombox);
+    	        			 }
+    	        		 }
+    	        	 });
+	                }
+    	        
+    	         
+    	    });
+    	}
+	    
+	    $('#province').combobox({
+		    onChange : function(newValue, oldValue) {			
+		         if (newValue) {
+		             showCity(newValue)
+		             $("#citys").combobox("clear")
+		             $("#county").combobox("clear")					
+		         }
+		    }
+	    });
+	    
+    	function showCity(newValue){
+    		$.ajax({
+    	        url : '/order/getRegions2',
+    	        type:'POST',
+    	         dataType: 'json',
+    	         data: {
+                     "parentId":newValue
+                 },
+    	         success: function (jsonstr) {
+    	        	 var tempCombox=[{"code":'',"name":"please","childs":[{}]}];
+    	        	 $.each(jsonstr.rows,function(i,val){
+    	        		 if(val.parentId == newValue){
+    	        			 tempCombox.push({"value":val.id,"text":val.regionName,"childs":[{}]});
+    	        			 $("#citys").combobox("loadData", tempCombox);
+    	        		 }
+    	        	 });
+	                }
+    	        
+    	         
+    	    });
+    	}
+    	   
+
+    	 $('#citys').combobox({
+    		    onChange : function(newValue, oldValue) {			
+    	         if (newValue) {
+    	        	 showCounty(String(newValue))
+    	             	 			
+    	         }
+    		    }
+    	 });
+    		    
+    	function showCounty(newValue){
+    		$.ajax({
+    	        url : '/order/getRegions2',
+    	        type:'POST',
+    	         dataType: 'json',
+    	         data: {
+                     "parentId":newValue
+                 },
+    	         success: function (jsonstr) {  
+    	        	 var tempCombox=[{"code":'',"name":"please","childs":[{}]}];
+    	        	 $.each(jsonstr.rows,function(i,val){
+    	        		 if(val.parentId == newValue){
+    	        			 tempCombox.push({"value":val.code,"text":val.regionName,"childs":[{}]});
+    	        			 $("#county").combobox("loadData", tempCombox);
+    	        		 }
+    	        	 });
+	                }
+    	    });         
+    	}
+    	
+    	function isEmpty(obj){
+		    if(typeof obj == "undefined" || obj == null || obj == ""){
+		        return true;
+		    }else{
+		        return false;
+		    }
+		}
+</script>
+
+<script>
+	$("#order_notes_state").on('click', function (event) {
+        $('#update_tbgroupbuy').form('reset');
+        $('#update_notes').dialog({'title': '修改'});
+        $('#update_notes').dialog('open');
+    });
+    
+    $(function(){
+    	$('#update_order_notes').click(function(){
+    	//页面信息
+    	var notes = $('#notes').text();
+    	//弹框信息
+    	var textNotes = $('#textNotes').val();
+    	//订单号
+    	var orderNumber = $('#orderSn').val();
+    	//订单id
+    	var orderId = $('#orderId').val();
+    		$.ajax({
+		         url      : "/operationArea/updateNotes",
+		         type     : 'POST',
+		         dataType : 'json',
+		         data     : {		notes:notes,
+						            textNotes: textNotes,
+						            orderId: orderId,
+						            orderNumber:orderNumber
+		         }, 
+		         success  : function(data) {
+		        	$('#update_notes').dialog('close');
+		        	$('#spanNotes').text(textNotes);
+		        	$('#notes').text(textNotes);
+		        	$('#textNotes').val(textNotes);
+		        	Operating_history();
+		         }
+		     });
+    	});
+    });
+</script>
+
+<script>
+	$("#update_pay_state").on('click', function (event) {
+        $('#update_states').form('reset');
+        $('#update_state').dialog({'title': '修改'});
+        $('#select_state').val($('#span_state').val());
+        $('#update_state').dialog('open');
+    });
+    
+    $(function(){
+    	
+    	if($('#span_state').val()==100){
+			$("#money_is_pay").show();
+		}else{
+			$("#money_is_pay").hide();
+		}
+    	
+    	$('#update_statess').click(function(){
+    	//页面状态
+    	var spanState = $('#span_state').val();
+    	//弹框状态
+    	var selectState = $('#select_state').val();
+    	//订单号
+    	var orderNumber = $('#orderSn').val();
+    	//订单id
+    	var orderId = $('#orderId').val();
+    	if(spanState==selectState){
+    		$('#update_state').dialog('close');
+    	}else{
+    		$.ajax({
+		         url      : "/operationArea/updatePayState",
+		         type     : 'POST',
+		         dataType : 'json',
+		         data     : {		spanState:spanState,
+						            selectState: selectState,
+						            orderNumber: orderNumber,
+						            orderId:orderId
+		         }, 
+		         success  : function(data) {
+		        	$('#update_state').dialog('close');
+		        	$('#span_state').val(selectState);
+		        	if(selectState==100){
+		        		selectState="未付款"
+		        		$("#money_is_pay").show();
+		        	}else if(selectState==101){
+		        		selectState="已付款"
+		        		$("#money_is_pay").hide();
+		        	}else if(selectState==102){
+		        		selectState="待退款"
+		        		$("#money_is_pay").hide();
+		        	}else if(selectState==103){
+		        		selectState="已退款"
+		        		$("#money_is_pay").hide();
+		        	}
+		        	$('#pay').text(selectState);
+		        	$('#text_state').text(selectState);
+		        	Operating_history();
+		         }
+		     });
+    	}
+    	});
+    	
+    	$('#money_is_pay').click(function(){
+    	//页面状态
+    	var spanState = $('#span_state').val();
+    	//弹框状态
+    	var selectState = '101';
+    	//订单号
+    	var orderNumber = $('#orderSn').val();
+    	//订单id
+    	var orderId = $('#orderId').val();
+    	if(spanState==selectState){
+    		$('#update_state').dialog('close');
+    	}else{
+    		$.ajax({
+		         url      : "/operationArea/updatePayState",
+		         type     : 'POST',
+		         dataType : 'json',
+		         data     : {		spanState:spanState,
+						            selectState: selectState,
+						            orderNumber: orderNumber,
+						            orderId:orderId
+		         }, 
+		         success  : function(data) {
+		        	$('#update_state').dialog('close');
+		        	$('#span_state').val(selectState);
+		        	if(selectState==100){
+		        		selectState="未付款"
+		        		$("#money_is_pay").show();
+		        	}else if(selectState==101){
+		        		selectState="已付款"
+		        		$("#money_is_pay").hide();
+		        	}else if(selectState==102){
+		        		selectState="待退款"
+		        		$("#money_is_pay").hide();
+		        	}else if(selectState==103){
+		        		selectState="已退款"
+		        		$("#money_is_pay").hide();
+		        	}
+		        	$('#pay').text(selectState);
+		        	$('#text_state').text(selectState);
+		        	Operating_history();
+		         }
+		     });
+    	}
+    	});
+    });
+</script>
+
+
+<script>
+	$("#addBtn_tbgroupbuy").on('click', function (event) {
+        $('#addForm_tbgroupbuy').form('reset');
+        $("#sourceOrderNumber").textbox("setValue", $('#inputSourceOrderNumber').text());
+        $('#addDlg_tbgroupbuy').dialog({'title': '修改'});
+        $('#addDlg_tbgroupbuy').dialog('open');
+    });
+    function proof(v){
+        var special = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+        var chinese = new RegExp("[\u4e00-\u9fa5]");
+        if(special.test(v) || chinese.test(v)){
+            return true;
+        }
+    }
+    $(function(){
+    	$('#update_sourceOrderNumber').click(function(){
+    	//页面来源订单号
+    	var inputSourceOrderNumber =  $('#inputSourceOrderNumber').text();
+    	//弹框来源订单号
+    	var sourceOrderNumber = $('#sourceOrderNumber').textbox('getValue').trim();
+    	if(sourceOrderNumber=="" || sourceOrderNumber==null){
+    		alert("来源订单号不能为空");
+    		return false;
+    	}
+    	if(sourceOrderNumber.length > 25){
+    	    alert("来源订单号长度不能大于25");
+            return false;
+    	}
+    	if(proof(sourceOrderNumber)){
+                alert("来源订单号不能有中文和特殊字符");
+                return false;
+        }
+    	//订单号
+    	var orderNumber = $('#orderSn').val();
+    	//订单id
+    	var orderId = $('#orderId').val();
+    	if(inputSourceOrderNumber==sourceOrderNumber){
+    		$('#addDlg_tbgroupbuy').dialog('close');
+    	}else{
+    		$.ajax({
+		         url      : "/operationArea/updateSourceOrderNumber",
+		         type     : 'POST',
+		         dataType : 'json',
+		         data     : {		inputSourceOrderNumber:inputSourceOrderNumber,
+						            sourceOrderNumber: sourceOrderNumber,
+						            orderNumber: orderNumber,
+						            orderId:orderId
+		         }, 
+		         success  : function(data) {
+		        	$('#addDlg_tbgroupbuy').dialog('close');
+		        	$('#inputSourceOrderNumber').text(sourceOrderNumber);
+		        	Operating_history();
+		         }
+		     });
+    	}
+    	});
+    });
+</script>
 <script src="../static/js/order/orderDetail.js"></script>
 </body>
 </html>

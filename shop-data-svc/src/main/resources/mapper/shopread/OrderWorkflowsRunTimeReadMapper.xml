@@ -1,0 +1,1537 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OrderWorkflowsRunTimeReadDao">
+    <resultMap id="orderWorkflowsResult" type="com.haier.shop.model.OrderWorkflows">
+        <result property="id" column="id" />
+        <result property="orderId" column="orderId" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="addTime" column="addTime" />
+        <result property="payTime" column="payTime" />
+        <result property="confirmTime" column="confirmTime" />
+        <result property="confirmPeople" column="confirmPeople" />
+        <result property="sendHpTime" column="sendHpTime" />
+        <result property="hpAllotNetPointTime" column="hpAllotNetPointTime" />
+        <result property="lesShipping" column="lesShipping" />
+        <result property="lesShipTime" column="lesShipTime" />
+        <result property="netPointAcceptTime" column="netPointAcceptTime" />
+        <result property="netPointRefuseTime" column="netPointRefuseTime" />
+        <result property="netPointShipTime" column="netPointShipTime" />
+        <result property="userAcceptTime" column="userAcceptTime" />
+        <result property="userRefuseTime" column="userRefuseTime" />
+        <result property="receiptTime" column="receiptTime" />
+        <result property="finishTime" column="finishTime" />
+        <result property="finishPeople" column="finishPeople" />
+        <result property="cancelTime" column="cancelTime" />
+        <result property="cancelPeople" column="cancelPeople" />
+        <result property="mustHpAllotNetPointTime" column="mustHpAllotNetPointTime" />
+        <result property="ewHpAllotNetPointTime" column="ewHpAllotNetPointTime" />
+        <result property="mustLesShipping" column="mustLesShipping" />
+        <result property="ewLesShipping" column="ewLesShipping" />
+        <result property="mustNetPointAcceptTime" column="mustNetPointAcceptTime" />
+        <result property="ewNetPointAcceptTime" column="ewNetPointAcceptTime" />
+        <result property="mustUserAcceptTime" column="mustUserAcceptTime" />
+        <result property="ewUserAcceptTime" column="ewUserAcceptTime" />
+        <result property="shippingMode" column="shippingMode" />
+        <result property="shippingTime" column="shippingTime" />
+        <result property="isTimeoutFree" column="isTimeoutFree" />
+        <result property="netPointArriveTime" column="netPointArriveTime" />
+        <result property="mustConfirmTime" column="mustConfirmTime" />
+        <result property="ewConfirmTime" column="ewConfirmTime" />
+    </resultMap>
+    <sql id="commonQuerySmallChannel">
+		and (os.source='TMMK' or os.source='YHDQWZY' or os.source='YHDZY' or os.source='DDW' or os.source='DCYH' or os.source='SNYG'
+			or os.source='YLW' or os.source='GMTSZYBX' or os.source='GMTSZYCW' or os.source='GMTSZYYY' or os.source='GMTSZYKT'
+			or os.source='GMTSZYXYJ' or os.source='GMZX' or os.source='FRIDGE' or os.source='TOPDHSC' or os.source='WASHER'
+			or os.source='JDMK' or os.source='TMKSD' or os.source='ICBC' or os.source='YHD' or os.source='ZSH' or os.source='YIHAODIAN'
+			or os.source='115' or os.source='114' or os.source='CCBSC' or os.source='CCBSR' or os.source='113'
+			or os.source='CORPORATE_SJMG' or os.source='95533' or os.source='CORPORATE' or os.source='SNHEGQ' or os.source='TBCT'
+			or os.source='TBSC' or os.source='TOPFENXIAO' or os.source='TOPBUYBANG' or os.source='TOPBOILER' or os.source='TOPSHJD'
+			or os.source='TOPFENXIAODHSC' or os.source='TOPMOBILE' or os.source='AIR' or os.source='TOPXB' or os.source='GQGYS'
+			or os.source='TMMKFX' or os.source='TBQYG' or os.source='TMST' or os.source='TONGSHUAIFX' or os.source='TONGSHUAI'
+			or os.source='TSPC' or os.source='TSMOBILE' or os.source='YMX' or os.source='YHDTS' or os.source='TMTV' or os.source='TBCFDD'
+			or os.source='TBXCR' or os.source='GMZXTS')
+	</sql>
+    <sql id="commonQueryBigChannel">
+		and (os.source='1' or os.source='690CK' or os.source='C2BWASHER' or os.source='BLPMS' or os.source='HPB2B' or os.source='RRS'
+			or os.source='DXS' or os.source='BLPHH' or os.source='DBJ' or os.source='FLW' or os.source='HBSC' or os.source='SCHD'
+			or os.source='DALOU' or os.source='PCNEW' or os.source='COS' or os.source='112' or os.source='SCFX' or os.source='MOBILE'
+			or os.source='S_MOBILE' or os.source='YJYD' or os.source='SQXW' or os.source='MSTORE' or os.source='CK'
+			or os.source='CK_MOBILE' or os.source='VDCN' or os.source='XPZC' or os.source='KDGW' or os.source='YDYZ'
+			or os.source='ZPTH' or os.source='CHINAUNICOM')
+	</sql>
+    <sql id="commonQuery">
+        <if test="isTimeoutFree != '' and isTimeoutFree == 1"> and ow.isTimeoutFree = #{isTimeoutFree}</if>
+        <if test="isTimeoutFree != '' and isTimeoutFree == 2"> and ow.isTimeoutFree != 1</if>
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <!-- 增加COD筛选 -->
+        <if test="(nodeType eq 'user'.toString() or nodeType eq 'owf'.toString()) and isCod != '' and isCod != -1 and isCod != 2">
+            and os.isCod = #{isCod}
+        </if>
+        and op.status != 110 and (op.shippingMode ='' or op.shippingMode = 'B2B2C')
+        and os.isTest != 1
+        and op.stockType='WA'
+        <if test="sCodes != null and sCodes != '' ">
+            and
+            ((op.tsCode = '' and op.sCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            )
+            or
+            (op.tsCode != '' and op.tsCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            ))
+        </if>
+        <if test="opId != null and opId > 0">
+            and op.id &gt; #{opId}
+        </if>
+    </sql>
+
+    <sql id="commonReverseQuery">
+        <if test="sCodes != null and sCodes != '' ">
+            and
+            ((op.tsCode = '' and op.sCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            )
+            or
+            (op.tsCode != '' and op.tsCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            ))
+        </if>
+
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="sourceCode != null and sourceCode.size() &gt; 0">and os.source in
+            <foreach collection="sourceCode" index="index" item="sc" open="(" separator="," close=")">
+                #{sc}
+            </foreach>
+        </if>
+        <if test="cateCode != null and cateCode.size() &gt; 0">and op.cateId in
+            <foreach collection="cateCode" index="index" item="cc" open="(" separator="," close=")">
+                #{cc}
+            </foreach>
+        </if>
+        and os.isTest != 1
+        <if test="nodeType neq 'refund'.toString()">
+            <if test="stockType == null or stockType == ''">
+                and op.stockType ='WA'
+            </if>
+            <if test="stockType != null and stockType != '' and stockType eq 'all'.toString()">
+                and op.stockType in('WA','3W')
+            </if>
+            <if test="stockType != null and stockType != '' and stockType neq 'all'.toString()">
+                and op.stockType=#{stockType}
+            </if>
+        </if>
+        <!-- 渠道筛选 0:大渠道，1:小渠道-->
+        <if test="channel != null and channel != '' and channel == 1 ">
+            <include refid="commonQuerySmallChannel"/>
+        </if>
+        <if test="channel != null and channel != '' and channel ==0 ">
+            <include refid="commonQueryBigChannel"/>
+        </if>
+        <if test="orsId != null and orsId > 0">
+            and ors.id &gt; #{orsId}
+        </if>
+        order by ors.id asc
+        <if test="nodeType eq 'hp'.toString() or nodeType eq 'orderclose'.toString()">
+            ,orh.id desc
+        </if>
+        <if test="nodeType eq 'invoice'.toString() ">
+            ,orl.id desc
+        </if>
+        limit #{topNum}
+    </sql>
+
+    <!-- les开单及时率-->
+    <select id="getOntimeRateLes" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct op.id as opId,op.cOrderSn,op.tsCode,op.sCode,op.pdOrderStatus,op.hpRegisterDate,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,
+        os.region,os.confirmTime,os.source,os.isCod,os.smManualTime,os.codConfirmTime,os.firstConfirmTime,os.regionName,
+        ow.shippingTime,ow.shippingTime,ow.lesShipping,ow.hpAllotNetPointTime
+        from
+        orders os inner join orderproducts op on os.id = op.orderId inner join orderworkflows ow on op.id= ow.orderProductId
+        where
+        os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate} and (os.orderType = 0 or os.orderType = 3)
+        and ((os.isCod = 0 and os.payTime &gt; 0) or (os.isCod=1 and os.codConfirmTime &gt; 0)) and os.isBook = 0
+        and os.source !='COS'
+        and (
+        (op.pdOrderStatus &gt; 0 and op.hpRegisterDate &gt; 0)
+        or op.pdOrderStatus = 0
+        )
+        and os.orderStatus !=200 and os.orderStatus !=204
+        <include refid="commonQuery"/>
+        order by op.id limit #{topNum}
+    </select>
+
+    <!-- netpoint到网点及时率-->
+    <select id="getOntimeRateNetpoint" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct op.id as opId,op.cOrderSn,op.tsCode,op.sCode,op.status,
+        os.region,os.regionName,
+        ow.shippingTime,ow.netPointAcceptTime,ow.netPointArriveTime,
+        les.successTime as vomTime
+        from
+        orders os inner join orderproducts op on os.id = op.orderId inner join orderworkflows ow on op.id= ow.orderProductId
+        left join orderrepairs ors on op.id = ors.orderProductId
+        left join lesqueues les on op.id=les.orderProductId
+        where
+        os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate}
+        and ors.id is null
+        and les.successTime &gt; 0
+        <include refid="commonQuery"/>
+        order by op.id limit #{topNum}
+    </select>
+
+    <!-- user到用户及时率-->
+    <select id="getOntimeRateUser" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct op.id as opId,op.cOrderSn,op.tsCode,op.sCode,op.status,op.productType,op.closeTime as finishCloseTime,op.hpReservationDate,
+        os.region,os.tailPayTime,os.isCod,os.source,os.regionName,
+        ow.shippingTime,ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime as userAcceptTime
+        from
+        orders os inner join orderproducts op on os.id = op.orderId inner join orderworkflows ow on op.id= ow.orderProductId
+        left join orderrepairs ors on op.id = ors.orderProductId
+        where
+        os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate}
+        and (op.status &gt;= 40 or (op.status = 10 and ow.netPointArriveTime &gt; 0))
+        and (ow.netPointArriveTime != 0 or ow.netPointAcceptTime != 0)
+        and (
+        (os.tailPayTime != 0 and (os.orderType = 1 or os.orderType = 4))
+        or
+        (os.orderType = 0 or os.orderType = 3)
+        )
+        and ors.id is null
+        <include refid="commonQuery"/>
+        order by op.id limit #{topNum}
+    </select>
+
+    <!-- owf妥投及时率-->
+    <select id="getOntimeRateOwf" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct op.id as opId,op.cOrderSn,op.tsCode,op.sCode,op.status,op.productType,op.hpRegisterDate,op.hpReservationDate,op.closeTime as finishCloseTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,op.pdOrderStatus,
+        os.region,os.orderType,os.isCod,os.tailPayTime,os.source,os.smManualTime,os.codConfirmTime,os.firstConfirmTime,os.regionName,os.confirmTime,
+        ow.shippingTime,ow.userAcceptTime as userAcceptTime,ow.hpAllotNetPointTime,ow.lesShipping,ow.netPointAcceptTime,ow.netPointArriveTime,
+        rs.date,rs.time,
+        les.successTime as vomTime
+        from
+        orders os inner join orderproducts op on os.id = op.orderId inner join orderworkflows ow on op.id= ow.orderProductId
+        left join orderrepairs ors on op.id = ors.orderProductId
+        left join reservationshipping rs on os.id = rs.orderId
+        left join lesqueues les on op.id=les.orderProductId
+        where
+        (os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate} and (os.orderType = 0 or os.orderType = 3))
+        and ors.id is null and ((os.isCod = 0 and os.payTime &gt; 0) or (os.isCod=1 and os.codConfirmTime &gt; 0))
+        and os.source !='COS'
+        and op.hpRegisterDate &gt; 0
+        and os.orderStatus !=200 and os.orderStatus !=204
+        <include refid="commonQuery"/>
+
+        order by op.id limit #{topNum}
+    </select>
+
+    <select id="getOntimeRateOwfSecond" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct op.id as opId,op.cOrderSn,op.tsCode,op.sCode,op.status,op.productType,op.hpRegisterDate,op.hpReservationDate,op.closeTime as finishCloseTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,op.pdOrderStatus,
+        os.region,os.orderType,os.isCod,os.tailPayTime,os.source,os.smManualTime,os.codConfirmTime,os.firstConfirmTime,os.regionName,os.confirmTime,
+        ow.shippingTime,ow.userAcceptTime as userAcceptTime,ow.hpAllotNetPointTime,ow.lesShipping,ow.netPointAcceptTime,ow.netPointArriveTime,
+        rs.date,rs.time,
+        les.successTime as vomTime
+        from
+        orders os inner join orderproducts op on os.id = op.orderId inner join orderworkflows ow on op.id= ow.orderProductId
+        left join orderrepairs ors on op.id = ors.orderProductId
+        left join reservationshipping rs on os.id = rs.orderId
+        left join lesqueues les on op.id=les.orderProductId
+        where
+        (os.tailPayTime &gt; #{startDate} and os.tailPayTime &lt; #{endDate} and (os.orderType = 1 or os.orderType = 4))
+        and ors.id is null and ((os.isCod = 0 and os.payTime &gt; 0) or (os.isCod=1 and os.codConfirmTime &gt; 0))
+        and os.source !='COS'
+        and op.hpRegisterDate &gt; 0
+        and os.orderStatus !=200 and os.orderStatus !=204
+        <include refid="commonQuery"/>
+
+        order by op.id limit #{topNum}
+    </select>
+
+    <!-- transport多层级及时率-->
+    <select id="getOntimeRateTransport" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct op.id as opId,op.cOrderSn,op.tsCode,op.sCode,op.lessShipTInTime,op.status,op.lessShipTOutTime,op.closeTime as finishCloseTime,
+        os.region,os.regionName,
+        ow.shippingTime,ow.lesShipping
+        from
+        orders os inner join orderproducts op on os.id = op.orderId inner join orderworkflows ow on op.id= ow.orderProductId
+        where
+        os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate}
+        and op.tsCode != ''
+        and op.stockType='WA'
+        and (op.shippingMode ='' or op.shippingMode = 'B2B2C')
+        and os.isTest != 1
+        and ow.lesShipping &gt; 0
+        <if test="sCodes != null and sCodes != '' ">
+            and op.tsCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+        </if>
+        <if test="isTimeoutFree != '' and isTimeoutFree == 1"> and ow.isTimeoutFree = #{isTimeoutFree}</if>
+        <if test="isTimeoutFree != '' and isTimeoutFree == 2"> and ow.isTimeoutFree != 1</if>
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="opId != null and opId > 0">
+            and op.id &gt; #{opId}
+        </if>
+        order by op.id limit #{topNum}
+    </select>
+
+    <!-- cod货到付款及时率 -->
+    <select id="getOntimeRateCod" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        distinct op.id as opId,op.cOrderSn,op.tsCode,op.sCode,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,op.cPaymentStatus,op.productAmount,op.balanceAmount,
+        os.region,os.regionName,
+        ow.shippingTime,ow.userAcceptTime as userAcceptTime
+        from
+        orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+        left join orderrepairs ors on ow.orderProductId = ors.orderProductId
+        where
+        ow.userAcceptTime &gt; #{startDate} and ow.userAcceptTime &lt; #{endDate}
+        and os.isCod = 1
+        and ors.id is null
+        <include refid="commonQuery"/>
+        order by op.id limit #{topNum}
+    </select>
+
+    <select id="getOntimeRate" parameterType="java.util.Map" resultType="java.util.Map">
+        select distinct op.id as opId,op.cOrderSn,op.status,op.productType,op.sCode,op.lessShipTInTime,op.lessShipTOutTime,op.tsCode,os.isCod,convert(os.codConfirmState,SIGNED) as codConfirmState,os.orderStatus,
+        os.province,os.city,os.region,os.regionName,os.orderType,ors.orderId as repairsFlag,ow.shippingTime,os.addTime,os.smManualTime,
+        os.codConfirmTime,os.confirmTime,os.firstConfirmTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,op.hpRegisterDate,ow.hpAllotNetPointTime,ow.lesShipping,
+        ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime as userAcceptTime,op.closeTime as finishCloseTime,rs.date,rs.time,
+        op.hpReservationDate,os.tailPayTime,op.price,op.number,os.source,op.productAmount,op.balanceAmount,op.pdOrderStatus,op.cPaymentStatus,les.successTime as vomTime
+        from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+        left join reservationshipping rs on ow.orderId = rs.orderId left join orderrepairs ors on ow.orderProductId = ors.orderProductId
+        left join lesqueues les on op.id=les.orderProductId
+        where
+        <if test="nodeType eq 'les'.toString()">
+            os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate} and (os.orderType = 0 or os.orderType = 3)
+            and ((os.isCod = 0 and os.payTime &gt; 0) or (os.isCod=1 and os.codConfirmTime &gt; 0)) and os.isBook = 0
+            and os.source !='COS'
+            and (
+            (op.pdOrderStatus &gt; 0 and op.hpRegisterDate &gt; 0)
+            or op.pdOrderStatus = 0
+            )
+            and os.orderStatus !=200 and os.orderStatus !=204
+        </if>
+        <if test="nodeType eq 'netpoint'.toString()">
+            os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate} and op.status &gt;= 8
+            and ors.id is null
+            and les.successTime &gt; 0
+        </if>
+        <if test="nodeType eq 'user'.toString()">
+            os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate}
+            and (op.status &gt;= 40 or (op.status = 10 and ow.netPointArriveTime &gt; 0))
+            and (ow.netPointArriveTime != 0 or ow.netPointAcceptTime != 0)
+            and (
+            (os.tailPayTime != 0 and (os.orderType = 1 or os.orderType = 4))
+            or
+            (os.orderType = 0 or os.orderType = 3)
+            )
+            and ors.id is null
+        </if>
+        <if test="nodeType eq 'owf'.toString()">
+            (os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate} and (os.orderType = 0 or os.orderType = 3))
+            and ors.id is null and ((os.isCod = 0 and os.payTime &gt; 0) or (os.isCod=1 and os.codConfirmTime &gt; 0))
+            and os.source !='COS'
+            and op.hpRegisterDate &gt; 0
+            and os.orderStatus !=200 and os.orderStatus !=204
+        </if>
+        <!-- 增加COD筛选 -->
+        <if test="(nodeType eq 'user'.toString() or nodeType eq 'owf'.toString()) and isCod != '' and isCod != -1 and isCod != 2">
+            and os.isCod = #{isCod}
+        </if>
+
+        <if test="nodeType eq 'transport'.toString()">
+            os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate}
+            and op.tsCode != ''
+            and op.stockType='WA'
+            and (op.shippingMode ='' or op.shippingMode = 'B2B2C')
+            and os.isTest != 1
+            and ow.lesShipping &gt; 0
+            <if test="sCodes != null and sCodes != '' ">
+                and op.tsCode in
+                <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                    #{sCode}
+                </foreach>
+            </if>
+        </if>
+
+        <if test="nodeType eq 'cod'.toString()">
+            ow.userAcceptTime &gt; #{startDate} and ow.userAcceptTime &lt; #{endDate}
+            and os.isCod = '1'
+            and ors.id is null
+        </if>
+
+        <!--<if test="shippingTime != ''"> and ow.shippingTime = #{shippingTime}</if>-->
+        <if test="isTimeoutFree != '' and isTimeoutFree == 1"> and ow.isTimeoutFree = #{isTimeoutFree}</if>
+        <if test="isTimeoutFree != '' and isTimeoutFree == 2"> and ow.isTimeoutFree != 1</if>
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="nodeType neq 'transport'.toString()">
+            and op.status != 110 and (op.shippingMode ='' or op.shippingMode = 'B2B2C')
+            and os.isTest != 1
+            and op.stockType='WA'
+        </if>
+
+        <if test="sCodes != null and sCodes != '' and nodeType neq 'transport'.toString()">
+            and
+            ((op.tsCode = '' and op.sCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            )
+            or
+            (op.tsCode != '' and op.tsCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            ))
+        </if>
+
+        <if test="opId != null and opId > 0">
+            and op.id &gt; #{opId}
+        </if>
+        <if test="nodeType eq 'owf'.toString()">
+            union
+            select distinct op.id as opId,op.cOrderSn,op.status,op.productType,op.sCode,op.lessShipTInTime,op.lessShipTOutTime,op.tsCode,os.isCod,convert(os.codConfirmState,SIGNED) as codConfirmState,os.orderStatus,
+            os.province,os.city,os.region,os.regionName,os.orderType,ors.orderId as repairsFlag,ow.shippingTime,os.addTime,os.smManualTime,
+            os.codConfirmTime,os.confirmTime,os.firstConfirmTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,op.hpRegisterDate,ow.hpAllotNetPointTime,ow.lesShipping,
+            ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime as userAcceptTime,op.closeTime as finishCloseTime,rs.date,rs.time,
+            op.hpReservationDate,os.tailPayTime,op.price,op.number,os.source,op.productAmount,op.balanceAmount,op.pdOrderStatus,op.cPaymentStatus,les.successTime as vomTime
+            from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+            left join reservationshipping rs on ow.orderId = rs.orderId left join orderrepairs ors on ow.orderProductId = ors.orderProductId
+            left join lesqueues les on op.id=les.orderProductId
+            where
+            (os.tailPayTime &gt; #{startDate} and os.tailPayTime &lt; #{endDate} and (os.orderType = 1 or os.orderType = 4))
+            and ors.id is null and ((os.isCod = 0 and os.payTime &gt; 0) or (os.isCod=1 and os.codConfirmTime &gt; 0))
+            and os.source !='COS'
+            and op.hpRegisterDate &gt; 0
+            and os.orderStatus !=200 and os.orderStatus !=204
+            and op.status != 110 and (op.shippingMode ='' or op.shippingMode = 'B2B2C')
+            and op.stockType='WA'
+            and os.isTest != 1
+            <!-- 增加COD筛选 -->
+            <if test="isCod != '' and isCod != -1 and isCod != 2">
+                and os.isCod = #{isCod}
+            </if>
+            <!--<if test="shippingTime != ''"> and ow.shippingTime = #{shippingTime}</if>-->
+            <if test="isTimeoutFree != '' and isTimeoutFree == 1"> and ow.isTimeoutFree = #{isTimeoutFree}</if>
+            <if test="isTimeoutFree != '' and isTimeoutFree == 2"> and ow.isTimeoutFree != 1</if>
+            <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+            <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+            <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+
+            <if test="sCodes != null and sCodes != '' ">
+                and
+                ((op.tsCode = '' and op.sCode in
+                <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                    #{sCode}
+                </foreach>
+                )
+                or
+                (op.tsCode != '' and op.tsCode in
+                <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                    #{sCode}
+                </foreach>
+                ))
+            </if>
+
+            <if test="opId != null and opId > 0">
+                and op.id &gt; #{opId}
+            </if>
+        </if>
+
+        limit #{topNum}
+    </select>
+    <select id="getO2oStoreOntimeRateList" parameterType="java.util.Map" resultType="java.util.Map">
+        select distinct op.id as opId,op.cOrderSn,op.status,op.productType,op.sCode,op.tsCode,os.isCod,os.province,os.city,os.region,
+        os.regionName,os.orderType,ow.shippingTime,os.addTime,os.confirmTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,
+        ow.userAcceptTime as userAcceptTime,op.closeTime as finishCloseTime,os.source,op.storeId
+        FROM orderworkflows ow
+        INNER JOIN orderproducts op ON ow.orderProductId = op.id
+        INNER JOIN orders os ON ow.orderId = os.id
+        LEFT JOIN orderrepairs ors ON ow.orderProductId = ors.orderProductId
+        where
+        os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate}
+        and ors.id is null
+        and op.stockType='STORE'
+        and os.confirmTime &gt; 0
+        and os.orderStatus not in (200,204)
+        and op.status != 110
+        and os.isTest != 1
+        <!-- 增加COD筛选 -->
+        <if test="isCod != '' and isCod != -1 and isCod != 2">
+            and os.isCod = #{isCod}
+        </if>
+        <if test="isTimeoutFree != '' and isTimeoutFree == 1"> and ow.isTimeoutFree = #{isTimeoutFree}</if>
+        <if test="isTimeoutFree != '' and isTimeoutFree == 2"> and ow.isTimeoutFree != 1</if>
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="sCodes != null and sCodes != '' ">
+            and op.storeId in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+        </if>
+        <if test="opId != null and opId > 0">
+            and op.id &gt; #{opId}
+        </if>
+
+        order by op.id limit #{topNum}
+    </select>
+    <select id="getOntimeRateByOrderSn" parameterType="java.util.Map" resultType="java.util.Map">
+        select distinct op.cOrderSn,op.status,op.productType,op.sCode,op.lessShipTInTime,op.lessShipTOutTime,op.tsCode,os.isCod,convert(os.codConfirmState,SIGNED) as codConfirmState,os.orderStatus,
+        os.province,os.city,os.region,os.regionName,os.orderType,ors.orderId as repairsFlag,ow.shippingTime,os.addTime,os.smManualTime,
+        os.codConfirmTime,os.confirmTime,os.firstConfirmTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,op.hpRegisterDate,ow.hpAllotNetPointTime,ow.lesShipping,
+        ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime as userAcceptTime,op.closeTime as finishCloseTime,rs.date,rs.time,
+        op.hpReservationDate,os.tailPayTime,op.price,op.number,os.source,op.productAmount,op.balanceAmount,op.pdOrderStatus,op.cPaymentStatus,op.id as opId,les.successTime as vomTime,op.storeId
+        from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+        left join reservationshipping rs on ow.orderId = rs.orderId left join orderrepairs ors on ow.orderProductId = ors.orderProductId
+        left join lesqueues les on op.id=les.orderProductId
+        where op.cOrderSn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and op.cOrderSn !=''
+        <if test="nodeType neq 'o2oOwf'.toString()">
+            and op.stockType='WA'
+        </if>
+        <if test="nodeType eq 'les'.toString()">
+            and (os.orderType = 0 or os.orderType = 3)
+            and ((os.isCod = 0 and os.payTime &gt; 0) or (os.isCod=1 and os.codConfirmTime &gt; 0)) and os.isBook = 0
+            and os.source !='COS'
+            and (
+            (op.pdOrderStatus &gt; 0 and op.hpRegisterDate &gt; 0)
+            or op.pdOrderStatus = 0
+            )
+            and os.orderStatus !=200 and os.orderStatus !=204
+        </if>
+        <if test="nodeType eq 'netpoint'.toString()">
+            and op.status &gt;= 8
+            and ors.id is null
+            and les.successTime &gt; 0
+        </if>
+        <if test="nodeType eq 'user'.toString()">
+            and (op.status &gt;= 40 or (op.status = 10 and ow.netPointArriveTime &gt; 0))
+            and (ow.netPointArriveTime != 0 or ow.netPointAcceptTime != 0)
+            and (
+            (os.tailPayTime != 0 and (os.orderType = 1 or os.orderType = 4))
+            or
+            (os.orderType = 0 or os.orderType = 3)
+            )
+            and ors.id is null
+        </if>
+        <if test="nodeType eq 'owf'.toString()">
+            and (os.orderType = 0 or os.orderType = 3 or ((os.orderType = 1 or os.orderType = 4) and os.tailPayTime &gt; 0))
+            and ors.id is null and ((os.isCod = 0 and os.payTime &gt; 0) or (os.isCod=1 and os.codConfirmTime &gt; 0))
+            and os.source !='COS'
+            and op.hpRegisterDate &gt; 0
+            and os.orderStatus !=200 and os.orderStatus !=204
+        </if>
+        <if test="nodeType eq 'transport'.toString()">
+            and op.tsCode != ''
+            and (op.shippingMode ='' or op.shippingMode = 'B2B2C')
+            and os.isTest != 1
+            and ow.lesShipping &gt; 0
+        </if>
+        <if test="nodeType neq 'transport'.toString() and nodeType neq 'o2oOwf'.toString()">
+            and op.status != 110 and (op.shippingMode ='' or op.shippingMode = 'B2B2C')
+            and os.isTest != 1
+        </if>
+
+        <if test="nodeType eq 'cod'.toString()">
+            and ow.userAcceptTime &gt; 0
+            and os.isCod = '1'
+            and ors.id is null
+        </if>
+
+        <if test="nodeType eq 'o2oOwf'.toString()">
+            and ors.id is null
+            and op.stockType='STORE'
+            and os.confirmTime &gt; 0
+            and os.orderStatus !=200 and os.orderStatus !=204
+            and op.status != 110
+            and os.isTest != 1
+        </if>
+    </select>
+
+    <select id="getRegions" parameterType="Integer" resultType="java.util.Map">
+		select id,regionName from regions where parentId = #{parentId}
+	</select>
+
+    <select id="getOntimeRateDetailCount" parameterType="java.util.Map" resultType="Integer">
+        select count(*)
+        from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+        where op.cOrderSn in
+        <foreach collection="cOrderSns" index="index" item="cOSn" open="(" separator="," close=")">
+            #{cOSn}
+        </foreach>
+        and op.cOrderSn like #{cOrderSn}
+        and op.cOrderSn !=''
+        and os.isTest != 1
+        <if test="nodeType neq 'o2oOwf'.toString()">
+            and op.stockType='WA'
+        </if>
+        <if test="nodeType eq 'o2oOwf'.toString()">
+            and op.stockType='STORE'
+        </if>
+    </select>
+
+    <select id="getOntimeRateDetail" resultType="java.util.Map">
+        select op.cOrderSn,op.number,op.price,op.status,op.productType,op.lessShipTInTime,os.source,op.productName,'' as area,'' as trade,op.sCode,op.lessShipTInTime,op.tsCode,np.netPointName,
+        os.isCod,os.province,os.city,os.region,os.regionName,os.consignee,'' as mobile,ow.shippingTime,os.addTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,os.smManualTime,
+        os.codConfirmTime,os.confirmTime,os.orderType,os.firstConfirmTime,op.hpRegisterDate,ow.hpAllotNetPointTime,op.hpReservationDate,
+        ow.lesShipping,ow.lesShipTime,ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime as userAcceptTime,op.closeTime as finishCloseTime,convert(ow.isTimeoutFree,SIGNED) as isTimeoutFree,
+        os.tailPayTime,rs.date,rs.time,op.productAmount,op.balanceAmount,op.pdOrderStatus,op.cPaymentStatus,op.id as opId,les.successTime as vomTime,op.storeId
+        from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+        left join netpoints np on op.netPointId=np.id
+        left join reservationshipping rs on ow.orderId = rs.orderId
+        left join lesqueues les on op.id=les.orderProductId
+        where op.cOrderSn in
+        <foreach collection="cOrderSns" index="index" item="cOSn" open="(" separator="," close=")">
+            #{cOSn}
+        </foreach>
+        and op.cOrderSn like #{cOrderSn}
+        and op.cOrderSn !=''
+        and os.isTest != 1
+        <if test="nodeType neq 'o2oOwf'.toString()">
+            and op.stockType='WA'
+        </if>
+        <if test="nodeType eq 'o2oOwf'.toString()">
+            and op.stockType='STORE'
+        </if>
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+
+    <select id="getShippingTimeByRegionId" resultType="java.util.Map">
+		SELECT id,shippingTime from regions where regionType=3
+	</select>
+
+    <select id="getStorages" resultType="java.util.Map">
+		select code as id, name as storageName from storages
+	</select>
+
+    <!--audit审核及时率-->
+    <select id="getOntimeRateReverseAudit" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        ors.id as id,ors.count,ors.handleStatus,ors.handleTime,ors.addTime,
+        os.region,
+        op.sCode,op.tsCode,op.shippingMode,op.stockType
+        from
+        orderrepairs ors  FORCE INDEX (ix_OrderRepairs_addTime) inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        where
+        ors.addTime &gt;= #{startDate} and ors.addTime &lt;= #{endDate}
+        <include refid="commonReverseQuery"/>
+    </select>
+
+    <!--hp质检及时率-->
+    <!--
+    <select id="getOntimeRateReverseHp" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+            ors.id as id,ors.count,ors.hpFirstAddTime,
+            orh.addTime as hpTime,
+            os.region,
+            op.sCode
+        from
+            orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+            left join (select max(t1.id) as id,t1.orderRepairId from `orderrepairhprecords` t1 inner join orderrepairs t2  on t1.orderRepairId=t2.id where t2.hpFirstAddTime &gt;= #{startDate} and t2.hpFirstAddTime &lt;= #{endDate} and t1.checkType = 1 group by t1.orderRepairId) temp on ors.id=temp.orderRepairId
+            left join orderrepairhprecords orh on orh.id=temp.id
+        where
+            ors.hpFirstAddTime &gt;= #{startDate} and ors.hpFirstAddTime &lt;= #{endDate} and ors.handleStatus != 6
+        <include refid="commonReverseQuery"/>
+    </select>
+     -->
+    <!--hp质检及时率  优化-->
+    <select id="getOntimeRateReverseHp" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        ors.id as id,ors.count,ors.hpFirstAddTime,
+        orh.addTime as hpTime,orh.id as hpId,
+        os.region,
+        op.sCode,op.tsCode,op.shippingMode,op.stockType
+        from
+        orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        left join orderrepairhprecords orh on orh.orderRepairId=ors.id and orh.checkType = 1
+        where
+        ors.hpFirstAddTime &gt;= #{startDate} and ors.hpFirstAddTime &lt;= #{endDate} and ors.handleStatus != 6
+        <include refid="commonReverseQuery"/>
+    </select>
+    <!--les入库及时率-->
+    <select id="getOntimeRateReverseLes" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        ors.id as id,ors.count,
+        orl.lesOrderSnTime as lesTime,orl.lesOutPingTime,
+        os.region,
+        op.sCode,op.tsCode,op.shippingMode,op.stockType
+        from
+        orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        left join (select max(t1.id) as id,t1.orderRepairId from `orderrepairlesrecords` t1 where t1.lesOrderSnTime &gt;= #{startDate} and t1.lesOrderSnTime &lt;= #{endDate} and t1.success != 2 and (t1.operate = 11 or t1.operate = 12) group by t1.orderRepairId) temp on ors.id=temp.orderRepairId
+        left join orderrepairlesrecords orl on orl.id=temp.id
+        left join orderrepairhprecords orh on orh.orderRepairId=ors.id
+        where
+        orl.lesOrderSnTime &gt;= #{startDate} and orl.lesOrderSnTime &lt;= #{endDate} and ors.handleStatus != 6
+        and ((orh.id>0 and ((((orh.quality != 3 and orh.quality != 5 and orh.quality != 6) or orh.checkResult != 1) and orh.checkType = 1 ))) or orh.id is null)
+        <include refid="commonReverseQuery"/>
+    </select>
+
+    <!--invoice冲红及时率-->
+    <!--
+    <select id="getOntimeRateReverseInvoice" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+            ors.id as id,ors.count,ors.receiptTime as invalidTime,
+            orl.lesOutPingTime,
+            os.region,
+            op.sCode
+        from
+            orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+            left join (select max(t1.id) as id,t1.orderRepairId from `orderrepairlesrecords` t1 where t1.lesOutPingTime &gt;= #{startDate} and t1.lesOutPingTime &lt;= #{endDate} and and t1.success != 2 and (t1.operate = 11 or t1.operate = 12) group by t1.orderRepairId) temp on ors.id=temp.orderRepairId
+            left join orderrepairlesrecords orl on orl.id=temp.id
+        where
+            orl.lesOutPingTime &gt;= #{startDate} and orl.lesOutPingTime &lt;= #{endDate} and ors.receiptStatus != 2
+        <include refid="commonReverseQuery"/>
+    </select>
+     -->
+
+    <!--invoice冲红及时率  优化-->
+    <select id="getOntimeRateReverseInvoice" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        ors.id as id,ors.count,ors.receiptTime as invalidTime,
+        orl.lesOutPingTime,orl.id as lesId,
+        os.region,
+        op.sCode,op.tsCode,op.shippingMode,op.stockType
+        from
+        orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join orderrepairlesrecords orl on orl.orderRepairId=ors.id
+        where
+        orl.lesOutPingTime &gt;= #{startDate} and orl.lesOutPingTime &lt;= #{endDate}
+        and orl.success != 2 and (orl.operate = 11 or orl.operate = 12)
+        and ors.receiptStatus != 2
+        <include refid="commonReverseQuery"/>
+    </select>
+
+    <!--orderclose关闭及时率-->
+    <!--
+    <select id="getOntimeRateReverseOrderclose" parameterType="java.util.Map" resultType="java.util.Map">
+    select
+        ors.id as id,ors.count,ors.hpFirstAddTime,ors.receiptStatus as state,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,
+        orh.quality,
+        os.region,
+        op.sCode,
+        ow.cancelTime
+    from
+        orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join orderworkflows ow on ow.orderProductId = ors.orderProductId
+        left join (select max(t1.id) as id,t1.orderRepairId from `orderrepairhprecords` t1 inner join orderrepairs t2  on t1.orderRepairId=t2.id where t2.hpFirstAddTime &gt;= #{startDate} and t2.hpFirstAddTime &lt;= #{endDate} and t1.checkType = 1 group by t1.orderRepairId) temp on ors.id=temp.orderRepairId
+        left join orderrepairhprecords orh on orh.id=temp.id
+    where
+        ors.hpFirstAddTime &gt;= #{startDate} and ors.hpFirstAddTime &lt;= #{endDate}
+    <include refid="commonReverseQuery"/>
+    </select>
+    -->
+
+    <!--orderclose关闭及时率-->
+    <select id="getOntimeRateReverseOrderclose" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        ors.id as id,ors.count,ors.hpFirstAddTime,ors.receiptStatus as state,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,
+        orh.quality,orh.id as hpId,
+        os.region,
+        op.sCode,op.tsCode,op.shippingMode,op.stockType,
+        ow.cancelTime
+        from
+        orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join orderworkflows ow on ow.orderProductId = ors.orderProductId
+        left join orderrepairhprecords orh on orh.orderRepairId=ors.id and orh.checkType = 1
+        where
+        ors.hpFirstAddTime &gt;= #{startDate} and ors.hpFirstAddTime &lt;= #{endDate}
+        <include refid="commonReverseQuery"/>
+    </select>
+
+    <!--refund退款及时率-->
+    <select id="getOntimeRateReverseRefund" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        ors.id as id,ors.count,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.paymentTime,ors.addTime,
+        os.region,os.source,
+        op.sCode,op.tsCode,op.shippingMode,op.stockType
+        from
+        orderrepairs ors FORCE INDEX (ix_OrderRepairs_addTime) inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        where
+        ors.addTime &gt;= #{startDate} and ors.addTime &lt;= #{endDate} and ors.typeActual = 1
+        <include refid="commonReverseQuery"/>
+    </select>
+
+    <!--blp及时率-->
+    <select id="getOntimeRateReverseBlp" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        ors.id as id,ors.count,ors.storageTime,
+        orh.addTime as hpTime,
+        os.region,
+        op.sCode,op.tsCode,op.shippingMode,op.stockType
+        from
+        orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        left join (select max(t1.id) as id,t1.orderRepairId from `orderrepairhprecords` t1 where t1.addTime &gt;= #{startDate} and t1.addTime &lt;= #{endDate} and (t1.quality=3 or t1.quality=5 or t1.quality=6) and t1.checkResult = 1 and t1.checkType = 1 group by t1.orderRepairId) temp on ors.id=temp.orderRepairId
+        left join orderrepairhprecords orh on orh.id=temp.id
+        where
+        orh.addTime &gt;= #{startDate} and orh.addTime &lt;= #{endDate} and ors.handleStatus != 6
+        <include refid="commonReverseQuery"/>
+    </select>
+
+    <select id="getOntimeRateReverse" parameterType="java.util.Map" resultType="java.util.Map">
+        select orh.id as hid,ors.id as id,ors.orderProductId,op.cOrderSn,op.status,op.sCode,os.region,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.hpFirstAddTime,ors.count,
+        orh.addTime as hpTime,orl.lesOrderSnTime as lesTime,orl.lesOutPingTime,ors.receiptTime as invalidTime,ors.receiptStatus as state,ow.finishTime,ow.cancelTime,os.source,ors.paymentTime,orh.quality,
+        ors.storageTime
+        from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+        inner join orderrepairs ors on op.id = ors.orderProductId
+        left join orderrepairlesrecords orl on ors.id=orl.orderRepairId and (orl.operate = 11 or orl.operate = 12) left join
+        (select max(id) as id,orderRepairId from `orderrepairhprecords` where checkType = 1 group by orderRepairId) temp on ors.id=temp.orderRepairId
+        left join orderrepairhprecords orh on orh.id=temp.id
+        where
+        <if test="nodeType == 'audit'">ors.addTime &gt;= #{startDate} and ors.addTime &lt;= #{endDate}</if>
+        <if test="nodeType == 'hp'">ors.hpFirstAddTime &gt;= #{startDate} and ors.hpFirstAddTime &lt;= #{endDate} and ors.handleStatus != 6</if>
+        <if test="nodeType == 'orderclose'">ors.hpFirstAddTime &gt;= #{startDate} and ors.hpFirstAddTime &lt;= #{endDate}</if>
+        <if test="nodeType == 'les'">orl.lesOrderSnTime &gt;= #{startDate} and orl.lesOrderSnTime &lt;= #{endDate} and ors.handleStatus != 6 and orl.success != 2 </if>
+        <if test="nodeType == 'invoice'">
+            orl.lesOutPingTime &gt;= #{startDate} and orl.lesOutPingTime &lt;= #{endDate} and ors.receiptStatus != 2
+        </if>
+        <if test="nodeType == 'refund'">ors.addTime &gt;= #{startDate} and ors.addTime &lt;= #{endDate} and ors.typeActual = 1</if>
+        <if test="nodeType == 'blp'">orh.addTime &gt;= #{startDate} and orh.addTime &lt;= #{endDate} and orh.quality=3 and ors.handleStatus != 6 and orh.checkResult = 1</if>
+        <if test="sCodes != null and sCodes != '' ">
+            and
+            ((op.tsCode = '' and op.sCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            )
+            or
+            (op.tsCode != '' and op.tsCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            ))
+        </if>
+
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="sourceCode != null and sourceCode.size() &gt; 0">and os.source in
+            <foreach collection="sourceCode" index="index" item="sc" open="(" separator="," close=")">
+                #{sc}
+            </foreach>
+        </if>
+        and os.isTest != 1
+        and op.stockType='WA'
+        <if test="orsId != null and orsId > 0">
+            and ors.id &gt; #{orsId}
+        </if>
+        limit #{topNum}
+    </select>
+
+    <select id="getOntimeRateReverseByOrderSn" parameterType="java.util.Map" resultType="java.util.Map">
+        select ors.id,ors.orderProductId,op.cOrderSn,op.status,op.sCode,op.tsCode,op.shippingMode,op.stockType,os.region,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.hpFirstAddTime,ors.count,
+        orh.addTime as hpTime,orl.lesOrderSnTime as lesTime,orl.lesOutPingTime,ors.receiptTime as invalidTime,ors.receiptStatus as state,ow.finishTime,ow.cancelTime,os.source,ors.paymentTime,orh.quality,
+        ors.storageTime
+        from orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join orderworkflows ow on ow.orderProductId = ors.orderProductId
+        left join
+        (select max(t3.id) as id,t3.orderRepairId from `orderrepairlesrecords` t3 inner join orderproducts t4 on t3.orderProductId=t4.id where
+        t4.cOrderSn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and t3.success != 2 and (t3.operate = 11 or t3.operate = 12) group by t3.orderRepairId) temp1 on ors.id=temp1.orderRepairId
+        left join orderrepairlesrecords orl on orl.id=temp1.id
+        left join
+        (select max(t1.id) as id,t1.orderRepairId from `orderrepairhprecords` t1 inner join orderproducts t2 on t1.orderProductId=t2.id where
+        t2.cOrderSn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and t1.checkType = 1 group by t1.orderRepairId) temp2 on ors.id=temp2.orderRepairId
+        left join orderrepairhprecords orh on orh.id=temp2.id
+        where op.cOrderSn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and op.cOrderSn !=''
+        <if test="nodeType == 'hp'">and ors.hpFirstAddTime &gt; 0 and ors.handleStatus != 6</if>
+        <if test="nodeType == 'orderclose'">and ors.hpFirstAddTime &gt; 0</if>
+        <if test="nodeType == 'les'">and orl.lesOrderSnTime &gt; 0 and ors.handleStatus != 6 and orl.success != 2 and (orl.operate = 11 or orl.operate = 12) and ((orh.id>0 and ((((orh.quality != 3 and orh.quality != 5 and orh.quality != 6) or orh.checkResult != 1) and orh.checkType = 1 ))) or orh.id is null)</if>
+        <if test="nodeType == 'invoice'">and orl.lesOutPingTime &gt; 0 and ors.receiptStatus != 2 and orl.success != 2 and (orl.operate = 11 or orl.operate = 12)</if>
+        <if test="nodeType == 'refund'">and ors.addTime &gt; 0 and ors.typeActual = 1</if>
+        <if test="nodeType == 'blp'">and orh.addTime &gt; 0 and (orh.quality=3 or orh.quality=5 or orh.quality=6) and orh.checkResult = 1 and orh.checkType = 1 and ors.handleStatus != 6</if>
+        and os.isTest != 1
+        <if test="nodeType neq 'refund'.toString()">
+            and op.stockType in('WA','3W')
+        </if>
+        <!-- 渠道筛选 0:大渠道，1:小渠道-->
+        <if test="channel != null and channel != '' and channel == 1 ">
+            <include refid="commonQuerySmallChannel"/>
+        </if>
+        <if test="channel != null and channel != '' and channel ==0 ">
+            <include refid="commonQueryBigChannel"/>
+        </if>
+    </select>
+
+    <select id="getOntimeRateReverseDetailCount" parameterType="java.util.Map" resultType="Integer">
+        select count(ors.id)
+        from orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join orderworkflows ow on ow.orderProductId = ors.orderProductId
+        left join netpoints np on op.netPointId=np.id
+        left join
+        (select max(t1.id) as id,t1.orderRepairId from `orderrepairlesrecords` t1
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            inner join orderproducts t3 on t1.orderProductId=t3.id
+        </if>
+        where
+        t1.orderRepairId in
+        <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+            #{repairId}
+        </foreach>
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            and t3.cOrderSn like #{cOrderSn}
+        </if>
+        and t1.success != 2 and (t1.operate = 11 or t1.operate = 12) group by t1.orderRepairId) temp1 on ors.id=temp1.orderRepairId
+        left join orderrepairlesrecords orl on orl.id=temp1.id
+        left join
+        (select max(t1.id) as id,t1.orderRepairId from `orderrepairhprecords` t1
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            inner join orderproducts t3 on t1.orderProductId=t3.id
+        </if>
+        where
+        t1.orderRepairId in
+        <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+            #{repairId}
+        </foreach>
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            and t3.cOrderSn like #{cOrderSn}
+        </if>
+        and t1.checkType = 1 group by t1.orderRepairId) temp2 on ors.id=temp2.orderRepairId
+        left join orderrepairhprecords orh on orh.id=temp2.id
+        <if test="nodeType eq '22storehouse'.toString() or nodeType eq 'recheckquality'.toString() or nodeType eq 'transmitbox'.toString() or nodeType eq 'transmitstock'.toString()">
+            left join
+            (select t1.orderRepairId,t1.lesOutPingTime FROM orderrepairlesrecords t1
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                inner join orderproducts t3 on t1.orderProductId=t3.id
+            </if>
+            where
+            t1.orderRepairId in
+            <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+                #{repairId}
+            </foreach>
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                and t3.cOrderSn like #{cOrderSn}
+            </if>
+            and (t1.operate=11 or t1.operate=12) and t1.storageType=22 and t1.success != 2) les1
+            on  les1.orderRepairId = ors.id
+            left join
+            (select t1.orderRepairId,t1.lesOutPingTime,t1.lesOrderSnTime from orderrepairlesrecords  t1
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                inner join orderproducts t3 on t1.orderProductId=t3.id
+            </if>
+            where
+            t1.orderRepairId in
+            <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+                #{repairId}
+            </foreach>
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                and t3.cOrderSn like #{cOrderSn}
+            </if>
+            and t1.operate=13 and (t1.storageType=10 or t1.storageType=41) and t1.success != 2) les2
+            on  ors.id = les2.orderRepairId
+            left join
+            (select t1.orderRepairId,max(t1.addTime) as hpTime from orderrepairhprecords t1
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                inner join orderproducts t3 on t1.orderProductId=t3.id
+            </if>
+            where
+            t1.orderRepairId in
+            <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+                #{repairId}
+            </foreach>
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                and t3.cOrderSn like #{cOrderSn}
+            </if>
+            and t1.checkType = 2 group by t1.orderRepairId ) hp1
+            on  ors.id = hp1.orderRepairId
+            left join
+            (select t1.orderRepairId,max(t1.addTime) as hpTime from orderrepairhprecords t1
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                inner join orderproducts t3 on t1.orderProductId=t3.id
+            </if>
+            where
+            t1.orderRepairId in
+            <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+                #{repairId}
+            </foreach>
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                and t3.cOrderSn like #{cOrderSn}
+            </if>
+            and t1.checkType = 3 group by t1.orderRepairId ) hp2
+            on  ors.id = hp2.orderRepairId
+        </if>
+        where ors.id in
+        <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+            #{repairId}
+        </foreach>
+        <!-- 增加网单查询 -->
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            and op.cOrderSn like #{cOrderSn}
+        </if>
+        and op.cOrderSn !=''
+        <if test="nodeType neq 'refund'.toString()">
+            and op.stockType in('WA','3W')
+        </if>
+        <if test="nodeType eq 'hp'.toString()">and ors.hpFirstAddTime &gt; 0 and ors.handleStatus != 6</if>
+        <if test="nodeType eq 'orderclose'.toString()">and ors.hpFirstAddTime &gt; 0</if>
+        <if test="nodeType eq 'les'.toString()">and orl.lesOrderSnTime &gt; 0 and ors.handleStatus != 6 and orl.success != 2 and (orl.operate = 11 or orl.operate = 12) and ((orh.id>0 and ((((orh.quality != 3 and orh.quality != 5 and orh.quality != 6) or orh.checkResult != 1) and orh.checkType = 1 ))) or orh.id is null)</if>
+        <if test="nodeType eq 'invoice'.toString()">and orl.lesOutPingTime &gt; 0 and ors.receiptStatus != 2 and orl.success != 2 and (orl.operate = 11 or orl.operate = 12)</if>
+        <if test="nodeType eq 'refund'.toString()">and ors.addTime &gt; 0 and ors.typeActual = 1</if>
+        <if test="nodeType == 'blp'">and orh.addTime &gt; 0 and (orh.quality=3 or orh.quality=5 or orh.quality=6) and orh.checkResult = 1 and orh.checkType = 1 and ors.handleStatus != 6</if>
+        and os.isTest != 1
+    </select>
+
+    <select id="getOntimeRateReverseDetail" resultType="java.util.Map">
+        select ors.id,op.cOrderSn,os.province,os.orderType,os.region,op.productType,op.status,op.productName,op.price,op.sCode,op.tsCode,op.shippingMode,op.stockType,ors.paymentStatus,ors.count as number,
+        ors.storageStatus,ors.receiptStatus as state,ors.typeActual,ors.addTime as applyTime,ors.handleTime,ors.handleStatus,ors.hpFirstAddTime,
+        orh.addTime as hpTime,orh.checkResult,orh.quality,orl.lesOrderSnTime as lesTime,orl.lesOutPingTime,
+        ors.receiptTime as invalidTime,ors.finishTime as endTime,ow.finishTime,ow.cancelTime,os.orderSn,op.cateId,opat.tb_order_sn,
+        np.netPointName, os.source ,ors.paymentTime,op.tsCode,ors.refundAmount,op.productAmount,op.balanceAmount,os.consignee,ors.storageTime,op.storeId
+        <if test="nodeType eq '22storehouse'.toString() or nodeType eq 'recheckquality'.toString() or nodeType eq 'transmitbox'.toString() or nodeType eq 'transmitstock'.toString()" >
+            ,les1.lesOutPingTime as in22StoreTime,les2.lesOutPingTime as in1041StoreTime,les2.lesOrderSnTime as lesOrderSnTime13,hp1.hpTime as jdTime,hp2.hpTime as hxTime
+        </if>
+        from orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join orderworkflows ow on ow.orderProductId = ors.orderProductId
+        left join netpoints np on op.netPointId=np.id
+        left join
+        (select max(t1.id) as id,t1.orderRepairId from `orderrepairlesrecords` t1
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            inner join orderproducts t3 on t1.orderProductId=t3.id
+        </if>
+        where
+        t1.orderRepairId in
+        <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+            #{repairId}
+        </foreach>
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            and t3.cOrderSn like #{cOrderSn}
+        </if>
+        and t1.success != 2 and (t1.operate = 11 or t1.operate = 12) group by t1.orderRepairId) temp1 on ors.id=temp1.orderRepairId
+        left join orderrepairlesrecords orl on orl.id=temp1.id
+        left join
+        (select max(t1.id) as id,t1.orderRepairId from `orderrepairhprecords` t1
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            inner join orderproducts t3 on t1.orderProductId=t3.id
+        </if>
+        where
+        t1.orderRepairId in
+        <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+            #{repairId}
+        </foreach>
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            and t3.cOrderSn like #{cOrderSn}
+        </if>
+        and t1.checkType = 1 group by t1.orderRepairId) temp2 on ors.id=temp2.orderRepairId
+        left join orderrepairhprecords orh on orh.id=temp2.id
+        <if test="nodeType eq '22storehouse'.toString() or nodeType eq 'recheckquality'.toString() or nodeType eq 'transmitbox'.toString() or nodeType eq 'transmitstock'.toString()">
+            left join
+            (select t1.orderRepairId,t1.lesOutPingTime FROM orderrepairlesrecords t1
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                inner join orderproducts t3 on t1.orderProductId=t3.id
+            </if>
+            where
+            t1.orderRepairId in
+            <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+                #{repairId}
+            </foreach>
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                and t3.cOrderSn like #{cOrderSn}
+            </if>
+            and (t1.operate=11 or t1.operate=12) and t1.storageType=22 and t1.success != 2) les1
+            on  les1.orderRepairId = ors.id
+            left join
+            (select t1.orderRepairId,t1.lesOutPingTime,t1.lesOrderSnTime from orderrepairlesrecords  t1
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                inner join orderproducts t3 on t1.orderProductId=t3.id
+            </if>
+            where
+            t1.orderRepairId in
+            <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+                #{repairId}
+            </foreach>
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                and t3.cOrderSn like #{cOrderSn}
+            </if>
+            and t1.operate=13 and (t1.storageType=10 or t1.storageType=41) and t1.success != 2) les2
+            on  ors.id = les2.orderRepairId
+            left join
+            (select t1.orderRepairId,max(t1.addTime) as hpTime from orderrepairhprecords t1
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                inner join orderproducts t3 on t1.orderProductId=t3.id
+            </if>
+            where
+            t1.orderRepairId in
+            <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+                #{repairId}
+            </foreach>
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                and t3.cOrderSn like #{cOrderSn}
+            </if>
+            and t1.checkType = 2 group by t1.orderRepairId ) hp1
+            on  ors.id = hp1.orderRepairId
+            left join
+            (select t1.orderRepairId,max(t1.addTime) as hpTime from orderrepairhprecords t1
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                inner join orderproducts t3 on t1.orderProductId=t3.id
+            </if>
+            where
+            t1.orderRepairId in
+            <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+                #{repairId}
+            </foreach>
+            <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+                and t3.cOrderSn like #{cOrderSn}
+            </if>
+            and t1.checkType = 3 group by t1.orderRepairId ) hp2
+            on  ors.id = hp2.orderRepairId
+        </if>
+        left join orderproductsattributes opat on opat.order_product_id=ors.orderProductId
+        where ors.id in
+        <foreach collection="repairIds" index="index" item="repairId" open="(" separator="," close=")">
+            #{repairId}
+        </foreach>
+        <!-- 增加网单查询 -->
+        <if test="cOrderSn !=null and cOrderSn != '' and cOrderSn !='%%' ">
+            and op.cOrderSn like #{cOrderSn}
+        </if>
+        and op.cOrderSn !=''
+        <if test="nodeType neq 'refund'.toString()">
+            and op.stockType in('WA','3W')
+        </if>
+        and os.isTest != 1
+        <if test="nodeType eq 'hp'.toString()">and ors.hpFirstAddTime &gt; 0 and ors.handleStatus != 6</if>
+        <if test="nodeType eq 'orderclose'.toString()">and ors.hpFirstAddTime &gt; 0</if>
+        <if test="nodeType eq 'les'.toString()">and orl.lesOrderSnTime &gt; 0 and ors.handleStatus != 6 and orl.success != 2 and (orl.operate = 11 or orl.operate = 12) and ((orh.id>0 and ((((orh.quality != 3 and orh.quality != 5 and orh.quality != 6) or orh.checkResult != 1) and orh.checkType = 1 ))) or orh.id is null)</if>
+        <if test="nodeType eq 'invoice'.toString()">and orl.lesOutPingTime &gt; 0 and ors.receiptStatus != 2 and orl.success != 2 and (orl.operate = 11 or orl.operate = 12)</if>
+        <if test="nodeType eq 'refund'.toString()">and ors.addTime &gt; 0 and ors.typeActual = 1</if>
+        <if test="nodeType == 'blp'">and orh.addTime &gt; 0 and (orh.quality=3 or orh.quality=5 or orh.quality=6) and orh.checkResult = 1 and orh.checkType = 1 and ors.handleStatus != 6</if>
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+
+    <select id="getDisplayOutTimeList" parameterType="Integer" resultType="java.util.Map">
+		select distinct op.cOrderSn,op.status,op.productType,op.sCode,os.isCod,os.isBook,convert(os.codConfirmState,SIGNED) as codConfirmState,os.orderStatus,
+			os.province,os.city,os.region,os.regionName,os.orderType,ors.orderId as repairsFlag,ow.shippingTime,os.addTime,os.smManualTime,
+			os.codConfirmTime,os.confirmTime,os.firstConfirmTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,op.hpRegisterDate,op.hpFinishDate,ow.lesShipping,
+			ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime as userAcceptTime,op.closeTime as finishCloseTime,rs.date,from_unixtime(rs.time,'%H:%i:%s') as time,
+			op.hpReservationDate,op.lessShipTInTime,op.lessShipTOutTime,op.tsCode,ow.hpAllotNetPointTime,os.tailPayTime,op.price,op.number,os.source,op.productAmount,
+			op.balanceAmount,op.pdOrderStatus,op.cPaymentStatus,les.successTime as vomTime,op.id as opId
+		from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+			left join reservationshipping rs on ow.orderId = rs.orderId left join orderrepairs ors on ow.orderProductId = ors.orderProductId
+			left join lesqueues les on op.id=les.orderProductId
+		where os.addTime &gt; #{startDate} and os.addTime &lt; #{endDate}
+			and op.status != 110 and (op.shippingMode ='' or op.shippingMode = 'B2B2C')
+			and os.isTest != 1
+			and op.stockType='WA'
+	</select>
+
+    <select id="getDisplayOutTimeReverseList" parameterType="java.util.Map" resultType="java.util.Map">
+        select ors.id,ors.orderProductId,op.cOrderSn,op.status,os.region,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.hpFirstAddTime,ors.count,
+        orh.addTime as hpTime,orl.lesOrderSnTime as lesTime,orl.lesOutPingTime,ors.receiptTime as invalidTime,ors.receiptStatus as state,ow.finishTime,ow.cancelTime,
+        op.sCode,os.source,ors.paymentTime,orh.quality
+        from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+        inner join orderrepairs ors on op.id = ors.orderProductId
+        left join orderrepairlesrecords orl on ors.id=orl.orderRepairId and (orl.operate = 11 or orl.operate = 12) left join
+        (select max(id) as id,orderRepairId from `orderrepairhprecords` where checkType = 1 group by orderRepairId) temp on ors.id=temp.orderRepairId
+        left join orderrepairhprecords orh on orh.id=temp.id
+        where
+        <if test="nodeType == 'audit'">ors.addTime &gt;= #{startTime} and ors.addTime &lt;= #{endTime}</if>
+        <if test="nodeType == 'hp'">ors.hpFirstAddTime &gt;= #{startTime} and ors.hpFirstAddTime &lt;= #{endTime} and ors.handleStatus != 6</if>
+        <if test="nodeType == 'orderclose'">ors.hpFirstAddTime &gt;= #{startTime} and ors.hpFirstAddTime &lt;= #{endTime}</if>
+        <if test="nodeType == 'les'">orl.lesOrderSnTime &gt;= #{startTime} and orl.lesOrderSnTime &lt;= #{endTime} and ors.handleStatus != 6 and orl.success !=2 </if>
+        <if test="nodeType == 'invoice'">
+            orl.lesOutPingTime &gt;= #{startTime} and orl.lesOutPingTime &lt;= #{endTime} and ors.receiptStatus != 2
+        </if>
+        and os.isTest != 1
+        and op.stockType='WA'
+    </select>
+
+    <!-- 22库 -->
+    <select id="getOntimeRateReverse22StoreHouse" parameterType="java.util.Map" resultType="java.util.Map">
+        select ors.id as id,ors.orderProductId,op.cOrderSn,op.status,op.sCode,op.tsCode,op.shippingMode,op.stockType,os.region,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.count,
+        les1.lesOutPingTime as in22StoreTime,les2.lesOutPingTime as in1041StoreTime
+        from orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join
+        (select orderRepairId,lesOutPingTime
+        from orderrepairlesrecords
+        where (operate=11 or operate=12) and storageType=22 and lesOutPingTime &gt;= #{startDate} and lesOutPingTime &lt;= #{endDate} and success != 2) les1
+        on  les1.orderRepairId = ors.id
+        left join
+        (select orderRepairId,lesOutPingTime
+        from orderrepairlesrecords
+        where operate=13 and (storageType=10 or storageType=41) and lesOutPingTime &gt;= #{startDate} and success != 2) les2
+        on  ors.id = les2.orderRepairId
+        where
+        ors.handleStatus != 6
+
+        <if test="sCodes != null and sCodes != '' ">
+            and
+            ((op.tsCode = '' and op.sCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            )
+            or
+            (op.tsCode != '' and op.tsCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            ))
+        </if>
+
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="sourceCode != null and sourceCode.size() &gt; 0">and os.source in
+            <foreach collection="sourceCode" index="index" item="sc" open="(" separator="," close=")">
+                #{sc}
+            </foreach>
+        </if>
+        <if test="cateCode != null and cateCode.size() &gt; 0">and op.cateId in
+            <foreach collection="cateCode" index="index" item="cc" open="(" separator="," close=")">
+                #{cc}
+            </foreach>
+        </if>
+        and os.isTest != 1
+        <if test="stockType == null or stockType == ''">
+            and op.stockType ='WA'
+        </if>
+        <if test="stockType != null and stockType != '' and stockType eq 'all'.toString()">
+            and op.stockType in('WA','3W')
+        </if>
+        <if test="stockType != null and stockType != '' and stockType neq 'all'.toString()">
+            and op.stockType=#{stockType}
+        </if>
+        <!-- 渠道筛选 0:大渠道，1:小渠道-->
+        <if test="channel != null and channel != '' and channel == 1 ">
+            <include refid="commonQuerySmallChannel"/>
+        </if>
+        <if test="channel != null and channel != '' and channel ==0 ">
+            <include refid="commonQueryBigChannel"/>
+        </if>
+        <if test="orsId != null and orsId > 0">
+            and ors.id &gt; #{orsId}
+        </if>
+        order by ors.id limit #{topNum}
+    </select>
+
+    <!-- 二次质检 -->
+    <select id="getOntimeRateReverseReCheckQuality" parameterType="java.util.Map" resultType="java.util.Map">
+        select ors.id as id,ors.orderProductId,op.cOrderSn,op.status,op.sCode,op.tsCode,op.shippingMode,op.stockType,os.region,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.count,
+        les.lesOutPingTime as in22StoreTime,hp.hpTime as jdTime
+        from orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join
+        (select orderRepairId,lesOutPingTime
+        from orderrepairlesrecords
+        where (operate=11 or operate=12) and storageType=22 and lesOutPingTime &gt;= #{startDate} and lesOutPingTime &lt;= #{endDate} and success != 2) les
+        on  les.orderRepairId = ors.id
+        left join
+        (select orderRepairId,max(addTime) as hpTime
+        from orderrepairhprecords
+        where checkType = 2 and addTime &gt;= #{startDate} group by orderRepairId ) hp
+        on ors.id = hp.orderRepairId
+        where
+        ors.handleStatus != 6
+
+        <if test="sCodes != null and sCodes != '' ">
+            and
+            ((op.tsCode = '' and op.sCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            )
+            or
+            (op.tsCode != '' and op.tsCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            ))
+        </if>
+
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="sourceCode != null and sourceCode.size() &gt; 0">and os.source in
+            <foreach collection="sourceCode" index="index" item="sc" open="(" separator="," close=")">
+                #{sc}
+            </foreach>
+        </if>
+        <if test="cateCode != null and cateCode.size() &gt; 0">and op.cateId in
+            <foreach collection="cateCode" index="index" item="cc" open="(" separator="," close=")">
+                #{cc}
+            </foreach>
+        </if>
+        and os.isTest != 1
+        <if test="stockType == null or stockType == ''">
+            and op.stockType ='WA'
+        </if>
+        <if test="stockType != null and stockType != '' and stockType eq 'all'.toString()">
+            and op.stockType in('WA','3W')
+        </if>
+        <if test="stockType != null and stockType != '' and stockType neq 'all'.toString()">
+            and op.stockType=#{stockType}
+        </if>
+        <!-- 渠道筛选 0:大渠道，1:小渠道-->
+        <if test="channel != null and channel != '' and channel == 1 ">
+            <include refid="commonQuerySmallChannel"/>
+        </if>
+        <if test="channel != null and channel != '' and channel ==0 ">
+            <include refid="commonQueryBigChannel"/>
+        </if>
+        <if test="orsId != null and orsId > 0">
+            and ors.id &gt; #{orsId}
+        </if>
+        order by ors.id limit #{topNum}
+    </select>
+
+    <!-- 转箱-->
+    <select id="getOntimeRateReverseTransmitBox" parameterType="java.util.Map" resultType="java.util.Map">
+        select ors.id as id,ors.orderProductId,op.cOrderSn,op.status,op.sCode,op.tsCode,op.shippingMode,op.stockType,os.region,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.count,
+        hp1.hpTime as jdTime,hp2.hpTime as hxTime
+        from orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join
+        (select orderRepairId,max(addTime) as hpTime from orderrepairhprecords where checkType = 2 and addTime &gt;= #{startDate} and addTime &lt;= #{endDate} group by orderRepairId ) hp1
+        on  hp1.orderRepairId = ors.id
+        left join
+        (select orderRepairId,max(addTime) as hpTime from orderrepairhprecords where checkType = 3 and addTime &gt;= #{startDate} group by orderRepairId ) hp2
+        on ors.id = hp2.orderRepairId
+        where
+        ors.handleStatus != 6
+
+        <if test="sCodes != null and sCodes != '' ">
+            and
+            ((op.tsCode = '' and op.sCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            )
+            or
+            (op.tsCode != '' and op.tsCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            ))
+        </if>
+
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="sourceCode != null and sourceCode.size() &gt; 0">and os.source in
+            <foreach collection="sourceCode" index="index" item="sc" open="(" separator="," close=")">
+                #{sc}
+            </foreach>
+        </if>
+        <if test="cateCode != null and cateCode.size() &gt; 0">and op.cateId in
+            <foreach collection="cateCode" index="index" item="cc" open="(" separator="," close=")">
+                #{cc}
+            </foreach>
+        </if>
+        and os.isTest != 1
+        <if test="stockType == null or stockType == ''">
+            and op.stockType ='WA'
+        </if>
+        <if test="stockType != null and stockType != '' and stockType eq 'all'.toString()">
+            and op.stockType in('WA','3W')
+        </if>
+        <if test="stockType != null and stockType != '' and stockType neq 'all'.toString()">
+            and op.stockType=#{stockType}
+        </if>
+        <!-- 渠道筛选 0:大渠道，1:小渠道-->
+        <if test="channel != null and channel != '' and channel == 1 ">
+            <include refid="commonQuerySmallChannel"/>
+        </if>
+        <if test="channel != null and channel != '' and channel ==0 ">
+            <include refid="commonQueryBigChannel"/>
+        </if>
+        <if test="orsId != null and orsId > 0">
+            and ors.id &gt; #{orsId}
+        </if>
+        order by ors.id limit #{topNum}
+    </select>
+
+    <!-- 转库-->
+    <select id="getOntimeRateReverseTransmitStock" parameterType="java.util.Map" resultType="java.util.Map">
+        select ors.id as id,ors.orderProductId,op.cOrderSn,op.status,op.sCode,op.tsCode,op.shippingMode,op.stockType,os.region,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.hpFirstAddTime,ors.count,
+        les.lesOrderSnTime as lesOrderSnTime13,les.lesOutPingTime as in1041StoreTime
+        from orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        inner join
+        orderrepairlesrecords les
+        on les.orderRepairId = ors.id and (les.operate=13 and (les.storageType=10 or les.storageType=41))
+        where
+        les.lesOrderSnTime &gt;= #{startDate} and les.lesOrderSnTime &lt;= #{endDate} and success != 2 and ors.handleStatus != 6
+
+        <if test="sCodes != null and sCodes != '' ">
+            and
+            ((op.tsCode = '' and op.sCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            )
+            or
+            (op.tsCode != '' and op.tsCode in
+            <foreach collection="sCodes" index="index" item="sCode" open="(" separator="," close=")">
+                #{sCode}
+            </foreach>
+            ))
+        </if>
+
+        <if test="province != null and province != '' and province != -1">and os.province = #{province}</if>
+        <if test="city != null and city != '' and city != -1">and os.city = #{city}</if>
+        <if test="region != null and region != '' and region != -1">and os.region = #{region}</if>
+        <if test="sourceCode != null and sourceCode.size() &gt; 0">and os.source in
+            <foreach collection="sourceCode" index="index" item="sc" open="(" separator="," close=")">
+                #{sc}
+            </foreach>
+        </if>
+        <if test="cateCode != null and cateCode.size() &gt; 0">and op.cateId in
+            <foreach collection="cateCode" index="index" item="cc" open="(" separator="," close=")">
+                #{cc}
+            </foreach>
+        </if>
+        and os.isTest != 1
+        <if test="stockType == null or stockType == ''">
+            and op.stockType ='WA'
+        </if>
+        <if test="stockType != null and stockType != '' and stockType eq 'all'.toString()">
+            and op.stockType in('WA','3W')
+        </if>
+        <if test="stockType != null and stockType != '' and stockType neq 'all'.toString()">
+            and op.stockType=#{stockType}
+        </if>
+        <!-- 渠道筛选 0:大渠道，1:小渠道-->
+        <if test="channel != null and channel != '' and channel == 1 ">
+            <include refid="commonQuerySmallChannel"/>
+        </if>
+        <if test="channel != null and channel != '' and channel ==0 ">
+            <include refid="commonQueryBigChannel"/>
+        </if>
+        <if test="orsId != null and orsId > 0">
+            and ors.id &gt; #{orsId}
+        </if>
+        order by ors.id limit #{topNum}
+    </select>
+
+    <select id="get1041StoreExistInfo" parameterType="Integer" resultType="java.util.Map">
+		select
+			min(addTime) as addTime,min(lesOrderSnTime) as lesOrderSnTime
+		from
+        orderrepairlesrecords
+		where
+			orderRepairId=#{orderRepairId}
+		and ((operate=13 and (storageType=10 or storageType=41)) or (operate=21 and storageType=22))
+	</select>
+
+    <!-- 22库相关网单号单独查询 -->
+    <select id="getOntimeRateReverseByOrderSn22Store" parameterType="java.util.Map" resultType="java.util.Map">
+        select ors.id,ors.orderProductId,op.cOrderSn,op.status,op.sCode,op.tsCode,op.shippingMode,op.stockType,os.region,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.count,
+        les1.lesOutPingTime as in22StoreTime,les2.lesOutPingTime as in1041StoreTime,les2.lesOrderSnTime as lesOrderSnTime13,hp1.hpTime as jdTime,hp2.hpTime as hxTime
+        from orderrepairs ors inner join orderproducts op on ors.orderProductId = op.id inner join orders os on ors.orderId=os.id
+        left join
+        (select t1.orderRepairId,t1.lesOutPingTime FROM orderrepairlesrecords t1 inner join orderproducts t2 on t1.orderProductId=t2.id where
+        t2.cOrderSn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and (t1.operate=11 or t1.operate=12) and t1.storageType=22 and t1.success != 2) les1
+        on  les1.orderRepairId = ors.id
+        left join
+        (select t1.orderRepairId,t1.lesOutPingTime,t1.lesOrderSnTime from orderrepairlesrecords t1 inner join orderproducts t2 on t1.orderProductId=t2.id where
+        t2.cOrderSn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and t1.operate=13 and (t1.storageType=10 or t1.storageType=41) and t1.success != 2) les2
+        on  ors.id = les2.orderRepairId
+        left join
+        (select t1.orderRepairId,max(t1.addTime) as hpTime from orderrepairhprecords t1 inner join orderproducts t2 on t1.orderProductId=t2.id where
+        t2.cOrderSn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and t1.checkType = 2 group by t1.orderRepairId ) hp1
+        on  ors.id = hp1.orderRepairId
+        left join
+        (select t1.orderRepairId,max(t1.addTime) as hpTime from orderrepairhprecords t1 inner join orderproducts t2 on t1.orderProductId=t2.id where
+        t2.cOrderSn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and t1.checkType = 3 group by t1.orderRepairId ) hp2
+        on  ors.id = hp2.orderRepairId
+        where op.cOrderSn in
+        <foreach collection="orderSn" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+        and op.cOrderSn !=''
+        and ors.handleStatus != 6
+        <if test="nodeType eq '22storehouse'.toString() or nodeType eq 'recheckquality'.toString() ">and les1.lesOutPingTime &gt; 0</if>
+        <if test="nodeType eq 'transmitbox'.toString()">and hp1.hpTime &gt; 0</if>
+        <if test="nodeType eq 'transmitstock'.toString()">and les2.lesOrderSnTime &gt; 0</if>
+        and os.isTest != 1
+        and op.stockType in('WA','3W')
+        <!-- 渠道筛选 0:大渠道，1:小渠道-->
+        <if test="channel != null and channel != '' and channel == 1 ">
+            <include refid="commonQuerySmallChannel"/>
+        </if>
+        <if test="channel != null and channel != '' and channel ==0 ">
+            <include refid="commonQueryBigChannel"/>
+        </if>
+    </select>
+
+    <!-- 获取改约信息 -->
+    <select id="getGaiyueInfo" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        addTime as logTime,hpReservationDate as gaiyueTime,orderProductId
+        from
+        hpreservationdatelogs
+        where
+        orderProductId in
+        <foreach collection="opIds" index="index" item="opId" open="(" separator="," close=")">
+            #{opId}
+        </foreach>
+        group by
+        orderProductId,hpReservationDate
+        order by
+        id
+    </select>
+
+    <!-- 区域表 -->
+    <select id="getDistances" resultType="java.util.Map">
+		select
+			`id`,`shippingDistance`
+		from
+			`regions`
+		where regionType=3
+	</select>
+
+    <select id="getProductCate" resultType="java.util.Map">
+		select id,parentId,cateName from productcates
+	</select>
+
+</mapper>

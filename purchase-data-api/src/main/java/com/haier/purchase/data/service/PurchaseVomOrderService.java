@@ -22,4 +22,6 @@ public interface PurchaseVomOrderService {
 	public String getFlowFlagBySiOuInfo(Map<String, Object> paramMap);
 	
 	public String getFlowFlagByCrmReturnInfo(Map<String, Object> paramMap);
+
+    String getStorageIdByCrmReturnInfo(Map<String, Object> paramMap);
 }

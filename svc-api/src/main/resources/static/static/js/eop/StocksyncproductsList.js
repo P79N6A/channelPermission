@@ -34,42 +34,49 @@ $('#gridView').datagrid({
             width: 120,
             field: 'source',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '物料编号',
             width: 120,
             field: 'productId',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '物料编码',
             width: 120,
             field: 'sku',
             align: 'center'
-            , sortable: true
+            , sortable: false
+        },
+        {
+            title: '套装编码',
+            width: 120,
+            field: 'tzSku',
+            align: 'center'
+            , sortable: false
         },
         {
             title: '外部商品编码',
             width: 120,
-            field: 'tzSku',
+            field: 'sourceProductId',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '添加时间',
             width: 172,
             field: 'addTime',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: 'id',
             width: 120,
             field: 'id',
             align: 'center'
-            , sortable: true,
+            , sortable: false,
             hidden:true
         },
         {
@@ -77,7 +84,7 @@ $('#gridView').datagrid({
             width: 120,
             field: 'stype',
             align: 'center'
-            , sortable: true,
+            , sortable: false,
             hidden: true
         }
     ]],
@@ -97,8 +104,9 @@ $(function () {
         onSelectPage: function (pageNo, pageSize) {
 
             var start = (pageNo - 1) * pageSize;//页码分页自增
-            var source = $('#csource').val();
+            var source = $('#csource').combobox("getValue");
             var tzSku = $('#ctzSku').val();
+            var sourceProductId = $('#sourceProductId').val();
             var sku = $('#csku').val();
             if (sku != "") {
                 sku =  sku + "%";
@@ -119,6 +127,7 @@ $(function () {
                     page: options.pageNumber,
                     rows: options.pageSize,
                     'source': source,
+                    'sourceProductId': sourceProductId,
                     'tzSku': tzSku,
                     'sku':sku
                 },
@@ -386,7 +395,8 @@ function list() {
         $("#id").val(rows1[0].id);
         $("#sku").val(rows1[0].sku);
         $("#tzSku").val(rows1[0].tzSku);
-        $("#source").val(rows1[0].source);
+        $("#sourceProductId").val(rows1[0].sourceProductId);
+        $("#source").combobox('setValue', rows1[0].source);
         $('#stype').combobox('setValue', rows1[0].stype);
         $('#oDialog4').dialog('open');
 
@@ -398,6 +408,7 @@ function Add() {
     $("#id").val("");
     $("#tzSku").val("");
     $("#source").val("");
+    $("#sourceProductId").val("");
     $("#sku").val("");
     $('#oDialog4').dialog('open');
     $('#oDialog4').panel({title: "新增"});
@@ -418,7 +429,9 @@ function Delete() {
                     async: false,
                     url: '/eop/monitoring/deletecommission_product',
                     data: {
-                        id: rows1[0].id
+                        id: rows1[0].id,
+                        sku: rows1[0].sku,
+                        source: rows1[0].source
                     },
                     success: function (data, textStatus) {
                         if (data == 1) {
@@ -442,36 +455,60 @@ function SearchClear() {
 	$('#csource').textbox('setValue','');;
 	$('#csku').textbox('setValue','');;
     $('#ctzSku').textbox('setValue','');
+    $('#csourceProductId').textbox('setValue','');
     $('#ccategoryId').val('');
 }
 
 
 function SetCodeValue4() {
-
     var id = $("#id").val();
-
     var sku = $("#sku").val();
-    var source = $("#source").val();
+    var source = $("#source").combobox("getValue");
     var tzSku = $("#tzSku").val();
+    var sourceProductId = $("#sourceProductId").val();
     var stype= $('#stype').combobox('getValue');
     var url = '/eop/monitoring/updatecommission_product';
     if (source == "") {
         autoAlt("来源店铺不能为空");
         return false;
     }
-    if (sku == "") {
-        autoAlt("物料编码不能为空");
-        return false;
-    }
+//    if (sku == "") {
+//        autoAlt("物料编码不能为空");
+//        return false;
+//    }
    
-    if (tzSku == "") {
-        autoAlt("外部编码不能为空");
+    if (sourceProductId == "") {
+        autoAlt("外部商品编码不能为空");
         return false;
     }
-    jiaoyan(sku);
-    if(gloid == 0){
-    	autoAlt("物料编码不存在！");
-    	return;
+    if (proof(sourceProductId)) {
+        autoAlt("外部商品编码不能有中文和特殊字符");
+        return false;
+    }
+    if(stype == "1"){
+        if(tzSku == ""){
+            autoAlt("套装编码不能为空");
+            return false;
+        }
+        if (proof(tzSku)) {
+            autoAlt("套装编码不能有中文和特殊字符");
+            return false;
+        }
+    }
+
+    if(sku != ''){
+        if (proof(sku)) {
+            autoAlt("物料编码不能有中文和特殊字符");
+            return false;
+        }
+        jiaoyan(sku);
+        if(gloid == 0){
+            autoAlt("物料编码不存在！");
+            return;
+        }
+    }
+    if(tzSku != ''){
+        sku = tzSku;
     }
     if (id == "") {
         url = '/eop/monitoring/addcommission_product';
@@ -485,6 +522,7 @@ function SetCodeValue4() {
             id: id,
             sku: sku,
             source: source,
+            sourceProductId:sourceProductId,
             tzSku: tzSku,
             stype: stype,
             productId:gloid
@@ -495,6 +533,8 @@ function SetCodeValue4() {
                 autoAlt("操作成功！");
                 $('#oDialog4').dialog('close');
                 SearchUnit();
+            } else if(data == 0){
+                autoAlt("该商品对应关系已存在！");
             } else {
                 autoAlt("操作失败！");
             }
@@ -513,17 +553,24 @@ function jiaoyan(sku){
         },
         success: function (data, textStatus) {
           gloid=data;
-
         }
-
     });
 
+}
+function proof(str){
+    var special = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+    var chinese = new RegExp("[\u4e00-\u9fa5]");
+    if(special.test(str) || chinese.test(str)){
+        return true;
+    }
+    return false;
 }
 
 //主表查询
 function SearchUnit() {
-	var source = $('#csource').val();
+	var source = $('#csource').combobox("getValue");
     var tzSku = $('#ctzSku').val();
+    var sourceProductId = $('#csourceProductId').val();
     var sku = $('#csku').val();
     if (sku != "") {
         sku =  sku + "%";
@@ -541,14 +588,12 @@ function SearchUnit() {
         async: true,
         url: '/eop/monitoring/commission_productListF',
         data: {
-
         	 page: options.pageNumber,
              rows: options.pageSize,
              'source': source,
+             'sourceProductId': sourceProductId,
              'tzSku': tzSku,
              'sku':sku
-            
-
         },
         success: function (data, textStatus) {
         	$('#gridView').datagrid('getPager').pagination('refresh');
@@ -565,4 +610,16 @@ function SearchUnit() {
     });
 
 }
+
+// $('#stype').combobox({
+//     onChange:function(record,o) {
+//         if (record == 1){
+//             $("#tzSku").removeAttr("disabled");
+//         }
+//         if (record == 0){
+//             $("#tzSku").val('')
+//             $("#tzSku").attr("disabled","disabled");
+//         }
+//     }
+// });
 

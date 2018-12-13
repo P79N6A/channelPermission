@@ -3,6 +3,7 @@ package com.haier.shop.service;
 
 import com.haier.shop.model.OrderProducts;
 
+import com.haier.shop.model.OrderProductsNew;
 import java.util.List;
 import java.util.Map;
 
@@ -95,4 +96,16 @@ public interface ShopOrderProductsService {
      * @return
      */
     List<Map<String, Object>> getOpListByCOrderSn(Map<String, Object> paramMap);
+
+    /**
+     * 根据tb单号查询网单信息
+     * @param tbOrderSn
+     * @return
+     * @throws Exception
+     */
+    OrderProducts getOrderProductsByTbNo(String tbOrderSn) throws Exception;
+
+    Integer updateCorderSnById(Integer oPid, String cOrderSn);
+
+    OrderProducts findOPBycOrderSnAndSku(String cOrderSn, String sku);
 }

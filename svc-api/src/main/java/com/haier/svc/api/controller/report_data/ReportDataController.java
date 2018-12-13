@@ -94,10 +94,14 @@ public class ReportDataController {
 	      double onum = ordernum;
 	      DecimalFormat df = new DecimalFormat("0.00");//格式化小数   
 	      double rate = (num/onum)*100; 
-	       badrate = df.format(rate);//返回的是String类型 
+	       badrate = df.format(rate);//返回的是String类型
+	  }
+	  else{
+	  	badrate = "0.0";
+	  }
 	      BadRate badRate = new BadRate(i+"月", badrate);
 	      list.add(badRate);
-	      }
+
       }
       ObjectMapper mapper = new ObjectMapper();    //提供java-json相互转换功能的类
       
@@ -128,37 +132,55 @@ public class ReportDataController {
       
     //根据数据库查询
       List<ProductBadCount> list_product = new ArrayList<ProductBadCount>();
-      List<ProductCates> list_industry = reportDataCenterService.findindustry();//查询不良品量按产业分组
+      List<ProductCates> list_industry = reportDataCenterService.findindustry();//查询产业
       List<ProductToIndustry> list_sign = reportDataCenterService.findsign();//揽收的不良品量
       List<ProductToIndustry> list_reject = reportDataCenterService.findreject();//拒收的不良品量
-      int signNum = 0;
-      int rejectNum = 0;
-     for(ProductCates product :list_industry) {
-    	 ProductBadCount productBadCount = new ProductBadCount();
-    	 	for(ProductToIndustry sign:list_sign) {
-    	 		String str = sign.getParentPath();
-    			  if(str != null) {
-    			  String[]parent = str.split("/");
-    			  if(product.getId()== Integer.parseInt(parent[1])) {
-    				  signNum = sign.getSign();
-    			  }
-    	 	}
-    	 	}
-    	 	for(ProductToIndustry reject:list_reject) {
-    	 		String str = reject.getParentPath();
-  			  if(str != null) {
-	  			  String[]parent = str.split("/");
-	  			  if(product.getId()== Integer.parseInt(parent[1])) {
-	  				rejectNum = reject.getReject();
-	  			  }
-  			  }
-    	 	}
-    	 	 productBadCount.setIndustry(product.getCateName());
-    	 	 productBadCount.setReject(rejectNum);
-    	 	 productBadCount.setSign(signNum);
-    	 	 productBadCount.setTotal(signNum+rejectNum);
-    	 	list_product.add(productBadCount);
-     }
+
+	  List<ProductCates> list_SevenProduct = new ArrayList<ProductCates>(); // 创建一个list 存七大产业的数据
+	  for(ProductCates product :list_industry) {
+		 if (product.getRootId() == 2723) {
+			 list_SevenProduct.add(product);
+		 }
+		 if (product.getRootId() == 2725) {
+			 list_SevenProduct.add(product);
+		 }
+		 if (product.getRootId() == 2726) {
+			 list_SevenProduct.add(product);
+		 }
+		 if (product.getRootId() == 2729) {
+			 list_SevenProduct.add(product);
+		 }
+		 if (product.getRootId() == 2741) {
+			 list_SevenProduct.add(product);
+		 }
+		 if (product.getRootId() == 2742) {
+			 list_SevenProduct.add(product);
+		 }
+		 if (product.getRootId() == 2743) {
+			 list_SevenProduct.add(product);
+		 }
+	 }
+	 for(ProductCates sevenProduct:list_SevenProduct) {
+         int signNum = 0;
+         int rejectNum = 0;
+		 ProductBadCount productBadCount = new ProductBadCount();
+		 for (ProductToIndustry sign : list_sign) {
+			 if (sign.getRootId() ==sevenProduct.getId()) {
+				 signNum = sign.getSign();
+			 }
+		 }
+		 for (ProductToIndustry reject : list_reject) {
+				 if (reject.getRootId() ==sevenProduct.getId()) {
+					 rejectNum = reject.getReject();
+				 }
+         }
+			 productBadCount.setIndustry(sevenProduct.getCateName());
+			 productBadCount.setReject(rejectNum);
+			 productBadCount.setSign(signNum);
+			 productBadCount.setTotal(signNum + rejectNum);
+			 list_product.add(productBadCount);
+
+	 }
 
       ObjectMapper mapper = new ObjectMapper();    //提供java-json相互转换功能的类
       
@@ -190,9 +212,7 @@ public class ReportDataController {
   public void findIndustry(HttpServletResponse response) throws IOException {
       response.setContentType("text/html;charset=utf-8");
       NumberFormat num = NumberFormat.getPercentInstance(); 
-      double industrycount = 0.0;
-      double sortcount = 0.0;
-      double rate = 0.0;
+
     //根据数据库查询
       List<ProductCates> list_sortcount = reportDataCenterService.findSortCount();//按类别分组的总数量
       List<OrderProducts> list_industrycount = reportDataCenterService.findIndustryCount();//按中心分组的数量
@@ -203,79 +223,82 @@ public class ReportDataController {
     	  //循环比对中心是否一致，然后判断产业
       for(int i=0; i<list_sortcount.size();i++) {
 		      for(int j=0; j<list_industrycount.size();j++) {
+                  double industrycount = 0.0;
+                  double sortcount = 0.0;
+                  double rate = 0.0;
 				    		  if(k==0) {//第一次循环先确定不良品量 每个产业的
 				    			  if(productIndustry.getCenterName()== null) {
 				    			  productIndustry.setCenterName("不良品量");
 				    			  }
-				    			    if(list_industrycount.get(j).getParentId()== 2723) {
-				        	        	   productIndustry.setFridge(String.valueOf(list_sortcount.get(k).getCount()));   
+				    			    if(list_sortcount.get(i).getRootId()== 2723) {
+				        	        	   productIndustry.setFridge(String.valueOf(list_sortcount.get(i).getCount()));
 				        	           }
-				        	           if(list_industrycount.get(j).getParentId()== 2725) {
-				        	        	   productIndustry.setWashingMach(String.valueOf(list_sortcount.get(k).getCount()));   
+				        	           if(list_sortcount.get(i).getRootId()== 2725) {
+				        	        	   productIndustry.setWashingMach(String.valueOf(list_sortcount.get(i).getCount()));
 				        	           }
-				        	           if(list_industrycount.get(j).getParentId()== 2726) {
-				        	        	   productIndustry.setFreezer(String.valueOf(list_sortcount.get(k).getCount()));   
+				        	           if(list_sortcount.get(i).getRootId()== 2726) {
+				        	        	   productIndustry.setFreezer(String.valueOf(list_sortcount.get(i).getCount()));
 				        	           }
-				        	           if(list_industrycount.get(j).getParentId()== 2729) {
-				        	        	   productIndustry.setAirCondition(String.valueOf(list_sortcount.get(k).getCount()));   
+				        	           if(list_sortcount.get(i).getRootId()== 2729) {
+				        	        	   productIndustry.setAirCondition(String.valueOf(list_sortcount.get(i).getCount()));
 				        	           }
-				        	           if(list_industrycount.get(j).getParentId()== 2741) {
-				        	        	   productIndustry.setWaterHeater(String.valueOf(list_sortcount.get(k).getCount()));   
+				        	           if(list_sortcount.get(i).getRootId()== 2741) {
+				        	        	   productIndustry.setWaterHeater(String.valueOf(list_sortcount.get(i).getCount()));
 				        	           }
-				        	           if(list_industrycount.get(j).getParentId()== 2742) {
-				        	        	   productIndustry.setKichenMach(String.valueOf(list_sortcount.get(k).getCount()));   
+				        	           if(list_sortcount.get(i).getRootId()== 2742) {
+				        	        	   productIndustry.setKichenMach(String.valueOf(list_sortcount.get(i).getCount()));
 				        	           }
-				        	           if(list_industrycount.get(j).getParentId()== 2743) {
-				        	        	   productIndustry.setColorTV(String.valueOf(list_sortcount.get(k).getCount()));   
+				        	           if(list_sortcount.get(i).getRootId()== 2743) {
+				        	        	   productIndustry.setColorTV(String.valueOf(list_sortcount.get(i).getCount()));
 				        	           }
 				        	            
 				    		  }
 				    		  else {//其他词循环 算到中心的不良率
-				    			 
-				    	  if(list_industrycount.get(j).getSCode().equals(list_center.get(k).getEstorge_id())){//判断中心名字
-		    			  if(productIndustry.getCenterName()== null || !productIndustry.getCenterName().equals(list_center.get(k).getIndustry_trade_desc()) ) {
-		    				   
-		    			  productIndustry.setCenterName(list_center.get(k).getIndustry_trade_desc());
-		    				  
-		    			  }
+				    	  if(list_industrycount.get(j).getSCode().equals(list_center.get(k).getEstorge_id())) {//判断中心名字
+							  if (productIndustry.getCenterName() == null || !productIndustry.getCenterName().equals(list_center.get(k).getIndustry_trade_desc())) {
+
+								  productIndustry.setCenterName(list_center.get(k).getIndustry_trade_desc());
+
+							  }
+
 		    			  	//找到对应的产业赋值给自定义对象productIndustry
-		    	           if(list_industrycount.get(j).getParentId()== 2723 &&list_sortcount.get(i).getParentId()== 2723) {
+		    	           if(list_industrycount.get(j).getRootId()== 2723 &&list_sortcount.get(i).getRootId()== 2723) {
 				    			   industrycount = list_industrycount.get(j).getCount();
 				    			   sortcount = list_sortcount.get(i).getCount();
 				    		       rate = (industrycount/sortcount);
-		    	        	   productIndustry.setFridge(num.format(rate)); //返回的是String类型  
+		    	        	   productIndustry.setFridge(num.format(rate)); //返回的是String类型
 		    	           }
-		    	           if(list_industrycount.get(j).getParentId()== 2725&&list_sortcount.get(i).getParentId()==2725) {
+		    	           if(list_industrycount.get(j).getRootId()== 2725&&list_sortcount.get(i).getRootId()==2725) {
 		    	        	   industrycount = list_industrycount.get(j).getCount();
 			    			   sortcount = list_sortcount.get(i).getCount();
 			    		       rate = (industrycount/sortcount);
 	    	        	   productIndustry.setWashingMach(num.format(rate)); //返回的是String类型    
 		    	           }
-		    	           if(list_industrycount.get(j).getParentId()== 2726&&list_sortcount.get(i).getParentId()==2726) {
+		    	           if(list_industrycount.get(j).getRootId()== 2726&&list_sortcount.get(i).getRootId()==2726) {
 		    	        	   industrycount = list_industrycount.get(j).getCount();
 			    			   sortcount = list_sortcount.get(i).getCount();
 			    		       rate = (industrycount/sortcount);
 	    	        	   productIndustry.setFreezer(num.format(rate)); //返回的是String类型    
 		    	           }
-		    	           if(list_industrycount.get(j).getParentId()== 2729&&list_sortcount.get(i).getParentId()==2729) {
+		    	           if(list_industrycount.get(j).getRootId()== 2729&&list_sortcount.get(i).getRootId()==2729) {
 		    	        	   industrycount = list_industrycount.get(j).getCount();
 			    			   sortcount = list_sortcount.get(i).getCount();
 			    		       rate = (industrycount/sortcount);
 	    	        	   productIndustry.setAirCondition(num.format(rate)); //返回的是String类型     
 		    	           }
-		    	           if(list_industrycount.get(j).getParentId()== 2741&&list_sortcount.get(i).getParentId()==2741) {
+		    	           if(list_industrycount.get(j).getRootId()== 2741&&list_sortcount.get(i).getRootId()==2741) {
 		    	        	   industrycount = list_industrycount.get(j).getCount();
 			    			   sortcount = list_sortcount.get(i).getCount();
 			    		       rate = (industrycount/sortcount);
 	    	        	   productIndustry.setWaterHeater(num.format(rate)); //返回的是String类型    
 		    	           }
-		    	           if(list_industrycount.get(j).getParentId()== 2742&&list_sortcount.get(i).getParentId()==2742) {
+		    	           if(list_industrycount.get(j).getRootId()== 2742&&list_sortcount.get(i).getRootId()==2742) {
 		    	        	   industrycount = list_industrycount.get(j).getCount();
 			    			   sortcount = list_sortcount.get(i).getCount();
 			    		       rate = (industrycount/sortcount);
 	    	        	   productIndustry.setKichenMach(num.format(rate)); //返回的是String类型     
 		    	           }
-		    	           if(list_industrycount.get(j).getParentId()== 2743&&list_sortcount.get(i).getParentId()==2743) {
+		    	           if(list_industrycount.get(j).getRootId()== 2743&&list_sortcount.get(i).getRootId()==2743) {
 		    	        	   industrycount = list_industrycount.get(j).getCount();
 			    			   sortcount = list_sortcount.get(i).getCount();
 			    		       rate = (industrycount/sortcount);
@@ -299,7 +322,7 @@ public class ReportDataController {
   Map<String,Object> map = new HashMap<String,Object>();
  	Gson gson=new Gson();
 	response.addHeader("Content-type","text/html;charset=utf-8");
-	map.put("total", "50");
+	map.put("total", list.size());
 	map.put("rows", list);
 	response.getWriter().write(gson.toJson(map));
 	response.getWriter().flush();
@@ -362,7 +385,7 @@ public class ReportDataController {
     Map<String,Object> map = new HashMap<String,Object>();
  	Gson gson=new Gson();
 	response.addHeader("Content-type","text/html;charset=utf-8");
-	map.put("total", "50");
+	map.put("total", list_mach.size());
 	map.put("rows", list_mach);
 	response.getWriter().write(gson.toJson(map));
 	response.getWriter().flush();
@@ -418,7 +441,7 @@ public class ReportDataController {
   */
 
   /**
-   * 跳转wa箱损库存监控页面
+   * 跳转wa箱损库存监控页面(换箱处理过程监控)
    * 
    * @return
    */
@@ -441,9 +464,9 @@ public class ReportDataController {
       response.setContentType("text/html;charset=utf-8");
       
      
-      List<PutAway> list_box = reportDataCenterService.findbox();
+      List<PutAway> list_box = reportDataCenterService.findbox();//查询箱损
       List<InvWarehouse> list_center = stockCenterInvWareHouseService.findCenter();
-      List<VomInOutStoreOrder> list_eis = reportDataCenterService.findInTime();
+      List<VomInOutStoreOrder> list_eis = reportDataCenterService.findInTime();//查询出库时间
       for(PutAway put :list_box) {
     	  for(InvWarehouse inv:list_center) {
     		  if(put.getSecCode().equals(inv.getEstorge_id())){
@@ -476,7 +499,7 @@ public class ReportDataController {
     Map<String,Object> map = new HashMap<String,Object>();
  	Gson gson=new Gson();
 	response.addHeader("Content-type","text/html;charset=utf-8");
-	map.put("total", "50");
+	map.put("total", list_box.size());
 	map.put("rows", list_box);
 	response.getWriter().write(gson.toJson(map));
 	response.getWriter().flush();
@@ -485,7 +508,7 @@ public class ReportDataController {
   }  
  
   
-  
+  //换箱未入库监控
   @RequestMapping("/WABoxDamageNotInStock")
   public String WABoxDamageNotInStock() {
 	  		//根据数据库查询
@@ -504,8 +527,8 @@ public class ReportDataController {
 	  		//根据数据库查询
       response.setContentType("text/html;charset=utf-8");
       
-      List<ProductCates> list_industry = reportDataCenterService.findindustry();
-      List<PutAway> list_notInStock = reportDataCenterService.findnotinstock();
+      List<ProductCates> list_industry = reportDataCenterService.findindustry();//7大产业
+      List<PutAway> list_notInStock = reportDataCenterService.findnotinstock();//查询未入库
       List<InvWarehouse> list_center = stockCenterInvWareHouseService.findCenter();
       String outnumber = reportDataCenterService.findoutnum();
       for(PutAway put :list_notInStock) { 
@@ -516,15 +539,14 @@ public class ReportDataController {
     		  }
     	  }
     	  
-    		  String str = put.getParentPath();
-    		  if(str != null) {
-    		  String[]parent = str.split("/");
+
+
     		  for(ProductCates product :list_industry) {
-    		  if(product.getId()== Integer.parseInt(parent[1])) {//判断产业是否相等
+    		  if(product.getId()== put.getRootId()) {//判断产业是否相等
     			  put.setIndustry(product.getCateName());
     		  }
     	  }
-    	  }
+
 
     	  if(put.getStorageType() == 10) {//入10库时间也就是入库单产生日期
     		  put.setPushWarehouseProduceDate(put.getAddtimeTs());
@@ -547,7 +569,7 @@ public class ReportDataController {
     Map<String,Object> map = new HashMap<String,Object>();
  	Gson gson=new Gson();
 	response.addHeader("Content-type","text/html;charset=utf-8");
-	map.put("total", "50");
+	map.put("total", list_notInStock.size());
 	map.put("rows", list_notInStock);
 	response.getWriter().write(gson.toJson(map));
 	response.getWriter().flush();
@@ -686,7 +708,7 @@ public class ReportDataController {
     Map<String,Object> map = new HashMap<String,Object>();
  	Gson gson=new Gson();
 	response.addHeader("Content-type","text/html;charset=utf-8");
-	map.put("total", "50");
+	map.put("total", list_notchange.size());
 	map.put("rows", list_notchange);
 	response.getWriter().write(gson.toJson(map));
 	response.getWriter().flush();
@@ -731,7 +753,7 @@ public class ReportDataController {
     Map<String,Object> map = new HashMap<String,Object>();
  	Gson gson=new Gson();
 	response.addHeader("Content-type","text/html;charset=utf-8");
-	map.put("total", "50");
+	map.put("total", list_notstock.size());
 	map.put("rows", list_notstock);
 	response.getWriter().write(gson.toJson(map));
 	response.getWriter().flush();

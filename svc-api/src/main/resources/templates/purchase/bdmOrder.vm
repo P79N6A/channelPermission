@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    ## <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    ## <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    ## <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    ## <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    ## <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    ## <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    ## <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    ## <link rel="stylesheet" href="../static/css/common.css">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>T+3备料BDM样表维护</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
+
+<style>
+.panel-htop{
+    border:0;
+}
+</style>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dataGrid">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel" style="font-size: 12px;">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">型号编码</span>
+                <input id="itemcode" name="itemcode" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">型号名称</span>
+                <input id="itemname" name="itemname" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">经营体编码</span>
+                <input id="smbCcode" name="smbCcode" class="easyui-textbox" data-options="">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">经营体名称</span>
+                <input id="smbName" name="smbName" class="easyui-textbox" data-options="">
+            </div>
+
+            <input id="itemcode_hidden" name="itemcode_hidden" type="hidden"/>
+            <input id="itemname_hidden" name="itemname_hidden" type="hidden"/>
+            <input id="smbCcode_hidden" name="smbCcode_hidden" type="hidden"/>
+            <input id="smbName_hidden" name="smbName_hidden" type="hidden"/>
+            <input id="exportData" name="exportData" type="hidden"/>
+        </div>
+        <a id='search' href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a id='create' href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">创建</a>
+        <a id='delete' href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true">删除</a>
+    </form>
+</div>
+<div id="createDiv"  title="创建信息" class="easyui-dialog"  closed="true" style="padding-top:20px;">
+    <form id="createForm" action="#" style="margin-bottom:15px;">
+ 		<div class="search-panel">
+			<div class="search-row_nowidth mar_r6px">
+				<span class="search-row-label_80">型号编码<span style="color:red">*</span></span>
+				<input id="itemcode_create" name="itemcode_create" class="easyui-validatebox" style="height:32px;" data-options="required:true,validType:'length[0,100]'">
+			</div>
+			<div class="search-row_nowidth mar_r6px">
+				<span class="search-row-label_80">型号名称</span>
+				<input id="itemname_create" name="itemname_create" class="easyui-textbox unRequiedInput" data-options="">
+			</div>
+			<div class="search-row_nowidth mar_r6px">
+				<span class="search-row-label_80">客户编码</span>
+				<input id="customerCode_create" name="customerCode_create" class="easyui-textbox" data-options="validType:'length[0,100]'">
+			</div>
+			<div class="search-row_nowidth mar_r6px">
+				<span class="search-row-label_80">客户名称</span>
+				<input id="customerName_create" name="customerName_create" class="easyui-textbox" data-options="validType:'length[0,100]'">
+			</div>
+			<div class="search-row_nowidth mar_r6px">
+				<span class="search-row-label_80">工贸</span>
+				<input id="tradeCode_create" name="tradeCode_create" class="easyui-textbox easyui-validatebox" data-options="validType:'length[0,100]'">
+			</div>
+		</div>
+    </form>
+    <div style="text-align:center">
+        <a id='createConfirm' href="#" class="easyui-linkbutton" style="margin-left: 10px; width: 70px">确认</a>
+        <a id='createCancel' href="#" class="easyui-linkbutton" style="margin-left: 10px; width: 70px">取消</a>
+    </div>
+    </br>
+</div>
+<script type="text/javascript">
+    var datagrid;
+
+	var datagridInit = {
+                fit: true,
+                fitColumns: false,
+                toolbar: '#datagridToolbar',
+                striped: true,
+                singleSelect: false,
+                pagination: true,
+                nowrap:false,
+                pagePosition: 'bottom',
+                pageSize: 100,
+                pageList: [100,200,300],
+                rownumbers: true,
+				columns: [
+					[
+						{field: "check",
+							title: "全选",
+							align: "center",
+							width: 100,
+							checkbox: true},
+						{field: "salesChanManagerID",
+							title: "渠道ID",
+							width: 100,
+							align: "center"
+						},
+						{field: "salesChanManagerName",
+							title: "渠道名称",
+							width: 100,
+							align: "center"
+						},
+						{field: "pltype",
+							title: "产品线编码",
+							width: 100,
+							align: "center"
+
+						},
+						{field: "productLineId",
+							title: "产品线ID",
+							width: 100,
+							align: "center"
+
+						},
+						{field: "plname",
+							title: "产品线名称",
+							width: 100,
+							align: "center"
+						},
+						{field: 'productSeriesId',
+							title: '产品系列ID',
+							width: 100,
+							align: 'center'
+						},
+						{field: 'itemcode',
+							title: '型号编码',
+							width: 100,
+							align: 'center'
+						},
+						{field: 'itemname',
+							title: '型号名称',
+							width: 150,
+							align: 'center'
+						},
+						{field: 'categorycode',
+							title: '产品系列编码',
+							width: 100,
+							align: 'center'
+						},
+						{field: "catn",
+							title: "产品线系列名称",
+							width: 200,
+							align: "center"
+						},
+						{field: "customerCode",
+							title: "客户编码",
+							width: 100,
+							align: "center"
+						},
+						{field: "customerName",
+							title: "客户名称",
+							width: 200,
+							align: "center"
+						},
+						{field: "tradeCode",
+							title: "工贸",
+							width: 100,
+							align: "center"
+						},
+						{field: "smbCcode",
+							title: "经营体编码",
+							width: 100,
+							align: "center"
+						},
+						{field: "smbName",
+							title: "经营体名称",
+							width: 200,
+							align: "center"
+						},
+						{field: "message",
+							title: "提示信息",
+							width: 100,
+							align: "center",
+							formatter: function(value,rows){
+								if (value == "S"){
+									return "成功";
+								}
+								if(value=="F"){
+									return "失败";
+								}
+							}
+						},
+						{field: "status",
+							title: "信息同步状态",
+							width: 200,
+							align: "center"
+						},
+						{field: "syn_time",
+							title: "信息同步时间",
+							width: 200,
+							align: "center"
+						}
+					]
+				]
+			};
+    //验证框验证触发
+    $(function () {
+        $('input.easyui-validatebox').validatebox('disableValidation')
+                .focus(function () {
+                    $(this).validatebox('enableValidation');
+                })
+                .blur(function () {
+                    $(this).validatebox('validate')
+                });
+
+
+		var datagrid = $('#dataGrid').datagrid(datagridInit);
+    });
+
+    $("#search").click(
+            function () {
+                $("#itemcode_hidden").val($("#itemcode").val());
+                $("#itemname_hidden").val($("#itemname").val());
+                $("#smbCcode_hidden").val($("#smbCcode").val());
+                $("#smbName_hidden").val($("#smbName").val());
+
+                if (datagrid) {
+                    $("#dataGrid").datagrid(
+                            "load", {
+                                itemcode: $("#itemcode").val(),
+                                itemname: $("#itemname").val(),
+                                smbCcode: $("#smbCcode").val(),
+                                smbName:  $("#smbName").val()
+                            });
+                } else {
+                    datagrid = $("#dataGrid").datagrid({
+                        url: "/purchase/findBdmOrder",
+                        fit: true,
+                        pagination: true,
+                        singleSelect: true,
+                        pageSize: 100,
+                        pageList: [100,200,300],
+                        nowrap: true,
+                        rownumbers: true,
+                        singleSelect: false,
+                        selectOnCheck: true,
+                        checkOnSelect: true,
+                        queryParams: {
+                            itemcode: $("#itemcode_hidden").val(),
+                            itemname: $("#itemname_hidden").val(),
+                            smbCcode: $("#smbCcode_hidden").val(),
+                            smbName: $("#smbName_hidden").val()
+                        },
+                        columns: [
+                            [
+                                {field: "check",
+                                    title: "全选",
+                                    align: "center",
+                                    width: 100,
+                                    checkbox: true},
+                                {field: "salesChanManagerID",
+                                    title: "渠道ID",
+                                    width: 100,
+                                    align: "center"
+                                },
+                                {field: "salesChanManagerName",
+                                    title: "渠道名称",
+                                    width: 100,
+                                    align: "center"
+                                },
+                                {field: "pltype",
+                                    title: "产品线编码",
+                                    width: 100,
+                                    align: "center"
+
+                                },
+                                {field: "productLineId",
+                                    title: "产品线ID",
+                                    width: 100,
+                                    align: "center"
+
+                                },
+                                {field: "plname",
+                                    title: "产品线名称",
+                                    width: 100,
+                                    align: "center"
+                                },
+                                {field: 'productSeriesId',
+                                    title: '产品系列ID',
+                                    width: 100,
+                                    align: 'center'
+                                },
+                                {field: 'itemcode',
+                                    title: '型号编码',
+                                    width: 100,
+                                    align: 'center'
+                                },
+                                {field: 'itemname',
+                                    title: '型号名称',
+                                    width: 150,
+                                    align: 'center'
+                                },
+                                {field: 'categorycode',
+                                    title: '产品系列编码',
+                                    width: 100,
+                                    align: 'center'
+                                },
+                                {field: "catn",
+                                    title: "产品线系列名称",
+                                    width: 200,
+                                    align: "center"
+                                },
+                                {field: "customerCode",
+                                    title: "客户编码",
+                                    width: 100,
+                                    align: "center"
+                                },
+                                {field: "customerName",
+                                    title: "客户名称",
+                                    width: 200,
+                                    align: "center"
+                                },
+                                {field: "tradeCode",
+                                    title: "工贸",
+                                    width: 100,
+                                    align: "center"
+                                },
+                                {field: "smbCcode",
+                                    title: "经营体编码",
+                                    width: 100,
+                                    align: "center"
+                                },
+                                {field: "smbName",
+                                    title: "经营体名称",
+                                    width: 200,
+                                    align: "center"
+                                },
+                                {field: "message",
+                                    title: "提示信息",
+                                    width: 100,
+                                    align: "center",
+                                    formatter: function(value,rows){
+                                        if (value == "S"){
+                                            return "成功";
+                                        }
+                                        if(value=="F"){
+                                            return "失败";
+                                        }
+                                    }
+                                },
+                                {field: "status",
+                                    title: "信息同步状态",
+                                    width: 200,
+                                    align: "center"
+                                },
+                                {field: "syn_time",
+                                    title: "信息同步时间",
+                                    width: 200,
+                                    align: "center"
+                                }
+                            ]
+                        ]
+                    });
+                }
+            });
+    $("#create").click(function () {
+        $("#createDiv").show();
+        $("#createDiv").window("open");
+    });
+    
+
+    $("#createDiv").window({
+                autoOpen: false,
+                resizable: false,
+                modal: true,
+                closed: true,
+                closable: false,
+                collapsible: false,
+                minimizable: false,
+                maximizable: false,
+                closeOnEscape: false,
+                shadow: false,
+                width: 400,
+            }
+
+    );
+    //创建框确认按钮
+    $("#createConfirm").click(
+            function(){
+                var flag = true;
+                $("#createForm").form("enableValidation");
+                flag = $("#createForm").form("validate");
+                if ($(this).linkbutton('options').disabled == false) {
+                    if (flag) {
+                        $("#createConfirm").linkbutton('disable');
+
+                        $.messager.confirm("确认", "确定要创建吗？", function (r) {
+                            if (r) {
+                                jQuery.ajax(
+                                        { url: "/purchase/insertBdmOrder",   // 提交的页面
+                                            type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                                            data: {"itemcode":$("#itemcode_create").val(),
+                                                "itemname":$("#itemname_create").val(),
+                                                "customerCode":$("#customerCode_create").val(),
+                                                "customerName":$("#customerName_create").val(),
+                                                "tradeCode":$("#tradeCode_create").val()
+                                            },
+                                            dataType:"JSON",
+                                            beforeSend: function(){
+                                                var win = $.messager.progress({
+                                                    title:'请等待',
+                                                    msg:'数据处理中...',
+                                                    text:'处理中',
+                                                    interval:700
+                                                });
+                                            },
+                                            complete: function(){
+                                                //AJAX请求完成时隐藏loading提示
+                                                $.messager.progress('close');
+                                            },
+                                            success: function (data) {
+                                                if(data==-1){
+                                                    $.messager.alert('提示','创建失败,BDM样表已存在','info');
+                                                }
+                                                else if(data==0){
+                                                    $.messager.alert('提示','创建过程发生异常','info');
+                                                }
+                                                else if(data==1){
+                                                    $.messager.alert('提示','创建成功','info');
+                                                }
+                                                else if(data==2){
+                                                    $.messager.alert('提示','创建过程调用接口失败','info');
+                                                }
+                                                $("#createDiv").window('close');
+                                                $("#createConfirm").linkbutton('enable');
+                                                $("#createForm").form("disableValidation");
+                                                $.messager.progress('close');
+                                                $('#itemcode_create').val('');
+                                                $('#itemname_create').val('');
+                                                $("#customerCode_create").val('');
+                                                $("#customerName_create").val('');
+                                                $("#tradeCode_create").val('');
+                                                $('#dataGrid').datagrid('reload');
+
+                                            }
+                                        });
+
+                            }else{
+                                $("#createConfirm").linkbutton('enable');
+                            }
+
+                        });
+                        $('.panel-tool-close').hide();
+                    }
+                }
+
+            });
+    //创建框取消按钮
+    $("#createCancel").click(
+            function(){
+                $('#createConfirm').linkbutton('enable');
+                $("#createDiv").window('close');
+                $("#createForm").form("disableValidation");
+                $('#itemcode_create').val('');
+                $('#itemname_create').val('');
+                $("#customerCode_create").val('');
+                $("#customerName_create").val('');
+                $("#tradeCode_create").val('');
+            }
+    );
+
+    //删除
+    $('#delete').click(function () {
+        $("#itemcode_hidden").val($("#itemcode").val());
+        if (!datagrid) {
+            $.messager.alert('提示', '请查询！', 'info');
+            return;
+        }
+        //获得选中行
+        var checkedItems = $('#dataGrid').datagrid('getChecked');
+        var deleteData = new Array();
+        $.each(checkedItems, function (index, item) {
+            deleteData.push(item.itemcode);
+        });
+        if (deleteData.length != 1) {
+            $.messager.alert('错误', '请选择一行数据！', 'error');
+            return;
+        }
+        $.messager.confirm('确认', '确定要删除吗？', function (r) {
+            if (r) {
+                jQuery.ajax({
+                    url: "/purchase/deleteBdmOrder",   // 提交的页面
+                    type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                    data: {"deleteData": JSON.stringify(deleteData)},
+                    beforeSend: function(){
+                        var win = $.messager.progress({
+                            title:'请等待',
+                            msg:'数据处理中...',
+                            text:'处理中',
+                            interval:700
+                        });
+                    },
+                    complete: function(){
+                        //AJAX请求完成时隐藏loading提示
+                        $.messager.progress('close');
+                    },
+                    success: function (data) {
+                        if(data==0){
+                            $.messager.alert('提示','删除过程发生异常','info');
+                        }
+                        else if(data==1){
+                            $.messager.alert('提示','删除成功','info');
+                        }
+                        else if(data==2){
+                            $.messager.alert('提示','删除过程调用接口失败','info');
+                        }
+                        $("#itemcode_hidden").val('');
+                        $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+                        $('#dataGrid').datagrid('reload');
+                    }
+                });
+            }
+        });
+    });
+
+
+    //创建时，输入型号id，焦点离开后关联数据
+    $("#itemcode_create").blur(function(){
+        var itemcode = $("#itemcode_create").val();
+        if(itemcode!=''&&itemcode!='null'&&itemcode!='undefined'){
+            jQuery.ajax({
+                url: "/purchase/getDataByItemcode",   // 提交的页面
+                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                data:{"itemcode":$("#itemcode_create").val(),
+                },
+                success: function (data) {
+                    var result = data.totalCount;
+                    if(result==1){
+                        //通过型号编码取值成功
+                        var obj = jQuery.parseJSON(data.data);
+                        $("#itemname_create").val(obj.itemname);
+                    }else{
+                        //通过型号编码取值失败
+                        $("#itemname_create").val("");
+                        if(data.message){$.messager.alert('提示',data.message,'error');}
+                    }
+                }
+            });
+        }
+    });
+    $(".unRequiedInput").attr("readonly","readonly");
+
+
+function slideUpSlideClk(t) {
+    var $this = $(t);
+    if ($this.hasClass('open')) {
+        $this.removeClass('open');
+        setTimeout(function () {
+            $this.addClass('close');
+        }, 0);
+        $(".search-panel").slideUp();
+    } else {
+        $this.removeClass('close');
+        setTimeout(function () {
+            $this.addClass('open');
+        }, 0);
+        $(".search-panel").slideDown();
+    }
+    setTimeout(function () {
+        $('#dataGrid').datagrid('resize');
+    }, 500);
+}
+</script>
+
+</body>
+</html>

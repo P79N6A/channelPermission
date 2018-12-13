@@ -1,10 +1,10 @@
 package com.haier.eis.service;
 
 
+import java.util.List;
+
 import com.haier.common.ServiceResult;
 import com.haier.eis.model.VomInOutStoreOrder;
-
-import java.util.List;
 
 /**
  * Created by 吴坤洋 2017-12-22
@@ -29,5 +29,11 @@ public interface EisVomInOutStoreOrderService {
     List<VomInOutStoreOrder> getByProcessStatus3W(Integer processStatus, Integer delay);
 
 	List<VomInOutStoreOrder> findInTime();
-	int queryVomInOut(String orderNo);//根据网单号查询VOM是否返回啦出入库信息
+	VomInOutStoreOrder queryVomInOut(String orderNo);//根据网单号查询VOM是否返回啦出入库信息
+	VomInOutStoreOrder queryGetStoreCode(String storageType,String busType,String orderNo);//根据出入库单号查询vomC码
+
+    public VomInOutStoreOrder getByStockInfoByOrderNo(String orderNo);
+
+	VomInOutStoreOrder 	queryVomInTenlibrary(String orderNo);
+	
 }

@@ -1,6 +1,6 @@
 var datagridOptions_warehouseListGoal = {
     fit: true,//自适应
-    fitColumns: true,//fitColumns: true,
+    fitColumns: false,//fitColumns: true,
     singleSelect: true,//多选
     url: '',
 //    idField: 'id',
@@ -10,10 +10,10 @@ var datagridOptions_warehouseListGoal = {
         hidden:true
     }]],
     columns: [[
-        {title: '仓库（TC）代码', field: 'whCode', sortable: true},
-        {title: '仓库名称', field: 'whName', sortable: true},
+        {title: '仓库（TC）代码', field: 'whCode', sortable: false, width:150},
+        {title: '仓库名称', field: 'whName', sortable: false, width:100},
         {
-            title: '状态', field: 'status', sortable: true,
+            title: '状态', field: 'status', sortable: false, width:100,
             formatter: function (val, rec) {
                 if (val == "0") {
                     return "未启用";
@@ -22,9 +22,9 @@ var datagridOptions_warehouseListGoal = {
                 }
             }
         },
-        {title: '网单中心代码', field: 'centerCode', sortable: true},
+        {title: '网单中心代码', field: 'centerCode', sortable: false, width:150},
         {
-            title: '是否支持货到付款', field: 'supportCod', sortable: true,
+            title: '是否支持货到付款', field: 'supportCod', sortable: false, width:150,
             formatter: function (val, rec) {
                 if (val == "0") {
                     return "否";
@@ -33,45 +33,45 @@ var datagridOptions_warehouseListGoal = {
                 }
             }
         },
-        {title: '该TC支持的物流模式', field: 'supportedDeliveryMode', sortable: true},
-        {title: 'LES送达方代码', field: 'lesFiveYard', sortable: true},
-        {title: 'LES库位编码', field: 'lesWhCode', sortable: true},
-        {title: 'les_accepter', field: 'lesAccepter', sortable: true},
-        {title: '日日顺配送中心编码', field: 'rrsDeliverCode', sortable: true},
-        {title: 'CRM地区编码', field: 'crmAreaCode', sortable: true},
-        {title: '电商付款方', field: 'ehaierPayer', sortable: true},
-        {title: '工贸代码', field: 'itcCode', sortable: true},
-        {title: '销售组织编码', field: 'moCode', sortable: true},
-        {title: '电商库位码', field: 'estorgeId', sortable: true},
-        {title: '电商库位名称', field: 'estorgeName', sortable: true},
-        {title: '送达方代码', field: 'transmitId', sortable: true},
-        {title: '送达方名称', field: 'transmitDesc', sortable: true},
-        {title: 'OE码（LES）', field: 'lesOeId', sortable: true},
-        {title: '管理客户编码', field: 'customId', sortable: true},
-        {title: '管理客户名称', field: 'customDesc', sortable: true},
-        {title: '工贸代码', field: 'industryTradeId', sortable: true},
-        {title: '工贸描述', field: 'industryTradeDesc', sortable: true},
-        {title: '颗粒度编码', field: 'graininessId', sortable: true},
-        {title: '网单经营体编码', field: 'netManagementId', sortable: true},
-        {title: '电商售达方编码', field: 'esaleId', sortable: true},
-        {title: '电商售达方名称', field: 'esaleName', sortable: true},
-        {title: '销售组织编码', field: 'saleOrgId', sortable: true},
-        {title: '分支', field: 'branch', sortable: true},
-        {title: '电商付款方编码', field: 'paymentId', sortable: true},
-        {title: '电商付款方名称', field: 'paymentName', sortable: true},
-        {title: '地区编码（CRM专用）', field: 'areaId', sortable: true},
-        {title: '日日顺配送编码', field: 'rrsDistributionId', sortable: true},
-        {title: '日日顺配送名称', field: 'rrsDistributionName', sortable: true},
-        {title: '日日顺售达方', field: 'rrsSaleId', sortable: true},
-        {title: '日日顺售达方名称', field: 'rrsSaleName', sortable: true},
-        {title: 'OMS重庆新日日顺付款方', field: 'omsRrsPaymentId', sortable: true},
-        {title: 'OMS重庆新日日顺付款方名称', field: 'omsRrsPaymentName', sortable: true},
-        {title: '客户编码', field: 'sapCustomerCode', sortable: true},
-        {title: '客户编码名称', field: 'sapCustomerName', sortable: true},
-        {title: '创建者', field: 'createUser', sortable: true},
-        {title: '创建时间', field: 'createTime', sortable: true, formatter: formatDatebox},
-        {title: '最后更新人', field: 'updateUser', sortable: true},
-        {title: '最后更新时间', field: 'updateTime', sortable: true, formatter: formatDatebox}
+        {title: '该TC支持的物流模式', field: 'supportedDeliveryMode', sortable: false, width:180},
+        {title: 'LES送达方代码', field: 'lesFiveYard', sortable: false, width:150},
+        {title: 'LES库位编码', field: 'lesWhCode', sortable: false, width:150},
+        {title: 'LES接收人', field: 'lesAccepter', sortable: false, width:150},
+        {title: '日日顺配送中心编码', field: 'rrsDeliverCode', sortable: false, width:180},
+        {title: 'CRM地区编码', field: 'crmAreaCode', sortable: false, width:150},
+        {title: '电商付款方', field: 'ehaierPayer', sortable: false, width:120},
+        {title: '工贸代码', field: 'itcCode', sortable: false, width:150},
+        {title: '销售组织编码', field: 'moCode', sortable: false, width:150},
+        {title: '电商库位码', field: 'estorgeId', sortable: false, width:120},
+        {title: '电商库位名称', field: 'estorgeName', sortable: false, width:250},
+        {title: '送达方代码', field: 'transmitId', sortable: false, width:150},
+        {title: '送达方名称', field: 'transmitDesc', sortable: false, width:250},
+        {title: 'OE码（LES）', field: 'lesOeId', sortable: false, width:150},
+        {title: '管理客户编码', field: 'customId', sortable: false, width:180},
+        {title: '管理客户名称', field: 'customDesc', sortable: false, width:250},
+        {title: '工贸代码', field: 'industryTradeId', sortable: false, width:150},
+        {title: '工贸描述', field: 'industryTradeDesc', sortable: false, width:150},
+        {title: '颗粒度编码', field: 'graininessId', sortable: false, width:150},
+        {title: '网单经营体编码', field: 'netManagementId', sortable: false, width:180},
+        {title: '电商售达方编码', field: 'esaleId', sortable: false, width:180},
+        {title: '电商售达方名称', field: 'esaleName', sortable: false, width:250},
+        {title: '销售组织编码', field: 'saleOrgId', sortable: false, width:150},
+        {title: '分支', field: 'branch', sortable: false, width:100},
+        {title: '电商付款方编码', field: 'paymentId', sortable: false, width:180},
+        {title: '电商付款方名称', field: 'paymentName', sortable: false, width:250},
+        {title: '地区编码（CRM专用）', field: 'areaId', sortable: false, width:200},
+        {title: '日日顺配送编码', field: 'rrsDistributionId', sortable: false, width:180},
+        {title: '日日顺配送名称', field: 'rrsDistributionName', sortable: false, width:250},
+        {title: '日日顺售达方', field: 'rrsSaleId', sortable: false, width:180},
+        {title: '日日顺售达方名称', field: 'rrsSaleName', sortable: false, width:250},
+        {title: 'OMS重庆新日日顺付款方', field: 'omsRrsPaymentId', sortable: false, width:250},
+        {title: 'OMS重庆新日日顺付款方名称', field: 'omsRrsPaymentName', sortable: false, width:350},
+        {title: '客户编码', field: 'sapCustomerCode', sortable: false, width:150},
+        {title: '客户编码名称', field: 'sapCustomerName', sortable: false, width:250},
+        {title: '创建者', field: 'createUser', sortable: false, width:100},
+        {title: '创建时间', field: 'createTime', sortable: false, width:200, formatter: formatDatebox},
+        {title: '最后更新人', field: 'updateUser', sortable: false, width:120},
+        {title: '最后更新时间', field: 'updateTime', sortable: false, width:200, formatter: formatDatebox}
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
     striped: true,
@@ -184,6 +184,11 @@ $(function () {
                     }
                     $('#addDlg_invWarehouse').dialog('close');
                 }
+
+                if (obj == "exception") {
+                  $.messager.alert('错误', '参数有误，请检查参数长度和类型');
+                  return;
+                }
             }
         });
     });
@@ -291,6 +296,7 @@ $("#searchBtn").on('click', function (event) {
     datagrid = $('#datagrid_warehouseListGoal').datagrid({
         url: "/invwarehouse/findInvWareHouseList",
         fit: true,
+        fitColumns: false,
         singleSelect: true,//多选
         striped: true,
         autoRowHeight: true,
@@ -310,10 +316,10 @@ $("#searchBtn").on('click', function (event) {
             hidden:true
         }]],
         columns: [[
-            {title: '仓库（TC）代码', field: 'whCode', sortable: true},
-            {title: '仓库名称', field: 'whName', sortable: true},
+            {title: '仓库（TC）代码', field: 'whCode', sortable: false, width:150},
+            {title: '仓库名称', field: 'whName', sortable: false, width:100},
             {
-                title: '状态', field: 'status', sortable: true,
+                title: '状态', field: 'status', sortable: false, width:100,
                 formatter: function (val, rec) {
                     if (val == "0") {
                         return "未启用";
@@ -322,9 +328,9 @@ $("#searchBtn").on('click', function (event) {
                     }
                 }
             },
-            {title: '网单中心代码', field: 'centerCode', sortable: true},
+            {title: '网单中心代码', field: 'centerCode', sortable: false, width:150},
             {
-                title: '是否支持货到付款', field: 'supportCod', sortable: true,
+                title: '是否支持货到付款', field: 'supportCod', sortable: false, width:150,
                 formatter: function (val, rec) {
                     if (val == "0") {
                         return "否";
@@ -333,45 +339,45 @@ $("#searchBtn").on('click', function (event) {
                     }
                 }
             },
-            {title: '该TC支持的物流模式', field: 'supportedDeliveryMode', sortable: true},
-            {title: 'LES送达方代码', field: 'lesFiveYard', sortable: true},
-            {title: 'LES库位编码', field: 'lesWhCode', sortable: true},
-            {title: 'les_accepter', field: 'lesAccepter', sortable: true},
-            {title: '日日顺配送中心编码', field: 'rrsDeliverCode', sortable: true},
-            {title: 'CRM地区编码', field: 'crmAreaCode', sortable: true},
-            {title: '电商付款方', field: 'ehaierPayer', sortable: true},
-            {title: '工贸代码', field: 'itcCode', sortable: true},
-            {title: '销售组织编码', field: 'moCode', sortable: true},
-            {title: '电商库位码', field: 'estorgeId', sortable: true},
-            {title: '电商库位名称', field: 'estorgeName', sortable: true},
-            {title: '送达方代码', field: 'transmitId', sortable: true},
-            {title: '送达方名称', field: 'transmitDesc', sortable: true},
-            {title: 'OE码（LES）', field: 'lesOeId', sortable: true},
-            {title: '管理客户编码', field: 'customId', sortable: true},
-            {title: '管理客户名称', field: 'customDesc', sortable: true},
-            {title: '工贸代码', field: 'industryTradeId', sortable: true},
-            {title: '工贸描述', field: 'industryTradeDesc', sortable: true},
-            {title: '颗粒度编码', field: 'graininessId', sortable: true},
-            {title: '网单经营体编码', field: 'netManagementId', sortable: true},
-            {title: '电商售达方编码', field: 'esaleId', sortable: true},
-            {title: '电商售达方名称', field: 'esaleName', sortable: true},
-            {title: '销售组织编码', field: 'saleOrgId', sortable: true},
-            {title: '分支', field: 'branch', sortable: true},
-            {title: '电商付款方编码', field: 'paymentId', sortable: true},
-            {title: '电商付款方名称', field: 'paymentName', sortable: true},
-            {title: '地区编码（CRM专用）', field: 'areaId', sortable: true},
-            {title: '日日顺配送编码', field: 'rrsDistributionId', sortable: true},
-            {title: '日日顺配送名称', field: 'rrsDistributionName', sortable: true},
-            {title: '日日顺售达方', field: 'rrsSaleId', sortable: true},
-            {title: '日日顺售达方名称', field: 'rrsSaleName', sortable: true},
-            {title: 'OMS重庆新日日顺付款方', field: 'omsRrsPaymentId', sortable: true},
-            {title: 'OMS重庆新日日顺付款方名称', field: 'omsRrsPaymentName', sortable: true},
-            {title: '客户编码', field: 'sapCustomerCode', sortable: true},
-            {title: '客户编码名称', field: 'sapCustomerName', sortable: true},
-            {title: '创建者', field: 'createUser', sortable: true},
-            {title: '创建时间', field: 'createTime', sortable: true, formatter: formatDatebox},
-            {title: '最后更新人', field: 'updateUser', sortable: true},
-            {title: '最后更新时间', field: 'updateTime', sortable: true, formatter: formatDatebox}
+            {title: '该TC支持的物流模式', field: 'supportedDeliveryMode', sortable: false, width:180},
+            {title: 'LES送达方代码', field: 'lesFiveYard', sortable: false, width:150},
+            {title: 'LES库位编码', field: 'lesWhCode', sortable: false, width:150},
+            {title: 'LES接收人', field: 'lesAccepter', sortable: false, width:150},
+            {title: '日日顺配送中心编码', field: 'rrsDeliverCode', sortable: false, width:180},
+            {title: 'CRM地区编码', field: 'crmAreaCode', sortable: false, width:150},
+            {title: '电商付款方', field: 'ehaierPayer', sortable: false, width:120},
+            {title: '工贸代码', field: 'itcCode', sortable: false, width:150},
+            {title: '销售组织编码', field: 'moCode', sortable: false, width:150},
+            {title: '电商库位码', field: 'estorgeId', sortable: false, width:120},
+            {title: '电商库位名称', field: 'estorgeName', sortable: false, width:250},
+            {title: '送达方代码', field: 'transmitId', sortable: false, width:150},
+            {title: '送达方名称', field: 'transmitDesc', sortable: false, width:250},
+            {title: 'OE码（LES）', field: 'lesOeId', sortable: false, width:150},
+            {title: '管理客户编码', field: 'customId', sortable: false, width:180},
+            {title: '管理客户名称', field: 'customDesc', sortable: false, width:250},
+            {title: '工贸代码', field: 'industryTradeId', sortable: false, width:150},
+            {title: '工贸描述', field: 'industryTradeDesc', sortable: false, width:150},
+            {title: '颗粒度编码', field: 'graininessId', sortable: false, width:150},
+            {title: '网单经营体编码', field: 'netManagementId', sortable: false, width:180},
+            {title: '电商售达方编码', field: 'esaleId', sortable: false, width:180},
+            {title: '电商售达方名称', field: 'esaleName', sortable: false, width:250},
+            {title: '销售组织编码', field: 'saleOrgId', sortable: false, width:150},
+            {title: '分支', field: 'branch', sortable: false, width:100},
+            {title: '电商付款方编码', field: 'paymentId', sortable: false, width:180},
+            {title: '电商付款方名称', field: 'paymentName', sortable: false, width:250},
+            {title: '地区编码（CRM专用）', field: 'areaId', sortable: false, width:200},
+            {title: '日日顺配送编码', field: 'rrsDistributionId', sortable: false, width:180},
+            {title: '日日顺配送名称', field: 'rrsDistributionName', sortable: false, width:250},
+            {title: '日日顺售达方', field: 'rrsSaleId', sortable: false, width:180},
+            {title: '日日顺售达方名称', field: 'rrsSaleName', sortable: false, width:250},
+            {title: 'OMS重庆新日日顺付款方', field: 'omsRrsPaymentId', sortable: false, width:250},
+            {title: 'OMS重庆新日日顺付款方名称', field: 'omsRrsPaymentName', sortable: false, width:350},
+            {title: '客户编码', field: 'sapCustomerCode', sortable: false, width:150},
+            {title: '客户编码名称', field: 'sapCustomerName', sortable: false, width:250},
+            {title: '创建者', field: 'createUser', sortable: false, width:100},
+            {title: '创建时间', field: 'createTime', sortable: false, width:200, formatter: formatDatebox},
+            {title: '最后更新人', field: 'updateUser', sortable: false, width:120},
+            {title: '最后更新时间', field: 'updateTime', sortable: false, width:200, formatter: formatDatebox}
         ]],
     });
 

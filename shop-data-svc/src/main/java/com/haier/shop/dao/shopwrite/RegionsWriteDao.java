@@ -18,5 +18,7 @@ public interface RegionsWriteDao extends BaseWriteDao<Regions> {
 	 int updateByPrimaryKeySelective(Regions record);
 
 	 int updateByPrimaryKey(Regions record);
+
+	 int updateByParentId(Regions record);
 	    
 }

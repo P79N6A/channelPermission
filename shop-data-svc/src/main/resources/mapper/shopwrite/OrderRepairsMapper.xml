@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.settleCenter.OrderRepairsDao">
+	<resultMap id="orderRepairsResult" type="com.haier.shop.model.OrderRepairs">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="addTime" column="addTime" />
+		<result property="memberId" column="memberId" />
+		<result property="orderId" column="orderId" />
+		<result property="orderProductId" column="orderProductId" />
+		<result property="paymentStatus" column="paymentStatus" />
+		<result property="paymentTime" column="paymentTime" />
+		<result property="paymentName" column="paymentName" />
+		<result property="receiptStatus" column="receiptStatus" />
+		<result property="receiptTime" column="receiptTime" />
+		<result property="storageStatus" column="storageStatus" />
+		<result property="storageTime" column="storageTime" />
+		<result property="typeExpect" column="typeExpect" />
+		<result property="typeActual" column="typeActual" />
+		<result property="reason" column="reason" />
+		<result property="description" column="description" />
+		<result property="contactName" column="contactName" />
+		<result property="contactMobile" column="contactMobile" />
+		<result property="handleStatus" column="handleStatus" />
+		<result property="handleTime" column="handleTime" />
+		<result property="handleRemark" column="handleRemark" />
+		<result property="repairSn" column="repairSn" />
+		<result property="count" column="count" />
+		<result property="requestServiceRemark" column="requestServiceRemark" />
+		<result property="requestServiceDate" column="requestServiceDate" />
+		<result property="offlineFlag" column="offlineFlag" />
+		<result property="offlineReason" column="offlineReason" />
+		<result property="offlineAmount" column="offlineAmount" />
+		<result property="offlineRemark" column="offlineRemark" />
+		<result property="offlineConfirmFlag" column="offlineConfirmFlag" />
+		<result property="hpFirstAddTime" column="hpFirstAddTime" />
+		<result property="hpSecondAddTime" column="hpSecondAddTime" />
+		<result property="modified" column="modified" />
+		<result property="finishTime" column="finishTime" />
+		<result property="refundAmount" column="refundAmount" />
+		<result property="ybkExchangeType" column="ybkExchangeType" />
+		<result property="typeFlag" column="typeFlag" />
+		<result property="cOrderSnStatus" column="cOrderSnStatus" />
+		<result property="vomRepairSn" column="vomRepairSn" />
+	</resultMap>
+	<select id="getByOrderProductId" parameterType="Integer" resultMap="orderRepairsResult">
+		select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleTime`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn
+		from `orderrepairs`
+		where `orderProductId` = #{orderProductId}
+	</select>
+	<select id="getOrderRepairDetailByOrderProductId" parameterType="Integer" resultMap="orderRepairsResult">
+		select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleTime`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn
+		from `orderrepairs`
+		where `orderProductId` = #{orderProductId}
+		order by `id`
+	</select>
+</mapper>

@@ -44,4 +44,10 @@ public class WwwHpRecordsServiceImpl implements WwwHpRecordsService {
         return wwwHpRecordsReadDao.getByVomRepairSnAndSku(vomRepairSn, sku);
     }
 
+	@Override
+	public String queryTHRepairSn(String orderRepairId) {
+		// TODO Auto-generated method stub
+		return wwwHpRecordsReadDao.queryTHRepairSn(orderRepairId);
+	}
+
 }

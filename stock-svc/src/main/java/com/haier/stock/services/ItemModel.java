@@ -19,7 +19,6 @@ import com.haier.shop.model.ProductBase;
 import com.haier.shop.model.ProductTypesNew;
 import com.haier.shop.model.ProductsNew;
 
-import com.haier.shop.model.Regions;
 import com.haier.shop.service.NetPointsService;
 import com.haier.shop.service.PaymentsService;
 import com.haier.shop.service.ProductTypesService;
@@ -28,6 +27,8 @@ import com.haier.shop.service.ProductsNewService;
 import com.haier.shop.service.RegionsService;
 import com.haier.shop.service.ShopItemAttributeService;
 import com.haier.shop.service.ShopItemBaseService;
+import com.haier.stock.model.EisEaiMdmModel;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +37,8 @@ import com.haier.common.BusinessException;
 import com.haier.common.util.StringUtil;
 import com.haier.eis.model.EisExternalSku;
 import com.haier.eis.service.EisExternalSkuService;
-import com.haier.purchase.data.model.LesFiveYardInfo;
-import com.haier.purchase.data.service.PurchaseLesFiveYardsService;
+import com.haier.shop.model.LesFiveYardInfo;
+import com.haier.shop.service.PurchaseLesFiveYardsService;
 import com.haier.shop.model.ItemAttribute;
 import com.haier.shop.model.ItemBase;
 
@@ -189,8 +190,10 @@ public class ItemModel {
          }
          if (attribute.getId() != null) {
         	 shopItemAttributeService.update(attribute);
+        	 EisEaiMdmModel.updateItemAttribute+=1;
          } else {
         	 shopItemAttributeService.insert(attribute);
+        	 EisEaiMdmModel.insertItemAttribute+=1;
          }
      }
      
@@ -232,6 +235,7 @@ public class ItemModel {
              }
              itemBase.setLastUpd(new Date());
              shopItemBaseService.update(itemBase);
+             EisEaiMdmModel.updateItemBase+=1;
          } else {
              itemBase.setIsAutoUpdate(1);
              itemBase.setStatus(0);
@@ -240,6 +244,7 @@ public class ItemModel {
                  itemBase.setSaleChar(itemBase.getSaleChar().trim().substring(0, 1));
              }
              shopItemBaseService.insert(itemBase);
+             EisEaiMdmModel.insertItemBase+=1;
          }
      }
 

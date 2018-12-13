@@ -22,7 +22,7 @@
         SELECT id,addTime,invoiceId,cOrderType,orderProductId,diffId,pushType,pushData,returnData
         ,success,count,lastTime,lastMessage
         FROM
-        `InvoiceSAPLogs`
+        `invoicesaplogs`
         where  invoiceId=#{invoiceId} and pushType=#{pushType}
         order by id desc
     </select>
@@ -42,7 +42,7 @@
         ,a.count
         ,CASE WHEN a.lastTime=0 THEN '' ELSE FROM_UNIXTIME(a.lastTime) END lastTime
         ,a.lastMessage
-        FROM InvoiceSAPLogs a,Invoices b
+        FROM invoicesaplogs a,invoices b
         WHERE 1=1 AND a.invoiceId=b.id
         <if test = "count !=null and count != ''">
             AND a.count=#{count}
@@ -68,6 +68,8 @@
         <if test="lastMessage != null and lastMessage != ''">
             AND a.lastMessage LIKE CONCAT('%',#{lastMessage},'%')
         </if>
+
+        order by a.addTime desc 
         <if test="m != null and n != null">
             Limit ${m},${n}
         </if>
@@ -93,7 +95,7 @@
         ,lastTime
         ,lastMessage
         FROM
-        InvoiceSAPLogs
+        invoicesaplogs
         where  success = 0
         and count&lt;=20
         order by id

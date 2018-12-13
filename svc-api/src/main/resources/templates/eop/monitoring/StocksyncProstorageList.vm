@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/static/css/common.css">
     <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
     
-    <title>库存同步配置 </title>
+    <title>库存同步配置</title>
     <script src="/static/third/easyui/jquery.min2.js"></script>
     <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
     <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
@@ -32,75 +32,113 @@
 	    #fontclor{
 	    	font-color:#660000;
 	    }
+        .datagrid-header-rownumber{
+            width: 50px;
+            text-align: center;
+            margin: 0px;
+            padding: 3px 0;
+        }
+        .datagrid-cell-rownumber{
+            width: 50px;
+            text-align: center;
+            margin: 0px;
+            padding: 3px 0;
+        }
 
 	</style>
 </head>
 <body style="font-size:14px">
-<div class="easyui-layout" style="width:100%;height:100%;">
-   	<div id="datagridToolbar_orderForecastGoal">
-    
-	    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
-	        <div class="slide_line fa fa-window-minimize"></div>
-	        <div class="slide_line fa fa-window-minimize"></div>
-	        <div class="slide_line fa fa-window-minimize"></div>
-	        <div class="slide_line fa fa-window-minimize"></div>
-	        <div class="slide_line fa fa-window-minimize"></div>
-	        <div class="slide_line fa fa-window-minimize"></div>
-	        <div class="slide_line fa fa-window-minimize"></div>
-	        <div class="slide_line fa fa-window-minimize"></div>
-	        <div class="slide_line fa fa-window-minimize"></div>
-	        <div class="slide_circle fa fa-map-marker"></div>  
-	    </div>
-	    <div class="search-panel" style="font-size: 11px;">
+<div data-options="region:'west'" style="width:100%;height: 100%" data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,collapsible:false">
+    <table id="gridView" style="width:100%;height: 100%"></table>
+</div>
+## <div class="easyui-layout" style="width:100%;height:100%;">
+<div id="datagridToolbar_orderForecastGoal">
+
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <div class="search-panel" style="font-size: 11px;">
         <div style="height: 18px"></div>
         <div class="search-row_nowidth mar_r6px">
             <span class="search-row-label_80">店铺</span>
             <!--<input id="policyYear" class="easyui-numberbox" type="text"/>-->
-            <input id="csource" name="dept" name="productType"/>
+            #*<input id="csource" name="dept" name="productType"/>*#
 
+            <select id="csource" class="easyui-combobox" name="productType">
+                <option value="">来源店铺</option>
+                <option value="GMZX">国美海尔官方旗舰店</option>
+                <option value="GMZXTS">国美统帅官方旗舰店</option>
+                <option value="SNYG">苏宁统帅官方旗舰店</option>
+                <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
+                <option value="SNQDZX">易购渠道中心</option>
+                <option value="DDW">海尔官方当当旗舰店</option>
+                <option value="GMTSZYYY">海尔官方国美自营店-电视/家庭影音</option>
+                <option value="JDHEGQ">京东海尔官方旗舰店</option>
+                <option value="JDHEBXGQ">京东海尔集团冰箱官方旗舰店</option>
+            </select>
         </div>
         <div class="search-row_nowidth mar_r6px">
             <span class="search-row-label_80">物料编码</span>
-                <input id="csku" name="dept"  data-options="prompt:'全部'" name="productType"/>
+            <input id="csku" name="productType" data-options="prompt:'全部'"/>
         </div>
         <div class="search-row_nowidth mar_r6px">
             <span class="search-row-label_80">套装编码</span>
-            <input id="ctzSku" name="dept"  name="productType"/>
+            <input id="ctzSku" name="productType"/>
 
         </div>
-  <div class="search-row_nowidth mar_r6px">
+        <div class="search-row_nowidth mar_r6px">
             <span class="search-row-label_80">库位编码</span>
-            <input id="csCode" name="dept"  name="productType"/>
+            <input id="csCode" name="productType"/>
 
         </div>
         <div class="search-row_nowidth mar_r6px">
             <span class="search-row-label_80">是否同步</span>
- 			<select id="cisOn" class="easyui-combobox" style="height:24px;width: 140px"
-                    data-options="editable:false,panelHeight:65">
+            <select
+                id="cisOn"
+                class="easyui-combobox"
+                style="height:24px;width: 140px"
+                data-options="editable:false,panelHeight:65">
                 <option value="1">同步</option>
                 <option value="0">不同步</option>
             </select>
         </div>
-     </div>
-        <div style="font-size:14px;width: 100%">
-            <a href="#" class="easyui-linkbutton" onclick="SearchUnit()"
-               data-options="iconCls:'icon-search',plain:true">查询</a>
-            <a href="#" class="easyui-linkbutton" onclick="Add()"
-               data-options="iconCls:'icon-add',plain:true">增加</a>
-            <a href="#" class="easyui-linkbutton" onclick="list()"
-               data-options="iconCls:'icon-edit',plain:true">修改</a>
-            <a href="#" class="easyui-linkbutton" onclick="Delete()"
-               data-options="iconCls:'icon-remove',plain:true">删除</a>
-            <a href="#" class="easyui-linkbutton" onclick="SearchClear()"
-                   data-options="iconCls:'icon-redo',plain:true">重置</a>
-
-        </div>
     </div>
-    <div data-options="region:'west'" style="width:100%;height: 100%">
-        <table id="gridView" style="width:100%;height: 100%"></table>
-    </div>
+    <div style="font-size:14px;width: 100%">
+        <a
+            href="#"
+            class="easyui-linkbutton"
+            onclick="SearchUnit()"
+            data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" onclick="Add()" data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a
+            href="#"
+            class="easyui-linkbutton"
+            onclick="list()"
+            data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a
+            href="#"
+            class="easyui-linkbutton"
+            onclick="Delete()"
+            data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <a
+            href="#"
+            class="easyui-linkbutton"
+            onclick="SearchClear()"
+            data-options="iconCls:'icon-redo',plain:true">重置</a>
 
+    </div>
 </div>
+
+## </div>
 
 <!-- 修改表格 -->
 <div id="oDialog4" class="easyui-dialog" title="修改"
@@ -116,7 +154,21 @@
             
             <label >来源店铺<span style="color: red;padding-right:19px">*</span></label>
             &numsp;
-            <input id="source"   name="categoryName"  style="height:24px;width: 135px"  maxlength="15" >
+            #*<input id="source"   name="categoryName"  style="height:24px;width: 135px"  maxlength="15" >*#
+
+            <select id="source"  name="categoryName"  class="easyui-combobox" style="height:24px;width: 135px"  maxlength="30">
+                <<option value="">来源店铺</option>
+                <option value="GMZX" >国美海尔官方旗舰店</option>
+                <option value="GMZXTS" >国美统帅官方旗舰店</option>
+                <option value="SNYG" >苏宁统帅官方旗舰店</option>
+                <option value="SNHEGQ" >苏宁海尔官方旗舰店</option>
+                <option value="SNQDZX" >易购渠道中心</option>
+                <option value="DDW" >海尔官方当当旗舰店</option>
+                <option value="GMTSZYYY" >海尔官方国美自营店-电视/家庭影音</option>
+                <option value="JDHEGQ" >京东海尔官方旗舰店</option>
+                <option value="JDHEBXGQ" >京东海尔集团冰箱官方旗舰店</option>
+            </select>
+
             <br/>
             <br/>
             &numsp;
@@ -149,8 +201,8 @@
             &numsp;&numsp; 
            <select id="stype" class="easyui-combobox" name="stype" style="height:24px;width: 140px"
                     data-options="editable:false,panelHeight:65">
-                <option value="0">否</option>
-                <option value="1">是</option>
+                <option value="1">否</option>
+                <option value="2">是</option>
             </select>
            <br/>
             <br/>

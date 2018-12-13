@@ -20,4 +20,6 @@ public interface SkuStockRelationDao {
     );
 
     public void insertList(List<SkuStockRelation> list);
+
+	public List<SkuStockRelation> get3WskuToNum(String getTime);
 }

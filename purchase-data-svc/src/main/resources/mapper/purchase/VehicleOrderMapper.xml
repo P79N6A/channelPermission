@@ -71,6 +71,7 @@
 			jdbcType="VARCHAR" />
 		<result column="brand" property="brand" jdbcType="VARCHAR" />
 		<result column="qty" property="qty" jdbcType="DECIMAL" />
+		<result column="actual_qty" property="actualQty" jdbcType="DECIMAL" />
 		<result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
 		<result column="amount" property="amount" jdbcType="DECIMAL" />
 		<result column="volume" property="volume" jdbcType="DECIMAL" />
@@ -87,6 +88,17 @@
 		<!--<result column="wh_code" property="whCode" /> -->
 		<result column="order_time" property="orderTime" />
 		<result column="date_of_arrival" property="dateOfArrival" />
+		<result column="lbx_err_msg" property="lbxErrMsg" />
+	</resultMap>
+	
+	<resultMap id="changeDnResultMapper"
+		type="com.haier.purchase.data.model.vehcile.VehicleOrderHistoryDTO">
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="item_no" property="itemNo" jdbcType="VARCHAR" />
+		<result column="vbeln_dn1" property="vbelnDn1" jdbcType="VARCHAR" />
+		<result column="vbeln_dn5" property="vbelnDn5" jdbcType="VARCHAR" />
+		<result column="vbeln_spare" property="vbelnSpare" jdbcType="VARCHAR" />
+		<result column="order_time" property="createTime" jdbcType="DATE" />
 	</resultMap>
 
 	<!-- =========================================================== -->
@@ -509,9 +521,9 @@
 			<if test="entity.remark != null and entity.remark !='' ">
 				<![CDATA[ and remark  = #{entity.remark} ]]>
 			</if>
-			<if test="entity.createBy != null and entity.createBy !='' ">
-				<![CDATA[ and create_by  = #{entity.createBy} ]]>
-			</if>
+			<!--<if test="entity.createBy != null and entity.createBy !='' ">-->
+				<!--<![CDATA[ and create_by  = #{entity.createBy} ]]>-->
+			<!--</if>-->
 			<if test="entity.createTime != null ">
 				<![CDATA[ and create_time  = #{entity.createTime} ]]>
 			</if>
@@ -570,7 +582,7 @@
 				#{item}
 			</foreach>
 		</if>
-		order by order_no desc
+		order by order_time desc
 		<include refid="pagination" />
 	</select>
 	<!--分页count -->
@@ -585,6 +597,60 @@
 				#{item}
 			</foreach>
 		</if>
+	</select>
+	
+<!-- 	暂时不用 -->
+	<sql id="changeDnSQL2">
+		SELECT vod.order_no, vod.item_no, vod.vbeln_dn1, vozd.zq_item_no,vo.order_time, vod.vbeln_spare, vozd.`status` as zq_status, vozd.remark, vozd.vbeln_dn5, c3ps.`status` as sap_status, e3o.`status` as lbx_status, e3o.actual_qty as lbx_actual_qty
+		FROM vehicle_order vo
+		LEFT JOIN vehicle_order_details vod ON vo.order_no = vod.order_no
+		left join vehicle_order_zq_details vozd on replace(vod.item_no, "ZK", "ZQ") = vozd.zq_item_no
+		left join cn_3w_purchase_stock c3ps on vod.item_no = c3ps.cn_stock_syncs_id
+		left join entry_3w_order e3o on vod.lbx = e3o.entry_order_id
+		where 1 = 1 
+	</sql>
+	<sql id="changeDnSQL">
+		SELECT vod.order_no, vod.item_no, vod.vbeln_dn1, vo.order_time, vozd.zq_item_no, vod.vbeln_spare, vozd.`status` as zq_status, vozd.remark, vozd.vbeln_dn5
+		FROM vehicle_order vo
+		LEFT JOIN vehicle_order_details vod ON vo.order_no = vod.order_no
+		left join vehicle_order_zq_details vozd on replace(vod.item_no, "ZK", "ZQ") = vozd.zq_item_no
+		where 1 = 1 
+	</sql>
+	<sql id="changeDnSQLWhere">
+		<if test="entity.orderNos != null">
+			and vod.order_no in
+			<foreach collection="entity.orderNos" item="item" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="entity.vbelnDn1s != null">
+			and vod.vbeln_dn1 in
+			<foreach collection="entity.vbelnDn1s" item="item" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="entity.startOrderTime!=null">
+		<![CDATA[and vo.order_time >= #{entity.startOrderTime}]]>
+		</if>
+		<if test="entity.endOrderTime!=null">
+		<![CDATA[and vo.order_time <= #{entity.endOrderTime}]]>
+		</if>
+	</sql>
+	<!-- 查询page -->
+	<select id="getChangeDNPageByCondition" resultMap="changeDnResultMapper">
+		<include refid="changeDnSQL"></include>
+		<include refid="changeDnSQLWhere"></include>
+		order by order_time desc
+		LIMIT #{page}, #{rows}
+	</select>
+	<!--分页count -->
+	<select id="getChangeDNPagerCount" resultType="long">
+		select count(1) from (
+			<include refid="changeDnSQL"></include>
+			<include refid="changeDnSQLWhere"></include>
+		) t
 	</select>
 
 	<!--查询总条数 -->
@@ -1181,7 +1247,8 @@
 	</update>
 	<select id="selectVehicleExport" resultMap="vehicleExport"
 		parameterType="Map">
-		select cps.status as sapStatus,c.* from  (select entry.status as lbxStatus,b.* from (SELECT
+		select distinct tt.* from (
+		select cps.status as sapStatus,c.* from  (select entry.status as lbxStatus, entry.actual_qty, b.* from (SELECT
 		a.*, vehicleOrderZqDetails.zq_item_no AS zqItemNo,
 		vehicleOrderZqDetails.vbeln_dn5 as vbelnDn5,
 		vehicleOrderZqDetails.remark as zqRemark,
@@ -1203,6 +1270,7 @@
 		vehicleOrderDetails.lbx,
 		vehicleOrderDetails.zspdt,
 		vehicleOrderDetails.rows,
+		vehicleOrderDetails.lbx_err_msg,
 		vehicleOrderDetails.status as zkStatus,
 		vehicleOrderDetails.materiel_code AS materielCode,
 		vehicleOrderDetails.materiel_name AS materielName,
@@ -1237,7 +1305,7 @@
 	    c.itemNo = cps.cn_stock_syncs_id
 		ORDER BY
 		c.orderNo,
-		c.rows
+		c.rows ) tt
 	</select>
 
 	<select id="getWhCode" parameterType="String" resultType="String">
@@ -1245,4 +1313,105 @@
 		wh_code FROM `area_center_info` WHERE delivery_to_code = #{code}
 	</select>
 
+	<resultMap id="pushToSAPMap" type="com.haier.purchase.data.model.vehcile.Cn3wPurchaseStock">
+		<result column="id" property="id"/>
+		<result column="cn_stock_syncs_id" property="cnStockSyncsId" jdbcType="VARCHAR"/>
+		<result column="push_data" property="pushData" jdbcType="VARCHAR"/>
+		<result column="return_data" property="returnData" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+		<result column="message" property="message" jdbcType="VARCHAR"/>
+		<result column="add_time" property="addTime"/>
+		<result column="process_time" property="processTime"/>
+	</resultMap>
+	
+	<resultMap id="pushToSAPMap2" type="com.haier.purchase.data.model.vehcile.VehiclePushToSAP">
+		<result column="id" property="id"/>
+		<result column="cn_stock_syncs_id" property="cnStockSyncsId" jdbcType="VARCHAR"/>
+		<result column="push_data" property="pushData" jdbcType="VARCHAR"/>
+		<result column="return_data" property="returnData" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+		<result column="message" property="message" jdbcType="VARCHAR"/>
+		<result column="add_time" property="addTime"/>
+		<result column="process_time" property="processTime"/>
+		<result column="vbeln_dn1" property="vbelnDn1"/>
+		<result column="vbeln_dn5" property="vbelnDn5"/>
+		<result column="vbeln_spare" property="vbelnSpare"/>
+		<result column="lbx" property="lbx"/>
+		<result column="qty" property="qty"/>
+		<result column="actual_qty" property="actualQty"/>
+	</resultMap>
+
+	<sql id="findPushToSAPListSQLCond">
+		FROM
+		cn_3w_purchase_stock
+		WHERE 1=1
+		<if test="orderId !=null and orderId != ''">
+			AND UPPER(cn_stock_syncs_id) LIKE CONCAT(CONCAT('%',UPPER
+			(#{orderId})),'%')
+		</if>
+		<if test="dnOrderId !=null and dnOrderId != ''">
+			AND UPPER(push_data) LIKE CONCAT(CONCAT('%',UPPER
+			(#{dnOrderId})),'%')
+		</if>
+		<if test="status != null">
+			AND status = #{status}
+		</if>
+	</sql>
+
+	<select id="findPushToSAPList"
+			resultMap="pushToSAPMap" parameterType="Map">
+		SELECT cn_stock_syncs_id,push_data,return_data,status,message,add_time,process_time
+		<include refid="findPushToSAPListSQLCond"></include>
+        <if test="orderList !=null">
+            AND cn_stock_syncs_id IN
+            <foreach collection="orderList" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+		<if test="size != null and size &gt; 0">
+			limit ${start},${size}
+		</if>
+	</select>
+	
+	<select id="findPushToSAPList2" resultMap="pushToSAPMap2" parameterType="Map">
+		SELECT p.id, p.cn_stock_syncs_id, p.push_data, p.return_data, p.status, p.message, p.add_time, p.process_time, vozd.vbeln_dn5, vod.vbeln_spare, vod.vbeln_dn1, vod.lbx, vod.qty, eo.actual_qty
+		<include refid="findPushToSAPListSql2"></include>
+		ORDER BY p.add_time DESC
+		LIMIT ${start},${size}
+	</select>
+	
+	<select id="findPushToSAPListCount2" resultType="int" parameterType="Map">
+		SELECT count(1)
+		<include refid="findPushToSAPListSql2"></include>
+	</select>
+	
+	<sql id="findPushToSAPListSql2">
+		FROM cn_3w_purchase_stock p
+		LEFT JOIN vehicle_order_details vod ON p.cn_stock_syncs_id = vod.item_no
+		LEFT JOIN entry_3w_order eo ON eo.entry_order_id = vod.lbx
+		LEFT JOIN vehicle_order_zq_details vozd ON REPLACE(vod.item_no, "ZK", "ZQ") = vozd.zq_item_no
+		WHERE 1 = 1
+		<if test="orderId !=null and orderId != ''">
+			AND UPPER(p.cn_stock_syncs_id) LIKE CONCAT('%', UPPER(#{orderId}), '%')
+		</if>
+		<if test="dnOrderId !=null and dnOrderId != ''">
+			AND (vod.vbeln_dn1 LIKE CONCAT('%', UPPER(#{dnOrderId}), '%') or vozd.vbeln_dn5 LIKE CONCAT('%', UPPER(#{dnOrderId}), '%'))
+		</if>
+		<if test="status != null">
+			AND p.status = #{status}
+		</if>
+		<if test="startDate != null">
+			<![CDATA[AND p.add_time >= #{startDate}]]>
+		</if>
+		<if test="endDate != null">
+			<![CDATA[AND p.add_time <= #{endDate}]]>
+		</if>
+	
+	</sql>
+
+	<select id="findPushToSAPListCount" resultType="Integer">
+		SELECT COUNT(1)
+		<include refid="findPushToSAPListSQLCond"></include>
+	</select>
+	
 </mapper>

@@ -83,7 +83,7 @@
 		<result column="itemShareAmount" property="itemshareamount" jdbcType="DECIMAL" />
 		<result column="lessShipTInTime" property="lessshiptintime" jdbcType="INTEGER" />
 		<result column="lessShipTOutTime" property="lessshiptouttime" jdbcType="INTEGER" />
-		<result column="cbsSecCode" property="cbsseccode" jdbcType="VARCHAR" />
+		<result column="isSAorZP" property="cbsseccode" jdbcType="VARCHAR" />
 		<result column="points" property="points" jdbcType="INTEGER" />
 		<result column="modified" property="modified" jdbcType="TIMESTAMP" />
 		<result column="splitFlag" property="splitflag" jdbcType="TINYINT" />
@@ -165,8 +165,8 @@
 
 	<sql id="findOrderProductSQLCond" >
 		FROM
-		OrderProducts p,
-		Orders o
+		orderproducts p,
+		orders o
 		where o.id =p.orderId
 		<if test="cOrderSn !=null and cOrderSn !=''">
 			and p.cOrderSn like '%${cOrderSn}%'
@@ -300,8 +300,8 @@
 		<if test="addTimeMin != null and addTimeMin != ''">
 			and o.addTime >=  unix_timestamp(#{#{addTimeMin},jdbcType=VARCHAR})
 		</if>
-		<if test="addTimeMix != null and addTimeMix != ''">
-			and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{#{addTimeMix},jdbcType=VARCHAR})
+		<if test="addTimeMax != null and addTimeMax != ''">
+			and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{#{addTimeMax},jdbcType=VARCHAR})
 		</if>
 	</sql>
 
@@ -341,9 +341,9 @@
 			i.checkCode
 
 		FROM
-			OrderProducts p,
-			Orders o ,
-			Invoices i
+		orderproducts p,
+		orders o ,
+		invoices i
 		where 
 		    o.id =p.orderId
 			and i.orderProductId = p.id
@@ -353,8 +353,8 @@
 		SELECT
 		a.tb_order_sn
 	FROM
-		OrderProducts p,
-		OrderProductsAttributes a
+		orderproducts p,
+		orderproductsattributes a
 	where 
 		p.id = a.order_product_id
 	 and p.cOrderSn =#{orderSn,jdbcType=VARCHAR}
@@ -363,7 +363,7 @@
 	SELECT
 		count(1)
 	FROM
-		WwwHpRecords
+		wwwhprecords
 	WHERE
 		hpTbSn =#{tbSn}
 	and success ='0'
@@ -398,8 +398,8 @@
 			p.receiptNum,
 			p.receiptAddTime
 		FROM
-			OrderProducts p,
-			Orders o
+		orderproducts p,
+		orders o
 		where 
 		    o.id =p.orderId
 			and sku=#{sku,jdbcType=VARCHAR}
@@ -424,7 +424,7 @@
 	    p.orderPromotionAmount,
 	    (IFNULL(p.number, 0) * IFNULL(p.price, 0) + IFNULL(p.shippingFee, 0) - IFNULL(p.couponCodeValue, 0) - IFNULL(p.esAmount, 0)) money
 	FROM
-	    OrderProducts p
+		orderproducts p
 	WHERE
 	    p.cOrderSn =#{cOrderSn,jdbcType=VARCHAR}
 	</select>
@@ -465,7 +465,7 @@
 		SELECT orderSn,from_unixtime(addTime) as addTime,consignee,from_unixtime(firstConfirmTime) as firstConfirmTime,tradeSn,source,paymentStatus,
 		from_unixtime(payTime) as payTime,paymentName,sellPeople,sellPeopleManner,sourceOrderSn,isProduceDaily,from_unixtime(bestShippingTime) as bestShippingTime,orderStatus,remark
 		,receiptConsignee,receiptAddress,receiptZipcode,receiptMobile,regionName,province,region,address,poiId,city,orderType
-		from Orders
+		from orders
 		WHERE orderSn=#{orderSn}
 	</select>
 	<!--
@@ -478,7 +478,7 @@
 		<result column="couponCode " property="couponCode "  /><!--优惠券文件编号-->
 	</resultMap>
 	<select id="selectCoupon" parameterType="java.lang.String" resultMap="CouponMap">
-		SELECT p.productName,p.couponCodeValue,p.couponCode from OrderProducts p, Orders o WHERE o.id=p.orderId AND o.orderSn=#{orderSn}
+		SELECT p.productName,p.couponCodeValue,p.couponCode from orderproducts p, orders o WHERE o.id=p.orderId AND o.orderSn=#{orderSn}
 	</select>
 	<!--
 	订单操作日志
@@ -491,7 +491,7 @@
 		<result column="remark" property="remark"  /><!--备注-->
 	</resultMap>
 	<select id="selectOrderOperateLogs" parameterType="java.lang.String" resultMap="OrderOperateLogsMap">
-		SELECT from_unixtime(l.logTime) AS logTime,p.cOrderSn,l.operator,l.changeLog,l.remark FROM OrderOperateLogs l,Orders o,OrderProducts p WHERE o.id=l.orderId AND
+		SELECT from_unixtime(l.logTime) AS logTime,p.cOrderSn,l.operator,l.changeLog,l.remark FROM orderoperatelogs l,orders o,orderproducts p WHERE o.id=l.orderId AND
 		l.orderProductId=p.id AND o.orderSn=#{orderSn}
 	</select>
 	<!--
@@ -518,7 +518,7 @@
 	</resultMap>
 	<select id="selectPrudevtDatail" parameterType="java.lang.String" resultMap="commodityMap">
 		SELECT q.shippingMode,q.cOrderSn,q.productName,q.sku,q.scode,q.tscode,q.productType,q.netpointid,q.pdorderstatus,
-		q.price,q.shippingfee,number,q.couponcodevalue,a.customer_id,q.orderpromotionamount FROM OrderProducts q,OrderProductsAttributes a,Orders o
+		q.price,q.shippingfee,number,q.couponcodevalue,a.customer_id,q.orderpromotionamount FROM orderproducts q,orderproductsattributes a,orders o
 		WHERE a.is_self_sell=1 AND q.id=a.order_product_id AND o.id=q.orderId AND o.orderSn=#{orderSn}
 	</select>
 	<!--查询发票信息的参数-->
@@ -528,7 +528,7 @@
 		<result column="invoiceTitle" property="invoiceTitle"  /><!--审核状态-->
 	</resultMap>
 	<select id="selectMemberInvoicesByorderSn" parameterType="java.lang.String" resultMap="billMap">
-		select m.invoiceType,m.state AS  Mstate,m.invoiceTitle FROM MemberInvoices m,Orders o WHERE o.id=m.orderId AND o.orderSn=#{orderSn}
+		select m.invoiceType,m.state AS  Mstate,m.invoiceTitle FROM memberinvoices m,orders o WHERE o.id=m.orderId AND o.orderSn=#{orderSn}
 	</select>
 	<!--
 	Hp拒收表格显示
@@ -548,7 +548,7 @@
 	-->
 	<select id="datagrid_WwwHpRecords" parameterType="java.util.Map" resultMap="recordsMap">
 		SELECT w.vomRepairSn,w.cOrderSn,w.hpTbSn,w.success*1 AS success,w.remark,from_unixtime(w.addTime) as addTime,w.modifytime,w.sku
-		FROM WwwHpRecords w
+		FROM wwwhprecords w
 		WHERE  1=1
 		<if test="success==1">
 			AND w.success=${success}
@@ -589,7 +589,7 @@
 	-->
 	<select id="datagrid_WwwHpRecords1" parameterType="java.util.Map" resultMap="recordsMap">
 		SELECT w.vomRepairSn,w.cOrderSn,w.hpTbSn,w.success*1 as success,w.remark,from_unixtime(w.addTime) as addTime,w.modifytime
-		FROM WwwHpRecords w
+		FROM wwwhprecords w
 		WHERE  1=1
 		<if test="success==1">
 			AND w.success=${success}
@@ -617,12 +617,12 @@
 	</resultMap>
 	<select id="check_cOrderSn_isExist" parameterType="java.util.List" resultMap="statusMap">
 		<foreach collection="list" index="index" item="item" separator="union">
-			SELECT b.*,i.orderProductId AS orderProductId,i.id AS th_id FROM OrderRepairs i
+			SELECT b.*,i.orderProductId AS orderProductId,i.id AS th_id FROM orderrepairs i
 			RIGHT JOIN
 			(SELECT q.cOrderSn as cOrderSn,w.tb_order_sn as hpTbSn,q.sku AS sku,q.id AS id FROM
-			OrderProducts q
+			orderproducts q
 			INNER JOIN
-			(SELECT order_product_id,tb_order_sn FROM OrderProductsAttributes
+			(SELECT order_product_id,tb_order_sn FROM orderproductsattributes
 			WHERE tb_order_sn=#{item.hpTbSn}) w
 			ON
 			w.order_product_id=q.id) b
@@ -633,23 +633,23 @@
 	更新WwwHpRecords表中的匹配次数
 	-->
 	<update id="update_WwwHpRecordsCount" parameterType="java.util.List">
-		update WwwHpRecords
+		update wwwhprecords
 		INNER JOIN
-		(SELECT count,cOrderSn,hpTbSn FROM WwwHpRecords WHERE hpTbSn in
+		(SELECT count,cOrderSn,hpTbSn FROM wwwhprecords WHERE hpTbSn in
 		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 		) q
-		ON q.hpTbSn=WwwHpRecords.hpTbSn
-		SET WwwHpRecords.count=q.count+1,
-		WwwHpRecords.remark='单据匹配失败,出库信息未获取。待人工处理';
+		ON q.hpTbSn=wwwhprecords.hpTbSn
+		SET wwwhprecords.count=q.count+1,
+		wwwhprecords.remark='单据匹配失败,出库信息未获取。待人工处理';
 	</update>
 	<!--
 	批量更新hp拒收表的success字段
 	-->
 	<update id="updateFlagBatch" parameterType="java.util.List">
 		<foreach collection="list" index="index" item="item" separator=";">
-			UPDATE WwwHpRecords
+			UPDATE wwwhprecords
 			SET success=1 WHERE cOrderSn=#{item}
 		</foreach>
 	</update>
@@ -658,7 +658,7 @@
 	-->
 	<select id="select_export_ExcelData" parameterType="java.util.Map" resultMap="recordsMap">
 		SELECT w.vomRepairSn,w.cOrderSn,w.hpTbSn,w.success*1 as success,w.remark,from_unixtime(w.addTime) as addTime,w.modifytime
-		FROM WwwHpRecords w
+		FROM wwwhprecords w
 		WHERE  1=1
 		<if test="success==1">
 			AND w.success=${success}
@@ -696,19 +696,22 @@
 		hp回传信息添加到日志表
 	-->
 	<insert id="insertHPlogs" parameterType="java.util.Map" >
-		INSERT INTO OrderRepairWwwHPLogs(addTime,receiveData,success,rowid) VALUES(unix_timestamp(now()),#{receiveData},1,#{rowid})
+		INSERT INTO orderrepairwwwhplogs(addTime,receiveData,success,rowid) VALUES(unix_timestamp(now()),#{receiveData},1,#{rowid})
 	</insert>
 	<!--
 	查询hp拒收回传日志
 	-->
 	<select id="selectHPlogsRowid" parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT  rowid FROM  OrderRepairWwwHPLogs WHERE rowid=#{rowid}
+		SELECT  rowid FROM  orderrepairwwwhplogs WHERE rowid=#{rowid}
 	</select>
 	<!--
 	HP拒收推送信息插入到HP拒收表
 	-->
 	<insert id="insertWwwHpRecords" parameterType="java.util.Map" >
-		INSERT into WwwHpRecords(addTime,sku,lbxSn,remark,hpTbSn,vomRepairSn) VALUES (unix_timestamp(now()),#{prodtype},#{add2},#{remark},#{orderno},#{sourceno});
+		INSERT into wwwhprecords(addTime,sku,lbxSn,remark,hpTbSn,vomRepairSn)
+		SELECT unix_timestamp(now()) as addTime,#{prodtype} as sku,#{add2} as lbxSn,#{remark} as remark,#{orderno} as hpTbSn,#{add1} as vomRepairSn from dual
+		WHERE not exists
+		(SELECT * from wwwhprecords WHERE sku=#{prodtype} and hpTbSn=#{orderno} and VomRepairSn=#{add1})
 	</insert>
 
 	<!--
@@ -716,11 +719,11 @@
 	-->
 	<update id="update_WwwHpRecordsInfo" parameterType="java.util.List">
 		<foreach collection="list" index="index" item="item" separator=";">
-			UPDATE WwwHpRecords
+			UPDATE wwwhprecords
 
-			SET success=1,remark='单据匹配成功',orderProductId=${item.orderProductId},orderRepairId=${item.th_id},cOrderSn=#{item.cOrderSn}
+			SET success=1,remark='匹配成功',orderProductId=#{item.id},orderRepairId=#{item.th_id},cOrderSn=#{item.cOrderSn}
 
-			WHERE hpTbSn=#{item.hpTbSn, jdbcType=VARCHAR}
+			WHERE hpTbSn=#{item.hpTbSn, jdbcType=VARCHAR} and sku = #{item.sku, jdbcType=VARCHAR}
 		</foreach>
 	</update>
 
@@ -741,16 +744,16 @@
 		b.number,
 		b.cOrderSn,
 		b.orderId
-		FROM Orders w
+		FROM orders w
 		INNER  JOIN
-		(SELECT orderId,number,cOrderSn FROM OrderProducts WHERE cOrderSn=#{cOrderSn}) b
+		(SELECT orderId,number,cOrderSn FROM orderproducts WHERE cOrderSn=#{cOrderSn}) b
 		ON b.orderId=w.id
 	</select>
 	<select id="selectOrderSn" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT o.repairSn
-		FROM OrderRepairs o
+		FROM orderrepairs o
 		RIGHT JOIN
-		(SELECT id FROM OrderProducts where
+		(SELECT id FROM orderproducts where
 		cOrderSn=#{cOrderSn}) b
 		ON b.id=o.orderProductId
 		WHERE o.handleStatus!=1 OR o.handleStatus!=2
@@ -779,12 +782,12 @@
 	<select id="datagrid_orderForecastGoal" parameterType="java.util.Map" resultMap="returnMap">
 		SELECT
 		r.regionName AS province,t.cOrderSn,t.orderSn,t.addTime,t.repairSn,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
-		FROM Regions r
+		FROM regions r
 		INNER JOIN
-		(SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM OrderProducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM Orders o INNER JOIN
+		(SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM orderproducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM orders o INNER JOIN
 		(SELECT a.addTime,a.orderId,a.orderProductId,a.id AS repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
 		a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
-		FROM OrderRepairs a) b
+		FROM orderrepairs a) b
 		ON
 		o.id=b.orderId) c
 		ON c.orderProductId=w.id) t
@@ -828,12 +831,12 @@
 	<select id="datagrid_orderForecastGoalcount" parameterType="java.util.Map" resultMap="returnMap">
 		SELECT
 		r.regionName AS province,t.cOrderSn,t.orderSn,t.addTime,t.repairSn,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
-		FROM Regions r
+		FROM regions r
 		INNER JOIN
-		(SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM OrderProducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM Orders o INNER JOIN
+		(SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM orderproducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM orders o INNER JOIN
 		(SELECT a.addTime,a.orderId,a.orderProductId,a.id AS repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
 		a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
-		FROM OrderRepairs a) b
+		FROM orderrepairs a) b
 		ON
 		o.id=b.orderId) c
 		ON c.orderProductId=w.id) t
@@ -874,12 +877,12 @@
 	<select id="export_ExcelOrderRepairs" parameterType="java.util.Map" resultMap="returnMap">
 		SELECT
 		r.regionName AS province,t.cOrderSn,t.orderSn,t.addTime,t.repairSn,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
-		FROM Regions r
+		FROM regions r
 		INNER JOIN
-		(SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM OrderProducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM Orders o INNER JOIN
+		(SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM orderproducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM orders o INNER JOIN
 		(SELECT a.addTime,a.orderId,a.orderProductId,a.id AS repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
 		a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
-		FROM OrderRepairs a) b
+		FROM orderrepairs a) b
 		ON
 		o.id=b.orderId) c
 		ON c.orderProductId=w.id) t
@@ -922,4 +925,26 @@
 			AND t.paymentStatus=2
 		</if>
 	</select>
+	<update id="updataOrderStatus">
+		UPDATE orders SET orderStatus=202 WHERE id=#{id}
+	</update>
+	<update id="updateHPjushouCount">
+	UPDATE wwwhprecords z
+	INNER JOIN (
+	SELECT
+	count,
+	cOrderSn,
+	hpTbSn
+	FROM
+		wwwhprecords
+	WHERE
+	hpTbSn =#{map.hpTbSn}
+	) q ON q.hpTbSn = z.hpTbSn
+	SET z.count = q.count+1,
+	z.remark =#{map.remark}
+	</update>
+	<update id="updateOrderRepairsStatus">
+		UPDATE orderrepairs SET vomRepairSn=#{map.vomRepairSn},handleStatus=#{map.handleStatus} WHERE
+		id=#{map.th_id}
+	</update>
 </mapper>

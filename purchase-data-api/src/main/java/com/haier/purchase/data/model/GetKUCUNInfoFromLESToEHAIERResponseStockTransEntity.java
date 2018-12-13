@@ -1,5 +1,6 @@
 package com.haier.purchase.data.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -53,7 +54,7 @@ import javax.xml.bind.annotation.XmlType;
                                  "matnr", "matkl", "charg", "lfimg", "lgort", "kunnrsaleto",
                                  "kunnrsendto", "vbelnso", "vbelndn", "tknum", "bstnk", "auart",
                                  "reserve1", "reserve2", "bstkd", "kbetr" })
-public class GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity {
+public class GetKUCUNInfoFromLESToEHAIERResponseStockTransEntity implements Serializable{
     @XmlElement(name = "MBLNR", required = true)
     protected String     mblnr;
     @XmlElement(name = "MJAHR", required = true)

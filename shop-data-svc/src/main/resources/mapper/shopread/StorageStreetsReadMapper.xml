@@ -23,8 +23,24 @@
     </resultMap>
     <select id="getSCodeByStreet"  resultType="String">
         select distinct `sCodeA`
-        from `StorageStreets`
+        from `storagestreets`
         where `streetId` = #{streetId}
     </select>
 
+    <select id="getCityIdByProvinceId" parameterType="Integer" resultType="java.util.Map">
+        select distinct cityId,cityName
+        from `storagestreets`
+        where `provinceId` = #{provinceId}
+    </select>
+
+	<select id="getCityByCityIds" resultType="java.util.Map">
+	    SELECT
+	    distinct cityId,cityName
+	    from `storagestreets`
+	    WHERE cityId in 
+	    <foreach collection="array" item="cityId" open="(" close=")"
+	    separator=",">
+	    #{cityId}
+	    </foreach>
+    </select>
 </mapper>

@@ -8,27 +8,29 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- *
- *
+ * <p>ResponseData complex type的 Java 类。
+ * 
+ * <p>以下模式片段指定包含在此类中的预期内容。
+ * 
  * <pre>
- * &lt;complexType name="ResponseData">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="field1" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field2" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field3" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field4" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="field5" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="message" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="titleSoCodeId" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="flag" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="fault" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="ResponseData"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="field1" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field2" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field3" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field4" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="field5" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="message" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="titleSoCodeId" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="flag" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="fault" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -70,7 +72,8 @@ public class ResponseData {
     protected String fault;
 
     /**
-     *
+     * 获取field1属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -81,7 +84,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置field1属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -92,7 +96,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 获取field2属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -103,7 +108,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置field2属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -114,7 +120,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 获取field3属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -125,7 +132,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置field3属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -136,7 +144,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 获取field4属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -147,7 +156,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置field4属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -158,7 +168,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 获取field5属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -169,7 +180,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置field5属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -180,7 +192,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 获取message属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -191,7 +204,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置message属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -202,7 +216,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 获取status属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -213,7 +228,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置status属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -224,7 +240,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 获取titleSoCodeId属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -235,7 +252,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置titleSoCodeId属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -246,7 +264,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 获取flag属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -257,7 +276,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置flag属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }
@@ -268,7 +288,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 获取fault属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link String }
@@ -279,7 +300,8 @@ public class ResponseData {
     }
 
     /**
-     *
+     * 设置fault属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link String }

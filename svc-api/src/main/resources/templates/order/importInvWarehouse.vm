@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>订单批量导入</title>
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../static/css/orderworkflow.css" />
+    <link rel="stylesheet" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
+
+
+    <script src="../static/third/jquery-1.8.3.min.js"></script>
+    <script src="../static/js/jquery.form.js"></script>
+    <script src="../static/third/adminlte/plugins/jQueryUI/jquery-ui.js"></script>
+    <script src="../static/third/jqueryui/jquery.ui.core.js"></script>
+    <script src="../static/third/jqueryui/jquery.ui.widget.js"></script>
+    <script src="../static/third/jqueryui/jquery.ui.mouse.js"></script>
+    <script src="../static/third/jqueryui/jquery.ui.button.js"></script>
+    <script src="../static/third/jqueryui/jquery.ui.draggable.js"></script>
+    <script src="../static/third/jqueryui/jquery.ui.position.js"></script>
+    <script src="../static/third/jqueryui/jquery.ui.resizable.js"></script>
+    <script src="../static/third/jqueryui/jquery.ui.dialog.js"></script>
+
+
+
+
+
+
+    <style type="text/css">
+        input{ vertical-align:middle; margin:0; padding:0}
+        .file-box{ position:relative;width:100%}
+        .txt{ height:22px; border:1px solid #cdcdcd; width:360px;}
+        .btn{ background-color:#FFF; border:1px solid #CDCDCD;height:24px; width:70px;}
+
+        .layout {
+            display: none;
+            position: absolute;
+            top: 20%;
+            left: 40%;
+            width: 20%;
+            height: 20%;
+            z-index: 1001;
+            text-align:center;
+        }
+    </style>
+</head>
+<body id="body">
+<div class="tabbutton">
+    <input name="typeButton" class="cur" style="width:130px" type="button" value="订单批量导入" onClick="javascript:void(0);"/>
+</div>
+<!--过滤器-->
+<fieldset>
+    <legend ><a href="javascript:void(0)" class="tool-toggle tool-toggle-show"></a></legend>
+    <div class="file-box">
+        <form id="importForm" name="importForm" action="/purchase/importT2OrderData" method="post" enctype="multipart/form-data">
+            <span>请选择要导入的模板</span>
+            <input id="file" name="file" type="file" style="display:none" onchange="document.getElementById('textfield').value=this.value" />
+            <input type='text' readonly="readonly" name='textfield'  id='textfield' class='txt' />
+            <input type="button" class="btn" value="选择..." onclick="document.getElementById('file').click()"/>
+            <input type="submit" id="submit" name="submit" class="btn" value="导入" />
+            <input type="button" id="close"  class="btn" value="返回" onclick='onGoBack()'/>
+            <input id="report_year_week" name="report_year_week" type="hidden" value="$!report_year_week"/>
+            <input id="url" name="url" type="hidden" value="$!url"/>
+        </form>
+    </div>
+</fieldset>
+<div id="list" class="list">
+    <div class="well">
+        <h3>注意</h3>
+        <ul>
+            <li>只支持Excel 2003(<strong>xls</strong>) .</li>
+            <li>上传中请不要关闭浏览器.</li>
+            <li>
+                请下载Excel模板，严格按照模板格式填写.
+            </li>
+            <li>
+                【渠道】需要填写您的权限对应的渠道名，例如：大客户渠道，京东渠道，商城渠道，天猫渠道，易迅渠道.
+            </li>
+
+
+            <li>
+                【物料编码】必须填写准确，不得有空格.
+            </li>
+
+
+        </ul>
+    </div>
+</div>
+<div id="dialog-message" title="处理中">
+    <h1 id="message"></h1>
+    <span id="errMsg"></span>
+    <div>
+        <div id="layout" class="layout">
+            <img src="../static/img/loading.gif" />
+        </div>
+    </div>
+    <div id="result">
+        <ul>
+            <li id="total"></li>
+            <li id="success"></li>
+            <li id="ignore"></li>
+        </ul>
+    </div>
+</div>
+
+<script type="application/javascript">
+    var processing = false;
+    $(function(){
+
+        $( "#dialog-message" ).dialog({
+            autoOpen:false,
+            modal: true,
+            closeOnEscape:false,
+            resizable:false,
+            height:200,
+            close: function( event, ui ) {
+                if(processing)
+                    $( this ).dialog( "open" );
+            },
+            buttons: {
+
+            }
+        });
+        var options = {
+            url:'/order/importInvWarehouses',
+            type:'POST',
+            async:true,
+            beforeSubmit: beforeSubmit,
+            resetForm:true,
+            error:function(){
+                hideLoading();
+                processing = false;
+                $('#message').html("失败!");
+                $('#submit').removeAttr('disabled');
+                $('#errMsg').html("服务器繁忙或者响应失败，请稍后重试");
+                $('#errMsg').show();
+                $('#result').hide();
+                $("#file").val("");//清空文件域
+                $("#textfield").val("");//清空文件域
+            },
+            success:function(data) {
+                hideLoading();
+                var message = data.message;
+                $('#submit').removeAttr('disabled');
+                processing = false;
+                if(data.success){
+                    $('#errMsg').hide();
+                    $('#resultWarn').hide();
+                    $('#message').html("导入状况");
+                    $('#total').html("共"+data.data.total+"条记录");
+                    $("#success").html("创建"+data.data.success+"条记录");
+                    if(data.data.warn != ""){
+                        $('#ignore').html("异常"+data.data.ignore+"条记录"+data.data.warn);
+                    }else {
+                        $('#ignore').html("异常"+data.data.ignore+"条记录");
+                    }
+                    $("#result").show();
+                }else{
+                    $('#resultWarn').hide();
+                    $('#message').html("失败！");
+                    if(!data.message){
+                        $('#errMsg').html("服务器繁忙或者响应失败，请稍后重试");
+                    }else{
+                        $('#errMsg').html(data.message);
+                    }
+                    $('#errMsg').show();
+                    $("#result").hide();
+                }
+            }
+        }
+
+
+        $('#importForm').submit(function(){
+            try{
+                $(this).ajaxSubmit(options);
+            }catch(e){
+                alert(e.message);
+            }
+
+            $("#file").val("");//清空文件域
+            return false;	//防止刷新
+        });
+
+        $('#body').height($(window).height() - 30);
+        $('#list').height($(window).height() - 169);
+    });
+
+    function beforeSubmit(){
+        if(checkFile()){
+            $('#submit').attr('disabled','disabled');
+            processing = true;
+            $('#errMsg').html('');
+            $('#errMsg').hide();
+            $('#result').hide();
+            $('#dialog-message').dialog("open");
+            showLoading();
+        }else
+            return false;
+    }
+
+    <!--  var isIE = /msie/i.test(navigator.userAgent) && !window.opera; -->
+    function checkFile()
+    {
+        var target = document.getElementById('file');
+        var filePath = target.value;
+        if(!filePath)
+        {
+            alert('请选择文件');
+            return false;
+        }
+
+        filePath = filePath.trim();
+        var extendName = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length);
+        if(!extendName==csv)
+        {
+            alert("文件类型不正确，文件的扩展名必须为.csv或.");
+            return false;
+        }
+
+        var strRegex = "(xls|XLS)$";
+        var re=new RegExp(strRegex);
+        if (!re.test(extendName.toLowerCase())){
+            alert("文件格式不合法，文件的扩展名必须为.xls或.XLS格式");
+            return false;
+        }
+
+        var fileSize = 0;
+        if(!target.files){
+            var fileSys = new ActiveXObject("Scripting.FileSystemObject");
+            if(!fileSys.FileExists(filePath)){
+                alert("附件不存在，请重新输入");
+                return false;
+            }
+            var file = fileSys.GetFile(filePath);
+            fileSize = file.Size;
+        }else{
+            fileSize = target.files[0].size;
+        }
+
+        return true;
+    }
+
+    function showLoading() {
+        $('#message').html('');
+        $('#dialog-message').dialog('option','title','处理中');
+        //document.getElementById("over").style.display = "block";
+        document.getElementById("layout").style.display = "block";
+    }
+
+    function hideLoading(){
+        $('#dialog-message').dialog('option','title','提示');
+        document.getElementById("layout").style.display = "none";
+    }
+    //返回调用画面
+    function onGoBack(){
+        var url = '/order/addOrderList';
+        window.location.href=url;
+    }
+</script>
+</body>
+</html>

@@ -34,28 +34,28 @@ $('#gridView').datagrid({
              width: 120,
              field: 'source',
              align: 'center'
-             , sortable: true
+             , sortable: false
          },
          {
              title: '库位编码',
              width: 120,
              field: 'sCode',
              align: 'center'
-             , sortable: true
+             , sortable: false
          },
          {
              title: '外部库位编码',
              width: 120,
              field: 'sourceStoreCode',
              align: 'center'
-             , sortable: true
+             , sortable: false
          },
          {
              title: 'id',
              width: 120,
              field: 'id',
              align: 'center'
-             , sortable: true,
+             , sortable: false,
              hidden:true
          }
     ]],
@@ -75,7 +75,7 @@ $(function () {
         onSelectPage: function (pageNo, pageSize) {
 
             var start = (pageNo - 1) * pageSize;//页码分页自增
-            var source = $('#csource').val();
+            var source = $('#csource').combobox("getValue");
             var sCode=$("#csCode").val();
             var sourceStoreCode=$("#csourceStoreCode").val();
             if (sCode != "") {
@@ -415,7 +415,7 @@ function Delete() {
 function SetCodeValue4() {
 
     var id = $("#id").val();
-    var source = $("#source").val();
+    var source = $("#source").combobox("getValue");
     var sourceStoreCode = $("#sourceStoreCode").val();
     var sCode=$("#sCode").val();
  
@@ -435,6 +435,9 @@ function SetCodeValue4() {
         return false;
     }
     jiaoyan(sCode);
+    if (proof(sourceStoreCode)) {
+        return false;
+    }
     if(gloid == 0){
     	autoAlt("库位编码不存在！");
     	return;
@@ -482,6 +485,15 @@ function jiaoyan(sCode){
     });
 
 }
+function proof(sourceStoreCode){
+    var special = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+    var chinese = new RegExp("[\u4e00-\u9fa5]");
+    if(special.test(sourceStoreCode) || chinese.test(sourceStoreCode)){
+        autoAlt("外部商品编码不用有中文和特殊字符");
+        return true;
+    }
+
+}
 function SearchClear() {
     $('#csCode').val('');
     $('#csource').val('');
@@ -490,7 +502,7 @@ function SearchClear() {
 }
 //主表查询
 function SearchUnit() {
-	   var source = $('#csource').val();
+	   var source = $('#csource').combobox("getValue");
        var sCode=$("#csCode").val();
        var sourceStoreCode=$("#csourceStoreCode").val();
        if (sCode != "") {

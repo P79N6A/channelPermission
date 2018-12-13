@@ -1,6 +1,7 @@
 package com.haier.svc.services;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,7 @@ public class T2OrderQueryServiceImpl implements T2OrderQueryService {
 	        		}
 	        	}
 	            result.setResult(list);
-	            int pagecount = purchaseT2OrderQueryService.getRowCnts();
+	            int pagecount = purchaseT2OrderQueryService.getRowCnts(params);
 	            PagerInfo pi = new PagerInfo();
 	            pi.setRowsCount(pagecount);
 	            result.setPager(pi);
@@ -112,6 +113,19 @@ public class T2OrderQueryServiceImpl implements T2OrderQueryService {
 	        }
 	        return result;
 	}
+
+
+    /**
+     * 获取T+2订单导出信息list
+     * (non-Javadoc)
+     */
+    @Override
+    public List<T2OrderItem> getT2OrderListExportData(
+            Map<String, Object> params) {
+
+        return  purchaseT2OrderQueryService.findT2OrderMultipleExportList(params);
+
+    }
 
 	/**
 	 * 手工关单
@@ -296,7 +310,7 @@ public class T2OrderQueryServiceImpl implements T2OrderQueryService {
         	List<CrmOrderItem> list = purchaseT2OrderQueryService.findPOList(params);
         	for(CrmOrderItem crm : list){
         		Map<String, Object> map = new HashMap<String, Object>();
-        		map.put("cnStockSyncsId", crm.getOrder_id());
+        		map.put("cnStockDnId", crm.getDn_id());
         		List<CnT2PurchaseStock>  ctList = cnT2PurchaseStockService.queryCnT2PurchaseStock(map);
         		if(ctList != null && ctList.size()>0){
         			crm.setSapMessage(ctList.get(0).getMessage());
@@ -317,5 +331,19 @@ public class T2OrderQueryServiceImpl implements T2OrderQueryService {
         }
         return result;
     }
-    
+
+    /**
+     * 获取PO查询信息
+     *
+     * @param Map
+     *            <String, Object> params
+     * @return
+     */
+    @Override
+    public List<CrmOrderItem> getPOExportList(Map<String, Object> params) {
+
+        return purchaseT2OrderQueryService.findPOList(params);
+
+    }
+
 }

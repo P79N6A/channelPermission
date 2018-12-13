@@ -92,7 +92,7 @@
                     <option value="AA">等于</option>
                     <option value="BA">小于</option>
                 </select>
-                <input class="easyui-textbox" name="stockQty" id="stockQty" style="width:80px"/>
+                <input class="easyui-numberbox" precision="0" name="stockQty" id="stockQty" style="width:80px"/>
             </div>
             <div class="search-row">
 			<span class="search-row-label">
@@ -104,13 +104,12 @@
                     <option value="AA">等于</option>
                     <option value="BA">小于</option>
                 </select>
-                <input class="easyui-textbox" name="frozenQty" id="frozenQty" style="width:80px"/>
+                <input class="easyui-numberbox" precision="0" name="frozenQty" id="frozenQty" style="width:80px"/>
             </div>
             <div class="search-row">
                 <span class="search-row-label"></span>
-                <input type="checkbox">
+                <input type="checkbox" name="selectType"  id="selectType" value="1">
                 <input id="start" name="start" type="hidden"/>
-                <input name="selectType"  id="selectType" type="hidden"/>
                 <input id="size" name="size" type="hidden" />
                 <span>超卖库存</span>
             </div>
@@ -122,6 +121,28 @@
     </form>
 </div>
 
+<script type="text/javascript">
+  function slideUpSlideClk(t) {
+    var $this = $(t);
+    if ($this.hasClass('open')) {
+            $this.removeClass('open');
+      setTimeout(function () {
+              $this.addClass('close');
+      }, 0);
+      $(".search-panel").slideUp();
+    } else {
+            $this.removeClass('close');
+      setTimeout(function () {
+              $this.addClass('open');
+      }, 0);
+      $(".search-panel").slideDown();
+    }
+    setTimeout(function () {
+      $('#dg').datagrid('resize');
+    }, 500);
+  }
+
+</script>
 <script src="../static/js/stock/loadInvBaseStockPageList.js"></script>
 </body>
 </html>

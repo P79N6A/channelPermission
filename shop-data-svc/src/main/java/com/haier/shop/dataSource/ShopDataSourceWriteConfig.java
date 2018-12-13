@@ -15,9 +15,11 @@ import javax.sql.DataSource;
 
 @Configuration
 // 扫描 Mapper 接口并容器管理
-@MapperScan(basePackages = ShopDataSourceWriteConfig.PACKAGE, sqlSessionFactoryRef = "shopSqlSessionFactoryWrite")
+@MapperScan(basePackages = {ShopDataSourceWriteConfig.PACKAGE_1,ShopDataSourceWriteConfig.PACKAGE_2,ShopDataSourceWriteConfig.PACKAGE_3}, sqlSessionFactoryRef = "shopSqlSessionFactoryWrite")
 public class ShopDataSourceWriteConfig {
-    static final String PACKAGE = "com.haier.shop.dao.shopwrite";
+    static final String PACKAGE_1 = "com.haier.shop.dao.shopwrite";
+    static final String PACKAGE_2 = "com.haier.shop.dao.workorder";
+    static final String PACKAGE_3 = "com.haier.shop.dao.settleCenter";
     static final String MAPPER_LOCATION = "classpath:mapper/shopwrite/*.xml";
 
     @Value("${spring.datasource.shopwrite.testOnBorrow}")

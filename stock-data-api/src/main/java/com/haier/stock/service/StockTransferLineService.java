@@ -113,4 +113,14 @@ public interface StockTransferLineService {
      */
     Integer updateRemarkByLineId(  Integer id,   String remark);
 
+    /**
+     * 调拨管理-根据单号更新状态
+     * @param params
+     * @return
+     */
+	Integer updateLineStatusByLineNum(Map<String, Object> params);
+
+    Integer updateRemarkByLineNum(String lineNum, String remark);
+
+    InvTransferLine getYpInvTransferLineBySoLineNum(String lbx);
 }

@@ -35,12 +35,15 @@ function datagrid_WwwHpRecords1(){
     })
 }
 
+
+
 $(function () {
     datagrid_WwwHpRecords = $("#datagrid_WwwHpRecords").datagrid({
         striped : true, // 隔行变色
         rownumbers : true,
         fit: true,
         checkbox:true,
+        singleSelect:true,
         fitColumns : true,
         loadMsg:"正在努力加载中",
         idField : 'id',
@@ -55,6 +58,10 @@ $(function () {
                 width : '20%',
                 title : 'VOM退货单号',
                 field : 'vomRepairSn'
+            },{
+                field: "id",
+                title: "id",
+                hidden: "true"
             },{
                 width : '15%',
                 title : '网单号',
@@ -122,6 +129,33 @@ $(function () {
         }
     });
 });
+$("#Rejectionsinglereset").on('click', function () {
+    //获取所选行数据
+    $.messager.confirm("确认", "确认要操作吗?", function (r) {
+        if(r){
+            var selRows = $('#datagrid_WwwHpRecords').datagrid('getChecked');
+            if (selRows.length == 0) {
+                alert("请至少选择一行数据进行匹配");
+                return;
+            }
+            var id = (selRows[0].id);
+            console.log(id);
+            $.ajax({
+                url: "/operationArea/Rejectionsinglereset",
+                type: 'POST',
+                dataType: 'json',
+                data: {id: id},
+                success: function (res) {
+                    if (res.success) {
+                        alert("重置成功");
+                    } else {
+                        alert("重置异常");
+                    }
+                }
+            });
+        }
+    })
+})
 /*
  * 点击搜索按钮执行的函数
  * */
@@ -156,7 +190,10 @@ $('#exceptional_point').click(function() {
             contentType:"application/json",
             data     :JSON.stringify(selRows),
             success  : function(data) {
-                alert(data.msg);
+                if (data.success==false){
+                    alert(data.msg);
+
+                }
                 datagrid_WwwHpRecords.datagrid('clearSelections');
                 $("#datagrid_WwwHpRecords").datagrid('clearSelections');
                 var options = datagrid_WwwHpRecords.datagrid('getPager').data("pagination").options;
@@ -201,16 +238,26 @@ $('#export_Excel').click(function() {
             addTimeMax :$("#addTimeMax").datebox("getValue"),//下单时间 截止
             success :$("#success").combobox("getValue"),//标记
         };
-        $.ajax({
+
+    $.messager.confirm('确认','确定要导出吗？', function(r){
+        if (r){
+            $('#exportData').val(JSON.stringify(Pagination));
+            $('#paramForm_orderForecastGoal').attr("action", '/operationArea/export_Excel');
+            $('#paramForm_orderForecastGoal').submit();
+        }
+    });
+
+
+        /*$.ajax({
             url      : "/operationArea/export_Excel",
             type     : 'POST',
             dataType: 'json',
             contentType:"application/json",
             data     :JSON.stringify(Pagination),
             success  : function(data) {
-                alert(data.msg);
+                alert(data.Msg);
             }
-        })
+        })*/
     }
 )
 

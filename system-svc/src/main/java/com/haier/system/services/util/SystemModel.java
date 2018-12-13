@@ -249,17 +249,18 @@ public class SystemModel {
             throw new BusinessException("名称不能为空");
         if (!SysMenu.MENU_MODULE.equals(menu.getMenuItemType())
                 && !SysMenu.MENU_ITEM_APP.equals(menu.getMenuItemType())
-                && !SysMenu.MENU_ITEM_URL.equals(menu.getMenuItemType())) {
+                && !SysMenu.MENU_ITEM_URL.equals(menu.getMenuItemType())
+                && !("mg").equals(menu.getMenuItemType())) {
             throw new BusinessException("无效的菜单类型，必须为mdl、app、url之一");
         }
-        if (!SysMenu.MENU_MODULE.equals(menu.getMenuItemType())) {
+        if (!SysMenu.MENU_MODULE.equals(menu.getMenuItemType()) && !("mg").equals(menu.getMenuItemType())) {
             if (StringUtil.isEmpty(menu.getMenuItemData()))
                 throw new BusinessException("菜单项地址不能为空");
             if (menu.getMenuId() == null || menu.getMenuId() <= 0)
                 throw new BusinessException("更新菜单项时无效的菜单ID：" + menu.getMenuId());
         } else {
             menu.setMenuItemData("");
-            menu.setParentId(0);
+//            menu.setParentId(0);
         }
         if (menu.getOrderBy() == null || menu.getOrderBy() < 0)
             menu.setOrderBy(0);
@@ -340,7 +341,7 @@ public class SystemModel {
         }
     }
 
-    public Boolean updateUser(SysUser user, int optUserId) {
+    public Boolean updateUser(SysUser user) {
         Assert.notNull(sysUserService, "Property 'sysUserService' is required.");
         if (user == null)
             throw new ArgumentException("无法更新用户资料，被更新的用户对象为空");
@@ -353,12 +354,12 @@ public class SystemModel {
         // 更新时不检查密码是否为空。
         // 密码加密存储，更新时用以下逻辑确定是否需要更新密码：
         // 密码为null，不更新；不为null，则重新进行加密并更新密码。
-        if (user.getPassword() != null) {
+        if (!StringUtil.isEmpty(user.getPassword())) {
             user.setPassword(EncryptUtil.md5(user.getPassword()));
         }
 
         //TODO: 获取当前登陆用户信息
-        user.setUpdateUser("admin");
+//        user.setUpdateUser("admin");
 
         try {
             this.dbConstrains(user);
@@ -379,20 +380,22 @@ public class SystemModel {
             throw new ArgumentException("无法创建用户，用户名不能为空");
         if (StringUtil.isEmpty(user.getLoginId(), true))
             throw new ArgumentException("无法创建用户，登录账号不能为空");
-        if (StringUtil.isEmpty(user.getPassword()))
-            throw new ArgumentException("无法创建用户，登录密码不能为空");
+//        if (StringUtil.isEmpty(user.getPassword()))
+//            throw new ArgumentException("无法创建用户，登录密码不能为空");
 
         //默认值
         //TODO: 读取当前登陆用户信息
         if (user.getStatus() == null) {
             user.setStatus(1);
         }
-        user.setCreateUser("admin");
+//        user.setCreateUser("admin");
         user.setCreateTime(new Date(System.currentTimeMillis()));
-        user.setUpdateUser("admin");
+//        user.setUpdateUser("admin");
 
         //密码加密存储
-        user.setPassword(EncryptUtil.md5(user.getPassword()));
+        if (!StringUtil.isEmpty(user.getPassword())) {
+            user.setPassword(EncryptUtil.md5(user.getPassword()));
+        }
 
         try {
 //            this.dbConstrains(user);
@@ -834,10 +837,10 @@ public class SystemModel {
         List<SysMenu> menus = new ArrayList<SysMenu>();
         List<SysMenu> list = this.findAllMenuTree();
         for (SysMenu sysMenu : list){
-            if (sysMenu.getChildren() != null && sysMenu.getMenuItemType().equals("mg")){
-                for (SysMenu model : sysMenu.getChildren()){
-                    menus.add(model);
-                }
+            if (sysMenu.getChildren() != null){
+//                for (SysMenu model : sysMenu.getChildren()){
+                    menus.add(sysMenu);
+//                }
             }
         }
 
@@ -881,7 +884,7 @@ public class SystemModel {
                     //第三层：系统操作
                     SysPermission permAction = permMap.get(action.getRid());
                     if (permAction != null
-                            && SysPermission.RESOURCE_ACTION == permAction.getResType()) {
+                            && SysPermission.RESOURCE_MENU == permAction.getResType()) {
                         action.setChecked(true);
                     }
                 }
@@ -1057,12 +1060,10 @@ public class SystemModel {
             }
 
             SysPermission perm = new SysPermission();
-            String channelIds = "";
             perm.setOwnerId(ownerId);
             perm.setOwnerType(ownerType);
             perm.setResId(resId);
             perm.setResType(resType);
-            perm.setChannelIds(channelIds);
             perm.setStartTime(new Date(System.currentTimeMillis()));
             perm.setEndTime(DateUtil.getDate(9999, 12, 31));
             //TODO: 传递当前操作用户

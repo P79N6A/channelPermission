@@ -61,7 +61,7 @@
 			<span class="search-row-label">
 			  是否成功
 			</span>
-                <select class="easyui-combobox" id="isSuccess"  name="isSuccess" style="width: 174px;">
+                <select class="easyui-combobox" id="isSuccess"  name="isSuccess" style="width: 174px;" panelHeight="auto">
                     <option value="-1"  selected="true">全部</option>
                     <option value="1">成功</option>
                     <option value="0">失败</option>
@@ -72,7 +72,7 @@
 			  开票类型
 			</span>
 
-                <select class="easyui-combobox"  id="type"  name="type"  style="width: 174px;">
+                <select class="easyui-combobox"  id="type"  name="type"  style="width: 174px;" panelHeight="auto">
                     <option value="-1"  selected="true">全部</option>
                     <option value="1">首次推送开票</option>
                     <option value="2">修改发票信息</option>
@@ -120,12 +120,12 @@ $(function () {
         pagination: true,
         columns: [[
             {title: "序号", field: "id", hidden: true},
-            {title: "网单编号", field: "cOrderSn", sortable: true},
-            {title: "开票类型", field: "type", sortable: true},
-            {title: "记录时间", field: "addTime", sortable: true},
-            {title: "是否成功", field: "isSuccess", sortable: true},
-            {title: "次数", field: "countNum", sortable: true},
-            {title: "提示信息", field: "lastMessage",sortable: true}
+            {title: "网单编号", field: "cOrderSn", sortable: false},
+            {title: "开票类型", field: "type", sortable: false},
+            {title: "记录时间", field: "addTime", sortable: false},
+            {title: "是否成功", field: "isSuccess", sortable: false},
+            {title: "次数", field: "countNum", sortable: false},
+            {title: "提示信息", field: "lastMessage",sortable: false}
         ]],
         pageSize: 50,
         pageList: [50,100,200],
@@ -234,11 +234,12 @@ $('#search').click(function () {
 		datagrid = $('#datagrid').datagrid({
 			url: "/invoice/findMakeInvoiceApiLogs",
 	        fit: true,
+            fitColumns: true,
 	        pagination: true,
 	        singleSelect: true,
             pageSize: 50,
             pageList: [50,100,200],
-	        nowrap: true,
+	        nowrap: false,
 	        rownumbers: true,
 	        singleSelect: false,
 			selectOnCheck: true,
@@ -249,22 +250,19 @@ $('#search').click(function () {
                   {
                       field: 'id',
                       title: '序号',
-                      width: 10,
                       align: 'center',
                       hidden:true
                   },
 	           	{
 	           		field: 'cOrderSn',
                     title: '网单编号',
-                    width: 150,
-                    sortable:true,
+                    sortable: false,
                     align: 'center'
 	           	},
 	           	{
                     field: 'type',
                     title: '开票类型',
-                    width: 230,
-                    sortable:true,
+                    sortable: false,
                     align: 'center',
                     formatter:function(value,rowData,rowIndex){
 				        if(value=='1') return '首次推送开票';
@@ -278,15 +276,13 @@ $('#search').click(function () {
                 {
                     field: 'addTime',
                     title: '记录时间',
-                    width: 200,
-                    sortable:true,
+                    sortable: false,
                     align: 'center'
                 },
                 {
                     field: 'isSuccess',
                     title: '是否成功',
-                    width: 100,
-                    sortable:true,
+                    sortable: false,
                     align: 'center',
                     formatter:function(value,rowData,rowIndex){
 				        if(value=='1') return '成功';
@@ -297,15 +293,13 @@ $('#search').click(function () {
                 {
                     field: 'countNum',
                     title: '次数',
-                    width: 100,
-                    sortable:true,
+                    sortable: false,
                     align: 'center'
                 },
                 {
                     field: 'lastMessage',
                     title: '提示信息',
-                    width: 400,
-                    sortable:true,
+                    sortable: false,
                     align: 'center'
                 }
 	          ]

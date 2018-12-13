@@ -13,6 +13,12 @@ function queryDetailed(){
                 }
             }
 //       	var dataGrid = $('#datagrid_orderForecastLogs').datagrid(datagridOptions_orderForecastLogs);
+
+            $("#ddAmount").html(data.obj[0].money);
+            $("#ddccv").html(data.obj[0].couponcodevalue);
+            $("#ddpaid").html(data.obj[0].paidAmount);
+            $("#ddAmount2").html(data.obj[0].money);
+            $("#ddpoint").html(data.obj[0].points);
             dataGrid.datagrid('loadData', row);
             $("#datagrid_orderForecastLogs").datagrid('refreshRow');
         }
@@ -30,9 +36,55 @@ $(function () {
                 title : '当前物流模式',
                 field : 'shippingMode'
             },{
-                width : '150',
+                width : '220',
                 title : '网单号',
-                field : 'cOrderSn'
+                field : 'cOrderSn',
+                align : 'center',
+                hidden : true
+                // formatter: function(value,row,index){
+                //     return '<a href="../operationArea/ProductView?cOrderSn='+row.cOrderSn+'">'+row.cOrderSn+'</a>';
+                // }
+
+            },  {
+                width : '280',
+                title : '网单号',
+                align : 'center',
+                //退货状态
+                field : 'handleStatus',
+                formatter: function(value,row,index){
+                    var op = '<a href="../operationArea/ProductView?cOrderSn='+row.cOrderSn+'">'+row.cOrderSn+'</a>';
+                    if (row.handleStatus == 1){
+                        return op + '&nbsp;&nbsp;<a style="color:red;font-size:12px;" href="/operationArea/ReturnEdit?id=' + row.repairsId +'">(退货状态：审核中)</a>';
+                    }
+                    if (row.handleStatus == 2){
+                        return op + '&nbsp;&nbsp;<a style="color:red;font-size:12px;" href="/operationArea/ReturnEdit?id=' + row.repairsId +'">(退货状态：进行中)</a>';
+                    }
+                    if (row.handleStatus == 3){
+                        return op + '&nbsp;&nbsp;<a style="color:red;font-size:12px;" href="/operationArea/ReturnEdit?id=' + row.repairsId +'">(退货状态：受理完成)</a>';
+                    }
+                    if (row.handleStatus == 4){
+                        return op + '&nbsp;&nbsp;<a style="color:red;font-size:12px;" href="/operationArea/ReturnEdit?id=' + row.repairsId +'">(退货状态：已完结)</a>';
+                    }
+                    if (row.handleStatus == 7){
+                        return op + '&nbsp;&nbsp;<a style="color:red;font-size:12px;" href="/operationArea/ReturnEdit?id=' + row.repairsId +'">(退货状态：线下已退款)</a>';
+                    }
+                    if (row.handleStatus == 8){
+                        return op + '&nbsp;&nbsp;<a style="color:red;font-size:12px;" href="/operationArea/ReturnEdit?id=' + row.repairsId +'">(退货状态：等待确认终止)</a>';
+                    }
+                    if (row.handleStatus == 9){
+                        return op + '&nbsp;&nbsp;<a style="color:red;font-size:12px;" href="/operationArea/ReturnEdit?id=' + row.repairsId +'">(退货状态：等待HP确认拒收)</a>';
+                    }
+                    if (row.handleStatus == 5 || value == 6 || value == '' || value == null){
+                        return op + '&nbsp;&nbsp; <span style="color:red;font-size:12px;">(退货状态：无)</span>';
+                    }
+
+                }
+
+            },{
+                width : '120',
+                title : 'repairsId',
+                field : 'repairsId',
+                hidden : true
             }, {
                 width : '120',
                 title : '商品名称',
@@ -57,20 +109,91 @@ $(function () {
                 align : 'right',
                 field : 'productType'
             }, {
-                width : '100',
+                width : '130',
                 title : '网点',
                 align : 'right',
-                field : 'netpointid'
+                field : 'netPointName'
             }, {
                 width : '100',
                 title : '处理状态',
                 align : 'right',
-                field : 'seasonPer'
+                field : 'status',
+                formatter: function(value,row,index){
+                    if("0"==value){
+                        return "处理中";
+                    }else if("1"==value){
+                        return "已占用库存";
+                    }else if("2"==value){
+                        return "同步到HP";
+                    }else if("3"==value){
+                        return "同步到EC";
+                    }else if("4"==value){
+                        return "已分配到网点";
+                    }else if("8"==value){
+                        return "待出库";
+                    }else if("10"==value){
+                        return "待审核";
+                    }else if("11"==value){
+                        return "待转运入库";
+                    }else if("12"==value){
+                        return "待转运出库";
+                    }else if("40"==value){
+                        return "待发货";
+                    }else if("150"==value){
+                        return "网点拒单";
+                    }else if("70"==value){
+                        return "待交付";
+                    }else if("130"==value){
+                        return "完成关闭";
+                    }else if("140"==value){
+                        return "用户签收";
+                    }else if("160"==value){
+                        return "用户拒收";
+                    }else if("110"==value){
+                        return "取消关闭";
+                    }else if("-100"==value){
+                        return "未定义";
+                    }
+                }
+            },{
+                width : '100',
+                title : '开票状态',
+                align : 'right',
+                field : 'isMakeReceipt',
+                formatter: function(value,row,index){
+                    if("1"==value){
+                        return "未开票";
+                    }else if("2"==value){
+                        return "已开票";
+                    }else if("3"==value){
+                        return "作废发票";
+                    }else if("4"==value){
+                        return "冲红发票";
+                    }else if("5"==value){
+                        return "开票中";
+                    }else if("6"==value){
+                        return "开票失败";
+                    }else if("9"==value){
+                        return "待开票";
+                    }else if("10"==value){
+                        return "取消开票";
+                    }else if("20"==value){
+                        return "期初数据封存";
+                    }
+                }
+
             }, {
                 width : '100',
                 title : '日日单状态',
                 align : 'right',
-                field : 'pdorderstatus'
+                field : 'pdorderstatus',
+                formatter: function(value,row,index){
+                    if("0"==value){
+                        return "否";
+                    }else if("1"==value){
+                        return "是";
+                    }
+                }
             }, {
                 width : '90',
                 title : '价格',
@@ -89,16 +212,7 @@ $(function () {
                 width : '80',
                 title : '商城优惠券',
                 align : 'right',
-                field : 'couponcodevalue'
-            },{
-                width : '80',
-                title : '自营转单Id',
-                align : 'right',
-                field : 'customer_id'
-            }, {
-                width : '80',
-                title : '下单立减',
-                field : 'orderpromotionamount'
+                field : 'couponAmount'
             }, {
                 width : '80',
                 title : '金额',
@@ -137,16 +251,18 @@ function Operating_history(){
 
 $(function () {
     datagrid_Operating_history = $("#datagrid_Operating_history").datagrid({
+        fitColumns: true,
         striped: true,
         pagination: false,
         rownumbers: true,
+        nowrap: false,
         columns : [ [
             {
-                width : '120',
+                width : '170',
                 title : '操作时间',
                 field : 'logTime'
             },{
-                width : '150',
+                width : '170',
                 title : '网单号',
                 field : 'cOrderSn'
             }, {
@@ -154,11 +270,11 @@ $(function () {
                 title : '操作人',
                 field : 'operator'
             }, {
-                width : '100',
+                width : '400',
                 title : '更改内容',
                 field : 'changeLog'
             }, {
-                width : '130',
+                width : '600',
                 title : '备注',
                 field : 'remark'
 

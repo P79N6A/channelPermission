@@ -32,5 +32,14 @@ public interface OrderrepairHPrecordsWriteDao {
      * @param id
      * @return
      */
-    int updataOutOfStorage(String OutOfStorageFlag ,String id);
+    int updataOutOfStorage(@Param("OutOfStorageFlag")String OutOfStorageFlag ,@Param("id")String id);
+    /**
+     *更改虚入虚出状态
+     * @param id
+     * @param virtualEntryState
+     * @return
+     */
+    int UpdaVirtualEntryState(@Param("id")String id,@Param("virtualEntryState")String virtualEntryState);
+    
+    int updataPushRejects(String id);//更改不良品推送HP状态
 }

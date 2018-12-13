@@ -38,7 +38,7 @@ import com.haier.shop.model.OrderQueueExtend;
 import com.haier.shop.model.OrderWorkflows;
 import com.haier.shop.model.OrdersNew;
 import com.haier.shop.model.ProductsNew;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.shop.service.EcQueuesService;
 import com.haier.shop.service.GroupOrdersService;
 import com.haier.shop.service.HPQueuesService;
@@ -1135,7 +1135,7 @@ public class OrderBizHelper {
             //加入LES队列
             if (lesQueuesService.getCountByOpId(orderProduct.getId()) > 0) {
                 orderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
-                    "网单插入VOM队列", "VOM队列已经存在网单，不在插入。", null));
+                    "网单插入VOM队列", "VOM队列已经存在网单，不再插入。", null));
                 return true;
             }
             lesQueues = new LesQueues();
@@ -1167,7 +1167,7 @@ public class OrderBizHelper {
             //加入HP队列
             if (hpQueuesService.getCountByOpId(orderProduct.getId()) > 0) {
                 orderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
-                    "网单插入HP队列", "HP队列已经存在网单，不在插入。", null));
+                    "网单插入HP队列", "HP队列已经存在网单，不再插入。", null));
                 return true;
             }
             hpQueues = new HPQueues();
@@ -1275,7 +1275,7 @@ public class OrderBizHelper {
                         orderProductsList.add(orderProduct);
                         if ("3W".equalsIgnoreCase(orderProduct.getStockType())
                             && orderProduct.getMakeReceiptType().intValue() == 0) {
-                            insertOperateLog(order, "CBS系统", "添加网单到发票队列",
+                            insertOperateLog(order, "系统", "添加网单到发票队列",
                                 "定金发货模式，3W特殊网单人工客服没有处理，不开票！", orderProductsList,
                                 orderOperateLogsService);
                         } else {
@@ -1287,10 +1287,10 @@ public class OrderBizHelper {
                             //                            } else {
                             flag = InvoiceQueueInsert(invoiceQueueService, orderProduct.getId());
                             if (flag == 0) {
-                                insertOperateLog(order, "CBS系统", "添加网单到发票队列", "定金发货模式，添加失败，已存在",
+                                insertOperateLog(order, "系统", "添加网单到发票队列", "定金发货模式，添加失败，已存在",
                                     orderProductsList, orderOperateLogsService);
                             } else {
-                                insertOperateLog(order, "CBS系统", "添加网单到发票队列", "定金发货模式，添加成功",
+                                insertOperateLog(order, "系统", "添加网单到发票队列", "定金发货模式，添加成功",
                                     orderProductsList, orderOperateLogsService);
                             }
                             //                            }
@@ -1311,7 +1311,7 @@ public class OrderBizHelper {
                         List<OrderProductsNew> orderProductsList = new ArrayList<OrderProductsNew>();
                         orderProductsList.add(orderProduct);
                         OrdersNew order = ordersNewService.get(orderProduct.getOrderId());
-                        insertOperateLog(order, "CBS系统", "添加网单到发票队列",
+                        insertOperateLog(order, "系统", "添加网单到发票队列",
                             "定金发货模式，添加失败，网单已收尾款，但未出库，不插入开票队列", orderProductsList,
                             orderOperateLogsService);
                     }
@@ -1323,7 +1323,7 @@ public class OrderBizHelper {
                         orderProductsList.add(orderProduct);
                         if ("3W".equalsIgnoreCase(orderProduct.getStockType())
                             && orderProduct.getMakeReceiptType().intValue() == 0) {
-                            insertOperateLog(order, "CBS系统", "添加网单到发票队列",
+                            insertOperateLog(order, "系统", "添加网单到发票队列",
                                 "尾款发货模式，3W特殊网单人工客服没有处理，不开票！", orderProductsList,
                                 orderOperateLogsService);
                         } else {
@@ -1335,10 +1335,10 @@ public class OrderBizHelper {
                             //                            } else {
                             flag = InvoiceQueueInsert(invoiceQueueService, orderProduct.getId());
                             if (flag == 0) {
-                                insertOperateLog(order, "CBS系统", "添加网单到发票队列", "尾款发货模式，添加失败，已存在",
+                                insertOperateLog(order, "系统", "添加网单到发票队列", "尾款发货模式，添加失败，已存在",
                                     orderProductsList, orderOperateLogsService);
                             } else {
-                                insertOperateLog(order, "CBS系统", "添加网单到发票队列", "尾款发货模式，添加成功",
+                                insertOperateLog(order, "系统", "添加网单到发票队列", "尾款发货模式，添加成功",
                                     orderProductsList, orderOperateLogsService);
                             }
                             //                            }
@@ -1359,7 +1359,7 @@ public class OrderBizHelper {
                         List<OrderProductsNew> orderProductsList = new ArrayList<OrderProductsNew>();
                         orderProductsList.add(orderProduct);
                         OrdersNew order = ordersNewService.get(orderProduct.getOrderId());
-                        insertOperateLog(order, "CBS系统", "添加网单到发票队列",
+                        insertOperateLog(order, "系统", "添加网单到发票队列",
                             "尾款发货模式，添加失败，网单已收尾款，但未出库，不插入开票队列", orderProductsList,
                             orderOperateLogsService);
                     }

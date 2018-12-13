@@ -137,4 +137,81 @@ public class BigStoragesRela implements Serializable {
         this.centerShippingTime = value;
     }
 
+    /**
+     * 主库运输距离
+     */
+    private String masterDistance;
+
+    /**
+     * 中心库运输距离
+     */
+    private String centerDistance;
+
+    /**
+     * 库位名称
+     */
+    private String name;
+
+    /**
+     * 主库位名称
+     */
+    private String masterName;
+
+    /**
+     * 中心库位名称
+     */
+    private String centerName;
+
+    /**
+     * 是否开通
+     */
+    private int flag;
+
+    public String getMasterDistance() {
+        return masterDistance;
+    }
+
+    public void setMasterDistance(String masterDistance) {
+        this.masterDistance = masterDistance;
+    }
+
+    public String getCenterDistance() {
+        return centerDistance;
+    }
+
+    public void setCenterDistance(String centerDistance) {
+        this.centerDistance = centerDistance;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMasterName() {
+        return masterName;
+    }
+
+    public void setMasterName(String masterName) {
+        this.masterName = masterName;
+    }
+
+    public String getCenterName() {
+        return centerName;
+    }
+
+    public void setCenterName(String centerName) {
+        this.centerName = centerName;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
 }

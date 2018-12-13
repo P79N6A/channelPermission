@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.system.dao.SyncOrderConfigsDao">
+	<resultMap id="SysAccessLogResult" type="com.haier.system.model.SyncOrderConfigs">
+		<result property="id" column="id" />
+		<result property="siteId" column="siteId" />
+		<result property="shopName" column="shopName" />
+		<result property="configType" column="configType" />
+		<result property="configValue" column="configValue" />
+		<result property="autoSync" column="autoSync" />
+		<result property="limitcount" column="limitcount" />
+		<result property="syncCount" column="syncCount" />
+		<result property="customerid" column="customerid" />
+	</resultMap>
+	
+	<select id="selectSyncOrderConfigs" resultMap="SysAccessLogResult">
+		SELECT
+			id,
+			shopName,
+			configType,
+			configValue,
+			autoSync,
+			limitcount,
+			syncCount,
+			customerid
+		FROM
+			SyncOrderConfigs
+	</select>
+
+	<select id="selectShopNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT
+			shopName
+		FROM
+			SyncOrderConfigs
+			where `id` = #{configId}
+	</select>
+	
+
+	<select id="findSyncOrderConfigByPage" parameterType="Map" resultMap="SysAccessLogResult">
+		SELECT SQL_CALC_FOUND_ROWS
+		id,
+		shopName,
+		configType,
+		configValue,
+		autoSync,
+		limitcount,
+		syncCount,
+		customerid
+		from SyncOrderConfigs
+		where 1=1
+		<if test="m!=null and n!=null">
+			Limit ${m},${n}
+		</if>
+	</select>
+
+	<select id="getTotal" resultType="int" >
+		select
+		FOUND_ROWS();
+	</select>
+
+	<select id="findOrderConfigsById" resultMap="SysAccessLogResult">
+		SELECT
+		id,
+		shopName,
+		configType,
+		configValue,
+		autoSync,
+		limitcount,
+		syncCount,
+		customerid
+		FROM
+		SyncOrderConfigs
+		where id = #{id}
+	</select>
+
+	<insert id="addSyncOrderConfigs" parameterType="com.haier.system.model.SyncOrderConfigs">
+		INSERT INTO SyncOrderConfigs (
+		`siteId`,
+		`shopName`,
+		`configType`,
+		`configValue`,
+		`autoSync`,
+		`limitcount`,
+		`syncCount`,
+		`customerid`
+		)
+		VALUES
+		(
+		#{siteId},
+		#{shopName},
+		#{configType},
+		#{configValue},
+		#{autoSync},
+		#{limitcount},
+		#{syncCount},
+		#{customerid}
+		)
+		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER" statementType="STATEMENT">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+
+	<update id="updateSyncOrderConfigsById" parameterType="com.haier.system.model.SyncOrderConfigs">
+		UPDATE	SyncOrderConfigs
+		<set>
+			<if test="shopName != null">
+				shopName = #{shopName},
+			</if>
+			<if test="configType != null">
+				configType = #{configType},
+			</if>
+			<if test="configValue != null">
+				configValue = #{configValue},
+			</if>
+			<if test="autoSync != null">
+				autoSync = #{autoSync},
+			</if>
+			<if test="limitcount != null">
+				limitcount = #{limitcount},
+			</if>
+		</set>
+		WHERE
+		id = #{id}
+	</update>
+
+	<delete id="deleteSyncOrderConfigsById" >
+		DELETE
+		FROM
+		SyncOrderConfigs
+		WHERE
+		id = #{id}
+	</delete>
+
+	<select id="findOrderConfigsByShopName" resultMap="SysAccessLogResult">
+		SELECT
+		id,
+		shopName,
+		configType,
+		configValue,
+		autoSync,
+		limitcount,
+		syncCount,
+		customerid
+		FROM
+		SyncOrderConfigs
+		where shopName = #{shopName}
+		limit 1
+	</select>
+</mapper>

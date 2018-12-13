@@ -4,7 +4,7 @@
 
 	<update id="updateHpReturn" parameterType="com.haier.shop.model.OrderRepairTcRecords" >
 		update 
-		    `OrderRepairTcRecords` 
+		    `orderrepairtcrecords`
 		<set>
 		    <if test="lesOrderSn != null">
 				lesOrderSn = #{lesOrderSn},
@@ -39,13 +39,13 @@
 	</update>
 	
 	<update id="updateAfterVomAccepted" parameterType="com.haier.shop.model.OrderRepairTcRecords">
-        UPDATE `OrderRepairTcRecords`
+        UPDATE `orderrepairtcrecords`
         SET `lesOrderSnTime` = #{lesOrderSnTime}, `lesOrderSn` = #{lesOrderSn}
         WHERE `id` = #{id}
     </update>
     
     <update id="updateAfterLesInStorage" parameterType="com.haier.shop.model.OrderRepairTcRecords">
-		update `OrderRepairTcRecords` set `lesOutPing`=#{lesOutPing},`lesOutPingTime`= #{lesOutPingTime},
+		update `orderrepairtcrecords` set `lesOutPing`=#{lesOutPing},`lesOutPingTime`= #{lesOutPingTime},
 		`wwwScode`=#{wwwScode},`vomNum`=#{vomNum}
 		where `id` = #{id}
 	</update>

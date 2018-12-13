@@ -13,4 +13,7 @@ public interface PurchaseRuntimeParametersService {
 	public void insertRuntimeParameters(RuntimeParametersVO vo);
 
 	public void updateRuntimeParameters(RuntimeParametersVO vo);
+
+	public void updateRuntimeWpOrderId(RuntimeParametersVO vo);
+
 }

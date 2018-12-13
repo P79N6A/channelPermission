@@ -17,7 +17,7 @@
 		<result property="sysLog" column="sys_log" />
 	</resultMap>
 	
-	<select id="selectByPrimaryKey" resultMap="returnMap">
+	<!-- <select id="selectByPrimaryKey" resultMap="returnMap">
 	SELECT
 		id,
 		refund_id,
@@ -25,7 +25,7 @@
 		tid,
 		sku,
 		source,
-		sync_state,
+		
 		sync_count,
 		created,
 		lasttime,
@@ -33,7 +33,40 @@
 		jdp_response
 	FROM
 		refundbill_sync_record
-	where sync_state !='SyncSuccess'
+	where   sync_state !='MatchingSuccess'
+	AND  sku IN ('BB09B1094', 'CB0N3V000', 'DH1WB0D04', 'HE082371', 'FB1Q20M0K', 'FC513D00L', 'AAABT606V')
+	 ORDER BY id desc
+	 LIMIT 0,1000
+	</select> -->
+	<select id="selectByPrimaryKey" resultMap="returnMap" parameterType="java.lang.Integer">
+	SELECT
+		id,
+		refund_id,
+		oid,
+		tid,
+		sku,
+		source,
+		sync_count,
+		created,
+		lasttime,
+		jdp_modified,
+		jdp_response
+	FROM
+		refundbill_sync_record
+		where sync_state !='MatchingSuccess'
+		and created > '2018-06-22 09:22:00'
+		<if test="_parameter == 1">
+			and  source IN (select sp.shopCode from return_shopconfig sp WHERE sp.disabled = 0) 
+		</if>
+		<if test="_parameter == 2">
+			and  source NOT IN (select sp.shopCode from return_shopconfig sp WHERE sp.disabled = 0) 
+		</if>
+	
+	 ORDER BY id desc			
+	 LIMIT 0,1000  
 	</select>
+	
+	
+	
 
 </mapper>

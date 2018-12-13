@@ -13,6 +13,8 @@
 		<result property="errorMessage" column="error_message" />
 		<result property="foreignKey" column="foreign_key" />
 		<result property="elapsedTime" column="elapsed_time" />
+		<result property="responseDatas" column="responseDatas" />
+
 	</resultMap>
 	<!-- <select id="get" parameterType="Integer" resultMap="eisInterfaceDataLogResult">
 		select `Id`,`interface_code`,`request_data`,`response_data`,`request_time`,`response_time`,`create_time`,`response_status`,`error_message`,`foreign_key`,`elapsed_time`
@@ -37,4 +39,102 @@
 		update `eis_interface_data_log` set `interface_code`=#{interfaceCode},`request_data`=#{requestData},`response_data`=#{responseData},`request_time`=#{requestTime},`response_time`=#{responseTime},`create_time`=#{createTime},`response_status`=#{responseStatus},`error_message`=#{errorMessage},`foreign_key`=#{foreignKey},`elapsed_time`=#{elapsedTime}
 		where `Id` = #{id}
 	</update> -->
+
+	<select id="getEisInterfaceList" parameterType="java.util.Map"
+			resultMap="eisInterfaceDataLogResult">
+		SELECT
+		id,
+		request_data,
+		response_data responseDatas,
+		request_time,
+		foreign_key
+		from
+		eis_interface_data_log
+		WHERE
+		interface_code = 'transfer_order_from_hbdm_to_sap'
+		<if test="foreignKey != null and foreignKey !='' ">
+			<![CDATA[ and foreign_key LIKE CONCAT(CONCAT('%',#{foreignKey},'%')) ]]>
+		</if>
+		<if test="status != null and status == '1'.toString()">
+			<![CDATA[ AND response_data NOT LIKE '%"type":"E"%' ]]>
+		</if>
+		<if test="status != null and status == '2'.toString()">
+			<![CDATA[ AND response_data  LIKE '%"type":"E"%' ]]>
+		</if>
+		<if test="startDate != null  and startDate != ''">
+			<![CDATA[ and request_time >= #{startDate}]]>
+		</if>
+		<if test="endDate != null  and endDate != ''">
+			<![CDATA[ and request_time <= #{endDate} ]]>
+		</if>
+		<if test="eisInterfaceDatalist!=null">
+			AND id in
+			<foreach item="item" index="index" collection="eisInterfaceDatalist" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
+
+	<select id="getEisInterfaceCNT" parameterType="java.util.Map"
+			resultType="Integer">
+		SELECT
+			count(1)
+		from
+			eis_interface_data_log
+		WHERE
+		interface_code = 'transfer_order_from_hbdm_to_sap'
+		<if test="foreignKey != null and foreignKey !='' ">
+			<![CDATA[ and foreign_key LIKE CONCAT(CONCAT('%',#{foreignKey},'%')) ]]>
+		</if>
+		<if test="id != null and id !='' ">
+			<![CDATA[ and id  = #{id}]]>
+		</if>
+		<if test="status != null and status == '1'.toString()">
+			<![CDATA[ AND response_data NOT LIKE '%"type":"E"%' ]]>
+		</if>
+		<if test="status != null and status == '2'.toString()">
+			<![CDATA[ AND response_data  LIKE '%"type":"E"%' ]]>
+		</if>
+		<if test="startDate != null  and startDate != ''">
+			<![CDATA[ and request_time >= #{startDate}]]>
+		</if>
+		<if test="endDate != null  and endDate != ''">
+			<![CDATA[ and request_time <= #{endDate} ]]>
+		</if>
+	</select>
+
+
+	<select id="getEisInterfaceDataList" parameterType="java.util.Map"
+			resultMap="eisInterfaceDataLogResult">
+		SELECT
+		request_data,
+		response_data responseDatas,
+		request_time,
+		foreign_key
+		from
+		eis_interface_data_log
+		WHERE
+		interface_code = 'transfer_order_from_hbdm_to_sap'
+		<if test="foreignKey != null and foreignKey !='' ">
+			<![CDATA[ and foreign_key LIKE CONCAT(CONCAT('%',#{foreignKey},'%')) ]]>
+		</if>
+		<if test="status != null and status == '1'.toString()">
+			<![CDATA[ AND response_data NOT LIKE '%"type":"E"%' ]]>
+		</if>
+		<if test="status != null and status == '2'.toString()">
+			<![CDATA[ AND response_data  LIKE '%"type":"E"%' ]]>
+		</if>
+		<if test="startDate != null  and startDate != ''">
+			<![CDATA[ and request_time >= #{startDate}]]>
+		</if>
+		<if test="endDate != null  and endDate != ''">
+			<![CDATA[ and request_time <= #{endDate} ]]>
+		</if>
+		<if test="m!=null and n!=null">
+			limit ${m},${n}
+		</if>
+	</select>
 </mapper>

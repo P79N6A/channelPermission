@@ -21,7 +21,7 @@ public enum ShopEnum {
     FRIDGE(18,"FRIDGE_","海尔冰冷旗舰店"),
     AIR(21,"AIR_","海尔空调旗舰店"),
     TBCT(22,"TBCT_","村淘海尔商家"),
-    GQGYS(23,"GQGYS_","海尔官方旗舰店供应商"),
+    GQGYS(23,"GQGYS_","生态授权店"),
     TMKSD(27,"TMKSD_","天猫卡萨帝旗舰店"),
     TMTV(28,"TMTV_","海尔电视旗舰店"),
     TBCFDD(29,"TBCFDD_","海尔厨房大电旗舰店"),
@@ -50,4 +50,15 @@ public enum ShopEnum {
     public String getShopName() {
         return shopName;
     }
+
+    public static String getName(String index) {
+        for (ShopEnum sh : ShopEnum.values()) {
+            if (sh.name().equals(index)) {
+                return sh.getShopName();
+            }
+        }
+        return null;
+    }
+
+
 }

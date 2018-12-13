@@ -106,7 +106,7 @@ public class ConfirmOrderModel {
     @Autowired
     private ShopOrderOperateLogsService orderOperateLogsService;
     @Autowired
-    private StockCommonService stockCommonService;
+    private StockCommonServiceImpl stockCommonService;
 
     @Autowired
     private SmsLogsWriteService smsLogsWriteService;
@@ -702,7 +702,9 @@ public class ConfirmOrderModel {
                         couponPrice = couponPrice.add(new BigDecimal(op.getPoints())
                                 .divide(new BigDecimal(100), 2, BigDecimal.ROUND_UNNECESSARY));
                     }
-                    OrderProductsAttributes attribute = orderProductsAttributesService
+
+                    //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+                    /*OrderProductsAttributes attribute = orderProductsAttributesService
                             .getByOrderProductId(op.getId());
                     if (attribute != null) {
                         if (attribute.getSeashellAmt() != null) {
@@ -714,7 +716,9 @@ public class ConfirmOrderModel {
                         if (attribute.getDiamondAmt() != null) {
                             couponPrice = couponPrice.add(attribute.getDiamondAmt());
                         }
-                    }
+                    }*/
+                    //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
                     //商城优惠券金额
                     scCouponPrice = couponPrice;
                     //平台承担优惠券金额为0,初值即0
@@ -1554,9 +1558,9 @@ public class ConfirmOrderModel {
 
     private void addHPOrLESQueues(OrdersNew orders, List<OrderProductsNew> orderProductsList) {
         Integer mysqlTime = Long.valueOf(System.currentTimeMillis() / 1000L).intValue();
-        HPQueues hpQueues = null;
+//        HPQueues hpQueues = null;
         LesQueues lesQueues = null;
-        List<HPQueues> hpQueuesList = new ArrayList<HPQueues>();
+//        List<HPQueues> hpQueuesList = new ArrayList<HPQueues>();
         List<LesQueues> lesQueuesList = new ArrayList<LesQueues>();
         OrderProductsNew orderProducts = null;
         for (Iterator<OrderProductsNew> it = orderProductsList.iterator(); it.hasNext();) {
@@ -1603,8 +1607,16 @@ public class ConfirmOrderModel {
                         + sectionResult.getMessage());
                 throw new BusinessException("调用判断是否为基地库直发订单失败，回滚事务");
             }
+            //****2018/8/29需求修改，大家电派工改为OMS进行派工，只需要给OMS下发订单，然后从回传订单状态数据中，解析网单数据***start
 
-            if ("B2C".equalsIgnoreCase(orderProducts.getShippingMode())) {
+            //加入LES队列
+            if (lesQueuesService.getCountByOpId(orderProducts.getId()) > 0) {
+                it.remove();
+                continue;
+            }
+
+            lesQueuesList = addListLes(orderProducts, lesQueues, mysqlTime, lesQueuesList);
+            /*if ("B2C".equalsIgnoreCase(orderProducts.getShippingMode())) {
                 //加入LES队列
                 if (lesQueuesService.getCountByOpId(orderProducts.getId()) > 0) {
                     it.remove();
@@ -1618,16 +1630,17 @@ public class ConfirmOrderModel {
                     continue;
                 }
                 hpQueuesList = addListHP(orderProducts, hpQueues, mysqlTime, hpQueuesList);
-            }
+            }*/
         }
-        if (!hpQueuesList.isEmpty()) {
+        /*if (!hpQueuesList.isEmpty()) {
             //保存HP队列
             hpQueuesService.insert(hpQueuesList);
-        }
+        }*/
         if (!lesQueuesList.isEmpty()) {
             //保存LES队列
             lesQueuesService.insert(lesQueuesList);
         }
+        //****2018/8/29需求修改，大家电派工改为OMS进行派工，只需要给OMS下发订单，然后从回传订单状态数据中，解析网单数据***end
     }
 
     /**
@@ -2049,7 +2062,8 @@ public class ConfirmOrderModel {
                                 && OrderProductsNew.TYPE_WA
                                 .equalsIgnoreCase(orderProducts.getStockType())) {
 
-                            OrderProductsAttributes attribute = orderProductsAttributesService
+                            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+                            /*OrderProductsAttributes attribute = orderProductsAttributesService
                                     .getByOrderProductId(orderProducts.getId());
                             if (attribute != null) {
                                 productsMap.put(orderProducts.getId(), config.getCustomerId());
@@ -2057,7 +2071,9 @@ public class ConfirmOrderModel {
                                 attribute.setCustomerId(config.getCustomerId());//客户id
                                 attribute.setIsDispatching(config.getIsDispatching());//是否指定派工  0不指定  1指定 默认0
                                 orderProductsAttributesService.update(attribute);
-                            }
+                            }*/
+                            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
                         }
                     }
                 } catch (Exception e) {

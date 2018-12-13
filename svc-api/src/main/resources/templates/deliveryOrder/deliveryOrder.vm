@@ -29,6 +29,10 @@
     collapsible:false">
     <table id="datagrid_r6relateManage">
     </table>
+    <div id="circle"  class="easyui-dialog add-dlg"
+         style="width:800px;height:500px;text-align:center;"
+         closed="true">
+    </div>
 </div>
 
 <div id="datagridToolbar_r6relateManage">
@@ -372,6 +376,15 @@
 <!--[if lte IE 8]>
 <![endif]-->
 <script type="text/javascript">
+
+    $(document).ready(function(){
+        $(".textbox-text").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+        $(".combobox").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+    });
 
     var quickDataFns = {
         //购物信息

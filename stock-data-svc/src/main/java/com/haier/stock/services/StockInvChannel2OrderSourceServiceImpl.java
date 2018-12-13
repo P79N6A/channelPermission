@@ -44,4 +44,41 @@ public class StockInvChannel2OrderSourceServiceImpl implements StockInvChannel2O
 		return invChannel2OrderSourceDao.getChannelNames();
 	}
 
+
+	/**
+	 * 获取订单来源对应关系
+	 */
+	@Override
+	public List<Map<String, String>> getInvChannel2OrderSource(String channelCode) {
+
+			return invChannel2OrderSourceDao.getInvChannel2OrderSource(channelCode);
+
+	}
+
+	@Override
+	public Integer queryInvChannel2OrderSourceListCount(String name) {
+		return invChannel2OrderSourceDao.queryInvChannel2OrderSourceListCount(name);
+	}
+
+	@Override
+	public List<InvChannel2OrderSource> queryInvChannel2OrderSourceList(String name, Integer start,
+			Integer size, Integer id) {
+		return invChannel2OrderSourceDao.queryInvChannel2OrderSourceList(name, start, size, id);
+	}
+
+	@Override
+	public void insert(InvChannel2OrderSource tInvChannel2OrderSource) {
+		invChannel2OrderSourceDao.insert(tInvChannel2OrderSource);
+	}
+
+	@Override
+	public void update(InvChannel2OrderSource tInvChannel2OrderSource) {
+		invChannel2OrderSourceDao.update(tInvChannel2OrderSource);
+	}
+
+	@Override
+	public List<Map<String, String>> getInvStockChannel() {
+		return invChannel2OrderSourceDao.getInvStockChannel();
+	}
+
 }

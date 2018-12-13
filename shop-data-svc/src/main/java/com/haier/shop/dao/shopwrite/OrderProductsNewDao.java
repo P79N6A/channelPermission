@@ -1,11 +1,12 @@
 package com.haier.shop.dao.shopwrite;
 
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
+import com.haier.shop.model.OrderProducts;
 import com.haier.shop.model.OrderProductsNew;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import org.apache.ibatis.annotations.Param;
 
 // TODO 与 OrderProducts 模型冲突
 public interface OrderProductsNewDao {
@@ -180,5 +181,65 @@ public interface OrderProductsNewDao {
      * @return
      */
     int updateAfterSyncLes(OrderProductsNew orderProduct);
+	int insertOrderProducts(OrderProducts orderProducts);
+	int interceptCancelClose(@Param("id") Integer id, @Param("closeTime")Long closeTime);
 
+    void updateCOrderSn(OrderProducts orderProducts);
+    
+    /**
+     * 根据orderId查询
+     * @param id
+     * @return
+     */
+    OrderProductsNew getOrderId(Integer id);
+
+    /**
+     * 查询占用库存失败的数据
+     * @param params
+     * @return
+     */
+    List<OrderProductsNew> queryOccupyStockFail(Map<String, Object> params);
+
+    /**
+     * 查询占用库存失败的数据条数
+     * @param params
+     * @return
+     */
+    Integer queryOccupyStockFailCount(Map<String, Object> params);
+
+
+    /**
+     * 根据订单id 更新网单付款状态
+     * @param
+     * @param
+     * @return
+     */
+    Integer updatePaymentStatusByOrderId(@Param("orderId") Integer orderId, @Param("cPaymentStatus") Integer cPaymentStatus);
+
+    int updateNum(@Param("newNum")Long newNum, @Param("productAmount")BigDecimal productAmount ,@Param("orderProductId")String orderProductId);
+
+    int updatesCodeBycOrderSn(@Param("sCode")String sCode,@Param("cOrderSn")String cOrderSn);
+
+    /**
+     * 根据日日单状态获取网单列表
+     * @param pdOrderStatus 日日单状态
+     * @return
+     */
+    List<OrderProductsNew> getByPdOrderStatusPaging(@Param("pdOrderStatus") Integer pdOrderStatus,
+        @Param("minId") Integer minId,
+        @Param("size") Integer size);
+
+    /**
+     * 更新日日单信息,包括日日单状态和集团OMS单号
+     * @param orderProducts
+     * @return
+     */
+    Integer updateRRSById(OrderProductsNew orderProducts);
+
+    /**
+     * 根据订单ID 获取订单下未占用库存成功的网单数量
+     * @param orderId
+     * @return
+     */
+    Integer getSuccessNum(Integer orderId);
 }

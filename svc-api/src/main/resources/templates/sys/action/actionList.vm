@@ -1,110 +1,147 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>操作管理</title>
-	<link rel="stylesheet" href="../../static/css/jqueryui/base/jquery.ui.all.css"/>
-    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css"></link>
-    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css"></link>
-    <link rel="stylesheet" href="../../static/css/msg.css"></link>
-    <link rel="stylesheet" type="text/css" href="../../static/third/easyui/themes/gray/easyui.css"/>
-    <link rel="stylesheet" href="../../static/css/reset.css"></link>
-	<script src="../../static/third/jquery-1.8.3.min.js"></script>
-    <script src="../../static/third/easyui/jquery.easyui.min.js"></script>
-    <script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
-</head>
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../../static/third/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../static/third/adminlte/css/AdminLTE.min.css">
+        <link rel="stylesheet" href="../../static/third/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui_animation.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui_plus.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css">
+        <link rel="stylesheet" href="../../static/css/common.css">
+        <title>操作管理</title>
 
-<body>
-<div class="easyui-layout" data-options="fit : true,border : false">
-	<div data-options="region:'north',title:'查询条件',border:false" style="height: 120px;overflow: auto;" align="left" class="new-form-box">
-		<form id="filterForm" action="#">
-	    	<table>
-	    		<tr>
-	    			<td>菜单名称</td>
-	    			<td><input id="menuName"  name="menuName" class="txt"/></td>
-	    			<td>操作代码</td>
-	    			<td><input id="actKey"  name="actKey" class="txt"/></td>
-	    			<td>操作名称</td>
-	    			<td><input id="actName"  name="actName" class="txt"/></td>
-	    			<td>备注</td>
-	    			<td><input id="remark"  name="remark" class="txt"/></td>
-	    			<td>状态</td>
-	    			<td>
-	    			<input id="status" name="status" class="easyui-combobox"></input>
-	    		</tr>
-	    		<tr>
-	    			<td colspan="10">
-		    			<a id='search' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-search">查询</a>
-##		    			<a id='' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-edit">创建</a>
-##		    			<a id='import' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-edit">保存</a>
-	    			</td>
-	    		</tr>
-	    	</table>
-	    </form>
-    </div>
-    <div data-options="region:'center',title:'操作查询结果',border:false">
-		    <table id="dataGrid"></table>
-		    <div id="msgMask"></div>
-			<div id="msg">正在处理，请稍待。。。</div>
-	</div>
-</div>
-<script type="application/javascript">
-//点击查询
-$('#search').click(function () {
-	var status;
-	if($("#status").val()=="ALL"){
-		status = "";
+        <style type="text/css">
+            .dlg {
+                width: 400px;
+                height: 100px;
+                padding: 10px;
+                margin-top: 20px;
+            }
+
+            .easyui-panel {
+                overflow-x: show;
+            }
+            .cententLeft{
+                float:left;
+                width:175px;
+                height: 240px;
+                margin:8px 3px;
+                padding:0;
+                border:0;
+            }
+            .btnAdd{
+                float:left;
+                width:30px;
+                height:240px;
+                margin:0;
+                padding:0;
+                border:0;
+                text-align:center;
+            }
+            .cententRight{
+                float:right;
+                width:175px;
+                height: 240px;
+                margin:8px 3px;
+                padding:0;
+                border:0;
+            }
+        </style>
+
+    </head>
+    <body class="iframe-body">
+        <div
+            id="searchPanel"
+            class="easyui-panel"
+            style="width:100%;height:100%;"
+            data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,collapsible:false">
+            <table id="dataGrid"></table>
+        </div>
+
+        <div id="datagridToolbar">
+            <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_circle fa fa-map-marker"></div>
+
+            </div>
+            <form id="filterForm" class="param-form">
+                <div class="search-panel" style="font-size: 12px;">
+                    <div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">菜单名称</span>
+                        <input id="menuName" name="menuName" class="easyui-textbox" data-options="prompt:''">
+                    </div>
+					<div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">操作代码</span>
+                        <input id="actKey" name="actKey" class="easyui-textbox" data-options="prompt:''">
+                    </div>
+					<div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">操作名称</span>
+                        <input id="actName" name="actName" class="easyui-textbox" data-options="prompt:''">
+                    </div>
+					<div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">备注</span>
+                        <input id="remark" name="remark" class="easyui-textbox" data-options="prompt:''">
+                    </div>
+                    <div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">状态</span>
+                        <select name="status" id="status" class="easyui-combobox" panelheight="auto" style="width: 141px;"></select>
+                    </div>
+                </div>
+
+                <a href="javascript:void(0);" class="easyui-linkbutton" id="search" data-options="iconCls:'icon-search',plain:true">查询</a>
+                ## <a href="javascript:void(0);"  class="easyui-linkbutton" id="create" data-options="iconCls:'icon-add',plain:true">创建</a>
+                ## <a href="javascript:void(0);" class="easyui-linkbutton" id="import" data-options="iconCls:'icon-save',plain:true">保存</a>
+
+            </form>
+        </div>
+      
+<!-- 需引入的js -->
+<script src="../../static/third/jquery.js"></script>
+<script src="../../static/third/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../static/third/easyui/jquery.easyui.min.js"></script>
+<script src="../../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+<script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script src="../../static/js/utils.js"></script>
+<script src="../../static/js/easyui-extention_ws.js"></script>
+<script src="../../static/js/customConfig.js"></script>
+<!-- 自写的js -->
+
+<script type="text/javascript">
+function slideUpSlideClk(t) {
+	var $this = $(t);
+	if ($this.hasClass('open')) {
+		$this.removeClass('open');
+		setTimeout(function () {
+			$this.addClass('close');
+		}, 0);
+		$(".search-panel").slideUp();
+	} else {
+		$this.removeClass('close');
+		setTimeout(function () {
+			$this.addClass('open');
+		}, 0);
+		$(".search-panel").slideDown();
 	}
-	//检索列表构筑
-	if(datagrid){
-		//grid刷新
-	    $('#dataGrid').datagrid('load',
-	    		{
-		    	 menuName:$("#menuName").val(),
-	    	     actKey:$("#actKey").val(),
-	    	     actName:$("#actName").val(),
-	    	     remark:$("#remark").val(),
-	    	     status:status
-	   	 });
-	}else{
-		//生成grid
-	    datagrid = $('#dataGrid').datagrid({
-	       url: "/sys/action/find",
-	        fit: true,
-	        pagination: true,
-	        singleSelect: false,
-	        checkOnSelect:true,
-	        pageSize: 100,
-	        pageList: [1,2,100,200,300],
-	        nowrap: false,
-	        rownumbers: true,
-	        queryParams: {
-	        	 menuName:$("#menuName").val(),
-	    	     actKey:$("#actKey").val(),
-	    	     actName:$("#actName").val(),
-	    	     remark:$("#remark").val(),
-	    	     status:status
-	        },
-	        columns: [
-	            [
-	            		{field:'actId', title:'操作ID', width:'100', align:'center',hidden:true},
-				        {field:'actKey', title:'操作代码', width:'150', align:'center'},
-				        {field:'actName', title:'操作名称', width:'150', align:'center'},
-				        {field:'status', title:'状态', width:'100', align:'center'},
-				        {field:'fnId', title:'菜单ID', width:'100', align:'center',hidden:true},
-				        {field:'fnName', title:'菜单名称', width:'150', align:'center'},
-				        {field:'url', title:'URL地址', width:'150', align:'center'},
-				        {field:'remark', title:'备注', width:'150', align:'center'}
-	            ]
-	        ]
-	    });
-	}
-    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
-});
+	setTimeout(function () {
+		$('#dataGrid').datagrid('resize');
+	}, 500);
+}
+
 var datagrid;
 $(function () {
-	
+	$(".textbox-text").keyup(function(){
+		this.value=this.value.replace(/\s+/g,'');
+	});
 	//取得状态
 	jQuery.getJSON("/sys/user/getStatus", function(result){
 		var count = result.totalCount;
@@ -121,9 +158,84 @@ $(function () {
 		});
 	});
 	
-			
-	
+	datagrid = $('#dataGrid').datagrid({
+	        fit: true,
+	        pagination: true,
+	        singleSelect: false,
+	        checkOnSelect:true,
+	        pageSize: 100,
+	        pageList: [100,200,300],
+	        nowrap: false,
+	        rownumbers: true,
+	        queryParams: {
+	        	 menuName:$("#menuName").val(),
+	    	     actKey:$("#actKey").val(),
+	    	     actName:$("#actName").val(),
+	    	     remark:$("#remark").val(),
+	    	     status:status
+	        },
+			toolbar: '#datagridToolbar',
+	        columns: [
+	            [
+	            		{field:'actId', title:'操作ID', width:'100', align:'center',hidden:true},
+				        {field:'actKey', title:'操作代码', width:'150', align:'center'},
+				        {field:'actName', title:'操作名称', width:'150', align:'center'},
+				        {field:'status', title:'状态', width:'100', align:'center'},
+				        {field:'fnId', title:'菜单ID', width:'100', align:'center',hidden:true},
+				        {field:'fnName', title:'菜单名称', width:'150', align:'center'},
+				        {field:'url', title:'URL地址', width:'250', align:'center'},
+				        {field:'remark', title:'备注', width:'150', align:'center'}
+	            ]
+	        ]
+	    });
 });
+
+//点击查询
+$('#search').click(function () {
+	var status;
+	if($("#status").textbox('getValue')=="ALL"){
+		status = "";
+	}
+	else{
+		status = $("#status").textbox('getValue');
+	}
+	
+	//生成grid
+	datagrid = $('#dataGrid').datagrid({
+		url: "/sys/action/find",
+		fit: true,
+		pagination: true,
+		singleSelect: false,
+		checkOnSelect:true,
+		pageSize: 100,
+		pageList: [100,200,300],
+		nowrap: false,
+		rownumbers: true,
+		queryParams: {
+				menuName:$("#menuName").val(),
+				actKey:$("#actKey").val(),
+				actName:$("#actName").val(),
+				remark:$("#remark").val(),
+				status:status
+		},
+		toolbar: '#datagridToolbar',
+		columns: [
+			[
+					{field:'actId', title:'操作ID', width:'100', align:'center',hidden:true},
+					{field:'actKey', title:'操作代码', width:'150', align:'center'},
+					{field:'actName', title:'操作名称', width:'150', align:'center'},
+					{field:'status', title:'状态', width:'100', align:'center'},
+					{field:'fnId', title:'菜单ID', width:'100', align:'center',hidden:true},
+					{field:'fnName', title:'菜单名称', width:'150', align:'center'},
+					{field:'url', title:'URL地址', width:'250', align:'center'},
+					{field:'remark', title:'备注', width:'150', align:'center'}
+			]
+		]
+	});
+	
+    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+});
+
 </script>
 </body>
 </html>

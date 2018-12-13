@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.settleCenter.ReportReadDao">
+	<select id="getCount" resultType="Long">
+		select count(id) from ord_wf_kpidata
+	</select>
+	<select id="getNotFinishData" parameterType="java.util.Date" resultType="java.util.Map">
+		select order_product_id,ors_id,node_type from ord_wf_kpidata where date = #{date} and timeout_type = 2
+	</select>
+</mapper>

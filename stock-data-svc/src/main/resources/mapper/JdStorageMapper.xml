@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.JdStorageDao">
+	<resultMap id="jdStorageResult" type="com.haier.stock.model.JdStorage">
+		<result property="corpCode" column="corp_code" />
+		<result property="regionId" column="region_id" />
+		<result property="regionName" column="region_name" />
+		<result property="corpDest" column="corp_dest" />
+		<result property="whCode" column="wh_code" />
+		<result property="estorageId" column="estorage_id" />
+		<result property="custDest" column="cust_dest" />
+		<result property="mgCustCode" column="mg_cust_code" />
+		<result property="custName" column="cust_name" />
+		<result property="transportPrescription" column="transport_prescription" />
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_time" column="update_time" />
+		<result property="is_enabled" column="is_enabled" />
+	</resultMap>
+	<select id="getAllRrsWhByEstorgeOriginal" resultMap="jdStorageResult">
+		SELECT
+		`corp_code`,
+		`region_id`,
+		`region_name`,
+		`corp_dest`,
+		`wh_code`,
+		`estorage_id`,
+		`cust_dest`,
+		`mg_cust_code`,
+		`cust_name`,
+		`transport_prescription`,
+		`create_user`,
+		`create_time`,
+		`update_user`,
+		`update_time`
+		FROM `t_jd_storage`
+		WHERE `estorage_id` =
+		#{estorageId}
+	</select>
+
+</mapper>

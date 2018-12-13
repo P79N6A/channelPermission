@@ -1,6 +1,7 @@
 package com.haier.shop.services;
 
 
+import com.haier.shop.model.O2OOrderTailendQueues;
 import java.util.List;
 import java.util.Map;
 
@@ -206,5 +207,21 @@ public class AccountCenterServiceImpl implements AccountCenterService {
     @Override
     public int updateOrderCloseQueue(O2oOrderCloseQueuesExt o2oOrderCloseQueuesExt) {
         return accountCenterWriteDao.updateOrderCloseQueue(o2oOrderCloseQueuesExt);
+    }
+
+    /**
+     * 网单号ID DepositOrderProductId 获取 o2o已付尾款订单队列表
+     */
+    @Override
+    public O2OOrderTailendQueues getTailendToAccountCenterByDepositOrderProductId(Integer depositOrderProductId){
+        return accountCenterReadDao.getTailendToAccountCenterByDepositOrderProductId(depositOrderProductId);
+    }
+
+    /**
+     * 插入 o2o已付尾款队列表
+     */
+    @Override
+    public int insertTailendToAccountCenterList(O2OOrderTailendQueues o2oOrderTailendQueues){
+        return accountCenterWriteDao.insertTailendToAccountCenterList(o2oOrderTailendQueues);
     }
 }

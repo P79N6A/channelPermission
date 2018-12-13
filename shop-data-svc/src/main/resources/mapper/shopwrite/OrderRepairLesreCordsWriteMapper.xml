@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.haier.shop.dao.shopwrite.OrderRepairLESRecordsWriteDao" >
-	<insert id="insert"  parameterType="com.haier.shop.model.OrderRepairLESRecords">
-		insert into `OrderRepairLESRecords`(
+	<insert id="insert"  parameterType="com.haier.shop.model.OrderRepairLESRecords" useGeneratedKeys="true" keyProperty="id">
+		insert into `orderrepairlesrecords`(
 				<if test="siteId != null">
 					`siteId`,
 				</if>
@@ -90,29 +90,38 @@
 		statementType="STATEMENT">select last_insert_id()</selectKey>
 	</insert>
 	<update id="updateAfterLesInStorage" parameterType="com.haier.shop.model.OrderRepairLESRecords">
-		update `OrderRepairLESRecords` set `lesOutPing`=#{lesOutPing},`lesOutPingTime`= unix_timestamp()
+		update `orderrepairlesrecords` set `lesOutPing`=#{lesOutPing},`lesOutPingTime`= unix_timestamp()
 		where `id` = #{id}
 	</update>
 	<update id="updateLesRecordAfterJLIN" parameterType="com.haier.shop.model.OrderRepairLESRecords">
-		update `OrderRepairLESRecords` set `lesOutPing`=#{lesOutPing},`lesOutPingTime`= #{lesOutPingTime}
+		update `orderrepairlesrecords` set `lesOutPing`=#{lesOutPing},`lesOutPingTime`= #{lesOutPingTime}
 		where `id` = #{id}
 	</update>												  
 	<update id="updateAfterVomAccepted" parameterType="com.haier.shop.model.OrderRepairLESRecords">
-        UPDATE `OrderRepairLESRecords`
+        UPDATE `orderrepairlesrecords`
         SET `lesOrderSnTime` = #{lesOrderSnTime}, `lesOrderSn` = #{lesOrderSn}
         WHERE `id` = #{id}
     </update>
     <update id="updateOpCancelFlag" parameterType="com.haier.shop.model.OrderRepairLESRecords">
-    	UPDATE `OrderRepairLESRecords`
+    	UPDATE `orderrepairlesrecords`
         SET `opCancelFlag` = #{opCancelFlag}
         WHERE `id` = #{id}
     </update>
-    
+	<update id="updateRepairLesRecordcn">
+        UPDATE orderrepairlesrecords
+        SET recordSn=#{recordSn}, falg=0
+        WHERE id = #{id}
+    </update>
+	<update id="updateRepairLesRecordcnSuccess">
+        UPDATE orderrepairlesrecords
+        SET success=#{success}
+        WHERE id = #{id}
+    </update>
     <update id="updataRecords" parameterType="com.haier.shop.model.OrderRepairLESRecords">
-		update OrderRepairLESRecords set
+		update orderrepairlesrecords set
 			failReason=#{failReason},
 			PushFailNumber=#{pushFailNumber},
-			falg=#{flag}
+			falg=#{falg}
 		where `id` = #{id}
 	</update>
 </mapper>

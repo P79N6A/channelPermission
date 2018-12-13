@@ -1,6 +1,7 @@
 package com.haier.shop.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>Table: <strong>Regions</strong>
@@ -245,4 +246,53 @@ public class Regions implements Serializable {
         this.isOto = isOto;
     }
 
+    private String addTime;
+
+	public String getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(String addTime) {
+		this.addTime = addTime;
+	}
+
+	private Date modified;
+
+	public Date getModified() {
+		return modified;
+	}
+
+	public void setModified(Date modified) {
+		this.modified = modified;
+	}
+
+	private String zipCode;
+
+	private Integer receivingTime;
+
+	private String shippingDistance;
+
+	public String getZipCode() {
+		return zipCode;
+	}
+
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
+	}
+
+	public Integer getReceivingTime() {
+		return receivingTime;
+	}
+
+	public void setReceivingTime(Integer receivingTime) {
+		this.receivingTime = receivingTime;
+	}
+
+	public String getShippingDistance() {
+		return shippingDistance;
+	}
+
+	public void setShippingDistance(String shippingDistance) {
+		this.shippingDistance = shippingDistance;
+	}
 }

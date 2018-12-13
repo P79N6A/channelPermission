@@ -53,12 +53,91 @@
         <result property="storage_id" column="storage_id"/>
         <result property="age" column="age"/>
     </resultMap>
-
+    <resultMap id="GateOfDataPrivilege" type="com.haier.purchase.data.model.GateOfDataPrivilegeItem">
+        <result property="role_id" column="role_id"/>
+        <result property="role_name" column="role_name"/>
+        <result property="gate_limit" column="gate_limit"/>
+        <result property="ed_channel_id" column="ed_channel_id"/>
+        <result property="product_group_id" column="product_group_id"/>
+        <result property="cbs_catgory" column="cbs_catgory"/>
+    </resultMap>
+    <resultMap id="GateOfLimitSum" type="com.haier.purchase.data.model.GateLimitSumItem">
+        <result property="month" column="month"/>
+        <result property="limit_sum_num" column="limit_sum_num"/>
+        <result property="use_flag" column="use_flag"/>
+    </resultMap>
+    <resultMap id="GateOfHistoryLimit" type="com.haier.purchase.data.model.GateOfHistoryLimitItem">
+        <result property="id" column="id"/>
+        <result property="year_week" column="year_week"/>
+        <result property="category_id" column="category_id"/>
+        <result property="ed_channel_id" column="ed_channel_id"/>
+        <result property="target_num" column="target_num"/>
+        <result property="limit_num" column="limit_num"/>
+        <result property="loan_num" column="loan_num"/>
+        <result property="total_num" column="total_num"/>
+        <result property="on_way_num" column="on_way_num"/>
+        <result property="used_num" column="used_num"/>
+        <result property="available_num" column="available_num"/>
+        <result property="create_time" column="create_time"/>
+    </resultMap>
+    <select id="selectGateOfHistoryLimit" parameterType="Map" resultMap="GateOfHistoryLimit">
+        (
+        SELECT
+        '0' newOrder,
+        id,
+        '总计' category_id,
+        year_week,
+        ed_channel_id,
+        sum(target_num) target_num,
+        sum(limit_num) limit_num,
+        sum(loan_num) loan_num,
+        sum(total_num) total_num,
+        sum(on_way_num) on_way_num,
+        sum(used_num) used_num,
+        sum(available_num) available_num,
+        create_time
+        FROM
+        haier_limit_history_t
+        WHERE 1=1
+        <if test="report_year_week !=null and report_year_week != ''">
+            and year_week = #{report_year_week}
+        </if>
+        GROUP BY
+        ed_channel_id
+        )
+        UNION ALL
+        (
+        SELECT
+        '1' newOrder,
+        id,
+        category_id,
+        year_week,
+        ed_channel_id,
+        target_num,
+        limit_num,
+        loan_num,
+        total_num,
+        on_way_num,
+        used_num,
+        available_num,
+        create_time
+        FROM
+        haier_limit_history_t
+        WHERE 1=1
+        <if test="report_year_week !=null and report_year_week != ''">
+            and year_week = #{report_year_week}
+        </if>
+        )
+        ORDER BY
+        newOrder,
+        category_id,
+        ed_channel_id
+    </select>
     <select id="selectGateOfLimit" parameterType="Map" resultMap="GateOfLimit">
         (SELECT
         '0' orderid,
         '' id,
-        '�ܼ�' category_id,
+        '总计' category_id,
         ed_channel_id,
         SUM(target_num) target_num,
         SUM(limit_num) limit_num,
@@ -106,6 +185,26 @@
         category_id,
         ed_channel_id
     </select>
+    <select id="selectAllGateOfLimit" resultMap="GateOfLimit">
+		SELECT
+			category_id,
+			ed_channel_id,
+			sum(case month when 1 then target_num else 0 end) as target_num_month1,
+			sum(case month when 2 then target_num else 0 end) as target_num_month2,
+			sum(case month when 3 then target_num else 0 end) as target_num_month3,
+			sum(case month when 4 then target_num else 0 end) as target_num_month4,
+			sum(case month when 5 then target_num else 0 end) as target_num_month5,
+			sum(case month when 6 then target_num else 0 end) as target_num_month6,
+			sum(case month when 7 then target_num else 0 end) as target_num_month7,
+			sum(case month when 8 then target_num else 0 end) as target_num_month8,
+			sum(case month when 9 then target_num else 0 end) as target_num_month9,
+			sum(case month when 10 then target_num else 0 end) as target_num_month10,
+			sum(case month when 11 then target_num else 0 end) as target_num_month11,
+			sum(case month when 12 then target_num else 0 end) as target_num_month12
+		FROM
+			haier_limit_gate_t
+		group by category_id,ed_channel_id
+	</select>
     <select id="selectGateItem" parameterType="Map" resultMap="GateOfTimeResult">
         SELECT
         setting_id,
@@ -197,4 +296,254 @@
 				]]>
         </if>
     </select>
+    <select id="selectLimitSum" parameterType="Map" resultMap="GateOfLimitSum">
+        SELECT month,limit_sum_num,use_flag
+        FROM gate_limit_sum_t
+        WHERE month = #{month}
+    </select>
+    <update id="updateLimitSumByMonth" parameterType="com.haier.purchase.data.model.GateOfLimitItem">
+        UPDATE gate_limit_sum_t
+        SET
+		    limit_sum_num = #{limit_sum_num},use_flag=#{use_flag}
+        WHERE month=#{month}
+    </update>
+    <update id="updateGateOfLimitById" parameterType="com.haier.purchase.data.model.GateOfLimitItem">
+	    update haier_limit_gate_t
+	    set category_id = #{category_id},
+			ed_channel_id = #{ed_channel_id},
+			target_num = #{target_num},
+			limit_num = #{limit_num},
+			loan_num = #{loan_num},
+			modify_user = #{modify_user},
+			modify_time = CURRENT_TIMESTAMP()
+	    where id = #{id}
+	</update>
+	<insert id="insertGateOfLimit" parameterType="Map">
+		INSERT INTO haier_limit_gate_t (
+			category_id,
+			ed_channel_id ,
+			month,
+			target_num ,
+			modify_user,
+			modify_time,
+			delete_flag
+		)
+		VALUES
+		(
+			#{category_id},
+			#{ed_channel_id},
+			#{month},
+			#{target_num},
+			#{modify_user},
+			current_timeStamp,
+			1
+		);
+	</insert>
+	<update id="updateGateOfLimit" parameterType="Map">
+        UPDATE haier_limit_gate_t
+        SET
+		    target_num = #{target_num},
+			delete_flag = 1,
+			modify_user = #{modify_user},
+			modify_time = current_timeStamp
+        WHERE category_id = #{category_id} AND ed_channel_id = #{ed_channel_id} and month = #{month}
+    </update>
+    <update id="deleteGateOfLimit">
+        delete from haier_limit_gate_t
+        WHERE delete_flag = 0
+    </update>
+    <update id="updateDeleteFlag">
+        UPDATE haier_limit_gate_t
+        SET
+		    delete_flag = 0
+        WHERE delete_flag = 1
+    </update>
+    <select id="isExistGateOfLimit" parameterType="String" resultType="Integer">
+        SELECT
+            count(id)
+        FROM haier_limit_gate_t
+        WHERE category_id = #{category} AND ed_channel_id = #{channelCode} and month = #{month}
+    </select>
+    <update id="updateLimitSum" parameterType="Map">
+        UPDATE gate_limit_sum_t
+        SET
+		    limit_sum_num = #{limit_sum_num}
+        WHERE use_flag=1
+    </update>
+    <update id="updateLoanNum" parameterType="com.haier.purchase.data.model.GateOfLimitItem">
+	    update haier_limit_gate_t
+	    set 
+			loan_num = #{loan_num},
+			modify_user = #{modify_user},
+			modify_time = CURRENT_TIMESTAMP()
+	    where category_id = #{category_id} AND ed_channel_id = #{ed_channel_id}
+	</update>
+	<select id="selectGateOfDataPrivilege" parameterType="Map" resultMap="GateOfDataPrivilege">
+        SELECT
+        d.role_id,
+        u.user_id,
+        d.gate_limit,
+        d.role_name,
+        d.ed_channel_id,
+        d.product_group_id,
+        d.cbs_catgory
+        FROM
+        data_privilege_t d
+        LEFT OUTER JOIN (select role_id, GROUP_CONCAT(user_id SEPARATOR ',') as user_id from user_privilege_t group by
+        role_id) u ON d.role_id = u.role_id
+        where 1=1
+        <if test="role_id !=null and role_id != ''">
+            and d.role_id = #{role_id}
+        </if>
+        <if test="role_name !=null and role_name != ''">
+            and d.role_name = #{role_name}
+        </if>
+    </select>
+    <delete id="deleteGateOfDataPrivilege" parameterType="Map">
+        DELETE FROM data_privilege_t WHERE 0=1
+        <if test="role_id_list !=null">
+            or role_id in
+            <foreach item="item" index="index" collection="role_id_list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+    <delete id="deleteGateOfUserPrivilege" parameterType="Map">
+        DELETE FROM user_privilege_t WHERE 0=1
+        <if test="role_id_list !=null ">
+            or role_id in
+            <foreach item="item" index="index" collection="role_id_list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+    <select id="selectGateOfUserPrivilege" parameterType="Map" resultMap="GateOfDataPrivilege">
+        SELECT
+        u.role_id,
+        u.user_id,
+        d.role_name
+        FROM
+        user_privilege_t u LEFT OUTER JOIN data_privilege_t d on u.role_id = d.role_id
+        where 1=1
+        <if test="user_id !=null and user_id != ''">
+            and u.user_id = #{user_id}
+        </if>
+        <if test="user_id_list !=null ">
+            and u.user_id in
+            <foreach item="item" index="index" collection="user_id_list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <update id="updateGateOfUserPrivilege" parameterType="com.haier.purchase.data.model.GateOfDataPrivilegeItem">
+	    update user_privilege_t
+	    set role_id =#{role_id}
+	    where user_id = #{user_id};
+	</update>
+	<insert id="insertGateOfUserPrivilege" parameterType="com.haier.purchase.data.model.GateOfDataPrivilegeItem">
+		INSERT INTO `user_privilege_t` (
+			user_id,
+			role_id
+		)
+		VALUES
+		(
+			#{user_id},
+			#{role_id}
+		);
+	</insert>
+	<insert id="insertGateOfDataPrivilege" parameterType="com.haier.purchase.data.model.GateOfDataPrivilegeItem">
+		INSERT INTO `data_privilege_t` (
+			role_name,
+			gate_limit,
+			ed_channel_id,
+			product_group_id,
+			cbs_catgory
+		)
+		VALUES
+		(
+			#{role_name},
+			#{gate_limit},
+			#{ed_channel_id},
+			#{product_group_id},
+			#{cbs_catgory}
+		);
+	</insert>
+	<update id="updateGateOfDataPrivilege" parameterType="com.haier.purchase.data.model.GateOfDataPrivilegeItem">
+	    update data_privilege_t
+	    set gate_limit =#{gate_limit},
+	    	ed_channel_id = #{ed_channel_id},
+			product_group_id = #{product_group_id},
+			cbs_catgory = #{cbs_catgory}
+	    where role_id = #{role_id};
+	</update>
+    <delete id="deleteGateOfStockExceed" parameterType="Map">
+        DELETE FROM haier_stock_exceed_gate_t WHERE 0=1
+        <if test="id_list !=null and id_list.size()>0">
+            or id in
+            <foreach item="item" index="index" collection="id_list" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+    <delete id="deleteAllDataOfGateOfStockExceed">
+        DELETE FROM haier_stock_exceed_gate_t;
+    </delete>
+    <insert id="insertGateOfStockExceed" parameterType="com.haier.purchase.data.model.GateOfStockExceedItem">
+        INSERT INTO `haier_stock_exceed_gate_t` (
+        id,
+        judge_ed_channel_id,
+        exceed_age,
+        limit_ed_channel_id,
+        brand_type,
+        category_type,
+        model_type,
+        storage_type,
+        is_enabled,
+        summary,
+        modify_user,
+        modify_time
+        )
+        VALUES
+        (
+        #{id},
+        #{judge_ed_channel_id},
+        #{exceed_age},
+        #{limit_ed_channel_id},
+        #{brand_type},
+        #{category_type},
+        #{model_type},
+        #{storage_type},
+        #{is_enabled},
+        #{summary},
+        #{modify_user},
+        #{modify_time}
+        );
+    </insert>
+
+    <update id="updateDefaultTime" parameterType="Map">
+        UPDATE haier_time_gate_t
+        SET setting_week = default_setting_week,
+        setting_hour = default_setting_hour,
+        setting_minute = default_setting_minute,
+        setting_second = default_setting_second,
+        modify_time = CURRENT_TIMESTAMP (),
+        modify_user = #{modify_user}
+    </update>
+
+    <update id="updateGateItem" parameterType="com.haier.purchase.data.model.GateItem">
+        update haier_time_gate_t
+        set ed_channel_id = #{ed_channel_id},
+        product_group_id = #{product_group_id},
+        is_enabled = #{is_enabled},
+        setting_year = #{setting_year},
+        setting_month = #{setting_month},
+        setting_week = #{setting_week},
+        setting_day = #{setting_day},
+        setting_hour = #{setting_hour},
+        setting_minute = #{setting_minute},
+        setting_second = #{setting_second},
+        modify_user = #{modify_user},
+        modify_time = CURRENT_TIMESTAMP()
+        where setting_id = #{setting_id}
+    </update>
 </mapper>

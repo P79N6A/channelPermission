@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
+import com.haier.shop.model.ItemBase;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.InvStockInOut;
 import com.haier.stock.model.StockAgeWapped;
@@ -30,6 +31,8 @@ public interface  StockAgeService {
      * @return 新增的出入库记录数量,新增为1,否则为0
      */
     ServiceResult<Integer> stockInOutRecord(InvStockInOut invStockInOut);
+
+	ServiceResult<Integer> updateMtlInfoForStockAge(ItemBase mtl);
     
     
 

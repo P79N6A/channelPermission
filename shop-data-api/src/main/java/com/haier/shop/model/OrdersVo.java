@@ -1,6 +1,6 @@
 package com.haier.shop.model;
 
-
+import java.util.List;
 
 /**
  * 订单拓展实体类
@@ -25,7 +25,68 @@ public class OrdersVo extends Orders{
 	private String price;//商品单价
 	private String payTimeStr;//获取在线付款时间 字符串格式
 	private String isReceipt;//是否需要发票
+	private String orderYwType;
+	private String netPointCode;//网点86码
+	private Invoices invocie;//发票表
+	private List<OrderProductsVo> productsVo;//网单表
 	
+	private String industrys;//所属产业
+	private String orderUserName;//下单人（用户名
+	
+	private String userEmail;//Email
+
+	private String stockType;
+
+	private String tbOrderSn;
+	
+public List<OrderProductsVo> getProductsVo() {
+		return productsVo;
+	}
+	public void setProductsVo(List<OrderProductsVo> productsVo) {
+		this.productsVo = productsVo;
+	}
+	//	public OrderProductsVo getProductsVo() {
+//		return productsVo;
+//	}
+//	public void setProductsVo(OrderProductsVo productsVo) {
+//		this.productsVo = productsVo;
+//	}
+	public String getIndustrys() {
+		return industrys;
+	}
+	public void setIndustrys(String industrys) {
+		this.industrys = industrys;
+	}
+	public String getOrderUserName() {
+		return orderUserName;
+	}
+	public void setOrderUserName(String orderUserName) {
+		this.orderUserName = orderUserName;
+	}
+	public String getUserEmail() {
+		return userEmail;
+	}
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+	public Invoices getInvocie() {
+		return invocie;
+	}
+	public void setInvocie(Invoices invocie) {
+		this.invocie = invocie;
+	}
+	public String getNetPointCode() {
+		return netPointCode;
+	}
+	public void setNetPointCode(String netPointCode) {
+		this.netPointCode = netPointCode;
+	}
+	public String getOrderYwType() {
+		return orderYwType;
+	}
+	public void setOrderYwType(String orderYwType) {
+		this.orderYwType = orderYwType;
+	}
 	public String getIsReceipt() {
 		return isReceipt;
 	}
@@ -110,12 +171,20 @@ public class OrdersVo extends Orders{
 	public void setPrice(String price) {
 		this.price = price;
 	}
-	
-	
-	
-	
-	
-	
-	
 
+	public String getStockType() {
+		return stockType;
+	}
+
+	public void setStockType(String stockType) {
+		this.stockType = stockType;
+	}
+
+    public String getTbOrderSn() {
+        return tbOrderSn;
+    }
+
+    public void setTbOrderSn(String tbOrderSn) {
+        this.tbOrderSn = tbOrderSn;
+    }
 }

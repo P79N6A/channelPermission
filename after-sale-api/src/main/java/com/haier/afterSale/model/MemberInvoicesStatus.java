@@ -4,16 +4,13 @@ package com.haier.afterSale.model;
  * 发票 状态
  */
 public enum MemberInvoicesStatus {
-	    /** 待审核 */
-	    START_PENDING_AUDIT(1, "已开票"),
-	    /** 审核通过 */
-	    STATUS_ADOPT(2, "未开票"),
-	    /** 拒绝 */
-	    SYNC_REFUSE(10, "待召回"),
-	    
-	    STASUS_RECALL(3,"已召回"),
-	    
-	    PUNCHED_TICKET(4,"已冲票"),
+
+		STASUS_INITIAL(0,"待审核"),
+
+	    START_PENDING_AUDIT(1, "审核通过"),
+
+	    STATUS_ADOPT(2, "审核拒绝"),
+
 	    /** 未定义 */
 	    UNDEFINED(-100, "未定义");
 

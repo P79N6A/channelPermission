@@ -98,20 +98,20 @@
 	</resultMap>
 	<select id="get1" parameterType="Integer" resultMap="productsResult1">
 		select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
-		from `Products`
+		from `products`
 		where `id` = #{id}
 	</select>
 	<select id="get" parameterType="Integer" resultMap="storageProductsResult">
 		select
 		`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
-		from `StorageProducts`
+		from `storageproducts`
 		where `id` = #{id}
 	</select>
 	<select id="getBySCodeAndSkuForLock" parameterType="Integer"
 		resultMap="storageProductsResult">
 		select
 			`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
-		from `StorageProducts`
+		from `storageproducts`
 		where `sCode` = #{sCode} and `sku` = #{sku}
 		for update
 	</select>
@@ -119,14 +119,14 @@
 		resultMap="storageProductsResult">
 		select
 		`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
-		from `StorageProducts`
+		from `storageproducts`
 		where `sCode` = #{sCode} and `sku` = #{sku}
 	</select>
 	<select id="getBySkuAndScodeList" parameterType="map"
 		resultMap="storageProductsResult">
 		select
 		`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
-		from `StorageProducts`
+		from `storageproducts`
 		where `sku` = #{sku} and `sCode` in 
 		<foreach collection="scodeList" index="index" item="sCode" open="("
 					separator="," close=")">
@@ -137,7 +137,7 @@
 		resultMap="storageProductsResult">
 		select
 		`id`,`sCode`,`storageId`,`sku`,`stock`,`stockBak`,`usedStock`,`productType`,`stockUpTime`,`lastAvailableModifyTime`,`waitSyncToTaobao`,`lastSyncToTaobaoTime`,`addTime`,`locksTB`,`locksSC`,`locksQY`,`shareStock`,`waQty`
-		from `StorageProducts`
+		from `storageproducts`
 		where `sCode` in 
 		<foreach collection="scodeList" index="index" item="sCode" open="("
 					separator="," close=")">
@@ -155,7 +155,7 @@
 		  t.`locksTB`,
 		  t.`locksQY` 
 		FROM
-		  `StorageProducts` t 
+		  `storageproducts` t
 		WHERE t.`sCode` <> '' 
 		  AND t.`sku` <> '' 
 		  AND (t.`locksSC`>0 OR t.`locksTB`>0 OR t.`locksQY`>0)

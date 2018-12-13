@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.EisInterfaceFinanceDao">
+	<resultMap id="eisInterfaceFinanceResult" type="com.haier.eis.model.EisInterfaceFinance">
+		<result property="id" column="id" />
+		<result property="lesStockTransQueueId" column="les_stock_trans_queue_id" />
+		<result property="interfaceCode" column="interface_code" />
+		<result property="status" column="status" />
+		<result property="eaiType" column="eai_type" />
+		<result property="message" column="message" />
+		<result property="addTime" column="add_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="eaiDataLogId" column="eai_data_log_id" />
+	</resultMap>
+	<select id="getByTransQueueId" resultMap="eisInterfaceFinanceResult">
+		select
+		`id`,`les_stock_trans_queue_id`,`interface_code`,`status`,`eai_type`,`message`,`add_time`,`update_time`,`eai_data_log_id`
+		from `eis_interface_finance`
+		where `les_stock_trans_queue_id` =
+		#{les_stock_trans_queue_id}
+		limit 1;
+	</select>
+	<select id="getByStatus" resultMap="eisInterfaceFinanceResult">
+		select
+		`id`,`les_stock_trans_queue_id`,`interface_code`,`status`,`eai_type`,`message`,`add_time`,`update_time`,`eai_data_log_id`
+		from `eis_interface_finance`
+		where `status` = #{status}
+		limit 500;
+	</select>
+	<select id="getByParams" resultType="java.util.Map" resultMap="eisInterfaceFinanceResult">
+		select
+		`id`,`les_stock_trans_queue_id`,`interface_code`,`status`,`eai_type`,`message`,`add_time`,`update_time`,`eai_data_log_id`
+		from `eis_interface_finance`
+		where `status` = #{status}
+		<if test="isNotDN">
+			AND interface_code != 'TransDNInfoFromEHAIERToGVS'
+		</if>
+		<if test="isNotTrans">
+			AND interface_code != 'TransferGoodsInfoToEhaierSAP'
+		</if>
+		order by `update_time`
+		limit 500;
+	</select>
+	<insert id="insert" parameterType="com.haier.eis.model.EisInterfaceFinance">
+		insert into
+		`eis_interface_finance`(`les_stock_trans_queue_id`,`interface_code`,`status`,`eai_type`,`message`,`add_time`,`update_time`,`eai_data_log_id`)
+		values(#{lesStockTransQueueId},#{interfaceCode},#{status},#{eaiType},#{message},#{addTime},#{updateTime},#{eaiDataLogId})
+	</insert>
+	<update id="update" parameterType="com.haier.eis.model.EisInterfaceFinance">
+		update `eis_interface_finance`
+		set
+		`les_stock_trans_queue_id`=#{lesStockTransQueueId},`interface_code`=#{interfaceCode},`status`=#{status},`eai_type`=#{eaiType},`message`=#{message},`add_time`=#{addTime},`update_time`=#{updateTime}
+		<if test="eaiDataLogId &gt;0">
+			,`eai_data_log_id`=#{eaiDataLogId}
+		</if>
+		where `id` = #{id} 
+	</update>
+
+	<select id="getIdsByOrderSn" parameterType="String" resultType="Integer">
+		select id from `les_stock_trans_queue` where `corder_sn` = #{corder_sn}
+	</select>
+
+	<update id="updateEisInterfaceFinance">
+		update `eis_interface_finance`
+		set `status` = 2
+		where `les_stock_trans_queue_id` in
+		<foreach collection="les_stock_trans_queue_ids" index="index" item="id" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+		and `status` = 3
+	</update>
+</mapper>

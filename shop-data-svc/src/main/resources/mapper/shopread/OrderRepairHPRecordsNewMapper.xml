@@ -25,7 +25,7 @@
     </resultMap>
     <select id="getByRepairIdAndCheckType" parameterType="map" resultMap="orderRepairHPRecordsResult">
         select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`netPointCode`,`checkResult`,`quality`,`machineNum`,`inspector`,`inspectTime`,`success`,`checkType`,`packResult`,`response`,`hpOrderFail`,`hpOrderRemark`,source,woId
-        from `OrderRepairHPRecords`
+        from `orderrepairhprecords`
         where `orderRepairId` = #{orderRepairId}
         and `checkType` = #{checkType}
         order by id desc
@@ -34,7 +34,7 @@
     	<!-- 根据repairId查询HP记录表 -->
 	<select id="getByRepairId" parameterType="map" resultMap="orderRepairHPRecordsResult">
 		select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`netPointCode`,`checkResult`,`quality`,`machineNum`,`inspector`,`inspectTime`,`success`,`checkType`,`packResult`,`response`,`hpOrderFail`,`hpOrderRemark`,source,woId
-		from `OrderRepairHPRecords`
+		from `orderrepairhprecords`
 		where `orderRepairId` = #{orderRepairId}
 	</select>
 </mapper>

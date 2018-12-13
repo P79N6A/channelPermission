@@ -15,9 +15,16 @@ public class ProductCatesServiceImpl implements ProductCatesService{
 	@Autowired
 	ProductCatesReadDao productCatesReadDao;
 
+
+
 	@Override
 	public List<ProductCates> selectByProducttypesId() {
 		return productCatesReadDao.selectByProducttypesId();
+	}
+
+	@Override
+	public List<ProductCates> selectCateName() {
+		return productCatesReadDao.selectCateName();
 	}
 
 	@Override

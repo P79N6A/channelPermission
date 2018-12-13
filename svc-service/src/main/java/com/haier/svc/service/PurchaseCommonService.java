@@ -1,7 +1,11 @@
 package com.haier.svc.service;
 
 import com.haier.common.ServiceResult;
+import com.haier.purchase.data.model.CrmGenuineRejectItem;
+import com.haier.purchase.data.model.CrmOrderManualItem;
 import com.haier.purchase.data.model.PrivilegeItem;
+
+import java.util.List;
 
 public interface PurchaseCommonService {
 	/**
@@ -16,4 +20,6 @@ public interface PurchaseCommonService {
 	public ServiceResult<Integer> getNextVal();
 
 	public String getCrmSubOrderId(String order_id, int num);
+
+	List<CrmOrderManualItem> getManualWdOrderId(String wpOrderId);
 }

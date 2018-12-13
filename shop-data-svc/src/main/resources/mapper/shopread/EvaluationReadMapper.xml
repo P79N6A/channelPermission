@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.EvaluationReadDao">
+    <resultMap id="evaluationResult" type="com.haier.shop.model.Evaluation">
+        <result property="id" column="id" />
+        <result property="sourceOrderSn" column="sourceOrderSn" />
+        <result property="productName" column="productName" />
+        <result property="productCode" column="productCode" />
+        <result property="custStar" column="custStar" />
+        <result property="attitudeStar" column="attitudeStar" />
+        <result property="deliverySpeedStar" column="deliverySpeedStar" />
+        <result property="userName" column="userName" />
+        <result property="custEvaluateContent" column="custEvaluateContent" />
+        <result property="custEvaluateTime" column="custEvaluateTime" />
+        <result property="custAddEvaluateContent" column="custAddEvaluateContent" />
+        <result property="custAddEvaluateTime" column="custAddEvaluateTime" />
+        <result property="shopReplyContent" column="shopReplyContent" />
+        <result property="shopReplyTime" column="shopReplyTime" />
+        <result property="source" column="source" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, sourceOrderSn, productName, productCode, custStar, attitudeStar, deliverySpeedStar, userName, custEvaluateContent,
+        custEvaluateTime, custAddEvaluateContent, custAddEvaluateTime, shopReplyContent, shopReplyTime, source
+    </sql>
+
+    <select id="getAllData" parameterType="com.haier.shop.model.EvaluationParameter" resultMap="evaluationResult">
+        select <include refid="Base_Column_List" />
+        from evaluation
+        <where>
+            <if test="source != null and source !=''">
+                source=#{source}
+            </if>
+            <if test="sourceOrderSn  != null and sourceOrderSn !=''">
+                and sourceOrderSn=#{sourceOrderSn}
+            </if>
+            <if test="productName  != null and productName !=''">
+                and productName like '%${productName}%'
+            </if>
+            <if test="productCode  != null and productCode !=''">
+                and productCode = #{productCode}
+            </if>
+            <if test="commentCreateTime  != null and commentCreateTime !=''">
+                and custEvaluateTime &gt;= #{commentCreateTime}
+            </if>
+            <if test="commentEndTime  != null and commentEndTime !=''">
+                and custEvaluateTime &lt;= #{commentEndTime}
+            </if>
+            <if test="custStar  != null and custStar =='good'">
+                and custStar = 5
+            </if>
+            <if test="custStar  != null and custStar =='middle'">
+                and (custStar = 4 or custStar = 3)
+            </if>
+            <if test="custStar  != null and custStar =='bad'">
+                and (custStar = 1 or custStar = 2)
+            </if>
+        </where>
+        order by id desc
+        <if test="page  != null and rows  != null">
+            Limit #{page} , #{rows}
+        </if>
+    </select>
+
+    <select id="getCount" parameterType="com.haier.shop.model.EvaluationParameter" resultType="Integer">
+        select count(0) from evaluation
+        <where>
+            <if test="source != null and source !=''">
+                source=#{source}
+            </if>
+            <if test="sourceOrderSn  != null and sourceOrderSn !=''">
+                and sourceOrderSn=#{sourceOrderSn}
+            </if>
+            <if test="productName  != null and productName !=''">
+                and productName like '%${productName}%'
+            </if>
+            <if test="commentCreateTime  != null and commentCreateTime !=''">
+                and custEvaluateTime &gt;= #{commentCreateTime}
+            </if>
+            <if test="commentEndTime  != null and commentEndTime !=''">
+                and custEvaluateTime &lt;= #{commentEndTime}
+            </if>
+            <if test="custStar  != null and custStar =='good'">
+                and custStar = 5
+            </if>
+            <if test="custStar  != null and custStar =='middle'">
+                and (custStar = 4 or custStar = 3)
+            </if>
+            <if test="custStar  != null and custStar =='bad'">
+                and (custStar = 1 or custStar = 2)
+            </if>
+        </where>
+    </select>
+</mapper>

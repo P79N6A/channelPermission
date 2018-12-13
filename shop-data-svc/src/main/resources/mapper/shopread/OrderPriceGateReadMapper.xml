@@ -31,10 +31,10 @@
 		<result property="unlockTime" column="unlock_time" />
 		<result property="gateStatus" column="gate_status" />
 		<result property="gateType" column="gate_type" />
-		<result property="orderStatus" column="order_status" />
+		<result property="orderStatus" column="orderStatus" />
 		<result property="orderProductStatus" column="order_product_status" />
 		<result property="payStatus" column="cpayment_status" />
-		<result property="productName" column="productName " />
+		<result property="productName" column="productName" />
 		<result property="updateTime" column="update_time" />
 	</resultMap>
 
@@ -50,9 +50,9 @@
 		from 
 			order_price_gate price
 				inner join
-			Orders os on price.order_sn=os.orderSn
+		orders os on price.order_sn=os.orderSn
 				inner join
-			OrderProducts op on price.corder_sn=op.cOrderSn
+		orderproducts op on price.corder_sn=op.cOrderSn
 		where 
 			order_sn = #{orderSn} and gate_status=1
 	</select>
@@ -60,8 +60,8 @@
 	<select id="getBrandNameByBrandId" resultType="java.lang.String">
 		select 
 			brandName
-		from 
-			Brands
+		from
+		brands
 		where 
 			id = #{id}
 	</select>
@@ -69,10 +69,111 @@
 	<select id="getCateNameByCateId" resultType="java.lang.String">
 		select 
 			cateName
-		from 
-			ProductCates
+		from
+		productcates
 		where 
 			id = #{id}
 	</select>
 
+
+	<select id="getOrderPriceGateList" parameterType="Map" resultMap="orderPriceGateResult">
+		select
+		opg.`id`,
+		opg.`order_source`,
+		opg.`channel_code`,
+		opg.`industry_code`,
+		opg.`product_group`,
+		opg.`corder_sn`,
+		opg.`order_sn`,
+		opg.`sku`,
+		opg.`cate_id`,
+		opg.`cate_name`,
+		opg.`brand_id`,
+		opg.`brand_name`,
+		opg.`order_product_price`,
+		opg.`coupon_amount`,
+		opg.`platform_coupon_amount`,
+		opg.`order_product_amount`,
+		opg.`order_product_number`,
+		opg.`guarantee_price`,
+		opg.`subduction_price`,
+		FROM_UNIXTIME(opg.`order_add_time`,'%Y-%m-%d %H:%i:%S') AS `order_add_time`,
+		FROM_UNIXTIME(opg.`create_time`,'%Y-%m-%d %H:%i:%S') AS `create_time`,
+		opg.`lock_reason`,
+		opg.`operator`,
+		opg.`responsible_person`,
+		opg.`unlock_reason`,
+		FROM_UNIXTIME(UNIX_TIMESTAMP(opg.`unlock_time`),'%Y-%m-%d %H:%i:%S') AS `unlock_time`,
+		opg.`gate_status`,
+		opg.`gate_type`,
+		FROM_UNIXTIME(UNIX_TIMESTAMP(opg.`update_time`),'%Y-%m-%d %H:%i:%S') AS `update_time`,
+		os.orderStatus AS orderStatus,
+		op.productName AS productName
+		from order_price_gate opg left join orders os on opg.order_sn = os.orderSn left join orderproducts op on opg.corder_sn=op.cOrderSn
+		where 1=1
+		<include refid="orderPriceGateQuery"/>
+		<if test="params.m!=null and params.n!=null">
+			Limit ${params.m},${params.n}
+		</if>
+	</select>
+
+	<select id="getOrderPriceProductGroup" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+		DISTINCT product_group,product_group_name
+		FROM
+		`order_price_product_group_industry`
+		<where>
+			<if test="industry !=null and industry !='' ">
+				industry_code =#{industry }
+			</if>
+		</where>
+	</select>
+
+	<select id="getRows" resultType="int" parameterType="Map">
+		select
+		COUNT(1)
+		from order_price_gate opg left join orders os on opg.order_sn = os.orderSn left join orderproducts op on opg.corder_sn=op.cOrderSn
+		where 1=1
+		<include refid="orderPriceGateQuery"/>
+	</select>
+
+	<!--订单开票列表  query  -->
+	<sql id="orderPriceGateQuery">
+		<if test="params.orderSn !=null and params.orderSn != ''">
+			and opg.order_sn like CONCAT('%',#{params.orderSn},'%')
+		</if>
+		<if test="params.cOrderSn !=null and params.cOrderSn != ''">
+			and opg.corder_sn = #{params.cOrderSn}
+		</if>
+		<if test="params.channel !=null and params.channel != ''">
+			and opg.channel_code = #{params.channel}
+		</if>
+		<if test="params.orderSource !=null and params.orderSource != ''">
+			and opg.order_source = #{params.orderSource}
+		</if>
+		<if test="params.gateStatus !=null and params.gateStatus != ''">
+			and opg.gate_status = #{params.gateStatus}
+		</if>
+		<if test="params.gateType !=null and params.gateType != ''">
+			and opg.gate_type = #{params.gateType}
+		</if>
+		<if test="params.industryCode !=null and params.industryCode != ''">
+			and opg.industry_code = #{params.industryCode}
+		</if>
+		<if test="params.productGroup !=null and params.productGroup != ''">
+			and opg.product_group = #{params.productGroup}
+		</if>
+		<if test="params.createTimeMin !=null and params.createTimeMin != ''">
+			and opg.create_time &gt;= #{params.createTimeMin}
+		</if>
+		<if test="params.createTimeMax !=null and params.createTimeMax != ''">
+			and opg.create_time &lt;= #{params.createTimeMax}
+		</if>
+		<if test="params.orderStatusCode !=null and params.orderStatusCode.size() &gt; 0">
+			and os.orderStatus in
+			<foreach collection="params.orderStatusCode" index="index" item="orderStatus" open="(" separator="," close=")">
+				#{orderStatus}
+			</foreach>
+		</if>
+	</sql>
 </mapper>

@@ -1,5 +1,7 @@
 package com.haier.stock.services;
 
+import com.haier.shop.model.OrderProductsNew;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,7 @@ public class StockCenterOrderPubServiceImpl implements StockCenterOrderPubServic
      * @author wukunyang
      */
 //	 @Scheduled(cron="0/5 * *  * * ?")
+    @Override
    public ServiceResult<Boolean> autoFrozenStockByOrder() {
        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
        try {
@@ -66,4 +69,15 @@ public class StockCenterOrderPubServiceImpl implements StockCenterOrderPubServic
        }
        return result;
    }
+
+    @Override
+    public void occupyStockAgain(List<OrderProductsNew> unFrozenOpList) {
+        //重新占用库存
+        frozenStockModel.execute(unFrozenOpList);
+    }
+
+    @Override
+    public void occupyStockAgainBysCode(List<OrderProductsNew> unFrozenOpList) {
+        frozenStockModel.frozenStockByOrderBysCode(unFrozenOpList);
+    }
 }

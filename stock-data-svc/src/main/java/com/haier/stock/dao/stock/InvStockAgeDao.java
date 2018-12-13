@@ -171,5 +171,7 @@ public interface InvStockAgeDao {
 	 * @return
 	 */
 	public List<HaierStockExceedCacheVO> findStockTotal();
+
+	List<InvStockAge> getStockAgeListByMap(Map param);
 }
 

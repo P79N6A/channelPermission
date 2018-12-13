@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="../static/third/jquery.js"></script>
+<script>
+window.onload = function() {
+	var input = document.getElementById("file_input");
+	
+	if (typeof (FileReader) === 'undefined') {
+		result.innerHTML = "抱歉，你的浏览器不支持 FileReader，请使用现代浏览器操作！";
+		input.setAttribute('disabled', 'disabled');
+	} else {
+		input.addEventListener('change', readFiles, false);
+	}
+	//全局变量
+	var preview = document.querySelector('#preview');
+}
+
+function readFiles() {
+	if(this.files.length > 3 || $('#preview').children().length > 2) {
+		alert("图片数量不能大于三张");
+		return false;
+	}
+	
+	//console.log($('#preview').children());
+	function readOne(file) {	
+		//这里我们判断下类型如果不是图片就返回 去掉就可以上传任意文件 
+		if(file){
+			if (!/image\/\w+/.test(file.type)) {
+				$("#result").val("");
+				alert("请确保文件为图像类型");
+				return false;
+			}
+		}else{
+			$("#result").val("");
+		}
+		
+		//计算文件大小 
+		var size = Math.floor(file.size/1024); 
+		if (size > 500) { 
+			$("#result").val("");
+			alert("上传文件不得超过500K!"); 
+			return false; 
+		}; 
+		
+		var reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = function(e) {
+			//console.log(e.target.result);
+			var image = new Image();
+	        image.height = 10;
+	        image.title = file.name;
+	        image.src = this.result;
+	        preview.appendChild(image);
+
+				//显示选择的图片
+	      // $(window.parent.document.getElementById("tb")).children().remove();//清空table内的元素
+	      // $(window.parent.document.getElementById("showImg")).show();
+
+	      $('#xianshi').show();
+	      $('#tb1').append("<tr><td>"+file.name+"</td></tr>");
+	       
+		};
+	}
+		
+	if (this.files) {
+	    [].forEach.call(this.files, readOne);
+	  }	
+}
+</script>
+</head>
+<div>
+	<input type="file" accept="image/*" style="margin-top: -5px; margin-left: -8px;" value="sdgsdg" multiple="multiple" id="file_input" /> 
+	<div id="preview" style="display:none"></div>
+	<div id="xianshi" style="display:none;width:284px;height:20px;font:400 13.3333px Arial;" >
+		<table id="tb1"></table>	
+	</div>
+	
+	
+</div>
+</html>

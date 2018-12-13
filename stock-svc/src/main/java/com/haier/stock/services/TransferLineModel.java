@@ -18,6 +18,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.alibaba.fastjson.JSONObject;
 import com.haier.common.BusinessException;
 import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
@@ -71,6 +72,7 @@ public class TransferLineModel<T> {
     private StockCenterItemServiceImplNew                    itemService;
     @Autowired
     private com.haier.stock.service.StockTransferLineService transferLineDao;
+    @Autowired
     private DataSourceTransactionManager   transactionManagerStock;
     @Autowired
     private TransferLogService                 transferLogDao;
@@ -310,6 +312,9 @@ public class TransferLineModel<T> {
                 if (InvTransferLine.TRANSFER_REASON_3W.equals(line.getTransferReason())) {
                     line.setLineNum(this.getPPOr3WLineNum(line.getSecFrom(), "WDX"));
                 }
+                if (InvTransferLine.TRANSFER_REASON_YP.equals(line.getTransferReason())) {
+                    line.setLineNum(this.getPPOr3WLineNum(line.getSecFrom(), "WDX"));
+                }
                 transferLineDao.insert(line);
                 lineIdArr[cnt++] = line.getLineId();
                 // lineIdlist.add(line.getLineId());
@@ -438,7 +443,7 @@ public class TransferLineModel<T> {
      * @param user
      */
     public ServiceResult<Boolean> submitBatchTransfer(Integer[] lineIdArr, String user,
-                                                      String isFirst) {
+                                                      Boolean isFirst) {
         ServiceResult<Boolean> result = new ServiceResult<Boolean>();
         ServiceResult<List<InvTransferLine>> checkRet = this.checkLineStatus(lineIdArr,
             new Integer[] { InvTransferLine.LINE_STATUS_INIT });
@@ -469,7 +474,7 @@ public class TransferLineModel<T> {
         for (InvTransferLine transferLine : checkRet.getResult()) {
             status = transactionManagerStock.getTransaction(def);
             try {
-                if ("true".equals(isFirst)) {
+                if (isFirst == true) {
                     //首次期望
                     qty = transferLine.getQty();
                 } else {
@@ -484,7 +489,7 @@ public class TransferLineModel<T> {
                     cnt++;
                     msgFailBuffer.append(transferLine.getLineId()).append(",");
                     transactionManagerStock.rollback(status);
-                    if ("true".equals(isFirst)) {
+                    if (isFirst == true) {
                         //首次失败，将实际的0更新为当前真正库存或者在又有库存时的期望值
                         transferQtyParam = getTransferQtyParam(
                             transferLine.getLineId(),
@@ -504,8 +509,8 @@ public class TransferLineModel<T> {
                 if (transferLine.getTransferReason().equals(InvTransferLine.TRANSFER_REASON_XN)) {
                     params = getUpdateLineStatusParams(new Integer[] { transferLine.getLineId() },
                         InvTransferLine.LINE_STATUS_LES);
-                } else if (transferLine.getTransferReason().equals(
-                    InvTransferLine.TRANSFER_REASON_3W)) {
+                } else if (transferLine.getTransferReason().equals(InvTransferLine.TRANSFER_REASON_3W)||
+                        transferLine.getTransferReason().equals(InvTransferLine.TRANSFER_REASON_YP)) {
                     params = getUpdateLineStatusParams(new Integer[] { transferLine.getLineId() },
                         InvTransferLine.LINE_STATUS_3W_CONFIRM);
                 } else {
@@ -958,11 +963,16 @@ public class TransferLineModel<T> {
      * @return
      */
     private Integer getPPTransferLineNumIntSequence(String param) {
+
         List<InvTransferLine> lines = transferLineDao.getPPTransferLineNum(param);
         Integer ret = 1;
         if (lines != null && lines.size() > 0) {
             InvTransferLine line = lines.get(0);
-            ret = Integer.parseInt(line.getLineNum().substring(10, 14)) + 1;
+            if(line.getLineNum().length()==17){
+                ret = Integer.parseInt(line.getLineNum().substring(11, 15)) + 1;
+            }else{
+                ret = Integer.parseInt(line.getLineNum().substring(11, 14)) + 1;
+            }
         }
         return ret;
     }
@@ -972,7 +982,11 @@ public class TransferLineModel<T> {
         Integer ret = 1;
         if (lines != null && lines.size() > 0) {
             InvTransferLine line = lines.get(0);
-            ret = Integer.parseInt(line.getLineNum().substring(11, 15)) + 1;
+            if(line.getLineNum().length()==18){
+                ret = Integer.parseInt(line.getLineNum().substring(11, 16)) + 1;
+            }else{
+                ret = Integer.parseInt(line.getLineNum().substring(11, 15)) + 1;
+            }
         }
         return ret;
     }
@@ -981,8 +995,8 @@ public class TransferLineModel<T> {
         Integer intSeq = this.getPPTransferLineNumIntSequence(param);
         String req = String.valueOf(intSeq);
         StringBuilder sb = new StringBuilder();
-        if (req.length() < 4) {
-            for (int i = 4 - req.length(); i > 0; i--) {
+        if (req.length() < 5) {
+            for (int i = 5 - req.length(); i > 0; i--) {
                 sb.append("0");
             }
             sb.append(req);
@@ -995,8 +1009,8 @@ public class TransferLineModel<T> {
         Integer intSeq = this.get3WTransferLineNumIntSequence(param);
         String req = String.valueOf(intSeq);
         StringBuilder sb = new StringBuilder();
-        if (req.length() < 4) {
-            for (int i = 4 - req.length(); i > 0; i--) {
+        if (req.length() < 5) {
+            for (int i = 5 - req.length(); i > 0; i--) {
                 sb.append("0");
             }
             sb.append(req);
@@ -1251,7 +1265,42 @@ public class TransferLineModel<T> {
         }
         return result;
     }
+    /**
+     * 根据LBX更新调拨网单
+     * @param
+     * @return
+     */
+    public ServiceResult<Integer> updateTransferLineToSap(InvTransferLine transferLine) {
 
+        ServiceResult<Integer> result = new ServiceResult<Integer>();
+        //在一个事务中处理变更
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManagerStock.getTransaction(def);
+        try {
+            transferLine.setLineStatus(InvTransferLine.LINE_STATUS_COMPLETE);
+
+            InvTransferLog transferLog = new InvTransferLog();
+            transferLog.setLineId(transferLine.getLineId());
+            transferLog.setLogTime(DateUtil.currentDateTime());
+            transferLog.setLogType(InvTransferLog.LOG_TYPE_LES_OUT);
+            transferLog.setLogUser("CBS");
+            transferLog.setOptTime(new Date());
+            int cnt = transferLineDao.update(transferLine);
+            transferLogDao.insert(transferLog);
+
+            result.setSuccess(true);
+            result.setMessage("操作成功");
+            result.setResult(cnt);
+            transactionManagerStock.commit(status);
+        } catch (Exception e) {
+            transactionManagerStock.rollback(status);
+            log.error("LES出库后更新调拨状态时发生未知异常：" + e);
+            result.setSuccess(false);
+            result.setMessage("LES出库后更新调拨状态时发生未知异常");
+        }
+        return result;
+    }
     /**
      * 根据网单ID更新调拨网单
      * @param transferLine
@@ -1639,21 +1688,22 @@ public class TransferLineModel<T> {
                     if (invTransferLine == null) {
                         continue;
                     }
+                    String[] contenXml = new String[1];
+
                     try {
                         ReadWriteRoutingDataSourceHolder.setIsAlwaysMaster(Boolean.TRUE);
                         String[] message = new String[1];
-                        int result = this.createInnerTransfersToVom(invTransferLine, message);
-
-                        this.recordTransferLog(invTransferLine.getLineId(),
+                        int result = this.createInnerTransfersToVom(invTransferLine, message,contenXml);
+                        this.recordTransfer3WtoVomLog(invTransferLine.getLineId(),
                             InvTransferLog.LOG_TYPE_3W_CBSTOVOM, "CBS_3W_ZK", new Date(),
-                            message[0]);
+                            message[0],contenXml[0]);
                     } catch (Exception e) {
                         log.error(this.logPrefix(invTransferLine.getLineId().toString())
                                   + "3W转库单同步到VOM出错", e);
-                        this.recordTransferLog(invTransferLine.getLineId(),
+                        this.recordTransfer3WtoVomLog(invTransferLine.getLineId(),
                             InvTransferLog.LOG_TYPE_3W_CBSTOVOM, "CBS_3W_ZK", new Date(),
                             this.logPrefix(invTransferLine.getLineId().toString())
-                                    + "3W转库单同步到VOM出错");
+                                    + "3W转库单同步到VOM出错",contenXml[0]);
                         return false;
                     } finally {
                         ReadWriteRoutingDataSourceHolder.clearIsAlwaysMaster();
@@ -1670,6 +1720,27 @@ public class TransferLineModel<T> {
         return true;
     }
 
+
+    private void recordTransfer3WtoVomLog(Integer lineId, Integer logType, String user, Date opTime,
+                                   String remark,String contentXml) {
+        if (opTime == null) {
+            opTime = new Date();
+        }
+        InvTransferLog log = new InvTransferLog();
+        log.setLineId(lineId);
+        log.setLogTime(new Date());
+        log.setLogType(logType);
+        log.setLogUser(user);
+
+        log.setOptTime(opTime);
+        if (!StringUtil.isEmpty(remark)) {
+            log.setLogRemark(remark);
+        }
+        if (!StringUtil.isEmpty(contentXml)) {
+            log.setContentXml(contentXml);
+        }
+        transferLogDao.insert(log);
+    }
     /**
      * 3w-往Les创建3W转库单
      * 
@@ -1679,7 +1750,7 @@ public class TransferLineModel<T> {
      * 
      * @param invTransferLine
      */
-    private int createInnerTransfersToVom(InvTransferLine invTransferLine, String[] message) {
+    private int createInnerTransfersToVom(InvTransferLine invTransferLine, String[] message,String[] contenXml) {
         //查询
         //参数检测
         if (invTransferLine == null) {
@@ -1702,6 +1773,7 @@ public class TransferLineModel<T> {
 
         //生成业务数据xml
         String content = this.getContentXml(invTransferLine, invWarehouseInfo);//生成xml格式的content参数
+        contenXml[0]=content;
         VomInterData vomInterData = new VomInterData();
         vomInterData.setNotifyid(invTransferLine.getLineNum() + "");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1709,7 +1781,7 @@ public class TransferLineModel<T> {
         vomInterData.setContent(content);
 
         //VOM开提单，生成3W调拨单加密参数
-        String paramLes_tem = accessExternalInterface.orderToLesParam(content, vomInterData);
+        String paramLes_tem = accessExternalInterface.orderToLesParam(content, vomInterData,"rrs_order");
         String resultXml = "";
         try {
             if (paramLes_tem == null || paramLes_tem.equals("")) {
@@ -1808,7 +1880,7 @@ public class TransferLineModel<T> {
         sb.append("<orderno>" + input.getLineNum() + "</orderno>");//网单号
         sb.append("<sourcesn>" + input.getSoLineNum() + "</sourcesn>");//订单号
         sb.append("<ordertype>5</ordertype>");//订单类型：1.采购入库 2.销售出库 3.退货入库 4.取件 5.普通出库（自提）6.调拨 7.第三方运输订单  8客户调货 9.客户调货入库 10.网点取货 11.拒收入库
-        sb.append("<bustype>2</bustype>");//业务类型：入库订单：1 送货到仓库 70 提货 ;出库订单：1 自提2 网点 70 直配 调货：1.送货到HUB库 2.HUB库自提
+        sb.append("<bustype>70</bustype>");//业务类型：入库订单：1 送货到仓库 70 提货 ;出库订单：1 自提2 网点 70 直配 调货：1.送货到HUB库 2.HUB库自提
         String orderdate = "";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         orderdate = sdf.format(new Date());
@@ -1822,6 +1894,13 @@ public class TransferLineModel<T> {
         sb.append("<mobile>" + invWarehouseInfo.getMobile() + "</mobile>");//联系电话
         sb.append("<reorder>" + input.getSoLineNum() + "</reorder>");//前续订单号：关联单号    --不填
         sb.append("<busflag>1</busflag>");//默认值1
+        //以下两字段用于下单接口区分新旧系统
+        if(input.getTransferReason()==4){
+            sb.append("<remark1><![CDATA[F2,HB]]></remark1>");//追加HB，用逗号隔开(示例：原来remark1 = "F2"，加上 "remark1"="F2,HB")
+        }else if(input.getTransferReason()==5){
+            sb.append("<remark1><![CDATA[TMYP]]></remark1>");//优品传VOM
+        }
+        sb.append("<remark8>1</remark8>");
 
         //应该循环，可能有套机的情况
         sb.append("<items>");
@@ -1870,19 +1949,23 @@ public class TransferLineModel<T> {
         return transferLineDao.updateRemarkByLineId(id, remark);
     }
 
+    public Integer updateRemarkByLineNum(String lineNum, String remark) {
+        return transferLineDao.updateRemarkByLineNum(lineNum, remark);
+    }
+
     public ServiceResult<Boolean> cancelTransferLineToLesOnTime(String lineNum) {
         ServiceResult<Boolean> result = new ServiceResult<Boolean>();
         try {
             //生成业务数据xml
             String content = this.get3WTranferCancelContentXml(lineNum);//生成xml格式的content参数
             VomInterData vomInterData = new VomInterData();
-            vomInterData.setNotifyid(lineNum);
+            vomInterData.setNotifyid(lineNum+"cancel");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             vomInterData.setNotifytime(sdf.format(new Date()));
             vomInterData.setContent(content);
 
             //生成3W调拨单加密参数
-            String paramLes_tem = accessExternalInterface.orderToLesParam(content, vomInterData);
+            String paramLes_tem = accessExternalInterface.orderToLesParam(content, vomInterData,"rrs_cancel");
             String resultXml = "";
             if (StringUtil.isEmpty(paramLes_tem)) {
                 result.setSuccess(false);
@@ -1932,8 +2015,10 @@ public class TransferLineModel<T> {
                 result.setMessage("3W同步取消物流失败");
                 log.error("3W调拨取消同步物流时异常：" + "单号：" + lineNum + "3W同步取消物流失败"
                           + JsonUtil.toJson(httpresult));
+                updateRemarkByLineNum(lineNum,httpresult.getMessage());
                 return result;
-            } else {// true：成功    
+            } else {// true：成功
+                updateRemarkByLineNum(lineNum,httpresult.getMessage());
                 result.setSuccess(true);
                 result.setResult(true);
             }
@@ -1978,14 +2063,14 @@ public class TransferLineModel<T> {
                 //生成业务数据xml
                 String content = this.get3WTranferCancelContentXml(lineNum);//生成xml格式的content参数
                 VomInterData vomInterData = new VomInterData();
-                vomInterData.setNotifyid(lineNum);
+                vomInterData.setNotifyid(lineNum+"cancel");
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 vomInterData.setNotifytime(sdf.format(new Date()));
                 vomInterData.setContent(content);
 
                 //生成3W调拨单加密参数
                 String paramLes_tem = accessExternalInterface.orderToLesParam(content,
-                    vomInterData);
+                    vomInterData,"rrs_cancel");
                 String resultXml = "";
                 if (StringUtil.isEmpty(paramLes_tem)) {
                     invTransferLineCancelQueues.setCount(invTransferLineCancelQueues.getCount()
@@ -2129,4 +2214,39 @@ public class TransferLineModel<T> {
         return sb.toString();
     }
 
+	public boolean updateLineStatusByLineNum(String orderNo, int status) {
+        boolean isSuc = true;
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("lineNum", orderNo);
+            params.put("lineStatus", status);
+            Integer line = this.transferLineDao.updateLineStatusByLineNum(params);
+        } catch (Exception e) {
+            log.error("更新调拨单状态失败", e);
+            isSuc = false;
+        }
+        return isSuc;
+	}
+
+	public boolean updateLineStatusAndQtyByLineNum(String orderNo, int status, Integer qty) {
+		boolean isSuc = true;
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("lineNum", orderNo);
+            params.put("lineStatus", status);
+            params.put("qty", qty);
+            Integer line = this.transferLineDao.updateLineStatusByLineNum(params);
+        } catch (Exception e) {
+            log.error("更新调拨单状态失败", e);
+            isSuc = false;
+        }
+        return isSuc;
+	}
+
+    public InvTransferLine getYpInvTransferLineBySoLineNum(String lbx) {
+        if (StringUtil.isEmpty(lbx))
+            return null;
+        InvTransferLine line = transferLineDao.getYpInvTransferLineBySoLineNum(lbx);
+        return line;
+    }
 }

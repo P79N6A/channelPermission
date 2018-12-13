@@ -77,6 +77,11 @@ public class PurchaseVehicleOrderZqDetailsServiceImpl implements PurchaseVehicle
 	public int updateSelectiveByZqItemNo(VehicleOrderZqDetailsDTO entity) {
 		return vehicleOrderZqDetailsDao.updateSelectiveByZqItemNo(entity);
 	}
+	
+	@Override
+	public int updateSelectiveByZqOrderNo(VehicleOrderZqDetailsDTO entity) {
+		return vehicleOrderZqDetailsDao.updateSelectiveByZqOrderNo(entity);
+	}
 
 	@Override
 	public int updateStatusDetail(String orderNo) {
@@ -91,6 +96,11 @@ public class PurchaseVehicleOrderZqDetailsServiceImpl implements PurchaseVehicle
 	@Override
 	public List<VehicleOrderZqDetailsDTO> selectByStatus() {
 		return vehicleOrderZqDetailsDao.selectByStatus();
+	}
+
+	@Override
+	public List<VehicleOrderZqDetailsDTO> getListByOrderNo(String orderNo) {
+		return vehicleOrderZqDetailsDao.getListByOrderNo(orderNo);
 	}
 	
 }

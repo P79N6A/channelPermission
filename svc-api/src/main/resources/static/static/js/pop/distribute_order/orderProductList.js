@@ -7,20 +7,20 @@ var datagridOptions_orderForecastGoal = {
     //     field: 'id', checkbox: true
     // }]],
     columns: [[
-        {title: '网单编号 ', field: 'cOrderSn', sortable: true},
-        {title: '订单编号 ', field: 'orderSn', sortable: true},
-        {title: '商品名称', field: 'productName', sortable: true},
-        {title: '商品编号', field: 'sku', sortable: true},
-        {title: '商品分类', field: 'typeName', sortable: true},
-        {title: '价格', field: 'price', sortable: true, align: 'right'},
-//      {title: '配送费', field: 'secName1', sortable: true},
-        {title: '数量', field: 'number', sortable: true, align: 'right'},
-        {title: '网单金额', field: 'pAmount', sortable: true, align: 'right'},
-        {title: '订单来源', field: 'source', sortable: true},
-        {title: '来源订单号', field: 'sourceOrderSn', sortable: true},
-        {title: '付款时间', field: 'cPayTime', sortable: true},
+        {title: '网单编号 ', field: 'cOrderSn', sortable: false},
+        {title: '订单编号 ', field: 'orderSn', sortable: false},
+        {title: '商品名称', field: 'productName', sortable: false},
+        {title: '商品编号', field: 'sku', sortable: false},
+        {title: '商品分类', field: 'typeName', sortable: false},
+        {title: '价格', field: 'price', sortable: false, align: 'right'},
+//      {title: '配送费', field: 'secName1', sortable: false},
+        {title: '数量', field: 'number', sortable: false, align: 'right'},
+        {title: '网单金额', field: 'pAmount', sortable: false, align: 'right'},
+        {title: '订单来源', field: 'source', sortable: false},
+        {title: '来源订单号', field: 'sourceOrderSn', sortable: false},
+        {title: '付款时间', field: 'cPayTime', sortable: false},
         {
-            title: '订单状态', field: 'orderStatus', sortable: true,
+            title: '订单状态', field: 'orderStatus', sortable: false,
             formatter: function (val, rec) {
                 if (val == "200" || val == "0") {
                     return "未确认";
@@ -37,10 +37,10 @@ var datagridOptions_orderForecastGoal = {
                 }
             }
         },
-        {title: '收货人', field: 'consignee', sortable: true},
-        {title: '联系电话', field: 'mobile', sortable: true},
-        {title: '所在地', field: 'originRegionName', sortable: true},
-        {title: '详细信息', field: 'originAddress', sortable: true},
+        {title: '收货人', field: 'consignee', sortable: false},
+        {title: '联系电话', field: 'mobile', sortable: false},
+        {title: '所在地', field: 'originRegionName', sortable: false},
+        {title: '详细信息', field: 'originAddress', sortable: false},
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
     striped: true,
@@ -241,20 +241,20 @@ $("#searchBtn").on('click', function (event) {
         //     field: 'id', checkbox: true
         // }]],
         columns: [[
-            {title: '网单编号 ', field: 'cOrderSn', sortable: true},
-            {title: '订单编号 ', field: 'orderSn', sortable: true},
-            {title: '商品名称', field: 'productName', sortable: true},
-            {title: '商品编号', field: 'sku', sortable: true},
-            {title: '商品分类', field: 'typeName', sortable: true},
-            {title: '价格', field: 'price', sortable: true, align: 'right'},
-//      {title: '配送费', field: 'secName1', sortable: true},
-            {title: '数量', field: 'number', sortable: true, align: 'right'},
-            {title: '网单金额', field: 'pAmount', sortable: true, align: 'right'},
-            {title: '订单来源', field: 'source', sortable: true},
-            {title: '来源订单号', field: 'sourceOrderSn', sortable: true},
-            {title: '付款时间', field: 'cPayTime', sortable: true},
+            {title: '网单编号 ', field: 'cOrderSn', sortable: false},
+            {title: '订单编号 ', field: 'orderSn', sortable: false},
+            {title: '商品名称', field: 'productName', sortable: false},
+            {title: '商品编号', field: 'sku', sortable: false},
+            {title: '商品分类', field: 'typeName', sortable: false},
+            {title: '价格', field: 'price', sortable: false, align: 'right'},
+//      {title: '配送费', field: 'secName1', sortable: false},
+            {title: '数量', field: 'number', sortable: false, align: 'right'},
+            {title: '网单金额', field: 'pAmount', sortable: false, align: 'right'},
+            {title: '订单来源', field: 'source', sortable: false},
+            {title: '来源订单号', field: 'sourceOrderSn', sortable: false},
+            {title: '付款时间', field: 'cPayTime', sortable: false},
             {
-                title: '订单状态', field: 'orderStatus', sortable: true,
+                title: '订单状态', field: 'orderStatus', sortable: false,
                 formatter: function (val, rec) {
                     if (val == "200" || val == "0") {
                         return "未确认";
@@ -271,10 +271,10 @@ $("#searchBtn").on('click', function (event) {
                     }
                 }
             },
-            {title: '收货人', field: 'consignee', sortable: true},
-            {title: '联系电话', field: 'mobile', sortable: true},
-            {title: '所在地', field: 'originRegionName', sortable: true},
-            {title: '详细信息', field: 'originAddress', sortable: true},
+            {title: '收货人', field: 'consignee', sortable: false},
+            {title: '联系电话', field: 'mobile', sortable: false},
+            {title: '所在地', field: 'originRegionName', sortable: false},
+            {title: '详细信息', field: 'originAddress', sortable: false},
         ]],
     });
 

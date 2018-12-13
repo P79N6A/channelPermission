@@ -1,328 +1,329 @@
-
-var datagridData_orderPriceGate={'data':{'records':[
-      {
-          'orderSource':'淘宝海尔官方旗舰店',sortable:true,
-          'channelCode':'天猫',sortable:true,
-          'industry':'',sortable:true,
-          'productType':'',sortable:true,
-          'orderNo':'170322142436956',sortable:true,
-          'orderStatus':'已确认',sortable:true,
-          'sorderNo':'WD170121212',sortable:true,
-          'sku':'GAORD7D1C',sortable:true,
-          'kindName':'热水器',sortable:true,
-          'model':'海尔电热水器',sortable:true,
-          'sPrice':'4532',sortable:true,
-          'shopPromotion':'0',sortable:true,
-          'platformPromotion':'0',sortable:true,
-          'sProductAmount':'4532',sortable:true,
-          'sAmount':'1',sortable:true,
-          'lowDifferOrPromotion':'-10',sortable:true,
-          'lowPrice':'1599',sortable:true,
-          'makeOrderTime':'2017-03-22 14:24:36',sortable:true,
-          'beGateTime':'2017-03-22 14-35-22',sortable:true,
-          'beGateReason':'网单销售价低于报单价',sortable:true,
-          'gateStatus':'放行',sortable:true,
-          'gateType':'保本价',sortable:true,
-          'openGatePerson':'代颖',sortable:true,
-          'responsePerson':'高洪波',sortable:true,
-          'openGateReason':'不良品换机',sortable:true,
-          'openGateTime':'2017-3-22 14：55：10',sortable:true,
-      },
-      {
-          'orderSource':'淘宝海尔官方旗舰店',sortable:true,
-          'channelCode':'天猫',sortable:true,
-          'industry':'',sortable:true,
-          'productType':'',sortable:true,
-          'orderNo':'1703221424675456',sortable:true,
-          'orderStatus':'已确认',sortable:true,
-          'sorderNo':'WD133321212',sortable:true,
-          'sku':'GAORD7D1C',sortable:true,
-          'kindName':'彩电',sortable:true,
-          'model':'海尔彩电',sortable:true,
-          'sPrice':'19191',sortable:true,
-          'shopPromotion':'0',sortable:true,
-          'platformPromotion':'0',sortable:true,
-          'sProductAmount':'19191',sortable:true,
-          'sAmount':'1',sortable:true,
-          'lowDifferOrPromotion':'-10',sortable:true,
-          'lowPrice':'1599',sortable:true,
-          'makeOrderTime':'2017-03-22 14:24:36',sortable:true,
-          'beGateTime':'2017-03-22 14-35-22',sortable:true,
-          'beGateReason':'网单销售价低于报单价',sortable:true,
-          'gateStatus':'放行',sortable:true,
-          'gateType':'保本价',sortable:true,
-          'openGatePerson':'代颖',sortable:true,
-          'responsePerson':'高洪波',sortable:true,
-          'openGateReason':'不良品换机',sortable:true,
-          'openGateTime':'2017-3-22 14：55：10',sortable:true,
-      },
-      {
-          'orderSource':'淘宝海尔官方旗舰店',sortable:true,
-          'channelCode':'天猫',sortable:true,
-          'industry':'',sortable:true,
-          'productType':'',sortable:true,
-          'orderNo':'170322143436956',sortable:true,
-          'orderStatus':'已确认',sortable:true,
-          'sorderNo':'WD170666212',sortable:true,
-          'sku':'GAORD7D1C',sortable:true,
-          'kindName':'洗衣机',sortable:true,
-          'model':'BG801449578',sortable:true,
-          'sPrice':'7878',sortable:true,
-          'shopPromotion':'0',sortable:true,
-          'platformPromotion':'0',sortable:true,
-          'sProductAmount':'7878',sortable:true,
-          'sAmount':'1',sortable:true,
-          'lowDifferOrPromotion':'-10',sortable:true,
-          'lowPrice':'1599',sortable:true,
-          'makeOrderTime':'2017-03-22 14:24:36',sortable:true,
-          'beGateTime':'2017-03-22 14-35-22',sortable:true,
-          'beGateReason':'网单销售价低于报单价',sortable:true,
-          'gateStatus':'放行',sortable:true,
-          'gateType':'保本价',sortable:true,
-          'openGatePerson':'代颖',sortable:true,
-          'responsePerson':'高洪波',sortable:true,
-          'openGateReason':'不良品换机',sortable:true,
-          'openGateTime':'2017-3-22 14：55：10',sortable:true,
-      },
-      {
-          'orderSource':'淘宝海尔官方旗舰店',sortable:true,
-          'channelCode':'天猫',sortable:true,
-          'industry':'',sortable:true,
-          'productType':'',sortable:true,
-          'orderNo':'170324442436956',sortable:true,
-          'orderStatus':'已确认',sortable:true,
-          'sorderNo':'WD170199912',sortable:true,
-          'sku':'GAORD7D1C',sortable:true,
-          'kindName':'冰箱',sortable:true,
-          'model':'BCD-984543',sortable:true,
-          'sPrice':'5656',sortable:true,
-          'shopPromotion':'0',sortable:true,
-          'platformPromotion':'0',sortable:true,
-          'sProductAmount':'5656',sortable:true,
-          'sAmount':'1',sortable:true,
-          'lowDifferOrPromotion':'-10',sortable:true,
-          'lowPrice':'1599',sortable:true,
-          'makeOrderTime':'2017-03-22 14:24:36',sortable:true,
-          'beGateTime':'2017-03-22 14-35-22',sortable:true,
-          'beGateReason':'网单销售价低于报单价',sortable:true,
-          'gateStatus':'放行',sortable:true,
-          'gateType':'保本价',sortable:true,
-          'openGatePerson':'代颖',sortable:true,
-          'responsePerson':'高洪波',sortable:true,
-          'openGateReason':'不良品换机',sortable:true,
-          'openGateTime':'2017-3-22 14：55：10',sortable:true,
-      },
-      {
-          'orderSource':'淘宝海尔官方旗舰店',sortable:true,
-          'channelCode':'天猫',sortable:true,
-          'industry':'',sortable:true,
-          'productType':'',sortable:true,
-          'orderNo':'170322146666956',sortable:true,
-          'orderStatus':'已确认',sortable:true,
-          'sorderNo':'WD173661212',sortable:true,
-          'sku':'GAORD7D1C',sortable:true,
-          'kindName':'冷柜',sortable:true,
-          'model':'BC/BD-202G',sortable:true,
-          'sPrice':'3411',sortable:true,
-          'shopPromotion':'0',sortable:true,
-          'platformPromotion':'0',sortable:true,
-          'sProductAmount':'3411',sortable:true,
-          'sAmount':'1',sortable:true,
-          'lowDifferOrPromotion':'-10',sortable:true,
-          'lowPrice':'1599',sortable:true,
-          'makeOrderTime':'2017-03-22 14:24:36',sortable:true,
-          'beGateTime':'2017-03-22 14-35-22',sortable:true,
-          'beGateReason':'网单销售价低于报单价',sortable:true,
-          'gateStatus':'放行',sortable:true,
-          'gateType':'保本价',sortable:true,
-          'openGatePerson':'代颖',sortable:true,
-          'responsePerson':'高洪波',sortable:true,
-          'openGateReason':'不良品换机',sortable:true,
-          'openGateTime':'2017-3-22 14：55：10',sortable:true,
-      },
-      {
-          'orderSource':'淘宝海尔官方旗舰店',sortable:true,
-          'channelCode':'天猫',sortable:true,
-          'industry':'',sortable:true,
-          'productType':'',sortable:true,
-          'orderNo':'170322111136956',sortable:true,
-          'orderStatus':'已确认',sortable:true,
-          'sorderNo':'WD170999212',sortable:true,
-          'sku':'GAORD7D1C',sortable:true,
-          'kindName':'冰箱',sortable:true,
-          'model':'BCD-45894387543',sortable:true,
-          'sPrice':'45454',sortable:true,
-          'shopPromotion':'0',sortable:true,
-          'platformPromotion':'0',sortable:true,
-          'sProductAmount':'45454',sortable:true,
-          'sAmount':'1',sortable:true,
-          'lowDifferOrPromotion':'-10',sortable:true,
-          'lowPrice':'1599',sortable:true,
-          'makeOrderTime':'2017-03-22 14:24:36',sortable:true,
-          'beGateTime':'2017-03-22 14-35-22',sortable:true,
-          'beGateReason':'网单销售价低于报单价',sortable:true,
-          'gateStatus':'放行',sortable:true,
-          'gateType':'保本价',sortable:true,
-          'openGatePerson':'代颖',sortable:true,
-          'responsePerson':'高洪波',sortable:true,
-          'openGateReason':'不良品换机',sortable:true,
-          'openGateTime':'2017-3-22 14：55：10',sortable:true,
-      },
-      {
-          'orderSource':'淘宝海尔官方旗舰店',sortable:true,
-          'channelCode':'天猫',sortable:true,
-          'industry':'',sortable:true,
-          'productType':'',sortable:true,
-          'orderNo':'170322148886956',sortable:true,
-          'orderStatus':'已确认',sortable:true,
-          'sorderNo':'WD170121777',sortable:true,
-          'sku':'GAORD7D1C',sortable:true,
-          'kindName':'洗衣机',sortable:true,
-          'model':'BGS1234',sortable:true,
-          'sPrice':'6786',sortable:true,
-          'shopPromotion':'0',sortable:true,
-          'platformPromotion':'0',sortable:true,
-          'sProductAmount':'6786',sortable:true,
-          'sAmount':'1',sortable:true,
-          'lowDifferOrPromotion':'-10',sortable:true,
-          'lowPrice':'1599',sortable:true,
-          'makeOrderTime':'2017-03-22 14:24:36',sortable:true,
-          'beGateTime':'2017-03-22 14-35-22',sortable:true,
-          'beGateReason':'网单销售价低于报单价',sortable:true,
-          'gateStatus':'放行',sortable:true,
-          'gateType':'保本价',sortable:true,
-          'openGatePerson':'代颖',sortable:true,
-          'responsePerson':'高洪波',sortable:true,
-          'openGateReason':'不良品换机',sortable:true,
-          'openGateTime':'2017-3-22 14：55：10',sortable:true,
-      },
-      {
-          'orderSource':'淘宝海尔官方旗舰店',sortable:true,
-          'channelCode':'天猫',sortable:true,
-          'industry':'',sortable:true,
-          'productType':'',sortable:true,
-          'orderNo':'170322178766956',sortable:true,
-          'orderStatus':'已确认',sortable:true,
-          'sorderNo':'WD170166662',sortable:true,
-          'sku':'GAORD7D1C',sortable:true,
-          'kindName':'彩电',sortable:true,
-          'model':'海尔彩电CBS',sortable:true,
-          'sPrice':'3421',sortable:true,
-          'shopPromotion':'0',sortable:true,
-          'platformPromotion':'0',sortable:true,
-          'sProductAmount':'3421',sortable:true,
-          'sAmount':'1',sortable:true,
-          'lowDifferOrPromotion':'-10',sortable:true,
-          'lowPrice':'1599',sortable:true,
-          'makeOrderTime':'2017-03-22 14:24:36',sortable:true,
-          'beGateTime':'2017-03-22 14-35-22',sortable:true,
-          'beGateReason':'网单销售价低于报单价',sortable:true,
-          'gateStatus':'放行',sortable:true,
-          'gateType':'保本价',sortable:true,
-          'openGatePerson':'代颖',sortable:true,
-          'responsePerson':'高洪波',sortable:true,
-          'openGateReason':'不良品换机',sortable:true,
-          'openGateTime':'2017-3-22 14：55：10',sortable:true,
-      },
-
-],'totalCount':1}};
-
-var datagridOptions_orderPriceGate = {
-  fit: true,
-  fitColumns: true,
-  singleSelect: true,
-  //url: '/order/orderPriceGate/p',
-  frozenColumns: [[{
-    field: 'id', checkbox: true
-  }]],
-  columns: [[
-        {title: '订单来源', field: 'orderSource',sortable:true},
-        {title: '渠道', field: 'channelCode',sortable:true},
-        {title: '产业', field: 'industry',sortable:true},
-        {title: '产品组', field: 'productType',sortable:true},
-        {title: '订单号', field: 'orderNo',sortable:true},
-        {title: '订单状态', field: 'orderStatus',sortable:true},
-        {title: '网单号', field: 'sorderNo',sortable:true},
-        {title: '物料编码', field: 'sku',sortable:true},
-        {title: '品类名称', field: 'kindName',sortable:true},
-        {title: '型号', field: 'model',sortable:true},
-        {title: '网单单价', field: 'sPrice',sortable:true},
-        {title: '商城优惠券', field: 'shopPromotion',sortable:true},
-        {title: '平台优惠券', field: 'platformPromotion',sortable:true},
-        {title: '网单表productAmount', field: 'sProductAmount',sortable:true},
-        {title: '网单数量', field: 'sAmount',sortable:true},
-        {title: '保本价差额/费用池优惠券', field: 'lowDifferOrPromotion',sortable:true},
-        {title: '保本价', field: 'lowPrice',sortable:true},
-        {title: '下单时间', field: 'makeOrderTime',sortable:true},
-        {title: '被闸时间', field: 'beGateTime',sortable:true},
-        {title: '被闸原因', field: 'beGateReason',sortable:true},
-        {title: '闸口状态', field: 'gateStatus',sortable:true},
-        {title: '闸口类型', field: 'gateType',sortable:true},
-        {title: '放行操作', field: 'openGatePerson',sortable:true},
-        {title: '责任人', field: 'responsePerson',sortable:true},
-        {title: '放行原因', field: 'openGateReason',sortable:true},
-        {title: '放行时间', field: 'openGateTime',sortable:true},
-  ]],
-  toolbar: '#datagridToolbar_orderPriceGate',
-  striped: true,
-  pagination: true,
-  rownumbers: true,
-};
+var param;
 $(function () {
-  var datagrid = $('#datagrid_orderPriceGate').datagrid(datagridOptions_orderPriceGate);
-  datagrid.datagrid('loadData',datagridData_orderPriceGate);
-  //创建表头的菜单
-  //CustomConfig.load(datagrid,"OrderPriceGate");
-  //$("#searchPanel_orderPriceGate").panel('resize');
+  getGuaranteePriceChannel();
+  getGuaranteePriceSource();
+  // $('#orderStatus').combobox('clear');
 
-  /*$("#searchBtn_orderPriceGate").on('click', function (event) {
-    var param = $('#paramForm_orderPriceGate').serializeObject();
-    datagrid.datagrid({queryParams: param});
-    event.preventDefault();
-  });*/
-  $("#addBtn_orderPriceGate").on('click', function (event) {
-    $('#addForm_orderPriceGate').form('reset');
-    $('#addForm_orderPriceGate').find('[__actType]').val('add');
-    $('#addDlg_orderPriceGate').dialog({'title':'新增'});
-    $('#addDlg_orderPriceGate').dialog('open');
-  });
-  $("#addDlgSaveBtn_orderPriceGate").on('click', function () {
-    if(!$('#addForm_orderPriceGate').form('validate')){return;}
-    var actType = $('#addForm_orderPriceGate').find('[__actType]').val();
-    if(actType === 'add'){
-      alert( '新增成功');
-    }else{
-      alert('编辑成功');
-    }
-    $('#addDlg_orderPriceGate').dialog('close');
-  });
-  $("#editBtn_orderPriceGate").on('click', function () {
-    var selected = datagrid.datagrid('getSelected');
-    $('#addDlg_orderPriceGate').dialog({'title':'修改'});
-    if (selected !== null) {
-      $('#addForm_orderPriceGate').form('load', selected);
-      $('#addForm_orderPriceGate').find('[__actType]').val('edit');
-      $('#addDlg_orderPriceGate').dialog('open');
-    } else {
-      alert('请选择一条数据');
-    }
-  });
-  $("#deleteBtn_orderPriceGate").on('click',function (event) {
-    event.preventDefault();
-    var selected = datagrid.datagrid('getSelected');
-    if (selected !== null) {
-      confirm('确定删除？',function(r){
-        if(r){
-          alert('删除成功');
+  var datagrid = $('#datagrid_orderPriceGate').datagrid(
+      datagridOptions_orderPriceGate);
+
+  //限制开始时间小于截止时间
+  $("#createTimeMin").datebox({
+    onSelect: function (beginDate) {
+      $('#createTimeMax').datebox().datebox('calendar').calendar({
+        validator: function (date) {
+          return beginDate < date;//<=
         }
-      })
-
-    }else{
-      alert('请选择一条数据');
+      });
     }
   });
-  $("#resetBtn_orderPriceGate").on('click',function (event) {
+
+  var formParam = $('#paramForm_orderPriceGate').serializeObject();
+  param = {
+    // id:$("#id").val(),
+    orderSn: formParam.orderSn,
+    cOrderSn: formParam.cOrderSn,
+    channel: formParam.channel,
+    orderSource: formParam.orderSource,
+    orderStatusCode: formParam.orderStatusCode,
+    gateStatus: formParam.gateStatus,
+    gateType: formParam.gateType,
+    /*    industryCode:$(".industryCode").val(),
+     productGroup:$(".productGroup").val(),*/
+    createTimeMin: $("#createTimeMin").datetimebox('getValue'),
+    createTimeMax: $("#createTimeMax").datetimebox('getValue')
+  };
+  $("#searchBtn_orderPriceGate").on('click', function (event) {
+    // param = $('#paramForm_orderPriceGate').serializeObject();
+    var formParam = $('#paramForm_orderPriceGate').serializeObject();
+    param = {
+      // id:$("#id").val(),
+      orderSn: formParam.orderSn,
+      cOrderSn: formParam.cOrderSn,
+      channel: formParam.channel,
+      orderSource: formParam.orderSource,
+      orderStatusCode: formParam.orderStatusCode,
+      gateStatus: formParam.gateStatus,
+      gateType: formParam.gateType,
+      /*    industryCode:$(".industryCode").val(),
+       productGroup:$(".productGroup").val(),*/
+      createTimeMin: $("#createTimeMin").datetimebox('getValue'),
+      createTimeMax: $("#createTimeMax").datetimebox('getValue')
+    };
+    console.log(param)
+    $('#datagrid_orderPriceGate').datagrid('load', param);
+    event.preventDefault();
+  });
+
+  $("#resetBtn_orderPriceGate").on('click', function (event) {
     event.preventDefault();
     $('#paramForm_orderPriceGate').form('reset');
   });
+
+  //点击导出
+  $('#exportBtn_orderPriceGate').click(function () {
+    if (!datagrid) {
+      $.messager.alert('提示', '请查询！', 'info');
+      return;
+    }
+    $.messager.confirm('确认', '确定要导出吗？', function (r) {
+      if (r) {
+        $('#exportData').val(JSON.stringify(param));
+        $('#paramForm_orderPriceGate').attr("action",
+            '/order/exportOrderPriceGateList.html');
+        $('#paramForm_orderPriceGate').submit();
+      }
+    });
+  });
 });
+
+var datagridOptions_orderPriceGate = {
+  fit: true,
+  pagination: true,
+  singleSelect: true,
+  pageSize: 100,
+  pageList: [100, 200, 300],
+  nowrap: true,
+  rownumbers: true,
+  selectOnCheck: true,
+  checkOnSelect: true,
+
+  // fitColumns: true,
+  url: '/order/getOrderPriceGateList.html',
+  frozenColumns: [[{
+    field: 'id', checkbox: true
+  }]],
+  columns: [
+    [
+      {
+        field: 'orderSource',
+        title: '订单来源',
+        width: 140,
+        align: 'center',
+      },
+      {
+        field: 'channelCode',
+        title: '渠道',
+        width: 90,
+        align: 'center'
+      },
+      {
+        field: 'industryCode',
+        title: '产业',
+        width: 90,
+        align: 'center'
+      },
+      {
+        field: 'productGroup',
+        title: '产品组',
+        width: 90,
+        align: 'center'
+      },
+      {
+        field: 'orderSn',
+        title: '订单号',
+        width: 170,
+        align: 'center'
+      },
+      {
+        field: 'orderStatus',
+        title: '订单状态',
+        width: 70,
+        align: 'center'
+      },
+      {
+        field: 'corderSn',
+        title: '网单号',
+        width: 160,
+        align: 'center'
+      },
+      {
+        field: 'sku',
+        title: '物料编码',
+        width: 130,
+        align: 'center'
+      },
+      {
+        field: 'cateName',
+        title: '品类名称',
+        width: 80,
+        align: 'center'
+      },
+      {
+        field: 'productName',
+        title: '型号',
+        width: 80,
+        align: 'center'
+      },
+      {
+        field: 'orderProductPrice',
+        title: '网单单价',
+        width: 110,
+        align: 'center'
+      },
+      {
+        field: 'couponAmount',
+        title: '商城优惠券',
+        width: 70,
+        align: 'center'
+      },
+      {
+        field: 'platformCouponAmount',
+        title: '平台优惠券',
+        width: 70,
+        align: 'center'
+      },
+      {
+        field: 'orderProductAmount',
+        title: '网单表productAmount',
+        width: 140,
+        align: 'center'
+      },
+      {
+        field: 'orderProductNumber',
+        title: '网单数量',
+        width: 60,
+        align: 'center'
+      },
+      {
+        field: 'guaranteePrice',
+        title: '保本价',
+        width: 80,
+        align: 'center'
+      },
+      {
+        field: 'subductionPrice',
+        title: '保本价差额/费用池优惠券',
+        width: 145,
+        align: 'center'
+      },
+      {
+        field: 'orderAddTime',
+        title: '下单时间',
+        width: 140,
+        align: 'center'
+      },
+      {
+        field: 'createTime',
+        title: '被闸时间',
+        width: 140,
+        align: 'center'
+      },
+      {
+        field: 'lockReason',
+        title: '被闸原因',
+        width: 170,
+        align: 'center'
+      },
+      {
+        field: 'gateStatus',
+        title: '闸口状态',
+        width: 60,
+        align: 'center',
+        formatter: function (value) {
+          if (value == '0') {
+            return '放行';
+          }
+          if (value == '1') {
+            return '闸住';
+          }
+          return value;
+        }
+      },
+      {
+        field: 'gateType',
+        title: '闸口类型',
+        width: 60,
+        align: 'center',
+        formatter: function (value) {
+          if (value == '1') {
+            return '保本价';
+          }
+          if (value == '2') {
+            return '费用池';
+          }
+          return value;
+        }
+      },
+      {
+        field: 'operator',
+        title: '放行操作人',
+        width: 50,
+        align: 'center'
+      },
+      {
+        field: 'responsiblePerson',
+        title: '责任人',
+        width: 50,
+        align: 'center'
+      },
+      {
+        field: 'unlockReason',
+        title: '放行原因',
+        width: 170,
+        align: 'center'
+      },
+      {
+        field: 'unlockTime',
+        title: '放行时间',
+        width: 140,
+        align: 'center'
+      }]],
+  toolbar: '#datagridToolbar_orderPriceGate',
+  striped: true,
+  onBeforeLoad: function (param) {
+    var firstLoad = $(this).attr("firstLoad");
+    if (firstLoad == "false" || typeof (firstLoad) == "undefined") {
+      $(this).attr("firstLoad", "true");
+      return false;
+    }
+    return true;
+  }
+};
+
+function getGuaranteePriceChannel() {
+  $('#channelCode').combobox('clear');
+  jQuery.getJSON("/order/getGuaranteePriceChannel", function (result) {
+    var arrayObj = result.data;
+    arrayObj.unshift({channel_name: "全部", channel_code: ""});
+    result.data = arrayObj;
+
+    $("#channelCode").combobox({
+      data: result.data,
+      valueField: 'channel_code',
+      textField: 'channel_name',
+      value: '',
+      onChange: function (channel) {
+        if (channel == '') {
+          return;
+        }
+        $.getJSON('/order/getGuaranteePriceSource?channel=' + channel,
+            function (source) {
+              source.data.unshift(
+                  {order_source_name: '全部', order_source: ''});
+              $('#orderSource').combobox({
+                data: source.data,
+                valueField: 'order_source', //值字段
+                textField: 'order_source_name', //显示的字段
+                panelHeight: 'auto',
+                editable: false,//不可编辑，只能选择
+                value: ''
+              });
+            });
+
+      }
+    });
+
+  });
+}
+var getGuaranteePriceSource = function () {
+  var array = [{order_source_name: '全部', order_source: ''}];
+  $('#orderSource').combobox({
+    data: array,
+    valueField: 'order_source', //值字段
+    textField: 'order_source_name', //显示的字段
+    panelHeight: 'auto',
+    editable: false,//不可编辑，只能选择
+    value: ''
+  });
+};

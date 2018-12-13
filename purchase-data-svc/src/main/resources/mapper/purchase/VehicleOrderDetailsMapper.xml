@@ -69,7 +69,7 @@
 	<!-- oracle 分页尾部 -->
 	<sql id="pagination_Tail">
     <![CDATA[
-        ) row_ where rownum < (#{pager.page} * #{pager.rows} +1) ) where rownum_ >= ((#{pager.page} -1) * #{pager.rows} +1)
+        limit #{start}, #{rows}
         ]]>
 	</sql>
 	<!-- count * from -->
@@ -141,7 +141,7 @@
                 <![CDATA[ and item_id  = #{entity.itemId} ]]>
 			</if>
 			<if test="entity.orderNo != null and entity.orderNo !='' ">
-                <![CDATA[ and order_no  LIKE '%' || #{entity.orderNo} ||'%']]>
+                <![CDATA[ and order_no  LIKE CONCAT('%', #{entity.orderNo},'%')]]>
 			</if>
 			<if test="entity.itemNo != null and entity.itemNo !='' ">
                 <![CDATA[ and item_no  LIKE '%' || #{entity.itemNo} ||'%']]>
@@ -239,6 +239,12 @@
 			</if>
 			<if test="entity.lastUpdateTime != null ">
                 <![CDATA[ and last_update_time  = #{entity.lastUpdateTime} ]]>
+			</if>
+			<if test="entity.startOrderTime != null ">
+                <![CDATA[ and order_no in (select order_no from vehicle_order where order_time >= ${entity.startOrderTime, jdbcType=DATE}) ]]>
+			</if>
+			<if test="entity.endOrderTime != null ">
+                <![CDATA[ and order_no in (select order_no from vehicle_order where order_time <= ${entity.endOrderTime, jdbcType=DATE}) ]]>
 			</if>
 		</if>
 	</sql>
@@ -373,12 +379,12 @@
 
 	<!-- 查询page -->
 	<select id="getPageByCondition" resultMap="vehicleOrderDetailsMap">
-		<include refid="pagination_Head" />
+<!-- 		<include refid="pagination_Head" /> -->
 		SELECT
 		<include refid="Base_Column_List" />
 		FROM vehicle_order_details
 		<include refid="where_fragement" />
-		<include refid="pagination_OrderBy" />
+<!-- 		<include refid="pagination_OrderBy" /> -->
 		<include refid="pagination_Tail" />
 	</select>
 
@@ -912,6 +918,9 @@
 				<if test="entity.zspdt != null ">
                     <![CDATA[ zspdt = #{entity.zspdt}, ]]>
 				</if>
+				<if test="entity.lbxErrMsg != null ">
+					<![CDATA[ lbx_err_msg = #{entity.lbxErrMsg} ]]>
+				</if>
 			</if>
 		</set>
 		WHERE item_no = #{entity.itemNo}
@@ -982,22 +991,53 @@
 
 	<!-- 待推送sap数据 -->
 	<select id="selectByWaitToSap" resultMap="vehicleOrderDetailsMap">
-		SELECT
-		<include refid="Base_Column_List" />
-		FROM
-		vehicle_order_details vod
-		WHERE
-		vod.lbx != ''
-		AND vod.zspdt != ''
-		AND
-		item_no NOT IN (
-		SELECT
-		cn_stock_syncs_id
-		FROM
-		cn_3w_purchase_stock
-		WHERE
-		STATUS = '1'
-		)
+	<![CDATA[
+		SELECT *
+		FROM (
+			SELECT DISTINCT item_id, order_no, item_no, STATUS
+				, CASE vod.product_group
+					WHEN 'CA' THEN concat(materiel_code, '&', cm.cgb_subgbid)
+					ELSE materiel_code
+				END AS materiel_code
+				, CASE vod.product_group
+					WHEN 'CA' THEN cm.cgb_subgbid
+					ELSE materiel_code
+				END AS materiel_code2, product_group, product_group_name, brand, qty
+				, unit_price, sum_money, stock_price, retail_price, act_price
+				, bate_rate, bate_money, ver_code, ver_money, pro_loss_money
+				, loss_rate, Isfl, Iskpo, amount, volume
+				, total_volume, payment_code, payment_name, remark, create_by
+				, create_time, last_update_by, last_update_time, vbeln_dn1, vbeln_spare
+				, vbeln_status, lbx, zspdt
+			FROM vehicle_order_details vod
+				LEFT JOIN tmall_ca_machine cm ON cm.cgb_gbid = vod.materiel_code
+			WHERE vod.lbx != ''
+				AND vbeln_dn1 IN (
+					SELECT entry_order_code
+					FROM entry_3w_order
+					WHERE STATUS = 'FULFILLED'
+						AND operate_time IS NOT NULL
+						AND operate_time != ''
+						AND entry_order_id IS NOT NULL
+				)
+		) t
+		WHERE 1 = 1
+			AND CASE t.product_group
+				WHEN 'CA' THEN NOT EXISTS (
+					SELECT 1
+					FROM cn_3w_purchase_stock
+					WHERE push_data LIKE concat('%', t.materiel_code2, '%')
+						AND status = '1'
+						AND cn_stock_syncs_id = t.item_no
+				)
+				ELSE NOT EXISTS (
+					SELECT 1
+					FROM cn_3w_purchase_stock
+					WHERE STATUS = '1'
+						AND cn_stock_syncs_id = t.item_no
+				)
+			END
+			]]>
 	</select>
 
 	<!-- 待更新lbx数据 -->
@@ -1087,6 +1127,9 @@
 	<update id="updateByItemNo" parameterType="java.util.Map">
 		UPDATE vehicle_order_details
 		<set>
+			<if test="vbelnSpare != null and vbelnSpare !='' ">
+				<![CDATA[ vbeln_spare = #{vbelnSpare}, ]]>
+			</if>
 			<if test="orderNo != null and orderNo !='' ">
                 <![CDATA[ order_no = #{orderNo}, ]]>
 			</if>
@@ -1195,11 +1238,13 @@
 			<if test="vbelnDn1 != null and vbelnDn1 != ''">
                 <![CDATA[ vbeln_dn1 = #{vbelnDn1}, ]]>
 			</if>
-			<if test="vbelnSpare != null and vbelnSpare != ''">
-				<![CDATA[ vbeln_spare = #{vbelnSpare}, ]]>
-			</if>
 		</set>
 		WHERE item_no = #{itemNo}
+	</update>
+	<update id="updateVbelnSpareByItemNo" parameterType="java.util.Map">
+		<![CDATA[ UPDATE vehicle_order_details
+		set vbeln_spare = #{vbelnSpare}
+		WHERE item_no = #{itemNo} ]]>
 	</update>
 	
 	<insert id="addPurchaseStock">
@@ -1250,6 +1295,9 @@
 		<if test="status != null  ">
                 <![CDATA[ and status = #{status} ]]>
 		</if>
+		<if test="pushData != null  ">
+                <![CDATA[ and push_data like concat('%', #{pushData}, '%') ]]>
+		</if>
 
 	</select>
 
@@ -1257,10 +1305,10 @@
 		INSERT INTO
 		entry_3w_order
 		(id,entry_order_code,ownerCode,ware_house_code,entry_order_id,entry_order_type,
-		status,operate_time,flag,code,message,totalLines,push_status)
+		status,operate_time,flag,code,message,totalLines,push_status,actual_qty)
 		VALUES
 		(#{id},#{entryOrderCode},#{ownerCode},#{warehouseCode},#{entryOrderId},#{entryOrderType},
-		#{status},#{operateTime},#{flag},#{code},#{message},#{totalLines},#{pushStatus})
+		#{status},#{operateTime},#{flag},#{code},#{message},#{totalLines},#{pushStatus},#{actualQty})
 	</insert>
 
 	<update id="updateEntry3wOrder" parameterType="String">
@@ -1279,9 +1327,9 @@
 			<if test="entryOrderType != null and entryOrderType != '' ">
                 <![CDATA[ entry_order_type = #{entryOrderType}, ]]>
 			</if>
-			<if test="status != null and status != '' ">
+<!-- 			<if test="status != null and status != '' "> -->
                 <![CDATA[ status = #{status}, ]]>
-			</if>
+<!-- 			</if> -->
 			<if test="operateTime != null ">
                 <![CDATA[ operate_time = #{operateTime}, ]]>
 			</if>
@@ -1301,11 +1349,41 @@
                 <![CDATA[ totalLines = #{totalLines}, ]]>
 			</if>
 			<if test="pushStatus != null and pushStatus !='' ">
-                <![CDATA[ push_status = #{pushStatus}]]>
+                <![CDATA[ push_status = #{pushStatus},]]>
+			</if>
+			<if test="actualQty != null">
+                <![CDATA[ actual_qty = #{actualQty}]]>
 			</if>
 
 		</set>
 		WHERE entry_order_code = #{entryOrderCode}
+	</update>
+	
+	<update id="updateEntry3wOrderById" parameterType="String">
+		UPDATE
+		cn_3w_purchase_stock
+		<set>
+			<if test="pushData != null ">
+                <![CDATA[ push_data = #{pushData}, ]]>
+			</if>
+			<if test="returnData != null ">
+                <![CDATA[ return_data = #{returnData}, ]]>
+			</if>
+			<if test="status != null">
+                <![CDATA[ status = #{status}, ]]>
+			</if>
+			<if test="message != null">
+                <![CDATA[ message = #{message}, ]]>
+			</if>
+			<!-- <if test="addTime != null addTime !='' "> -->
+			<!-- <![CDATA[ add_time = #{addTime}, ]]> -->
+			<!-- </if> -->
+			<if test="processTime != null">
+                <![CDATA[ process_time = #{processTime}, ]]>
+			</if>
+
+		</set>
+		WHERE id = #{id}
 	</update>
 
 	<select id="queryEntry3wOrder" parameterType="String"
@@ -1323,7 +1401,8 @@
 		code,
 		message,
 		totalLines,
-		push_status as pushStatus
+		push_status as pushStatus,
+		actual_qty as actualQty
 		FROM
 		entry_3w_order
 		WHERE
@@ -1334,10 +1413,19 @@
 		<if test="entryOrderId != null and entryOrderId !='' ">
                 <![CDATA[ and entry_order_id = #{entryOrderId} ]]>
 		</if>
-		<if test="pushStatus != null  and pushStatus !=''  ">
+		<if test="pushStatus != null">
                 <![CDATA[ and push_status = #{pushStatus} ]]>
 		</if>
 
 	</select>
 
+	<select id="getByVbeln" resultMap="vehicleOrderDetailsMap">
+		select * from vehicle_order_details where vbeln_dn1 = #{vbeln}
+	</select>
+	
+	<select id="vbelnExists" resultType="Integer">
+		<![CDATA[ select count(1) from vehicle_order_details
+		where vbeln_spare = #{vbelnSpare}
+		and item_no != #{itemNo} ]]>
+	</select>
 </mapper>

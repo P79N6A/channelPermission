@@ -202,23 +202,23 @@ var tabDg1 = {
     fit: true,
     fitColumns: true,
     columns: [[
-        {title: '产品', field: 'materielName', sortable: true, align: 'center', width: 300},
-        {title: '小单号', field: 'itemNo', sortable: true, align: 'center', width: 300},
-        // {title: '扣点', field: 'bateRate', sortable: true, align: 'center', width: 200},
+        {title: '产品', field: 'materielName',  align: 'center', width: 300},
+        {title: '小单号', field: 'itemNo',  align: 'center', width: 300},
+        // {title: '扣点', field: 'bateRate',  align: 'center', width: 200},
         {
             title: '开票价',
             field: 'unitPrice',
-            sortable: true,
+            
             align: 'center',
             width: 200,
             formatter: function (val) {
                 return parseFloat(val).toFixed(2)
             }
         },
-        // {title: '台返', field: 'field5', sortable: true, align: 'center', width: 200},
-        {title: '数量', field: 'qty', sortable: true, align: 'center', width: 300},
+        // {title: '台返', field: 'field5',  align: 'center', width: 200},
+        {title: '数量', field: 'qty',  align: 'center', width: 300},
         {
-            title: '总价', field: 'amount', sortable: true, align: 'center', width: 300, formatter: function (val) {
+            title: '总价', field: 'amount',  align: 'center', width: 300, formatter: function (val) {
             return parseFloat(val).toFixed(2)
         }
         }
@@ -235,17 +235,17 @@ var datagridOptions_r6relateManage = {
     columns: [[
 		{title: '基地编码', field: 'baseCode',hidden:true, align: 'center', width: 300},
 		{title: '送达发编码', field: 'deliveryToCode',hidden:true, align: 'center', width: 300},
-        {title: '物料编码', field: 'materielCode', sortable: true, align: 'center', width: 300},
-        {title: '产品名称', field: 'materielName', sortable: true, align: 'center', formatter: productName, width: 300},
-        {title: '产品组', field: 'productGroupName', sortable: true, align: 'center', width: 300},
-        {title: '品牌', field: 'brandName', sortable: true, align: 'center', width: 300},
-        {title: '体积（m³）', field: 'volume', sortable: true, align: 'center', width: 300},
-        {title: '开票价', field: 'price', sortable: true, align: 'center', formatter: price, width: 300},
-        // {title: '扣点', field: 'bateRate', sortable: true, align: 'center', formatter: bateRate,width:200},
-        {title: '数量', field: 'count', sortable: true, align: 'center', formatter: count, width: 300},
-        // {title: '最大量', field: 'max', sortable: true, align: 'center',width:200},
-        {title: '基地', field: 'baseName', sortable: true, align: 'center', width: 200},
-        {title: '操作', field: 'option', sortable: true, align: 'center', formatter: zcCart, width: 300}
+        {title: '物料编码', field: 'materielCode',  align: 'center', width: 300},
+        {title: '产品名称', field: 'materielName',  align: 'center', formatter: productName, width: 300},
+        {title: '产品组', field: 'productGroupName',  align: 'center', width: 300},
+        {title: '品牌', field: 'brandName',  align: 'center', width: 300},
+        {title: '体积（m³）', field: 'volume',  align: 'center', width: 300},
+        {title: '开票价', field: 'price',  align: 'center', formatter: price, width: 300},
+        // {title: '扣点', field: 'bateRate',  align: 'center', formatter: bateRate,width:200},
+        {title: '数量', field: 'count',  align: 'center', formatter: count, width: 300},
+        // {title: '最大量', field: 'max',  align: 'center',width:200},
+        {title: '基地', field: 'baseName',  align: 'center', width: 200},
+        {title: '操作', field: 'option',  align: 'center', formatter: zcCart, width: 300}
     ]],
     toolbar: '#datagridToolbar_r6relateManage',
     striped: true,
@@ -377,7 +377,7 @@ function carCode(carType, carTypeName) {
                     carCodeOpt.prompt = prompts[0]
                     carCodeOpt.data = null
                     $("select[comboname='carCode']").combobox("loadData", []);
-                    alert("查询出错，请选择有效的送达方和基地！")
+                    alert("车型查询出错，需物流维护该线路基地车型!")
                 }
                 
             }
@@ -471,8 +471,11 @@ $(function () {
     // });
 
     $("#addDlgSaveBtn_r6relateManage").on('click', function () {
+    	var widths
         if (!$('#addForm_r6relateManage').form('validate')) {
-            throw new Error;
+            // throw new Error();
+            // return true;
+            return;
         }
         $.messager.progress({
             title: '请稍候',
@@ -481,10 +484,20 @@ $(function () {
         var index = $("#rowIndex").val()
         var code = $("#itemCode").val()
         var row = datagrid.datagrid("getRows")[index]
+        var oldNum =0;
+        var oldVolume = 0;
+        //从物料列表中选择加入整车
         if (row) {
             row.count = parseInt($("#num").val())
             $("#datagrid_r6relateManage").datagrid("refreshRow", parseInt(index));
+            if(selections[row.materielCode] != undefined){
+            	oldNum = selections[row.materielCode].num;
+            	oldVolume = selections[row.materielCode].volume * oldNum;
+            }
         } else {
+        	oldNum = selections[code].num;
+        	oldVolume = selections[code].volume * oldNum;
+        	//修改采购列表中的数据
             row = {}
             row.count = parseInt($("#num").val())
             selections[code].num = row.count
@@ -495,22 +508,34 @@ $(function () {
             row.productGroup = selections[code].productGroupCode
             row.materielId = selections[code].materielId
         }
-        var widths
+        
+        
+        getSelections(index, row);
+        //采购列表中没有数据
         if (selections.volume() == 0) {
             widths = (parseInt(row.count) * parseFloat(row.volume)) / standardMax * 100
         } else {
+        //采购列表中有数据
             if (selections[row.materielCode]) {
                 selections[row.materielCode].num = row.count
             }
             widths = selections.volume() / standardMax * 100;
         }
-        if (widths > 100) {
-            var leftnum = parseInt((standardMax - selections.volume()) / parseFloat(row.volume));
-            alert("超出最大装车体积，这种产品最多还能添加" + Math.abs(leftnum) + "台");
-            $("#addDlgSaveBtn_r6relateManage").linkbutton("enable")
-            $.messager.progress('close');
-            throw new Error;
-        }
+        
+        	if (widths > 100) {
+        		row.count = oldNum;
+        		getSelections(index, row);
+//        		del(row.materielCode);
+                var leftnum = parseInt((standardMax - selections.volume()+oldVolume) / parseFloat(row.volume));
+                
+                alert("超出最大装车体积，这种产品最多可添加" + Math.abs(leftnum) + "台");
+                $("#addDlgSaveBtn_r6relateManage").linkbutton("enable")
+                $.messager.progress('close');
+                // throw new Error();
+                // return true;
+                return;
+            }
+        
         var sendTo = $("#88code").combobox("getValue");
         var base = $("select[comboname='baseCode']").combobox("getValue");
 //        var sendTo = row.deliveryToCode;
@@ -719,6 +744,24 @@ function deleteItem(code) {
     })
 };
 
+function del(code){
+	var index = selections[code].index;
+    delete selections[code];
+    if (selections.length() == 0) {
+        $("#88code").combobox("enable");
+        $("select[comboname='baseCode']").combobox("enable");
+        $("select[comboname='carCode']").combobox("enable");
+    }
+    if (index) {
+        var row = $('#datagrid_r6relateManage').datagrid('getRows')[index]
+        row.count = 1
+        $('#datagrid_r6relateManage').datagrid("refreshRow", parseInt(index))
+    }
+    sethtmls();
+    $('.cart_num').html(selections["length"]);
+    setprogress();
+}
+
 function editItem(code) {
     addCart(null, code)
 };
@@ -870,7 +913,31 @@ function attention(tempSave) {
                             $('#confirmdig_r6relateManage').dialog('open');
                         }
                     } else {
-                        alert(data.msg)
+                        confirm(data.msg, function (r) {
+                            if (data.imgUrl != null) {
+                                $("#orderId").val(data.orderId)
+                                $("#orderNo").val(data.orderNo)
+                                var strs = new Array();//定义一个数组
+                                strs = data.imgUrl;//字符分割
+                                var str = "";
+                                for (var i = 0; i < strs.length; i++) {
+                                    str = str + '<div id="dddd_' + i + '" style="display:none;text-align:center;"><img src=\"' + strs[i] + '\" /></div>';
+                                }
+                                str += '<div><a href="javacript:;" id="a1">上一页</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javacript:;" id="a2">下一页</a></div>';
+                                $("#circle").html(str);
+                                $("#dddd_0").show();
+                                $("#a1").on("click", function () {
+                                    $("#dddd_0").show();
+                                    $("#dddd_1").hide();
+                                })
+                                $("#a2").on("click", function () {
+                                    $("#dddd_1").show();
+                                    $("#dddd_0").hide();
+                                })
+                                $('#circle').dialog({'title': '确认信息'});
+                                $('#circle').dialog('open');
+                            }
+                        })
                     }
                 },
                 error: function () {

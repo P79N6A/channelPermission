@@ -10,13 +10,13 @@ var datagridOptions_warehouseListGoal = {
          hidden:true
     }]],
     columns: [[
-        {title: '渠道名称 ', field: 'channelName', sortable: true},
-        {title: '仓库编码', field: 'warehouseCode', sortable: true},
-        {title: '仓库名称', field: 'warehouseName', sortable: true},
-        {title: '海尔仓库编码', field: 'warehouseCodeHaier', sortable: true},
-        {title: '海尔仓库名称', field: 'warehouseNameHaier', sortable: true},
+        {title: '渠道名称 ', field: 'channelName', sortable: false},
+        {title: '仓库编码', field: 'warehouseCode', sortable: false},
+        {title: '仓库名称', field: 'warehouseName', sortable: false},
+        {title: '海尔仓库编码', field: 'warehouseCodeHaier', sortable: false},
+        {title: '海尔仓库名称', field: 'warehouseNameHaier', sortable: false},
         {
-            title: '仓库类型', field: 'warehouseType', sortable: true,
+            title: '仓库类型', field: 'warehouseType', sortable: false,
             formatter: function (val, rec) {
                 if (val == "1") {
                     return "始发仓";
@@ -25,14 +25,14 @@ var datagridOptions_warehouseListGoal = {
                 }
             }
         },
-        {title: '始发仓', field: 'pname', sortable: true},
-        {title: '送达方编码', field: 'transmitCode', sortable: true},
-        {title: '所在城市', field: 'city', sortable: true},
-        {title: '创建者', field: 'createBy', sortable: true},
-        {title: '创建时间', field: 'cTime', sortable: true},
-//        {title: '更新者', field: 'updateby', sortable: true},
-//        {title: '更新时间', field: 'uTime', sortable: true},
-        {title: '备注', field: 'remark', sortable: true}
+        {title: '始发仓', field: 'pname', sortable: false},
+        {title: '送达方编码', field: 'transmitCode', sortable: false},
+        {title: '所在城市', field: 'city', sortable: false},
+        {title: '创建者', field: 'createBy', sortable: false},
+        {title: '创建时间', field: 'cTime', sortable: false},
+//        {title: '更新者', field: 'updateby', sortable: false},
+//        {title: '更新时间', field: 'uTime', sortable: false},
+        {title: '备注', field: 'remark', sortable: false}
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
     striped: true,
@@ -206,13 +206,13 @@ $("#searchBtn").on('click', function (event) {
              hidden:true
         }]],
         columns: [[
-            {title: '渠道名称 ', field: 'channelName', sortable: true},
-            {title: '仓库编码', field: 'warehouseCode', sortable: true},
-            {title: '仓库名称', field: 'warehouseName', sortable: true},
-            {title: '海尔仓库编码', field: 'warehouseCodeHaier', sortable: true},
-            {title: '海尔仓库名称', field: 'warehouseNameHaier', sortable: true},
+            {title: '渠道名称 ', field: 'channelName', sortable: false},
+            {title: '仓库编码', field: 'warehouseCode', sortable: false},
+            {title: '仓库名称', field: 'warehouseName', sortable: false},
+            {title: '海尔仓库编码', field: 'warehouseCodeHaier', sortable: false},
+            {title: '海尔仓库名称', field: 'warehouseNameHaier', sortable: false},
             {
-                title: '仓库类型', field: 'warehouseType', sortable: true,
+                title: '仓库类型', field: 'warehouseType', sortable: false,
                 formatter: function (val, rec) {
                     if (val == "1") {
                         return "始发仓";
@@ -221,14 +221,14 @@ $("#searchBtn").on('click', function (event) {
                     }
                 }
             },
-            {title: '始发仓', field: 'pname', sortable: true},
-            {title: '送达方编码', field: 'transmitCode', sortable: true},
-            {title: '所在城市', field: 'city', sortable: true},
-            {title: '创建者', field: 'createBy', sortable: true},
-            {title: '创建时间', field: 'cTime', sortable: true},
-//        {title: '更新者', field: 'updateby', sortable: true},
-//        {title: '更新时间', field: 'uTime', sortable: true},
-            {title: '备注', field: 'remark', sortable: true}
+            {title: '始发仓', field: 'pname', sortable: false},
+            {title: '送达方编码', field: 'transmitCode', sortable: false},
+            {title: '所在城市', field: 'city', sortable: false},
+            {title: '创建者', field: 'createBy', sortable: false},
+            {title: '创建时间', field: 'cTime', sortable: false},
+//        {title: '更新者', field: 'updateby', sortable: false},
+//        {title: '更新时间', field: 'uTime', sortable: false},
+            {title: '备注', field: 'remark', sortable: false}
         ]],
     });
 

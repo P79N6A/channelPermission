@@ -27,4 +27,14 @@ public class EisStockBusinessQueueServiceImpl implements EisStockBusinessQueueSe
         return eisStockBusinessQueueDao.insert(stockBusinessQueue);
     }
 
+    @Override
+    public List<EisStockBusinessQueue> getTops(int i) {
+        return eisStockBusinessQueueDao.getTops(i);
+    }
+
+    @Override
+    public void delete(EisStockBusinessQueue queue) {
+        eisStockBusinessQueueDao.delete(queue);
+    }
+
 }

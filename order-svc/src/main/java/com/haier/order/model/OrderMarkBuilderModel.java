@@ -120,7 +120,9 @@ public class OrderMarkBuilderModel {
             for (OrderProductsNew tempOp : orderProductsList) {
                 if ("3W".equalsIgnoreCase(tempOp.getStockType())) {
                     i3W++;
-                    OrderProductsAttributes opa = null;
+
+                    //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+                    /*OrderProductsAttributes opa = null;
                     try {
                         opa = orderProductsAttributesService.getByOrderProductId(tempOp.getId());
                     } catch (Exception ex) {
@@ -134,7 +136,13 @@ public class OrderMarkBuilderModel {
                     if (opa != null && opa.getIsCd() != null && opa.getIsCd().intValue() != 1) {
                         isCd = false;
                         break;
+                    }*/
+
+                    if (tempOp != null && tempOp.getIsCd() != null && tempOp.getIsCd().intValue() != 1) {
+                        isCd = false;
+                        break;
                     }
+                    //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
                 }
                 //更新网单的物流模式 根据产品的所属库类型
                 if ("BLPHH".equalsIgnoreCase(order.getSource())) {
@@ -169,7 +177,7 @@ public class OrderMarkBuilderModel {
                         SmConfirmStatusEnum.W_MANUAL_HANDLE.getCode(), Integer.valueOf(order.getId()),
                         SmConfirmStatusEnum.INIT.getCode(), (new Date()).getTime() / 1000,
                         "订单状态不是待确认状态：" + order.getOrderStatus());
-                    OrderCenterOrderBizHelper.insertOperateLog(order, "CBS系统", "订单处理方式选择",
+                    OrderCenterOrderBizHelper.insertOperateLog(order, "系统", "订单处理方式选择",
                         "获取标建时状态不是‘未确认’，统一改为待人工处理", orderProductsList, shopOrderOperateLogsService);
                 } catch (Exception ex) {
                     log.error("更新订单获取标建状态时(订单状态不是待确认状态,orderId:" + order.getId() + ")，发生未知异常：", ex);
@@ -178,57 +186,59 @@ public class OrderMarkBuilderModel {
             }
             try {
                 //都是3W单子不判断省市区
+                //2018年07月04日 3W的拦截放在 出库之后
                 if ((!flag3W && OrderCenterOrderBizHelper.orderRemarkAndRegionHandler(order, remarkKeyWord,
                     regionsService))
-                    || (flag3W && OrderCenterOrderBizHelper.orderRemarkHandler3W(order, remarkKeyWord))) {//处理开发票和特殊地区设置人工处理
+                   // || (flag3W && OrderCenterOrderBizHelper.orderRemarkHandler3W(order, remarkKeyWord))
+                        ) {//处理开发票和特殊地区设置人工处理
                     //设置手动处理
                     ordersNewService.updateSmConfirmStatusById(
                         SmConfirmStatusEnum.W_MANUAL_HANDLE.getCode(), Integer.valueOf(order.getId()),
                         SmConfirmStatusEnum.INIT.getCode(), (new Date()).getTime() / 1000,
                         "订单备注有特殊关键字或者省市区不全或者区县属于非显示区县");
-                    OrderCenterOrderBizHelper.insertOperateLog(order, "CBS系统", "订单处理方式选择",
+                    OrderCenterOrderBizHelper.insertOperateLog(order, "系统", "订单处理方式选择",
                         "获取标建成功，订单备注有特殊关键字或者省市区不全或者区县属于非显示区县，转人工处理", orderProductsList,
                         shopOrderOperateLogsService);
-                    log.error("[OrderMarkBuilderModel]orderid:" + order.getId() + ",下含"
-                              + orderProductsList.size() + "个网单");
+//                    log.error("[OrderMarkBuilderModel]orderid:" + order.getId() + ",下含"
+//                              + orderProductsList.size() + "个网单");
                     //2016-10-18 3W网单发票信息特殊处理 设置初始值不开票
-                    for (OrderProductsNew tempOp : orderProductsList) {
-                        if ("3W".equalsIgnoreCase(tempOp.getStockType())) {
-                            log.error("[OrderMarkBuilderModel]orderid:" + order.getId() + ",网单ID:"
-                                      + tempOp.getId() + ",是3W网单");
-                            tempOp.setMakeReceiptType(0);//开票类型 0 初始值 1 库房开票 2 共享开票
-                            orderProductsNewService.updateAfterCreateInvoice(tempOp);
-                            InvoicesWwwLogs invLog = invoicesWwwLogsService.get(tempOp.getId());
-                            if (invLog == null) {
-                                InvoicesWwwLogs invoiceLog = new InvoicesWwwLogs();
-                                invoiceLog.setOrderProductId(tempOp.getId());
-                                invoiceLog.setOrderId(Integer.valueOf(order.getId()));
-                                invoiceLog.setOrderSn(order.getOrderSn());
-                                invoiceLog.setSourceSn(order.getSourceOrderSn());
-                                invoiceLog.setSource(order.getSource());
-                                invoiceLog.setSuccess(0);
-                                invoiceLog.setFlag(0);
-                                invoiceLog.setAddTime((int) (System.currentTimeMillis() / 1000));
-                                invoiceLog.setProcessTime(0);
-                                invoiceLog.setLastMessage("");
-                                int n = invoicesWwwLogsService.insert(invoiceLog);
-                                if (n <= 0) {
-                                    log.error("[OrderMarkBuilderModel]插入队列失败："
-                                              + JsonUtil.toJson(invoiceLog));
-                                }
-                            } else {
-                                log.error(
-                                    "[OrderMarkBuilderModel]根据网单ID查询队列不为空，网单ID：" + tempOp.getId());
-                            }
-                        } else {
-                            log.error("[OrderMarkBuilderModel]orderid:" + order.getId() + ",网单ID:"
-                                      + tempOp.getId() + ",非3W网单");
-                        }
-                    }
+//                    for (OrderProductsNew tempOp : orderProductsList) {
+//                        if ("3W".equalsIgnoreCase(tempOp.getStockType())) {
+//                            log.error("[OrderMarkBuilderModel]orderid:" + order.getId() + ",网单ID:"
+//                                      + tempOp.getId() + ",是3W网单");
+//                            tempOp.setMakeReceiptType(0);//开票类型 0 初始值 1 库房开票 2 共享开票
+//                            orderProductsNewService.updateAfterCreateInvoice(tempOp);
+//                            InvoicesWwwLogs invLog = invoicesWwwLogsService.get(tempOp.getId());
+//                            if (invLog == null) {
+//                                InvoicesWwwLogs invoiceLog = new InvoicesWwwLogs();
+//                                invoiceLog.setOrderProductId(tempOp.getId());
+//                                invoiceLog.setOrderId(Integer.valueOf(order.getId()));
+//                                invoiceLog.setOrderSn(order.getOrderSn());
+//                                invoiceLog.setSourceSn(order.getSourceOrderSn());
+//                                invoiceLog.setSource(order.getSource());
+//                                invoiceLog.setSuccess(0);
+//                                invoiceLog.setFlag(0);
+//                                invoiceLog.setAddTime((int) (System.currentTimeMillis() / 1000));
+//                                invoiceLog.setProcessTime(0);
+//                                invoiceLog.setLastMessage("");
+//                                int n = invoicesWwwLogsService.insert(invoiceLog);
+//                                if (n <= 0) {
+//                                    log.error("[OrderMarkBuilderModel]插入队列失败："
+//                                              + JsonUtil.toJson(invoiceLog));
+//                                }
+//                            } else {
+//                                log.error(
+//                                    "[OrderMarkBuilderModel]根据网单ID查询队列不为空，网单ID：" + tempOp.getId());
+//                            }
+//                        } else {
+//                            log.error("[OrderMarkBuilderModel]orderid:" + order.getId() + ",网单ID:"
+//                                      + tempOp.getId() + ",非3W网单");
+//                        }
+//                    }
                 } else {
                     //设置自动处理，大小家电统一都按小家电方式自动处理
                     ordersNewService.updateSmConfirmStatusForAllProductsOrder(Integer.valueOf(order.getId()));
-                    OrderCenterOrderBizHelper.insertOperateLog(order, "CBS系统", "订单处理方式选择", "获取标建成功，自动处理",
+                    OrderCenterOrderBizHelper.insertOperateLog(order, "系统", "订单处理方式选择", "获取标建成功，自动处理",
                         orderProductsList, shopOrderOperateLogsService);
                 }
             } catch (Exception e) {
@@ -239,7 +249,7 @@ public class OrderMarkBuilderModel {
                 //                    sb.append(key.toString()).append("\r\n");
                 //                }
                 //                log.error("订单标建转换为自动处理或人工处理时异常：orderid:" + order.getId() + ":" + sb.toString());
-                OrderCenterOrderBizHelper.insertOperateLog(order, "CBS系统", "订单处理方式选择",
+                OrderCenterOrderBizHelper.insertOperateLog(order, "系统", "订单处理方式选择",
                     "订单orderid:" + order.getId() + ",转换为自动处理或人工处理时异常：" + e.getMessage(),
                     orderProductsList, shopOrderOperateLogsService);
             }

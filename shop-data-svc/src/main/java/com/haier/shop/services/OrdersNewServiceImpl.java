@@ -86,4 +86,18 @@ public class OrdersNewServiceImpl implements OrdersNewService {
     public OrdersNew getByOrderSn(String orderSn) {
         return ordersNewDao.getByOrderSn(orderSn);
     }
+
+    @Override
+    public Integer updateLbxSn(OrdersNew orders) {
+        return ordersNewDao.updateLbxSn(orders);
+    }
+    @Override
+    public Integer updateForTailPayTime(OrdersNew orders) {
+        return ordersNewDao.updateForTailPayTime(orders);
+    }
+
+    @Override
+    public Integer updateStatus(Integer orderId) {
+        return ordersNewDao.updateStatus(orderId);
+    }
 }

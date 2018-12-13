@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.haier.common.PagerInfo;
@@ -66,9 +67,11 @@ public class StocksyncproductsController {
 		//删除
 		@RequestMapping(value="/deletecommission_product", method = RequestMethod.POST)
 	    @ResponseBody
-	    public int deleteCommission(int id) {
+	    public int deleteCommission(@RequestParam("id") int id,
+									@RequestParam("source") String source,
+									@RequestParam("sku") String sku) {
 
-			return eopCenterStocksyncproductsService.deleteByPrimaryKey(id);
+			return eopCenterStocksyncproductsService.deleteByPrimaryKey(id,source,sku);
 	    }
 		//校验
 		@RequestMapping(value="/jiaoyan", method = RequestMethod.POST)

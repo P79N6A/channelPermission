@@ -18,4 +18,9 @@ public class OrderPriceSourceChannelServiceImpl implements OrderPriceSourceChann
 		return orderPriceSourceChannelReadDao.getOrderPriceSourceChannelList();
 	}
 
+	@Override
+	public OrderPriceSourceChannel getChannelByOrderSource(String source) {
+		return orderPriceSourceChannelReadDao.getChannelByOrderSource(source);
+	}
+
 }

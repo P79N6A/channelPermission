@@ -112,9 +112,9 @@ public class StockInvStockTransactionServiceImpl implements StockInvStockTransac
 	}
 
 	@Override
-	public int getRowCnt() {
+	public int getRowCnt(Map params) {
 		// TODO Auto-generated method stub
-		return invStockTransactionDao.getRowCnt();
+		return invStockTransactionDao.getRowCnt(params);
 	}
 
 }

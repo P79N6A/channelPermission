@@ -11,9 +11,10 @@ import com.haier.stock.dao.stock.InvMachineSetDao;
 import com.haier.stock.model.InvMachineSet;
 import com.haier.stock.service.StockInvMachineSetService;
 @Service
-public class StockInvMachineSetServiceImpl implements StockInvMachineSetService{
+public class StockInvMachineSetServiceImpl implements StockInvMachineSetService {
 	@Autowired
 	private InvMachineSetDao invMachineSetDao;
+
 	@Override
 	public List<InvMachineSet> getByMainSku(String mainSku) {
 		// TODO Auto-generated method stub
@@ -27,16 +28,23 @@ public class StockInvMachineSetServiceImpl implements StockInvMachineSetService{
 	}
 
 	@Override
+	public List<Map<String, Object>> selectMainSkuAndSubSku(Map<String, Object> map) {
+		return invMachineSetDao.selectMainSkuAndSubSku(map);
+	}
+
+	@Override
 	public List<InvMachineSet> getBySubSku(String subSku) {
 		// TODO Auto-generated method stub
 		return invMachineSetDao.getBySubSku(subSku);
 	}
+
 	/**
-     * 根据主sku和bom项目号获取
-     * @param mainSku
-     * @param bomNum
-     * @return
-     */
+	 * 根据主sku和bom项目号获取
+	 *
+	 * @param mainSku
+	 * @param bomNum
+	 * @return
+	 */
 	@Override
 	public InvMachineSet getByMainSkuAndBomNum(String mainSku, String bomNum) {
 		// TODO Auto-generated method stub
@@ -57,7 +65,7 @@ public class StockInvMachineSetServiceImpl implements StockInvMachineSetService{
 
 	@Override
 	public List<InvMachineSet> getPageByCondition(InvMachineSet condition, int start, int pageSize) {
-		return invMachineSetDao.getPageByCondition(condition,start,pageSize);
+		return invMachineSetDao.getPageByCondition(condition, start, pageSize);
 	}
 
 	@Override
@@ -67,7 +75,19 @@ public class StockInvMachineSetServiceImpl implements StockInvMachineSetService{
 
 	@Override
 	public Integer updateSubSku(String sku, Integer s, String currentUser) {
-		return invMachineSetDao.updateSubSku(sku,s,currentUser);
+		return invMachineSetDao.updateSubSku(sku, s, currentUser);
 	}
 
+	@Override
+	public String querySubsku(String sku) {
+		// TODO Auto-generated method stub
+		return invMachineSetDao.querySubsku(sku);
+
+
+	}
+
+	@Override
+	public String findBySubSku(String subSku1, String subSku2) {
+		return invMachineSetDao.findBySubSku(subSku1,subSku2);
+	}
 }

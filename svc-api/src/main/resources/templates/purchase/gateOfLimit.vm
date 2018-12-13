@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>额度闸口</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
+</head>
+<body>
+<div class="easyui-layout" data-options="fit : true,border : false">
+			<div data-options="region:'north',border:false" style="height: 70px;overflow: auto;" align="left">
+			<form id="importForm" name="importForm" method="post" enctype="multipart/form-data">
+				<table>
+					<tr>
+						<td>导入额度:</td>
+						<td width="40%">
+							<input id="file" name="file" type="file" style="display:none" onchange="$('#filename').val(this.value)" />
+						    <input type='text' readonly="readonly" name='filename' id='filename' class='txt' style="background-color: #EEEEEE;width:98%"/>  
+						</td>
+						<td><a id="explore" class="easyui-linkbutton"  data-options="iconCls:'icon-search',plain:true"    onClick="$('#file').click()" >浏览</a>
+						<a id="submitfile" class="easyui-linkbutton"  data-options="iconCls:'icon-add',plain:true"   >导入指标文件</a>
+						<a id="export" class="easyui-linkbutton"  data-options="iconCls:'icon-save',plain:true"   >导出额度文件</a>
+						<a id='downloadtmp' href="#" class="easyui-linkbutton"  data-options="iconCls:'icon-save',plain:true" >下载模板</a>
+						<font color='red'>导入指标文件是全年指标覆盖！</font></td>
+					</tr>
+					<tr>
+					<td>额度时间:</td>
+						<td colspan="2">
+							
+							<input id="report_year_week" name="report_year_week" class="txt" value="$!currentweek" readonly="readonly"  style="background-color: #EEEEEE "/>
+							<a id="search" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" >查看</a>
+							<a id="targetModify" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"  >指标修改</a>
+							<a id="quotaTotalModify" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"  >总额度修改</a>
+							<a id="quotaModify" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" >个别额度修改</a>
+							<a id="loanModify" class="easyui-linkbutton"  data-options="iconCls:'icon-edit',plain:true" >额度拆借管理</a>
+							<font color='red'>本页面所有金额的表示单位为万元！</font>
+						</td>
+					</tr>
+				</table>
+			</form>
+			</div>
+			<div data-options="region:'center',title:'额度闸口查询结果',border:false">
+		  		<table id="dataGrid"></table>
+			</div>
+</div>
+<div id="quotaTotalModifyDiv"  class="easyui-window" title="总额度修改" data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true,footer:'#bb'" style="width:400px;height:200px;padding: 10px;">
+	<br />
+	<table>
+		<tr>
+			<td style="text-align:right">当前总额度</td>
+			<td><input id="currentTotalLimit" type="text"  readonly="readonly" style="background-color:#EEEEEE;"/></td>
+		</tr>
+		<tr>
+			<td style="text-align:right">修改后的总额度</td>
+			<td><input id="modifyTotalLimit" type="text" class="easyui-numberbox"  precision="2" data-options="required:true,decimalSeparator:'.',min:0"/></td>
+		</tr>
+	</table>
+</div>
+<div id="bb">
+		<a href="javascript:saveEdu();" class="easyui-linkbutton">保存</a>
+	</div>
+<script type="text/javascript">
+var totalLimit;
+//导出
+$("#export").click(function(){
+	    $('#importForm').attr("action", '/gate/exportGateOfLimit.export');
+	    $('#importForm').submit();
+});
+//指标修改
+$("#targetModify").click(function(){
+	 window.open("/gate/gotoChangeTarget",'_self');
+});
+//个别额度修改
+$("#quotaModify").click(function(){
+	 window.open("/gate/gotoChangeLimitIndividual",'_self');
+});
+//拆借修改
+$("#loanModify").click(function(){
+	 window.open("/gate/gotoChangeLimitLoan",'_self');
+});
+//总额度修改
+$("#quotaTotalModify").click(function(){
+	if(datagrid){
+		$("#quotaTotalModifyDiv").window('open');
+	}else{
+		$.messager.alert('提示', "请先查询！", 'info');
+	}
+});
+//点击下载模板
+$("#downloadtmp").click(function(){
+	$('#importForm').attr("action", '/gate/exportLimitModel.export');
+    $('#importForm').submit();
+});
+function saveEdu() {
+	console.info($("#modifyTotalLimit").val());
+	 jQuery.ajax({
+         url: "/gate/saveGateOfLimitTotal",
+         type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+         data:{"modifyTotalLimit":$("#modifyTotalLimit").val(),"currentTotalLimit":$("#currentTotalLimit").val() },
+         success: function (data) {
+			$("#quotaTotalModifyDiv").dialog('close');
+				var result = data.message;
+				console.info(result);
+			if(result){$.messager.alert('提示',result,'info', function(){
+				if(data.totalCount==1){
+	             	$('#dataGrid').datagrid('reload');
+				}
+			});
+			}
+         }
+		});
+}
+var processing = false;
+var datagrid;
+$(function () {
+	//构筑总额度修改的dialog
+// 	$("#quotaTotalModifyDiv").dialog({
+// 		autoOpen:false,
+// 		modal: true,
+// 		closeOnEscape:false,
+// 		width: 400,
+// 		buttons: {
+// 			"保存": function() {
+// 				console.info($("#modifyTotalLimit").val());
+// 				 jQuery.ajax({
+// 		             url: "/gate/saveGateOfLimitTotal",
+// 		             type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+// 		             data:{"modifyTotalLimit":$("#modifyTotalLimit").val(),"currentTotalLimit":$("#currentTotalLimit").val() },
+// 		             success: function (data) {
+// 						$("#quotaTotalModifyDiv").dialog('close');
+// 		 				var result = data.message;
+// 		 				console.info(result);
+// 						if(result){$.messager.alert('提示',result,'info', function(){
+// 							if(data.totalCount==1){
+// 				             	$('#dataGrid').datagrid('reload');
+// 							}
+// 						});
+// 						}
+// 		             }
+// 		 		});
+// 			},
+// 			"取消": function() {
+// 				$(this).dialog('close');
+// 			}
+// 		}
+// 	});
+	//点击查询
+	$('#search').click(function () {
+		//检索列表构筑
+		if(datagrid){
+			//grid刷新
+		    $('#dataGrid').datagrid('load', {report_year_week: $('#report_year_week').val()});
+		}else{
+			//生成grid
+		    datagrid = $('#dataGrid').datagrid({
+		       url: "/gate/findGateOfLimitList",
+		        fit: true,
+		        fitColumns: true,
+		        singleSelect: true,
+		        checkOnSelect:true,
+		        nowrap: true,
+		        rownumbers: true,
+		        queryParams: {
+		        	report_year_week: $('#report_year_week').val()
+		        },
+		        columns: [
+		            [
+		               {
+		                    field: 'id',
+		                    title: '序号',
+		                    width: 10,
+		                    align: 'center',
+		                    hidden:true
+		                },
+		                {
+		                	field:'category_id',
+		                	title:'品类',
+		                	width:80,
+		                	align:'center'
+		                },
+		                {
+		                    field: 'ed_channel_name',
+		                    title: '渠道',
+		                    width: 70,
+		                    align: 'center'
+		                },
+		                {
+		                    field: 'target_num',
+		                    title: '指标',
+		                    width: 50,
+		                    align: 'center'
+		                },
+		                {
+		                	field:'limit_num',
+		                	title:'额度',
+		                	width:50,
+		                	align:'center'
+		                },{
+		                	field:'total_num',
+		                	title:'总库存',
+		                	width:50,
+		                	align:'center'
+		                },
+		                {
+		                	field:'on_way_num',
+		                	title:'在途',
+		                	width:50,
+		                	align:'center'
+		                },
+		                {
+		                	field:'loan_num',
+		                	title:'拆借',
+		                	width:50,
+		                	align:'center'
+		                },
+		                {
+		                	field:'used_num',
+		                	title:'本周已用',
+		                	width:50,
+		                	align:'center'
+		                },
+		                {
+		                    field: 'available_num',
+		                    title: '可用额度',
+		                    width: 50,
+		                    align: 'center'
+		                }
+		            ]
+		        ],
+		        loadFilter: function(data){
+		        	totalLimit=data.total;
+		        	$("#currentTotalLimit").val( totalLimit);
+		        	return data;
+		        }
+		    });
+		}
+	});
+	
+	$( "#dialog-message" ).dialog({
+		 	autoOpen:false,
+			modal: true,
+			closeOnEscape:false,
+			resizable:false,
+			height:200,
+			close: function( event, ui ) {
+				if(processing)
+					$( this ).dialog( "open" );
+			},
+			buttons: {
+			}
+	});
+  	 var options = {
+  	  
+ 	url:'/gate/importGateLimit',
+	type:'POST',
+	async:true,
+ 	beforeSubmit: beforeSubmit,
+	resetForm:true,
+	error:function(){
+		$.messager.progress('close');
+		$.messager.alert('失败', '导入失败,服务器繁忙或者响应失败，请稍后重试');
+		$("#file").val("");//清空文件域
+		$("#filename").val("");//清空文件域
+	},
+	success:function(data) {
+		$.messager.progress('close');
+		$('#submit').removeAttr('disabled');
+		var msg = '';
+		if(data.success){
+			$('#errMsg').hide();
+			$('#resultWarn').hide();
+			msg += "导入状况<br>";
+			msg += "共"+data.data.total+"行" +data.data.total*12+"条记录<br>";
+			msg += "创建"+data.data.insSuccess+"条记录<br>";
+			msg += "更新"+data.data.updSuccess+"条记录<br>";
+			if(data.data.warn != ""){
+				msg += "异常"+data.data.ignore+"条记录"+"<br><font color='red'>"+data.data.warn+"</font>";
+			}else {
+				msg += "异常"+data.data.ignore+"条记录";
+			}
+			$.messager.alert('成功', msg);
+		}else{
+			if(!data.message){
+				msg = "<font color='red'>"+"服务器繁忙或者响应失败，请稍后重试"+"</font>";
+			}else{
+				msg = "<font color='red'>"+data.message+"</font>";
+			}
+			$.messager.alert('失败', msg);
+		}
+	}
+ };
+ $('#submitfile').click(function () {
+// $('#importForm').submit(function(){
+ 	try{
+ 		$('#importForm').ajaxSubmit(options);
+	}catch(e){
+		//alert(e.message);
+		$.messager.alert('错误', e.message, 'error');
+	}
+	
+	$("#file").val("");//清空文件域
+      	return false;	//防止刷新
+ });
+ 
+ //$('#body').height($(window).height() - 30);
+ $('#list').height($(window).height() - 169);
+});
+	   
+function beforeSubmit(){
+  if(checkFile()){
+	$('#submit').attr('disabled','disabled');	
+	processing = true;
+	$('#errMsg').html('');
+	$('#errMsg').hide();
+	$('#result').hide();
+	$.messager.progress({
+		title: '请等待',
+		msg: '正在导入……'
+	})
+  }else
+  	return false;
+}
+	   
+var isIE = /msie/i.test(navigator.userAgent) && !window.opera; 
+function checkFile()
+{
+	var target = document.getElementById('file');
+	var filePath = target.value;
+	if(!filePath)
+	{
+	 	$.messager.alert('提示', '请选择文件', 'info');
+       	$("#filename").val("");//清空文件域
+	 	return false;
+	}
+ 
+	 filePath = filePath.trim(); 
+	       var extendName = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length);
+	 if(!extendName)
+	 {
+
+	 	$.messager.alert('提示', '文件类型不正确，文件的扩展名必须为.xls或.XLS', 'info');
+       	$("#filename").val("");//清空文件域
+		return false;
+	 }
+ 
+     var strRegex = "(xls|XLS)$";
+   	 var re=new RegExp(strRegex);
+   	 if (!re.test(extendName.toLowerCase())){
+		
+       	$.messager.alert('提示', '文件格式不合法，文件的扩展名必须为.xls或.XLS格式', 'info');
+       	$("#filename").val("");//清空文件域
+       	return false;
+     }
+ 
+ 	var fileSize = 0;
+ 	if(isIE && !target.files){
+	 	var fileSys = new ActiveXObject("Scripting.FileSystemObject");
+		if(!fileSys.FileExists(filePath)){
+			$.messager.alert('提示', '附件不存在，请重新输入', 'info');
+	       	$("#filename").val("");//清空文件域
+			return false;
+		}
+		var file = fileSys.GetFile(filePath);
+		fileSize = file.Size;
+ 	}else{
+ 		fileSize = target.files[0].size;
+ 	}
+
+ 	return true;
+} 
+  
+function showLoading() {
+    $('#message').html('');
+    $('#dialog-message').dialog('option','title','处理中');
+       //document.getElementById("over").style.display = "block";
+       document.getElementById("layout").style.display = "block";
+}
+  
+function hideLoading(){
+ 	 $('#dialog-message').dialog('option','title','提示');
+       document.getElementById("layout").style.display = "none";
+}
+</script>
+</body>

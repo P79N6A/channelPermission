@@ -29,7 +29,14 @@ public interface T2OrderQueryService {
 	 * @return
 	 */
 	ServiceResult<List<T2OrderItem>> getT2OrderList( Map<String, Object> params);
-	
+
+	/**
+	 * 获取T+2订单导出信息list
+	 * @param params
+	 * @return
+	 */
+	List<T2OrderItem> getT2OrderListExportData( Map<String, Object> params);
+
 	/**
 	 * 手工关单
 	 * @param params
@@ -76,4 +83,6 @@ public interface T2OrderQueryService {
      * @return
      */
     ServiceResult<List<CrmOrderItem>> getPOList(Map<String, Object> params);
+
+	List<CrmOrderItem> getPOExportList(Map<String, Object> params);
 }

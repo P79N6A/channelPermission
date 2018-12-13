@@ -6,7 +6,7 @@ import java.util.Map;
 import com.haier.common.ServiceResult;
 import com.haier.shop.model.BatchOrderLockVO;
 import com.haier.shop.model.OrderLockResult;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.stock.model.InvSgStock;
 import com.haier.stock.model.InvSgStockLock;
 

@@ -1,140 +1,188 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haier.purchase.data.dao.purchase.CrmOrderDao">
-    <resultMap type="com.haier.purchase.data.model.CrmOrderVO" id="CrmOrderVO">
-	    <result property="order_id" column="order_id"/>
-		<result property="po_id" column="po_id"/>
-		<result property="source_order_id" column="source_order_id"/>
-		<result property="bill_order_id" column="bill_order_id"/>
-		<result property="bill_time" column="bill_time"/>
-		<result property="so_id" column="so_id"/>
-		<result property="dn_id" column="dn_id"/>
-		<result property="wp_order_id" column="wp_order_id"/>
-		<result property="material_id" column="material_id"/>
-		<result property="amount" column="amount"/>
-		<result property="qty" column="qty"/>
-		<result property="total" column="total"/>
-		<result property="bate_rate" column="bate_rate"/>
-		<result property="status" column="status"/>
-		<result property="flow_flag" column="flow_flag"/>
-		<result property="rrs_out_time" column="rrs_out_time"/>
-		<result property="rrs_in_time" column="rrs_in_time"/>
-		<result property="wa_in_order_id" column="wa_in_order_id"/>
-		<result property="wa_in_time" column="wa_in_time"/>
-		<result property="bill_back_time" column="bill_back_time"/>
-		<result property="detail" column="detail"/>
-		<result property="message" column="message"/>
-    </resultMap>
-    <insert id="insertCRMOrder" parameterType="Map">
-	  insert into `crm_order_t`(`po_id`,source_order_id,`bill_order_id`,`bill_time`,
-	  `so_id`,`dn_id`,`wp_order_id`,`material_id`,`amount`,`qty`,
-	  `total`,`bate_rate`,`status`,`message`,`detail`,flow_flag,sub_order_id)
+	<resultMap type="com.haier.purchase.data.model.CrmOrderVO"
+		id="CrmOrderVO">
+		<result property="order_id" column="order_id" />
+		<result property="po_id" column="po_id" />
+		<result property="source_order_id" column="source_order_id" />
+		<result property="bill_order_id" column="bill_order_id" />
+		<result property="bill_time" column="bill_time" />
+		<result property="so_id" column="so_id" />
+		<result property="dn_id" column="dn_id" />
+		<result property="wp_order_id" column="wp_order_id" />
+		<result property="material_id" column="material_id" />
+		<result property="amount" column="amount" />
+		<result property="qty" column="qty" />
+		<result property="total" column="total" />
+		<result property="bate_rate" column="bate_rate" />
+		<result property="status" column="status" />
+		<result property="flow_flag" column="flow_flag" />
+		<result property="rrs_out_time" column="rrs_out_time" />
+		<result property="rrs_in_time" column="rrs_in_time" />
+		<result property="wa_in_order_id" column="wa_in_order_id" />
+		<result property="wa_in_time" column="wa_in_time" />
+		<result property="bill_back_time" column="bill_back_time" />
+		<result property="detail" column="detail" />
+		<result property="message" column="message" />
+		<result property="lbx" column="lbx" />
+		<result property="lbxStatus" column="lbx_status" />
+		<result property="inTime" column="3w_in_time" />
+		<result property="pushStatus" column="push_status" />
+	</resultMap>
+	<insert id="insertCRMOrder" parameterType="Map">
+		insert into
+		`crm_order_t`(`po_id`,source_order_id,`bill_order_id`,`bill_time`,
+		`so_id`,`dn_id`,`wp_order_id`,`material_id`,`amount`,`qty`,
+		`total`,`bate_rate`,`status`,`message`,`detail`,flow_flag,sub_order_id)
 		values(#{billCode},
 		<choose>
 			<when test="source_order_id != null and source_order_id != ''">
-			    #{source_order_id},
+				#{source_order_id},
 			</when>
 			<otherwise>
-			    #{billCode},
+				#{billCode},
 			</otherwise>
-		</choose>		
+		</choose>
 		#{billCode},#{billDate},
 		#{so},#{dn},#{wdCode},#{invCode},#{unitPrice},#{qty},
 		#{sumMoney},#{bateRate},#{status},#{message},#{detail},70,
 		<choose>
 			<when test="sub_order_id != null and sub_order_id != ''">
-			    #{sub_order_id}
+				#{sub_order_id}
 			</when>
 			<otherwise>
-			    #{billCode}
+				#{billCode}
 			</otherwise>
-		</choose>)
+		</choose>
+		)
 	</insert>
 	<select id="selectCRMOrder" parameterType="Map" resultType="Integer">
-		SELECT 
+		SELECT
 		count(1)
 		FROM crm_order_t
 		where bill_order_id=#{billCode}
 	</select>
 	<select id="findCRMOrder" parameterType="Map" resultMap="CrmOrderVO">
-		<!-- SELECT 
-		t2.order_id
-		FROM crm_order_t t1, haier_t2_order_t t2
-		WHERE t1.wp_order_id = t2.order_id
-		<if test="wp_order_id != null and wp_order_id != ''">
-		 	AND t1.wp_order_id = #{wp_order_id}   
-		</if>
+		<!-- SELECT t2.order_id FROM crm_order_t t1, haier_t2_order_t t2 WHERE 
+			t1.wp_order_id = t2.order_id <if test="wp_order_id != null and wp_order_id 
+			!= ''"> AND t1.wp_order_id = #{wp_order_id} </if> <if test="dn_id != null 
+			and dn_id != ''"> AND t2.dn_id = #{dn_id} </if> <if test="arrival_storage_id 
+			!= null and arrival_storage_id != ''"> AND t2.arrival_storage_id = #{arrival_storage_id} 
+			</if> -->
+		SELECT t2.order_id
+		FROM crm_order_t t1,
+		(SELECT order_id FROM
+		haier_t2_order_t WHERE 1=1
 		<if test="dn_id != null and dn_id != ''">
-		 	AND t2.dn_id = #{dn_id}   
+			AND dn_id = #{dn_id}
 		</if>
 		<if test="arrival_storage_id != null and arrival_storage_id != ''">
-		 	AND t2.arrival_storage_id = #{arrival_storage_id}   
-		</if> -->		
-		SELECT t2.order_id 
-		FROM crm_order_t t1,
-			 (SELECT order_id  FROM haier_t2_order_t  WHERE 1=1 
-			 <if test="dn_id != null and dn_id != ''">
-			 	AND dn_id = #{dn_id}   
-			 </if>
-			 <if test="arrival_storage_id != null and arrival_storage_id != ''">
-			 	AND arrival_storage_id = #{arrival_storage_id}   
-			 </if> 
-			  ) t2
+			AND arrival_storage_id = #{arrival_storage_id}
+		</if>
+		) t2
 		WHERE t1.wp_order_id = t2.order_id
 		<if test="wp_order_id != null and wp_order_id != ''">
-		 	AND t1.wp_order_id = #{wp_order_id}   
-		</if>		
+			AND t1.wp_order_id = #{wp_order_id}
+		</if>
 	</select>
 	<update id="updateCRMOrder" parameterType="Map">
-		update crm_order_t set 
+		update crm_order_t set
 		`so_id`=#{so},`dn_id`=#{dn},`amount`=#{unitPrice},`qty`=#{qty},`total`=#{sumMoney},`bate_rate`=#{bateRate},`status`=#{status},`message`=#{message},`detail`=#{detail}
 		<if test="sub_order_id != null and sub_order_id != ''">
-		,sub_order_id=#{sub_order_id}
+			,sub_order_id=#{sub_order_id}
 		</if>
 		where bill_order_id = #{billCode}
 	</update>
-	
+
 	<update id="updateCRMCancelOrder" parameterType="Map">
-		update crm_order_t set 
+		update
+		crm_order_t set
 		`bill_back_time`=#{backTime},`status`=#{status},`message`=#{message},`detail`=#{detail}
 		where bill_order_id = #{billCode}
 	</update>
-	
-	<select id="getMaxFlowFlagInOrder" parameterType="Map" resultType="Integer">
-        select max(flow_flag) from crm_order_t t
-        where 1=1
-        <if test="so_id != null and so_id != ''">
-			and t.source_order_id=(select source_order_id from crm_order_t t2 where t2.so_id=#{so_id}) 
+
+	<select id="getMaxFlowFlagInOrder" parameterType="Map"
+		resultType="Integer">
+		select max(flow_flag) from crm_order_t t
+		where 1=1
+		<if test="so_id != null and so_id != ''">
+			and t.source_order_id=(select source_order_id from
+			crm_order_t t2 where t2.so_id=#{so_id})
 		</if>
 		<if test="dn_id != null and dn_id != ''">
-			and t.source_order_id=(select source_order_id from crm_order_t t2 where t2.dn_id=#{dn_id})   
+			and t.source_order_id=(select source_order_id from
+			crm_order_t t2 where t2.dn_id=#{dn_id})
 		</if>
 		<if test="source_order_id != null and source_order_id != ''">
-		    and t.source_order_id=#{source_order_id}
+			and t.source_order_id=#{source_order_id}
 		</if>
 		group by t.source_order_id
-    </select>
-	<update id="updateStatusForSOPO" parameterType="Map" >
+	</select>
+	<update id="updateStatusForSOPO" parameterType="Map">
 		UPDATE crm_order_t
 		SET flow_flag = #{flow_flag}
 		<if test="wa_in_num != null and wa_in_num != ''">
-		    ,wa_in_num = #{wa_in_num}
+			,wa_in_num = #{wa_in_num}
 		</if>
 		WHERE 
 		<![CDATA[ ((flow_flag >= 0 and flow_flag <= #{flow_flag} ) or (flow_flag >= 0 and #{flow_flag} < 0)) ]]>
 		<if test="so_id != null and so_id != ''">
-			and so_id=#{so_id} 
+			and so_id=#{so_id}
 		</if>
 		<if test="dn_id != null and dn_id != ''">
-			and dn_id=#{dn_id}   
+			and dn_id=#{dn_id}
 		</if>
 		<if test="source_order_id != null and source_order_id != ''">
-		    and source_order_id=#{source_order_id}
-		</if>		
-    </update>
-    <select id="selectCrmOrderCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-    	select count(*)
-    	from haier_in_rrs_t
-    	where wp_order_id = #{wp_order_id}
-    </select>
+			and source_order_id=#{source_order_id}
+		</if>
+	</update>
+	<update id="updateLbxs" parameterType="com.haier.purchase.data.model.CrmOrderItem">
+		UPDATE crm_order_t set dn_id=#{dn_id}
+		<if test="lbx != null and lbx != ''">
+			, lbx=#{lbx}
+		</if>
+		<if test="lbxStatus != null and lbxStatus != ''">
+			, lbx_status=#{lbxStatus}
+		</if>
+		<if test="inTime != null and inTime != ''">
+			, 3w_in_time=#{inTime}
+		</if>
+		<if test="pushStatus != null and pushStatus != ''">
+			, push_status=#{pushStatus}
+		</if>
+		where dn_id=#{dn_id}
+	</update>
+	<select id="selectCrmOrderCount" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*)
+		from haier_in_rrs_t
+		where wp_order_id =
+		#{wp_order_id}
+	</select>
+	<!-- 获取天猫自动款先订单待更新lbx、入库时间的数据 -->
+	<select id="findWaitUpdateLbxList" resultType="com.haier.purchase.data.model.CrmOrderItem">
+		SELECT
+		dn_id
+		FROM
+		crm_order_t crm
+		WHERE
+		1 = 1
+		AND dn_id IS NOT NULL and dn_id != ''
+		AND (lbx='' or lbx is NULL or 3w_in_time ='' or 3w_in_time is NULL)
+		AND
+		crm.source_order_id IN (
+		SELECT
+		order_id
+		FROM
+		haier_t2_order_t
+		WHERE
+		order_category = '3'
+		)
+	</select>
+	<!-- 获取天猫自动款先订单待推送sap的数据 -->
+	<select id="findWaitToSapList" resultType="com.haier.purchase.data.model.CrmOrderItem">
+		select dn_id,lbx from
+		crm_order_t where push_status='0'
+	</select>
 </mapper>

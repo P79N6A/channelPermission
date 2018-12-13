@@ -1,7 +1,6 @@
 package com.haier.svc.services;
 
-import com.haier.purchase.data.model.CrmOrderManualDetailItem;
-import com.haier.purchase.data.model.T2OrderItem;
+import com.haier.purchase.data.model.*;
 import com.haier.purchase.data.service.PurchaseCrmOrderManualService;
 import com.haier.purchase.data.service.PurchaseT2OrderService;
 import com.haier.svc.service.SequenceService;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haier.common.ServiceResult;
-import com.haier.purchase.data.model.PrivilegeItem;
 import com.haier.svc.service.PurchaseCommonService;
 
 import java.util.*;
@@ -136,5 +134,10 @@ public class PurchaseCommonServiceImpl implements PurchaseCommonService {
 //			transactionManager.rollback(status);
 			return null;
 		}
+	}
+
+	@Override
+	public List<CrmOrderManualItem> getManualWdOrderId(String wpOrderId) {
+		return purchaseCrmOrderManualService.getManualWdOrderId(wpOrderId);
 	}
 }

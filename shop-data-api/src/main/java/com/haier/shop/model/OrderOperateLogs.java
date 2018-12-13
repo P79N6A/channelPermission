@@ -29,8 +29,17 @@ public class OrderOperateLogs implements Serializable {
     /** Comment for <code>serialVersionUID</code> */
     private static final long serialVersionUID = 4080442616413376757L;
     private Integer id;
+    private String cOrderSn;//用来接收网单号
+    
+    public String getcOrderSn() {
+		return cOrderSn;
+	}
 
-    public Integer getId() {
+	public void setcOrderSn(String cOrderSn) {
+		this.cOrderSn = cOrderSn;
+	}
+
+	public Integer getId() {
         return this.id;
     }
 

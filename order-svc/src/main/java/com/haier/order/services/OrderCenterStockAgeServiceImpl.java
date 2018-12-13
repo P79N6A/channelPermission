@@ -74,6 +74,8 @@ public class OrderCenterStockAgeServiceImpl {
             PagerInfo pagerInfo, Map<String, Object> params) {
         ServiceResult<List<InvStockAge>> result = new ServiceResult<List<InvStockAge>>();
         try {
+            params.put("start",pagerInfo.getStart());
+            params.put("size",pagerInfo.getPageSize());
             int count = stockInvStockAgeService.getCount(params);
             result.setResult(stockInvStockAgeService.getStockAgeList(params));
             pagerInfo.setRowsCount(count);

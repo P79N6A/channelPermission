@@ -34,4 +34,7 @@ public interface EisVomwwwOutinstockAnalysisService {
                                                   int size);
     
     VomwwwOutinstockAnalysis  quereyVOMthNO(String tbNo);//根据tb单号查询退货入库信息
+    VomwwwOutinstockAnalysis  quereyBackNo(String backNo);//根据thj号查询3W库存信息
+
+	List<VomwwwOutinstockAnalysis> outStockSap(String tbNo);
 }

@@ -1,133 +1,307 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
 <head>
+    <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>T+2订单综合查询</title>
-	<link rel="stylesheet" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css"/>
-    <script type="text/javascript" src="../static/third/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
-
-    <script type="text/javascript" src="../static/third/easyui/plugins/jquery.form.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.core.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.widget.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.mouse.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.button.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.draggable.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.position.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.resizable.js"></script>
-    <script src="../static/third/jqueryui/jquery.dialog.js"></script>
-    <style type="text/css">
-        .layoutdis {
-            display: none;
-            position: absolute;
-            top: 20%;
-            left: 40%;
-            width: 20%;
-            height: 20%;
-            z-index: 1001;
-            text-align: center;
-        }
-
-        .manual-dialog {
-            font-size: 14px
-        }
-    </style>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>产品基础数据管理</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
 
 </head>
-<body>
-<div class="easyui-layout" data-options="fit : true,border : false">
-	
-    <div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 100px;overflow:auto;" align="left">
-        <form id="filterForm" action="#">
-            <table>
-                    <td> 物料编码:</td>
-                    <td><input id="materials_id" name="materials_id" class="txt" style="width: 140px"/>
-                    </td>
-                    <td> 型号:</td>
-                    <td><input id="materials_desc" name="materials_desc" class="txt"
-                               style="width: 140px"/>
-                    </td>
-                    <td>类型:</td>
-                    <td><input id="type" name="type" class="easyui-combobox"
-                                style="width: 100px"/>
-                    </td>
-                    <td>品类:</td>
-                    <td><input id="category_id" name="category_id" class="easyui-combobox"
-                               style="width: 100px"/>
-                    </td>
-                    <td> 产品组:</td>
-                    <td><input id="product_group_id" name="product_group_id" class="easyui-combobox"
-                               style="width: 100px"/>
-                    </td>
-                    <td>状态:</td>
-                    <td><select id="status" name="status" class="easyui-combobox"
-                               style="width: 100px">
-                     
-                     <option   value ="3" selected ="selected">全部</ option >
-                     <option   value ="0">初始化 </option >
-                     <option   value ="1">使用中 </option >
-                     <option   value ="2">停用 </option >
-                 </select >
-                    </td>
-                     <td>是否自动同步:</td>
-                    <td><select id="update" name="update" class="easyui-combobox"
-                               style="width: 100px">
-                     
-                     <option   value ="2" selected ="selected">全部</option >
-                     <option   value ="1">是 </option >
-                     <option   value ="0">否 </option >
-                     
-                 </select >
-                    </td>
-                    
-                    </tr>
-                <tr>
-                    <td colspan="10">
-                        <a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
-                        <a id='export' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
-                    </td>
-                </tr>
-            </table>
-            <input id="arrival_year_week_start_save" name="arrival_year_week_start_save" type="hidden"/>
-            <input id="arrival_year_week_end_save" name="arrival_year_week_end_save" type="hidden"/>
-            <input id="ed_channel_id_save" name="ed_channel_id_save" type="hidden"/>
-            <input id="product_group_id_save" name="product_group_id_save" type="hidden"/>
-            <input id="wp_order_id_save" name="wp_order_id_save" type="hidden"/>
-            <input id="oms_order_id_save" name="oms_order_id_save" type="hidden"/>
-            <input id="brand_save" name="brand_save" type="hidden"/>
-            <input id="materials_id_save" name="materials_id_save" type="hidden"/>
-            <input id="materials_description_save" name="materials_description_save" type="hidden"/>
-            <input id="storage_id_save" name="storage_id_save" type="hidden"/>
-            <input id="flow_flag_save" name="flow_flag_save" type="hidden"/>
-            <input id="shipment_combination_id_save" name="shipment_combination_id_save" type="hidden"/>
-            <input id="gvs_order_id_save" name="gvs_order_id_save" type="hidden"/>
-            <input id="custom_order_id_save" name="custom_order_id_save" type="hidden"/>
-            <input id="customization_save" name="customization_save" type="hidden"/>
-            <input id="order_type_save" name="order_type_save" type="hidden"/>
-            <input id="cbs_catgory_save" name="cbs_catgory_save" type="hidden"/>
-            <input id="order_category_save" name="order_category_save" type="hidden"/>
-            <!-- 下面隐藏控件用来存放点击导出后的数据 -->
-            <input id="exportData" name="exportData" type="hidden"/>
-            <input id="datestart_save" name="datestart_save" type="hidden"/>
-            <input id="dateend_save" name="dateend_save" type="hidden"/>
-            <input id="commitData" name="order_id" type="hidden"/>
-        </form>
-        </div>
-    <div data-options="region:'center',title:'产品基础信息查询结果',border:false">
-        <table id="dataGrid"></table>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
     </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">物料编码：</span>
+                <input id="materials_id" name="materials_id" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">型号：</span>
+                <input id="materials_desc" name="materials_desc"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">类型：</span>
+                <select id="type" name="type" class="easyui-combobox" style="width: 100px">
+                    <option value="">请选择</option>
+                    <option value="T01">整机 </option>
+                    <option value="T04">套机 </option>
+                    <option value="T05">内机 </option>
+                    <option value="T06">外机 </option>
+                    <option value="Z09">支架 </option>
+                    <option value="Z26">面板 </option>
+                    <option value="Z27">壳体 </option>
+                    <option value="T02">散件</option>
+                    <option value="T03">散件</option>
+                    <option value="T07">服务</option>
+                    <option value="Z02">烟管</option>
+                    <option value="Z03">集热器</option>
+                    <option value="Z04">控制器</option>
+                    <option value="Z05">膨胀罐</option>
+                    <option value="Z06">水箱</option>
+                    <option value="Z07">太阳能站</option>
+                    <option value="Z08">循环泵</option>
+                    <option value="Z11">电磁阀</option>
+                    <option value="Z12">电动阀</option>
+                    <option value="Z13">阀门</option>
+                    <option value="Z14">附件</option>
+                    <option value="Z17">换热器</option>
+                    <option value="Z19">控制柜</option>
+                    <option value="Z20">水泵</option>
+                    <option value="Z21">桶托</option>
+                    <option value="Z22">真空管</option>
+                    <option value="Z25">采暖炉</option>
+                </select>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">品类：</span>
+                <input id="category_id" name="category_id"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">产品组：</span>
+                <input id="product_group_id" name="product_group_id"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">状态：</span>
+                <select id="status" name="status" class="easyui-combobox"
+                        style="width: 120px">
+
+                    <option   value ="3" selected ="selected">全部</ option >
+                    <option   value ="0">初始化 </option >
+                    <option   value ="1">使用中 </option >
+                    <option   value ="2">停用 </option >
+                </select >
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">是否自动同步：</span>
+                <select id="update" name="update" class="easyui-combobox"
+                        style="width: 100px">
+                    <option   value ="2" selected ="selected">全部</option >
+                    <option   value ="1">是 </option >
+                    <option   value ="0">否 </option >
+                </select >
+            </div>
+        </div>
+
+        <input id="arrival_year_week_start_save" name="arrival_year_week_start_save" type="hidden"/>
+        <input id="arrival_year_week_end_save" name="arrival_year_week_end_save" type="hidden"/>
+        <input id="ed_channel_id_save" name="ed_channel_id_save" type="hidden"/>
+        <input id="product_group_id_save" name="product_group_id_save" type="hidden"/>
+        <input id="wp_order_id_save" name="wp_order_id_save" type="hidden"/>
+        <input id="oms_order_id_save" name="oms_order_id_save" type="hidden"/>
+        <input id="brand_save" name="brand_save" type="hidden"/>
+        <input id="materials_id_save" name="materials_id_save" type="hidden"/>
+        <input id="materials_description_save" name="materials_description_save" type="hidden"/>
+        <input id="storage_id_save" name="storage_id_save" type="hidden"/>
+        <input id="flow_flag_save" name="flow_flag_save" type="hidden"/>
+        <input id="shipment_combination_id_save" name="shipment_combination_id_save" type="hidden"/>
+        <input id="gvs_order_id_save" name="gvs_order_id_save" type="hidden"/>
+        <input id="custom_order_id_save" name="custom_order_id_save" type="hidden"/>
+        <input id="customization_save" name="customization_save" type="hidden"/>
+        <input id="order_type_save" name="order_type_save" type="hidden"/>
+        <input id="cbs_catgory_save" name="cbs_catgory_save" type="hidden"/>
+        <input id="order_category_save" name="order_category_save" type="hidden"/>
+        <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+        <input id="exportData" name="exportData" type="hidden"/>
+        <input id="datestart_save" name="datestart_save" type="hidden"/>
+        <input id="dateend_save" name="dateend_save" type="hidden"/>
+        <input id="commitData" name="order_id" type="hidden"/>
+
+
+        <a id='search' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a id='export' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >导出</a>
+        <a id='btnInsert' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">新增</a>
+
+    </form>
+</div>
+
+
+<div id="dialog-message" data-options="title:'编辑产品基础数据',resizable:true,modal:true"
+     class="easyui-dialog add-dlg" closed="true"
+     style="width:600px;height:400px;" buttons="#edit-buttons">
+    <form id="dialog-form">
+        <table cellpadding="0" cellspacing="0" width="100%" class="">
+            <div class="fitem">
+                <label style="width: 100px;">物料编码: </label>
+                <input id="materialCodeLabel" name="materialCodeLabel" class="easyui-textbox" readonly="readonly" data-options="required:true,validType:'length[0,200]'" />
+            </div>
+            <div class="fitem">
+                <label style="width: 100px;">型号: </label>
+                <input id="dialog-form-input-materialDescription" name="materialDescription" class="easyui-textbox"  data-options="required:true,validType:'length[0,200]'" />
+            </div>
+
+            <div class="fitem">
+                <label style="width: 100px;">品类: </label>
+                <input id="cbsCategoryLabel" name="cbsCategoryLabel" class="easyui-textbox"  readonly="readonly" data-options="required:true,validType:'length[0,200]'" />
+            </div>
+
+            <div class="fitem">
+                <label style="width: 100px;">产品组: </label>
+                <input id="dialog-form-input-department" name="department" class="easyui-combobox" />
+            </div>
+
+            <div class="fitem">
+                <label style="width: 100px;">状态: </label>
+                <select id="status" name="status" class="easyui-combobox"
+                        style="width: 120px">
+
+                    <option   value ="3" selected ="selected">全部</ option >
+                    <option   value ="0">初始化 </option >
+                    <option   value ="1">使用中 </option >
+                    <option   value ="2">停用 </option >
+                </select >
+            </div>
+
+            <div class="fitem">
+                <label style="width: 100px;">是否自动同步: </label>
+                <select id="dialog-form-input-isAutoUpdate" class="easyui-combobox" name="isAutoUpdate">
+                    <option value="0">否</option>
+                    <option value="1">是 </option>
+                </select>
+            </div>
+
+            <div class="fitem">
+                <label style="width: 100px;">修改人: </label>
+                <input id="modifier" name="modifier" class="easyui-textbox"  readonly="readonly" data-options="required:true,validType:'length[0,200]'" />
+
+            </div>
+            <div class="fitem">
+                <label style="width: 100px;">修改时间: </label>
+                <input id="lastUpd" name="lastUpd" class="easyui-textbox"  readonly="readonly" data-options="required:true,validType:'length[0,200]'" />
+
+            </div>
+            <div class="fitem">
+                <label style="width: 100px;">价格: </label>
+                <input id="price" name="price" class="easyui-textbox" data-options="required:true,validType:'length[0,200]'" />
+
+            </div>
+        </table>
+        <input type="hidden" id="dialog-form-input-id" name="id"/>
+    </form>
+</div>
+<div id="edit-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dialog-message').dialog('close')" >取消</a>
+    <a href="#" class="easyui-linkbutton" id="editBtn" iconCls="icon-ok">保存</a>
+</div>
+
+<div id="dialog-insert" data-options="title:'',resizable:true,modal:true"
+     class="easyui-dialog add-dlg" closed="true"
+     style="width:600px;height:240px;" buttons="#dlg-buttons">
+    <form id="dialog-insert-form" method="post">
+        <div class="fitem">
+            <label style="width: 100px;">物料编码: </label>
+            <input id="materialCodeLabelInsert" name="materialCodeLabelInsert" class="easyui-textbox"data-options="required:true" />
+        </div>
+        <div class="fitem">
+            <label style="width: 100px;">型号: </label>
+            <input id="materialDescriptionInsert" name="materialDescriptionInsert" class="easyui-textbox"  data-options="required:true" />
+        </div>
+
+        <div class="fitem">
+            <label style="width: 100px;">类型: </label>
+
+            <select name="productTypeInsert" id="productTypeInsert" class="easyui-combobox">
+                <option value="">请选择</option>
+                <option value="T01">整机 </option>
+                <option value="T04">套机 </option>
+                <option value="T05">内机 </option>
+                <option value="T06">外机 </option>
+                <option value="Z09">支架 </option>
+                <option value="Z26">面板 </option>
+                <option value="Z27">壳体 </option>
+                <option value="T02">散件</option>
+                <option value="T03">散件</option>
+                <option value="T07">服务</option>
+                <option value="Z02">烟管</option>
+                <option value="Z03">集热器</option>
+                <option value="Z04">控制器</option>
+                <option value="Z05">膨胀罐</option>
+                <option value="Z06">水箱</option>
+                <option value="Z07">太阳能站</option>
+                <option value="Z08">循环泵</option>
+                <option value="Z11">电磁阀</option>
+                <option value="Z12">电动阀</option>
+                <option value="Z13">阀门</option>
+                <option value="Z14">附件</option>
+                <option value="Z17">换热器</option>
+                <option value="Z19">控制柜</option>
+                <option value="Z20">水泵</option>
+                <option value="Z21">桶托</option>
+                <option value="Z22">真空管</option>
+                <option value="Z25">采暖炉</option>
+            </select>
+
+        </div>
+
+        <div class="fitem">
+            <label style="width: 100px;">产品组: </label>
+            <input id="departmentInsert" name="departmentInsert" class="easyui-combobox" />
+        </div>
+
+        <div class="fitem">
+            <label style="width: 100px;">价格: </label>
+            <input id="priceInsert" name="priceInsert" class="easyui-textbox" data-options="required:true" />
+
+        </div>
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn" iconCls="icon-ok">保存</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#dialog-insert').dialog('close')">关闭</a>
 </div>
 
 
 
-
-
-<script type="text/javascript"></script>
 <script src="../static/js/purchase/productBaseDataManagement.js"></script>
+<script type="text/javascript">
 
+    $(document).ready(function(){
+        $(".textbox-text").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+        $(".txt").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+    });
+
+</script>
 </body>
 </html>

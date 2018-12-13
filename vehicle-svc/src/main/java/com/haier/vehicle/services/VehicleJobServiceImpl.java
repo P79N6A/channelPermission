@@ -14,11 +14,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.haier.common.ServiceResult;
 import com.haier.purchase.data.model.vehcile.Cn3wPurchaseStock;
 import com.haier.purchase.data.model.vehcile.Entry3wOrder;
 import com.haier.purchase.data.model.vehcile.VehicleOrderZqDetailsDTO;
 import com.haier.purchase.data.service.vechile.PurchaseVehicleInterfaceLogService;
 import com.haier.vehicle.model.VehicleOrderDetailModel;
+import com.haier.vehicle.service.TMallCAMachineService;
 import com.haier.vehicle.service.VehicleInterfaceLogService;
 import com.haier.vehicle.service.VehicleJobService;
 import com.haier.vehicle.wsdl.les.ZHIFAADDRES;
@@ -49,6 +51,8 @@ public class VehicleJobServiceImpl implements VehicleJobService {
 	private VehicleOrderDetailModel vehicleOrderDetailModel;
 	@Autowired
 	private PurchaseVehicleInterfaceLogService vehicleInterfaceLogService;
+	@Autowired
+	private TMallCAMachineService tmallCAMachineSerivce;
 
 	@Value("${wsdlPath}")
 	private String wsdlLocation;
@@ -339,6 +343,12 @@ public class VehicleJobServiceImpl implements VehicleJobService {
 				object.toJSONString());
 		return _zhifaCUSTOMER__return.getFLAG();
 	}
+	
+	@Override
+	public ServiceResult<String> getTmallCaMachine(){
+		ServiceResult<String> result = tmallCAMachineSerivce.getTmallCaMachine();
+		return result;
+	}
 
 	@Override
 	public void addPurchaseStock(Cn3wPurchaseStock cn3wPurchaseStock) {
@@ -366,6 +376,10 @@ public class VehicleJobServiceImpl implements VehicleJobService {
 
 	public List<Entry3wOrder> queryEntry3wOrder(Map<String, Object> map) {
 		return vehicleOrderDetailModel.queryEntry3wOrder(map);
+	}
+
+	public void updateCn3wPurchaseStockById(Cn3wPurchaseStock cn3wPurchaseStock) {
+		vehicleOrderDetailModel.updateEntry3wOrderById(cn3wPurchaseStock);
 	}
 
 }

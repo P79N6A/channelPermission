@@ -65,6 +65,15 @@ public class CrmOrderManualItem implements Serializable {
 	private String			  source_order_id;						   //来源单号
 
 	private String			  mustHaveDNorSO;						   //更新状态使用，如果不为空，则只有SO或者DN有值时才更新
+	private String corpname;
+
+	public String getCorpname() {
+		return corpname;
+	}
+
+	public void setCorpname(String corpname) {
+		this.corpname = corpname;
+	}
 
 	/**
 	 * @return Returns the wp_order_id

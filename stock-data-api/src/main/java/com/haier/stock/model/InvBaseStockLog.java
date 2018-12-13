@@ -1,6 +1,8 @@
 package com.haier.stock.model;
 
+import com.haier.common.util.StringUtil;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -248,7 +250,7 @@ public class InvBaseStockLog implements Serializable {
     /**
      * 设置 库位名称。
      *
-     * @param value 属性值
+     * @param secName 属性值
      */
     public void setSecName(String secName) {
         this.secName = secName;
@@ -266,7 +268,7 @@ public class InvBaseStockLog implements Serializable {
     /**
      * 设置 产品型号。
      *
-     * @param value 属性值
+     * @param productName 属性值
      */
     public void setProductName(String productName) {
         this.productName = productName;
@@ -284,12 +286,13 @@ public class InvBaseStockLog implements Serializable {
             put("YTIB", "存性变更出库");
             put("ZGI6", "调拨出库");
             put("BRSI", "转运出库");
-            put("ZBCR", "采购入库 ");
+            put("ZBCR", "采购入库");
             put("YTRB", "存性变更入库");
             put("ZBCT", "退货入库");
             put("ZBCJ", "拒收入库");
             put("ZGR6", "调拨入库");
             put("ZRSR", "转运入库");
+            put("QYRK", "迁移入库");
             put("DBFF", "调拨冻结");
             put("XSFF", "销售冻结");
             put("DBRR", "取消调拨释放");
@@ -302,9 +305,15 @@ public class InvBaseStockLog implements Serializable {
      */
     public String getContent() {
         StringBuffer buffer = new StringBuffer();
+        if (!StringUtil.isEmpty(this.mark)){
+            this.mark = this.mark.equalsIgnoreCase("S")?"入库":"出库";
+        }else {
+            this.mark = "";
+        }
         buffer.append("借贷标志：" + this.mark);
         buffer.append(",");
-        buffer.append("交易类型：" + billTypeName.get(this.billType));
+        String temBillType = billTypeName.get(this.billType);
+        buffer.append("交易类型：" + (null == temBillType? "未知":temBillType));
         buffer.append(",");
         buffer.append("原实际库存为" + this.oldStockQty);
         buffer.append(",");

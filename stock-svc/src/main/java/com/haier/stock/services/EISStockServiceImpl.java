@@ -1,22 +1,14 @@
 package com.haier.stock.services;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.haier.common.ServiceResult;
 import com.haier.eis.model.BusinessException;
-import com.haier.shop.model.VOMSynOrderRequire;
-import com.haier.shop.model.VOMSynSubOrderRequire;
 import com.haier.stock.service.StockCenterEISStockService;
 @Configuration
 @EnableScheduling
@@ -24,10 +16,15 @@ import com.haier.stock.service.StockCenterEISStockService;
 public class EISStockServiceImpl implements StockCenterEISStockService  {
 	 private Logger                                 logger = LoggerFactory
 		        .getLogger(EISStockServiceImpl.class);
+
 	 @Autowired
-		    private EISStockModel eisStockModel;
+	 private EISStockModel eisStockModel;
+	 /*@Autowired
+	 private VOMOrderModel vomOrderModel;*/
 	 @Autowired
-		private VOMOrderModel vomOrderModel;
+	 private TransferDefectiveProductsInToGVSModel  inToGVSModel;
+	 @Autowired
+	 private TransferDefectiveProductsOutToGVSModel outToGVSModel;
 	
 	
 	 @Override
@@ -103,5 +100,38 @@ public class EISStockServiceImpl implements StockCenterEISStockService  {
 //			 synOrderRequire.setSubOrderList(subOrderList);
 //			vomOrderModel.synOrderInfo(synOrderRequire);
 //		}
-		
+
+	@Override
+	public ServiceResult<Boolean> processLesStockTransForFinance() {
+		ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+		try {
+			eisStockModel.processLesTransForFinance();
+			/**2018-06-14 暂时注释掉虚入虚出
+			//发送不良品虚入信息到SAP
+			inToGVSModel.transferDefectiveProductsInToGVS();
+			//发送不良品虚出信息到SAP
+			outToGVSModel.transferDefectiveProductsOutToGVS();
+			**/
+			result.setResult(true);
+		} catch (Exception e) {
+			result.setResult(false);
+			result.setSuccess(false);
+			result.setMessage("库存变化，调用SAP财务接口错误：" + e.getMessage());
+			logger.error("库存变化，调用SAP财务接口错误：", e);
+		}
+		return result;
+	}
+
+	@Override
+	public ServiceResult<Boolean> syncStockReserved() {
+		ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+		try {
+			eisStockModel.syncStockReserved();
+		} catch (Exception e) {
+			result.setResult(false);
+			result.setSuccess(false);
+			result.setMessage("同步预留库存出现异常：" + e.getMessage());
+		}
+		return result;
+	}
 }

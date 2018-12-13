@@ -6,14 +6,7 @@ import com.haier.logistics.Helper.ReadWriteRoutingDataSourceHolder;
 import com.haier.logistics.Util.DateFormatUtil;
 import com.haier.logistics.Util.HttpResult;
 import com.haier.logistics.service.LESService;
-import com.haier.shop.model.OrderQueues;
-import com.haier.shop.model.CancelInputType;
-import com.haier.shop.model.LesQueues;
-import com.haier.shop.model.OrderOperateLogs;
-import com.haier.shop.model.OrderProducts;
-import com.haier.shop.model.OrderProductsNew;
-import com.haier.shop.model.OrderWorkflows;
-import com.haier.shop.model.OrdersNew;
+import com.haier.shop.model.*;
 import com.haier.shop.service.LesQueuesService;
 import com.haier.shop.service.OrderProductsNewService;
 import com.haier.shop.service.OrderQueuesService;
@@ -22,6 +15,7 @@ import com.haier.shop.service.ShopOrderOperateLogsService;
 import com.haier.shop.service.ShopOrderWorkflowsService;
 import com.haier.stock.model.OrderProductStatus;
 import com.haier.stock.model.OrderStatus;
+import com.haier.stock.service.VomOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
@@ -50,6 +44,8 @@ public class LesToOrderModel {
     private ShopOrderWorkflowsService orderWorkflowsDao;
     @Autowired
     private LESService lesService;
+    @Autowired
+    VomOrderService vomOrderService;
     private static org.apache.log4j.Logger log = org.apache.log4j.LogManager
             .getLogger(LesToOrderModel.class);
 
@@ -228,83 +224,24 @@ public class LesToOrderModel {
      * @param lq
      * @return
      */
-    private int cancelOrderToles(OrderProductsNew orderProduct,OrdersNew order,String message,LesQueues lq){
-        CancelInputType input = new CancelInputType();
-        input.setOrderno(orderProduct.getCOrderSn());
-        input.setCanceltype("2");
-        String content =accessExternalInterface.getCancelContentXml(input);
-        VomInterData vomInterData = new VomInterData();
-        vomInterData.setNotifyid(orderProduct.getId() + "");
-        vomInterData.setNotifytime(DateFormatUtil.format(new Date()));
-        vomInterData.setContent(content);
-        //VOM开提单，生成开提单加密参数
-        String paramLes_tem = accessExternalInterface.cancelOrderToLesParam(content, vomInterData);
-        String resultXml = "";
-        try {
-            message = "开提单返回结果：" + (lq.getSuccess() != null && lq.getSuccess() == 1 ? "成功" : "失败")
-                    + "，由于网单取消，不在更新网单状态信息，取消订单作废VOM成功";
+    public int cancelOrderToles(OrderProductsNew orderProduct, OrdersNew order,String message, LesQueues lq){
 
-            if (paramLes_tem == null || paramLes_tem.equals("")) {
-                message = "开提单返回结果：" + (lq.getSuccess() != null && lq.getSuccess() == 1 ? "成功" : "失败")
-                        + "，由于网单取消，不在更新网单状态信息，取消订单作废VOM时生成VOM参数为空，请联系相关开发技术人员";
-                log.error(this.logPrefix("网单id：" + lq.getOrderProductId()) + message);
-                this.insertOrderProductLog(order, orderProduct, message, "同步VOM返回");
-                return -106;
-            }
+        VOMCancelOrderRequire vomCancelOrderRequire = new VOMCancelOrderRequire();
+        vomCancelOrderRequire.setOrderNo(orderProduct.getCOrderSn());
+        vomCancelOrderRequire.setCancelType("2");
+        ServiceResult<VOMOrderResponse> serviceResult = vomOrderService.cancelVomOrderInfo(vomCancelOrderRequire);
 
-            //VOM新接口，调用VOM开提单    --vom
-            ServiceResult<String> result = lesService.orderToLes(orderProduct.getCOrderSn(), paramLes_tem);
-            if (result == null || !result.getSuccess()) {//调用les出异常
-                message = "开提单返回结果：" + (lq.getSuccess() != null && lq.getSuccess() == 1 ? "成功" : "失败")
-                        + "，由于网单取消，不在更新网单状态信息，取消订单作废VOM时调用返回失败，VOM错误信息:" + result != null ? result.getMessage()
-                        : "开提单调用接口返回为null，请联系相关开发技术人员";
-                log.error(this.logPrefix("网单id：" + lq.getOrderProductId()) + message);
-                this.insertOrderProductLog(order, orderProduct, message, "同步VOM返回");
-                return -106;
-            }
+        if (serviceResult.getResult().getFlag().equals("T")){
+            message = "由于网单取消，不在更新网单状态信息，取消订单作废VOM返回结果：" + serviceResult.getResult().getMsg();
 
-            resultXml = result.getResult();
-            if (resultXml == null) {
-                message = "开提单返回结果：" + (lq.getSuccess() != null && lq.getSuccess() == 1 ? "成功" : "失败")
-                        + "，由于网单取消，不在更新网单状态信息，取消订单作废VOM时调用返回结果为空，请联系相关开发技术人员";
-                log.error(this.logPrefix("网单id：" + lq.getOrderProductId()) + message);
-                this.insertOrderProductLog(order, orderProduct, message, "同步VOM返回");
-                return -106;
-            }
-
-        } catch (Exception ex) {
-            message = "开提单返回结果：" + (lq.getSuccess() != null && lq.getSuccess() == 1 ? "成功" : "失败")
-                    + "，由于网单取消，不在更新网单状态信息，取消订单作废VOM时，opid:" + orderProduct.getId() + "，发生未知异常:"
-                    + ex.getMessage()+"，请联系相关开发技术人员";
-            log.error(this.logPrefix("网单id：" + lq.getOrderProductId()) + message);
-            this.insertOrderProductLog(order, orderProduct, message, "同步VOM返回");
-            return -106;
+        }else{
+            message = "由于网单取消，不在更新网单状态信息，取消订单作废VOM返回结果：" + serviceResult.getResult().getMsg()
+                    + " 请联系相关开发技术人员";
         }
-
-        //处理les返回结果，解析xml
-        HttpResult<String> httpresult = accessExternalInterface.getLesToOrderResult(resultXml);
-
-        //les返回结果
-        if (httpresult == null || httpresult.getSuccess() == null) {//调用接口发生异常，说明resultXml=""
-            message = "开提单返回结果：" + (lq.getSuccess() != null && lq.getSuccess() == 1 ? "成功" : "失败")
-                    + "，由于网单取消，不在更新网单状态信息，取消订单作废VOM，解析返回结果时发生异常,网单号id：" + lq.getOrderProductId() + ", 接口返回为空，HttpResult is null";
-            log.error(this.logPrefix("网单id：" + lq.getOrderProductId()) + message);
-            this.insertOrderProductLog(order, orderProduct, message, "同步VOM返回");
-            return -106;
-        }
-
-        // false:失败
-        if (!httpresult.getSuccess()) { //调用接口返回false
-            message = "开提单返回结果：" + (lq.getSuccess() != null && lq.getSuccess() == 1 ? "成功" : "失败")
-                    + "，由于网单取消，不在更新网单状态信息，取消订单作废VOM返回结果失败：" + httpresult.getMessage();
-            log.error(this.logPrefix("网单id：" + lq.getOrderProductId()) + message);
-            this.insertOrderProductLog(order, orderProduct, message, "同步VOM返回");
-            return -106;
-        }
-
-        log.info(this.logPrefix("网单id：" + lq.getOrderProductId()) + message);
+        log.info("网单：" + orderProduct.getCOrderSn() + "取消下单vom返回结果:" + serviceResult.getResult().getFlag() + serviceResult.getResult().getMsg());
         this.insertOrderProductLog(order, orderProduct, message, "同步VOM返回");
-        return -106;//网单取消，不在更新
+        return -106;
+
     }
     /**
      * 新增 订单明细操作日志

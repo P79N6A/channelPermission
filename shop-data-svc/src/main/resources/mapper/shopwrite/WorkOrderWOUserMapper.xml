@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.workorder.WOUserDao" >
+
+  <resultMap id="WOUserMap" type="com.haier.shop.model.WOUser">
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="INTEGER" />
+    <result column="send_email" property="sendEmail" jdbcType="INTEGER" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ReviewUserReadDto" type="com.haier.shop.dto.ReviewUserDto" extends="WOUserMap">
+    <result column="Id1" property="id1" jdbcType="VARCHAR" />
+    <result column="userName1" property="username1" jdbcType="VARCHAR" />
+    <result column="phone1" property="phone1" jdbcType="VARCHAR" />
+    <result column="email1" property="email1" jdbcType="VARCHAR" />
+    <result column="Id2" property="id2" jdbcType="VARCHAR" />
+    <result column="userName2" property="username2" jdbcType="VARCHAR" />
+    <result column="phone2" property="phone2" jdbcType="VARCHAR" />
+    <result column="email2" property="email2" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, user_name, status, email, mobile, user_type, send_email, create_user,
+    create_time, update_user, update_time
+  </sql>
+  <sql id="pagination"> LIMIT #{page.start}, #{page.pageSize}  </sql>
+
+  <insert id="addWOUser">
+    insert into wo_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        user_id,
+      <if test="userName != null and userName !=''">
+        user_name,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="email != null and email !=''">
+        email,
+      </if>
+      <if test="mobile != null and mobile !=''">
+        mobile,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+      <if test="sendEmail != null">
+        send_email,
+      </if>
+      <if test="createUser != null and createUser !=''">
+        create_user,
+      </if>
+      <if test="updateUser != null and updateUser !=''">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      uuid(),
+      <if test="userName != null and userName !=''">
+        #{userName},
+      </if>
+      <if test="status != null">
+        #{status},
+      </if>
+      <if test="email != null and email !=''">
+        #{email},
+      </if>
+      <if test="mobile != null and mobile !=''">
+        #{mobile},
+      </if>
+      <if test="userType != null">
+        #{userType},
+      </if>
+      <if test="sendEmail != null">
+        #{sendEmail},
+      </if>
+      <if test="createUser != null and createUser !=''">
+        #{createUser},
+      </if>
+      <if test="updateUser != null and updateUser !=''">
+        #{updateUser},
+      </if>
+    </trim>
+  </insert>
+
+   <select id="getById" resultMap="WOUserMap" >
+    select
+    <include refid="Base_Column_List"/>
+    from wo_user
+    where user_id=#{userId}
+  </select>
+
+  <select id="getListByParam" resultMap="WOUserMap" >
+    select
+    <include refid="Base_Column_List"/>
+    from wo_user
+    <where>
+        status=0
+      <if test="param.userId != null">
+        and user_id=#{param.userId}
+      </if>
+      <if test="param.userName != null and param.userName != ''">
+       and user_name like concat('%',#{param.userName},'%')
+      </if>
+      <if test="param.email != null and param.email != ''">
+        and email=#{param.email}
+      </if>
+      <if test="param.mobile != null and param.mobile != ''">
+        and mobile=#{param.mobile}
+      </if>
+      <if test="param.userType != null">
+        and user_type=#{param.userType}
+      </if>
+      <if test="param.sendEmail != null">
+        and send_email=#{param.sendEmail}
+      </if>
+      <if test="param.createUser != null and param.createUser != ''">
+        and create_user=#{param.createUser}
+      </if>
+      <if test="param.createTime != null and param.createTime != ''">
+        and create_time=#{param.createTime}
+      </if>
+      <if test="param.updateTime != null and param.updateTime != ''">
+        and update_time=#{param.updateTime}
+      </if>
+      <if test="param.updateUser != null and param.updateUser != ''">
+        and update_user=#{param.updateUser}
+      </if>
+    </where>
+    <if test="page != null ">
+      <include refid="pagination"/>
+    </if>
+  </select>
+
+  <select id="countByParam" resultType="int" >
+    select
+    count(1)
+    from wo_user
+    <where>
+      status=0
+      <if test="param.userId != null">
+        and user_id=#{param.userId}
+      </if>
+      <if test="param.userName != null and param.userName != ''">
+        and user_name like concat('%',#{param.userName},'%')
+      </if>
+      <if test="param.status != null">
+        and status=#{param.status}
+      </if>
+      <if test="param.email != null and param.email != ''">
+        and email=#{param.email}
+      </if>
+      <if test="param.mobile != null and param.mobile != ''">
+        and mobile=#{param.mobile}
+      </if>
+      <if test="param.userType != null">
+        and user_type=#{param.userType}
+      </if>
+      <if test="param.sendEmail != null">
+        and send_email=#{param.sendEmail}
+      </if>
+      <if test="param.createUser != null and param.createUser != ''">
+        and create_user=#{param.createUser}
+      </if>
+      <if test="param.createTime != null and param.createTime != ''">
+        and create_time=#{param.createTime}
+      </if>
+      <if test="param.updateTime != null and param.updateTime != ''">
+        and update_time=#{param.updateTime}
+      </if>
+      <if test="param.updateUser != null and param.updateUser != ''">
+        and update_user=#{param.updateUser}
+      </if>
+    </where>
+  </select>
+
+  <update id="updateById">
+    update wo_user
+    <set>
+    <if test="userName != null and userName != '' ">
+     user_name = #{userName},
+    </if>
+    <if test="status != null ">
+      status = #{status},
+    </if>
+    <if test="email != null and email != '' ">
+      email = #{email},
+    </if>
+    <if test="mobile != null and mobile != '' ">
+      mobile = #{mobile},
+    </if>
+    <if test="userType != null">
+      user_type = #{userType},
+    </if>
+    <if test="sendEmail != null">
+      send_email = #{sendEmail},
+    </if>
+    <if test="updateUser != null">
+      update_user = #{updateUser},
+    </if>
+    <if test="updateTime != null">
+      update_time = #{updateTime},
+    </if>
+    </set>
+    where user_id=#{userId}
+  </update>
+
+  <update id="delBatch">
+    update wo_user
+      set status = 1
+    where user_id in
+    <foreach collection="list" item="userId" open="(" close=")" separator="," index="index">
+    #{userId}
+    </foreach>
+  </update>
+
+  <select id="selectBySetId" resultMap="ReviewUserReadDto">
+    select user_id,user_name,mobile,email,user_type
+    <if test="userId!=null">
+      ,(select distinct managerUserId1 from wo_reviewcontacts where userId=#{userId} and
+      delFlag = 0 limit 1) as Id1,
+      (select user_name FROM wo_user WHERE user_id=(select distinct managerUserId1
+      from wo_reviewcontacts where userId=#{userId} and delFlag = 0 limit 1)) as
+      userName1,
+      (select mobile FROM wo_user WHERE user_id=(select distinct managerUserId1 from
+      wo_reviewcontacts where userId=#{userId} and delFlag = 0 limit 1)) as phone1,
+      (select email FROM wo_user WHERE user_id=(select distinct
+      managerUserId1 from wo_reviewcontacts where userId=#{userId} and delFlag =
+      0 limit 1)) as email1,
+      (select distinct managerUserId2 from wo_reviewcontacts where userId=#{userId} and
+      delFlag = 0 limit 1) as Id2,
+      (select user_name FROM wo_user WHERE user_id=(select distinct managerUserId2
+      from wo_reviewcontacts where userId=#{userId} and delFlag = 0 limit 1)) as
+      userName2,
+      (select mobile FROM wo_user WHERE user_id=(select distinct managerUserId2 from
+      wo_reviewcontacts where userId=#{userId} and delFlag = 0 limit 1)) as phone2,
+      (select email FROM wo_user WHERE user_id=(select distinct
+      managerUserId2 from wo_reviewcontacts where userId=#{userId} and delFlag =
+      0 limit 1)) as email2
+    </if>
+    from wo_user
+    where status = 0
+    <if test="userId!=null">
+      and user_id <![CDATA[=]]>
+      #{userId}
+    </if>
+    <if test="type!=null">
+      and user_type <![CDATA[=]]>
+      #{type}
+    </if>
+  </select>
+
+  <sql id="search_where">
+    <if test="record.username != null">
+      <!-- and userName = #{record.username} -->
+      and user_name like concat('%',#{record.username},'%')
+    </if>
+    <if test="record.mobile != null">
+      and mobile like concat('%',#{record.mobile},'%')
+    </if>
+    <if test="record.email != null">
+      and email like concat('%',#{record.email},'%')
+    </if>
+    <if test="record.type != null">
+      and type = #{record.type}
+    </if>
+    <if test="record.sendEmail != null">
+      and send_email = #{record.sendEmail}
+    </if>
+  </sql>
+
+  <select id="selectNotuserId" resultMap="ReviewUserReadDto">
+    select
+    <include refid="Base_Column_List" />
+    from wo_user where user_id not in(select userId from wo_reviewcontacts
+    where delFlag=0) and status=0 and user_type=0
+  </select>
+</mapper>

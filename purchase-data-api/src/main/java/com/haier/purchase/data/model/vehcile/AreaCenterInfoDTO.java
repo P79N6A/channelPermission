@@ -15,11 +15,42 @@ public class AreaCenterInfoDTO extends BaseDTO {
     private String rrsCenterCode; //日日顺中心编码
     private String rrsCenterName; //日日顺中心编码
     private String createBy; //
+
+
+    public String getActiveFlagName() {
+        return activeFlagName;
+    }
+
+    public void setActiveFlagName(String activeFlagName) {
+        this.activeFlagName = activeFlagName;
+    }
+
+    private String activeFlagName;
+
+    private String createTimeShow;
+
+    public String getCreateTimeShow() {
+        return createTimeShow;
+    }
+
+    public void setCreateTimeShow(String createTimeShow) {
+        this.createTimeShow = createTimeShow;
+    }
+
+    public String getLastUpdateTimeShow() {
+        return lastUpdateTimeShow;
+    }
+
+    public void setLastUpdateTimeShow(String lastUpdateTimeShow) {
+        this.lastUpdateTimeShow = lastUpdateTimeShow;
+    }
+
+    private String lastUpdateTimeShow;
     private Date createTime; //
     private String lastUpdateBy; //
     private Date lastUpdateTime; //
-    private String whCode;//仓库编码
 
+    private String whCode;//仓库编码
     public String getDeliveryToCode() {
         return deliveryToCode;
     }

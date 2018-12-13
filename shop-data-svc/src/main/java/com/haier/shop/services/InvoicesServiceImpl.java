@@ -131,4 +131,18 @@ public class InvoicesServiceImpl implements InvoicesService {
     	return invoicesDao.get(id);
     }
 
+	@Override
+	public Invoices selectInvoiceView(String productId) {
+		// TODO Auto-generated method stub
+		return invoicesDao.selectInvoiceView(productId);
+	}
+
+	@Override
+	public int selectCountView(String productId) {
+		// TODO Auto-generated method stub
+		return invoicesDao.selectCountView(productId);
+	}
+
+
+
 }

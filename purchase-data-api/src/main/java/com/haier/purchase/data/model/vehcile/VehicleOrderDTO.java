@@ -1,6 +1,8 @@
 package com.haier.purchase.data.model.vehcile;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class VehicleOrderDTO extends BaseDTO {
 
@@ -41,6 +43,14 @@ public class VehicleOrderDTO extends BaseDTO {
     private Date startOrderTime;
     private Date endOrderTime;
     private String[]  noStatus; //
+    private String remark;
+    
+    /*
+     * 订单号，查询用
+     */
+    private List<String> orderNos = new ArrayList<>();
+    
+    private List<String> vbelnDn1s = new ArrayList<>();
 
 
 
@@ -330,6 +340,30 @@ public class VehicleOrderDTO extends BaseDTO {
 
 	public void setNoStatus(String[] noStatus) {
 		this.noStatus = noStatus;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public List<String> getOrderNos() {
+		return orderNos;
+	}
+
+	public void setOrderNos(List<String> orderNos) {
+		this.orderNos = orderNos;
+	}
+
+	public List<String> getVbelnDn1s() {
+		return vbelnDn1s;
+	}
+
+	public void setVbelnDn1s(List<String> vbelnDn1s) {
+		this.vbelnDn1s = vbelnDn1s;
 	}
 
 

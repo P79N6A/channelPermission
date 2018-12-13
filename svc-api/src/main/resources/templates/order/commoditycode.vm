@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="/static/css/common.css">
+    <title>商品信息</title>
+    <script src="/static/third/jquery.js"></script>
+    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/easyui-extention_ws.js"></script>
+    <script src="/static/js/customConfig.js"></script>
+    <script src="/static/js/pop/common/pop.js"></script>
+    <script src="/static/third/easyui/glo.js"></script>
+    <style type="text/css">
+        .dlg{
+            width:400px;
+            height:100px;
+            padding:10px;
+            margin-top:20px;
+        },
+        easyui-panel.{
+            overflow-x: show;
+        }
+        .panel-body{
+            border:0 !important;
+        }
+    </style>
+</head>
+<body>
+<div >
+    <fieldset>
+        <div class="search-panel" style="width: 100%; height: 60%; background-color: #fff" >
+            <span style="margin: 10px;display: inline-block;  height: auto">产品名称：$!senateDTO.productName &nbsp;&nbsp;</span> <span style="margin: 10px;display: inline-block; height: auto">产品编码：$!senateDTO.sku &nbsp;&nbsp;</span>
+            <br><br>
+        </div>
+        <legend></legend>
+        <legend>规格参数</legend>
+        #if($productPicturesDTOList.size()==0)
+            <div style="width: 100%;border-radius: 4px;text-align: center;border: 1px solid #ddd ;background-color: #eee;padding: 12px">
+                规格参数未维护!
+            </div>&nbsp;
+        #else
+        <div class="search-panel" style="background-color: #eee; border: 1px solid #ddd;border-radius: 4px;padding: 6px">
+            <table>
+                #foreach($ProductSpecificationsDTO in $productSpecificationsDTOList)
+                    <tr><td>属性分类:$ProductSpecificationsDTO.tag &nbsp;</td> <td>属性名称:$ProductSpecificationsDTO.name &nbsp;</td> <td>属性值:$ProductSpecificationsDTO.value &nbsp;</td></tr>
+                #end
+            </table>
+            #end
+        </div>
+    </fieldset>
+    <br>
+
+    <fieldset>
+        <legend>产品图</legend>
+        <div class="search-panel" >
+            #if($productPicturesDTOList.size()==0)
+            <div style="width: 100%;border-radius: 4px;text-align: center;border: 1px solid #ddd ;background-color: #eee;padding: 12px">
+                        产品图未维护!
+            </div>&nbsp;
+            #else
+            #foreach($ProductPicturesDTO in $productPicturesDTOList)
+                <div style="float: left;border: 1px solid #ddd ;margin-bottom: 20px;margin: 15px;background-color: #fff;display: block;padding: 4px;border-radius: 4px">
+                    <img src="$ProductPicturesDTO.url"style="height: 245px;width: 245px;">
+                    <br>
+                    <span >$!ProductPicturesDTO.displayName &nbsp;</span>
+                </div>
+            #end
+            #end
+        </div>
+    </fieldset>
+    <br>
+    <fieldset>
+        <legend>特性图</legend>
+        <div class="search-panel" >
+            #if($productFeaturesDTOList.size()==0)
+                <div style="width: 100%;border-radius: 4px;text-align: center;border: 1px solid #ddd ;background-color: #eee;padding: 12px">
+                    特性图未维护!
+                </div>&nbsp;
+            #else
+            #foreach($ProductFeaturesDTO in $productFeaturesDTOList)
+                <div style="float: left;border: 1px solid #ddd ;margin: 15px;margin-bottom: 20px;background-color: #fff;display: block;padding: 4px;border-radius: 4px">
+                    <img src="$ProductFeaturesDTO.url"style="height: 245px;width: 245px">
+                    <br>
+                    <span >$!ProductFeaturesDTO.displayName&nbsp;</span>
+                </div>
+            #end
+            #end
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>拉页图</legend>
+        <div class="search-panel" >
+            #if($productGatefoldsDTOList.size()==0)
+                <div style="width: 100%;border-radius: 4px;text-align: center;border: 1px solid #ddd ;background-color: #eee;padding: 12px">
+                    拉页图未维护!
+                </div>&nbsp;
+            #else
+            #foreach($ProductGatefoldsDTO in $productGatefoldsDTOList)
+                <div style="float: left;border: 1px solid #ddd ;margin: 15px;margin-bottom: 20px;background-color: #fff;display: block;padding: 4px;border-radius: 4px">
+                    <img src="$ProductGatefoldsDTO.url" style="height: auto;width: 195px">
+                    <br>
+                    <span >$!ProductGatefoldsDTO.displayName &nbsp;</span>
+                </div>
+            #end
+            #end
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>外包装图</legend>
+        <div class="search-panel" >
+            #if($productOuterPackingBoxesDTOList.size()==0)
+                <div style="width: 100%;border-radius: 4px;text-align: center;border: 1px solid #ddd ;background-color: #eee;padding: 12px">
+                    外包装图未维护!
+                </div>&nbsp;
+            #else
+            #foreach($ProductOuterPackingBoxesDTO in $productOuterPackingBoxesDTOList)
+                <div style="float: left;border: 1px solid #ddd ;margin: 15px;margin-bottom: 20px;background-color: #fff;display: block;padding: 4px;border-radius: 4px">
+                    <img src="$ProductOuterPackingBoxesDTO.url" style="height: 245px;width: 245px">
+                    <br>
+                    <span >$!ProductOuterPackingBoxesDTO.displayName &nbsp;</span>
+                </div>
+            #end
+            #end
+        </div>
+    </fieldset>
+</div>
+</body>
+
+<script type="text/javascript">
+
+    var goback = function () {
+        window.history.back();
+    };
+</script>
+</html>

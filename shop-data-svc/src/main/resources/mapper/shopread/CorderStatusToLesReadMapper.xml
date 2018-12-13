@@ -20,13 +20,13 @@
   <select id="findNeedSendToLes" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from CorderStatusToLes
+    from corderstatustoles
     where count &lt; 20 and success = 0
     limit #{limit}
   </select>
   
   <insert id="insert" parameterType="com.haier.shop.model.CorderStatusToLes">
-		insert into `CorderStatusToLes`(`orderProductId`,`cOrderSn`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`successTime`,`createType`,`corderFlag`) values
+		insert into `corderstatustoles`(`orderProductId`,`cOrderSn`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`successTime`,`createType`,`corderFlag`) values
 		(#{orderproductid},#{cordersn},#{pushdata},#{success},#{count},#{addtime},#{lastmessage},#{successtime},#{createtype},#{corderflag})
   </insert>
 </mapper>

@@ -32,7 +32,7 @@
 		SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,`cancel_status`,`sync_order_status`,
 		`finance_status`,`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
 		`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
-		FROM `OrderQueueExtend`
+		FROM `orderqueueextend`
 		WHERE  1=1 and `sync_order_status`=0 ORDER BY id DESC
 	</select>
 	<!-- 同步网单状态 -->
@@ -40,7 +40,7 @@
 		SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,`cancel_status`,`sync_order_status`,
 		`finance_status`,`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
 		`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
-		FROM `OrderQueueExtend`
+		FROM `orderqueueextend`
 		WHERE  1=1 and `sync_order_status`=#{syncOrderStatus} and `source`=#{source} and `cancel_status`=0
 	</select>
 	<!-- 查询未传财务 -->
@@ -50,7 +50,7 @@
 	    	   `error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
 	    	   `out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
 	    	   `outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
-		FROM `OrderQueueExtend`
+		FROM `orderqueueextend`
 		WHERE  1=1 
 		<!-- 只查询海朋 -->
 		and `source`='HAIP'
@@ -70,7 +70,7 @@
 	    	   `error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
 	    	   `out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
 	    	   `outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
-		FROM `OrderQueueExtend`
+		FROM `orderqueueextend`
 		WHERE  1=1 
 		<!-- 查询对应渠道 -->
 		and `source`=#{source}
@@ -90,7 +90,7 @@
 	    	`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
 	    	`out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
 	    	`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
-		FROM `OrderQueueExtend`
+		FROM `orderqueueextend`
 		WHERE  1=1 
 		AND `source`='HAIP'
 		AND `status` &gt;=2
@@ -104,7 +104,7 @@
 	    	`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
 	    	`out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
 	    	`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
-		FROM `OrderQueueExtend` WHERE `source`=#{source} order by id desc limit 1
+		FROM `orderqueueextend` WHERE `source`=#{source} order by id desc limit 1
 	</select>
 	<select id="getByCOrderSnAndOrderSource" resultMap="orderQueueExtendResult">
 		 SELECT `id`,`cordersn`,`sku`,`secCode`,`source`,`qty`,`status`,
@@ -112,7 +112,7 @@
 	    	`error_message`,`add_time`,`delivery_time`,`express_company`,`express_number`,
 	    	`out_json`,`sap_message`,`invoice_status`,`invoice_json`,`invoice_message`,
 	    	`outping`,`netpoint_code`,`netpoint_name`,`netpoint_tel`,`dn_number`
-		FROM `OrderQueueExtend` WHERE `cordersn`=#{cordersn} and `source`=#{source}
+		FROM `orderqueueextend` WHERE `cordersn`=#{cordersn} and `source`=#{source}
 	</select>
 
 	<resultMap id="ordersResult" type="com.haier.shop.model.OrdersNew">
@@ -337,10 +337,10 @@
 		`isProduceDaily`,
 		`tailPayTime`,
 		`ckCode`
-		FROM `Orders`
+		FROM `orders`
 		WHERE `id` = #{id}
 	</select>
 	<select id="getMemberMobile" parameterType="Integer" resultType="String">
-		select mobile from Members where id = #{id}
+		select mobile from members where id = #{id}
 	</select>
 </mapper>

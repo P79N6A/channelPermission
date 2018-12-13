@@ -21,11 +21,20 @@ public interface PurchaseT2OrderQueryService {
 	List<T2OrderItem> findT2OrderMultipleList(Map<String, Object> params);
 
 	/**
+	 * 根据条件查询获取T+2订单信息
+	 *
+	 * @param params
+	 * @return
+	 */
+	CrmOrderItem getIsNullWaInTime(Map<String, Object> params);
+
+	/**
 	 * 获得条数
+	 * @param params 
 	 * 
 	 * @return
 	 */
-	int getRowCnts();
+	int getRowCnts(Map<String, Object> params);
 
 	/**
 	 * 手工关单
@@ -64,4 +73,13 @@ public interface PurchaseT2OrderQueryService {
 	 * @return
 	 */
 	public int findPOListCNT(Map<String, Object> params);
+
+    List<T2OrderItem> findT2OrderMultipleExportList(Map<String, Object> params);
+
+	/**
+	 * 根据网单号码查询数据是否存在
+	 * @param orderId
+	 * @return
+	 */
+	Integer getByOrderId(String orderId);
 }

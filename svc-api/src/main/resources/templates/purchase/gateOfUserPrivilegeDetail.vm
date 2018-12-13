@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>数据权限设置</title>
+    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css"/>
+  <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css"/>
+  <script type="text/javascript" src="../static/third/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script type="text/javascript" src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.form.js"></script>
+</head>
+<body>
+	<div class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'north',title:'查询条件',border:false" style="height: 60px;overflow: auto;" align="left">
+		<form id="filterForm" action="#">
+	    	<table>
+	    		<tr>
+	    			<td>用户名</td>
+	    			<td><input id="user_name" name="user_name" class="txt"></td>
+		    			<td><a id='search' href="javascript:;" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+		    			<a id='save' href="javascript:;" class="easyui-linkbutton" iconCls="icon-save" onclick="accept()">保存</a>
+		    			<a id='cancel' href="javascript:;" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel()">取消</a>
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </form>
+    </div>
+    <div data-options="region:'center',border:false">
+		<table id="dataGrid"></table>
+	</div>
+</div>
+	<script type="text/javascript">
+	//datagrid
+	var datagrid;
+	
+	$('#search').click(function () {
+		//检索列表构筑
+		if(datagrid){
+			//grid刷新
+	    	$('#dataGrid').datagrid('load',{user_name:$("#user_name").val()});
+		}else{
+			//生成grid
+			datagrid = $('#dataGrid').datagrid({
+       			 url: "/gate/findGateOfUserPrivilege",
+        		 fit: true,
+        		 singleSelect: false,
+        		 nowrap: true,
+        		 rownumbers: true,
+				 selectOnCheck: false,
+				 checkOnSelect: false,
+				 onClickRow: onClickRow,
+				 queryParams: {user_name:$("#user_name").val()},
+        		 columns: [
+            		[{field: 'user_id',title: '用户id',width: 10,align: 'center',hidden:true},
+             		 {field:'user_name',title:'用户名',width:200,align:'center'},
+          			 {field:'role_id',title:'岗位名',align:'center',width:200,
+       	                formatter:function(value,row){
+      	                  return row.role_name;
+      	    			},
+       	    			editor:{
+      	        			type:'combobox',
+      	        			options:{
+      	            			data: eval('$!roleList'),
+      							valueField:'role_id',
+      							textField:'role_name',
+      							panelHeight:'350',
+      	            			editable:false
+      	        			}
+					 	}
+					}]]
+    			});
+			};});
+var editIndex = undefined;
+function endEditing(){
+	if($('#dataGrid').datagrid("getRows").length<=0) return true;
+	if (editIndex == undefined){return true}
+	if ($('#dataGrid').datagrid('validateRow', editIndex)){
+		getNames();
+		var rows = $('#dataGrid').datagrid('getChecked');
+		var editcheck = false;
+		$.each(rows, function(index, item) {        
+			if(item==$('#dataGrid').datagrid('getRows')[editIndex])
+				editcheck =true;
+				return false;
+		});
+		$('#dataGrid').datagrid('endEdit', editIndex);
+		if(editcheck) {
+			$('#dataGrid').datagrid('checkRow',editIndex);
+		}
+		editIndex = undefined;
+		return true;
+	}
+}
+function onClickRow(index){
+	if (editIndex != index){
+		if (endEditing()){
+			$('#dataGrid').datagrid('selectRow', index)
+			.datagrid('beginEdit', index);
+			editIndex = index;
+		} else {
+			$('#dataGrid').datagrid('selectRow', editIndex);
+		}
+	}
+}
+function accept(){
+	if (endEditing()){
+		$('#dataGrid').datagrid('acceptChanges');
+		var allData = $('#dataGrid').datagrid('getRows');
+		$.messager.progress({
+			title: '请等待……',
+			text: '正在保存'
+		})
+		jQuery.ajax({
+        	url: "/gate/saveGateOfUserPrivilege",   // 提交的页面
+			type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+			data:{"allData":JSON.stringify(allData)},
+			success: function (data) {
+				var result = data.message;
+				if(result){$.messager.alert('提示',result,'info', function(){
+					if(data.totalCount==1){
+						window.open("/gate/gotoGateOfDataPrivilege",'_self');
+					}
+				});}
+			},
+			complete: function(){
+				$.messager.progress('close');
+			}
+ 		});
+	}
+}
+function getNames(){
+	if(!$('#dataGrid').datagrid('getRows')[editIndex]) return;
+	var role_id = $('#dataGrid').datagrid('getEditor', {index:editIndex,field:'role_id'});
+	var role_name = $(role_id.target).combobox('getText');
+	$('#dataGrid').datagrid('getRows')[editIndex]['role_name'] = role_name;
+}
+		
+		function cancel(){
+			window.open("/gate/gotoGateOfDataPrivilege",'_self');
+		}
+	</script>
+</body>

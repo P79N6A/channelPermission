@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>闸口价信息</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
+
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="areaCenterInfo" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">送达方编码：</span>
+                <input id="deliveryToCode" name="deliveryToCode" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">配送中心编码：</span>
+                <input id="distributionCentreCode" name="distributionCentreCode"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">配送中心名称：</span>
+                <input id="distributionCentreName" name="distributionCentreName"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">仓库编码：</span>
+                <input id="whCode" name="whCode"  class="easyui-textbox" style="width:120px">
+            </div>
+        </div>
+        <input id="exportData" name="exportData" type="hidden" />
+        <a id="search" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" >查询</a>
+        <a id="create" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >创建</a>
+        <a id="update" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >修改</a>
+        <a id='openStatus' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" >启用</a>
+        <a id='closeStatus' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no',plain:true" >禁用</a>
+        <a id='export' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >导出</a>
+        <a id='exportall' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >全部导出</a>
+    </form>
+</div>
+
+<div id="createDiv" class="easyui-dialog"
+     closed="true" buttons="#usercreate-buttons" style="width:750px;">
+    <form id="createForm" method="post" style="padding:10px 20px">
+        <div class="fitem"  style="width: 320px;">
+            <label style="width: 120px;">送达方编码: </label>
+            <input id="deliveryToCode_create" name="deliveryToCode" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">配送中心编码:</label>
+            <input id="distributionCentreCode_create" name="distributionCentreCode" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 320px;">
+            <label style="width: 120px;">配送中心名称:</label>
+            <input id="distributionCentreName_create" name="distributionCentreName" class="easyui-textbox" data-options="required:true,validType:'length[0,40]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">配送中心简码:</label>
+            <input id="warehouseCode_create" name="warehouseCode" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 320px;">
+            <label style="width: 120px;">配送中心简码名称:</label>
+            <input id="warehouseName_create" name="warehouseName" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">仓库编码:</label>
+            <input id=whCode_create" name="whCode" class="easyui-textbox" data-options="required:true,validType:'length[0,4]'" />
+        </div>
+        <div class="fitem"  style="width: 320px;">
+            <label style="width: 120px;">区域编码:</label>
+            <input id="areaCode_create" name="areaCode" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">区域名称:</label>
+            <input id="areaName_create" name="areaName" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"  />
+        </div>
+        <div class="fitem" style="width: 320px;">
+            <label style="width: 120px;">日日顺中心编码:</label>
+            <input id="rrsCenterCode_create" name="rrsCenterCode" 	class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">日日顺中心名称:</label>
+            <input id="rrsCenterName_create" name="rrsCenterName" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+
+    </form>
+</div>
+<div id="usercreate-buttons">
+    <a id="createConfirm" href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#createDiv').dialog('close')" style="width:90px">取消</a>
+</div>
+<div id="userEdit-buttons">
+    <a id="updateConfirm" href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#updateDiv').dialog('close')" style="width:90px">取消</a>
+</div>
+<div id="updateDiv" class="easyui-dialog"
+     closed="true" buttons="#userEdit-buttons" style="width:750px;">
+    <form id="updateForm" method="post" style="padding:10px 20px">
+        <div class="fitem"  style="width: 320px;">
+            <label style="width: 120px;">送达方编码: </label>
+            <input id="deliveryToCode_update" name="deliveryToCode" readonly="readonly" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">配送中心编码:</label>
+            <input id="distributionCentreCode_update" name="distributionCentreCode" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 320px;">
+            <label style="width: 120px;">配送中心名称:</label>
+            <input id="distributionCentreName_update" name="distributionCentreName" class="easyui-textbox" data-options="required:true,validType:'length[0,40]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">配送中心简码:</label>
+            <input id="warehouseCode_update" name="warehouseCode" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 320px;">
+            <label style="width: 120px;">配送中心简码名称:</label>
+            <input id="warehouseName_update" name="warehouseName" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">仓库编码:</label>
+            <input id=whCode_update" name="whCode" class="easyui-textbox" data-options="required:true,validType:'length[0,4]'" />
+        </div>
+        <div class="fitem"  style="width: 320px;">
+            <label style="width: 120px;">区域编码:</label>
+            <input id="areaCode_update" name="areaCode" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">区域名称:</label>
+            <input id="areaName_update" name="areaName" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"  />
+        </div>
+        <div class="fitem" style="width: 320px;">
+            <label style="width: 120px;">日日顺中心编码:</label>
+            <input id="rrsCenterCode_update" name="rrsCenterCode" 	class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+        <div class="fitem" style="width: 330px">
+            <label style="width: 180px;">日日顺中心名称:</label>
+            <input id="rrsCenterName_update" name="rrsCenterName" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'" />
+        </div>
+
+    </form>
+</div>
+
+<script src="../static/js/purchase/tmypAreaCenterInfo.js"></script>
+
+</body>
+</html>

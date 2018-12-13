@@ -20,6 +20,16 @@ public class InvoicesWwwLogDispItem implements Serializable {
     private String addTime;
     private String processTime;
     private String lastMessage;
+    //网单号
+    private String cOrderSn;
+
+    public String getcOrderSn() {
+        return cOrderSn;
+    }
+
+    public void setcOrderSn(String cOrderSn) {
+        this.cOrderSn = cOrderSn;
+    }
 
     public Integer getId() {
         return id;

@@ -1,65 +1,197 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>权限管理</title>
-	<link rel="stylesheet" href="../../static/css/jqueryui/base/jquery.ui.all.css"/>
-    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css"></link>
-    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css"></link>
-    <link rel="stylesheet" href="../../static/css/msg.css"></link>
-    <link rel="stylesheet" type="text/css" href="../../static/third/easyui/themes/gray/easyui.css"/>
-    <link rel="stylesheet" href="../../static/css/reset.css"></link>
-	<script src="../../static/third/jquery-1.8.3.min.js"></script>
-    <script src="../../static/third/easyui/jquery.easyui.min.js"></script>
-    <script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
-</head>
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../../static/third/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../static/third/adminlte/css/AdminLTE.min.css">
+        <link rel="stylesheet" href="../../static/third/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui_animation.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui_plus.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css">
+        <link rel="stylesheet" href="../../static/css/common.css">
+        <title>权限管理</title>
 
-<body>
-<div class="easyui-layout" data-options="fit : true,border : false">
-	<div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 120px;overflow: auto;" align="left" class="new-form-box">
-		<form id="filterForm" action="#">
-	    	<table>
-	    		<tr>
-	    			<td>权限拥有者</td>
-	    			<td>
-	    				<select id="role" name="role" class="easyui-combobox" style="width:60px">
-	    					<option value="1">用户</option>
+        <style type="text/css">
+            .dlg {
+                width: 400px;
+                height: 100px;
+                padding: 10px;
+                margin-top: 20px;
+            }
+
+            .easyui-panel {
+                overflow-x: show;
+            }
+            .cententLeft{
+                float:left;
+                width:175px;
+                height: 240px;
+                margin:8px 3px;
+                padding:0;
+                border:0;
+            }
+            .btnAdd{
+                float:left;
+                width:30px;
+                height:240px;
+                margin:0;
+                padding:0;
+                border:0;
+                text-align:center;
+            }
+            .cententRight{
+                float:right;
+                width:175px;
+                height: 240px;
+                margin:8px 3px;
+                padding:0;
+                border:0;
+            }
+        </style>
+
+    </head>
+    <body class="iframe-body">
+        <div
+            id="searchPanel"
+            class="easyui-panel"
+            style="width:100%;height:100%;"
+            data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,collapsible:false">
+            <table id="dataGrid"></table>
+        </div>
+
+        <div id="datagridToolbar">
+            <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_circle fa fa-map-marker"></div>
+
+            </div>
+            <form id="filterForm" class="param-form">
+                <div class="search-panel" style="font-size: 12px;">
+                    <div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">权限拥有者</span>
+                        <select name="role" id="role" class="easyui-combobox" panelheight="auto" style="width: 141px;">
+							<option value="1">用户</option>
 	    					<option value="2">角色</option>
-	    				</select>
-	    			</td>
-	    			<td>角色名称</td>
-	    			<td><input id="name"  name="name" class="easyui-textbox" style="width:160px"/></td>
-	    			<td>状态</td>
-	    			<td>
-	    			<input id="perStatus" name="status" class="easyui-combobox" style="width:173px"></input>
-	    		</tr>
-	    		<tr>
-	    			<td colspan="10">
-		    			<a id='search' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-search">查询</a>
-	    			</td>
-	    		</tr>
-	    	</table>
-	    </form>
-    </div>
-    <div data-options="region:'center',title:'查询结果',border:false">
-		    <table id="dataGrid"></table>
-		    <div id="msgMask"></div>
-			<div id="msg">正在处理，请稍待。。。</div>
-	</div>
-</div>
+						</select>
+                    </div>
+                    <div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">名称</span>
+                        <input id="name" name="name" class="easyui-textbox" data-options="prompt:''">
+                    </div>
+                    <div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">状态</span>
+                        <select id="perStatus" name="status" class="easyui-combobox" panelheight="auto" style="width: 141px;"></select>
+                    </div>
+                </div>
 
-<div id="permission" class="easyui-dialog" style="display:none;width:350px;height:400px;" title="分配权限" modal="true">
-	<ul id="treeData"></ul>
-    <div>
-        <a id="per_Pre" class="easyui-linkbutton">保存</a>
-        <a id="per_Close" class="easyui-linkbutton">关闭</a>
-    </div>
-</div>
+                <a href="javascript:void(0);" id="search" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查询</a>
 
-<script type="application/javascript">
+            </form>
+        </div>
 
+        <div  id="permission"  class="easyui-dialog" style="display:none;width:550px;height:80%;" data-options="buttons:'#bb'"  title="分配权限" modal="true">
+            <div class="search-panel" style="font-size: 12px;margin:8px;">
+                <ul id="treeData"></ul> 
+            </div>
+        </div>
+		<div id="bb" style="width:100%;text-align:center;border:0;">
+			<button id="per_Pre" class="easyui-linkbutton">保存</button>
+			<button id="per_Close" class="easyui-linkbutton">关闭</button>
+		</div>
+
+<!-- 需引入的js -->
+<script src="../../static/third/jquery.js"></script>
+<script src="../../static/third/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../static/third/easyui/jquery.easyui.min.js"></script>
+<script src="../../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+<script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script src="../../static/js/utils.js"></script>
+<script src="../../static/js/easyui-extention_ws.js"></script>
+<script src="../../static/js/customConfig.js"></script>
+<!-- 自写的js -->
+
+<script type="text/javascript">
+function slideUpSlideClk(t) {
+	var $this = $(t);
+	if ($this.hasClass('open')) {
+		$this.removeClass('open');
+		setTimeout(function () {
+			$this.addClass('close');
+		}, 0);
+		$(".search-panel").slideUp();
+	} else {
+		$this.removeClass('close');
+		setTimeout(function () {
+			$this.addClass('open');
+		}, 0);
+		$(".search-panel").slideDown();
+	}
+	setTimeout(function () {
+		$('#dataGrid').datagrid('resize');
+	}, 500);
+}
+
+	
 var datagrid;
+$(function () {
+	$(".textbox-text").keyup(function(){
+		this.value=this.value.replace(/\s+/g,'');
+	});
+
+	getStatus();
+	$('#permission').dialog('close');
+
+	datagrid = $('#dataGrid').datagrid({
+	        fit: true,
+	        pagination: true,
+	        singleSelect: true,
+	        checkOnSelect:true,
+	        pageSize: 100,
+	        pageList: [100,200,300],
+	        nowrap: false,
+	        rownumbers: true,
+	        queryParams: {
+
+	        },
+			toolbar: '#datagridToolbar',
+	        columns: [
+	            [
+	    	        {field:'operation',title:'操作',width:'100',align:'center',
+	                    formatter : function(value,row, index) {
+	                    	return "<a id='oper' href='#' onclick='operation("+row.userId+")'>操作</a>";
+	                    }
+	    	        },
+	            	{field:'userId', title:'用户ID', width:'100', align:'center'},
+			        {field:'userName', title:'用户名称', width:'100', align:'center'},
+			        {field:'status', title:'状态', width:'100', align:'center',
+	                    formatter : function(value) {
+	                    	if(value == 1){
+	                    		return "有效";
+	                    	}
+	                    	if(value == 0){
+	                    		return "禁用";
+	                    	}
+	                    	if(value == -1){
+	                    		return "删除";
+	                    	}
+	                    }
+			        },
+	            ]
+	        ]
+	    });
+
+});
+
+
 
 //点击查询
 $('#search').click(function () {
@@ -72,12 +204,14 @@ $('#search').click(function () {
 });
 
 function searchRole(){
-	var status;
-	if($("#perStatus").val()=="ALL"){
-		status = "";
+	var roleStatus;
+	if($("#perStatus").textbox('getValue')=="ALL"){
+        roleStatus = "";
 	}else{
-		status = $("#perStatus").val();
+        // roleStatus = $("#perStatus").val();
+		roleStatus = $("#perStatus").textbox('getValue');
 	}
+	
 	//检索列表构筑
 		//生成grid
 	    datagrid = $('#dataGrid').datagrid({
@@ -89,14 +223,15 @@ function searchRole(){
 	        checkOnSelect:true,
 	        //onAfterEdit:onAfterEdit,
 	        pageSize: 100,
-	        pageList: [1,2,100,200,300],
+	        pageList: [100,200,300],
 	        nowrap: false,
 	        rownumbers: true,
 	        queryParams: {
 	        	 //role:$("#role").val(),
-	    	     roleName:$("#name").val(),
-	    	     status:status
+	    	     name:$("#name").textbox("getValue"),
+	    	     status:roleStatus
 	        },
+            toolbar: '#datagridToolbar',
 	        columns: [
 	            [
 	    	        {field:'operation',title:'操作',width:'100',align:'center',
@@ -126,12 +261,14 @@ function searchRole(){
 }
 
 function searchUser(){
-	var status;
-	if($("#perStatus").val()=="ALL"){
-		status = "";
+	var userStatus;
+	if($("#perStatus").textbox('getValue')=="ALL"){
+        userStatus = "";
 	}else{
-		status = $("#perStatus").val();
+        //userStatus = $("#perStatus").val();
+		userStatus = $("#perStatus").textbox('getValue');
 	}
+	console.log(userStatus);
 	//检索列表构筑
 		//生成grid
 	    datagrid = $('#dataGrid').datagrid({
@@ -142,14 +279,15 @@ function searchUser(){
 	        singleSelect: true,
 	        checkOnSelect:true,
 	        pageSize: 100,
-	        pageList: [1,2,100,200,300],
+	        pageList: [100,200,300],
 	        nowrap: false,
 	        rownumbers: true,
 	        queryParams: {
 	        	 //role:$("#role").val(),
-	    	     name:$("#name").val(),
-	    	     status:status
+                userName:$("#name").textbox("getValue"),
+	    	    status:userStatus
 	        },
+			toolbar: '#datagridToolbar',
 	        columns: [
 	            [
 	    	        {field:'operation',title:'操作',width:'100',align:'center',
@@ -178,18 +316,15 @@ function searchUser(){
     $('#dataGrid').parent().find("div.datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
 }
 
-$(function () {
-	getStatus();
-	$('#permission').dialog('close');
-});
-
 function getStatus(){
 	//取得状态
 	jQuery.getJSON("/sys/user/getStatus", function(result){
 		var count = result.totalCount;
 		var dataList = result.data;
+		
 		//添加全部
 		dataList.unshift( {value:'ALL',value_meaning:'全部'});
+		console.log(dataList);
 		$("#perStatus").combobox({
 			 data:dataList,
 		     valueField:'value',
@@ -259,7 +394,6 @@ function tree(){
 		}
 	});
 }
-
 </script>
 </body>
 </html>

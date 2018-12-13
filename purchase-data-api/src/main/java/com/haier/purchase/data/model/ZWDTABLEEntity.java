@@ -1,6 +1,8 @@
 
 package com.haier.purchase.data.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -48,7 +50,7 @@ import javax.xml.bind.annotation.XmlType;
     "ad2",
     "ad3"
 })
-public class ZWDTABLEEntity {
+public class ZWDTABLEEntity implements Serializable{
 
     @XmlElement(name = "BSTKD", required = true)
     protected String bstkd;

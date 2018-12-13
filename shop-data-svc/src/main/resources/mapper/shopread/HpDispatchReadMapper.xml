@@ -24,7 +24,7 @@
 			hp.`orderProductId`,
 			hp.count
 		from 
-			`HPQueues` hp 
+			`hpqueues` hp
 		where 	hp.`success` = 0
 			and hp.`count` &lt;= 25
 		order by 
@@ -49,7 +49,7 @@
 			op.hpReservationDate,
 			op.cPayTime
 		from 
-			OrderProducts op
+			orderproducts op
 		where
 			op.`id` = #{orderProductId}
 	</select>
@@ -80,7 +80,7 @@
 			os.addTime,
 			os.ckCode
 		from 
-			Orders os
+			orders os
 		where
 			os.`id` = #{orderId}
 	</select>
@@ -89,7 +89,7 @@
 		select  
 			ow.mustNetPointAcceptTime
 		from 
-			OrderWorkflows ow
+			orderworkflows ow
 		where
 			ow.orderProductId = #{orderProductId}
 	</select>
@@ -99,7 +99,7 @@
 			rs.date,
 			rs.time
 		from 
-			ReservationShipping rs
+			reservationshipping rs
 		where
 			rs.orderId = #{orderId}
 	</select>
@@ -107,8 +107,8 @@
 	<select id="getMemberInvoiceInfo" parameterType="map" resultType="java.util.Map">
 		select  
 			convert(electricFlag,SIGNED) as electricFlag
-		from 
-			MemberInvoices
+		from
+		memberinvoices
 		where
 			orderId = #{orderId}
 	</select>
@@ -120,9 +120,9 @@
 			 (select 
 			     distinct os.id as orderId
 			 from 
-				 Orders os
+				 orders os
 					inner join
-				 OrderProducts op on op.orderId=os.id
+				 orderproducts op on op.orderId=os.id
 	         where 
 			     op.id in
 	             <foreach collection="orderProductIds" item="oid" open="(" separator="," close=")" index="index">
@@ -130,9 +130,9 @@
 			     </foreach>
 			 ) t 
 			 	inner join 
-			 Orders os on t.orderId=os.id 
+			 orders os on t.orderId=os.id
 			 	inner join
-			 OrderProducts op on op.orderId=os.id
+			 orderproducts op on op.orderId=os.id
 		 where 
 		 	 os.orderStatus != 202 and os.orderStatus != 203 and op.status != 110 and op.status != 130
 			 and op.shippingMode != 'B2C'
@@ -146,7 +146,7 @@
 		select 
 			`id`,`code`
 		from 
-			`Regions`
+			`regions`
 			where regionType in (1,2,3) 
 	</select>
 	
@@ -155,14 +155,14 @@
 		select 
 			`sku`,`skuH`
 		from 
-			`SkuMappings`
+			`skumappings`
 	</select>
 	
 	<select id="getHpQueueUnSendInfo" parameterType="Integer" resultMap="hPQueuesResult">
 		select  
 			`id`,`orderProductId`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`successTime`,vomSuccess,vomCount
 		from 
-			`HPQueues`  
+			`hpqueues`
 		where 	`success` = 0
 			and `count` &lt;= 25
 		order by 

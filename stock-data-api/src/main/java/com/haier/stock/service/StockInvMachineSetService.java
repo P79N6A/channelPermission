@@ -12,7 +12,9 @@ public interface StockInvMachineSetService {
 
 
     public List<Map<String,Object>> select_sku(List<Map<String,Object>> list);
-    
+
+    public List<Map<String,Object>> selectMainSkuAndSubSku(Map<String,Object> map);
+
     public List<InvMachineSet> getBySubSku(String subSku);
     
     /**
@@ -32,4 +34,8 @@ public interface StockInvMachineSetService {
  long getPagerCount(InvMachineSet condition);
 
  Integer updateSubSku(String sku, Integer s, String currentUser);
+
+ String querySubsku(String sku); //根据网单sku查到子sku
+
+ String findBySubSku(String subSku1, String subSku2);
 }

@@ -384,13 +384,16 @@ public class HpNewDispatchModel {
             //            if (regionsList != null && regionsList.size() > 0) {
             //                dtoMap.put("attribute7", "O2O");//O2O_new
             //            }
+
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
             //2017-01-04自营转单
-            OrderProductsAttributes opa = orderProductsAttributesService
+            /*OrderProductsAttributes opa = orderProductsAttributesService
                     .getByOrderProductId(Math.toIntExact(orderProduct.getId()));
             if (opa != null && opa.getIsDispatching() != null
                     && opa.getIsDispatching().intValue() == 1) {
                 dtoMap.put("attribute7", "O2O");//O2O_new
-            }
+            }*/
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
 
             //2017-02-23 添加上岗账号参数
             if (!StringUtil.isEmpty(order.getCkCode(), true)) {
@@ -521,11 +524,11 @@ public class HpNewDispatchModel {
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 //        TransactionStatus transactionStatus = transactionManager.getTransaction(def);
         try {
-            Integer orderId = (Integer) detailMap.remove("log_order_id");
-            Integer orderProductId = (Integer) detailMap.remove("log_orderproduct_id");
-            Integer netPointId = (Integer) detailMap.remove("log_netpoint_id");
-            Integer status = (Integer) detailMap.remove("log_status");
-            Integer paymentStatus = (Integer) detailMap.remove("log_paymentstatus");
+            Integer orderId = Integer.parseInt(detailMap.remove("log_order_id").toString()) ;
+            Integer orderProductId = Integer.parseInt(detailMap.remove("log_orderproduct_id").toString());
+            Integer netPointId = Integer.parseInt(detailMap.remove("log_netpoint_id").toString());
+            Integer status = Integer.parseInt(detailMap.remove("log_status").toString());
+            Integer paymentStatus = Integer.parseInt(detailMap.remove("log_paymentstatus").toString());
             HPQueues hpQueue = (HPQueues) detailMap.remove("hpQueue");
 
             String successFlag = hpDetailResponse.getSuccess_flag();
@@ -699,11 +702,11 @@ public class HpNewDispatchModel {
         List<OrderOperateLogs> orderOperateLogsList = new ArrayList<OrderOperateLogs>();
         for (Map.Entry<String, Map<String, Object>> set : transferMap.entrySet()) {
             Map<String, Object> valueMap = set.getValue();
-            Integer orderId = (Integer) valueMap.get("log_order_id");
-            Integer orderProductId = (Integer) valueMap.get("log_orderproduct_id");
-            Integer netPointId = (Integer) valueMap.get("log_netpoint_id");
-            Integer status = (Integer) valueMap.get("log_status");
-            Integer paymentStatus = (Integer) valueMap.get("log_paymentstatus");
+            Integer orderId = Integer.parseInt(valueMap.get("log_order_id").toString());
+            Integer orderProductId = Integer.parseInt(valueMap.get("log_orderproduct_id").toString());
+            Integer netPointId = Integer.parseInt(valueMap.get("log_netpoint_id").toString());
+            Integer status = Integer.parseInt(valueMap.get("log_status").toString());
+            Integer paymentStatus = Integer.parseInt(valueMap.get("log_paymentstatus").toString());
             orderOperateLogsList.add(createOrderOperateLog(orderId, orderProductId, netPointId,
                     changeLog, status, paymentStatus));
             HPQueues hpQueue = (HPQueues) valueMap.get("hpQueue");

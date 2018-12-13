@@ -15,5 +15,5 @@ public interface GroupOrdersWriteDao {
 
     Object updateLesStatus(GroupOrders groupOrders);
 
-    Object update(GroupOrders groupOrders);
+    int update(GroupOrders groupOrders);
 }

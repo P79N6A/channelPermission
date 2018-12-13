@@ -539,7 +539,7 @@ public class PopProductController {
                     distributeCenterPopProductService.addTSaleProuctPrice(tSaleProductPrice);
                 } else {
                     //对应productTypes表
-                    producttypesDTO = distributeCenterPopProductService.getProductsType(validSku.getProductTypeId());
+                    producttypesDTO = distributeCenterPopProductService.getProductsTypeBySKU(sku);
                     departmentProductTypeDTO = distributeCenterPopProductService.getDepartment(validSku.getProductTypeId());
 
                     //插入主表数据
@@ -553,10 +553,10 @@ public class PopProductController {
                     productDTO.setProductTypeName(producttypesDTO.getTypeName());
                     productDTO.setProductName(validSku.getProductName());
                     productDTO.setDepartmentName(departmentProductTypeDTO.getDepartmentName());
-                    distributeCenterPopProductService.addProductFromImport(productDTO);
+                    int id = distributeCenterPopProductService.addProductFromImport(productDTO);
 
                     //插入子表数据
-                    int saleId = productDTO.getId();
+                    int saleId = id;
                     tSaleProductPrice.setSaleId(saleId);
                     tSaleProductPrice.setSupplyPrice(new BigDecimal(supplyprice));
                     tSaleProductPrice.setSalePrice(new BigDecimal(saleprice));

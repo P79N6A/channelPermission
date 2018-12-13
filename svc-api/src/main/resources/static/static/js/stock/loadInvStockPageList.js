@@ -101,8 +101,7 @@ function onQuerys(pageIndex){
 			success: function(data) {
 				try{
 					$("#dg").datagrid('loadData',data);
-					}
-				catch(err){
+					}catch(err){
 					alert("没有数据");
 					}
 				
@@ -390,7 +389,7 @@ function batchRelease(){
 				}
 			});
 	 }else{
-		 alert(2);
+		// alert(2);
 	 }
 	});
 }

@@ -43,27 +43,27 @@ $(function() {
 	});
 
 	$('#startDate').datebox({
-		onSelect : function(select) {
-			$('#endDate').datebox('calendar').calendar({
-				validator : function(date) {
-					var d1 = new Date(select);
-					return date >= d1
-				}
-			});
-		},
+//		onSelect : function(select) {
+//			$('#endDate').datebox('calendar').calendar({
+//				validator : function(date) {
+//					var d1 = new Date(select);
+//					return date >= d1
+//				}
+//			});
+//		},
 		icons : [],
 		buttons : buttons
 	});
 
 	$('#endDate').datebox({
-		onSelect : function(select) {
-			$('#startDate').datebox('calendar').calendar({
-				validator : function(date) {
-					var d1 = new Date(select);
-					return date <= d1
-				}
-			});
-		},
+//		onSelect : function(select) {
+//			$('#startDate').datebox('calendar').calendar({
+//				validator : function(date) {
+//					var d1 = new Date(select);
+//					return date <= d1
+//				}
+//			});
+//		},
 		icons : [],
 		buttons : buttons
 	});
@@ -97,8 +97,9 @@ $(function() {
 			fitColumns : true,
 			singleSelect : false,
 			queryParams : {
-				order : $("#order").textbox("getValue"),
-				startDate : $("#startDate").datebox("getValue"),
+				sort : $("#order").textbox("getValue"),
+                orderNo : $("#order").textbox("getValue"),
+                startDate : $("#startDate").datebox("getValue"),
 				endDate : $("#endDate").datebox("getValue"),
 				status : $("#orderStatus").combobox("getValue")
 //				page : p.pageNumber,
@@ -109,65 +110,65 @@ $(function() {
 				title : '',
 				field : '',
 				checkbox : true,
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				width : 200
 			}, {
 				title : '单号',
 				field : 'orderNo',
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				width : 200
 			}, {
 				title : '开单日期',
 				field : 'orderTime',
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				formatter : formatDate,
 				width : 200
 			}, {
 				title : '基地',
 				field : 'jdName',
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				width : 200
 			}, {
 				title : '送达方编码',
 				field : 'deliveryCode',
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				width : 200
 			}, {
 				title : '送达方名称',
 				field : 'deliveryName',
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				width : 200
 			}, {
 				title : '总体积',
 				field : 'loadingVolume',
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				formatter : loadingVolume,
 				width : 200
 			}, {
 				title : '是否拼车',
 				field : 'ispingcar',
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				formatter : ispingcar,
 				width : 200
 			}, {
 				title : '整车状态',
 				field : 'status',
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				formatter : showStatus,
 				width : 200
 			}, {
 				title : '操作',
 				field : 'opt',
-				sortable : true,
+//				sortable : true,
 				align : 'center',
 				formatter : showWhat,
 				width : 200
@@ -175,7 +176,7 @@ $(function() {
 			toolbar : '#datagridToolbar',
 			striped : true,
 			pagination : true,
-			pageSize : 50,
+			pageSize : 200,
 			pageList : [ 50, 100, 200 ],
 			rownumbers : true,
 			autoRowHeight : true,

@@ -46,10 +46,13 @@
 		`lastLoginTime`,`lastLoginIp`,`memberRankId`,`bigCustomerId`,`lastAddressId`,`lastPaymentCode`,
 		`gender`,`birthday`,`qq`,`msn`,`mobile`,`canReceiveSms`,`phone`,`validateCode`,`pwdErrCount`,`source`,
 		`sign`,`money`,`moneyPwd`,`isEmailVerify`,`isSmsVerify`,`smsVerifyCode`,`emailVerifyCode`,`verifySendCoupon`,`canReceiveEmail`,`nick_name`
-		from `Members`
+		from `members`
 		where `id` = #{id}
 	</select>
 	<select id="getMemberMobile" parameterType="Integer" resultType="String">
-		select mobile from Members where id = #{id}
+		select mobile from members where id = #{id}
 	</select>
+	<select id="getMembers" resultMap="membersResult">
+        SELECT m.mobile from members m WHERE m.id = #{storeId}
+    </select>
 </mapper>

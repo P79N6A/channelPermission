@@ -19,11 +19,33 @@
     <result column="hp_les_id" property="hpLesId" jdbcType="VARCHAR" />
     <result column="hp_les_date" property="hpLesDate" jdbcType="DATE" />
     <result column="resp_division" property="respDivision" jdbcType="VARCHAR" />
+    <result column="virtualEntryState" property="virtualEntryState" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.haier.shop.model.OrderhpRejectionLogs" extends="BaseResultMap" >
-    
+  <resultMap id="ResultMaps" type="com.haier.shop.model.OrderhpRejectionLogsVO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="so_num" property="soNum" jdbcType="VARCHAR" />
+    <result column="vbelnso" property="vbelnso" jdbcType="VARCHAR" />
+    <result column="product_type_id" property="productTypeId" jdbcType="VARCHAR" />
+    <result column="product_no" property="productNo" jdbcType="VARCHAR" />
+    <result column="count_num" property="countNum" jdbcType="INTEGER" />
+    <result column="inwh_id" property="inwhId" jdbcType="VARCHAR" />
+    <result column="inwh_date" property="inwhDate" jdbcType="VARCHAR" />
+    <result column="key_product_no" property="keyProductNo" jdbcType="VARCHAR" />
+    <result column="main_sku" property="mainSku" jdbcType="VARCHAR" />
+    <result column="sub_count" property="subCount" jdbcType="INTEGER" />
+    <result column="channel_order_sn" property="channelOrderSn" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="VARCHAR" />
+    <result column="sec_code" property="secCode" jdbcType="VARCHAR" />
+    <result column="hp_les_id" property="hpLesId" jdbcType="VARCHAR" />
+    <result column="hp_les_date" property="hpLesDate" jdbcType="DATE" />
+    <result column="resp_division" property="respDivision" jdbcType="VARCHAR" />
+    <result column="productId" property="productId" jdbcType="VARCHAR" />
+    <result column="cOrderSn" property="cOrderSn" jdbcType="VARCHAR" />
+    <result column="repairId" property="repairId" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="VARCHAR" />
+    <result column="sku" property="sku" jdbcType="VARCHAR" />
+    <result column="repairHPRecordsID" property="repairHPRecordsID" jdbcType="VARCHAR" />
   </resultMap>
-  
  <resultMap id="ReportResultMap" type="com.haier.shop.model.PutAway" >
     <result column="cOrderSn" property="netListNum" jdbcType="VARCHAR" />
     <result column="sec_code" property="secCode" jdbcType="VARCHAR" />
@@ -39,7 +61,7 @@
     <result column="TwoAppraisalDate" property="secondPushTime" jdbcType="DATE" />
    	<result column="storageType" property="storageType" jdbcType="TINYINT" />
    	<result column="is_tz" property="istz"  />	
-   	<result column="parentPath" property="parentPath" />
+   	<result column="rootId" property="rootId" />
    	<result column="checkType" property="checkType" />
    	<result column="woId" property="woId" />
    	<result column="orderSn" property="orderNum" />
@@ -65,31 +87,31 @@
   <sql id="Blob_Column_List" >
     hp_les_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from OrderHPRejectionLogs
+    from orderhprejectionlogs
     where id = #{id,jdbcType=INTEGER}
   </select>
    <select id="notfitcount" resultType="Integer" >
    SELECT 
 	count(1)
-		from OrderHPRejectionLogs orl 
-		left join OrderRepairHPRecords orhr
+		from orderhprejectionlogs orl
+		left join orderrepairhprecords orhr
 		on orl.product_no = orhr.machineNum
-		LEFT JOIN OrderRepairLESRecords oles
+		LEFT JOIN orderrepairlesrecords oles
 		on orhr.orderProductId = oles.orderProductId
-		LEFT JOIN OrderProducts op
+		LEFT JOIN orderproducts op
 		on op.id = orhr.orderProductId
-		LEFT JOIN OrderRepairs  ore
+		LEFT JOIN orderrepairs  ore
 		on ore.id = orhr.orderRepairId 
-		LEFT JOIN Orders  o
+		LEFT JOIN orders  o
 		on o.id = ore.orderId
-		LEFT JOIN ProductTypes pt
-		on pt.attrCateId = op.productType
-		LEFT JOIN OrderRepairFromHps ofp
+		LEFT JOIN producttypes pt
+		on pt.id = op.productType
+		LEFT JOIN orderrepairfromhps ofp
 		on ofp.orderProductId = op.id
-		LEFT JOIN OrderProductsAttributes opa
+		LEFT JOIN orderproductsattributes opa
 		on opa.order_product_id = op.id
 		where orhr.checkResult = '2'
   </select>
@@ -114,22 +136,22 @@ SELECT
 		ore.repairSn,
 		ore.handleStatus,
 		FROM_UNIXTIME(ore.addTime) repairdate
-		from OrderHPRejectionLogs orl 
-		left join OrderRepairHPRecords orhr
+		from orderhprejectionlogs orl
+		left join orderrepairhprecords orhr
 		on orl.product_no = orhr.machineNum
-		LEFT JOIN OrderRepairLESRecords oles
+		LEFT JOIN orderrepairlesrecords oles
 		on orhr.orderProductId = oles.orderProductId
-		LEFT JOIN OrderProducts op
+		LEFT JOIN orderproducts op
 		on op.id = orhr.orderProductId
-		LEFT JOIN OrderRepairs  ore
+		LEFT JOIN orderrepairs  ore
 		on ore.id = orhr.orderRepairId 
-		LEFT JOIN Orders  o
+		LEFT JOIN orders  o
 		on o.id = ore.orderId
-		LEFT JOIN ProductTypes pt
-		on pt.attrCateId = op.productType
-		LEFT JOIN OrderRepairFromHps ofp
+		LEFT JOIN producttypes pt
+		on pt.id = op.productType
+		LEFT JOIN orderrepairfromhps ofp
 		on ofp.orderProductId = op.id
-		LEFT JOIN OrderProductsAttributes opa
+		LEFT JOIN orderproductsattributes opa
 		on opa.order_product_id = op.id
 		where orhr.checkResult = '2'
   </select>
@@ -161,27 +183,27 @@ SELECT
 		FROM_UNIXTIME(ore.finishTime) finishTime,
 		ore.handleStatus,
 		FROM_UNIXTIME(ore.addTime) repairdate
-		from OrderHPRejectionLogs orl 
-		left join OrderRepairHPRecords orhr
+		from orderhprejectionlogs orl
+		left join orderrepairhprecords orhr
 		on orl.product_no = orhr.machineNum
-		LEFT JOIN OrderRepairLESRecords oles
+		LEFT JOIN orderrepairlesrecords oles
 		on orhr.orderProductId = oles.orderProductId
-		LEFT JOIN OrderProducts op
+		LEFT JOIN orderproducts op
 		on op.id = orhr.orderProductId
-		LEFT JOIN OrderRepairs  ore
+		LEFT JOIN orderrepairs  ore
 		on ore.id = orhr.orderRepairId 
-		LEFT JOIN Orders  o
+		LEFT JOIN orders  o
 		on o.id = ore.orderId
-		LEFT JOIN ProductTypes pt
-		on pt.attrCateId = op.productType
-		LEFT JOIN OrderRepairFromHps ofp
+		LEFT JOIN producttypes pt
+		on pt.id = op.productType
+		LEFT JOIN orderrepairfromhps ofp
 		on ofp.orderProductId = op.id
-		LEFT JOIN OrderProductsAttributes opa
+		LEFT JOIN orderproductsattributes opa
 		on opa.order_product_id = op.id
 		where ore.storageStatus = '2'
 
   </select>
-     <select id="findNoChangeWarning" resultMap="ReportResultMap" >
+     <select id="findNoChangeWarning" resultMap="ReportResultMap" > 
    SELECT 
 		orl.sec_code,
 		orl.product_type_id,
@@ -202,22 +224,22 @@ SELECT
 		ore.repairSn,
 		ore.handleStatus,
 		FROM_UNIXTIME(ore.addTime) repairdate
-		from OrderHPRejectionLogs orl 
-		left join OrderRepairHPRecords orhr
+		from orderhprejectionlogs orl
+		left join orderrepairhprecords orhr
 		on orl.product_no = orhr.machineNum
-		LEFT JOIN OrderRepairLESRecords oles
+		LEFT JOIN orderrepairlesrecords oles
 		on orhr.orderProductId = oles.orderProductId
-		LEFT JOIN OrderProducts op
+		LEFT JOIN orderproducts op
 		on op.id = orhr.orderProductId
-		LEFT JOIN OrderRepairs  ore
+		LEFT JOIN orderrepairs  ore
 		on ore.id = orhr.orderRepairId 
-		LEFT JOIN Orders  o
+		LEFT JOIN orders  o
 		on o.id = ore.orderId
-		LEFT JOIN ProductTypes pt
-		on pt.attrCateId = op.productType
-		LEFT JOIN OrderRepairFromHps ofp
+		LEFT JOIN producttypes pt
+		on pt.id = op.productType
+		LEFT JOIN orderrepairfromhps ofp
 		on ofp.orderProductId = op.id
-		LEFT JOIN OrderProductsAttributes opa
+		LEFT JOIN orderproductsattributes opa
 		on opa.order_product_id = op.id
 		where orhr.packResult != '1'
   </select>
@@ -235,16 +257,16 @@ SELECT
 		oles.storageType,
 		op.cOrderSn,FROM_UNIXTIME(oles.addTime) addtimeTs,pt.typeName,
 		FROM_UNIXTIME(ofp.successTime) successTime	
-		from OrderHPRejectionLogs orl 
-		left join OrderRepairHPRecords orhr
+		from orderhprejectionlogs orl
+		left join orderrepairhprecords orhr
 		on orl.product_no = orhr.machineNum
-		LEFT JOIN OrderRepairLESRecords oles
+		LEFT JOIN orderrepairlesrecords oles
 		on orhr.orderProductId = oles.orderProductId
-		LEFT JOIN OrderProducts op
+		LEFT JOIN orderproducts op
 		on op.id = orhr.orderProductId
-		LEFT JOIN ProductTypes pt
-		on pt.attrCateId = op.productType
-		LEFT JOIN OrderRepairFromHps ofp
+		LEFT JOIN producttypes pt
+		on pt.id = op.productType
+		LEFT JOIN orderrepairfromhps ofp
 		on ofp.orderProductId = op.id
 		where orhr.quality = '2' and oles.operate = '12'
 
@@ -264,24 +286,24 @@ SELECT
 		oles.recordSn,
 		oles.storageType,
 		op.cOrderSn,FROM_UNIXTIME(oles.addTime) addtimeTs,
-		pt.typeName,
-		opa.is_tz,
-		pc.parentPath as parentPath,
+    	pt.typeName,
+-- 		opa.is_tz,
+		pc.rootId as rootId,
 		FROM_UNIXTIME(ofp.successTime) successTime	
-		from OrderHPRejectionLogs orl 
-		left join OrderRepairHPRecords orhr
+		from orderhprejectionlogs orl
+		left join orderrepairhprecords orhr
 		on orl.product_no = orhr.machineNum
-		LEFT JOIN OrderRepairLESRecords oles
+		LEFT JOIN orderrepairlesrecords oles
 		on orhr.orderProductId = oles.orderProductId
-		LEFT JOIN OrderProducts op
+		LEFT JOIN orderproducts op
 		on op.id = orhr.orderProductId
-		LEFT JOIN ProductTypes pt
-		on pt.attrCateId = op.productType
-		LEFT JOIN OrderRepairFromHps ofp
+		LEFT JOIN producttypes pt
+		on pt.id = op.productType
+		LEFT JOIN orderrepairfromhps ofp
 		on ofp.orderProductId = op.id
-		LEFT JOIN OrderProductsAttributes opa
-		on opa.order_product_id = op.id
-		LEFT JOIN ProductCates pc
+-- 		LEFT JOIN orderproductsattributes opa
+-- 		on opa.order_product_id = op.id
+		LEFT JOIN productcates pc
 		on pt.typeName = pc.cateName
 		where orhr.quality = '2' and oles.operate = '12' 
 
@@ -289,12 +311,12 @@ SELECT
       <select id="findoutnum" resultType="String"  >
 SELECT 
 		oles.recordSn
-		from OrderHPRejectionLogs orl 
-		left join OrderRepairHPRecords orhr
+		from orderhprejectionlogs orl
+		left join orderrepairhprecords orhr
 		on orl.product_no = orhr.machineNum
-		LEFT JOIN OrderRepairLESRecords oles
+		LEFT JOIN orderrepairlesrecords oles
 		on orhr.orderProductId = oles.orderProductId
-		LEFT JOIN OrderProducts op
+		LEFT JOIN orderproducts op
 		on op.id = orhr.orderProductId
 		where orhr.quality = '2' and oles.operate = '11' and oles.storageType = '22'
   </select>
@@ -306,43 +328,136 @@ SELECT
 		orl.product_no,
 		orl.hp_les_id,
 		orl.hp_les_date,orhr.orderProductId,oles.recordSn,op.cOrderSn,FROM_UNIXTIME(oles.addTime) addtimeTs,pt.typeName 
-		from OrderHPRejectionLogs orl 
-		left join OrderRepairHPRecords orhr
+		from orderhprejectionlogs orl
+		left join orderrepairhprecords orhr
 		on orl.product_no = orhr.machineNum
-		LEFT JOIN OrderRepairLESRecords oles
+		LEFT JOIN orderrepairlesrecords oles
 		on orhr.orderProductId = oles.orderProductId
-		LEFT JOIN OrderProducts op
+		LEFT JOIN orderproducts op
 		on op.id = orhr.orderProductId
-		LEFT JOIN ProductTypes pt
-		on pt.attrCateId = op.productType
-		where orhr.quality = '5' or orhr.quality = '6' and oles.operate = '12'
+		LEFT JOIN producttypes pt
+		on pt.id = op.productType
+		where (orhr.quality = '5' or orhr.quality = '6' ) and oles.operate = '12'
   </select>
   
   <select id="quereHPRejection" parameterType="java.lang.String" resultType="java.lang.String">
   SELECT
 	id
 FROM
-	OrderHPRejectionLogs
+	  orderhprejectionlogs
 WHERE
 	channel_order_sn =#{orderReprisSn}
+	and  hp_les_id=#{hpLesId}
   </select>
-  
-	  <select id="quereEmptyOutSAP" resultMap="BaseResultMap">
-	 SELECT
-		h.id,
-		h.channel_order_sn,
-		h.count_num,
-		h.product_no,
-		h.sec_code,
-		h.channel_order_sn
+  <select id="queryVirtualEntryState" parameterType="java.lang.String" resultMap="BaseResultMap">
+   SELECT
+		id, so_num, vbelnso, product_type_id, product_no, count_num, inwh_id, inwh_date, 
+	    key_product_no, main_sku, sub_count, channel_order_sn, channel, sec_code, hp_les_date, 
+	    resp_division,virtualEntryState
 	FROM
-		OrderHPRejectionLogs h,
-		OrderRepairs r
+	  orderhprejectionlogs
 	WHERE
-		h.channel_order_sn = r.repairSn
-	and h.EmptyOut='0'
-	and r.handleStatus !='6'
-	and h.inwh_id !=NULL
-	and EmptyIn ='1'
+		channel_order_sn =#{channelOrderSn}
+  </select>
+  <select id="quereHpLesId" resultType="java.lang.String" parameterType="java.lang.String">
+ 	SELECT
+		hp_les_id
+	FROM
+	  orderhprejectionlogs
+	WHERE
+		channel_order_sn = #{channelOrderSn}
+		LIMIT 0,1
+  </select>
+	  <select id="quereEmptyOutSAP" resultMap="ResultMaps">
+	 SELECT
+			p.id repairHPRecordsID,
+			h.id,
+			h.channel_order_sn,
+			h.count_num,
+			h.product_no,
+			r.id repairId,
+			d.cOrderSn,
+			r.count quantity,
+			h.product_type_id sku,
+			h.vbelnso,
+			h.inwh_id,
+			d.id productId,
+			d.sCode sec_code
+		FROM
+		  orderrepairhprecords p,
+		  orderhprejectionlogs h,
+		  orderrepairs r,
+		  orderproducts d
+		WHERE
+			replace(h.channel_order_sn,'TC','TH') = r.repairSn
+		and p.orderRepairId = r.id
+		and p.orderProductId = d.id	
+		and r.handleStatus !='6'
+		and h.inwh_id != ''
+		and h.virtualEntryState  ='enterSuccess'
+		and p.quality in('5','6')
+		LIMIT 0,1000
+	  </select>
+	  
+	  <select id="queryTheVirtualInto" resultMap="ResultMaps" >
+	      SELECT
+			p.id repairHPRecordsID,
+			h.id,
+			h.channel_order_sn,
+			h.count_num,
+			h.product_no,
+			r.id repairId,
+			d.cOrderSn,
+			r.count quantity,
+			h.product_type_id,
+			d.id productId,
+			d.sCode sec_code,
+			d.sku
+		FROM
+		  orderrepairhprecords p,
+		  orderhprejectionlogs h,
+		  orderrepairs r,
+		  orderproducts d
+		WHERE
+			replace(h.channel_order_sn,'TC','TH') = r.repairSn
+		and p.orderRepairId = r.id
+		and p.orderProductId = d.id	
+		and r.handleStatus !='6'
+		and h.inwh_id != ''
+		and h.virtualEntryState  ='default'
+		and p.quality in('5','6')
+		LIMIT 0,1000
+	  </select>
+	  <select id="queryRealOutofData" resultMap="ResultMaps">
+	  SELECT
+			p.id repairHPRecordsID,
+			h.id,
+			r.repairSn channel_order_sn,
+			h.count_num,
+			h.product_no,
+			h.sec_code,
+			r.id repairId,
+			d.cOrderSn,
+			r.count quantity,
+			h.product_type_id sku,
+			h.vbelnso,
+			h.inwh_id,
+			d.id productId
+		FROM
+		  orderrepairhprecords p,
+		  orderhprejectionlogs h,
+		  orderrepairs r,
+		  orderproducts d
+		WHERE
+			replace(h.channel_order_sn,'TC','TH') = r.repairSn
+		AND p.orderRepairId = r.id
+		AND p.orderProductId = d.id
+		AND r.handleStatus != '6'
+		AND h.inwh_id IS NOT NULL
+		AND r.pushSap = '1'
+		AND p.checkType = '3'
+		AND p.ThreeAppraisal = '1'
+		AND p.OutOfStorageFlag = '3'
+		AND p.packResult = '2'
 	  </select>
 </mapper>

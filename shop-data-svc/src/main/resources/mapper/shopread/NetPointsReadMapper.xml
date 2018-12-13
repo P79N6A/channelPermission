@@ -27,33 +27,59 @@
   
   <select id="getByNetPointByCode" parameterType="string" resultMap="BaseResultMap">
 		select `id`,`siteId`,`netPointCode`,`netPointN8`,`password`,`salt`,`netPointName`,`contactName`,`contactMobile`,`areaCode`,`phoneNumber`,`contactEmail`,`contactProvinceId`,`contactCityId`,`shippingTimeLimit`,`contactAddress`,`coordinate`,`TCCode`,`shippingDistance`,`logisticsTimeLimit`,`addTime`
-		from `NetPoints`
+		from `netpoints`
 		where `netPointCode` = #{netPointCode}
 	</select>
 
   <sql id="Base_Column_List" >
-    id, siteId, netPointCode, netPointN8, password, salt, netPointName, contactName, 
-    contactMobile, areaCode, phoneNumber, contactEmail, contactProvinceId, contactCityId, 
-    shippingTimeLimit, contactAddress, coordinate, TCCode, shippingDistance, logisticsTimeLimit, 
+    id, siteId, netPointCode, netPointN8, password, salt, netPointName, contactName,
+    contactMobile, areaCode, phoneNumber, contactEmail, contactProvinceId, contactCityId,
+    shippingTimeLimit, contactAddress, coordinate, TCCode, shippingDistance, logisticsTimeLimit,
     addTime
   </sql>
 
   <select id="get" parameterType="Integer" resultMap="BaseResultMap">
     select `id`,`siteId`,`netPointCode`,`netPointN8`,`password`,`salt`,`netPointName`,`contactName`,`contactMobile`,`areaCode`,`phoneNumber`,`contactEmail`,`contactProvinceId`,`contactCityId`,`shippingTimeLimit`,`contactAddress`,`coordinate`,`TCCode`,`shippingDistance`,`logisticsTimeLimit`,`addTime`
-    from `NetPoints`
+    from `netpoints`
     where `id` = #{id}
   </select>
 
   <select id="getByNetPointN8" parameterType="string" resultMap="BaseResultMap">
     select `id`,`siteId`,`netPointCode`,`netPointN8`,`password`,`salt`,`netPointName`,`contactName`,`contactMobile`,`areaCode`,`phoneNumber`,`contactEmail`,`contactProvinceId`,`contactCityId`,`shippingTimeLimit`,`contactAddress`,`coordinate`,`TCCode`,`shippingDistance`,`logisticsTimeLimit`,`addTime`
-    from `NetPoints`
+    from `netpoints`
     where `netPointN8` = #{netPointN8}
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from NetPoints
+    from netpoints
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <select id="getRowCnts" resultType="int">
+        select
+        FOUND_ROWS();
+    </select>
+
+    <select id="queryNetPointList"  parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        SQL_CALC_FOUND_ROWS
+        id, netPointN8, contactName, contactAddress, netPointName,netPointCode ,TCCode,addTime
+        FROM  `netpoints`
+        WHERE
+            1=1
+        <if test="netPointN8 != null and netPointN8 != ''">
+            and netPointN8 = #{netPointN8}
+        </if>
+        <if test="netPointCode != null and netPointCode != ''">
+            and netPointCode = #{netPointCode}
+        </if>
+        <if test="netPointName != null and netPointName != ''">
+            and netPointName Like CONCAT('%',#{netPointName},'%')
+        </if>
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
 </mapper>

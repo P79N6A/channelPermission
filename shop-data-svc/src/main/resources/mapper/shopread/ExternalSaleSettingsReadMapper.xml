@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.ExternalSaleSettingsReadDao" >
+    <resultMap id="BaseResultMap" type="com.haier.shop.model.ExternalSaleSettings" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="siteId" property="siteId" jdbcType="INTEGER" />
+        <result column="settingName" property="settingName" jdbcType="VARCHAR" />
+        <result column="externalSkus" property="externalSkus" jdbcType="VARCHAR" />
+        <result column="productSpecs" property="productSpecs" jdbcType="VARCHAR" />
+        <result column="configIds" property="configIds" jdbcType="VARCHAR" />
+        <result column="addTime" property="addTime" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="startTime" property="startTime" jdbcType="INTEGER" />
+        <result column="endTime" property="endTime" jdbcType="INTEGER" />
+        <result column="effect" property="effect" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, siteId, settingName, externalSkus, productSpecs, configIds, addTime, type, startTime,
+        endTime, effect
+    </sql>
+    <select id="Listf" resultMap="BaseResultMap">
+        SELECT  <include refid="Base_Column_List" />
+        FROM externalsalesettings
+        <where>
+        <if test="entity.externalSkus != '' and entity.externalSkus != null">externalSkus = #{entity.externalSkus}</if>
+        <if test="entity.configIds != '' and entity.configIds != null">AND configIds LIKE binary CONCAT('%',#{entity.configIds},'%')</if>
+        </where>
+        <include refid="pagination" />
+    </select>
+    <select id="getPagerCountS" resultType="int">
+        SELECT count(id)
+        FROM externalsalesettings
+        <where>
+            <if test="entity.externalSkus != '' and entity.externalSkus != null">externalSkus = #{entity.externalSkus}</if>
+            <if test="entity.configIds != '' and entity.configIds != null">AND configIds LIKE binary CONCAT('%',#{entity.configIds},'%')</if>
+        </where>
+    </select>
+    <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+
+    <select id="findByWhere"  resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from externalsalesettings
+        where effect=1 and startTime &lt; UNIX_TIMESTAMP()
+        and endTime &gt; UNIX_TIMESTAMP() and externalSkus =#{externalSkus}
+    </select>
+</mapper>

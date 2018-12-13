@@ -52,11 +52,23 @@ public class LoginController {
             String sessionId = session.getId();
             SysUser sysUser = systemCenterService.getUserByLoginId(userCode).getResult();
             if (sysUser == null){
+//                SysUser su = new SysUser();
+//                su.setUserName(userCode);
+//                su.setLoginId(userCode);
+//                su.setPassword(userPassword);
+//                systemCenterService.createUser(su);
+                return "请联系管理员添加用户和权限";
+            } else if (sysUser.getPassword() == null || "".equals(sysUser.getPassword())){
                 SysUser su = new SysUser();
-                su.setUserName(userCode);
-                su.setLoginId(userCode);
+                su.setUserId(sysUser.getUserId());
+                su.setLoginId(sysUser.getLoginId());
                 su.setPassword(userPassword);
-                ServiceResult<Integer> res = systemCenterService.createUser(su);
+                su.setUserName(sysUser.getUserName());
+                su.setStatus(sysUser.getStatus());
+                su.setEmail(sysUser.getEmail());
+                su.setPhone(sysUser.getPhone());
+                su.setMobile(sysUser.getMobile());
+                systemCenterService.updateUser(su);
             }
             if (session.getAttribute("loginId") == null){
                 session.setAttribute("loginId",userCode);

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eis.dao.eis.OrderForecastDao">
+	<resultMap id="orderForecastResult" type="com.haier.eis.model.OrderForecast">
+		<result property="id" column="id" />
+		<result property="secCode" column="sec_code" />
+		<result property="secName" column="sec_name" />
+		<result property="productType" column="product_type" />
+		<result property="productTypeName" column="product_type_name" />
+		<result property="sku" column="sku" />
+		<result property="skuName" column="sku_name" />
+		<result property="stockAMonthOverdue" column="stock_a_month_overdue" />
+		<result property="stock2MonthOverdue" column="stock_2_month_overdue" />
+		<result property="shopForecast" column="shop_forecast" />
+		<result property="shopSurplusStock" column="shop_surplus_stock" />
+		<result property="shopTwoWeeksSales" column="shop_two_weeks_sales" />
+		<result property="shopInTransit" column="shop_in_transit" />
+		<result property="shopReserved" column="shop_reserved" />
+		<result property="tbForecast" column="tb_forecast" />
+		<result property="tbSurplusStock" column="tb_surplus_stock" />
+		<result property="tbTwoWeeksSales" column="tb_two_weeks_sales" />
+		<result property="tbInTransit" column="tb_in_transit" />
+		<result property="tbReserved" column="tb_reserved" />
+		<result property="keyaccountForecast" column="keyaccount_forecast" />
+		<result property="keyaccountSurplusStock" column="keyaccount_surplus_stock" />
+		<result property="keyaccountTwoWeeksSales" column="keyaccount_two_weeks_sales" />
+		<result property="keyaccountInTransit" column="keyaccount_in_transit" />
+		<result property="keyaccountReserved" column="keyaccount_reserved" />
+		<result property="addtime" column="addtime" />
+		<result property="seasonPer" column="season_per" />
+		<result property="dkhGoalQty" column="dkh_goal_qty"/>
+		<result property="tbGoalQty" column="tb_goal_qty"/>
+		<result property="scGoalQty" column="sc_goal_qty"/>
+		<result property="keyaccountWeekSale" column="keyaccount_week_sale"/>
+		<result property="tbWeekSale" column="tb_week_sale"/>
+		<result property="shopWeekSale" column="shop_week_sale"/>
+	</resultMap>
+	<select id="getCount" parameterType="Map" resultType="Integer">
+		select COUNT(*)
+		from `order_forecast_logs` a where 1=1 
+		<if test="sku != null and sku !=''">
+			and a.sku = #{sku}
+		</if>
+		<if test="sec_code != null and sec_code != ''">
+			and a.sec_code = #{sec_code}
+		</if>
+		<if test="orderWeek != null and orderWeek !=''">
+			and a.order_week= #{orderWeek}
+		</if>
+		<if test="orderYear != null and orderYear !=''">
+			and a.order_year= #{orderYear}
+		</if>
+		<if test="product_type_name != null and product_type_name !=''">
+			and a.product_type_name=#{product_type_name}
+		</if>
+
+	</select>
+	<select id="getAll" parameterType="Map" resultMap="orderForecastResult">
+		select  a.`sec_code`,a.`sec_name`,a.`product_type`,`product_type_name`,a.`sku`,`sku_name`,`stock_a_month_overdue`,`stock_2_month_overdue`,
+		`shop_forecast`,`shop_surplus_stock`,`shop_two_weeks_sales`,`shop_in_transit`,`shop_reserved`,
+		`tb_forecast`,`tb_surplus_stock`,`tb_two_weeks_sales`,`tb_in_transit`,`tb_reserved`,
+		`keyaccount_forecast`,`keyaccount_surplus_stock`,`keyaccount_two_weeks_sales`,`keyaccount_in_transit`,`keyaccount_reserved`,
+		`addtime`,`season_per`,
+		IF(`shop_week_sale` IS NULL, 0, shop_week_sale) as shop_week_sale, 
+		IF(`tb_week_sale` IS NULL, 0, tb_week_sale) as tb_week_sale, 
+		IF(`keyaccount_week_sale` IS NULL, 0, keyaccount_week_sale) as keyaccount_week_sale, 
+		dkh_goal_qty as dkh_goal_qty,
+		tb_goal_qty as tb_goal_qty,
+		shop_goal_qty as sc_goal_qty
+		from `order_forecast_logs` a where 1=1 
+		<if test="sku != null and sku !=''">
+			and a.sku = #{sku}
+		</if>
+		<if test="sec_code != null and sec_code != ''">
+			and a.sec_code = #{sec_code}
+		</if>
+		<if test="orderWeek != null and orderWeek !=''">
+			and a.order_week= #{orderWeek}
+		</if>
+		<if test="orderYear != null and orderYear !=''">
+			and a.order_year= #{orderYear}
+		</if>
+		<if test="product_type_name != null and product_type_name !=''">
+			and a.product_type_name=#{product_type_name}
+		</if>
+		<if test="size != null and size &gt; 0">
+			limit #{start},#{size}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta charset="UTF-8">
+    <title>营销费用池管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <style>
+        .datagrid-header-rownumber{
+            width: 50px!important;
+            text-align: center;
+            margin: 0px;
+            padding: 3px 0;
+        }
+        .datagrid-cell-rownumber{
+            width: 50px!important;
+            text-align: center;
+            margin: 0px;
+            padding: 3px 0;
+        }
+    </style>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_costPools" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid"></table>
+</div>
+
+<div id="datagridToolbar_costPools">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_costPools" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            <div class="search-row_nowidth mar_r6px">
+                <input id="yearMonth" name="yearMonth" class="easyui-textbox" data-options="prompt:'年月'" >
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="batch" name="batch" class="easyui-textbox" data-options="prompt:'批次'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="type" name="type" class="easyui-combobox" editable="false" panelHeight="auto">
+                    <option value="" selected="">费用类型</option>
+                    <option value="0">赠品机</option>
+                    <option value="1">优惠券</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="channel" name="channel" class="easyui-combobox" editable="false" panelHeight="auto">
+                    <option value="" selected="">所属渠道</option>
+                    <option value="1">商城</option>
+                    <option value="2">天猫</option>
+                    <option value="3">电商平台</option>
+                    <option value="4">微店</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="chanYe" name="chanYe" class="easyui-combobox" editable="false" panelHeight="auto">
+                    <option value="" selected="">所属产业</option>
+                    <option value="C200076226">冰箱</option>
+                    <option value="C200076227">冷柜</option>
+                    <option value="C200076228">洗衣机</option>
+                    <option value="C200076229">家用空调</option>
+                    <option value="C200076230">热水器</option>
+                    <option value="C200076231">厨电</option>
+                    <option value="C200076232">彩电</option>
+                    <option value="C200076233">商用空调及其他</option>
+                    <option value="C20170825">海尔集团电子商务有限公司(赠品)</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_costPools"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_costPoolsUsedLogs"
+           data-options="iconCls:'icon-search',plain:true">查询日志</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn_costPools"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" onclick="list()"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_costPools"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>
+        <a href="#" class="easyui-linkbutton" id="importBtn_costPools"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+           <input id="exportData" name="exportData" type="hidden"/>
+    </form>
+
+    <input id="startDate" type="hidden" value="${startDate}"/>
+</div>
+<div>
+    <div id="dlg-buttons_costPoolsForecastGoal">
+        <input id="exportData" name="exportData" type="hidden"/>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(function() {// 初始化内容
+		var startDate=$('#startDate').val();
+    	$('#addTimeBegine').datebox('setValue',startDate);
+    });
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid').datagrid('resize');
+        }, 500);
+    }
+</script>
+<script src="../static/js/order/costPoolsList.js"></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.CnReplOrderDao">
+    <resultMap id="cnReplOrderResult" type="com.haier.purchase.data.model.ReplenishOrder">
+        <result property="id" column="id"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="scItemId" column="sc_item_id"/>
+        <result property="scItemCode" column="sc_item_code"/>
+        <result property="scItemName" column="sc_item_name"/>
+        <result property="replNo" column="repl_no"/>
+        <result property="planReplQty" column="plan_repl_qty"/>
+        <result property="deadLine" column="deadline"/>
+        <!--<result property="replOrderType" column="repl_order_type"/>-->
+        <!--<result property="status" column="status"/>-->
+        <!--<result property="sellerId" column="seller_id"/>-->
+        <!--<result property="sellerNick" column="seller_nick"/>-->
+        <result property="suggestQty" column="suggest_qty"/>
+        <result property="transportType" column="transport_type"/>
+        <result property="storeCode" column="store_code"/>
+        <result property="storeName" column="store_name"/>
+        <result property="state" column="state"/>
+        <result property="entryOrderCode" column="entryOrderCode"/>
+        <result property="entryOrderId" column="entryOrderId"/>
+        <result property="contactName" column="contact_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="confirmReplQty" column="confirm_repl_qty"/>
+        <result property="confirmDeadLine" column="confirm_deadline"/>
+        <result property="errorMsg" column="errorMsg"/>
+    </resultMap>
+    <resultMap id="cnReplOrderDisplayResult" type="com.haier.purchase.data.model.ReplenishOrderDisplayItem">
+        <result property="id" column="id"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="scItemId" column="sc_item_id"/>
+        <result property="scItemCode" column="sc_item_code"/>
+        <result property="scItemName" column="sc_item_name"/>
+        <result property="replNo" column="repl_no"/>
+        <result property="planReplQty" column="plan_repl_qty"/>
+        <result property="deadLine" column="deadline"/>
+        <result property="suggestQty" column="suggest_qty"/>
+        <result property="transportType" column="transport_type"/>
+        <result property="fromStoreCode" column="from_store_code"/>
+        <result property="fromStoreName" column="from_store_name"/>
+        <result property="storeCode" column="store_code"/>
+        <result property="storeName" column="store_name"/>
+        <result property="state" column="state"/>
+        <result property="entryOrderCode" column="entryOrderCode"/>
+        <result property="entryOrderId" column="entryOrderId"/>
+        <result property="contactName" column="contact_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="confirmReplQty" column="confirm_repl_qty"/>
+        <result property="confirmDeadLine" column="confirm_deadline"/>
+        <result property="errorMsg" column="errorMsg"/>
+    </resultMap>
+    <resultMap id="order4ConfirmResult" type="com.haier.purchase.data.model.ReplenishOrderConfirmDisplayItem">
+        <result property="id" column="id"/>
+        <result property="scItemId" column="sc_item_id"/>
+        <result property="scItemName" column="sc_item_name"/>
+        <result property="scItemCode" column="sc_item_code"/>
+        <result property="replNo" column="repl_no"/>
+        <result property="planReplQty" column="plan_repl_qty"/>
+        <result property="deadLine" column="deadline"/>
+        <result property="suggestQty" column="suggest_qty"/>
+    </resultMap>
+    <sql id="cnReplOrderQueryCondition">
+        <if test="gmtCreateMin !=null and gmtCreateMin != ''">
+            AND UNIX_TIMESTAMP(gmt_create)>=UNIX_TIMESTAMP(#{gmtCreateMin})
+        </if>
+        <if test="gmtCreateMax !=null and gmtCreateMax != ''">
+            AND UNIX_TIMESTAMP(gmt_create)&lt;=UNIX_TIMESTAMP(#{gmtCreateMax})
+        </if>
+        <if test="gmtModifiedMin !=null and gmtModifiedMin != ''">
+            AND UNIX_TIMESTAMP(gmt_modified)>=UNIX_TIMESTAMP(#{gmtModifiedMin})
+        </if>
+        <if test="gmtModifiedMax !=null and gmtModifiedMax != ''">
+            AND UNIX_TIMESTAMP(gmt_modified)&lt;=UNIX_TIMESTAMP(#{gmtModifiedMax})
+        </if>
+        <if test="scItemId !=null and scItemId != ''">
+            AND sc_item_id = #{scItemId}
+        </if>
+        <if test="scItemCode !=null and scItemCode != ''">
+            AND sc_item_code = #{scItemCode}
+        </if>
+        <if test="scItemName !=null and scItemName != ''">
+            AND sc_item_name = #{scItemName}
+        </if>
+        <if test="replNo !=null and replNo != ''">
+            AND repl_no = #{replNo}
+        </if>
+        <if test="fromStoreCode !=null and fromStoreCode != ''">
+            AND from_store_code = #{fromStoreCode}
+        </if>
+        <!--<if test="transportType !=null and transportType != ''">-->
+        <!--AND transport_type=#{transportType}-->
+        <!--</if>-->
+        <if test="storeCode !=null and storeCode != ''">
+            AND store_code = #{storeCode}
+        </if>
+        <if test="storeName !=null and storeName != ''">
+            AND store_name = #{storeName}
+        </if>
+        <if test="state !=null and state != '-1'">
+            AND state=#{state}
+        </if>
+        <if test="entryOrderCode !=null and entryOrderCode != ''">
+            AND entryOrderCode = #{entryOrderCode}
+        </if>
+        <if test="entryOrderId !=null and entryOrderId != ''">
+            AND entryOrderId = #{entryOrderId}
+        </if>
+        <if test="deadLineMin !=null and deadLineMin != ''">
+            AND UNIX_TIMESTAMP(deadline)>=UNIX_TIMESTAMP(#{deadLineMin})
+        </if>
+        <if test="deadLineMax !=null and deadLineMax != ''">
+            AND UNIX_TIMESTAMP(deadline)&lt;=UNIX_TIMESTAMP(#{deadLineMax})
+        </if>
+        <if test="confirmDeadLineMin !=null and confirmDeadLineMin != ''">
+            AND UNIX_TIMESTAMP(confirm_deadline)>=UNIX_TIMESTAMP(#{confirmDeadLineMin})
+        </if>
+        <if test="confirmDeadLineMax !=null and confirmDeadLineMax != ''">
+            AND UNIX_TIMESTAMP(confirm_deadline)&lt;=UNIX_TIMESTAMP(#{confirmDeadLineMax})
+        </if>
+    </sql>
+    <select id="getReplOrders" parameterType="Map" resultMap="cnReplOrderDisplayResult">
+        SELECT SQL_CALC_FOUND_ROWS
+        id,sc_item_id,sc_item_code,sc_item_name,repl_no,plan_repl_qty,
+        suggest_qty,transport_type,from_store_code,from_store_name,store_code,store_name,state,entryOrderCode,
+        entryOrderId,contact_name,contact_phone,confirm_repl_qty,errorMsg,
+        date_format(gmt_create, '%Y-%m-%d %T') as gmt_create,
+        date_format(gmt_modified, '%Y-%m-%d %T') as gmt_modified,
+        date_format(deadline, '%Y-%m-%d %T') as deadline,
+        date_format(confirm_deadline, '%Y-%m-%d %T') as confirm_deadline
+        FROM cn_3w_replenish_orders
+        WHERE 1=1
+        <include refid="cnReplOrderQueryCondition"/>
+        Order By id DESC
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+    <select id="getRowCnts" resultType="int">
+        select
+        FOUND_ROWS();
+    </select>
+    <select id="getById4Confirm" parameterType="java.lang.Integer" resultMap="order4ConfirmResult">
+        SELECT id,sc_item_id,sc_item_code,sc_item_name,repl_no,plan_repl_qty,suggest_qty,
+        date_format(deadline, '%Y-%m-%d %T') as deadline
+        FROM cn_3w_replenish_orders
+        WHERE id=#{id}
+    </select>
+    <select id="getById" parameterType="java.lang.Integer" resultMap="cnReplOrderResult">
+        SELECT
+        id,gmt_create,gmt_modified,sc_item_id,sc_item_code,sc_item_name,repl_no,plan_repl_qty,deadline,
+        suggest_qty,transport_type,store_code,store_name,state,entryOrderCode,entryOrderId,contact_name,contact_phone,confirm_repl_qty,
+        confirm_deadline,errorMsg
+        FROM cn_3w_replenish_orders
+        WHERE id=#{id}
+    </select>
+    <update id="confirmOrder" parameterType="com.haier.purchase.data.model.ReplenishOrder">
+        UPDATE `cn_3w_replenish_orders`
+        SET
+        state= #{state},
+        confirm_repl_qty = #{confirmReplQty},
+        confirm_deadline = #{confirmDeadLine},
+        contact_name = #{contactName},
+        contact_phone = #{contactPhone},
+        modifyTime = #{modifiedTime}
+        WHERE id=#{id}
+    </update>
+</mapper>

@@ -77,6 +77,9 @@
     <result property="isProduceDaily" column="isProduceDaily"/>
     <result property="tailPayTime" column="tailPayTime"/>
     <result property="ckCode" column="ckCode"/>
+        <result property="tmallName" column="tmallName"/>
+        <result property="aliPayName" column="aliPayName"/>
+        <result property="sellpeople" column="sellpeople"/>
     </resultMap>
     <resultMap id="QueryOrderParameterResult" type="com.haier.shop.model.QueryOrderParameter">
         <result property="smConfirmStatus" column="smConfirmStatus" />
@@ -101,86 +104,101 @@
         <result property="orderMoney" column="orderAmount" />
         <result property="orderAddTime" column="orderAddTime" />
 		<result property="orderModified" column="orderModified" />
+		<result property="productId" column="productId" />
     </resultMap>
 
     <select id="get" parameterType="Integer" resultMap="ordersResult">
         SELECT
-        `id`,
-        `isTest`,
-        `isBackend`,
-        `isBook`,
-        `isCod`,
-        `notAutoConfirm`,
-        `orderSn`,
-        `relationOrderSn`,
-        `memberId`,
-        `memberEmail`,
-        `addTime`,
-        `syncTime`,
-        `orderStatus`,
-        `payTime`,
-        `paymentStatus`,
-        `receiptConsignee`,
-        `receiptAddress`,
-        `receiptZipcode`,
-        `receiptMobile`,
-        `productAmount`,
-        `orderAmount`,
-        `paidAmount`,
-        `shippingAmount`,
-        `totalEsAmount`,
-        `paymentCode`,
-        `payBankCode`,
-        `paymentName`,
-        `consignee`,
-        `originRegionName`,
-        `originAddress`,
-        `province`,
-        `city`,
-        `region`,
-        `street`,
-        `regionName`,
-        `address`,
-        `zipcode`,
-        `mobile`,
-        `phone`,
-        `receiptInfo`,
-        `delayShipTime`,
-        `remark`,
-        `bankCode`,
-        `agent`,
-        `confirmTime`,
-        `firstConfirmTime`,
-        `firstConfirmPerson`,
-        `finishTime`,
-        `tradeSn`,
-        `signCode`,
-        `source`,
-        `sourceOrderSn`,
-        `onedayLimit`,
-        `orderType`,
-        `memberInvoiceId`,
-        `taobaoGroupId`,
-        `tradeType`,
-        `stepTradeStatus`,
-        `stepPaidFee`,
-        `depositAmount`,
-        `balanceAmount`,
-        `autoCancelDays`,
-        `isNoLimitStockOrder`,
-        `autoConfirmNum`,
-        `smConfirmStatus`,
-        `smConfirmTime`,
-        `smManualTime`,
-        `smManualRemark`,
-        `isTogether`,
-        `isNotConfirm`,
-        `points`,
-        `isProduceDaily`,
-        `tailPayTime`,
-        `ckCode`
-        FROM `Orders`
+        *
+        FROM `orders`
         WHERE `id` = #{id}
+    </select>
+    
+    <select id="getOrderByOrderSn" resultType="com.haier.shop.model.WorkOrderBean">
+        SELECT
+        FROM_UNIXTIME(o.addtime,'%Y-%m-%d %H:%i:%S') as addtime,
+        o.orderSn,
+        op.cOrderSn,
+        op.productName,
+        op.number,
+        op.sku,
+        op.productAmount,
+        o.mobile buyerMobile,
+        o.phone ,
+        o.consignee buyer,
+        op.netPointId,
+        np.netPointName,
+        op.status,
+        o.syncTime,
+        o.payTime,
+        o.province,
+        o.city,
+        o.region,
+        o.regionName,
+        o.address,
+        o.source,
+        op.storeId,
+        op.sCode,
+        op.stockType storeType,
+        op.tbOrderSn,
+        o.orderStatus,
+        o.agent,
+        op.sCode,
+        op.price,
+        op.lessShipTime,
+        op.status netOrderStatus
+        ,isProduceDaily
+        ,sourceOrderSn
+        ,finishTime
+        FROM `orders` o inner join orderproducts op on o.id=op.orderId
+        left join netpoints np on op.netPointId=np.id
+        WHERE op.cOrderSn=#{orderSn}
+        union
+        SELECT
+        FROM_UNIXTIME(o.addtime,'%Y-%m-%d %H:%i:%S') as addtime,
+        o.orderSn,
+        op.cOrderSn,
+        op.productName,
+        op.number,
+        op.sku,
+        op.productAmount,
+        o.mobile buyerMobile,
+        o.phone ,
+        o.consignee buyer,
+        op.netPointId,
+        np.netPointName,
+        op.status,
+        o.syncTime,
+        o.payTime,
+        o.province,
+        o.city,
+        o.region,
+        o.regionName,
+        o.address,
+        o.source,
+        op.storeId,
+        op.sCode,
+        op.stockType storeType,
+        op.tbOrderSn,
+        o.orderStatus,
+        o.agent,
+        op.sCode,
+        op.price,
+        op.lessShipTime,
+        op.status netOrderStatus
+        ,isProduceDaily
+        ,sourceOrderSn
+        ,finishTime
+        FROM `orders` o inner join orderproducts op on o.id=op.orderId
+        left join netpoints np on op.netPointId=np.id
+        WHERE o.orderSn = #{orderSn} limit 1
+    </select>
+
+    <select id="getRegionByOrderSn" resultType="map">
+        SELECT r.code, r.regionName
+        FROM `orders` o LEFT JOIN regions r ON o.region = r.id
+        WHERE o.orderSn = #{orderSn}
+
     </select>
 
     <select id="getByOrderSn" parameterType="String" resultMap="ordersResult">
@@ -256,8 +274,103 @@
         `isTogether`,
         `isNotConfirm`,
         `ckCode`
-        FROM `Orders`
+        FROM `orders`
         WHERE `orderSn` = #{orderSn}
+        limit 1
+    </select>
+
+    <select id="getBySourceOrderSn" parameterType="String" resultMap="ordersResult">
+        SELECT
+        `id`,
+        `isTest`,
+        `isBackend`,
+        `isBook`,
+        `isCod`,
+        `notAutoConfirm`,
+        `orderSn`,
+        `relationOrderSn`,
+        `memberId`,
+        `memberEmail`,
+        `addTime`,
+        `syncTime`,
+        `orderStatus`,
+        `payTime`,
+        `paymentStatus`,
+        `receiptConsignee`,
+        `receiptAddress`,
+        `receiptZipcode`,
+        `receiptMobile`,
+        `productAmount`,
+        `orderAmount`,
+        `paidAmount`,
+        `shippingAmount`,
+        `totalEsAmount`,
+        `paymentCode`,
+        `payBankCode`,
+        `paymentName`,
+        `consignee`,
+        `originRegionName`,
+        `originAddress`,
+        `province`,
+        `city`,
+        `region`,
+        `street`,
+        `regionName`,
+        `address`,
+        `zipcode`,
+        `mobile`,
+        `phone`,
+        `receiptInfo`,
+        `delayShipTime`,
+        `remark`,
+        `bankCode`,
+        `agent`,
+        `confirmTime`,
+        `firstConfirmTime`,
+        `firstConfirmPerson`,
+        `finishTime`,
+        `tradeSn`,
+        `signCode`,
+        `source`,
+        `sourceOrderSn`,
+        `onedayLimit`,
+        `orderType`,
+        `memberInvoiceId`,
+        `taobaoGroupId`,
+        `tradeType`,
+        `stepTradeStatus`,
+        `stepPaidFee`,
+        `depositAmount`,
+        `balanceAmount`,
+        `autoCancelDays`,
+        `isNoLimitStockOrder`,
+        `autoConfirmNum`,
+        `smConfirmStatus`,
+        `smConfirmTime`,
+        `smManualTime`,
+        `smManualRemark`,
+        `isTogether`,
+        `isNotConfirm`,
+        `ckCode`
+        FROM `orders`
+        WHERE `sourceOrderSn` = #{sourceOrderSn}
+        limit 1
+    </select>
+
+    <select id="getByRelationOrderSn" parameterType="String" resultMap="ordersResult">
+        Select
+        `id`,
+        `orderSn`,
+        `relationOrderSn`,
+        `originRegionName`,
+        `originAddress`,
+        `province`,
+        `city`,
+        `region`,
+        `sourceOrderSn`
+        FROM `orders`
+        WHERE `OrderSn` = #{connectOrderNum}
+        limit 1
     </select>
 
     <select id="getFindQueryOrderList" parameterType="com.haier.shop.model.QueryOrderParameter" resultMap="QueryOrderParameterResult">
@@ -265,76 +378,80 @@
         o.smConfirmStatus,o.isCod,o.orderSn,o.sourceOrderSn,o.mobile,o.consignee,
         o.source,o.orderAmount,o.paymentCode,o.orderStatus,o.paymentName,o.paymentStatus,
         FROM_UNIXTIME(o.addTime, '%Y-%m-%d %H:%i:%S') as orderAddTime,
-		date_format(o.modified, '%Y-%m-%d %H:%i:%S') as orderModified,o.autoConfirmNum,op.productName,m.invoiceType,
+		date_format(o.modified, '%Y-%m-%d %H:%i:%S') as orderModified,o.autoConfirmNum,m.invoiceType,
         FROM_UNIXTIME(o.firstConfirmTime, '%Y-%m-%d %H:%i:%S') as firstConfirmTime,
         FROM_UNIXTIME(o.payTime, '%Y-%m-%d %H:%i:%S') as payTime,
         FROM_UNIXTIME(o.syncTime, '%Y-%m-%d %H:%i:%S') as syncTime,
         o.modified,o.orderType,o.province,o.isProduceDaily
-        from (Orders o left join MemberInvoices m on o.id=m.orderId ) LEFT JOIN OrderProducts op  on o.id=op.orderId
-        where 1=1
-        <if test="smConfirmStatus  != null and smConfirmStatus ==3">
-            and o.smConfirmStatus=#{smConfirmStatus}
-        </if>
-        <if test="smConfirmStatus  != null and smConfirmStatus ==-1">
-            and o.smConfirmStatus != 3
-        </if>
-        <if test="isCod  != null and isCod !=-1">
-            and o.isCod=#{isCod}
-        </if>
-        <if test="orderSn  != null and orderSn !=''">
-            and o.orderSn=#{orderSn}
-        </if>
-        <if test="sourceOrderNo  != null and sourceOrderNo !=''">
-            and o.sourceOrderSn=#{sourceOrderNo}
-        </if>
-        <if test="mobile  != null and mobile !=''">
-            and o.mobile=#{mobile}
-        </if>
-        <if test="consignee  != null and consignee !=''">
-            and o.consignee=#{consignee}
-        </if>
-        <if test="source  != null and source !=''">
-            and o.source=#{source}
-        </if>
-        <if test="orderStatus  != null and orderStatus !=-1">
-            and o.orderStatus=#{orderStatus}
-        </if>
-        <if test="paymentStatus  != null and paymentStatus !=-1">
-            and o.paymentStatus=#{paymentStatus}
-        </if>
-        <if test="paymentCode  != null and paymentCode !=''">
-            and o.paymentCode=#{paymentCode}
-        </if>
-        <if test="addTimeBegine != null and addTimeBegine != ''">
-            and o.addTime >= unix_timestamp(#{addTimeBegine})
-        </if>
-        <if test="addTimeEnd != null and addTimeEnd != ''">
-            and  o.addTime <![CDATA[  <= ]]>  unix_timestamp(#{addTimeEnd})
-        </if>
-        <if test="modifiedBegine != null and modifiedBegine != ''">
-            and o.modified >= #{modifiedBegine}
-        </if>
-        <if test="modifiedEnd != null and modifiedEnd != ''">
-            and  o.modified <![CDATA[  <= ]]>  #{modifiedEnd}
-        </if>
-        <if test="orderType != null and orderType !=-1">
-            and o.orderType=#{orderType}
-        </if>
-        <if test="isUsePoint != null and isUsePoint ==1">
-            and o.points &gt; 0
-        </if>
-        <if test="isUsePoint != null and isUsePoint ==0">
-            and o.points = 0
-        </if>
-        <if test="isProduceDaily != null and isProduceDaily !=-1">
-            and o.isProduceDaily = #{isProduceDaily}
-        </if>
-        <if test="productName  != null and productName !=''">
-            and op.productName=#{productName}
-        </if>
-        <if test="invoiceType  != null and invoiceType !=-1">
-            and m.invoiceType=#{invoiceType}
-        </if>
+        from orders o left join memberinvoices m on o.id=m.orderId
+        <where>
+            <if test="provinceId  != null and provinceId !=-1">
+                o.province=#{provinceId}
+            </if>
+            <if test="smConfirmStatus  != null and smConfirmStatus ==3">
+                and o.smConfirmStatus=#{smConfirmStatus}
+            </if>
+            <if test="smConfirmStatus  != null and smConfirmStatus ==-1">
+                and o.smConfirmStatus != 3
+            </if>
+            <if test="isCod  != null and isCod !=-1">
+                and o.isCod=#{isCod}
+            </if>
+            <if test="orderSn  != null and orderSn !=''">
+                and o.orderSn=#{orderSn}
+            </if>
+            <if test="sourceOrderNo  != null and sourceOrderNo !=''">
+                and o.sourceOrderSn=#{sourceOrderNo}
+            </if>
+            <if test="mobile  != null and mobile !=''">
+                and o.mobile=#{mobile}
+            </if>
+            <if test="consignee  != null and consignee !=''">
+                and o.consignee=#{consignee}
+            </if>
+            <if test="source  != null and source !=''">
+                and o.source=#{source}
+            </if>
+            <if test="orderStatus  != null and orderStatus !=-1">
+                and o.orderStatus=#{orderStatus}
+            </if>
+            <if test="paymentStatus  != null and paymentStatus !=-1">
+                and o.paymentStatus=#{paymentStatus}
+            </if>
+            <if test="paymentCode  != null and paymentCode !=''">
+                and o.paymentCode=#{paymentCode}
+            </if>
+            <if test="addTimeBegine != null and addTimeBegine != ''">
+                and o.addTime >= unix_timestamp(#{addTimeBegine})
+            </if>
+            <if test="addTimeEnd != null and addTimeEnd != ''">
+                and  o.addTime <![CDATA[  <= ]]>  unix_timestamp(#{addTimeEnd})
+            </if>
+            <if test="modifiedBegine != null and modifiedBegine != ''">
+                and o.modified >= #{modifiedBegine}
+            </if>
+            <if test="modifiedEnd != null and modifiedEnd != ''">
+                and  o.modified <![CDATA[  <= ]]>  #{modifiedEnd}
+            </if>
+            <if test="orderType != null and orderType !=-1">
+                and o.orderType=#{orderType}
+            </if>
+            <if test="isUsePoint != null and isUsePoint ==1">
+                and o.points &gt; 0
+            </if>
+            <if test="isUsePoint != null and isUsePoint ==0">
+                and o.points = 0
+            </if>
+            <if test="isProduceDaily != null and isProduceDaily !=-1">
+                and o.isProduceDaily = #{isProduceDaily}
+            </if>
+            <if test="productName  != null and productName !=''">
+                and op.productName=#{productName}
+            </if>
+            <if test="invoiceType  != null and invoiceType !=-1">
+                and m.invoiceType=#{invoiceType}
+            </if>
+        </where>
         <if test="payTimeSort  != null and payTimeSort =='desc'">
             order by payTime desc
         </if>
@@ -345,77 +462,81 @@
             Limit #{page} , #{rows}
         </if>
     </select>
-    <select id="getFindQueryOrderListCount" parameterType="com.haier.shop.model.QueryOrderParameter" resultType="Integer">
+    <select id="getFindQueryOrderListCount" parameterType="com.haier.shop.model.QueryOrderParameter" resultType="java.lang.Integer">
         select
         count(*)
-        from (Orders o left join MemberInvoices m on o.id=m.orderId ) LEFT JOIN OrderProducts op  on m.id=op.orderId
-        where 1=1
-        <if test="smConfirmStatus  != null and smConfirmStatus ==3">
-            and o.smConfirmStatus=#{smConfirmStatus}
-        </if>
-        <if test="smConfirmStatus  != null and smConfirmStatus ==-1">
-            and o.smConfirmStatus != 3
-        </if>
-        <if test="isCod  != null and isCod !=-1">
-            and o.isCod=#{isCod}
-        </if>
-        <if test="orderSn  != null and orderSn !=''">
-            and o.orderSn=#{orderSn}
-        </if>
-        <if test="sourceOrderNo  != null and sourceOrderNo !=''">
-            and o.sourceOrderSn=#{sourceOrderNo}
-        </if>
-        <if test="mobile  != null and mobile !=''">
-            and o.mobile=#{mobile}
-        </if>
-        <if test="consignee  != null and consignee !=''">
-            and o.consignee=#{consignee}
-        </if>
-        <if test="source  != null and source !=''">
-            and o.source=#{source}
-        </if>
-        <if test="orderStatus  != null and orderStatus !=-1">
-            and o.orderStatus=#{orderStatus}
-        </if>
-        <if test="paymentStatus  != null and paymentStatus !=-1">
-            and o.paymentStatus=#{paymentStatus}
-        </if>
-        <if test="paymentCode  != null and paymentCode !=''">
-            and o.paymentCode=#{paymentCode}
-        </if>
-        <if test="addTimeBegine != null and addTimeBegine != ''">
-            and o.addTime >= unix_timestamp(#{addTimeBegine})
-        </if>
-        <if test="addTimeEnd != null and addTimeEnd != ''">
-            and  o.addTime <![CDATA[  <= ]]>  unix_timestamp(#{addTimeEnd})
-        </if>
-        <if test="modifiedBegine != null and modifiedBegine != ''">
-            and o.modified >= #{modifiedBegine}
-        </if>
-        <if test="modifiedEnd != null and modifiedEnd != ''">
-            and  o.modified <![CDATA[  <= ]]>  #{modifiedEnd}
-        </if>
-        <if test="orderType != null and orderType !=-1">
-            and o.orderType=#{orderType}
-        </if>
-        <if test="isUsePoint != null and isUsePoint ==1">
-            and o.points &gt; 0
-        </if>
-        <if test="isUsePoint != null and isUsePoint ==0">
-            and o.points = 0
-        </if>
-        <if test="isProduceDaily != null and isProduceDaily !=-1">
-            and o.isProduceDaily = #{isProduceDaily }
-        </if>
-        <if test="productName  != null and productName !=''">
-            and op.productName=#{productName}
-        </if>
-        <if test="invoiceType  != null and invoiceType !=-1">
-            and m.invoiceType=#{invoiceType}
-        </if>
+        from orders o left join memberinvoices m on o.id=m.orderId
+        <where>
+            <if test="provinceId  != null and provinceId !=-1">
+                o.province=#{provinceId}
+            </if>
+            <if test="smConfirmStatus  != null and smConfirmStatus ==3">
+                and o.smConfirmStatus=#{smConfirmStatus}
+            </if>
+            <if test="smConfirmStatus  != null and smConfirmStatus ==-1">
+                and o.smConfirmStatus != 3
+            </if>
+            <if test="isCod  != null and isCod !=-1">
+                and o.isCod=#{isCod}
+            </if>
+            <if test="orderSn  != null and orderSn !=''">
+                and o.orderSn=#{orderSn}
+            </if>
+            <if test="sourceOrderNo  != null and sourceOrderNo !=''">
+                and o.sourceOrderSn=#{sourceOrderNo}
+            </if>
+            <if test="mobile  != null and mobile !=''">
+                and o.mobile=#{mobile}
+            </if>
+            <if test="consignee  != null and consignee !=''">
+                and o.consignee=#{consignee}
+            </if>
+            <if test="source  != null and source !=''">
+                and o.source=#{source}
+            </if>
+            <if test="orderStatus  != null and orderStatus !=-1">
+                and o.orderStatus=#{orderStatus}
+            </if>
+            <if test="paymentStatus  != null and paymentStatus !=-1">
+                and o.paymentStatus=#{paymentStatus}
+            </if>
+            <if test="paymentCode  != null and paymentCode !=''">
+                and o.paymentCode=#{paymentCode}
+            </if>
+            <if test="addTimeBegine != null and addTimeBegine != ''">
+                and o.addTime >= unix_timestamp(#{addTimeBegine})
+            </if>
+            <if test="addTimeEnd != null and addTimeEnd != ''">
+                and  o.addTime <![CDATA[  <= ]]>  unix_timestamp(#{addTimeEnd})
+            </if>
+            <if test="modifiedBegine != null and modifiedBegine != ''">
+                and o.modified >= #{modifiedBegine}
+            </if>
+            <if test="modifiedEnd != null and modifiedEnd != ''">
+                and  o.modified <![CDATA[  <= ]]>  #{modifiedEnd}
+            </if>
+            <if test="orderType != null and orderType !=-1">
+                and o.orderType=#{orderType}
+            </if>
+            <if test="isUsePoint != null and isUsePoint ==1">
+                and o.points &gt; 0
+            </if>
+            <if test="isUsePoint != null and isUsePoint ==0">
+                and o.points = 0
+            </if>
+            <if test="isProduceDaily != null and isProduceDaily !=-1">
+                and o.isProduceDaily = #{isProduceDaily }
+            </if>
+            <if test="productName  != null and productName !=''">
+                and op.productName=#{productName}
+            </if>
+            <if test="invoiceType  != null and invoiceType !=-1">
+                and m.invoiceType=#{invoiceType}
+            </if>
+        </where>
     </select>
     <select  id="queryVOMTransMission" parameterType="com.haier.shop.model.QueryOrderParameter" resultType="com.haier.shop.model.OrdersVo">
-        SELECT
+    SELECT
         o.orderSn,
         o.sourceOrderSn,
         o.confirmTime,
@@ -433,7 +554,7 @@
         o.shippingAmount,
         o.paymentStatus,
         o.paymentCode,
-         date_format(o.payTime,'%Y-%m-%d') payTimeStr,
+         from_unixtime(o.payTime, '%Y-%m-%d') payTimeStr,
         o.paymentName,
         p.isReceipt,
         i.type,
@@ -441,14 +562,163 @@
         i.taxPayerNumber,
         i.registerAddressAndPhone,
         i.bankNameAndAccount,
-        o.remark
-        FROM
-        OrderProducts p,
-        Orders o ,
-        Invoices i
-        where
-        o.id =p.orderId
-        and i.orderProductId = p.id
-        and p.id =#{id,jdbcType=VARCHAR}
+        o.remark,
+        o.orderType,
+		r.netPointCode,
+		p.stockType,
+		p.tbOrderSn
+       FROM
+        orders o,
+        orderrepairhprecords r,
+        orderrepairlesrecords l,
+        orderproducts p
+		LEFT JOIN invoices i ON i.orderProductId = p.id
+		WHERE
+			o.id = p.orderId
+		AND r.orderProductId = p.id
+		AND l.orderProductId = p.id
+		AND l.falg IN ('0', '2')
+		AND r.id = #{id,jdbcType=VARCHAR}
+		LIMIT 0,1
+	</select>
+
+    <select  id="queryMinHpRecordId" parameterType="java.lang.String" resultType="map">
+      SELECT min(id) id
+      FROM `orderrepairhprecords`
+      WHERE `orderRepairId` = #{id,jdbcType=VARCHAR}
+	</select>
+
+    <select  id="queryRepairVOMInfo" parameterType="com.haier.shop.model.QueryOrderParameter" resultType="com.haier.shop.model.OrdersVo">
+    SELECT
+        o.orderSn,
+        o.sourceOrderSn,
+        o.confirmTime,
+        p.sCode,
+        o.province,
+        o.city,
+        o.region,
+        o.address,
+        o.consignee,
+        o.mobile,
+        o.phone,
+        o.zipcode,
+        o.orderAmount,
+        o.relationOrderSn,
+        o.shippingAmount,
+        o.paymentStatus,
+        o.paymentCode,
+         from_unixtime(o.payTime, '%Y-%m-%d')payTimeStr,
+        o.paymentName,
+        p.isReceipt,
+        i.type,
+        i.invoiceTitle,
+        i.taxPayerNumber,
+        i.registerAddressAndPhone,
+        i.bankNameAndAccount,
+        o.remark,
+        o.orderType,
+		r.netPointCode
+       FROM
+        orders o,
+        orderrepairhprecords r,
+        orderrepairlesrecords l,
+        orderproducts p
+		LEFT JOIN invoices i ON i.orderProductId = p.id
+		WHERE
+			o.id = p.orderId
+		AND r.orderProductId = p.id
+		AND l.orderProductId = p.id
+		AND l.id = #{id,jdbcType=VARCHAR}
+		LIMIT 0,1
+		    </select>
+
+    <select  id="queryb2cVOM" parameterType="com.haier.shop.model.QueryOrderParameter" resultType="com.haier.shop.model.OrdersVo">
+    SELECT
+        o.orderSn,
+        o.sourceOrderSn,
+        o.confirmTime,
+        p.sCode,
+        o.province,
+        o.city,
+        o.region,
+        o.address,
+        o.consignee,
+        o.mobile,
+        o.phone,
+        o.zipcode,
+        o.orderAmount,
+        o.relationOrderSn,
+        o.shippingAmount,
+        o.paymentStatus,
+        o.paymentCode,
+         from_unixtime(o.payTime, '%Y-%m-%d')payTimeStr,
+        o.paymentName,
+        p.isReceipt,
+        i.type,
+        i.invoiceTitle,
+        i.taxPayerNumber,
+        i.registerAddressAndPhone,
+        i.bankNameAndAccount,
+        o.remark,
+        o.orderType,
+        n.netPointN8 netPointCode,
+        p.sku,
+        p.productName,
+        p.price,
+        p.number
+       FROM
+        orders o,
+        orderrepairlesrecords l,
+        orderproducts p
+		LEFT JOIN invoices i ON i.orderProductId = p.id
+    LEFT JOIN netpoints n ON p.netPointId = n.id
+		WHERE
+			o.id = p.orderId
+		AND l.orderProductId = p.id
+		AND l.falg = '0'
+		AND l.id = #{id,jdbcType=VARCHAR}
+		LIMIT 0,1
+	</select>
+    <select  id="queryFiveYard" parameterType="java.lang.String" resultType="map">
+    SELECT fiveYard, centerCode FROM lesfiveyards
+    where sCode = #{sCode, jdbcType=VARCHAR}
+
+	</select>
+	<select id="selectOrderView" parameterType="java.lang.String" resultMap="ordersResult">
+		    SELECT
+		    	o.id,
+				o.paymentCode,
+				o.isProduceDaily,
+				o.source,
+				o.sourceOrderSn,
+				o.consignee,
+				o.province,
+				o.city,
+				o.region,
+				o.address,
+				o.zipcode,
+				o.mobile,
+				o.phone,
+				o.paymentName
+			FROM
+        orders o
+			WHERE
+				o.orderSn = #{productId}
+	</select>
+
+    <select id="getRowCnts" resultType="int">
+        select
+        FOUND_ROWS();
+    </select>
+
+    <select id="getIdAndOhterByOrderSn" parameterType="String" resultMap="ordersResult">
+        SELECT
+        `id`,
+        `relationOrderSn`,
+        `addTime`,
+        `payTime`
+        FROM `orders`
+        WHERE `orderSn` = #{orderSn}
+        limit 1
     </select>
 </mapper>

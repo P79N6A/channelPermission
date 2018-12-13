@@ -9,6 +9,7 @@ import com.haier.purchase.data.model.T2OrderItem;
 import com.haier.purchase.data.model.WAAddress;
 import com.haier.stock.model.InvRrsWarehouse;
 import com.haier.stock.model.InvWarehouse;
+import com.haier.stock.model.JdStorage;
 
 public interface PurchaseBaseCommonService {
 
@@ -50,6 +51,13 @@ public interface PurchaseBaseCommonService {
 	 */
 	public ServiceResult<List<InvRrsWarehouse>> getAllRrsWhByEstorgeId(
             Map<String, Object> params);
+	
+	/**
+	 * @Title: getAllRrsWhByEstorgeIdJd
+	 * @Description:默认通过estorge_id字段查询，适用jd
+	 */
+	public ServiceResult<List<JdStorage>> getAllRrsWhByEstorgeIdJd(
+            Map<String, Object> params);
 
 	/**
 	 * 查询所有数据
@@ -67,4 +75,5 @@ public interface PurchaseBaseCommonService {
 	public ServiceResult<T2OrderItem> getDataBySourceOrderId(
 			String source_order_id);
 
+	ServiceResult<List<WAAddress>> getWAAddressInfo(String storage_id);
 }

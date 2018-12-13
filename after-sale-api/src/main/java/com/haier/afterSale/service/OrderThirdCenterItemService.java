@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.haier.common.ServiceResult;
 import com.haier.distribute.data.model.ProductCates;
-import com.haier.purchase.data.model.LesFiveYardInfo;
+import com.haier.shop.model.LesFiveYardInfo;
 import com.haier.shop.model.ItemAttribute;
 import com.haier.shop.model.ItemBase;
 import com.haier.shop.model.NetPoints;

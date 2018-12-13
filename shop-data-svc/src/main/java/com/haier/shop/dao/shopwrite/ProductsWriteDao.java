@@ -29,4 +29,10 @@ public interface ProductsWriteDao {
      * @return
      */
     List<Map<String,Object>> getBySku1(String sku);
+    
+    Integer addProduct(Products products);
+    
+    Integer updateProduct(Products products);
+    
+    Integer delProduct(Integer id);
 }

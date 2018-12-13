@@ -142,7 +142,7 @@
 		AND p.productCateId = pc.id
 		AND t.id = tp.saleId
 		AND t.channelId = #{channelId,jdbcType=INTEGER}
-		LIMIT 50
+		LIMIT 20
     
   </select>
   <!-- 查询list -->
@@ -286,6 +286,9 @@
       <if test="onSale != null and onSale != ''" >
         onSale,
       </if>
+       <if test="salePrice != null and salePrice != ''" >
+        salePrice,
+      </if>
       <if test="channelName != null and channelName != ''" >
         channelName,
       </if>
@@ -335,6 +338,9 @@
       </if>
       <if test="onSale != null and onSale != ''" >
         #{onSale,jdbcType=CHAR},
+      </if>
+      <if test="salePrice != null and salePrice != ''" >
+        #{salePrice,jdbcType=DECIMAL},
       </if>
       <if test="channelName != null and channelName != ''" >
         #{channelName,jdbcType=VARCHAR},
@@ -423,5 +429,17 @@
     <select id="checkSkuAndChannel" resultMap="ProductMap">
         SELECT * FROM t_sale_product WHERE sku = #{sku} AND channelId = (SELECT id from t_channels_info WHERE channelCode
         = #{channelCode})
+    </select>
+    <select id="selectAllSku" resultType="java.lang.String">
+        SELECT sku FROM t_sale_product WHERE channelId=3
+    </select>
+    <select id="selectSkuByChannelId" resultType="java.lang.String">
+         SELECT sku FROM t_sale_product WHERE channelId=#{channelId}
+    </select>
+    <select id="seletSkuAll" resultType="java.lang.String">
+           SELECT sku FROM t_sale_product
+    </select>
+    <select id="checkSkuAndChannelId" resultMap="ProductMap">
+        SELECT * FROM t_sale_product WHERE sku = #{sku} AND channelId = #{channelId}
     </select>
 </mapper>

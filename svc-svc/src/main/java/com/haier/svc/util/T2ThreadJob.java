@@ -91,9 +91,9 @@ public class T2ThreadJob implements IThreadJob {
                 // T+2订单数量
                 order.setQty(String.valueOf(reviewedOrder.getT2_delivery_prediction()));
                 //参考单号
-                order.setAdd4(reviewedOrder.getCancelOrderId());
+                order.setAdd4(org.apache.commons.lang.StringUtils.defaultIfEmpty(reviewedOrder.getOrder_num_73(), ""));
                 //更改发货方向标记
-                order.setAdd5(reviewedOrder.getCancelFlag());
+                order.setAdd5(org.apache.commons.lang.StringUtils.defaultIfEmpty(reviewedOrder.getSend_flag(), ""));
                 //渠道
                 order.setAdd6(reviewedOrder.getEd_channel_id());
                 // Flag 固定值2
@@ -107,6 +107,8 @@ public class T2ThreadJob implements IThreadJob {
                 }
                 // 付款方
                 order.setCustCode(reviewedOrder.getPayment_id());
+                //审批人是系统自动则标记为系统自动执行
+                order.setAdd18("系统自动".equals(reviewedOrder.getAudit_user()) ? "Y" : "N");
 
                 OMST2OrderCreateResponse response = null;
 

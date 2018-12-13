@@ -14,7 +14,7 @@ import com.haier.stock.service.StockInvMachineSetService;
 import com.haier.stock.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +81,13 @@ public class InvBaseStockMgtServiceImpl implements InvBaseStockMgtService {
     @Override
     public List<InvBaseStock> exportBaseStockList(InvBaseStock condition) {
         return stockInvBaseStockService.getPageByCondition(condition,
-                0, Integer.MAX_VALUE);
+            0, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public List<InvBaseStock> exportBaseStockListByCondition(InvBaseStock condition,Integer start,Integer size) {
+        return stockInvBaseStockService.getPageByCondition(condition,
+            start, size);
     }
 
     @Override
@@ -91,6 +97,16 @@ public class InvBaseStockMgtServiceImpl implements InvBaseStockMgtService {
         if (InvSection.W10.equals(itemProperty) || StringUtil.isEmpty(itemProperty)) {
             list = stockInvBaseStockService.getMachinePageByCondition(condition,
                     0, Integer.MAX_VALUE);
+        }
+        return list;
+    }
+    @Override
+    public List<InvBaseStock> exportMachineBaseStockListByContion(InvBaseStock condition,Integer start,Integer size) {
+        List<InvBaseStock> list = new ArrayList<InvBaseStock>();
+        String itemProperty = condition.getStockItemProperty();
+        if (InvSection.W10.equals(itemProperty) || StringUtil.isEmpty(itemProperty)) {
+            list = stockInvBaseStockService.getMachinePageByCondition(condition,
+                    start, size);
         }
         return list;
     }
@@ -173,7 +189,11 @@ public class InvBaseStockMgtServiceImpl implements InvBaseStockMgtService {
             if (null != storageCities) {
                 sa.setCityCode(storageCities.getCityId());
                 sa.setRegionCode(storageCities.getRegionId());
+                sa.setCityName(storageCities.getCityName());
+                sa.setRegionName(storageCities.getRegionName());
             }
+        }else {
+            return jsonResult(null, 0);
         }
 
         sa.setStockType(stock.getStockType() == null ? "" : stock.getStockType());

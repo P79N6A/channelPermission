@@ -1,10 +1,11 @@
 package com.haier.shop.service;
 
 
-import java.util.List;
-
 import com.haier.shop.model.OrderProducts;
 import com.haier.shop.model.OrderProductsNew;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 
 public interface OrderProductsNewService {
@@ -178,5 +179,63 @@ public interface OrderProductsNewService {
      * @return
      */
     int updateAfterSyncLes(OrderProductsNew orderProduct);
+	int insert(OrderProducts OrderProducts);
+	int interceptCancelClose(Integer id, Long closeTime);//取消原网单并更改拦截状态
 
+    void updateCOrderSn(OrderProducts orderProducts);
+    
+    /**
+     * 根据OrderID查询
+     * @param id
+     * @return
+     */
+    OrderProductsNew getOrderId(Integer id);
+
+    /**
+     * 查询占用库存失败的数据
+     * @param params
+     * @return
+     */
+    List<OrderProductsNew> queryOccupyStockFail(Map<String, Object> params);
+
+    /**
+     * 查询占用库存失败的数据条数
+     * @param params
+     * @return
+     */
+    Integer queryOccupyStockFailCount(Map<String, Object> params);
+
+    /**
+     * 根据订单修改网单付款状态
+     *
+     * @param orderId
+     * @param cPaymentStatus
+     * @return
+     */
+     Integer updatePaymentStatusByOrderId(Integer orderId, Integer cPaymentStatus);
+
+    int updateNum(Long newNum, BigDecimal productAmount,String orderProductId);
+
+    int updatesCodeBycOrderSn(String sCode ,String cOrderSn);
+
+    /**
+     * 根据日日单状态获取网单列表
+     * @param pdOrderStatus 日日单状态
+     * @return
+     */
+    List<OrderProductsNew> getByPdOrderStatusPaging(Integer pdOrderStatus, Integer minId, Integer size);
+
+    /**
+     * 更新日日单信息,包括日日单状态和集团OMS单号
+     * @param orderProducts
+     * @return
+     */
+    Integer updateRRSById(OrderProductsNew orderProducts);
+
+    /**
+     * 根据订单ID 获取订单下未占用库存成功的网单数量
+     * @param orderId
+     * @return
+     */
+    Integer getSuccessNum(Integer orderId);
 }

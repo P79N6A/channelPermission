@@ -38,13 +38,7 @@ var dataGrid =null;
           $('#addDlg_dmmtlPbcsMtlMeasure').dialog('open');
           $("#fitem").hide();
       });
-	  $("#chebox").change(function(){
-		  if($("#chebox").prop('checked')){
-			  $("#refNos").textbox("setValue","WD")
-		  }else{
-			  $("#refNos").textbox("setValue","")
-		  }
-	  });
+
     dataGrid = $('#datagrid_orderForecastGoal').datagrid({
     	striped : true, // 隔行变色
 		rownumbers : true,
@@ -113,6 +107,9 @@ var dataGrid =null;
    	 
 		onSelectPage : function(pageNumber, pageSize) {
 			var gridOpts = $('#datagrid_orderForecastGoal').datagrid('options');
+			if (pageNumber == 0) {
+        pageNumber = 1;
+			}
 			gridOpts.pageNumber = pageNumber;
 			gridOpts.pageSize = pageSize;
 			onQuery(1);
@@ -339,7 +336,7 @@ var dataGrid =null;
 				return false;
 			}		
 		}
-		
+
 		function isLength(str){
 		  if(str == ""){
 				return true;

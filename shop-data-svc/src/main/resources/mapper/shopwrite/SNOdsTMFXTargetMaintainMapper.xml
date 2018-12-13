@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.SNOdsTMFXTargetMaintainDao">
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.SNOdsTMFXTargetMaintain">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-10 16:55
+    -->
+    <id column="ID" property="id" jdbcType="VARCHAR"/>
+    <result column="ECOLOGY_SHOP" property="ecologyShop" jdbcType="VARCHAR"/>
+    <result column="YEAR" property="year" jdbcType="VARCHAR"/>
+    <result column="MONTH" property="month" jdbcType="VARCHAR"/>
+    <result column="INDUSTRY" property="industry" jdbcType="VARCHAR"/>
+    <result column="BRAND" property="brand" jdbcType="VARCHAR"/>
+    <result column="TYPE" property="type" jdbcType="CHAR"/>
+    <result column="TARGET" property="target" jdbcType="DECIMAL"/>
+    <result column="DELETE_TAB" property="deleteTab" jdbcType="VARCHAR"/>
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+    <result column="AUDIT_STATE" property="auditState" jdbcType="VARCHAR"/>
+    <result column="AUDIT_BY" property="auditBy" jdbcType="VARCHAR"/>
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-10 16:55
+    -->
+    ID, ECOLOGY_SHOP, YEAR, MONTH, INDUSTRY, BRAND, case type when 'y' then '年度' when 'q' then '季度'
+    when 'm' then'月度' end type,
+    TARGET, DELETE_TAB, CREATE_TIME,
+    CREATE_BY, AUDIT_STATE, AUDIT_BY, AUDIT_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-10 16:55
+    -->
+    select
+    <include refid="Base_Column_List"/>
+    from sn_ods_tmfx_targetmaintain
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-10 16:55
+    -->
+    delete from sn_ods_tmfx_targetmaintain
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-10 16:55
+    -->
+    insert into sn_ods_tmfx_targetmaintain
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ecologyShop != null">
+        ECOLOGY_SHOP,
+      </if>
+      <if test="year != null">
+        YEAR,
+      </if>
+      <if test="month != null">
+        MONTH,
+      </if>
+      <if test="industry != null">
+        INDUSTRY,
+      </if>
+      <if test="brand != null">
+        BRAND,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="target != null">
+        TARGET,
+      </if>
+      <if test="deleteTab != null">
+        DELETE_TAB,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="createBy != null">
+        CREATE_BY,
+      </if>
+      <if test="auditState != null">
+        AUDIT_STATE,
+      </if>
+      <if test="auditBy != null">
+        AUDIT_BY,
+      </if>
+      <if test="auditTime != null">
+        AUDIT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ecologyShop != null">
+        #{ecologyShop,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null">
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="target != null">
+        #{target,jdbcType=DECIMAL},
+      </if>
+      <if test="deleteTab != null">
+        #{deleteTab,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="auditState != null">
+        #{auditState,jdbcType=VARCHAR},
+      </if>
+      <if test="auditBy != null">
+        #{auditBy,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-10 16:55
+    -->
+    update sn_ods_tmfx_targetmaintain
+    <set>
+      <if test="ecologyShop != null">
+        ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null">
+        YEAR = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        MONTH = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        INDUSTRY = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        BRAND = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        TYPE = #{type,jdbcType=CHAR},
+      </if>
+      <if test="target != null">
+        TARGET = #{target,jdbcType=DECIMAL},
+      </if>
+      <if test="deleteTab != null">
+        DELETE_TAB = #{deleteTab,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="auditState != null">
+        AUDIT_STATE = #{auditState,jdbcType=VARCHAR},
+      </if>
+      <if test="auditBy != null">
+        AUDIT_BY = #{auditBy,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFlag != null">
+        create_flag = #{createFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="queryTMFXTargetMaintainCount" resultType="int">
+    SELECT count(1)
+    FROM sn_ods_tmfx_targetmaintain
+    WHERE 1=1
+    <if test="industry!=null and industry!=''">
+      and INDUSTRY = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null and type!=''">
+      and TYPE = #{type,jdbcType=CHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="deleteTab!=null and deleteTab!=''">
+      and DELETE_TAB = #{deleteTab,jdbcType=VARCHAR}
+    </if>
+    <if test="auditState!=null and auditState!=''">
+      and AUDIT_STATE = #{auditState,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryTMFXTargetMaintainList" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM sn_ods_tmfx_targetmaintain
+    <where>
+      <if test="industry!=null and industry!=''">
+        and INDUSTRY = #{industry,jdbcType=VARCHAR}
+      </if>
+      <if test="ecologyShop!=null and ecologyShop!=''">
+        and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+      </if>
+      <if test="type!=null and type!=''">
+        and TYPE = #{type,jdbcType=CHAR}
+      </if>
+      <if test="year!=null and year!=''">
+        and YEAR = #{year,jdbcType=VARCHAR}
+      </if>
+      <if test="month!=null and month!=''">
+        and MONTH = #{month,jdbcType=VARCHAR}
+      </if>
+      <if test="deleteTab!=null and deleteTab!=''">
+        and DELETE_TAB = #{deleteTab,jdbcType=VARCHAR}
+      </if>
+      <if test="auditState!=null and auditState!=''">
+        and AUDIT_STATE = #{auditState,jdbcType=VARCHAR}
+      </if>
+    </where>
+    <if test="start != null and rows != null ">
+      LIMIT #{start}, #{rows}
+    </if>
+  </select>
+  <select id="queryTMFXTargetMaintainExcel" resultMap="BaseResultMap">
+    SELECT
+    ECOLOGY_SHOP, YEAR, MONTH, INDUSTRY, BRAND,
+    case type when 'y' then '年度' when 'q' then '季度' when 'm' then '月度' end type,
+    TARGET,
+    case DELETE_TAB when 'Y' then '已删除' when 'N' then '未删除' end DELETE_TAB, CREATE_TIME,
+    CREATE_BY,
+    case AUDIT_STATE when 'B' then '待业务审核' when 'F' then '待财务审核' when 'A' then '审核通过' end
+    AUDIT_STATE, AUDIT_BY,
+    AUDIT_TIME
+    FROM sn_ods_tmfx_targetmaintain
+    WHERE 1=1
+    <if test="industry!=null and industry!=''">
+      and INDUSTRY = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null and type!=''">
+      and TYPE = #{type,jdbcType=CHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="deleteTab!=null and deleteTab!=''">
+      and DELETE_TAB = #{deleteTab,jdbcType=VARCHAR}
+    </if>
+    <if test="auditState!=null and auditState!=''">
+      and AUDIT_STATE = #{auditState,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryRepetition" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM sn_ods_tmfx_targetmaintain
+    WHERE 1=1
+    <if test="industry!=null and industry!=''">
+      and INDUSTRY = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null and type!=''">
+      and TYPE = #{type,jdbcType=CHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="brand != null and brand!=''">
+      and BRAND = #{brand,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <insert id="bulkImport" parameterType="java.util.List">
+    INSERT INTO sn_ods_tmfx_targetmaintain
+    (
+    	ECOLOGY_SHOP, YEAR, MONTH, INDUSTRY, BRAND, type, TARGET, CREATE_BY
+    )
+    values
+    <foreach collection="list" item="otm" separator="," index="index">
+      (#{otm.ecologyShop,jdbcType=VARCHAR},#{otm.year,jdbcType=VARCHAR},#{otm.month,jdbcType=VARCHAR},#{otm.industry,jdbcType=VARCHAR},
+      #{otm.brand,jdbcType=VARCHAR},#{otm.type,jdbcType=CHAR},#{otm.target,jdbcType=DECIMAL},#{otm.createBy,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <select id="queryAllTargetMaintain" resultMap="BaseResultMap">
+    SELECT
+    ID, ECOLOGY_SHOP, YEAR, MONTH, INDUSTRY, BRAND, type, TARGET, DELETE_TAB, CREATE_TIME,
+    CREATE_BY, AUDIT_STATE, AUDIT_BY, AUDIT_TIME
+    FROM
+    sn_ods_tmfx_targetmaintain
+    WHERE AUDIT_STATE = 'A'
+    and DELETE_TAB = 'N'
+    and create_flag = 'N'
+    <if test="type!=null and type!=''">
+      and TYPE = #{type,jdbcType=CHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="findTargetMaintain" resultMap="BaseResultMap">
+    SELECT
+    ID, ECOLOGY_SHOP, YEAR, MONTH, INDUSTRY, BRAND, type, TARGET, DELETE_TAB, CREATE_TIME,
+    CREATE_BY, AUDIT_STATE, AUDIT_BY, AUDIT_TIME
+    FROM
+    sn_ods_tmfx_targetmaintain
+    WHERE AUDIT_STATE = 'A'
+    and DELETE_TAB = 'N'
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and INDUSTRY = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="brand!=null and brand!=''">
+      and BRAND = #{brand,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null and type!=''">
+      and TYPE = #{type,jdbcType=CHAR}
+    </if>
+    limit 1
+  </select>
+  <select id="findByShop" resultMap="BaseResultMap">
+    select
+    t.ecology_shop,
+    t.year,
+    t.month,
+    t.type,
+    ifnull(sum(t.target),0)target
+    from sn_ods_tmfx_targetmaintain t
+    WHERE 1=1
+    and AUDIT_STATE = 'A'
+    and DELETE_TAB = 'N'
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null and type!=''">
+      and TYPE = #{type,jdbcType=CHAR}
+    </if>
+    group by
+    t.ecology_shop,
+    t.year,
+    t.month,
+    t.type
+  </select>
+  <select id="findTargetSummary" resultType="java.math.BigDecimal">
+    select
+    ifnull(sum(target),0)target
+    from sn_ods_tmfx_targetmaintain
+    WHERE audit_state = 'A'
+    and delete_tab = 'N'
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ecology_shop = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and year = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and month = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="brand!=null and brand!=''">
+      and brand = #{brand,jdbcType=VARCHAR}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null and type!=''">
+      and type = #{type,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="findYearTarget" resultType="java.math.BigDecimal">
+    select
+    ifnull(sum(t.target),0)target
+    from
+    sn_ods_tmfx_targetmaintain t
+    where t.type = 'n'
+    and t.month = 'N'
+    <if test="year!=null and year!=''">
+      and t.year = #{year}
+    </if>
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and t.ecology_shop = #{ecologyShop}
+    </if>
+  </select>
+
+
+  <select id="findTargetMaintain2" resultMap="BaseResultMap">
+    SELECT
+    ID, ECOLOGY_SHOP, YEAR, MONTH, INDUSTRY, BRAND, type, TARGET, DELETE_TAB, CREATE_TIME,
+    CREATE_BY, AUDIT_STATE, AUDIT_BY, AUDIT_TIME
+    FROM
+    sn_ods_tmfx_targetmaintain
+    WHERE AUDIT_STATE = 'A'
+    and DELETE_TAB = 'N'
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null and type=='q'.toString() and month!=null and month=='Q1'.toString()">
+      and month in ('01','02','03')
+    </if>
+    <if test="type!=null and type=='q'.toString() and month!=null and month=='Q2'.toString()">
+      and month in ('04','05','06')
+    </if>
+    <if test="type!=null and type=='q'.toString() and month!=null and month=='Q3'.toString()">
+      and month in ('07','08','09')
+    </if>
+    <if test="type!=null and type=='q'.toString() and month!=null and month=='Q4'.toString()">
+      and month in ('10','11','12')
+    </if>
+    <if test="industry!=null and industry!=''">
+      and INDUSTRY = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="brand!=null and brand!=''">
+      and BRAND = #{brand,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+
+</mapper>

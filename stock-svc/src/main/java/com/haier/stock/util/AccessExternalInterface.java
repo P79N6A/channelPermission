@@ -42,7 +42,7 @@ public class AccessExternalInterface {
      * @param content 数据内容
      * @throws Exception
      */
-    public String orderToLesParam(String content, VomInterData vomInterData) {
+    public String orderToLesParam(String content, VomInterData vomInterData,String buType) {
         //外网测试地址：http://58.56.128.84:9001/EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM
         //内网测试地址：http://10.135.17.72:10101/EAI/service/VOM/CommonGetWayToVOM/CommonGetWayToVOM
         //线上地址：http://58.56.128.10:19001/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=EAI_INT_1353
@@ -68,7 +68,7 @@ public class AccessExternalInterface {
             //        System.out.println(s1);
             stgVomData.setContent(s1);
             stgVomData.setSign(Md5.getMd5(content + keyvalue));
-            stgVomData.setButype("rrs_order");
+            stgVomData.setButype(buType);
             stgVomData.setSource("HAIERSC");
             stgVomData.setType("xml");
             List<VomInterData> list = new ArrayList<VomInterData>();

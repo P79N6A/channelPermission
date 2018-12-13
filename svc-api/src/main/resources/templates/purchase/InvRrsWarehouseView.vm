@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>电商库位与日日顺库位对照</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
+
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label" style="width: 150px">日日顺库位码：</span>
+                <input id="rrs_wh_code" name="rrs_wh_code" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label" style="width: 150px">日日顺仓库名称：</span>
+                <input id="rrs_wh_name" name="rrs_wh_name" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label" style="width: 150px">电商库位码：</span>
+                <input id="estorge_id" name="estorge_id" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label" style="width: 150px">运输时效(天)：</span>
+                <input id="transport_prescription" name="transport_prescription" class="easyui-numberbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label" style="width: 150px">T+2上单默认：</span>
+                <input id="t2_default" name="t2_default" type="checkbox" value="0"/>
+                <input id="exportData" name="exportData" type="hidden"/>
+            </div>
+
+        </div>
+        <input id="rrs_wh_code_hidden" name="rrs_wh_code_hidden" type="hidden"/>
+        <input id="rrs_wh_name_hidden" name="rrs_wh_name_hidden" type="hidden"/>
+        <input id="estorge_id_hidden" name="estorge_id_hidden" type="hidden"/>
+        <input id="t2_default_hidden" name="t2_default_hidden" type="hidden"/>
+        <input id="transport_prescription_hidden" name="transport_prescription_hidden" type="hidden"/>
+        <a id='search' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" >查询</a>
+        <a id='create' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >创建</a>
+        <a id='update' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >修改</a>
+        <a id='delete' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true"  >删除</a>
+        <a id='statusOpen' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" >启用</a>
+        <a id='statusClose' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no',plain:true" >禁用</a>
+        <a id='export' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >导出</a>
+        <a id='exportall' href="#" class="easyui-linkbutton"data-options="iconCls:'icon-save',plain:true" >全部导出</a>
+    </form>
+</div>
+
+<div id="createDiv" class="easyui-dialog"
+     closed="true" buttons="#usercreate-buttons" style="width:400px; height:300px;">
+    <form id="createForm" method="post" style="padding:10px 20px">
+        <div class="fitem" ">
+            <label style="width: 110px">日日顺库位码: </label>
+            <input id="rrs_wh_code_create" name="rrs_wh_code" class="easyui-textbox" data-options="required:true,validType:'length[0,4]'"/>
+        </div>
+        <div class="fitem" >
+            <label style="width: 110px">日日顺仓库名称:</label>
+            <input id="rrs_wh_name_create" name="rrs_wh_name" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"  />
+        </div>
+        <div class="fitem" >
+            <label style="width: 110px">电商库位码:</label>
+            <input id="estorge_id_create" name="estorge_id" class="easyui-textbox" data-options="required:true,validType:'length[0,4]'" />
+        </div>
+        <div class="fitem" >
+            <label style="width: 110px">运输时效(天):</label>
+            <input id="transport_prescription_create" name="transport_prescription" class="easyui-numberbox" required="true"/>
+        </div>
+        <div class="fitem" >
+            <label style="width: 110px">T+2上单默认:</label>
+            <input id="t2_default_create" name="t2_default" class="easyui-combobox"   />
+        </div>
+
+    </form>
+</div>
+<div id="usercreate-buttons">
+    <a id="createConfirm" href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#createDiv').dialog('close')" style="width:90px">取消</a>
+</div>
+<div id="userEdit-buttons">
+    <a id="updateConfirm" href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#updateDiv').dialog('close')" style="width:90px">取消</a>
+</div>
+<div id="updateDiv" class="easyui-dialog"
+     closed="true" buttons="#userEdit-buttons" style="width:400px; height:300px;">
+    <form id="updateForm" method="post" style="padding:10px 20px">
+        <div class="fitem" >
+            <label style="width: 110px;">日日顺库位码: </label>
+            <input id="rrs_wh_code_update" name="rrs_wh_code" class="easyui-textbox" data-options="required:true,validType:'length[0,4]'" readonly="readonly"/>
+        </div>
+        <div class="fitem" >
+            <label style="width: 110px;">日日顺仓库名称:</label>
+            <input id="rrs_wh_name_update" name="rrs_wh_name" class="easyui-textbox" data-options="required:true,validType:'length[0,20]'"  />
+        </div>
+        <div class="fitem" >
+            <label style="width: 110px;">电商库位码:</label>
+            <input id="estorge_id_update" name="estorge_id" class="easyui-textbox" data-options="required:true,validType:'length[0,4]'" />
+        </div>
+        <div class="fitem" >
+            <label style="width: 110px;">运输时效(天):</label>
+            <input id="transport_prescription_update" name="transport_prescription" class="easyui-numberbox" data-options="required:true" />
+        </div>
+        <div class="fitem" >
+            <label style="width: 110px;">T+2上单默认:</label>
+            <input id="t2_default_update" name="t2_default" class="easyui-combobox"   />
+        </div>
+    </form>
+</div>
+
+<script src="../static/js/purchase/invRrsWarehouseView.js"></script>
+<script src="../static/js/settleCenter/ajaxfileupload.js"></script>
+
+</body>
+</html>

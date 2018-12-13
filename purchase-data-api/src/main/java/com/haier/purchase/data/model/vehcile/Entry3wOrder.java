@@ -1,7 +1,8 @@
 package com.haier.purchase.data.model.vehcile;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 下单接口入参
@@ -24,6 +25,11 @@ public class Entry3wOrder implements Serializable {
 	private String message;			//响应信息
 	private int totalLines;			//总条数
 	private String pushStatus;			//推送状态（1成功，0未推送或失败）
+	private String itemCode;
+	private Integer planQty;
+	private Integer actualQty;
+	
+	private List<OrderLines> orderLines = new ArrayList<>();
 
 	public int getId() {
 		return id;
@@ -129,4 +135,35 @@ public class Entry3wOrder implements Serializable {
 		this.pushStatus = pushStatus;
 	}
 
+    public String getItemCode() {
+        return itemCode;
+    }
+
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
+    }
+
+    public Integer getPlanQty() {
+        return planQty;
+    }
+
+    public void setPlanQty(Integer planQty) {
+        this.planQty = planQty;
+    }
+
+	public List<OrderLines> getOrderLines() {
+		return orderLines;
+	}
+
+	public void setOrderLines(List<OrderLines> orderLines) {
+		this.orderLines = orderLines;
+	}
+
+	public Integer getActualQty() {
+		return actualQty;
+	}
+
+	public void setActualQty(Integer actualQty) {
+		this.actualQty = actualQty;
+	}
 }

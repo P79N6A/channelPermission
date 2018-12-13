@@ -21,7 +21,7 @@ public interface GroupOrdersService {
 
     List<GroupOrders> getListByDepositOrderProductId(Integer depositOrderProductId);
 
-    Object update(GroupOrders groupOrders);
+    Integer update(GroupOrders groupOrders);
 
     GroupOrders getByDepositOrderProductId(Integer depositOrderProductId);
 

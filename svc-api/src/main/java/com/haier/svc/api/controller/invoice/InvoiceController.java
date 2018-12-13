@@ -2,6 +2,7 @@ package com.haier.svc.api.controller.invoice;
 
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.dubbo.common.json.JSONArray;
+import com.haier.afterSale.model.Ustring;
 import com.haier.common.BusinessException;
 import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
@@ -30,9 +31,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -108,6 +112,7 @@ public class InvoiceController {
      */
     @RequestMapping(value = { "findInvoiceMakeOutList" }, method = { RequestMethod.POST })
     void findInvoiceMakeOutList(@RequestParam(required = false) String corder_sn,
+                                @RequestParam(required = false) String sourceorder_sn,
                                 @RequestParam(required = false) String invoice_title,
                                 @RequestParam(required = false) String tax_payer_number,
                                 @RequestParam(required = false) String register_address_and_phone,
@@ -126,7 +131,7 @@ public class InvoiceController {
                                 @RequestParam(required = false) String success,
                                 @RequestParam(required = false) String corder_add_time_start,
                                 @RequestParam(required = false) String corder_add_time_end,
-                                @RequestParam(required = false) String timeA,
+                                @RequestParam(required = false) String eai_write_state,
                                 @RequestParam(required = false) String is_together,
                                 @RequestParam(required = false) String timeB,
                                 @RequestParam(required = false) String corder_type,
@@ -145,6 +150,7 @@ public class InvoiceController {
             params.put("n", rows);
             //参数加入params里
             params.put("corder_sn", corder_sn.trim());
+            params.put("sourceorder_sn", sourceorder_sn.trim());
             params.put("invoice_title", invoice_title.trim());
             params.put("tax_payer_number", tax_payer_number.trim());
             params.put("register_address_and_phone", register_address_and_phone.trim());
@@ -163,7 +169,7 @@ public class InvoiceController {
             params.put("success", success);
             params.put("corder_add_time_start", corder_add_time_start);
             params.put("corder_add_time_end", corder_add_time_end);
-            params.put("timeA", timeA);
+            params.put("eai_write_state", eai_write_state);
             params.put("is_together", is_together);
             params.put("timeB", timeB);
             params.put("corder_type", corder_type);
@@ -270,6 +276,7 @@ public class InvoiceController {
      */
     @RequestMapping(value = { "findInvoicesWwwLogs" }, method = { RequestMethod.POST })
     public void findInvoicesWwwLogs(@RequestParam(required = false) String sourceSn,
+                                    @RequestParam(required = false) String cOrderSn,
                                    @RequestParam(required = false) String success,
                                    @RequestParam(required = false) String source,
                                    @RequestParam(required = false) String addTimeMax,
@@ -286,7 +293,8 @@ public class InvoiceController {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("m", (page - 1) * rows);
             paramMap.put("n", rows);
-            paramMap.put("sourceSn", sourceSn);
+            paramMap.put("sourceSn", sourceSn.trim());
+            paramMap.put("cOrderSn", cOrderSn.trim());
             paramMap.put("success", success);
             paramMap.put("source", source);
             paramMap.put("addTimeMin", addTimeMin);
@@ -624,7 +632,7 @@ public class InvoiceController {
 
     /**
      * 订单发票列表导出
-     * @param request
+     * @param reques
      * @return
      */
     @RequestMapping(value = { "exportAllMemberInvoiceList" })
@@ -666,7 +674,7 @@ public class InvoiceController {
         String sheetName = "数据导出";
 
         String[] sheetHead = new String[] { "序号", "订单号", "会员名称", "发票类型", "发票抬头", "纳税人识别号", "注册地址",
-                "注册电话", "开户行", "银行卡号", "添加时间", "审核状态", "审核时间", "审核人", "是否锁定" };
+                "注册电话", "开户行", "银行卡号", "添加时间", "审核状态", "审核时间", "审核人", "是否锁定", "提示信息" };
         try {
             ExcelExportUtil.exportEntity(request, response, fileName, sheetName, sheetHead,
                     new ExcelCallbackInterfaceUtil() {
@@ -805,19 +813,26 @@ public class InvoiceController {
      * @return
      */
     @RequestMapping(value = { "modifyMemberInvoices" }, method = { RequestMethod.GET })
-    String modifyMemberInvoices(@RequestParam(required = false) Integer id,
+    ModelAndView modifyMemberInvoices(@RequestParam(required = false) Integer id,
                                 @RequestParam(required = false) String modifyFlg,
                                 @RequestParam(required = false) String orderSn,
                                 Map<String, Object> modelMap, HttpServletRequest request,
                                 HttpServletResponse response) {
+        ModelAndView mv  = new ModelAndView();
         try {
             Map<String,Object> retMap = invoiceCommonService.modifyMemberInvoices(id,modifyFlg,orderSn);
             modelMap.putAll(retMap);
+            mv.addObject("map", retMap);
+            mv.setViewName("invoice/memberInvoiceDetail");
+
+
         } catch (Exception e) {
             logger.error("编辑/审核发票信息失败", e);
             throw new BusinessException("异常信息:" + e.getMessage());
         }
-        return "invoice/memberInvoiceDetail";
+//        return "invoice/memberInvoiceDetail";
+
+        return mv;
     }
 
     /**
@@ -888,15 +903,18 @@ public class InvoiceController {
                                            @RequestParam(required = false) String bankCardNumber,
                                            @RequestParam(required = false) Integer state,
                                            @RequestParam(required = false) String remark,
+                                           @RequestParam(required = false) String vatremark,
                                            HttpServletRequest request, HttpServletResponse response) {
         String errorFlg = "1";
         String message = "";
         Map<String, Object> retMap = new HashMap<String, Object>();
         try {
+        	HttpSession session = request.getSession();
+      	    String userName = Ustring.getString(session.getAttribute("userName"));
             String auditor = WebUtil.currentUserName(request);
             message = invoiceCommonService.saveMemberInvoices(id, invoiceType, invoiceTitle,
                     taxPayerNumber, registerAddress, registerPhone, bankName, bankCardNumber, state,
-                    remark, auditor);
+                    remark, auditor,userName,vatremark);
             if (message.trim().equals("")) {
                 message = "您已成功更新发票信息!<br/>如果是增票需发票管理员审核后方可生效";
                 errorFlg = "0";
@@ -1518,8 +1536,14 @@ public class InvoiceController {
             //税控号码处理
             String[] invoiceNumbers = CommUtil.getStringValue(map.get("invoiceNumber")).split(" ");
             String invoiceNumber = "";
+            int k=0;
             for (String str : invoiceNumbers) {
-                invoiceNumber += "'" + str + '\t';
+                if(k==0){
+                    invoiceNumber=str;
+                }else {
+                    invoiceNumber += "'" + str + '\t';
+                }
+                k++;
             }
             sheet.setColumnView(41, 15);
             sheet.addCell(new Label(41, temp, invoiceNumber, textFormat));
@@ -1620,6 +1644,8 @@ public class InvoiceController {
             }
             sheet.setColumnView(14, 25);
             sheet.addCell(new Label(14, temp, isLock, textFormat));
+            sheet.setColumnView(15, 25);
+            sheet.addCell(new Label(15, temp, CommUtil.getStringValue(memberInvoices.getMessage()), textFormat));
             temp++;
         }
     }
@@ -1639,7 +1665,7 @@ public class InvoiceController {
                 cOrderSn = (String) map.get("cOrderSn");
                 source = (String) map.get("source");
                 Map<String, String> customerMap = getCustomerCodeService.getCustomerCode(cOrderSn);
-                map.put("sapChannelCode", invoiceCommonService.getSapChannelCode(source));
+                map.put("sapChannelCode", invoiceCommonService.getSapChannelCode(cOrderSn,source));
                 String message = customerMap.get("Message");
                 if (null == message) {
                     map.put("customerCode", customerMap.get("code"));
@@ -1654,4 +1680,89 @@ public class InvoiceController {
             }
         }
     }
+    
+    /**
+    //TODO 批量共享开票
+    * @param request
+    * @param response
+    * @param modelMap
+    * @author ysh
+    * @return
+    */
+   @RequestMapping(value = { "batchShareInvoicePage" }, method = { RequestMethod.GET })
+   String batchShareInvoicePage(HttpServletRequest request, HttpServletResponse response,
+                               Map<String, Object> modelMap) {
+       return "invoice/batchShareInvoiceInfo";
+   }
+   /**
+   //TODO 批量审核订单发票
+   * @param request
+   * @param response
+   * @param modelMap
+   * @author ysh
+   * @return
+   */
+  @RequestMapping(value = { "batchAuditingOrderInvoicePage" }, method = { RequestMethod.GET })
+  String batchAuditingOrderInvoicePage(HttpServletRequest request, HttpServletResponse response,
+                              Map<String, Object> modelMap) {
+      return "invoice/batchAuditingOrderInvoiceInfo";
+  }
+   /**
+    //TODO 批量共享开票
+    * @param cOrderSns
+    * @param modelMap
+    * @param request
+    * @param response
+    * @return
+    */
+   @RequestMapping(value = { "doBatchShareInvoice" }, method = { RequestMethod.POST })
+   @ResponseBody
+   public HttpJsonResult<Map<String, Object>> doBatchShareInvoice(@RequestParam(required = true) String cOrderSns,
+                                                                   Map<String, Object> modelMap,
+                                                                   HttpServletRequest request,
+                                                                   HttpServletResponse response) {
+       response.setCharacterEncoding("UTF-8");
+       HttpJsonResult<Map<String, Object>> result = new HttpJsonResult<Map<String, Object>>();
+       if (StringUtil.isEmpty(cOrderSns, true)) {
+           result.setMessage("请提交有效的网单编号！");
+           return result;
+       }
+       System.out.println(cOrderSns);
+       try {
+           result = this.invoiceCommonService.doBatchShareInvoice(cOrderSns, modelMap);
+       } catch (Exception e) {
+           logger.error("[invoice][doBatchShareInvoice]批量共享开票时发生未知错误", e);
+           result.setMessage("批量共享开票失败！");
+       }
+       return result;
+   }
+   /**
+   //TODO 批量审核订单发票
+   * @param cOrderSns
+   * @param modelMap
+   * @param request
+   * @param response
+   * @return
+   */
+  @RequestMapping(value = { "doBatchAuditingOrderInvoice" }, method = { RequestMethod.POST })
+  @ResponseBody
+  public HttpJsonResult<Map<String, Object>> doBatchAuditingOrderInvoice(@RequestParam(required = true) String cOrderSns,
+                                                                  Map<String, Object> modelMap,
+                                                                  HttpServletRequest request,
+                                                                  HttpServletResponse response) {
+	  HttpSession session = request.getSession();
+	  String userName = Ustring.getString(session.getAttribute("userName"));
+      response.setCharacterEncoding("UTF-8");
+      HttpJsonResult<Map<String, Object>> result = new HttpJsonResult<Map<String, Object>>();
+      if (StringUtil.isEmpty(cOrderSns, true)) {
+          result.setMessage("请提交有效的订单编号！");
+          return result;
+      }
+      try {
+          result = this.invoiceCommonService.doBatchAuditingOrderInvoice(cOrderSns, modelMap,userName);
+      } catch (Exception e) {
+          logger.error("[invoice][doBatchUpdateTaxInfo]批量审核订单发票时发生未知错误", e);
+      }
+      return result;
+  }
 }

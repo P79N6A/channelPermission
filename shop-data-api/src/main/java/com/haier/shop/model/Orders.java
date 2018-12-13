@@ -2,16 +2,19 @@ package com.haier.shop.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
  * 订单
  */
 public class Orders implements Serializable {
+    private static final long serialVersionUID = -1870356948297769645L;
+
+
     /**
      * Comment for <code>serialVersionUID</code>
      */
-    private static final long serialVersionUID = 6282903735652163900L;
 
     /**----临时字段，不入库----start------*/
     private String deliverTime;
@@ -40,7 +43,7 @@ public class Orders implements Serializable {
      * 订单来源-平台大客户-1号店订单
      */
     public static final String ORIGIN_YHD       = "YHD";
-
+    private Date modified;// 订单的最后更新时间
     private Integer id;
 
     public Integer getId() {
@@ -69,19 +72,120 @@ public class Orders implements Serializable {
         this.isTest = value;
     }
 
-    private String memberEmail;
+    public Date getModified() {
+		return modified;
+	}
+
+	public void setModified(Date modified) {
+		this.modified = modified;
+	}
+
+	private String memberEmail;
 
     private Long points;
 
     public Long getPoints() {
         return points;
     }
-
+    private int markBuilding;//标建标志（0-未标建 1-标建）
+    private String poiId;//标建ID
+    private String poiName;
     private String tmallName;
     private String aliPayName;
+    private String lbxSn;
+    private String sellpeople;
+    private String orderYwType;
+//    private String modified;//最后更新时间
+    private String channelId;//区分EP和商城
+    private String couponCode;//优惠码编码
+    private String couponCodeValue;//优惠码优惠金额
+    /**
+     * 复制订单标志：1-手动复制 2-自动复制
+     */
+    private Integer isCopy;
+
+    public Integer getIsCopy() {
+        return isCopy;
+    }
+
+    public void setIsCopy(Integer isCopy) {
+        this.isCopy = isCopy;
+    }
+
+    public String getCouponCode() {
+		return couponCode;
+	}
+
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
+	}
+
+	public String getCouponCodeValue() {
+		return couponCodeValue;
+	}
+
+	public void setCouponCodeValue(String couponCodeValue) {
+		this.couponCodeValue = couponCodeValue;
+	}
+
+	public String getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
 
 
-    public String getTmallName() {
+	public String getLbxSn() {
+		return lbxSn;
+	}
+
+	public void setLbxSn(String lbxSn) {
+		this.lbxSn = lbxSn;
+	}
+
+	public String getSellpeople() {
+		return sellpeople;
+	}
+
+	public void setSellpeople(String sellpeople) {
+		this.sellpeople = sellpeople;
+	}
+
+	public String getOrderYwType() {
+		return orderYwType;
+	}
+
+	public void setOrderYwType(String orderYwType) {
+		this.orderYwType = orderYwType;
+	}
+
+	public String getPoiId() {
+		return poiId;
+	}
+
+	public void setPoiId(String poiId) {
+		this.poiId = poiId;
+	}
+
+	public String getPoiName() {
+		return poiName;
+	}
+
+	public void setPoiName(String poiName) {
+		this.poiName = poiName;
+	}
+
+	public int getMarkBuilding() {
+		return markBuilding;
+	}
+
+	public void setMarkBuilding(int markBuilding) {
+		this.markBuilding = markBuilding;
+	}
+
+	public String getTmallName() {
         return tmallName;
     }
 
@@ -258,8 +362,71 @@ public class Orders implements Serializable {
     public void setAddTime(Long value) {
         this.addTime = value;
     }
+	private String codConfirmPerson;//货到付款确认人
+	private String codConfirmTime;//货到付款确认时间
+	private String codConfirmRemark;//货到付款确认备注
+	private String codConfirmState;//货到侍确认状态0无需未确认,1待确认,2确认通过可以发货,3确认无效,订单可以取消
+	private String paymentNoticeUrl;//付款结果通知URL
+	private String addressLon;//地址经度
+	private String addressLat;//地址纬度
+	
+    public String getCodConfirmPerson() {
+		return codConfirmPerson;
+	}
 
-    private Long syncTime;
+	public void setCodConfirmPerson(String codConfirmPerson) {
+		this.codConfirmPerson = codConfirmPerson;
+	}
+
+	public String getCodConfirmTime() {
+		return codConfirmTime;
+	}
+
+	public void setCodConfirmTime(String codConfirmTime) {
+		this.codConfirmTime = codConfirmTime;
+	}
+
+	public String getCodConfirmRemark() {
+		return codConfirmRemark;
+	}
+
+	public void setCodConfirmRemark(String codConfirmRemark) {
+		this.codConfirmRemark = codConfirmRemark;
+	}
+
+	public String getCodConfirmState() {
+		return codConfirmState;
+	}
+
+	public void setCodConfirmState(String codConfirmState) {
+		this.codConfirmState = codConfirmState;
+	}
+
+	public String getPaymentNoticeUrl() {
+		return paymentNoticeUrl;
+	}
+
+	public void setPaymentNoticeUrl(String paymentNoticeUrl) {
+		this.paymentNoticeUrl = paymentNoticeUrl;
+	}
+
+	public String getAddressLon() {
+		return addressLon;
+	}
+
+	public void setAddressLon(String addressLon) {
+		this.addressLon = addressLon;
+	}
+
+	public String getAddressLat() {
+		return addressLat;
+	}
+
+	public void setAddressLat(String addressLat) {
+		this.addressLat = addressLat;
+	}
+
+	private Long syncTime;
 
     /**
      * 获取 同步到此表中的时间
@@ -1217,7 +1384,7 @@ public class Orders implements Serializable {
         this.smConfirmTime = value;
     }
 
-    private Integer isTogether = 0;
+    private Integer isTogether ;
 
     /**
      * 获取 货票同行
@@ -1450,4 +1617,5 @@ public class Orders implements Serializable {
     public void setStreetStr(String streetStr) {
         this.streetStr = streetStr;
     }
+    
 }

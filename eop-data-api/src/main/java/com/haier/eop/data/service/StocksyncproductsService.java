@@ -11,4 +11,5 @@ public interface StocksyncproductsService {
     List<Stocksyncproducts> Listf(Stocksyncproducts entity, int start, int rows);
     int getPagerCountS(Stocksyncproducts entity);
     Stocksyncproducts getId(String sku,String source);
+    Stocksyncproducts getBySourceAndSku(String source,String sku);
 }

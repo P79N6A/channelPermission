@@ -68,10 +68,10 @@
 			and status = #{sstatus}
 		</if>
 		<if test="schannelCode!=null and schannelCode!=''">
-			and channel_code=#{schannelCode}
+			and channel_code like CONCAT('%',#{schannelCode},'%')
 		</if>
 		<if test="sref!=null and sref!=''">
-			and ref=#{sref}
+			and ref like CONCAT('%',#{sref},'%')
 		</if>
 	</select>
 
@@ -81,10 +81,10 @@
 			and status = #{map.sstatus}
 		</if>
 		<if test="map.schannelCode!=null and map.schannelCode!=''">
-			and channel_code=#{map.schannelCode}
+			and channel_code like CONCAT('%',#{map.schannelCode},'%')
 		</if>
 		<if test="map.sref!=null and map.sref!=''">
-			and ref=#{map.sref}
+			and ref like CONCAT('%',#{map.sref},'%')
 		</if>
 		limit #{start},#{rows}
 	</select>

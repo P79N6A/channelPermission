@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>电商平台评价</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid2">
+
+    </table>
+</div>
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_dmmtlPbcsMtlMeasure" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  店铺
+			</span>
+                <select class="easyui-combobox" name="source" style="width: 174px;" id="source">
+                    <option value="" selected="">全部</option>
+                    <option value="SNYG">海尔统帅苏宁旗舰店</option>
+                    <option value="SNHEGQ">苏宁海尔集团官方旗舰店</option>
+                    <option value="SNQDZX">苏宁渠道中心</option>
+                    <option value="DDW">当当</option>
+                    <option value="JDHEBXGQ">京东海尔冰箱官方旗舰店</option>
+                    <option value="JDHEGQ">京东海尔官方旗舰店</option>
+                    <option value="DSPTJDST">电商平台-京东生态</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  外部订单号
+			</span>
+                <input class="easyui-textbox" name="sourceOrderSn" id="sourceOrderSn"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  商品名称
+			</span>
+                <input class="easyui-textbox" name="productName" id="productName"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">
+              商品编码
+            </span>
+                <input class="easyui-textbox" name="productCode" id="productCode"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  评论创建时间
+			</span>
+                <input class="easyui-datebox" name="periodCode" id="commentCreateTime"/>
+            </div>
+            <div class="search-row">
+            <span class="search-row-label" style="width:15px">
+			  至
+			</span>
+                <input class="easyui-datebox" name="measureName" id="commentEndTime"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  评价结果
+			</span>
+                <select class="easyui-combobox" name="custStar" style="width: 174px;" id="markResult">
+                    <option value="">全部</option>
+                    <option value="good">好评</option>
+                    <option value="middle">中评</option>
+                    <option value="bad">差评</option>
+                </select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure" onclick="reloadgrid()"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtlMeasure"
+           data-options="iconCls:'icon-save',plain:true">重置</a>
+    </form>
+</div>
+<script src="../static/js/evaluation/evaluation.js"></script>
+</body>
+</html>

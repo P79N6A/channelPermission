@@ -1,11 +1,13 @@
+
 package com.haier.svc.bean.getucunioninfofromles;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
+
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the org.example.getkucuninfofromlestoehaier package. 
+ * generated in the com.haier.svc.bean.getucunioninfofromles package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -19,27 +21,12 @@ import javax.xml.bind.annotation.XmlRegistry;
 @XmlRegistry
 public class ObjectFactory {
 
+
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.example.getkucuninfofromlestoehaier
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.haier.svc.bean.getucunioninfofromles
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT }
-     * 
-     */
-    public GetKUCUNInfoFromLESToEHAIERResponseStockTrans createGetKUCUNInfoFromLESToEHAIERResponseOUTPUT() {
-        return new GetKUCUNInfoFromLESToEHAIERResponseStockTrans();
-    }
-
-    /**
-     * Create an instance of {@link GetKUCUNInfoFromLESToEHAIER_Type }
-     * 
-     */
-    public GetKUCUNInfoFromLESToEHAIER_Type createGetKUCUNInfoFromLESToEHAIER_Type() {
-        return new GetKUCUNInfoFromLESToEHAIER_Type();
     }
 
     /**
@@ -51,11 +38,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetKUCUNInfoFromLESToEHAIER_Type }
+     * 
+     */
+    public GetKUCUNInfoFromLESToEHAIER_Type createGetKUCUNInfoFromLESToEHAIER_Type() {
+        return new GetKUCUNInfoFromLESToEHAIER_Type();
+    }
+
+    /**
+     * Create an instance of {@link GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT }
+     * 
+     */
+    public GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT createGetKUCUNInfoFromLESToEHAIERResponseOUTPUT() {
+        return new GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT();
+    }
+
+    /**
      * Create an instance of {@link GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT1 }
      * 
      */
-    public GetKUCUNInfoFromLESToEHAIERResponseStockQty createGetKUCUNInfoFromLESToEHAIERResponseOUTPUT1() {
-        return new GetKUCUNInfoFromLESToEHAIERResponseStockQty();
+    public GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT1 createGetKUCUNInfoFromLESToEHAIERResponseOUTPUT1() {
+        return new GetKUCUNInfoFromLESToEHAIERResponse.OUTPUT1();
     }
 
 }

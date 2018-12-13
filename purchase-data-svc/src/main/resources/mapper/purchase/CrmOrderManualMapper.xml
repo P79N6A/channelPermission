@@ -52,7 +52,129 @@
 		<result property="error_msg" column="error_msg" />
 		<result property="source_order_id" column="source_order_id" />
 		<result property="billOrderId" column="bill_order_id" />
+		<result property="push_status" column="push_status" />
+		<result property="push_message" column="push_message" />
+		<result property="push_process_time" column="push_process_time" />
+		<result property="cn_t2_purchase_stock_id" column="ps_id" />
 	</resultMap>
+
+	<resultMap id="crmOrderManualItemResult"
+			   type="com.haier.purchase.data.model.CrmOrderManualItem">
+		<result property="wp_order_id" column="wp_order_id" />
+		<result property="corpCode" column="CorpCode" />
+		<result property="regionId" column="RegionId" />
+		<result property="billType" column="BillType" />
+		<result property="sap_flow_num" column="sap_flow_num" />
+		<result property="custCode" column="CustCode" />
+		<result property="destCode" column="DestCode" />
+		<result property="whCode" column="WhCode" />
+		<result property="custMgr" column="CustMgr" />
+		<result property="porMgr" column="PorMgr" />
+		<result property="proDputy" column="ProDputy" />
+		<result property="budgetOrg" column="BudgetOrg" />
+		<result property="budgetOrgName" column="BudgetOrg_name" />
+		<result property="saleOrgCode" column="SaleOrgCode" />
+		<result property="maker" column="Maker" />
+		<result property="releBillCode" column="ReleBillCode" />
+		<result property="sysFlag" column="SysFlag" />
+		<result property="destCenter" column="DestCenter" />
+		<result property="stock_type" column="stock_type" />
+		<result property="les_regionId" column="les_regionId" />
+		<result property="create_user" column="create_user" />
+		<result property="flow_flag" column="flow_flag" />
+		<result property="error_msg" column="error_msg" />
+		<result property="estorge_id" column="estorge_id" />
+		<result property="estorge_name" column="estorge_name" />
+		<result property="corpname" column="Corpname" />
+		<result property="industry_trade_desc" column="industry_trade_desc" />
+		<result property="payment_name" column="payment_name" />
+		<result property="esale_name" column="esale_name" />
+		<result property="rrs_distribution_name" column="rrs_distribution_name" />
+		<result property="source_order_id" column="source_order_id" />
+		<result property="budgetSort" column="BudgetSort" />
+
+	</resultMap>
+
+	<select id="getCrmOrderManualItem" parameterType="String"
+			resultMap="crmOrderManualItemResult">
+		SELECT
+		wp_order_id,
+		CorpCode,
+		RegionId,
+		BillType,
+		sap_flow_num,
+		CustCode,
+		DestCode,
+		WhCode,
+		CustMgr,
+		PorMgr,
+		ProDputy,
+		BudgetOrg,
+		BudgetOrg_name,
+		SaleOrgCode,
+		Maker,
+		ReleBillCode,
+		SysFlag,
+		DestCenter,
+		stock_type,
+		les_regionId,
+		create_user,
+		flow_flag,
+		error_msg,
+		estorge_id,
+		estorge_name,
+		Corpname,
+		industry_trade_desc,
+		payment_name,
+		esale_name,
+		rrs_distribution_name,
+		source_order_id,
+		BudgetSort
+		FROM
+		crm_order_manual_t
+		WHERE
+		wp_order_id = #{wp_order_id}
+	</select>
+
+	<select id="getManualWdOrderId" parameterType="String" resultMap="crmOrderManualItemResult">
+		select `wp_order_id`
+		from `crm_order_manual_t`
+		where `wp_order_id` like CONCAT(#{wpOrderId},'%') order by `wp_order_id` desc
+	</select>
+
+
+	<select id="getcrmOrderManualDetailItem" parameterType="String"
+			resultMap="crmOrderManualResult">
+		SELECT
+			wp_order_id,
+			materials_id,
+			materials_desc,
+			product_group_id,
+			ed_channel_id,
+			brand_id,
+			category_id,
+			InvState,qty,
+			UnitPrice,
+			SumMoney,
+			StockPrice,
+			ActPrice,
+			RetailPrice,
+			BateRate,
+			BateMoney,
+			ProLossMoney,
+			LossRate,
+			IsFL,
+			IsKPO,
+			create_user,
+			so_id,
+			dn_id
+		FROM
+			crm_order_manual_detail_t
+		WHERE
+		wp_order_id = #{wp_order_id}
+	</select>
+
+
 	<insert id="insertCRMOrderManual" parameterType="com.haier.purchase.data.model.CrmOrderManualItem">
 		INSERT INTO crm_order_manual_t (
 		wp_order_id,
@@ -369,21 +491,41 @@
 			#{item}
 		</foreach>
 	</update>
+	<update id="updateStatus80FromLES" >
+		UPDATE crm_order_manual_t SET flow_flag = 80
+		WHERE wp_order_id IN (
+		SELECT wp_order_id
+		FROM crm_order_manual_detail_t
+		WHERE CONCAT(dn_id, 'D') IN (
+		SELECT bstnk
+		FROM les_in_out_t))  AND (flow_flag !=80 OR flow_flag IS NULL)
+	</update>
+	<update id="updateTimeInWAFromLES" >
+		UPDATE crm_order_t SET wa_in_time = (
+		SELECT CONCAT(cpudt, ' ', cputm)
+		FROM les_in_out_t t
+		WHERE t.BSTNK = CONCAT(dn_id, 'D') limit 1), flow_flag = 80,
+		wa_in_num = ( SELECT t.LFIMG FROM les_in_out_t t WHERE t.BSTNK = CONCAT( dn_id, 'D' ) LIMIT 1 )
+		<![CDATA[WHERE dn_id IS NOT NULL && dn_id <> '' AND CONCAT(dn_id, 'D') IN (]]>
+		SELECT bstnk
+		FROM les_in_out_t) AND wa_in_time IS NULL AND (flow_flag !=80 OR flow_flag IS NULL)
+	</update>
 	<sql id="findCrmOrderManualsSQLCond">
 		FROM
-			crm_order_manual_t AS m force index(ix_crm_order_manual_t_flag1),
+			crm_order_manual_t AS m,
 			crm_order_manual_detail_t AS d
+		LEFT JOIN cn_t2_purchase_stock sto on sto.cn_stock_syncs_id = d.wp_order_id
 		LEFT JOIN crm_order_t crm ON d.so_id = crm.so_id
 		AND crm.so_id IS NOT NULL
 		AND TRIM(crm.so_id) != ''
 		WHERE
 		d.wp_order_id = m.wp_order_id and m.delete_flag = 0
-		<if test="planInDate_start  !=null and planInDate_start  != ''">
+		<if test="planInDate_start  !=null">
 	        	<![CDATA[
 					and crm.bill_time >= #{planInDate_start}
 				]]>
 		</if>
-		<if test="planInDate_end  !=null and planInDate_end  != ''">
+		<if test="planInDate_end  !=null">
 	         	<![CDATA[
 					and crm.bill_time < #{planInDate_end}
 				]]>
@@ -394,14 +536,20 @@
 		<if test="dn_id !=null and dn_id != ''">
 			AND UPPER(d.dn_id) LIKE CONCAT(CONCAT('%',UPPER (#{dn_id})),'%')
 		</if>
-		<if test="channel !=null and channel != ''">
+		<if test="isJD !=null and isJD != ''">
+			AND (m.WhCode like '%RJ' OR m.WhCode like '%SJ' OR m.WhCode like '%TJ')
+		</if>
+		<if test="notJD !=null and notJD != ''">
+			AND (m.WhCode like '%2')
+		</if>
+		<if test="channel !=null">
 			AND d.ed_channel_id in
 			<foreach item="item" index="index" collection="channel" open="("
 				separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
-		<if test="product_group_id !=null and product_group_id != ''">
+		<if test="product_group_id !=null">
 			AND d.product_group_id in
 			<foreach item="item" index="index" collection="product_group_id"
 				open="(" separator="," close=")">
@@ -411,6 +559,10 @@
 		<if test="bill_type !=null and bill_type != ''">
 			AND m.BillType = #{bill_type}
 		</if>
+		<if test="rrsCode !=null and rrsCode != ''">
+			AND m.WhCode  LIKE CONCAT(CONCAT('%',UPPER
+			(#{rrsCode})),'%') 
+		</if>
 		<if test="order_id !=null and order_id != ''">
 			AND UPPER(d.wp_order_id) LIKE CONCAT(CONCAT('%',UPPER
 			(#{order_id})),'%')
@@ -418,7 +570,7 @@
 		<if test="corpCode !=null and corpCode != ''">
 			AND UPPER(m.CorpCode) LIKE CONCAT(CONCAT('%',UPPER (#{corpCode})),'%')
 		</if>
-		<if test="flow_flag !=null and flow_flag != ''">
+		<if test="flow_flag !=null">
 			AND m.flow_flag in
 			<foreach item="item" index="index" collection="flow_flag"
 				open="(" separator="," close=")">
@@ -435,7 +587,7 @@
 		<if test="brand_id !=null and brand_id != ''">
 			AND d.brand_id = #{brand_id}
 		</if>
-		<if test="category_id !=null and category_id != ''">
+		<if test="category_id !=null">
 			AND d.category_id in
 			<foreach item="item" index="index" collection="category_id"
 				open="(" separator="," close=")">
@@ -446,7 +598,7 @@
 			AND UPPER(d.materials_desc) LIKE CONCAT(CONCAT('%',UPPER
 			(#{materials_desc})),'%')
 		</if>
-		<if test="order_id_list !=null and order_id_list != ''">
+		<if test="order_id_list !=null">
 			AND d.wp_order_id in
 			<foreach item="item" index="index" collection="order_id_list"
 				open="(" separator="," close=")">
@@ -518,6 +670,9 @@
 		m.rrs_distribution_name,
 		m.error_msg,
 		d.so_id,
+		sto.status as push_status,
+		sto.message as push_message,
+		sto.process_time as push_process_time,
 		d.dn_id,
 		date_format(crm.bill_time,'%Y-%m-%d %H:%i:%S') as bill_time_display,
 		date_format(crm.rrs_out_time,'%Y-%m-%d %H:%i:%S') as
@@ -526,15 +681,67 @@
 		crm.bill_order_id
 		<include refid="findCrmOrderManualsSQLCond" />
 		ORDER BY
-		d.wp_order_id
+		crm.bill_time desc
 		<if test="m!=null and n!=null">
 			limit ${m},${n}
 		</if>
 	</select>
+	<select id="findOrdersToSap"
+		resultMap="crmOrderManualResult">
+			<![CDATA[	SELECT *
+			FROM (
+				SELECT DISTINCT vod.wp_order_id, CONCAT(lio.CPUDT, ' ', lio.CPUTM) AS wa_in_time
+					, CASE vod.product_group_id
+					WHEN 'CA' THEN concat(vod.materials_id, '&', cm.cgb_subgbid)  
+						ELSE vod.materials_id
+					END AS materials_id,
+					CASE vod.product_group_id
+						WHEN 'CA' THEN cm.cgb_subgbid
+						ELSE vod.materials_id
+					END AS materials_id2, vod.Qty, vo.estorge_id, vod.dn_id, lio.MBLNR AS bill_order_id
+					, vod.product_group_id
+				FROM crm_order_manual_detail_t vod
+					LEFT JOIN tmall_ca_machine cm ON cm.cgb_gbid = vod.materials_id
+					LEFT JOIN crm_order_manual_t vo ON vod.wp_order_id = vo.wp_order_id
+					LEFT JOIN les_in_out_t lio ON CONCAT(vod.dn_id, 'D') = lio.BSTNK
+				WHERE vo.flow_flag = '80'
+					AND vod.Dn_id != ''
+					AND lio.CPUDT != ''
+			) t
+			WHERE 1 = 1
+				AND CASE t.product_group_id
+					WHEN 'CA' THEN NOT EXISTS (
+						SELECT 1
+						FROM cn_t2_purchase_stock
+						WHERE push_data LIKE concat('%', t.materials_id2, '%') and status = '1' and cn_stock_syncs_id = t.wp_order_id
+					)
+					ELSE not exists (
+						SELECT 1
+						FROM cn_t2_purchase_stock
+						WHERE STATUS = '1' and cn_stock_syncs_id = t.wp_order_id
+					)
+				END
+				    ]]>
+		</select>
 	<select id="findCrmOrderManualsCNT" resultType="int">
 		SELECT COUNT(1)
 		FROM (SELECT d.wp_order_id
 		<include refid="findCrmOrderManualsSQLCond" />
 		) CNT
 	</select>
+	<update id="updateCrmOrderManualAfterSync">
+	UPDATE crm_order_manual_detail_t  SET wa_in_time = (
+	SELECT t.wa_in_time
+	FROM crm_order_t t
+	WHERE t.dn_id = dn_id),
+	bill_order_id = (SELECT t.bill_order_id
+	FROM crm_order_t t
+	WHERE t.dn_id = dn_id),
+	bill_time = (SELECT t.bill_time
+	FROM crm_order_t t
+	WHERE t.dn_id = dn_id)
+	WHERE dn_id IN (
+	SELECT dn_id
+	FROM crm_order_t t) and flow_flag = '70'
+	</update>
 </mapper>

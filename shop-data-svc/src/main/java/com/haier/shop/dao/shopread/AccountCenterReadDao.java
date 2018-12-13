@@ -1,5 +1,6 @@
 package com.haier.shop.dao.shopread;
 
+import com.haier.shop.model.O2OOrderTailendQueues;
 import java.util.List;
 import java.util.Map;
 
@@ -83,5 +84,10 @@ public interface AccountCenterReadDao {
      */
     List<O2oOrderCloseQueuesExt> getUnSendOrderRepairsAndCancel(@Param("unSendQueryNum") Integer unSendQueryNum,
                                                                 @Param("sendCount") Integer sendCount);
+    List<Map<String, Object>> getProductCatesOrderBy();
 
+    /**
+     * 更具网单号ID DepositOrderProductId 获取 o2o已付尾款订单队列表
+     */
+    O2OOrderTailendQueues getTailendToAccountCenterByDepositOrderProductId(Integer depositOrderProductId);
 }

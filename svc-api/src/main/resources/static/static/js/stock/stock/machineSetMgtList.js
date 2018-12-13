@@ -4,14 +4,14 @@ var datagridOptions_invMachineSet = {
     singleSelect: true,
     url: '',
     columns: [[
-        {title: '主物料编码', field: 'mainSku', sortable: true, align: 'center'},
-        {title: '子物料编码', field: 'subSku', sortable: true, align: 'center'},
-        {title: '更新时间', field: 'updateTime', sortable: true, align: 'center'},
-        {title: '创建时间', field: 'createTime', sortable: true, align: 'center'},
-        {title: '套机启用状态', field: 'status', sortable: true, align: 'center'},
-        {title: '支持子件销售状态', field: 'isSaleSub', sortable: true, align: 'center'},
-        {title: 'BOM项目编号', field: 'posnr', sortable: true, align: 'center'},
-        {title: '操作', field: 'operation', sortable: true, align: 'center'},
+        {title: '主物料编码', field: 'mainSku', sortable: false, align: 'center'},
+        {title: '子物料编码', field: 'subSku', sortable: false, align: 'center'},
+        {title: '更新时间', field: 'updateTime', sortable: false, align: 'center'},
+        {title: '创建时间', field: 'createTime', sortable: false, align: 'center'},
+        {title: '套机启用状态', field: 'status', sortable: false, align: 'center'},
+        {title: '支持子件销售状态', field: 'isSaleSub', sortable: false, align: 'center'},
+        {title: 'BOM项目编号', field: 'posnr', sortable: false, align: 'center'},
+        {title: '操作', field: 'operation', sortable: false, align: 'center'},
 
     ]],
     toolbar: '#datagridToolbar_invMachineSet',
@@ -53,12 +53,12 @@ $("#searchBtn_invMachineSet").on('click', function (event) {
             status: statusData
         },
         columns: [[
-            {title: '主物料编码', field: 'mainSku', sortable: true, align: 'center'},
-            {title: '子物料编码', field: 'subSku', sortable: true, align: 'center'},
-            {title: '更新时间', field: 'updateTime', sortable: true, align: 'center', formatter: formatDatebox},
-            {title: '创建时间', field: 'createTime', sortable: true, align: 'center', formatter: formatDatebox},
+            {title: '主物料编码', field: 'mainSku', sortable: false, align: 'center'},
+            {title: '子物料编码', field: 'subSku', sortable: false, align: 'center'},
+            {title: '更新时间', field: 'updateTime', sortable: false, align: 'center', formatter: formatDatebox},
+            {title: '创建时间', field: 'createTime', sortable: false, align: 'center', formatter: formatDatebox},
             {
-                title: '套机启用状态', field: 'status', sortable: true, align: 'center',
+                title: '套机启用状态', field: 'status', sortable: false, align: 'center',
                 formatter: function (val, rec) {
                     if (val == "0") {
                         return "启用";
@@ -68,7 +68,7 @@ $("#searchBtn_invMachineSet").on('click', function (event) {
                 }
             },
             {
-                title: '支持子件销售状态', field: 'isSaleSub', sortable: true, align: 'center',
+                title: '支持子件销售状态', field: 'isSaleSub', sortable: false, align: 'center',
                 formatter: function (val, rec) {
                     if (val == "0") {
                         return "启用";
@@ -77,8 +77,8 @@ $("#searchBtn_invMachineSet").on('click', function (event) {
                     }
                 }
             },
-            {title: 'BOM项目编号', field: 'posnr', sortable: true, align: 'center'},
-            {title: '操作', field: 'operation', sortable: true, align: 'center'},
+            {title: 'BOM项目编号', field: 'posnr', sortable: false, align: 'center'},
+            {title: '操作', field: 'operation', sortable: false, align: 'center'},
         ]],
     });
 });

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 人员维护 -->
+    <meta charset="UTF-8">
+    <title>400-工单管理</title>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <!--<link rel="stylesheet" type="text/css" href="/resources/lib/easyui/themes/color.css">-->
+<!--     <link rel="stylesheet" type="text/css" href="/resources/lib/easyui/demo.css"> -->
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+	
+</head>
+<body>
+    <table id="dg" title="" class="easyui-datagrid" style="width:100%;height:100%;"
+            data-options="toolbar:'#toolbar',pagination:true,rownumbers:true,singleSelect:false,
+            onClickCell: onClickCell,pageSize:50,pageList:[50,100,200]" >
+        <thead>
+            <tr>
+
+                <th field="messageNum" width="170" >信息编号</th>
+                <th field="type" width="120"  >工单类型</th>
+                <th field="userName" width="100" >用户姓名</th>
+                <th field="problemMessage" width="300"  >问题描述</th>
+                <th field="phone1" width="120">电话1</th>
+                <th field="phone2" width="120" >电话2</th>
+                <th field="phone3" width="120"  >电话3</th>
+                <th field="address" width="150" >地址</th>
+                <th field="store" width="100" >渠道</th>
+                <th field="storeType" width="150" >店铺</th>
+                <th field="productType" width="150" >产品大类</th>
+                <th field="model" width="150" >型号</th>
+                <th field="callTime" width="150"  >来电时间</th>
+                <th field="recoveryTime" width="150"  >回复时间</th>
+                <th field="problem" width="150"  >中间结果</th>
+                <th field="closeTime" width="150"  >关单时间</th>
+                <th field="remark2" width="100"  >操作人</th>
+                <th field="backContext3" width="150"  >最终结果</th>
+                <th field="workStatus" width="150"  >工单状态</th>
+                <th field="createTime" width="150"  >工单创建时间</th>
+
+                <th field="trip" width="150"  >跳闸类型</th>
+
+            </tr>
+        </thead>
+    </table>
+    <div id="toolbar">
+        <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_circle fa fa-map-marker"></div>
+        </div>
+    <div id="filter" style="padding:5px">
+        <form id="search" name="search" class="easyui-form" method="get" novalidate>
+            <div class="search-panel">
+                <div class="search-row">
+                    <span  class="search-row-label">信息编号：</span><input type="text" id="messageNum_search" name="messageNum_search" class="easyui-text" size=10 style="width:123px;"/>
+                </div>
+                <div class="search-row">
+                    <span  class="search-row-label">信息编号：</span><input type="text" id="messageNum_search" name="messageNum_search" class="easyui-text" size=10 style="width:123px;"/>
+                </div>
+                <div class="search-row">
+                    <span  class="search-row-label">人员：</span><input type="text" id="username_search" name="username_search" class="easyui-text" size=10 style="width:123px;"/>
+                </div>
+                <div class="search-row">
+                    <span  class="search-row-label">电话1：</span><input type="text" id="phone1_search" name="phone1_search" class="easyui-text" size=10 style="width:123px;"/>
+                </div>
+                <div class="search-row">
+                    <span  class="search-row-label">电话2：</span><input type="text" id="phone2_search" name="phone2_search" class="easyui-text" size=10 style="width:123px;"/>
+                </div>
+                <div class="search-row">
+                    <span  class="search-row-label">电话3：</span><input type="text" id="phone3_search" name="phone3_search" class="easyui-text" size=10 style="width:123px;"/>
+                </div>
+                <div class="search-row">
+                      <span  class="search-row-label">工单状态：</span><select  class="easyui-combobox" panelHeight="auto" style="width:123px;" id="workStatus_search" name="workStatus_search" data-options="valueField:'id',textField:'text',editable:false"></select>
+                </div>
+                <div class="search-row">
+                      <span  class="search-row-label">工单类型：</span><select  class="easyui-combobox" panelHeight="auto" style="width:123px;" id="type_search" name="type_search" data-options="valueField:'id',textField:'text',editable:false"></select>
+                </div>
+                <div class="search-row">
+                      <span  class="search-row-label">开始时间:</span><input type="text" id="startTime_search" name="startTime_search" class="easyui-datetimebox" data-options="formatter:ww4" size=13 style="width:123px;" editable="false"/>
+                </div>
+                <div class="search-row">
+                      <span  class="search-row-label">结束时间:</span><input type="text" id="endTime_search"  name="endTime_search" class="easyui-datetimebox" data-options="formatter:ww4" size=13 style="width:123px;" editable="false"/>
+                </div>
+                <div class="search-row">
+                    <span  class="search-row-label">店铺类型：</span><select  class="easyui-combobox" style="width:123px;" id="storeType_search" name="storeType_search" data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+                </div>
+                <div class="search-row" style="display:none;">
+                    <select  class="easyui-combobox" style="width:132px;" id="storeType_search2" name="storeType_search2" data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+                </div>
+
+            </div>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchReview()">查询</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true" onclick="reset()">重置</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="viewPool()">查看</a>
+            <a id="dc" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-print',plain:true" onclick="exp()" >导出  </a>
+            <font style="color:#FF0000">每次最大导出条数为20000条</font>
+        </form>
+
+
+    </div>
+
+    </div>
+    <div id="dlg" class="easyui-dialog" style="width:780px;height:500px;padding:10px 20px"
+            closed="true" modal="true" buttons="#dlg-buttons" >
+        <form id="fm" class="easyui-form" method="post" novalidate>
+        <input type='hidden' id="id" name="id"/>
+
+
+
+        
+        <h2>工单信息</h2>
+        
+        <table style="width:700px;">
+            <tr>
+
+                <td style="width:75px" align="right" valign="middle">信息编号:</td><td><input id="messageNum" name="messageNum" class="easyui-validatebox textbox"  style="width:125px;" data-options="validType:'length[0,150]'" readonly="true" disabled='disabled'></input>
+                <td style="width:75px" align="right" valign="middle">用户姓名:</td><td ><input id="userName" name="userName" class="easyui-validatebox textbox" style="width:125px;" data-options="editable:false" readonly="true" disabled='disabled'></input></td>
+
+            </tr>
+        <tr>
+        <td style="width:75px" align="right" valign="middle">电话1:</td><td ><input id="phone1" name="phone1" class="easyui-validatebox textbox" style="width:125px;" data-options="validType:'length[0,20]'"  readonly="true" disabled='disabled'></input></td>
+		 <td style="width:75px" align="right" valign="middle">电话2:</td><td ><input id="phone2" name="phone2" class="easyui-validatebox textbox" style="width:125px;" data-options="" disabled='disabled'></input></td>
+
+        </tr>
+            <tr>
+                <td style="width:75px" align="right" valign="middle">电话3:</td><td ><input id="phone3" name="phone3" class="easyui-validatebox textbox" style="width:125px;" data-options="validType:'length[0,20]'" readonly="true"  disabled='disabled'></input></td>
+                <td style="width:75px" align="right" valign="middle">地址:</td><td ><input id="address" name="address" class="easyui-validatebox textbox" style="width:125px;" data-options="" readonly="true" disabled='disabled'></input></td>
+
+            </tr>
+            <tr>
+                <td style="width:75px" align="right" valign="middle">渠道:</td><td >
+
+                <select  class="easyui-combobox" style="width:153px" id="store" name="store" data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+
+            </td>
+                <td style="width:75px" align="right" valign="middle">来电时间:</td><td ><input id="callTime" name="callTime" class="easyui-validatebox textbox" style="width:125px;" data-options="" readonly="true" disabled='disabled'></input></td>
+
+            </tr >
+            <tr >
+                <td style="width:75px" align="right" valign="middle" >回复时间:</td><td >
+                <input id="recoveryTime" name="recoveryTime" class="easyui-validatebox textbox" style="width:125px;" data-options="validType:'length[0,20]'"  readonly="true" disabled='disabled'></input>
+
+            </td>
+
+
+
+            </tr>
+            <tr>
+                <td style="width:75px" align="right" valign="middle">店铺类型:</td><td >
+
+
+                <select  class="easyui-combobox" style="width:153px" id="storeType_search3" name="storeType_search3" data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+                </td>
+            </tr>
+
+       
+           </table>
+
+
+            <h2>问题描述</h2>
+            <table style="width:665px;">
+                <tr>
+                    <td>
+
+
+                        <div id="contextDiv2"></div>
+                    </td>
+
+                </tr>
+            </table>
+
+            <h2>中间结果     <a id="backDiv3"  style="word-wrap:break-word;color:red; font-size:18px;"></a></h2>
+            <table style="width:665px;">
+                <tr>
+                    <td>
+
+                        <textarea id="problem1" name="problem1" onkeyup="return fun_trim(this);" class="easyui-validatebox" style="width:665px;height:75px" data-options="validType:'length[0,500]'"></textarea>
+                        <div id="backDiv"></div>
+
+                    </td>
+
+                </tr>
+            </table>
+
+            <h2>最终结果(<font color="#ff0000">注意:录入最终结果保存后,就不允许再次更改信息</font>)</h2>
+            <div id="jgpd">
+                <tr>
+                    <td>
+
+                        <textarea id="backContext3" name="backContext3" onkeyup="return fun_trim(this);" class="easyui-validatebox" style="width:665px;height:75px" data-options="validType:'length[0,500]'"></textarea>
+
+                        <div id="backDiv2"></div>
+                        <input type='hidden' id="workStatus" name="workStatus"/>
+                    </td>
+
+                </tr>
+            </div>
+        </form>
+    </div>
+    <div id="dlg-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveBackList()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
+    </div>
+    
+    <div id="dlg2" class="easyui-dialog" style="width:700px;height:200px;padding:10px 20px"
+            closed="true" modal="true" buttons="#dlg-buttons">
+        <form id="fm2" class="easyui-form" method="post" novalidate>
+        <textarea id="context2" name="context2" onkeyup="return fun_trim(this);" class="easyui-validatebox" required="true" style="width:650px;height:75px"></textarea>
+        </form>
+        <div id="dlg-buttons2">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveComment();" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg2').dialog('close')" style="width:90px">取消</a>
+    </div>
+    </div>
+
+
+
+    <script src="../static/js/report/workOrderDHZX.js"></script>
+#*<script type="text/javascript" src="resources/js/validator.js"></script>*#
+</body>
+
+</html>

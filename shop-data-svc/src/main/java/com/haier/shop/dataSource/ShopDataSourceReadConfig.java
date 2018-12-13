@@ -21,7 +21,7 @@ public class ShopDataSourceReadConfig {
     static final String PACKAGE = "com.haier.shop.dao.shopread";
     static final String MAPPER_LOCATION = "classpath:mapper/shopread/*.xml";
 
-    @Value("${spring.datasource.shopread.testOnBorrow}")
+     @Value("${spring.datasource.shopread.testOnBorrow}")
     private boolean testOnBorrow;
     @Value("${spring.datasource.shopread.testOnReturn}")
     private boolean testOnReturn;

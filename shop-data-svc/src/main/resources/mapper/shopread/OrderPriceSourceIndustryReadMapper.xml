@@ -19,4 +19,40 @@
 		where status = 1
 	</select>
 
+	<select id="getOrderPriceIndustryBySource" parameterType="java.lang.String" resultType="java.util.Map">
+		select DISTINCT `industry_code`,`industry_name`
+		from order_price_source_industry
+		<where>
+			<if test="source !=null and source !='' ">
+				and order_source =#{source}
+			</if>
+		</where>
+	</select>
+
+	<sql id="commonQuery">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="source !=null and source !='' ">
+				AND order_source = #{source}
+			</if>
+			<if test="industry !=null and industry !='' ">
+				AND industry_code = #{industry}
+			</if>
+			<if test="status !=null and status !='' ">
+				AND status = #{status}
+			</if>
+		</trim>
+	</sql>
+
+	<select id="getOrderPriceSourceIndustryListCount" parameterType="java.util.Map" resultType="Integer" statementType="PREPARED">
+		select count(*) count
+		from order_price_source_industry
+		<include refid="commonQuery"/>
+	</select>
+
+	<select id="getOrderPriceSourceIndustryList" parameterType="java.util.Map" resultMap="orderPriceSourceIndustryResult" statementType="PREPARED">
+		select id,`industry_code`,industry_name,`order_source`,order_source_name,status
+		from order_price_source_industry
+		<include refid="commonQuery"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
 </mapper>

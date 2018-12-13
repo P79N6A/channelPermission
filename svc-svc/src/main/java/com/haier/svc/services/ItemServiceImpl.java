@@ -3,11 +3,15 @@ package com.haier.svc.services;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+import com.haier.common.BusinessException;
 import com.haier.distribute.data.model.ProductCates;
 import com.haier.shop.model.*;
 import com.haier.shop.service.ShopItemAttributeService;
 import com.haier.shop.service.ShopItemBaseService;
 
+import com.haier.stock.model.InvStockAge;
+import com.haier.stock.service.InvStockAgeService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
-import com.haier.purchase.data.model.LesFiveYardInfo;
-import com.haier.purchase.data.service.PurchaseLesFiveYardsService;
+import com.haier.shop.service.PurchaseLesFiveYardsService;
 import com.haier.svc.model.ItemModel;
 import com.haier.svc.service.ItemService;
 @Service
@@ -35,6 +38,8 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ItemModel itemModel;
 
+    @Autowired
+    private InvStockAgeService invStockAgeService;
     @Override
     public ServiceResult<List<String>> getAllCbsCategory() {
         ServiceResult<List<String>> result = new ServiceResult<List<String>>();
@@ -46,6 +51,11 @@ public class ItemServiceImpl implements ItemService {
             result.setSuccess(false);
         }
         return result;
+    }
+
+    @Override
+    public JSONObject queryItemAttribute(ItemAttribute itemAttribute) {
+        return shopItemAttributeService.queryItemAttribute(itemAttribute);
     }
 
     @Override
@@ -162,7 +172,6 @@ public class ItemServiceImpl implements ItemService {
      * 根据物料SKU取得物料基本信息
      * @param sku 物料
      * @return ItemBase
-     * @see com.haier.cbs.item.service.ItemService#getItemBaseBySku(java.lang.String)
      */
     @Override
     public ServiceResult<ItemBase> getItemBaseBySku(String sku) {
@@ -176,13 +185,30 @@ public class ItemServiceImpl implements ItemService {
         }
         return result;
     }
-
+    @Override
+    public ServiceResult<String> getRegionsCode(Map<String, Object> params) {
+        ServiceResult<String> result = new ServiceResult<String>();
+        try {
+            String code = itemModel.getRegionsCode(params);
+            result.setSuccess(true);
+            result.setResult(code);
+        } catch (Exception e) {
+            result.setSuccess(false);
+            result.setResult(null);
+            if (e instanceof BusinessException) {
+                result.setMessage(e.getMessage());
+            } else {
+                result.setMessage("查询国标码等信息失败");
+            }
+            log.error("查询国标码等信息失败：", e);
+        }
+        return result;
+    }
     /**
      * 根据产品属性值(value)和属性类别(valueSetId)取得产品属性
      * @param valueSetId 属性列别Id
      * @param value 属性值
      * @return ItemAttribute
-     * @see com.haier.cbs.item.service.ItemService#getItemAttributeByValueSetIdAndValue(java.lang.String, java.lang.String)
      */
     @Override
     public ServiceResult<ItemAttribute> getItemAttributeByValueSetIdAndValue(String valueSetId,
@@ -194,6 +220,40 @@ public class ItemServiceImpl implements ItemService {
             log.error("根据产品属性值(value)和属性类别(valueSetId)取得产品属性时发生未知异常：", e);
             result.setMessage("根据产品属性值和属性类别取得产品属性时发生未知异常");
             result.setSuccess(false);
+        }
+        return result;
+    }
+    /**
+     * 手动添加物料基本信息
+     * @param itemBase 物料信息
+     * @return 执行结果
+     */
+    @Override
+    public ServiceResult<Boolean> insertItemBaseInfo(ItemBase itemBase) {
+        ServiceResult<Boolean> ret = new ServiceResult<Boolean>();
+        try {
+            itemModel.insertItemBaseInfo(itemBase);
+            ret.setSuccess(true);
+            ret.setResult(true);
+        } catch (Throwable e) {
+            ret.setSuccess(false);
+            ret.setResult(false);
+            ret.setMessage("手动添加物料基本信息时发生未知异常");
+            log.error("手动添加物料基本信息时发生未知异常：", e);
+        }
+        return ret;
+    }
+    @Override
+    public ServiceResult<Boolean> updateItemBaseById(ItemBase base) {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            itemModel.updateItemBaseById(base);
+            result.setResult(true);
+        } catch (Exception e) {
+            log.error("更新产品基础信息时，发生未知异常：", e);
+            result.setMessage("更新产品信息发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+            result.setResult(false);
         }
         return result;
     }
@@ -306,6 +366,106 @@ public class ItemServiceImpl implements ItemService {
             result.setSuccess(false);
         }
         return result;
+    }
+    
+    @Override
+    public ServiceResult<List<ItemAttribute>> queryProductGroupByCbsCategory(String cbsCategory) {
+        ServiceResult<List<ItemAttribute>> result = new ServiceResult<List<ItemAttribute>>();
+        try {
+            result.setResult(itemModel.queryProductGroupByCbsCategory(cbsCategory));
+        } catch (Exception e) {
+            log.error("根据CBS品类查询产品组时，发生未知异常：", e);
+            result.setMessage("根据CBS品类查询产品组发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+    @Override
+    public List<ItemBase> getIncompleteItemBaseList() {
+        return shopItemBaseService.getIncompleteItemBaseList();
+    }
+
+    @Override
+    public int updateMtlInfoForStockAge(InvStockAge stockAge) {
+        return invStockAgeService.updateMtlInfoForStockAge(stockAge);
+    }
+
+    /**
+     * 保存产品属性(ItemAttribute) 
+     * 如果已经存在：更新 
+     * 如果不存在：插入
+     * @param attribute 产品属性
+     * @return 更新结果
+     * @see com.haier.cbs.item.service.ItemService#saveItemAttribute(com.haier.cbs.item.entity.ItemAttribute)
+     */
+    @Override
+    public ServiceResult<Boolean> saveItemAttribute(ItemAttribute attribute) {
+        ServiceResult<Boolean> ret = new ServiceResult<Boolean>();
+        try {
+            itemModel.saveItemAttribute(attribute);
+            ret.setSuccess(true);
+            ret.setResult(true);
+        } catch (Throwable e) {
+            ret.setSuccess(false);
+            ret.setResult(false);
+            ret.setMessage("保存产品属性时发生未知异常");
+            log.error("保存产品属性时发生未知异常：", e);
+        }
+        return ret;
+    }
+
+    /**
+     * 保存物料基本信息 
+     * 如果已经存在：更新
+     * 如果不存在：插入
+     * @param base 产品治疗
+     * @return 执行结果
+     * @see com.haier.cbs.item.service.ItemService#saveItemBase(com.haier.cbs.item.entity.ItemBase)
+     */
+    @Override
+    public ServiceResult<Boolean> saveItemBase(ItemBase base) {
+        ServiceResult<Boolean> ret = new ServiceResult<Boolean>();
+        try {
+            itemModel.saveItemBase(base);
+            ret.setSuccess(true);
+            ret.setResult(true);
+        } catch (Throwable e) {
+            ret.setSuccess(false);
+            ret.setResult(false);
+            ret.setMessage("保存物料基本信息时发生未知异常");
+            log.error("保存物料基本信息时发生未知异常：", e);
+        }
+        return ret;
+    }
+
+    /**
+     * 手动同步物料基本信息
+     * @param itemBase 物料信息
+     * @param modifier 修改人
+     * @return 修复结果
+     * @see com.haier.cbs.item.service.ItemService#manualSyncMdmBySku(com.haier.cbs.item.entity.ItemBase,String modifier)
+     */
+    @Override
+    public ServiceResult<Boolean> manualSyncMdmBySku(ItemBase itemBase, String modifier) {
+        ServiceResult<Boolean> ret = new ServiceResult<Boolean>();
+        try {
+            int count = itemModel.manualSyncMdmBySku(itemBase, modifier);
+            if (count == 0) {
+                ret.setSuccess(true);
+                ret.setResult(false);
+                ret.setMessage("MDM中没有此物料可以同步的信息！");
+            } else {
+                ret.setSuccess(true);
+                ret.setResult(true);
+            }
+        } catch (Throwable e) {
+            ret.setSuccess(false);
+            ret.setResult(false);
+            ret.setMessage("手动同步物料基本信息时发生未知异常");
+            log.error("手动同步物料基本信息时发生未知异常：", e);
+        }
+        return ret;
     }
 
 }

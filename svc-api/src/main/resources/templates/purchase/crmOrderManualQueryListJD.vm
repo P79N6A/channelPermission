@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>闸口价信息</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
+
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">订单号</span>
+                <input id="order_id" name="order_id" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">渠道</span>
+                <input id="channel" name="channel"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">品类</span>
+                <input id="cbsCategory" name="cbsCategory"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">产品组</span>
+                <input id="product_group" name="product_group"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">分公司</span>
+                <input id="CorpCode" name="CorpCode"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">仓库编码</span>
+                <input id="WhCode" name="WhCode"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">型号</span>
+                <input id="materials_desc" name="materials_desc"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">物料编码</span>
+                <input id="materials_id" name="materials_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">品牌</span>
+                <input id="brand" name="brand"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">订单类型</span>
+                <input id="BillType" name="BillType"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">订单状态</span>
+                <input id="flow_flag" name="flow_flag"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">提交开始日期</span>
+                <input id="PlanInDate_start" name="PlanInDate_start"  class="easyui-datebox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">结束日期</span>
+                <input id="PlanInDate_end" name="PlanInDate_end"  class="easyui-datebox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">SO号</span>
+                <input id="so_id" name="so_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">DN号</span>
+                <input id="dn_id" name="dn_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">来源单号</span>
+                <input id="source_order_id" name="source_order_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">库位码</span>
+                <input id="rrsCode" name="rrsCode"  class="easyui-textbox" style="width:120px">
+            </div>
+
+        </div>
+        <input id="order_id_hidden" name="order_id_hidden" type="hidden">
+        <input id="CorpCode_hidden" name="CorpCode_hidden" type="hidden">
+        <input id="WhCode_hidden" name="WhCode_hidden" type="hidden">
+        <input id="materials_desc_hidden" name="materials_desc_hidden" type="hidden">
+        <input id="materials_id_hidden" name="materials_id_hidden" type="hidden">
+        <input id="product_group_id_hidden" name="product_group_id_hidden" type="hidden">
+        <input id="ed_channel_id_hidden" name="ed_channel_id_hidden" type="hidden">
+        <input id="brand_hidden" name="brand_hidden" type="hidden">
+        <input id="BillType_hidden" name="BillType_hidden" type="hidden">
+        <input id="flow_flag_hidden" name="flow_flag_hidden" type="hidden">
+        <input id="PlanInDate_start_hidden" name="PlanInDate_start_hidden" type="hidden">
+        <input id="PlanInDate_end_hidden" name="PlanInDate_end_hidden" type="hidden">
+        <input id="cbsCategory_hidden" name="cbsCategory_hidden" type="hidden">
+        <input id="so_id_hidden" name="so_id_hidden" type="hidden">
+        <input id="dn_id_hidden" name="dn_id_hidden" type="hidden">
+        <input id="source_order_id_hidden" name="source_order_id_hidden" type="hidden">
+        <input id="type" name="type" type="hidden" value="jd">
+
+        <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+        <input id="exportData" name="exportData" type="hidden"/>
+        <input id="modifyData" name="modifyData" type="hidden"/>
+        <input id="deleteData" name="deleteData" type="hidden"/>
+
+        <a id='search' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a id='add' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>
+        <a id='modify' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a id='delete' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true">删除</a>
+        <a id='export' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">导出</a>
+        <a id='import' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">导入</a>
+        <a id='pushCrm' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">提交</a>
+        <a id='downloadModel' href="/purchase/CRM京东订单导入模板.xls" data-options="iconCls:'icon-save',plain:true" class="easyui-linkbutton">导入模板下载</a>
+        <a id='exportall' href="#" style="display: none;" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">全部导出</a>
+    </form>
+</div>
+<form id="importForm" enctype="multipart/form-data" style="display: none;">
+    <input type="file" name="file" id="file" onchange="importFile()">
+</form>
+<script src="../static/js/jquery.form.js"></script>
+<script src="../static/js/purchase/crmOrderManualQueryListJD.js"></script>
+<script type="text/javascript">
+    var authMap = $!{authMap};
+    if(authMap.productGroup.length == 1 && authMap.productGroup[0] == ''){
+        $.messager.alert('错误', '请联系管理员分配权限', 'error');
+    }
+    $(document).ready(function(){
+        $(".textbox-text").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+        $(".txt").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+    });
+</script>
+</body>
+</html>

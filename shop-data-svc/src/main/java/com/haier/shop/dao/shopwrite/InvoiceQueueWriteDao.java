@@ -4,6 +4,8 @@ import com.haier.shop.model.InvoiceQueue;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author lichunsheng
  * @create 2018-01-10
@@ -26,4 +28,14 @@ public interface InvoiceQueueWriteDao {
      * @return
      */
     Integer updateAfterProccess(InvoiceQueue queue);
+
+
+    /**
+     * 根据OrderproductId修改发票成功状态,重新开票
+     * @param
+     * @return
+     */
+    Integer updateInvoiceQueueSuccessByOrderProductId(InvoiceQueue queue);
+
+    Integer updateInvoiceQueueSuccessByOrderProductIds(@Param("ids")List<Integer> ids);
 }

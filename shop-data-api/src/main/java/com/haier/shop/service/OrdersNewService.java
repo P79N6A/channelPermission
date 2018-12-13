@@ -1,10 +1,8 @@
 package com.haier.shop.service;
 
 
-import java.util.List;
-
-import com.haier.common.ServiceResult;
 import com.haier.shop.model.OrdersNew;
+import java.util.List;
 
 public interface OrdersNewService {
     /**
@@ -79,5 +77,20 @@ public interface OrdersNewService {
      */
     OrdersNew getByOrderSn(String orderSn);
 
+    /**
+     * 根据id更新lbx单号
+     * @param orders
+     * @return
+     */
+    Integer updateLbxSn(OrdersNew orders);
+
+    Integer updateForTailPayTime(OrdersNew orders);
+
+    /**
+     * 根据id将状态为部分缺货更新为未确认
+     * @param orderId
+     * @return
+     */
+    Integer updateStatus(Integer orderId);
 
 }

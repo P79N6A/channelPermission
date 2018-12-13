@@ -50,6 +50,11 @@ public class RegionsServiceImpl implements RegionsService{
     }
 
     @Override
+    public int updateByParentId(Regions record) {
+        return regionsWriteDao.updateByParentId(record);
+    }
+
+    @Override
     public List<Regions> selectByParentId(Integer parentid) {
         return regionsReadDao.selectByParentId(parentid);
     }
@@ -109,4 +114,35 @@ public class RegionsServiceImpl implements RegionsService{
 		// TODO Auto-generated method stub
 		return regionsReadDao.getRegions(params);
 	}
+
+	@Override
+	public String selectCode(String id) {
+		// TODO Auto-generated method stub
+		return regionsReadDao.selectCode(id);
+	}
+
+    @Override
+    public List<Regions> Listf(Regions entity, int start, int rows) {
+        try {
+            return regionsReadDao.Listf(entity,start,rows);
+        }catch (Exception e){
+
+        }
+        return null;
+    }
+
+    @Override
+    public int getPagerCountS(Regions entity) {
+        try {
+            return regionsReadDao.getPagerCountS(entity);
+
+        }catch (Exception e){
+
+        }
+        return 0;
+    }
+    @Override
+    public List<Regions> getRegion(int id){
+        return regionsReadDao.getRegion(id);
+    }
 }

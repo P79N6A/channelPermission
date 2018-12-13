@@ -11,6 +11,7 @@
         <result column="remark" property="remark" jdbcType="VARCHAR" />
         <result column="addTimeTss" property="addTimeTss" jdbcType="VARCHAR" />
         <result column="cOrderSn" property="cOrderSn" jdbcType="VARCHAR" />
+        <result property="orderId" column="orderId" />
     </resultMap>
     <resultMap id="orderRepairsResult" type="com.haier.shop.model.OrderRepairs">
         <result property="id" column="id" />
@@ -96,11 +97,20 @@
         <result column="addTimeTs" property="addTimeTs" jdbcType="VARCHAR" />
         <result column="cOrderSnId" property="cOrderSnId" jdbcType="VARCHAR" />
         <result column="price" property="price" jdbcType="VARCHAR" />
-        <result column="tb_order_sn" property="tbOrderSn" jdbcType="VARCHAR" />
+        <result column="tbOrderSn" property="tbOrderSn" jdbcType="VARCHAR" />
         <result column="source" property="source" jdbcType="VARCHAR" />
         <result column="sourceOrderSn" property="sourceOrderSn" jdbcType="VARCHAR" />
         <result column="productType" property="productType" jdbcType="VARCHAR" />
         <result column="requeStservieDateTS" property="requeStservieDateTS" jdbcType="VARCHAR" />
+        <result column="invoiceId" property="invoiceId" jdbcType="VARCHAR" />
+        <result column="stockType" property="stocktype" jdbcType="VARCHAR" />
+        <result column="shippingMode" property="shippingMode" jdbcType="VARCHAR" />
+        <result column="terminationReason" property="terminationReason" jdbcType="VARCHAR" />
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="region" property="region" jdbcType="INTEGER"/>
+        <result column="isCd" property="isCd" jdbcType="INTEGER" />
+
     </resultMap>
     <sql id="Base_Column_List" >
         id, siteId, addTime, memberId, orderId, orderProductId, paymentStatus, paymentTime,
@@ -116,7 +126,7 @@
         `contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,
         `requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,
         hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn
-        from `OrderRepairs`
+        from `orderrepairs`
         where `orderProductId` = #{orderProductId}
         order by id desc
     </select>
@@ -134,9 +144,9 @@
         p.remark,
         s.cOrderSn
         FROM
-        OrderRepairLogs p,
-        OrderRepairs a,
-        OrderProducts s
+        orderrepairlogs p,
+        orderrepairs a,
+        orderproducts s
         where
         p.orderRepairId = a.id
         and a.orderProductId = s.id
@@ -150,33 +160,49 @@
         SELECT
         s.id,
         p.id orderProductId,
-        p.cOrderSn  cOrderSnId
+        p.cOrderSn  cOrderSnId,
+        s.repairSn
         FROM
-        OrderRepairs s,
-        OrderProducts p
+        orderrepairs s,
+        orderproducts p
         WHERE
         s.orderProductId = p.id
-        and	repairSn = #{id}
+        and	s.id = #{id}
         LIMIT 0,1
     </select>
     <select  id="queryRepaiSn" parameterType="int" resultType="java.lang.String"> 
         SELECT
         repairSn
         FROM
-        OrderRepairs
+        orderrepairs
         where
         orderProductId =#{cOrderId}
-        GROUP BY id desc
+        order by id desc
         LIMIT 0,1
 
+    </select>
+    <select  id="queryWhetherRepaiSn" parameterType="int" resultMap="BaseResultMap"> 
+        SELECT
+        repairSn,
+        id
+        FROM
+        orderrepairs
+        where
+        orderProductId =#{cOrderId}
+        and handleStatus!='6'
+        GROUP BY id desc
+        LIMIT 0,1
     </select>
 
     <select id="queryPairsId" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT
+        o.province,
+        o.city,
+        o.region,
         o.orderSn,
         p.cOrderSn cOrderSnId,
         a.id,
-        from_unixtime(a.addTime) addTimeTs,
+        from_unixtime(a.addTime,'%Y-%m-%d %H:%i:%S') addTimeTs,
         a.contactName,
         a.contactMobile,
         a.typeFlag,
@@ -189,28 +215,28 @@
         a.handleStatus,
         a.paymentStatus,
         a.receiptStatus,
-        a.storageStatus
+        a.storageStatus,
+        p.stockType,
+        a.offlineReason,
+        a.offlineRemark,
+        p.shippingMode,
+        a.terminationReason,
+        from_unixtime(a.requestServiceDate,'%Y-%m-%d %H:%i:%S') requeStservieDateTS
         FROM
-        OrderRepairs a,
-        Orders o,
-        OrderProducts  p
+        orderrepairs a,
+        orders o,
+        orderproducts  p
         where
         a.orderId = o.id
         and a.orderProductId = p.id
         and a.id =#{id}
     </select>
-    <select id="selectPairs" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectOrderRepairsNOFinish" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT
-        o.orderSn,
-        o.id orderId,
-        p.cOrderSn cOrderSnId,
-        p.id orderProductId,
         a.id,
-        from_unixtime(a.addTime) addTimeTs,
         a.contactName,
         a.contactMobile,
         a.typeFlag,
-        p.price,
         a.offlineAmount,
         a.reason,
         a.description,
@@ -219,25 +245,49 @@
         a.handleStatus,
         a.paymentStatus,
         a.receiptStatus,
-
         a.storageStatus,
-        w.userAcceptTime,
-        p.stocktype,
-        p.sku,
-        d.tb_order_sn
+        a.offlineReason,
+        a.offlineRemark
         FROM
-        OrderRepairs a,
-        Orders o,
-        OrderProducts  p,
-        OrderWorkflows w,
-        OrderProductsAttributes d
-
-        where
-        a.orderId = o.id
-        and a.orderProductId = p.id
-        and w.orderProductId = p.id
-        and p.id = d.order_product_id
-        and  a.id =#{id}
+        orderrepairs a
+        where (a.handleStatus = 1 or a.handleStatus =2 or a.handleStatus =9)
+        and a.orderProductId = #{id}
+    </select>
+    <select id="selectPairs" parameterType="java.lang.String" resultMap="BaseResultMap">
+	SELECT
+		o.orderSn,
+		o.id orderId,
+		p.cOrderSn cOrderSnId,
+		p.id orderProductId,
+		a.id,
+		from_unixtime(a.addTime) addTimeTs,
+		a.contactName,
+		a.contactMobile,
+		a.typeFlag,
+		p.price,
+		a.offlineAmount,
+		a.reason,
+		a.description,
+		a.repairSn,
+		a.count,
+		a.handleStatus,
+		a.paymentStatus,
+		a.receiptStatus,
+		a.storageStatus,
+		w.userAcceptTime,
+		p.stocktype,
+		p.sku,
+		p.tbOrderSn,
+		p.isCd
+	FROM
+        orderrepairs a,
+        orders o,
+        orderproducts p
+	LEFT JOIN orderworkflows w ON w.orderProductId = p.id
+	WHERE
+		a.orderId = o.id
+	AND a.orderProductId = p.id
+	AND a.id =#{id}
 
     </select>
 
@@ -245,7 +295,7 @@
         SELECT
         userAcceptTime
         FROM
-        OrderWorkflows
+        orderworkflows
         WHERE
         orderProductId = #{id}
     </select>
@@ -270,9 +320,9 @@
         o.province,
         o.city
         FROM
-        OrderRepairs a,
-        Orders o,
-        OrderProducts  p
+        orderrepairs a,
+        orders o,
+        orderproducts  p
         where
         a.orderId = o.id
         and a.orderProductId = p.id
@@ -283,9 +333,9 @@
         a.id,
         p.id cOrderSnId
         FROM
-        OrderRepairs a,
-        Orders o,
-        OrderProducts  p
+        orderrepairs a,
+        orders o,
+        orderproducts  p
         where
         a.orderId = o.id
         and a.orderProductId = p.id
@@ -301,10 +351,11 @@
         r.offlineAmount,
         r.offlineRemark,
         r.count,
-        p.cOrderSn cOrderSnId
+        p.cOrderSn cOrderSnId,
+        r.repairSn
         FROM
-        OrderRepairs r,
-        OrderProducts  p
+        orderrepairs r,
+        orderproducts  p
         where
         r.orderProductId = p.id
         and   r.id = #{id}
@@ -313,10 +364,11 @@
     SELECT
 		r.id,
 		p.id orderProductId,
-		p.cOrderSn cOrderSnId
+		p.cOrderSn cOrderSnId,
+		r.repairSn
 	FROM
-		OrderRepairs r,
-		OrderProducts p
+        orderrepairs r,
+        orderproducts p
 	WHERE
 		r.orderProductId = p.id
 	and r.id=#{id}
@@ -327,9 +379,9 @@
 			a.id,
 			p.id cOrderSnId
 		FROM
-			OrderRepairs a,
-			Orders o,
-			OrderProducts  p
+        orderrepairs a,
+        orders o,
+        orderproducts  p
 		where 
 			a.orderId = o.id
 		and a.orderProductId = p.id
@@ -339,15 +391,28 @@
 	<select id="queryRepairsInvoiceId" parameterType="java.lang.String" resultMap="BaseResultMap">
 	SELECT
 		r.id,
-		i.id invoiceId,
-		p.id orderProductId
+		p.id orderProductId,
+		p.orderId,
+		p.cOrderSn cOrderSnId
 	FROM
-		OrderRepairs r,
-		OrderProducts p,
-		Invoices i
+        orderrepairs r,
+        orderproducts p
 	WHERE
 		r.orderProductId = p.id
-	AND i.orderProductId = p.id
 	and r.repairSn=#{repairSn}
+	</select>
+		<select id="queryRepairsStats" parameterType="java.lang.String" resultType="int">
+	SELECT
+		count(1)
+	FROM
+            orderrepairhprecords p,
+            orderrepairs s
+	WHERE
+		p.orderRepairId = s.id
+	AND p.TwoAppraisal = '1'
+	and p.packResult='2'
+	and p.checkType='3'
+	and s.handleStatus!='6'
+	and s.id =#{id}
 	</select>
 </mapper>

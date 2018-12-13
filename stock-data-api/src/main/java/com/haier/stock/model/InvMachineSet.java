@@ -17,16 +17,16 @@ public class InvMachineSet implements Serializable {
     private Integer           id;
 
     /**
-     * 鑾峰彇 娴佹按鍙枫��
+     * 获取 流水号。
      */
     public Integer getId() {
         return this.id;
     }
 
     /**
-     * 璁剧疆 娴佹按鍙枫��
+     * 设置 流水号。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setId(Integer value) {
         this.id = value;
@@ -35,16 +35,16 @@ public class InvMachineSet implements Serializable {
     private String mainSku;
 
     /**
-     * 鑾峰彇 涓籹ku銆�
+     * 获取 主sku。
      */
     public String getMainSku() {
         return this.mainSku;
     }
 
     /**
-     * 璁剧疆 涓籹ku銆�
+     * 设置 主sku。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setMainSku(String value) {
         this.mainSku = value;
@@ -53,16 +53,16 @@ public class InvMachineSet implements Serializable {
     private String subSku;
 
     /**
-     * 鑾峰彇 瀛恠ku銆�
+     * 获取 子sku。
      */
     public String getSubSku() {
         return this.subSku;
     }
 
     /**
-     * 璁剧疆 瀛恠ku銆�
+     * 设置 子sku。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setSubSku(String value) {
         this.subSku = value;
@@ -71,16 +71,16 @@ public class InvMachineSet implements Serializable {
     private String factoryCode;
 
     /**
-     * 鑾峰彇 宸ュ巶缂栫爜銆�
+     * 获取 工厂编码。
      */
     public String getFactoryCode() {
         return this.factoryCode;
     }
 
     /**
-     * 璁剧疆 宸ュ巶缂栫爜銆�
+     * 设置 工厂编码。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setFactoryCode(String value) {
         this.factoryCode = value;
@@ -89,16 +89,16 @@ public class InvMachineSet implements Serializable {
     private String stlnr;
 
     /**
-     * 鑾峰彇 鐗╂枡鍗曘��
+     * 获取 物料单。
      */
     public String getStlnr() {
         return this.stlnr;
     }
 
     /**
-     * 璁剧疆 鐗╂枡鍗曘��
+     * 设置 物料单。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setStlnr(String value) {
         this.stlnr = value;
@@ -107,16 +107,16 @@ public class InvMachineSet implements Serializable {
     private String posnr;
 
     /**
-     * 鑾峰彇 BOM椤圭洰鍙枫��
+     * 获取 BOM项目号。
      */
     public String getPosnr() {
         return this.posnr;
     }
 
     /**
-     * 璁剧疆 BOM椤圭洰鍙枫��
+     * 设置 BOM项目号。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setPosnr(String value) {
         this.posnr = value;
@@ -125,16 +125,16 @@ public class InvMachineSet implements Serializable {
     private BigDecimal menge;
 
     /**
-     * 鑾峰彇 缁勪欢鏁伴噺銆�
+     * 获取 组件数量。
      */
     public BigDecimal getMenge() {
         return this.menge;
     }
 
     /**
-     * 璁剧疆 缁勪欢鏁伴噺銆�
+     * 设置 组件数量。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setMenge(BigDecimal value) {
         this.menge = value;
@@ -143,16 +143,16 @@ public class InvMachineSet implements Serializable {
     private Date createTime;
 
     /**
-     * 鑾峰彇 鍒涘缓鏃堕棿銆�
+     * 获取 创建时间。
      */
     public Date getCreateTime() {
         return this.createTime;
     }
 
     /**
-     * 璁剧疆 鍒涘缓鏃堕棿銆�
+     * 设置 创建时间。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setCreateTime(Date value) {
         this.createTime = value;
@@ -161,16 +161,16 @@ public class InvMachineSet implements Serializable {
     private String maktx1;
 
     /**
-     * 鑾峰彇 鐗╂枡鎻忚堪1銆�
+     * 获取 物料描述1。
      */
     public String getMaktx1() {
         return this.maktx1;
     }
 
     /**
-     * 璁剧疆 鐗╂枡鎻忚堪1銆�
+     * 设置 物料描述1。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setMaktx1(String value) {
         this.maktx1 = value;
@@ -179,16 +179,16 @@ public class InvMachineSet implements Serializable {
     private String maktx2;
 
     /**
-     * 鑾峰彇 鐗╂枡鎻忚堪2銆�
+     * 获取 物料描述2。
      */
     public String getMaktx2() {
         return this.maktx2;
     }
 
     /**
-     * 璁剧疆 鐗╂枡鎻忚堪2銆�
+     * 设置 物料描述2。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setMaktx2(String value) {
         this.maktx2 = value;
@@ -197,23 +197,23 @@ public class InvMachineSet implements Serializable {
     private Date updateTime;
 
     /**
-     * 鑾峰彇 淇敼鏃堕棿銆�
+     * 获取 修改时间。
      */
     public Date getUpdateTime() {
         return this.updateTime;
     }
 
     /**
-     * 璁剧疆 淇敼鏃堕棿銆�
+     * 设置 修改时间。
      *
-     * @param value 灞炴�у��
+     * @param value 属性值
      */
     public void setUpdateTime(Date value) {
         this.updateTime = value;
     }
 
     /**
-     * 濂楁満鐘舵��
+     * 套机状态
      */
     private Integer status;
 

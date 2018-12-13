@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.OdsTMFXIndustrySummaryDao">
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.OdsTMFXIndustrySummary">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-30 10:23
+    -->
+    <id column="ID" property="id" jdbcType="VARCHAR"/>
+    <result column="YEAR" property="year" jdbcType="VARCHAR"/>
+    <result column="MONTH" property="month" jdbcType="VARCHAR"/>
+    <result column="TYPE" property="type" jdbcType="CHAR"/>
+    <result column="INDUSTRY" property="industry" jdbcType="VARCHAR"/>
+    <result column="BRAND" property="brand" jdbcType="VARCHAR"/>
+    <result column="REBATES_AMOUNT" property="rebatesAmount" jdbcType="DECIMAL"/>
+    <result column="YX_COST" property="yxCost" jdbcType="DECIMAL"/>
+    <result column="MONTHLY_CASH_AMOUNT" property="monthlyCashAmount" jdbcType="DECIMAL"/>
+    <result column="SALE_AMOUNT" property="saleAmount" jdbcType="DECIMAL"/>
+    <result column="QT_COST" property="qtCost" jdbcType="DECIMAL"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-30 10:23
+    -->
+    ID, YEAR, MONTH, TYPE, INDUSTRY, BRAND, REBATES_AMOUNT, YX_COST, MONTHLY_CASH_AMOUNT,
+    SALE_AMOUNT, QT_COST
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-30 10:23
+    -->
+    select
+    <include refid="Base_Column_List"/>
+    from ods_tmfx_industry_summary
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-30 10:23
+    -->
+    delete from ods_tmfx_industry_summary
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-30 10:23
+    -->
+    insert into ods_tmfx_industry_summary
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="year != null">
+        year,
+      </if>
+      <if test="month != null">
+        month,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="industry != null">
+        industry,
+      </if>
+      <if test="brand != null">
+        brand,
+      </if>
+      <if test="rebatesAmount != null">
+        rebates_amount,
+      </if>
+      <if test="yxCost != null">
+        yx_cost,
+      </if>
+      <if test="monthlyCashAmount!=null">
+        monthly_cash_amount,
+      </if>
+      <if test="saleAmount!=null">
+        sale_amount,
+      </if>
+      <if test="qtCost!=null">
+        qt_cost,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        replace(uuid(),'-',''),
+      </if>
+      <if test="year != null">
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="industry != null">
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="rebatesAmount != null">
+        #{rebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="yxCost != null">
+        #{yxCost,jdbcType=DECIMAL},
+      </if>
+      <if test="monthlyCashAmount != null">
+        #{monthlyCashAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="saleAmount != null">
+        #{saleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="qtCost != null">
+        #{qtCost,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-30 10:23
+    -->
+    update ods_tmfx_industry_summary
+    <set>
+      <if test="year != null">
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        month = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=CHAR},
+      </if>
+      <if test="industry != null">
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="rebatesAmount != null">
+        rebates_amount = #{rebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="yxCost != null">
+        yx_cost = #{yxCost,jdbcType=DECIMAL},
+      </if>
+      <if test="monthlyCashAmount != null">
+        monthly_cash_amount = #{monthlyCashAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="saleAmount != null">
+        sale_amount = #{saleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="qtCost != null">
+        qt_cost = #{qtCost,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="clearHistoryData">
+    DELETE FROM ods_tmfx_industry_summary
+    WHERE 1=1
+    <if test="year!=null and year!=''">
+      and year = #{year}
+    </if>
+    <if test="month!=null and month!=''">
+      and month = #{month}
+    </if>
+    <if test="type!=null and type!=''">
+      and type = #{type}
+    </if>
+  </delete>
+  <select id="queryIndustrySummaryCount" resultType="int">
+    SELECT
+    count(1)
+    FROM ods_tmfx_industry_summary
+    WHERE 1=1
+    <if test="year!=null and year!=''">
+      and year = #{year}
+    </if>
+    <if test="month!=null and month!=''">
+      and month = #{month}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry}
+    </if>
+  </select>
+  <select id="queryIndustrySummaryList" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ods_tmfx_industry_summary
+    WHERE 1=1
+    <if test="year!=null and year!=''">
+      and year = #{year}
+    </if>
+    <if test="month!=null and month!=''">
+      and month = #{month}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry}
+    </if>
+    <if test="start != null and rows != null ">
+      LIMIT #{start}, #{rows}
+    </if>
+  </select>
+  <select id="queryIndustrySummaryExcel" resultMap="BaseResultMap">
+    SELECT
+    YEAR, MONTH, case TYPE when 'm' then '月度' when 'q' then '季度' when 'y' then '年度' end type,
+    INDUSTRY, BRAND, MONTHLY_CASH_AMOUNT,
+    YX_COST, QT_COST,
+    REBATES_AMOUNT, SALE_AMOUNT
+    FROM ods_tmfx_industry_summary
+    WHERE 1=1
+    <if test="year!=null and year!=''">
+      and year = #{year}
+    </if>
+    <if test="month!=null and month!=''">
+      and month = #{month}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry}
+    </if>
+  </select>
+</mapper>

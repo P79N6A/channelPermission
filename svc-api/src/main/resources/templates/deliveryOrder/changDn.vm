@@ -35,42 +35,56 @@
     </style>
 </head>
 <body class="iframe-body">
-<div id="datagridToolbar">
-    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
-        <div class="slide_line fa fa-window-minimize"></div>
-        <div class="slide_line fa fa-window-minimize"></div>
-        <div class="slide_line fa fa-window-minimize"></div>
-        <div class="slide_line fa fa-window-minimize"></div>
-        <div class="slide_line fa fa-window-minimize"></div>
-        <div class="slide_line fa fa-window-minimize"></div>
-        <div class="slide_line fa fa-window-minimize"></div>
-        <div class="slide_line fa fa-window-minimize"></div>
-        <div class="slide_line fa fa-window-minimize"></div>
-        <div class="slide_circle fa fa-map-marker"></div>
-    </div>
-    <form id="paramForm" class="param-form">
-        <div class="search-panel">
-
-            <table class="kx-searchTable">
-                <tr>
-                    <th>单号</th>
-                    <td ><input class="easyui-textbox" id="order" name="order"/></td>
-                </tr>
-            </table>
-        </div>
-    </form>
-
-    <div style="" class="checkbox_css_1">
-        <a href="javascript:void(0)" class="easyui-linkbutton" id="searchZk"
-           data-options="iconCls:'icon-search',plain:true">查询</a>
-    </div>
-</div>
-<div id="searchPanel" class="easyui-panel"
-     style="width:100%;height:100%;"
-     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
-    collapsible:false">
-    <table id="datagrid">
-    </table>
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div id="datagridToolbar" data-options="region:'north',title:'查询条件',border:false" style="height: 120px;">
+	    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_line fa fa-window-minimize"></div>
+	        <div class="slide_circle fa fa-map-marker"></div>
+	    </div>
+	    <form id="paramForm" class="param-form">
+	        <div class="search-panel">
+	
+	            <table class="kx-searchTable">
+	                <tr>
+	                    <th>主单号</th>
+	                    <td ><input class="easyui-textbox" id="order" name="order" data-options="prompt:'多个用,隔开'"/></td>
+	                    <th>一次DN1</th>
+	                    <td ><input class="easyui-textbox" id="vbelnDn1" name=vbelnDn1 data-options="prompt:'多个用,隔开'"/></td>
+	                    <th>开单时间</th>
+	                    <td><input class="easyui-datebox" id="startDate" name="beginDate"/></td>
+	                    <th>至</th>		
+	                    <td><input class="easyui-datebox" id="endDate" name="endDate"/></td>
+	                </tr>
+	            </table>
+	        </div>
+	    </form>
+	
+	    <div style="" class="checkbox_css_1">
+	        <a href="javascript:void(0)" class="easyui-linkbutton" id="searchZk"
+	           data-options="iconCls:'icon-search',plain:true">查询</a>
+	        <a href="javascript:void(0)" class="easyui-linkbutton" id="exportZk"
+	           data-options="iconCls:'icon-save',plain:true">导出</a>
+	        <a href="javascript:void(0)" class="easyui-linkbutton" id="importZk"
+	           data-options="iconCls:'icon-search',plain:true">导入</a>
+	    </div>
+	</div>
+	<div id="searchPanel" class="easyui-panel"
+	     style="width:100%;height:100%;"
+	     data-options="region:'center'">
+	    <table id="datagrid">
+	    </table>
+	    <form id="importForm" enctype="multipart/form-data" style="display: none;">
+	    	<input type="file" name="file" id="file" onchange="importFile()">
+	    </form>
+	</div>
 </div>
 <div id="reviewDiv" title="预约LBX备用DN" class="easyui-dialog" >
 	<div data-options="region:'center',border:false" style="height: 220px;overflow: auto; " align="left">
@@ -103,70 +117,138 @@
 <script src="../vehicle/third/quicklink/quick_links.js"></script>
 
 <script type="text/javascript">
-
-var tabDg = {
-        fit: true,
-        fitColumns: false,
-        columns: [[
-            {title: '主单号', field: 'orderNo', sortable: true, align: 'center', width: 200},
-            {title: '采购单号', field: 'itemNo', sortable: true, align: 'center', width: 200},
-            {title: '一次DN1', field: 'vbelnDn1', sortable: true, align: 'center', width: 200},
-            {title: '二次DN5', field: 'vbelnDn5', sortable: true, align: 'center', width: 200},
-            {title: '预约LBX备用DN', field: 'vbelnSpare', sortable: true, align: 'center', width: 200},
-            {title : '操作', field : 'option', sortable : true, align : 'center', 
-            	formatter : 
-				function (val, row, index) {
-			        return '<button class="zcCart-btn" style="margin-right:15px" onclick="review(\'' + row.itemNo + '\',\'' + row.vbelnSpare + '\')">修改</button>'
-			    }
-				, width : 200}
-        ]],
-        striped: true
-    }
-$("#searchZk").on('click', function() {
-       if($("#order").val() == ''){
-       		alert("请输入单号");
-       		tabDg.data = {"total": data.details.length, rows: data.details};
-	                $("#datagrid").datagrid(tabDg);
-       }
-		$("#searchZk").linkbutton("disable")
-		$.ajax({
-            url: "/vehicle/orderDetail",
-            data: {orderNo: $("#order").val()},
-            dataType: "json",
-            type: "post",
-            success: function (data) {
-                if (data) {
-                    var arr = data.details
-                    if(arr.length==0){
-                    	alert("未获取到数据");
-                    }else{
-                    	var amount = 0
-	                    for (var i = 0; i < arr.length; i++) {
-	                        amount += arr[i].amount
-	                    }
-	                    data.order.amount = "￥" + amount.toFixed(2)
-	                    for (var key in data.order) {
-	                        if (data.order[key]) {
-	                            if (key == "type") {
-	                                continue
-	                            }
-	                            if (key == "orderTime" || key == "dateOfArrival") {
-	                                $("[" + key + "]").html($.fn.dateFormat("yyyy-MM-dd", new Date(data.order[key])))
-	                            } else if (key == "loadingVolume") {
-	                                $("[loadingVolume]").html(data.order[key] + "m³")
-	                            } else {
-	                                $("[" + key + "]").html(data.order[key])
-	                            }
-	                        }
-	                    }
-                    }
-                    tabDg.data = {"total": data.details.length, rows: data.details}
-	                $("#datagrid").datagrid(tabDg)
-                }
-            }
+    $(document).ready(function(){
+        $(".textbox-text").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
         });
-		$("#searchZk").linkbutton("enable");
-	})
+        $(".txt").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+		var tabDg = {
+		        fit: true,
+		        fitColumns: false,
+		        pagination: true,
+		        pageSize: 50,
+		        pageList: [50, 100, 200],
+		        queryParams: {
+		        	orderNo: function(){return $("#order").val();}, 
+		        	vbelnDn1: function(){return $('#vbelnDn1').val();},
+		            startDate : function(){return $("#startDate").datebox("getValue");},
+					endDate : function(){return $("#endDate").datebox("getValue");}
+		        },
+		        loadFilter: function(data){
+// 		        	if (data) {
+// 		                var arr = data.details
+// 		                if(arr.length==0){
+// 		                	alert("未获取到数据");
+// 		                }else{
+// 		                	var amount = 0
+// 		                    for (var i = 0; i < arr.length; i++) {
+// 		                        amount += arr[i].amount
+// 		                    }
+// 		                    data.order.amount = "￥" + amount.toFixed(2)
+// 		                    for (var key in data.order) {
+// 		                        if (data.order[key]) {
+// 		                            if (key == "type") {
+// 		                                continue
+// 		                            }
+// 		                            if (key == "orderTime" || key == "dateOfArrival") {
+// 		                                $("[" + key + "]").html($.fn.dateFormat("yyyy-MM-dd", new Date(data.order[key])))
+// 		                            } else if (key == "loadingVolume") {
+// 		                                $("[loadingVolume]").html(data.order[key] + "m³")
+// 		                            } else {
+// 		                                $("[" + key + "]").html(data.order[key])
+// 		                            }
+// 		                        }
+// 		                    }
+// 		                }
+// 		                return {"total": data.details.length, rows: data.details}
+// 		        	}
+					$.each(data.rows, function(k, v){
+						if(v.createTime)
+							v.createTime = formatDate(v.createTime);
+					})
+					return data;
+		        },
+		        columns: [[
+		            {title: '主单号', field: 'orderNo',  align: 'center', width: 200},
+		            {title: '采购单号', field: 'itemNo',  align: 'center', width: 200},
+		            {title: '一次DN1', field: 'vbelnDn1',  align: 'center', width: 200},
+		            {title: '二次DN5', field: 'vbelnDn5',  align: 'center', width: 200},
+		            {title: '预约LBX备用DN', field: 'vbelnSpare',  align: 'center', width: 200},
+		            {title: '开单时间', field: 'createTime',  align: 'center', width: 200},
+		            {title : '操作', field : 'option', align : 'center', 
+		            	formatter : 
+						function (val, row, index) {
+					        return '<button class="zcCart-btn" style="margin-right:15px" onclick="review(\'' + row.itemNo + '\',\'' + row.vbelnSpare + '\')">修改</button>'
+					    }
+						, width : 200}
+		        ]],
+		        striped: true
+		    }
+        $("#datagrid").datagrid(tabDg);
+    });
+
+	$("#searchZk").on('click', function() {
+		$("#datagrid").datagrid({
+			url: "/vehicle/changeDnOrderDetail"
+		});
+	});
+	$("#importZk").on('click', function() {
+		$('#file').click();
+	});
+	var importFile = function(){
+		console.log('import file');
+		$.messager.progress({  
+            title:'请等待',  
+            msg:'正在导入……',
+            text:'处理中',
+            interval:700
+        });  
+		$('#importForm').ajaxSubmit({
+			url: '/vehicle/importChangeDN',
+			type: 'post',
+			success: function(data){
+				$.messager.progress('close'); 
+				$('#file').val('');
+				if(data.success == true){
+					$.messager.alert('成功', '导入成功！', 'info');
+					$("#datagrid").datagrid({
+						url: "/vehicle/changeDnOrderDetail"
+					});
+				}else{
+					$.messager.alert('导入失败', data.message, 'error');
+				}
+			}
+		});
+	}
+	$("#exportZk").on('click', function() {
+		$.messager.progress({  
+            title:'请等待',  
+            msg:'正在导出……',
+            text:'处理中',
+            interval:700
+        });  
+		$.get('/vehicle/exportChangeDNTotal', {
+		        	orderNo: function(){return $("#order").val();}, 
+		        	vbelnDn1: function(){return $('#vbelnDn1').val();},
+		            startDate : function(){return $("#startDate").datebox("getValue");},
+					endDate : function(){return $("#endDate").datebox("getValue");}
+		        }, function(data){
+	        		$.messager.progress('close'); 
+		        	console.log(data);
+		        	if(data > 2000){
+		        		$.messager.alert('错误','数据太多【' + data + '条】，最多导出2000条记录，请缩小查询范围。','error');
+		        		return;
+		        	}else{
+		        		var orderNo = $("#order").val();
+		        		var vbelnDn1 = $('#vbelnDn1').val();
+			            var startDate = $("#startDate").datebox("getValue");
+						var endDate = $("#endDate").datebox("getValue");
+						window.location.href = '/vehicle/exportChangeDN?orderNo='+orderNo+'&vbelnDn1=' + vbelnDn1 + '&startDate='+startDate+'&endDate='+endDate;
+		        	}
+		        })
+	});
     var opt = function () {
         return '<button class="zcCart-btn" href="javascript:void(0)">撤销</button>'
     }
@@ -261,13 +343,13 @@ $("#searchZk").on('click', function() {
 	        	 } else {
 	        	 	var message = data.message;
 	 		 		if(data.message == "success"){
-	 		 		$.messager.alert('提示',"预约LBX备用DN更新成功！",'info',function(r){
-	 		 			$("#reviewDiv").window('close');
-	 		 			 $("#searchZk").click();
-	 		 		});
-	 		 	}else{
-	 		 		$.messager.alert('提示',"预约LBX备用DN更新失败！",'info');
-	            }
+		 		 		$.messager.alert('提示',"预约LBX备用DN更新成功！",'info',function(r){
+		 		 			$("#reviewDiv").window('close');
+		 		 			 $("#searchZk").click();
+		 		 		});
+		 		 	}else{
+		 		 		$.messager.alert('提示',"预约LBX备用DN更新失败:" + data.message,'info');
+		            }
 	         }}
 		 });
 	});
@@ -276,5 +358,6 @@ $(function(){
 });
 </script>
 <script src="../vehicle/js/delivery_order/historyOrder.js"></script>
+<script src="/static/js/jquery.form.js"></script>
 </body>
 </html>

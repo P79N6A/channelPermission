@@ -1,6 +1,7 @@
 package com.haier.vehicle.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,38 @@ public class AreaCenterInfoServiceImpl implements AreaCenterInfoService {
 	@Override
 	public AreaCenterInfoDTO getOneByDeliveryToCode(String deliveryToCode) {
 		return purchaseAreaCenterInfoService.getOneByDeliveryToCode(deliveryToCode);
+	}
+
+	@Override
+	public List<AreaCenterInfoDTO> getAreaCenterInfo(Map<String, Object> params) {
+		return purchaseAreaCenterInfoService.getAreaCenterInfo(params);
+	}
+
+	@Override
+	public Integer getAreaCenterInfoCount(Map<String, Object> params) {
+		return purchaseAreaCenterInfoService.getAreaCenterInfoCount(params);
+	}
+
+	@Override
+	public void updateSelectiveByDeliveryToCode(AreaCenterInfoDTO areaCenterInfoDTO) {
+		purchaseAreaCenterInfoService.updateSelectiveByDeliveryToCode(areaCenterInfoDTO);
+	}
+
+	@Override
+	public void openStatusAreaCenterInfo(Map<String, Object> params) {
+		purchaseAreaCenterInfoService.openStatusAreaCenterInfo(params);
+
+	}
+
+	@Override
+	public void closeStatusAreaCenterInfo(Map<String, Object> params) {
+		purchaseAreaCenterInfoService.closeStatusAreaCenterInfo(params);
+
+	}
+
+	@Override
+	public List<AreaCenterInfoDTO> getAreaCenterInfoExport(Map<String, Object> params) {
+		return 		purchaseAreaCenterInfoService.getAreaCenterInfoExport(params);
 	}
 
 

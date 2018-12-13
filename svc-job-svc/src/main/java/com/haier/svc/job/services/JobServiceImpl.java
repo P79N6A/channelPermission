@@ -126,4 +126,9 @@ public class JobServiceImpl implements JobService {
 		return result;
 	}
 
+	@Override
+	public SysJob getById(Integer jobId) {
+		return sysJobDao.findById(jobId);
+	}
+
 }

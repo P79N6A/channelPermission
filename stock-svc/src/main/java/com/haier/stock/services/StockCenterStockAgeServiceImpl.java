@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
 import com.haier.eis.model.BusinessException;
+import com.haier.shop.model.ItemBase;
 import com.haier.stock.model.InvStockAge;
 import com.haier.stock.model.InvStockAge.StockAgeData;
 import com.haier.stock.model.InvStockChannel;
@@ -78,6 +79,8 @@ public class StockCenterStockAgeServiceImpl implements StockAgeService {
 			PagerInfo pagerInfo, Map<String, Object> params) {
 		ServiceResult<List<InvStockAge>> result = new ServiceResult<List<InvStockAge>>();
 		try {
+			params.put("start",pagerInfo.getStart());
+			params.put("size",pagerInfo.getPageSize());
 			int count = stockInvStockAgeService.getCount(params);
 			result.setResult(stockInvStockAgeService.getStockAgeList(params));
 			pagerInfo.setRowsCount(count);
@@ -154,6 +157,20 @@ public class StockCenterStockAgeServiceImpl implements StockAgeService {
             log.error("记录出入库记录发生未知异常：", e);
             result.setSuccess(false);
             result.setMessage("记录出入库记录发生未知异常:" + e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public ServiceResult<Integer> updateMtlInfoForStockAge(ItemBase base) {
+        ServiceResult<Integer> result = new ServiceResult<Integer>();
+        try {
+            int cnt = stockAgeModel.updateMtlInfoForStockAge(base);
+            result.setResult(cnt);
+        } catch (Throwable e) {
+            result.setSuccess(false);
+            result.setMessage("更新库齡表的物料相关信息(商品名称，品类，产品组，品牌)时出现未知异常");
+            log.error("更新库齡表的物料相关信息(商品名称，品类，产品组，品牌)时出现未知异常：", e);
         }
         return result;
     }

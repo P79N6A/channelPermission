@@ -223,7 +223,7 @@
             `isProduceDaily`,
             `tailPayTime`,
             `ckCode`
-        FROM `Orders`
+        FROM `orders`
         WHERE `id` = #{id}
     </select>
     <select id="getByOrderSn" parameterType="String" resultMap="ordersResult">
@@ -333,13 +333,13 @@
             `isTogether`,
             `isNotConfirm`,
             `ckCode`
-        FROM `Orders`
+        FROM `orders`
         WHERE `orderSn` = #{orderSn}
     </select>
     <select id="getByIds" resultMap="ordersResult">
         select
         `id`,`siteId`,`isTest`,`hasSync`,`isBackend`,`isBook`,`isCod`,`notAutoConfirm`,`isPackage`,`packageId`,`orderSn`,`relationOrderSn`,`memberId`,`predictId`,`memberEmail`,`addTime`,`syncTime`,`orderStatus`,`payTime`,`paymentStatus`,`receiptConsignee`,`receiptAddress`,`receiptZipcode`,`receiptMobile`,`productAmount`,`orderAmount`,`paidBalance`,`giftCardAmount`,`paidAmount`,`shippingAmount`,`totalEsAmount`,`usedCustomerBalanceAmount`,`customerId`,`bestShippingTime`,`paymentCode`,`payBankCode`,`paymentName`,`consignee`,`originRegionName`,`originAddress`,`province`,`city`,`region`,`street`,`markBuilding`,`poiId`,`poiName`,`regionName`,`address`,`zipcode`,`mobile`,`phone`,`receiptInfo`,`delayShipTime`,`remark`,`bankCode`,`agent`,`confirmTime`,`firstConfirmTime`,`firstConfirmPerson`,`finishTime`,`tradeSn`,`signCode`,`source`,`sourceOrderSn`,`onedayLimit`,`logisticsManner`,`afterSaleManner`,`personManner`,`visitRemark`,`visitTime`,`visitPerson`,`sellPeople`,`sellPeopleManner`,`orderType`,`hasReadTaobaoOrderComment`,`memberInvoiceId`,`taobaoGroupId`,`tradeType`,`stepTradeStatus`,`stepPaidFee`,`depositAmount`,`balanceAmount`,`autoCancelDays`,`isNoLimitStockOrder`,`ccbOrderReceivedLogId`,`ip`,`isGiftCardOrder`,`giftCardDownloadPassword`,`giftCardFindMobile`,`autoConfirmNum`,`codConfirmPerson`,`codConfirmTime`,`codConfirmRemark`,`codConfirmState`,`paymentNoticeUrl`,`addressLon`,`addressLat`,`smConfirmStatus`,`smConfirmTime`,`smManualTime`,`smManualRemark`,`isTogether`,`isNotConfirm`,`points`,`isProduceDaily`,`ckCode`
-        from `Orders`
+        from `orders`
         where `id` in
         <foreach collection="ids" index="index" item="id" open="("
                  separator="," close=")">
@@ -348,32 +348,44 @@
     </select>
     <insert id="insert" parameterType="com.haier.shop.model.Orders">
         insert into
-        `Orders`(`siteId`,`isTest`,`hasSync`,`isBackend`,`isBook`,`isCod`,`notAutoConfirm`,`isPackage`,`packageId`,`orderSn`,`relationOrderSn`,`memberId`,`predictId`,`memberEmail`,`addTime`,`syncTime`,`orderStatus`,`payTime`,`paymentStatus`,`receiptConsignee`,`receiptAddress`,`receiptZipcode`,`receiptMobile`,`productAmount`,`orderAmount`,`paidBalance`,`giftCardAmount`,`paidAmount`,`shippingAmount`,`totalEsAmount`,`usedCustomerBalanceAmount`,`customerId`,`bestShippingTime`,`paymentCode`,`payBankCode`,`paymentName`,`consignee`,`originRegionName`,`originAddress`,`province`,`city`,`region`,`street`,`markBuilding`,`regionName`,`address`,`zipcode`,`mobile`,`phone`,`receiptInfo`,`delayShipTime`,`remark`,`bankCode`,`agent`,`confirmTime`,`firstConfirmTime`,`firstConfirmPerson`,`finishTime`,`tradeSn`,`signCode`,`source`,`sourceOrderSn`,`onedayLimit`,`logisticsManner`,`afterSaleManner`,`personManner`,`visitRemark`,`visitTime`,`visitPerson`,`sellPeople`,`sellPeopleManner`,`orderType`,`hasReadTaobaoOrderComment`,`memberInvoiceId`,`taobaoGroupId`,`tradeType`,`stepTradeStatus`,`stepPaidFee`,`depositAmount`,`balanceAmount`,`autoCancelDays`,`isNoLimitStockOrder`,`ccbOrderReceivedLogId`,`ip`,`isGiftCardOrder`,`giftCardDownloadPassword`,`giftCardFindMobile`,`autoConfirmNum`,`codConfirmPerson`,`codConfirmTime`,`codConfirmRemark`,`codConfirmState`,`paymentNoticeUrl`,`addressLon`,`addressLat`,`smConfirmStatus`,`smConfirmTime`,`isTogether`,`isNotConfirm`,`points`,`isProduceDaily`,`couponCode`,`couponCodeValue`,`ckCode`)
+        `orders`(`siteId`,`isTest`,`hasSync`,`isBackend`,`isBook`,`isCod`,`notAutoConfirm`,`isPackage`,`packageId`,`orderSn`,`relationOrderSn`,`memberId`,`predictId`,`memberEmail`,`addTime`,`syncTime`,`orderStatus`,`payTime`,`paymentStatus`,`receiptConsignee`,`receiptAddress`,`receiptZipcode`,`receiptMobile`,`productAmount`,`orderAmount`,`paidBalance`,`giftCardAmount`,`paidAmount`,`shippingAmount`,`totalEsAmount`,`usedCustomerBalanceAmount`,`customerId`,`bestShippingTime`,`paymentCode`,`payBankCode`,`paymentName`,`consignee`,`originRegionName`,`originAddress`,`province`,`city`,`region`,`street`,`markBuilding`,`regionName`,`address`,`zipcode`,`mobile`,`phone`,`receiptInfo`,`delayShipTime`,`remark`,`bankCode`,`agent`,`confirmTime`,`firstConfirmTime`,`firstConfirmPerson`,`finishTime`,`tradeSn`,`signCode`,`source`,`sourceOrderSn`,`onedayLimit`,`logisticsManner`,`afterSaleManner`,`personManner`,`visitRemark`,`visitTime`,`visitPerson`,`sellPeople`,`sellPeopleManner`,`orderType`,`hasReadTaobaoOrderComment`,`memberInvoiceId`,`taobaoGroupId`,`tradeType`,`stepTradeStatus`,`stepPaidFee`,`depositAmount`,`balanceAmount`,`autoCancelDays`,`isNoLimitStockOrder`,`ccbOrderReceivedLogId`,`ip`,`isGiftCardOrder`,`giftCardDownloadPassword`,`giftCardFindMobile`,`autoConfirmNum`,`codConfirmPerson`,`codConfirmTime`,`codConfirmRemark`,`codConfirmState`,`paymentNoticeUrl`,`addressLon`,`addressLat`,`smConfirmStatus`,`smConfirmTime`,`isTogether`,`isNotConfirm`,`points`,`isProduceDaily`,`couponCode`,`couponCodeValue`,`ckCode`)
         values(#{siteId},#{isTest},#{hasSync},#{isBackend},#{isBook},#{isCod},#{notAutoConfirm},#{isPackage},#{packageId},#{orderSn},#{relationOrderSn},#{memberId},#{predictId},#{memberEmail},#{addTime},#{syncTime},#{orderStatus},#{payTime},#{paymentStatus},#{receiptConsignee},#{receiptAddress},#{receiptZipcode},#{receiptMobile},#{productAmount},#{orderAmount},#{paidBalance},#{giftCardAmount},#{paidAmount},#{shippingAmount},#{totalEsAmount},#{usedCustomerBalanceAmount},#{customerId},#{bestShippingTime},#{paymentCode},#{payBankCode},#{paymentName},#{consignee},#{originRegionName},#{originAddress},#{province},#{city},#{region},#{street},#{markBuilding},#{regionName},#{address},#{zipcode},#{mobile},#{phone},#{receiptInfo},#{delayShipTime},#{remark},#{bankCode},#{agent},#{confirmTime},#{firstConfirmTime},#{firstConfirmPerson},#{finishTime},#{tradeSn},#{signCode},#{source},#{sourceOrderSn},#{onedayLimit},#{logisticsManner},#{afterSaleManner},#{personManner},#{visitRemark},#{visitTime},#{visitPerson},#{sellPeople},#{sellPeopleManner},#{orderType},#{hasReadTaobaoOrderComment},#{memberInvoiceId},#{taobaoGroupId},#{tradeType},#{stepTradeStatus},#{stepPaidFee},#{depositAmount},#{balanceAmount},#{autoCancelDays},#{isNoLimitStockOrder},#{ccbOrderReceivedLogId},#{ip},#{isGiftCardOrder},#{giftCardDownloadPassword},#{giftCardFindMobile},#{autoConfirmNum},#{codConfirmPerson},#{codConfirmTime},#{codConfirmRemark},#{codConfirmState},#{paymentNoticeUrl},#{addressLon},#{addressLat},#{smConfirmStatus},#{smConfirmTime},#{isTogether},#{isNotConfirm},#{points},#{isProduceDaily},#{couponCode},#{couponCodeValue},'')
         <selectKey resultType="int" keyProperty="id" order="AFTER">select last_insert_id()</selectKey>
     </insert>
+        <insert id="insertOrders"  parameterType="com.haier.shop.model.Orders" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        `orders`(`isTest`,`isBackend`,`isBook`,`isCod`,`notAutoConfirm`,`orderSn`,`relationOrderSn`,`memberId`,`memberEmail`,`addTime`,`syncTime`,`orderStatus`,`payTime`,`paymentStatus`,`receiptConsignee`,`receiptAddress`,`receiptZipcode`,`receiptMobile`,`productAmount`,`orderAmount`,`paidAmount`,`shippingAmount`,`totalEsAmount`,`paymentCode`,`payBankCode`,`paymentName`,`consignee`,`originRegionName`,`originAddress`,`province`,`city`,`region`,`street`,`regionName`,`address`,`zipcode`,`mobile`,`phone`,`receiptInfo`,`delayShipTime`,`remark`,`bankCode`,`agent`,`confirmTime`,`firstConfirmTime`,`firstConfirmPerson`,`finishTime`,`tradeSn`,`signCode`,`source`,`sourceOrderSn`,`onedayLimit`,`orderType`,`memberInvoiceId`,`taobaoGroupId`,`tradeType`,`stepTradeStatus`,`stepPaidFee`,`depositAmount`,`balanceAmount`,`autoCancelDays`,`isNoLimitStockOrder`,`autoConfirmNum`,`smConfirmStatus`,`smConfirmTime`,`isTogether`,`isNotConfirm`,`points`,`isProduceDaily`,`ckCode`,tmallName,aliPayName,sellpeople,lbxSn)
+        values(#{isTest},#{isBackend},#{isBook},#{isCod},#{notAutoConfirm},#{orderSn},#{relationOrderSn},#{memberId},#{memberEmail},#{addTime},#{syncTime},#{orderStatus},#{payTime},#{paymentStatus},#{receiptConsignee},#{receiptAddress},#{receiptZipcode},#{receiptMobile},#{productAmount},#{orderAmount},#{paidAmount},#{shippingAmount},#{totalEsAmount},#{paymentCode},#{payBankCode},#{paymentName},#{consignee},#{originRegionName},#{originAddress},#{province},#{city},#{region},#{street},#{regionName},#{address},#{zipcode},#{mobile},#{phone},#{receiptInfo},#{delayShipTime},#{remark},#{bankCode},#{agent},#{confirmTime},#{firstConfirmTime},#{firstConfirmPerson},#{finishTime},#{tradeSn},#{signCode},#{source},#{sourceOrderSn},#{onedayLimit},#{orderType},#{memberInvoiceId},#{taobaoGroupId},#{tradeType},#{stepTradeStatus},#{stepPaidFee},#{depositAmount},#{balanceAmount},#{autoCancelDays},#{isNoLimitStockOrder},#{autoConfirmNum},#{smConfirmStatus},#{smConfirmTime},#{isTogether},#{isNotConfirm},#{points},#{isProduceDaily},'',#{tmallName},#{aliPayName},#{sellpeople},#{lbxSn})
+    </insert>
     <update id="updateForInvoice" parameterType="com.haier.shop.model.Orders">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `memberInvoiceId` = #{memberInvoiceId}, `receiptInfo` = #{receiptInfo}, `hasSync` = #{hasSync}
         WHERE `id` = #{id}
     </update>
+
+    <update id="updateMemberInvoicesId" parameterType="int">
+        UPDATE `orders`
+        SET `memberInvoiceId` = #{memberInvoiceId}
+        WHERE `id` = #{id}
+    </update>
+
     <update id="updateForPayment" parameterType="com.haier.shop.model.Orders">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `tradeSn`=#{tradeSn},`paymentStatus`=#{paymentStatus},`payTime`=#{payTime},`paidAmount`=#{paidAmount}
         WHERE `id` = #{id}
     </update>
     <update id="updateForTailPayTime" parameterType="com.haier.shop.model.Orders">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `tailPayTime`=#{tailPayTime}
         WHERE `id` = #{id}
     </update>
     <update id="updateOrderStatus">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `orderStatus` = #{orderStatus}
         WHERE `id` = #{id} AND `orderStatus` != 202
     </update>
     <update id="completeClose">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `orderStatus` = 203, finishTime = #{finishTime}
         WHERE `id` = #{id} AND `orderStatus` != 202
     </update>
@@ -383,11 +395,11 @@
             orderStatus,
             tradeType,
             stepTradeStatus
-        FROM Orders
+        FROM orders
         WHERE `orderSn` = #{orderSn}
     </select>
     <update id="updateForStep">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET
             `productAmount`   = #{productAmount},
             `orderAmount`     = #{orderAmount},
@@ -400,7 +412,7 @@
     <select id="getNotAutoConfirmOrders" resultMap="ordersResult">
 	<![CDATA[
         select distinct os.id,os.orderStatus,os.orderSn,os.source,os.isProduceDaily,os.province,os.city,os.region,os.street,os.orderType,os.mobile,os.memberEmail,os.memberId,os.consignee,os.paymentStatus,os.isCod,os.codConfirmTime,os.tailPayTime,os.payTime,os.firstConfirmPerson,os.firstConfirmTime,os.confirmTime,os.addTime,os.isBackend ,os.regionName ,os.address ,os.paymentCode
-        from Orders os,OrderProducts op
+        from orders os,orderproducts op
         where (((os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or (os.isCod = 0 and os.source='BLPHH')) or (os.isCod = 1 and os.codConfirmState = 2)) and os.orderStatus = 200 and
               os.smConfirmStatus = 4 and os.orderType != 2 and os.isTest = 0 and os.isNotConfirm = 0 and os.notAutoConfirm = 0
         	  and os.id=op.orderId and op.status=1 limit 2000
@@ -409,7 +421,7 @@
     <select id="getNotAutoConfirmOrdersForException" resultMap="ordersResult">
         <![CDATA[
         select distinct os.id,os.orderStatus,os.orderSn,os.source,os.isProduceDaily,os.province,os.city,os.region,os.street,os.orderType,os.mobile,os.memberEmail,os.memberId,os.consignee,os.paymentStatus,os.isCod,os.codConfirmTime,os.tailPayTime,os.payTime,os.firstConfirmPerson,os.firstConfirmTime,os.confirmTime,os.addTime,os.isBackend,os.regionName ,os.address ,os.paymentCode 
-        from Orders os,OrderProducts op
+        from orders os,orderproducts op
         where (((os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or (os.isCod = 0 and os.source='BLPHH')) or (os.isCod = 1 and os.codConfirmState = 2)) and os.orderStatus = 204 and
               os.smConfirmStatus = 4 and os.orderType != 2 and os.isTest = 0 and os.isNotConfirm = 0 and os.notAutoConfirm = 0
         	  and os.id=op.orderId and op.status=1
@@ -422,20 +434,20 @@
         order by id limit 1000
     </select>
     <update id="updateForConfirm" parameterType="com.haier.shop.model.Orders">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `confirmTime`      = #{confirmTime}, `firstConfirmPerson` = #{firstConfirmPerson},
             `firstConfirmTime` = #{firstConfirmTime}, `orderStatus` = #{orderStatus}
         WHERE `id` = #{id} AND (`orderStatus` = 200 OR `orderStatus` = 204)
     </update>
     <update id="updateSmConfirmStatus" parameterType="com.haier.shop.model.Orders">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `smConfirmStatus` = #{smConfirmStatus}
         WHERE `id` = #{id} and `smConfirmStatus`=4
     </update>
     <select id="getByIdsForConfirm" resultMap="ordersResult">
         select
         id,orderStatus,orderSn,source,addTime,isProduceDaily,province,city,region,street,orderType,mobile,memberEmail,memberId,consignee,paymentStatus,isCod,codConfirmTime,tailPayTime,payTime,firstConfirmPerson,firstConfirmTime
-        from Orders
+        from orders
         where id in
         <foreach collection="ids" index="index" item="id" open="("
                  separator="," close=")">
@@ -444,22 +456,22 @@
     </select>
 
     <insert id="insertKjtProofs">
-        insert into `KjtProofs`(`orderId`,`addTime`,`pushData`,`orderProductId`,`success`,`count`,`lastMessage`,`successTime`)
+        insert into `kjtproofs`(`orderId`,`addTime`,`pushData`,`orderProductId`,`success`,`count`,`lastMessage`,`successTime`)
         values(#{orderId},#{addTime},#{pushData},0,0,0,'',0)
     </insert>
     <!-- <insert id="insert" parameterType="com.haier.shop.model.Orders">
-        insert into `Orders`(`siteId`,`isTest`,`hasSync`,`isBackend`,`isBook`,`isCod`,`notAutoConfirm`,`isPackage`,`packageId`,`orderSn`,`relationOrderSn`,`memberId`,`predictId`,`memberEmail`,`addTime`,`syncTime`,`orderStatus`,`payTime`,`paymentStatus`,`receiptConsignee`,`receiptAddress`,`receiptZipcode`,`receiptMobile`,`productAmount`,`orderAmount`,`paidBalance`,`giftCardAmount`,`paidAmount`,`shippingAmount`,`totalEsAmount`,`usedCustomerBalanceAmount`,`customerId`,`bestShippingTime`,`paymentCode`,`payBankCode`,`paymentName`,`consignee`,`originRegionName`,`originAddress`,`province`,`city`,`region`,`street`,`markBuilding`,`poiId`,`poiName`,`regionName`,`address`,`zipcode`,`mobile`,`phone`,`receiptInfo`,`delayShipTime`,`remark`,`bankCode`,`agent`,`confirmTime`,`firstConfirmTime`,`firstConfirmPerson`,`finishTime`,`tradeSn`,`signCode`,`source`,`sourceOrderSn`,`onedayLimit`,`logisticsManner`,`afterSaleManner`,`personManner`,`visitRemark`,`visitTime`,`visitPerson`,`sellPeople`,`sellPeopleManner`,`orderType`,`hasReadTaobaoOrderComment`,`memberInvoiceId`,`taobaoGroupId`,`tradeType`,`stepTradeStatus`,`stepPaidFee`,`depositAmount`,`balanceAmount`,`autoCancelDays`,`isNoLimitStockOrder`,`ccbOrderReceivedLogId`,`ip`,`isGiftCardOrder`,`giftCardDownloadPassword`,`giftCardFindMobile`,`autoConfirmNum`,`codConfirmPerson`,`codConfirmTime`,`codConfirmRemark`,`codConfirmState`,`paymentNoticeUrl`,`addressLon`,`addressLat`,`smConfirmStatus`,`smConfirmTime`,`smManualTime`,`smManualRemark`,`isTogether`,`isNotConfirm`)
+        insert into `orders`(`siteId`,`isTest`,`hasSync`,`isBackend`,`isBook`,`isCod`,`notAutoConfirm`,`isPackage`,`packageId`,`orderSn`,`relationOrderSn`,`memberId`,`predictId`,`memberEmail`,`addTime`,`syncTime`,`orderStatus`,`payTime`,`paymentStatus`,`receiptConsignee`,`receiptAddress`,`receiptZipcode`,`receiptMobile`,`productAmount`,`orderAmount`,`paidBalance`,`giftCardAmount`,`paidAmount`,`shippingAmount`,`totalEsAmount`,`usedCustomerBalanceAmount`,`customerId`,`bestShippingTime`,`paymentCode`,`payBankCode`,`paymentName`,`consignee`,`originRegionName`,`originAddress`,`province`,`city`,`region`,`street`,`markBuilding`,`poiId`,`poiName`,`regionName`,`address`,`zipcode`,`mobile`,`phone`,`receiptInfo`,`delayShipTime`,`remark`,`bankCode`,`agent`,`confirmTime`,`firstConfirmTime`,`firstConfirmPerson`,`finishTime`,`tradeSn`,`signCode`,`source`,`sourceOrderSn`,`onedayLimit`,`logisticsManner`,`afterSaleManner`,`personManner`,`visitRemark`,`visitTime`,`visitPerson`,`sellPeople`,`sellPeopleManner`,`orderType`,`hasReadTaobaoOrderComment`,`memberInvoiceId`,`taobaoGroupId`,`tradeType`,`stepTradeStatus`,`stepPaidFee`,`depositAmount`,`balanceAmount`,`autoCancelDays`,`isNoLimitStockOrder`,`ccbOrderReceivedLogId`,`ip`,`isGiftCardOrder`,`giftCardDownloadPassword`,`giftCardFindMobile`,`autoConfirmNum`,`codConfirmPerson`,`codConfirmTime`,`codConfirmRemark`,`codConfirmState`,`paymentNoticeUrl`,`addressLon`,`addressLat`,`smConfirmStatus`,`smConfirmTime`,`smManualTime`,`smManualRemark`,`isTogether`,`isNotConfirm`)
         values(#{siteId},#{isTest},#{hasSync},#{isBackend},#{isBook},#{isCod},#{notAutoConfirm},#{isPackage},#{packageId},#{orderSn},#{relationOrderSn},#{memberId},#{predictId},#{memberEmail},#{addTime},#{syncTime},#{orderStatus},#{payTime},#{paymentStatus},#{receiptConsignee},#{receiptAddress},#{receiptZipcode},#{receiptMobile},#{productAmount},#{orderAmount},#{paidBalance},#{giftCardAmount},#{paidAmount},#{shippingAmount},#{totalEsAmount},#{usedCustomerBalanceAmount},#{customerId},#{bestShippingTime},#{paymentCode},#{payBankCode},#{paymentName},#{consignee},#{originRegionName},#{originAddress},#{province},#{city},#{region},#{street},#{markBuilding},#{poiId},#{poiName},#{regionName},#{address},#{zipcode},#{mobile},#{phone},#{receiptInfo},#{delayShipTime},#{remark},#{bankCode},#{agent},#{confirmTime},#{firstConfirmTime},#{firstConfirmPerson},#{finishTime},#{tradeSn},#{signCode},#{source},#{sourceOrderSn},#{onedayLimit},#{logisticsManner},#{afterSaleManner},#{personManner},#{visitRemark},#{visitTime},#{visitPerson},#{sellPeople},#{sellPeopleManner},#{orderType},#{hasReadTaobaoOrderComment},#{memberInvoiceId},#{taobaoGroupId},#{tradeType},#{stepTradeStatus},#{stepPaidFee},#{depositAmount},#{balanceAmount},#{autoCancelDays},#{isNoLimitStockOrder},#{ccbOrderReceivedLogId},#{ip},#{isGiftCardOrder},#{giftCardDownloadPassword},#{giftCardFindMobile},#{autoConfirmNum},#{codConfirmPerson},#{codConfirmTime},#{codConfirmRemark},#{codConfirmState},#{paymentNoticeUrl},#{addressLon},#{addressLat},#{smConfirmStatus},#{smConfirmTime},#{smManualTime},#{smManualRemark},#{isTogether},#{isNotConfirm})
     </insert>
     <update id="update" parameterType="com.haier.shop.model.Orders">
-        update `Orders` set `siteId`=#{siteId},`isTest`=#{isTest},`hasSync`=#{hasSync},`isBackend`=#{isBackend},`isBook`=#{isBook},`isCod`=#{isCod},`notAutoConfirm`=#{notAutoConfirm},`isPackage`=#{isPackage},`packageId`=#{packageId},`orderSn`=#{orderSn},`relationOrderSn`=#{relationOrderSn},`memberId`=#{memberId},`predictId`=#{predictId},`memberEmail`=#{memberEmail},`addTime`=#{addTime},`syncTime`=#{syncTime},`orderStatus`=#{orderStatus},`payTime`=#{payTime},`paymentStatus`=#{paymentStatus},`receiptConsignee`=#{receiptConsignee},`receiptAddress`=#{receiptAddress},`receiptZipcode`=#{receiptZipcode},`receiptMobile`=#{receiptMobile},`productAmount`=#{productAmount},`orderAmount`=#{orderAmount},`paidBalance`=#{paidBalance},`giftCardAmount`=#{giftCardAmount},`paidAmount`=#{paidAmount},`shippingAmount`=#{shippingAmount},`totalEsAmount`=#{totalEsAmount},`usedCustomerBalanceAmount`=#{usedCustomerBalanceAmount},`customerId`=#{customerId},`bestShippingTime`=#{bestShippingTime},`paymentCode`=#{paymentCode},`payBankCode`=#{payBankCode},`paymentName`=#{paymentName},`consignee`=#{consignee},`originRegionName`=#{originRegionName},`originAddress`=#{originAddress},`province`=#{province},`city`=#{city},`region`=#{region},`street`=#{street},`markBuilding`=#{markBuilding},`poiId`=#{poiId},`poiName`=#{poiName},`regionName`=#{regionName},`address`=#{address},`zipcode`=#{zipcode},`mobile`=#{mobile},`phone`=#{phone},`receiptInfo`=#{receiptInfo},`delayShipTime`=#{delayShipTime},`remark`=#{remark},`bankCode`=#{bankCode},`agent`=#{agent},`confirmTime`=#{confirmTime},`firstConfirmTime`=#{firstConfirmTime},`firstConfirmPerson`=#{firstConfirmPerson},`finishTime`=#{finishTime},`tradeSn`=#{tradeSn},`signCode`=#{signCode},`source`=#{source},`sourceOrderSn`=#{sourceOrderSn},`onedayLimit`=#{onedayLimit},`logisticsManner`=#{logisticsManner},`afterSaleManner`=#{afterSaleManner},`personManner`=#{personManner},`visitRemark`=#{visitRemark},`visitTime`=#{visitTime},`visitPerson`=#{visitPerson},`sellPeople`=#{sellPeople},`sellPeopleManner`=#{sellPeopleManner},`orderType`=#{orderType},`hasReadTaobaoOrderComment`=#{hasReadTaobaoOrderComment},`memberInvoiceId`=#{memberInvoiceId},`taobaoGroupId`=#{taobaoGroupId},`tradeType`=#{tradeType},`stepTradeStatus`=#{stepTradeStatus},`stepPaidFee`=#{stepPaidFee},`depositAmount`=#{depositAmount},`balanceAmount`=#{balanceAmount},`autoCancelDays`=#{autoCancelDays},`isNoLimitStockOrder`=#{isNoLimitStockOrder},`ccbOrderReceivedLogId`=#{ccbOrderReceivedLogId},`ip`=#{ip},`isGiftCardOrder`=#{isGiftCardOrder},`giftCardDownloadPassword`=#{giftCardDownloadPassword},`giftCardFindMobile`=#{giftCardFindMobile},`autoConfirmNum`=#{autoConfirmNum},`codConfirmPerson`=#{codConfirmPerson},`codConfirmTime`=#{codConfirmTime},`codConfirmRemark`=#{codConfirmRemark},`codConfirmState`=#{codConfirmState},`paymentNoticeUrl`=#{paymentNoticeUrl},`addressLon`=#{addressLon},`addressLat`=#{addressLat},`smConfirmStatus`=#{smConfirmStatus},`smConfirmTime`=#{smConfirmTime},`smManualTime`=#{smManualTime},`smManualRemark`=#{smManualRemark},`isTogether`=#{isTogether},`isNotConfirm`=#{isNotConfirm}
+        update `orders` set `siteId`=#{siteId},`isTest`=#{isTest},`hasSync`=#{hasSync},`isBackend`=#{isBackend},`isBook`=#{isBook},`isCod`=#{isCod},`notAutoConfirm`=#{notAutoConfirm},`isPackage`=#{isPackage},`packageId`=#{packageId},`orderSn`=#{orderSn},`relationOrderSn`=#{relationOrderSn},`memberId`=#{memberId},`predictId`=#{predictId},`memberEmail`=#{memberEmail},`addTime`=#{addTime},`syncTime`=#{syncTime},`orderStatus`=#{orderStatus},`payTime`=#{payTime},`paymentStatus`=#{paymentStatus},`receiptConsignee`=#{receiptConsignee},`receiptAddress`=#{receiptAddress},`receiptZipcode`=#{receiptZipcode},`receiptMobile`=#{receiptMobile},`productAmount`=#{productAmount},`orderAmount`=#{orderAmount},`paidBalance`=#{paidBalance},`giftCardAmount`=#{giftCardAmount},`paidAmount`=#{paidAmount},`shippingAmount`=#{shippingAmount},`totalEsAmount`=#{totalEsAmount},`usedCustomerBalanceAmount`=#{usedCustomerBalanceAmount},`customerId`=#{customerId},`bestShippingTime`=#{bestShippingTime},`paymentCode`=#{paymentCode},`payBankCode`=#{payBankCode},`paymentName`=#{paymentName},`consignee`=#{consignee},`originRegionName`=#{originRegionName},`originAddress`=#{originAddress},`province`=#{province},`city`=#{city},`region`=#{region},`street`=#{street},`markBuilding`=#{markBuilding},`poiId`=#{poiId},`poiName`=#{poiName},`regionName`=#{regionName},`address`=#{address},`zipcode`=#{zipcode},`mobile`=#{mobile},`phone`=#{phone},`receiptInfo`=#{receiptInfo},`delayShipTime`=#{delayShipTime},`remark`=#{remark},`bankCode`=#{bankCode},`agent`=#{agent},`confirmTime`=#{confirmTime},`firstConfirmTime`=#{firstConfirmTime},`firstConfirmPerson`=#{firstConfirmPerson},`finishTime`=#{finishTime},`tradeSn`=#{tradeSn},`signCode`=#{signCode},`source`=#{source},`sourceOrderSn`=#{sourceOrderSn},`onedayLimit`=#{onedayLimit},`logisticsManner`=#{logisticsManner},`afterSaleManner`=#{afterSaleManner},`personManner`=#{personManner},`visitRemark`=#{visitRemark},`visitTime`=#{visitTime},`visitPerson`=#{visitPerson},`sellPeople`=#{sellPeople},`sellPeopleManner`=#{sellPeopleManner},`orderType`=#{orderType},`hasReadTaobaoOrderComment`=#{hasReadTaobaoOrderComment},`memberInvoiceId`=#{memberInvoiceId},`taobaoGroupId`=#{taobaoGroupId},`tradeType`=#{tradeType},`stepTradeStatus`=#{stepTradeStatus},`stepPaidFee`=#{stepPaidFee},`depositAmount`=#{depositAmount},`balanceAmount`=#{balanceAmount},`autoCancelDays`=#{autoCancelDays},`isNoLimitStockOrder`=#{isNoLimitStockOrder},`ccbOrderReceivedLogId`=#{ccbOrderReceivedLogId},`ip`=#{ip},`isGiftCardOrder`=#{isGiftCardOrder},`giftCardDownloadPassword`=#{giftCardDownloadPassword},`giftCardFindMobile`=#{giftCardFindMobile},`autoConfirmNum`=#{autoConfirmNum},`codConfirmPerson`=#{codConfirmPerson},`codConfirmTime`=#{codConfirmTime},`codConfirmRemark`=#{codConfirmRemark},`codConfirmState`=#{codConfirmState},`paymentNoticeUrl`=#{paymentNoticeUrl},`addressLon`=#{addressLon},`addressLat`=#{addressLat},`smConfirmStatus`=#{smConfirmStatus},`smConfirmTime`=#{smConfirmTime},`smManualTime`=#{smManualTime},`smManualRemark`=#{smManualRemark},`isTogether`=#{isTogether},`isNotConfirm`=#{isNotConfirm}
         where `id` = #{id}
     </update> -->
 	
 	<select id="getBySmConfirmStatus" resultMap="ordersResult">
 	<![CDATA[
 		select id,province,city,region,street,regionName,address,remark,orderStatus,orderSn,paymentStatus,source,sourceOrderSn,addTime  
-		from Orders 
+		from orders
 		where  smConfirmStatus=1 and isTest=0 and syncTime<unix_timestamp()-30
 		order by id limit 4000
 		]]>
@@ -467,17 +479,17 @@
 	<select id="getOrdersByStatus" resultMap="ordersResult">
 	<![CDATA[
 		select id,province,city,region,regionName,address,remark,orderStatus,orderSn,paymentStatus,autoCancelDays,addTime,orderType,paymentCode      
-		from Orders 
+		from orders
 		where  orderType <> 2 and source in (1,'DXS','MOBILE','CK','CK_MOBILE','YJYD') and paymentCode <> 'cod' and paymentStatus = 100 and orderStatus <> 202 and addTime <= (UNIX_TIMESTAMP(now())-172800)
 		order by id limit 500
 		]]>
 	</select>
 	<update id="updateSmConfirmStatusById" >
-		update Orders set  smConfirmStatus=#{targetStatus}, smManualTime=#{smManualTime}, smManualRemark=#{smManualRemark} 
+		update orders set  smConfirmStatus=#{targetStatus}, smManualTime=#{smManualTime}, smManualRemark=#{smManualRemark}
 		where id=#{id} and smConfirmStatus=#{srcStatus}
 	</update>
 	<update id="updateSmConfirmStatusForAllProductsOrder" >
-		update Orders set smConfirmStatus=4,markBuilding=1,
+		update orders set smConfirmStatus=4,markBuilding=1,
 		firstConfirmTime=unix_timestamp(),firstConfirmPerson='系统'
 		where id=#{id} and smConfirmStatus=1
 	</update>
@@ -485,8 +497,8 @@
 	<select id="getCodNotConfirmOrders" resultMap="ordersResult">
         select 
         	distinct os.id,os.mobile,os.phone,os.paymentStatus
-		from 
-			Orders os,OrderProducts op
+		from
+        orders os,orderproducts op
 		where 
 			os.id=op.orderId and op.status=0 and os.orderStatus = 200 
 			and (os.source = 'MOBILE' or os.source = '1' or os.source = 'SCFX' or os.source = 'DXS' or os.source = 'CK' or os.source = 'CK_MOBILE' or os.source = 'PCNEW' or os.source = '690CK' or os.source = 'YJYD' or os.source = 'S_MOBILE') 
@@ -496,13 +508,13 @@
 	</select>
 	
 	<update id="updateCodConfirmState" >
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `codConfirmState` = 2,codConfirmTime=unix_timestamp(now())
         WHERE `id` = #{id} and `codConfirmState`=1
     </update>
     
     <update id="updateNotAutoConfirm" >
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `notAutoConfirm` = #{setValue}
         WHERE `id` = #{id} and `notAutoConfirm`= #{whereValue}
     </update>
@@ -617,7 +629,7 @@
             `isProduceDaily`,
             `tailPayTime`,
             `ckCode`
-        FROM `Orders`
+        FROM `orders`
         WHERE `mobile` is not null AND `mobile` !=''
         <if test="params.id != null">
             AND `id` > #{params.id}
@@ -744,12 +756,12 @@
             `isProduceDaily`,
             `tailPayTime`,
             `ckCode`
-        FROM `Orders`
+        FROM `orders`
         WHERE `sourceOrderSn` = #{sourceOrderSn}
     </select>
     
     <update id="updateIsNotConfirm" parameterType="java.util.Set">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `isNotConfirm` = 0
         WHERE `orderSn` in
         <foreach collection="orderSns" index="index" item="orderSn" open="("
@@ -759,4 +771,65 @@
         and isNotConfirm=1
     </update>
     
+    <select id="getOrderList" parameterType="String" resultType="com.haier.shop.model.Orders">
+        select sourceOrderSn
+        from `orders`
+        WHERE `sourceOrderSn` =  #{sourceOrderNumber}
+    </select>
+    <update id="updateSourceOrderNumber" >
+        UPDATE `orders`
+        SET `sourceOrderSn` = #{sourceOrderSn}
+        WHERE `orderSn` = #{orderSn}
+    </update>
+    <update id="updatePayState" >
+        UPDATE `orders`
+        SET `paymentStatus` = #{selectStateInteger}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateNotes" >
+        UPDATE `orders`
+        SET `remark` = #{textNotes}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateInvoiceAddress" parameterType="com.haier.shop.model.Orders">
+        UPDATE `orders`
+        SET `receiptConsignee` = #{receiptConsignee}, `receiptZipcode` = #{receiptZipcode}, `receiptMobile` = #{receiptMobile}
+        <if test="receiptAddress != null">
+        	,`receiptAddress` = #{receiptAddress}
+        </if>
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateInvoiceState" >
+        UPDATE `memberinvoices`
+        SET `isLock` = #{isLock}
+        WHERE `orderId` = #{id}
+    </update>
+    
+    <update id="updateInvoiceInfo" parameterType="com.haier.shop.model.MemberInvoices">
+        UPDATE `memberinvoices`
+        SET `invoiceTitle` = #{invoiceTitle}, `taxPayerNumber` = #{taxPayerNumber}, `registerAddress` = #{registerAddress},
+        	`registerPhone` = #{registerPhone}, `bankName` = #{bankName}, `bankCardNumber` = #{bankCardNumber},
+        	`invoiceType` = #{invoiceType}, `remark` = #{remark}, `electricFlag` = #{electricFlag}
+        	<if test="state != null">
+        		,`state` = #{state}
+        	</if>
+        WHERE `orderId` = #{orderId}
+    </update>
+    <update id="updateAddress" parameterType="com.haier.shop.model.Orders">
+        UPDATE `orders`
+        SET `consignee` = #{consignee}, `address` = #{address}, `zipcode` = #{zipcode},
+        	`mobile` = #{mobile},`phone` = #{phone}
+        WHERE `id` = #{id}
+    </update>
+    <update id="updateSmConfirmStatusByIdState" >
+        UPDATE `orders`
+        SET `smConfirmStatus` = #{smConfirmStatus}
+        WHERE `id` = #{id}
+    </update>
+    <select id="getOrderNo" parameterType="String"  resultMap="ordersResult">
+        SELECT
+        `id`,`isTest`,`isBackend`,`isBook`,`isCod`,`notAutoConfirm`,`orderSn`,`relationOrderSn`,`memberId`,`memberEmail`,`addTime`,`syncTime`,`orderStatus`,`payTime`,`paymentStatus`,`receiptConsignee`,`receiptAddress`,`receiptZipcode`,`receiptMobile`,`productAmount`,`orderAmount`,`paidAmount`,`shippingAmount`,`totalEsAmount`,`paymentCode`,`payBankCode`,`paymentName`,`consignee`,`originRegionName`,`originAddress`,`province`,`city`,`region`,`street`,`markBuilding`,`poiId`,`poiName`,`regionName`,`address`,`zipcode`,`mobile`,`phone`,`receiptInfo`,`delayShipTime`,`remark`,`bankCode`,`agent`,`confirmTime`,`firstConfirmTime`,`firstConfirmPerson`,`finishTime`,`tradeSn`,`signCode`,`source`,`sourceOrderSn`,`onedayLimit`,`orderType`,`memberInvoiceId`,`taobaoGroupId`,`tradeType`,`stepTradeStatus`,`stepPaidFee`,`depositAmount`,`balanceAmount`,`autoCancelDays`,`isNoLimitStockOrder`,`autoConfirmNum`,`smConfirmStatus`,`smConfirmTime`,`smManualTime`,`smManualRemark`,`isTogether`,`isNotConfirm`,`points`,`isProduceDaily`,`ckCode`
+        FROM `orders`
+        WHERE `orderSn` = #{orderSn}
+    </select>
 </mapper>

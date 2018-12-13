@@ -5,7 +5,7 @@ package com.haier.shop.service;
 import java.util.List;
 import java.util.Map;
 
-import com.haier.shop.model.OrderProductsVo;
+import com.haier.shop.model.*;
 
 /**
  * 网单
@@ -34,17 +34,27 @@ public interface ShopOperationAreaService {
 	public List<Map<String,Object>> select_export_ExcelData(Map<String, Object> map);//查询导出报表的数据
 	public void insertHPlogs(Map<String, Object> map);//hp推送信息插入到hp拒收日志表
 	public List<String> selectHPlogsRowid(String rowid);//查询hp拒收日志表里面的rowid ,判断主键是否重复
+	public List<Map<String, Object>> selectAllHPlogs();
 	public void insertWwwHpRecords(Map<String, Object> map);
 
 	public String queryTBorderSn(String orderSn); //根据网单号查询TB单号
 
 	public int queryWwwHpTbSn(String tbSn);//根据网单扩展表TB单号查询HP拒收表是否有这条数据
 
-	public OrderProductsVo queryTmallTiming(String sku, String source,String tid);//根据sku 和来源号匹配网单数据
+	public List<OrderProductsVo> queryTmallTiming(String sku, String source,String tid);//根据sku 和来源号匹配网单数据
+
+    /**
+     * 根据tid oid匹配网单数据
+     * @param oid
+     * @param tid
+     * @return
+     */
+	public List<OrderProductsVo> queryTmallTimingoid(String oid, String tid);
 
 	public void update_WwwHpRecordsInfo(List<Map<String, Object>> list);//更新HP拒收信息
 	public Map<String,Object> select_ThInfo(String cOrderSn);
-	public String selectOrderSn(String cOrderSn);
+	public OrderRepairs selectOrderSn(String cOrderSn);
+	public OrderRepairs Checkstate(String cOrderSn);
 	/*
 	* 退换货列表显示
 	* */
@@ -57,4 +67,46 @@ public interface ShopOperationAreaService {
 	public int updateStatus(String id,String Status);
 	public List<OrderProductsVo> searchcod(OrderProductsVo vo);
 	public int findCodConfirmCNT(OrderProductsVo vo);
+	OrderProducts queryGetId(String id);//根据id查询数据
+	Map<String,Object> selectOrderProductView (String id);//根据网单id查询数据
+	public List<OrderProducts> findOrderProduct(String sourceOrderSn, String sku);
+	public OrderProducts findOrderProductByOid(String oid);
+	int insertOrderProducts(OrderProducts products);//插入网单
+	public List<OrderProducts> queryOrderProductStatus(String orderId);//根据订单号查询 为关闭的网单信息
+	public String selectOutping(String cOrderSn);//查询出入库凭证号
+	public  Map<String,Object> selectlessOrderSn(String cOrderSn);
+	public Map<String,Object> queryisStop(Integer id);
+	public Map<String,Object> selecctLockedNumber(String cOrderSn);
+	public void updateOPStatus(Integer lockedNumber,String cOrderSn);
+	public List<Map<String,Object>> selectOPCount(Integer orderId);
+	public void updataOrderStatus(Integer id);
+	public void updateLesQueuesIsStop(Integer id);
+	public Integer selectStatus(String cOrderSn);
+	public void updateHPQueuessuccess(Integer id);
+	public List<Map<String,Object>> queryOrderProductByTB(String tbSn);
+	public List<Map<String,Object>> queryRepairsOrderProductByTB(String tbSn, String sku);
+	public List<Map<String,Object>> queryRepairsOrderProductByTBSKU(String tbSn, String sku);
+	public void updateHPjushouCount(Map<String,Object> map);
+	public void updateOrderRepairsStatus(Map<String,Object> map);
+	public void insertOrderRepairLog(Map<String,Object> map);
+	public List<Regions> getRegion(int id);
+	public List<Regions> getRegionB2C(int id);
+	public Regions getOneRegion(int id);
+	public Orders getRegionName(String orderSn);
+	public void updateRegion(String orderSn,int province,int city,int region,int street,String regionName);
+	public List<Map<String,Object>> queryNetSheetExportDate(OrderProductsVo vo);
+	public Map<String,Object> selectData(String cOrderSn);
+	public List<Map<String,Object>> selectOrderProductViewTwo (String id);
+
+	List<OrderProducts> findByTradeSn(String tradeSn, String sku);
+
+	public List<Map<String,String>> getShippingModeAndStockType(String orderSn);
+
+	public List<Map<String,Object>> exportBadCommentsList(List<String> sourceOrderSn);
+
+	public OrderProductsVo selectIdAndIsMakeReceiptBycOrderSn(String cOrderSn);
+
+	public Integer Rejectionsinglereset(String id);
+
+
 }

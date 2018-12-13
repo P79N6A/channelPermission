@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-theme.min.css">-->
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <!--<link rel="stylesheet" href="/static/third/adminlte/css/skins/_all-skins.min.css">-->
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="/static/third/ionicons/css/ionicons.min.css">-->
+
+  <!--  <link rel="stylesheet" href="/static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/icon.css">-->
+
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <!--<link rel="stylesheet" href="/static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>库龄统计</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+  <script src="../static/js/easyui-extention_ws.js"></script>
+  <!--<script src="/static/third/adminlte/js/app.js"></script>-->
+  <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+  <table id="datagrid">
+  </table>
+</div>
+
+<div id="datagridToolbar_stock_age">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="datagridForm_stock_age" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          渠道
+        </span>
+        <select class="easyui-combobox" name="channel_code" id="channelCode" style="width: 174px;">
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          品类
+        </span>
+        <select class="easyui-combobox" name="product_type_name" id="product_type_name"
+                style="width: 174px;">
+        </select>
+      </div>
+      <div class="search-row">
+			<span class="search-row-label">
+			  产品组
+			</span>
+        <select class="easyui-combobox" name="product_group_name" id="product_group_name"
+                style="width: 174px;">
+        </select>
+      </div>
+      <div class="search-row">
+			<span class="search-row-label">
+			  库位
+			</span>
+        <input class="easyui-textbox" name="sec_code"/>
+      </div>
+      <div class="search-row">
+			<span class="search-row-label">
+			  物料编码
+			</span>
+        <input class="easyui-textbox" name="sku"/>
+      </div>
+      <div class="search-row">
+			<span class="search-row-label">
+			  产品型号
+			</span>
+        <input class="easyui-textbox" name="product_name"/>
+      </div>
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn_dmmtlPbcsMtlMeasure" onclick="onQuery(1)"
+       data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="cxhongzhi"
+       data-options="iconCls:'icon-redo',plain:true">重置</a>
+    <a href="#" class="easyui-linkbutton" id="resetBtn_dmmtlPbcsMtMeasure" onclick="onExport()"
+       data-options="iconCls:'icon-save',plain:true">导出</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton"
+       data-options="iconCls:'icon-tip',plain:true" onclick="$('#w').window('open')">显示报表说明</a>
+  </form>
+  <div id="w" class="easyui-window" title="库龄报表说明" data-options="collapsible: false,
+        minimizable:false,maximizable: false,
+        resizable: false,modal:true,closed:true" style="line-height:150%;padding:20px;">
+    <div>
+      1、该套报表按库龄从库位、渠道、产品组不同的维度来统计到库位到型号的WA自有库存情况，查询和导入修改的权限因岗位设置；<br/>
+      2、数据的出入库数据取自LES系统，对于非通过GVS采购的产品，例如数码、电脑手机，通过CBS分渠道采购数据接入；<br/>
+      3、价格取自CRM系统的含税开票价；以最后一次更新为准(如果当月未维护政策点位，则含税开票价=执行价)，无价格的手工导入价格；<br/>
+      4、库存逻辑:
+      <ul style="margin-left: 35px;">
+        <li>
+          LES系统出库优先选择自有库存，优先出库库龄长的库存；
+        </li>
+        <li>
+          各渠道库存根据销售优先扣减各自渠道的库存，出库后库存消减；
+        </li>
+        <li>
+          渠道库存不足时，扣减其他渠道的库存，按照库龄，优先扣减库龄长的库存；
+        </li>
+        <li>
+          正品退货、调货优先扣减库龄长的库存，调货入库后库存计入发起调货的渠道库存，库龄为1天起；
+        </li>
+        <li>
+          空调为内外机分开展示库存，价格为内外机单独维护，没有挂靠政策点位；
+        </li>
+        <li>
+          生活家电由海鹏合资公司承接库存，目前上单由三个渠道分摊上单；
+        </li>
+      </ul>
+      5、汇总表当查询数据后,点击带下划线的字段,可以看到订单的明细数据<em>（此功能待上线）</em>；<br/>
+      6、更新频率:每天凌晨6点执行更新.以当天日期为准,数据有1天的延迟；<br/>
+      <br/>
+      <em style="color:red">
+        备注：各渠道的新增加销售子平台，技术部在系统中维护前必须通知供应链确定库存逻辑，否则导致各渠道库存无法扣减；
+      </em>
+    </div>
+  </div>
+
+</div>
+
+
+<script type="text/javascript">
+  $(function () {
+    resetMethod();
+    getChannelCodes();
+    getProductGroups('')
+    getAllProductTypes();
+
+    $('#datagrid').datagrid(datagrid);
+
+  });
+  //重置
+  var resetMethod = function () {
+    $("#cxhongzhi").on('click', function (event) {
+      event.preventDefault();
+      $('#datagridForm_stock_age').form('reset');
+    });
+  };
+
+  //获取渠道下拉框数据
+  var getChannelCodes = function () {
+    $("#channelCode").combobox('clear');
+    $.getJSON("/invParams/getParams?group=GROUP_CHANNEL_AGE", function (result) {
+      var channelArray = [];
+      $.each(result.data, function (i, v) {
+        channelArray.push({"keyValue": v.paramKey, "showName": v.paramName});
+      });
+      $('#channelCode').combobox({
+        data: channelArray,
+        valueField: 'keyValue', //值字段
+        textField: 'showName', //显示的字段
+        panelHeight: 'auto',
+        editable: false,//不可编辑，只能选择
+        value: ' '
+      });
+    });
+  };
+
+  //获取产品组下拉框数据
+  var getProductGroups = function (type) {
+    $("#product_group_name").combobox('clear');
+    if (type == '全部') {
+      type = '';
+    }
+    $.getJSON("/stock/getProductGroups?productType=" + type, function (result) {
+      var groupArrayObj = [];
+      $.each(result.data, function (i, v) {
+        groupArrayObj.push({"keyValue": v, "showName": v})
+      });
+      $('#product_group_name').combobox({
+        data: groupArrayObj,
+        valueField: 'keyValue', //值字段
+        textField: 'showName', //显示的字段
+        editable: false,//不可编辑，只能选择
+        value: '全部'
+
+      });
+    });
+  };
+
+  //获取品类下拉框数据
+  var getAllProductTypes = function () {
+    $("#product_type_name").combobox('clear');
+    $.getJSON("/itemAttribute/getAllProductTypes", function (result) {
+      var arrayObj = [];
+      $.each(result.data, function (i, v) {
+        var key = v;
+        if (key == '全部') {
+          key = '';
+        }
+        arrayObj.push({"keyValue": key, "showName": v});
+      });
+
+      $('#product_type_name').combobox({
+        data: arrayObj,
+        valueField: 'keyValue', //值字段
+        textField: 'showName', //显示的字段
+        editable: false,//不可编辑，只能选择
+        value: '',
+        onChange: function (channel) {
+          getProductGroups(channel);
+        }
+      });
+    });
+  };
+  //查询
+  function onQuery(pageIndex) {
+    var formParam = $('#datagridForm_stock_age').serializeObject();
+
+    $('#datagrid').datagrid('load', formParam);
+
+  }
+
+  //导出
+  function onExport() {
+    $('#datagridForm_stock_age').attr("action", "/stock/exportStockAge");
+    $('#datagridForm_stock_age').submit();
+  }
+
+  //初始化数据网格
+  var datagrid = {
+    fit: true,
+    // fitColumns: true,
+    url: '/stock/getStockAgeList.html',
+    toolbar: '#datagridToolbar_stock_age',
+    striped: true,
+    singleSelect: false,
+    pagination: true,
+    pagePosition: 'bottom',
+    columns: [[
+      {
+        title: "渠道",
+        field: "stockAge",
+        sortable: false, align: "center",
+        rowspan: 2,
+        width: 110,
+        formatter: function (value, row, index) {
+          return row.stockAge.channelName;
+        }
+      },
+      {
+        title: "库位", field: "secCode", sortable: false, align: "center", rowspan: 2,
+        width: 75,
+        formatter: function (value, row, index) {
+          return row.stockAge.secCode;
+        }
+      },
+      {
+        title: "库位名称", field: "secName", sortable: false, align: "center", rowspan: 2,
+        width: 110,
+        formatter: function (value, row, index) {
+          return row.stockAge.secName;
+        }
+      },
+      {
+        title: '品类', field: 'productTypeName', sortable: false, align: "center", rowspan: 2,
+        width: 75,
+        formatter: function (value, row, index) {
+          return row.stockAge.productTypeName;
+        }
+      },
+      {
+        title: '产品组', field: 'productGroupName', sortable: false, align: "center", rowspan: 2,
+        width: 110,
+        formatter: function (value, row, index) {
+          return row.stockAge.productGroupName;
+        }
+      },
+      {
+        title: '品牌', field: 'brand', sortable: false, align: "center", rowspan: 2,
+        width: 80,
+        formatter: function (value, row, index) {
+          return row.stockAge.brand;
+        }
+      },
+      {
+        title: '物料编码', field: 'sku', sortable: false, align: "center", rowspan: 2,
+        width: 120,
+        formatter: function (value, row, index) {
+          return row.stockAge.sku;
+        }
+      },
+      {
+        title: '型号', field: 'productName', sortable: false, align: "center", rowspan: 2,
+        width: 270,
+        formatter: function (value, row, index) {
+          return row.stockAge.productName;
+        }
+      },
+      {title: '小计', sortable: false, align: "center", colspan: 2},
+      {title: '1-7天', sortable: false, align: "center", colspan: 2},
+      {title: '8-14天', sortable: false, align: "center", colspan: 2},
+      {title: '15-21天', sortable: false, align: "center", colspan: 2},
+      {title: '22-30天', sortable: false, align: "center", colspan: 2},
+      {title: '31-44天', sortable: false, align: "center", colspan: 2},
+      {
+        title: '45-60天',
+        sortable: false, align: "center",
+        colspan: 2,
+
+      },
+      {title: '61-75天', sortable: false, align: "center", colspan: 2},
+      {title: '75-90天', sortable: false, align: "center", colspan: 2},
+      {title: '3-4月', sortable: false, align: "center", colspan: 2},
+      {title: '4-6月', sortable: false, align: "center", colspan: 2},
+      {title: '6-12月', sortable: false, align: "center", colspan: 2},
+      {title: '1年以上', sortable: false, align: "center", colspan: 2}
+    ], [
+      {
+        title: '数量', field: 'stockQuantity1', sortable: false, align: "center",
+        width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[0].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts1', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[0].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity2', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[1].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts2', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[1].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity3', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[2].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts3', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[2].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity4', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[3].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts4', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[3].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity5', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[4].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts5', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[4].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity6', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[5].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts6', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[5].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity7', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[6].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts7', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[6].value;
+        },
+        styler: function (value, row, index) {
+          return 'border-right: 0.1cm solid red;';
+          // the function can return predefined css class and inline style
+          // return {class:'c1',style:'color:red'}
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity8', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[7].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts8', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[7].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity9', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[8].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts9', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[8].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity10', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[9].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts10', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[9].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity11', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[10].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts11', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[10].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity12', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[11].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts12', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[11].value;
+        }
+      },
+      {
+        title: '数量', field: 'stockQuantity13', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[12].stockQuantity;
+        }
+      },
+      {
+        title: '金额', field: 'amounts13', sortable: false, align: "center", width: 60,
+        formatter: function (value, row, index) {
+          return row.ageDatas[12].value;
+        }
+      }
+    ]],
+    pageSize: 50,
+    pageList: [50, 100, 200],
+    rownumbers: true,
+    onBeforeLoad: function (param) {
+      var firstLoad = $(this).attr("firstLoad");
+      if (firstLoad == "false" || typeof (firstLoad) == "undefined") {
+        $(this).attr("firstLoad", "true");
+        return false;
+      }
+      return true;
+    },
+    onLoadSuccess: function (data) {
+      console.log(123)
+      $('#datagrid-td-group1-0-14').css("border-right-width", "0.1cm");
+      $('[field=amounts7]').css("border-right-width", "0.1cm");
+    }
+  };
+
+
+</script>
+</body>
+</html>

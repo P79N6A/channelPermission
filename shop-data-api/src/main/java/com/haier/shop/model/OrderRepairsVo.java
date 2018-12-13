@@ -4,13 +4,15 @@ package com.haier.shop.model;
 
 public class OrderRepairsVo extends OrderRepairs{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2312411736195831116L;
-	
-	private String cOrderSnId;//用来接收网单号
-	
+    private static final long serialVersionUID = 2145777004809127705L;
+    private String cOrderSnId;//用来接收网单号
+
+	private Integer  province;//收货地址中国省份
+
+	private Integer  city;//收货地址中的城市
+
+	private Integer  region;//收货地址中城市中的区
+
 	private String addTimeTs;//用来接收申请时间
 	
 	private String orderSn;//订单号
@@ -47,7 +49,60 @@ public class OrderRepairsVo extends OrderRepairs{
 	
 	private String invoiceId;//发票主键
 	
+	private String storeCode;//发起二次鉴定时 需要vom返回的c码查到库位传给HP
 	
+	private String repairHPrecordsId;//用来接收HP返回数据表主键 用来发起三次鉴定工单时更改推送三次坚定状态
+    /**
+     * 物流模式
+     */
+	private String shippingMode;
+	private String terminationReason;  //终止逆向单原因
+    /**
+     *
+     */
+	private Integer isCd;
+
+	public Integer getProvince() {
+		return province;
+	}
+
+	public void setProvince(Integer province) {
+		this.province = province;
+	}
+
+	public Integer getCity() {
+		return city;
+	}
+
+	public void setCity(Integer city) {
+		this.city = city;
+	}
+
+	public Integer getRegion() {
+		return region;
+	}
+
+	public void setRegion(Integer region) {
+		this.region = region;
+	}
+
+	public String getRepairHPrecordsId() {
+		return repairHPrecordsId;
+	}
+
+	public void setRepairHPrecordsId(String repairHPrecordsId) {
+		this.repairHPrecordsId = repairHPrecordsId;
+	}
+
+	public String getStoreCode() {
+		return storeCode;
+	}
+
+	public void setStoreCode(String storeCode) {
+		this.storeCode = storeCode;
+	}
+
+
 	public String getInvoiceId() {
 		return invoiceId;
 	}
@@ -193,10 +248,6 @@ public class OrderRepairsVo extends OrderRepairs{
 		this.cOrderSnId = cOrderSnId;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public String getType() {
 		return type;
 	}
@@ -208,4 +259,27 @@ public class OrderRepairsVo extends OrderRepairs{
 	public String type;
 
 
+    public String getShippingMode() {
+        return shippingMode;
+    }
+
+    public void setShippingMode(String shippingMode) {
+        this.shippingMode = shippingMode;
+    }
+
+	public String getTerminationReason() {
+		return terminationReason;
+	}
+
+	public void setTerminationReason(String terminationReason) {
+		this.terminationReason = terminationReason;
+	}
+
+    public Integer getIsCd() {
+        return isCd;
+    }
+
+    public void setIsCd(Integer isCd) {
+        this.isCd = isCd;
+    }
 }

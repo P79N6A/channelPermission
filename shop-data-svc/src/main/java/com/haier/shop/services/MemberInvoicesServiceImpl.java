@@ -26,7 +26,8 @@ public class MemberInvoicesServiceImpl implements MemberInvoicesService {
 
     @Override
     public int insert(MemberInvoices memberInvoices) {
-        return memberInvoicesWriteDao.insert(memberInvoices);
+         memberInvoicesWriteDao.insert(memberInvoices);
+        return memberInvoices.getId();
     }
 
     @Override
@@ -48,4 +49,16 @@ public class MemberInvoicesServiceImpl implements MemberInvoicesService {
     public MemberInvoices checkPassedValuedInvoice(MemberInvoices memberInvoices) {
         return memberInvoicesReadDao.checkPassedValuedInvoice(memberInvoices);
     }
+
+    @Override
+    public int updateByTitleAndNumber(MemberInvoices memberInvoices) {
+        return memberInvoicesWriteDao.updateByTitleAndNumber(memberInvoices);
+    }
+
+    @Override
+    public Integer getIdByOrderId(Integer id) {
+        return memberInvoicesReadDao.getIdByOrderId(id);
+    }
+
+
 }

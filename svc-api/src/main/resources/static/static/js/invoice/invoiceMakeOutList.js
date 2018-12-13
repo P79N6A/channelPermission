@@ -14,35 +14,35 @@ $(function () {
         columns: [[
             {title: "序号", field: "id", hidden: true},
             {title: "复选框", field: "checked", hidden: true},
-            {title: "网单号", field: "corderSn", sortable: true},
-            {title: "网单类型", field: "corderType",sortable: true},
-            {title: "物料编号", field: "sku", sortable: true},
-            {title: "商品名称", field: "productName", sortable: true},
-            {title: "商品分类", field: "productCateName", sortable: true},
-            {title: "数量", field: "number",sortable: true},
-            {title: "含税单价", field: "price", sortable: true},
-            {title: "含税金额", field: "amount", sortable: true},
-            {title: "纳税人识别号", field: "taxPayerNumber", sortable: true},
-            {title: "发票号", field: "invoiceNumber", sortable: true},
-            {title: "税控码", field: "fiscalCode", sortable: true},
-            {title: "发票类型", field: "type", sortable: true},
-            {title: "电子发票标志", field: "electricFlag", sortable: true},
-            {title: "发票状态", field: "state", sortable: true},
-            {title: "开票状态", field: "eaiWriteState", sortable: true},
-            {title: "货票同行", field: "isTogether", sortable: true},
-            {title: "开票时间", field: "billingTime", sortable: true},
-            {title: "作废时间", field: "invalidTime", sortable: true},
-            {title: "推送状态", field: "statusType", sortable: true},
-            {title: "是否成功", field: "success", sortable: true},
-            {title: "推送次数", field: "tryNum", sortable: true},
-            {title: "实时开票信息查询", field: "operation", sortable: true}
+            {title: "网单号", field: "corderSn", sortable: false},
+            {title: "网单类型", field: "corderType",sortable: false},
+            {title: "发票状态", field: "state", sortable: false},
+            {title: "开票状态", field: "eaiWriteState", sortable: false},
+            {title: "推送状态", field: "statusType", sortable: false},
+            {title: "是否成功", field: "success", sortable: false},
+            {title: "物料编号", field: "sku", sortable: false},
+            {title: "商品名称", field: "productName", sortable: false},
+            {title: "商品分类", field: "productCateName", sortable: false},
+            {title: "数量", field: "number",sortable: false},
+            {title: "含税单价", field: "price", sortable: false},
+            {title: "含税金额", field: "amount", sortable: false},
+            {title: "纳税人识别号", field: "taxPayerNumber", sortable: false},
+            {title: "税控码", field: "fiscalCode", sortable: false},
+            {title: "发票号", field: "invoiceNumber", sortable: false},
+            {title: "发票类型", field: "type", sortable: false},
+            {title: "电子发票标志", field: "electricFlag", sortable: false},
+            {title: "货票同行", field: "isTogether", sortable: false},
+            {title: "开票时间", field: "billingTime", sortable: false},
+            {title: "作废时间", field: "invalidTime", sortable: false},
+            {title: "推送次数", field: "tryNum", sortable: false},
+            {title: "实时开票信息查询", field: "operation", sortable: false}
         ]],
         pageSize: 50,
         pageList: [50,100,200],
         rownumbers: true
     }
 
-    $('#datagrid_invoiceMakeOutList').datagrid(datagrid);
+    $('#datagrid').datagrid(datagrid);
 });
 
 var buttons = $.extend([], $.fn.datetimebox.defaults.buttons);
@@ -80,8 +80,14 @@ $('#search').click(function () {
             return false;
         }
     }
+    var eai_write_state = $("#eai_write_state").combobox("getValue");
+    if(eai_write_state=="2"){
+        eai_write_state="";
+    }
+
     queryParameters ={
         corder_sn:$("#corder_sn").val(),
+        sourceorder_sn:$("#sourceOrderSn").val(),
         invoice_title:$("#invoice_title").val(),
         tax_payer_number:$('#tax_payer_number').val(),
         register_address_and_phone:$("#register_address_and_phone").val(),
@@ -100,14 +106,14 @@ $('#search').click(function () {
         success:$("#success").combobox("getValue"),
         corder_add_time_start:$('#corder_add_time_start').datetimebox('getValue'),
         corder_add_time_end:$('#corder_add_time_end').datetimebox('getValue'),
-        timeA:$("#timeA").combobox("getValue"),
+        eai_write_state:eai_write_state,
         is_together:$("#is_together").combobox("getValue"),
         timeB:$("#timeB").combobox("getValue"),
         corder_type:$("#corder_type").combobox("getValue"),
         invoice_number:$("#invoice_number").val()
     };
-        //生成grid
-    datagrid = $('#datagrid_invoiceMakeOutList').datagrid({
+    //生成grid
+    datagrid = $('#datagrid').datagrid({
         url: "/invoice/findInvoiceMakeOutList",
         fit: true,
         fitColumns: true,
@@ -135,13 +141,17 @@ $('#search').click(function () {
                 {
                     field: 'corderSn',
                     title: '网单号',
-                    sortable: true,
-                    align: 'left'
+                    sortable: false,
+                    align: 'left',
+                    formatter: function(value,row,index){
+                        return '<a href="javascript:void(0)" onclick="addTab2(\''+row.corderSn+'\')">'+row.corderSn+'</a>';
+                        /* return '<a href="../operationArea/ProductView?cOrderSn='+row.corderSn+'">'+row.corderSn+'</a>';*/
+                    }
                 },
                 {
                     field:'corderType',
                     title:'网单类型',
-                    sortable: true,
+                    sortable: false,
                     align:'left',
                     formatter:function(value,rowData,rowIndex){
                         if(value=='1') return '普通网单';
@@ -151,107 +161,9 @@ $('#search').click(function () {
                     }
                 },
                 {
-                    field: 'sku',
-                    title: '物料编号',
-                    sortable: true,
-                    align: 'center'
-                },
-                {
-                    field:'productName',
-                    title:'商品名称',
-                    sortable: true,
-                    align:'center'
-                },
-                {
-                    field:'productCateName',
-                    title:'商品分类',
-                    sortable: true,
-                    align:'center'
-                },
-                {
-                    field:'number',
-                    title:'数量',
-                    sortable: true,
-                    align:'center'
-                },
-                {
-                    field:'price',
-                    title:'含税单价',
-                    sortable: true,
-                    align:'center',
-                    formatter:function(value,rowData,rowIndex){
-                        if(value == '' || value == null){
-                            return '';
-                        }else{
-                            return '￥'+value + '元';
-                        }
-                    }
-                },
-                {
-                    field:'amount',
-                    title:'含税金额',
-                    sortable: true,
-                    align:'center',
-                    formatter:function(value,rowData,rowIndex){
-                        if(value == '' || value == null){
-                            return '';
-                        }else{
-                            return '￥'+value + '元';
-                        }
-                    }
-                },
-                {
-                    field:'taxPayerNumber',
-                    title:'纳税人识别号',
-                    sortable: true,
-                    align:'center',
-                    formatter:function(value,rowData,rowIndex){
-                        if(value == '' || value == null){
-                            return '';
-                        }else{
-                            return '【'+value+'】';
-                        }
-                    }
-                },
-                {
-                    field:'invoiceNumber',
-                    title:'发票号',
-                    sortable: true,
-                    align:'center'
-                },
-                {
-                    field: 'fiscalCode',
-                    title: '税控码',
-                    sortable: true,
-                    align: 'center'
-                },
-                {
-                    field: 'type',
-                    title: '发票类型',
-                    sortable: true,
-                    align: 'center',
-                    formatter:function(value,rowData,rowIndex){
-                        if(value=='1') return '增值税发票';
-                        if(value=='2') return '普通发票';
-                        if(value=='3') return '增值税发票(普)';
-                        return value;
-                    }
-                },
-                {
-                    field: 'electricFlag',
-                    title: '电子发票标志',
-                    sortable: true,
-                    align: 'center',
-                    formatter:function(value,rowData,rowIndex){
-                        if(value=='1') return '电子发票';
-                        if(value=='0') return '纸质发票';
-                        return value;
-                    }
-                },
-                {
                     field: 'state',
                     title: '发票状态',
-                    sortable: true,
+                    sortable: false,
                     align: 'center',
                     formatter:function(value,rowData,rowIndex){
                         if(value=='0') return '待开票';
@@ -264,7 +176,7 @@ $('#search').click(function () {
                 {
                     field:'eaiWriteState',
                     title:'开票状态',
-                    sortable: true,
+                    sortable: false,
                     align:'center',
                     formatter:function(value,rowData,rowIndex){
                         if(value=='') return '正常';
@@ -274,59 +186,9 @@ $('#search').click(function () {
                     }
                 },
                 {
-                    field: 'isTogether',
-                    title: '货票同行',
-                    sortable: true,
-                    align: 'center',
-                    formatter:function(value,rowData,rowIndex){
-                        if(value=='1') return '货票同行';
-                        if(value=='2') return '非货票同行';
-                        return value;
-                    }
-                },
-                {
-                    field: 'firstPushTime',
-                    title: '首次推送开票时间',
-                    sortable: true,
-                    align: 'center',
-                    formatter:function(value,rowData,rowIndex){
-                        if(value == '' || value == null){
-                            return '';
-                        }else{
-                            return '【'+value+'】';
-                        }
-                    }
-                },
-                {
-                    field: 'billingTime',
-                    title: '开票时间',
-                    sortable: true,
-                    align: 'center',
-                    formatter:function(value,rowData,rowIndex){
-                        if(value == '' || value == null){
-                            return '';
-                        }else{
-                            return '【'+value+'】';
-                        }
-                    }
-                },
-                {
-                    field: 'invalidTime',
-                    title: '作废时间',
-                    sortable: true,
-                    align: 'center',
-                    formatter:function(value,rowData,rowIndex){
-                        if(value == '' || value == null){
-                            return '';
-                        }else{
-                            return '【'+value+'】';
-                        }
-                    }
-                },
-                {
                     field: 'statusType',
                     title: '推送状态',
-                    sortable: true,
+                    sortable: false,
                     align: 'left',
                     formatter:function(value,rowData,rowIndex){
                         if(value=='1') return '首次推送';
@@ -339,7 +201,7 @@ $('#search').click(function () {
                 {
                     field: 'success',
                     title: '是否成功',
-                    sortable: true,
+                    sortable: false,
                     align: 'left',
                     formatter:function(value,rowData,rowIndex){
                         if(value=='0') return '待推送';
@@ -348,30 +210,178 @@ $('#search').click(function () {
                     }
                 },
                 {
+                    field: 'sku',
+                    title: '物料编号',
+                    sortable: false,
+                    align: 'center'
+                },
+                {
+                    field:'productName',
+                    title:'商品名称',
+                    sortable: false,
+                    align:'center'
+                },
+                {
+                    field:'productCateName',
+                    title:'商品分类',
+                    sortable: false,
+                    align:'center'
+                },
+                {
+                    field:'number',
+                    title:'数量',
+                    sortable: false,
+                    align:'center'
+                },
+                {
+                    field:'price',
+                    title:'含税单价',
+                    sortable: false,
+                    align:'center',
+                    formatter:function(value,rowData,rowIndex){
+                        if(value == '' || value == null){
+                            return '';
+                        }else{
+                            return '￥'+value + '元';
+                        }
+                    }
+                },
+                {
+                    field:'amount',
+                    title:'含税金额',
+                    sortable: false,
+                    align:'center',
+                    formatter:function(value,rowData,rowIndex){
+                        if(value == '' || value == null){
+                            return '';
+                        }else{
+                            return '￥'+value + '元';
+                        }
+                    }
+                },
+                {
+                    field:'taxPayerNumber',
+                    title:'纳税人识别号',
+                    sortable: false,
+                    align:'center',
+                    formatter:function(value,rowData,rowIndex){
+                        if(value == '' || value == null){
+                            return '';
+                        }else{
+                            return '【'+value+'】';
+                        }
+                    }
+                },
+                {
+                    field:'invoiceNumber',
+                    title:'发票号',
+                    sortable: false,
+                    align:'center'
+                },
+                {
+                    field: 'fiscalCode',
+                    title: '税控码',
+                    sortable: false,
+                    align: 'center'
+                },
+                {
+                    field: 'type',
+                    title: '发票类型',
+                    sortable: false,
+                    align: 'center',
+                    formatter:function(value,rowData,rowIndex){
+                        if(value=='1') return '增值税发票';
+                        if(value=='2') return '普通发票';
+                        if(value=='3') return '增值税发票(普)';
+                        return value;
+                    }
+                },
+                {
+                    field: 'electricFlag',
+                    title: '电子发票标志',
+                    sortable: false,
+                    align: 'center',
+                    formatter:function(value,rowData,rowIndex){
+                        if(value=='1') return '电子发票';
+                        if(value=='0') return '纸质发票';
+                        return value;
+                    }
+                },
+                {
+                    field: 'isTogether',
+                    title: '货票同行',
+                    sortable: false,
+                    align: 'center',
+                    formatter:function(value,rowData,rowIndex){
+                        if(value=='1') return '货票同行';
+                        if(value=='2') return '非货票同行';
+                        return value;
+                    }
+                },
+                {
+                    field: 'firstPushTime',
+                    title: '首次推送开票时间',
+                    sortable: false,
+                    align: 'center',
+                    formatter:function(value,rowData,rowIndex){
+                        if(value == '' || value == null){
+                            return '';
+                        }else{
+                            return '【'+value+'】';
+                        }
+                    }
+                },
+                {
+                    field: 'billingTime',
+                    title: '开票时间',
+                    sortable: false,
+                    align: 'center',
+                    formatter:function(value,rowData,rowIndex){
+                        if(value == '' || value == null){
+                            return '';
+                        }else{
+                            return '【'+value+'】';
+                        }
+                    }
+                },
+                {
+                    field: 'invalidTime',
+                    title: '作废时间',
+                    sortable: false,
+                    align: 'center',
+                    formatter:function(value,rowData,rowIndex){
+                        if(value == '' || value == null){
+                            return '';
+                        }else{
+                            return '【'+value+'】';
+                        }
+                    }
+                },
+                {
                     field: 'tryNum',
                     title: '推送次数',
-                    sortable: true,
+                    sortable: false,
                     align: 'left'
                 },
                 {
                     field: 'operation',
                     title: ' 实时开票信息查询',
-                    sortable: true,
+                    sortable: false,
                     align: 'center',
                     formatter:function(value,rowData,rowIndex){
                         //只有开票状态为待开票以外的行显示
-                        if(rowData.state!=0){
-                            return "<a href='javascript:void(0);' onclick='showInvoiceInfo("+'"'+rowData.corderSn+'","'+rowData.electricFlag+'"'+");return false;'>实时开票信息查询</a>";
-                        }else{
-                            return "";
-                        }
+                        //if(rowData.state!=0){
+                        return "<a href='javascript:void(0);' onclick='showInvoiceInfo("+'"'+rowData.corderSn+'","'+rowData.electricFlag+'"'+");return false;'>实时开票信息查询</a>";
+                        //}else{
+                        //  return "";
+                        //}
                     }
                 }
             ]
         ],
         toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure'
     });
-    $('#datagrid_invoiceMakeOutList').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+    $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
 });
 //点击重推
 $('#reSend').click(function(){
@@ -380,7 +390,7 @@ $('#reSend').click(function(){
         return;
     }
     //获得选中行
-    var checkedItems = $('#datagrid_invoiceMakeOutList').datagrid('getChecked');
+    var checkedItems = $('#datagrid').datagrid('getChecked');
     var reSendData = new Array();
     //判断是否存在未成功的行
     $.each(checkedItems, function(index, item){
@@ -412,8 +422,8 @@ $('#reSend').click(function(){
                         return;
                     }else {
                         $.messager.alert('提示','总计：'+data.totalCount+'条，完成：'+data.data+'条，未完成：'+(data.totalCount-(data.data))+'条.<br/>请等待同步！','info');
-                        $('#datagrid_invoiceMakeOutList').datagrid('reload', queryParameters);
-                        $('#datagrid_invoiceMakeOutList').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+                        $('#datagrid').datagrid('reload', queryParameters);
+                        $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
                     }
                 }
             });
@@ -427,7 +437,7 @@ $('#cancel').click(function(){
         return;
     }
     //获得选中行
-    var checkedItems = $('#datagrid_invoiceMakeOutList').datagrid('getChecked');
+    var checkedItems = $('#datagrid').datagrid('getChecked');
     var cancelData = new Array();
     //判断是否状态行
     $.each(checkedItems, function(index, item){
@@ -459,8 +469,8 @@ $('#cancel').click(function(){
                         return;
                     }else {
                         $.messager.alert('提示','总计：'+data.totalCount+'条，完成：'+data.data+'条，未完成：'+(data.totalCount-(data.data))+'条.<br/>请等待同步！','info');
-                        $('#datagrid_invoiceMakeOutList').datagrid('reload',queryParameters);
-                        $('#datagrid_invoiceMakeOutList').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+                        $('#datagrid').datagrid('reload',queryParameters);
+                        $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
                     }
                 }
             });
@@ -474,7 +484,7 @@ $('#forceCancel').click(function(){
         return;
     }
     //获得选中行
-    var checkedItems = $('#datagrid_invoiceMakeOutList').datagrid('getChecked');
+    var checkedItems = $('#datagrid').datagrid('getChecked');
     var forceCancelData = new Array();
     //判断是否状态行
     $.each(checkedItems, function(index, item){
@@ -515,8 +525,8 @@ $('#forceCancel').click(function(){
                                     return;
                                 }else{
                                     $.messager.alert('提示','总计：'+data.totalCount+'条，完成：'+data.data+'条，未完成：'+(data.totalCount-(data.data))+'条.<br/>请等待同步！','info');
-                                    $('#datagrid_invoiceMakeOutList').datagrid('reload', queryParameters);
-                                    $('#datagrid_invoiceMakeOutList').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+                                    $('#datagrid').datagrid('reload', queryParameters);
+                                    $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
                                 }
                             }
                         });
@@ -539,14 +549,14 @@ $('#syncstatus').click(function(){
         return;
     }
     //获得选中行
-    var checkedItems = $('#datagrid_invoiceMakeOutList').datagrid('getChecked');
+    var checkedItems = $('#datagrid').datagrid('getChecked');
     var syncData = new Array();
     //判断是否存在满足条件的行
     $.each(checkedItems, function(index, item){
         //状态为待开票以外的行  电子发票也可以同步发票状态，去掉原来条件  && item.electricFlag==0
-        if(item.state!=0){
-            syncData.push(item.id);
-        }
+        // if(item.state!=0){
+        syncData.push(item.id);
+        // }
     });
     //判断是否存在非待开票的行
     if(syncData==null||syncData.length==0){
@@ -570,14 +580,18 @@ $('#syncstatus').click(function(){
                         $.messager.alert('错误',data.message,'error');
                     }else {
                         $.messager.alert('提示','总计：'+data.totalCount+'条，完成：'+data.data+'条，未完成：'+(data.totalCount-(data.data))+'条','info');
-                        $('#datagrid_invoiceMakeOutList').datagrid('reload', queryParameters);
-                        $('#datagrid_invoiceMakeOutList').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+                        $('#datagrid').datagrid('reload', queryParameters);
+                        $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
                     }
                 }
             });
         }
     });
 });
+
+function addTab2(corderSn) {
+    window.top.addTab("网单详情和订单详情", "/operationArea/ProductView?cOrderSn="+corderSn, true);
+}
 //点击导出
 $('#export').click(function(){
     if(!datagrid){
@@ -586,7 +600,7 @@ $('#export').click(function(){
     }
 
     //获得选中行
-    var checkedItems = $('#datagrid_invoiceMakeOutList').datagrid('getChecked');
+    var checkedItems = $('#datagrid').datagrid('getChecked');
     var syncData = new Array();
     //判断是否存在满足条件的行
     $.each(checkedItems, function(index, item){

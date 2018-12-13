@@ -18,5 +18,5 @@ public interface WwwHpRecordsService {
      */
     WwwHpRecords getByVomRepairSnAndSku( String vomRepairSn,
                                          String sku);
-
+    String queryTHRepairSn(String orderRepairId);//根据退货单号查询TH号
 }

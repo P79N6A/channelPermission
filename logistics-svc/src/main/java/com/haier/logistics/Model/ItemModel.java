@@ -4,30 +4,18 @@ package com.haier.logistics.Model;
 
 import com.haier.common.util.StringUtil;
 
-import com.haier.eis.model.EisExternalSku;
-import com.haier.eis.service.EisExternalSkuService;
-
-import com.haier.purchase.data.service.PurchaseLesFiveYardsService;
-import com.haier.shop.model.Brands;
-
 
 import com.haier.shop.model.NetPoints;
-import com.haier.shop.model.Payments;
 import com.haier.shop.model.ProductBase;
 import com.haier.shop.model.ProductCates;
 
 import com.haier.shop.model.ProductTypesNew;
 import com.haier.shop.model.ProductsNew;
 
-import com.haier.shop.service.BrandsService;
 import com.haier.shop.service.NetPointsService;
-import com.haier.shop.service.PaymentsService;
 import com.haier.shop.service.ProductCatesService;
 import com.haier.shop.service.ProductTypesService;
 import com.haier.shop.service.ProductsNewService;
-import com.haier.shop.service.RegionsService;
-import com.haier.shop.service.ShopItemAttributeService;
-import com.haier.shop.service.ShopItemBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -16,7 +16,7 @@ public interface ProductsDao {
  
     List<Products>selectProducts1(@Param("sku")String sku , @Param("productName")String productname);
 
-    List<Products>selectProducts(Products products);
+//    List<Products>selectProducts(Products products);
     /**
      * 根据sku获取产品对象
      * @param sku

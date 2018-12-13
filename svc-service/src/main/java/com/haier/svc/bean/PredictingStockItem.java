@@ -824,4 +824,9 @@ public String getCreate_time_display() {
     public void setFlow_flag_name(String flow_flag_name) {
         this.flow_flag_name = flow_flag_name;
     }
+
+	public Integer getNot_commit_count() {
+		return not_commit_count;
+	}
+
 }

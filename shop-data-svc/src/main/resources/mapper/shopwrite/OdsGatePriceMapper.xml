@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.OdsGatePriceDao">
+    <resultMap id="BaseResultMap" type="com.haier.shop.model.GatePrice">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="BIG_CHANNEL" property="bigChannel" jdbcType="VARCHAR"/>
+        <result column="BRAND" property="brand" jdbcType="VARCHAR"/>
+        <result column="CATE_GORY" property="cateGory" jdbcType="VARCHAR"/>
+        <result column="LOGISTICS_MODEL" property="logisticsModel" jdbcType="VARCHAR"/>
+        <result column="VERSION" property="version" jdbcType="VARCHAR"/>
+        <result column="FROZEN_FLAG" property="frozenFlag" jdbcType="VARCHAR"/>
+        <result column="IS_VALID" property="isValid" jdbcType="VARCHAR"/>
+        <result column="SKU" property="sku" jdbcType="VARCHAR"/>
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="IP" property="ip" jdbcType="VARCHAR"/>
+        <result column="AUDIT_STATUS" property="auditStatus" jdbcType="VARCHAR"/>
+        <result column="AUDIT_BY" property="auditBy" jdbcType="VARCHAR"/>
+        <result column="AUDIT_IP" property="auditIp" jdbcType="VARCHAR"/>
+        <result column="BEGIN_TIME" property="beginTime" jdbcType="VARCHAR"/>
+        <result column="END_TIME" property="endTime" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR"/>
+        <result column="AUDIT_TIME" property="auditTime" jdbcType="VARCHAR"/>
+        <result column="TEMP_BEGIN_TIME" property="tempBeginTime" jdbcType="VARCHAR"/>
+        <result column="TEMP_END_TIME" property="tempEndTime" jdbcType="VARCHAR"/>
+        <result column="GATE_PRICE" property="gatePrice" jdbcType="DECIMAL"/>
+        <result column="PUR_PRICE" property="purPrice" jdbcType="DECIMAL"/>
+        <result column="CUT" property="cut" jdbcType="DECIMAL"/>
+        <result column="BACK" property="back" jdbcType="DECIMAL"/>
+        <result column="CHANNEL_RATE" property="channelRate" jdbcType="DECIMAL"/>
+        <result column="BARE_PRICE" property="barePrice" jdbcType="DECIMAL"/>
+        <result column="TEMP_GATE_PRICE" property="tempGatePrice" jdbcType="DECIMAL"/>
+        <result column="NORMAL_GROSSPROFIT" property="normalGrossprofit" jdbcType="DECIMAL"/>
+        <result column="ACTUAL_GROSSPROFIT" property="actualGrossprofit" jdbcType="DECIMAL"/>
+        <result column="LOWER_STATUS" property="lowerStatus" jdbcType="VARCHAR"/>
+        <result column="FILE_ID" property="fileId" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <resultMap id="BrandResultMap" type="com.haier.shop.model.Brands">
+        <result column="brandName" property="brandName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID, BIG_CHANNEL, BRAND, CATE_GORY, LOGISTICS_MODEL, VERSION, FROZEN_FLAG, IS_VALID,
+        SKU, CREATE_BY, UPDATE_BY, AUDIT_STATUS, AUDIT_BY, AUDIT_IP, BEGIN_TIME,END_TIME,CREATE_TIME,UPDATE_TIME,AUDIT_TIME,TEMP_BEGIN_TIME,
+        TEMP_END_TIME,GATE_PRICE,PUR_PRICE,CUT,BACK,CHANNEL_RATE,BASE_PRICE,TEMP_GATE_PRICE,NORMAL_GROSSPROFIT
+    </sql>
+
+    <sql id="gatePriceExportQueryCondition">
+        <if test="bigChannel!=null and bigChannel!=''">
+            and t.BIG_CHANNEL = #{bigChannel}
+        </if>
+        <if test="cateGory!=null and cateGory!=''">
+            and t.CATE_GORY = #{cateGory}
+        </if>
+        <if test="logisticsModel!=null and logisticsModel!=''">
+            and t.LOGISTICS_MODEL = #{logisticsModel}
+        </if>
+        <if test="beginTime!=null and beginTime!=''">
+            and t.CREATE_TIME >=STR_TO_DATE(#{beginTime},'%Y-%m-%d')
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            and t.CREATE_TIME <![CDATA[ <  ]]> STR_TO_DATE(#{endTime},'%Y-%m-%d')+1
+        </if>
+        <if test="isValid !=null and isValid=='Y'.toString()">
+            and (SYSDATE() >= t.begin_time and SYSDATE() <![CDATA[ <  ]]> t.end_time)
+        </if>
+        <if test="isValid !=null and isValid=='N'.toString()">
+            and (SYSDATE() <![CDATA[ <  ]]> t.begin_time or SYSDATE() >= t.end_time)
+        </if>
+        <if test="sku!=null and sku!=''">
+            and t.sku = #{sku}
+        </if>
+        <if test="brand!=null and brand!=''">
+            and t.BRAND = #{brand}
+        </if>
+        <if test="frozenFlag!=null and frozenFlag=='X'.toString()">
+            and t.FROZEN_FLAG='X'
+        </if>
+        <if test="frozenFlag!=null and frozenFlag=='N'.toString()">
+            and t.FROZEN_FLAG is null
+        </if>
+        <if test="auditStatus!=null and auditStatus!=''">
+            and t.audit_status = #{auditStatus}
+        </if>
+        <if test="isBigBarePrice!=null and isBigBarePrice!=''">
+            and case
+            when t.bare_price>t.gate_price then 'Y'
+            else 'N'end = #{isBigBarePrice}
+        </if>
+        <if test="execDaysFrom!=null and execDaysFrom!=''">
+            and case
+            when SYSDATE() >= t.begin_time and SYSDATE()  <![CDATA[ <  ]]> t.end_time then
+            ROUND(cast((curdate()-t.begin_time ) as unsigned int))
+            else
+            ROUND(cast((t.end_time-t.begin_time ) as unsigned int) )
+            end > #{execDaysFrom}
+        </if>
+        <if test="execDaysTo!=null and execDaysTo!=''">
+            and case
+            when SYSDATE() >= t.begin_time and SYSDATE()  <![CDATA[ <  ]]> t.end_time then
+            ROUND(cast((curdate()-t.begin_time ) as unsigned int))
+            else
+            ROUND(cast((t.end_time-t.begin_time ) as unsigned int) )
+            end   <![CDATA[ <  ]]> #{execDaysTo}
+        </if>
+        <if test="isSmallNormal!=null and isSmallNormal=='Y'.toString()">
+            and NORMAL_GROSSPROFIT>ACTUAL_GROSSPROFIT
+        </if>
+        <if test="isSmallNormal!=null and isSmallNormal=='N'.toString()">
+            and NORMAL_GROSSPROFIT <![CDATA[ <= ]]> ACTUAL_GROSSPROFIT
+        </if>
+        <if test="isLower!=null and isLower=='Y'.toString()">
+            and LOWER_STATUS is not null
+        </if>
+        <if test="isLower!=null and isLower=='N'.toString()">
+            and LOWER_STATUS is null
+        </if>
+        <if test="userCate!=null and userCate.size()>0">
+            and CONCAT(t.CATE_GORY,t.BRAND) IN
+            <foreach item="cate" index="index" collection="userCate" open="(" separator="," close=")">
+                CONCAT(#{cate.cateGory},#{cate.brand})
+            </foreach>
+        </if>
+    </sql>
+    <select id="queryGatePriceList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        t.BIG_CHANNEL,
+        t.BRAND,
+        t.CATE_GORY,
+        t.LOGISTICS_MODEL,
+        t.SKU,
+        t.VERSION,
+        t.GATE_PRICE,
+        t.CUT,
+        t.PUR_PRICE,
+        t.BACK,
+        t.CHANNEL_RATE,
+        DATE_FORMAT(t.BEGIN_TIME,'%Y-%m-%d') BEGIN_TIME,
+        DATE_FORMAT(t.end_time,'%Y-%m-%d') END_TIME,
+        t.FROZEN_FLAG,
+        CASE
+        WHEN SYSDATE()   <![CDATA[ >=  ]]>  t.begin_time
+        AND SYSDATE()  <![CDATA[ < ]]>   t.end_time THEN
+        '有效' ELSE '失效'
+        END IS_VALID,
+        create_by,
+        update_by,
+        t.CREATE_TIME,
+        t.ID,
+        t.audit_status,
+        t.audit_by,
+        DATE_FORMAT(t.AUDIT_TIME,'%Y-%m-%d') AUDIT_TIME,
+        t.bare_price,
+        t.temp_gate_price,
+        DATE_FORMAT(t.TEMP_BEGIN_TIME,'%Y-%m-%d') TEMP_BEGIN_TIME,
+        DATE_FORMAT(t.TEMP_END_TIME,'%Y-%m-%d') TEMP_END_TIME,
+        CASE
+        WHEN t.bare_price > t.gate_price THEN
+        '是' ELSE '否'
+        END isBigBarePrice,
+        CASE
+        WHEN SYSDATE() <![CDATA[ >=  ]]> t.begin_time
+        AND SYSDATE()  <![CDATA[ <  ]]>   t.end_time THEN
+        ROUND(cast((curdate()-t.begin_time ) as unsigned int)) ELSE ROUND(cast((t.end_time-t.begin_time ) as unsigned int) )
+        END execDays,
+        CASE
+        WHEN t.audit_by = 'system'
+        AND t.audit_status = 'S' THEN
+        '是' ELSE '否'
+        END autoAudit,
+        CASE
+        WHEN SYSDATE() <![CDATA[ >=  ]]>  t.begin_time
+        AND SYSDATE()<![CDATA[ <  ]]>   t.end_time THEN
+        (
+        SELECT
+        f.gross_profit
+        FROM
+        ods_gate_grossprofit f
+        WHERE
+        f.brand = t.brand
+        AND f.cate_gory = t.cate_gory
+        AND SYSDATE() <![CDATA[ >  ]]> f.begin_time
+        AND f.end_time <![CDATA[ >  ]]> SYSDATE()
+        limit 1
+        ) ELSE t.normal_grossprofit
+        END NORMAL_GROSSPROFIT,
+        ACTUAL_GROSSPROFIT,
+        t.LOWER_STATUS
+        FROM
+        ods_gate_price t
+        WHERE
+        1 =1
+        <include refid="gatePriceExportQueryCondition"/>
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getExportGatePriceList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        t.BIG_CHANNEL,
+        t.BRAND,
+        t.CATE_GORY,
+        t.LOGISTICS_MODEL,
+        t.SKU,
+        t.VERSION,
+        t.GATE_PRICE,
+        t.CUT,
+        t.PUR_PRICE,
+        t.BACK,
+        t.CHANNEL_RATE,
+        DATE_FORMAT(t.BEGIN_TIME,'%Y-%m-%d') BEGIN_TIME,
+        DATE_FORMAT(t.end_time,'%Y-%m-%d') END_TIME,
+        CASE t.FROZEN_FLAG
+        WHEN 'X' THEN '冻结'
+        WHEN 'N'THEN '未冻结'
+        ELSE '' END FROZEN_FLAG,
+        CASE
+        WHEN SYSDATE()   <![CDATA[ >=  ]]>  t.begin_time
+        AND SYSDATE()  <![CDATA[ < ]]>   t.end_time THEN
+        '有效' ELSE '失效'
+        END IS_VALID,
+        create_by,
+        update_by,
+        t.CREATE_TIME,
+        t.ID,
+        CASE t.audit_status
+        WHEN 'W' THEN '待审核'
+        WHEN 'F'THEN '拒绝'
+        WHEN 'S'THEN '通过'
+        ELSE '' END audit_status,
+        t.audit_by,
+        DATE_FORMAT(t.AUDIT_TIME,'%Y-%m-%d') AUDIT_TIME,
+        t.bare_price,
+        t.temp_gate_price,
+        DATE_FORMAT(t.TEMP_BEGIN_TIME,'%Y-%m-%d') TEMP_BEGIN_TIME,
+        DATE_FORMAT(t.TEMP_END_TIME,'%Y-%m-%d') TEMP_END_TIME,
+        CASE
+        WHEN t.bare_price > t.gate_price THEN
+        '是' ELSE '否'
+        END isBigBarePrice,
+        CASE
+        WHEN SYSDATE() <![CDATA[ >=  ]]> t.begin_time
+        AND SYSDATE()  <![CDATA[ <  ]]>   t.end_time THEN
+        ROUND(cast((curdate()-t.begin_time ) as unsigned int)) ELSE ROUND(cast((t.end_time-t.begin_time ) as unsigned int) )
+        END execDays,
+        CASE
+        WHEN t.audit_by = 'system'
+        AND t.audit_status = 'S' THEN
+        '是' ELSE '否'
+        END autoAudit,
+        CASE
+        WHEN SYSDATE() <![CDATA[ >=  ]]>  t.begin_time
+        AND SYSDATE()<![CDATA[ <  ]]>   t.end_time THEN
+        (
+        SELECT
+        f.gross_profit
+        FROM
+        ods_gate_grossprofit f
+        WHERE
+        f.brand = t.brand
+        AND f.cate_gory = t.cate_gory
+        AND SYSDATE() <![CDATA[ >  ]]> f.begin_time
+        AND f.end_time <![CDATA[ >  ]]> SYSDATE()
+        limit 1
+        ) ELSE t.normal_grossprofit
+        END NORMAL_GROSSPROFIT,
+        ACTUAL_GROSSPROFIT,
+        CASE t.LOWER_STATUS
+        WHEN 'Y' THEN '下市'
+        ELSE '上市' END LOWER_STATUS
+        FROM
+        ods_gate_price t
+        WHERE
+        1 =1
+        <include refid="gatePriceExportQueryCondition"/>
+        <if test="ids != null and ids != ''">
+            AND t.id in (${ids})
+        </if>
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+    <select id="queryGatePriceCount" parameterType="Map" resultType="int">
+        SELECT
+        count(1)
+        FROM ods_gate_price t
+        WHERE
+        1 =1
+        <include refid="gatePriceExportQueryCondition"/>
+    </select>
+
+    <select id="getBySku" parameterType="String" resultMap="BaseResultMap">
+        SELECT
+	p.productName,
+	b.brandName,
+	CASE
+		c.parentId
+		WHEN '0' THEN	c.cateName
+		ELSE (SELECT cateName FROM productcates d where d.id=substring(c.parentPath,2,4))
+	END cateName
+FROM
+	products p
+	LEFT JOIN brands b ON p.brandId = b.id
+	left join productcates c on c.id=p.productCateId
+	WHERE p.sku = #{sku}
+    </select>
+
+
+    <insert id="createOdsGatePrice" parameterType="com.haier.shop.model.GatePrice" >
+        insert into ods_gate_price
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="bigChannel != null" >
+                BIG_CHANNEL,
+            </if>
+            <if test="brand != null" >
+                BRAND,
+            </if>
+            <if test="cateGory != null" >
+                CATE_GORY,
+            </if>
+            <if test="logisticsModel != null" >
+                LOGISTICS_MODEL,
+            </if>
+            <if test="version != null" >
+                VERSION,
+            </if>
+            <if test="gatePrice != null" >
+                GATE_PRICE,
+            </if>
+            <if test="purPrice != null" >
+                PUR_PRICE,
+            </if>
+            <if test="cut != null" >
+                CUT,
+            </if>
+            <if test="back != null" >
+                BACK,
+            </if>
+            <if test="channelRate != null" >
+                CHANNEL_RATE,
+            </if>
+            <if test="endTime != null" >
+                END_TIME,
+            </if>
+            <if test="frozenFlag != null" >
+                FROZEN_FLAG,
+            </if>
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="sku != null" >
+                sku,
+            </if>
+            <if test="isValid!=null">
+                IS_VALID,
+            </if>
+            <if test="createBy!=null">
+                CREATE_BY,
+            </if>
+            <if test="ip!=null">
+                ip,
+            </if>
+            <if test="barePrice!=null">
+                bare_price,
+            </if>
+            <if test="tempGatePrice!=null">
+                TEMP_GATE_PRICE,
+            </if>
+            <if test="tempBeginTime!=null">
+                TEMP_BEGIN_TIME,
+            </if>
+            <if test="tempEndTime!=null">
+                TEMP_END_TIME,
+            </if>
+            <if test="normalGrossprofit!=null">
+                NORMAL_GROSSPROFIT,
+            </if>
+            <if test="actualGrossprofit!=null">
+                ACTUAL_GROSSPROFIT,
+            </if>
+            <if test="lowerStatus!=null">
+                LOWER_STATUS,
+            </if>
+            BEGIN_TIME,
+            CREATE_TIME
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="bigChannel != null" >
+                #{bigChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null" >
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="cateGory != null" >
+                #{cateGory,jdbcType=VARCHAR},
+            </if>
+            <if test="logisticsModel != null" >
+                #{logisticsModel,jdbcType=VARCHAR},
+            </if>
+            <if test="version != null" >
+                #{version,jdbcType=VARCHAR},
+            </if>
+            <if test="gatePrice != null" >
+                #{gatePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="purPrice != null" >
+                #{purPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="cut != null" >
+                #{cut,jdbcType=DECIMAL},
+            </if>
+            <if test="back != null" >
+                #{back,jdbcType=DECIMAL},
+            </if>
+            <if test="channelRate != null" >
+                #{channelRate,jdbcType=DECIMAL},
+            </if>
+            <if test="endTime != null" >
+                STR_TO_DATE('9999-12-31','%Y-%m-%d'),
+            </if>
+            <if test="frozenFlag != null" >
+                #{frozenFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="sku != null" >
+                #{sku,jdbcType=VARCHAR},
+            </if>
+            <if test="isValid!=null">
+                #{isValid,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy!=null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="ip!=null">
+                #{ip,jdbcType=VARCHAR},
+            </if>
+            <if test="barePrice!=null">
+                #{barePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tempGatePrice!=null">
+                #{tempGatePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tempBeginTime!=null">
+                STR_TO_DATE(#{tempBeginTime,jdbcType=VARCHAR},'%Y-%m-%d'),
+            </if>
+            <if test="tempEndTime!=null">
+                STR_TO_DATE(#{tempEndTime,jdbcType=VARCHAR},'%Y-%m-%d'),
+            </if>
+            <if test="normalGrossprofit!=null">
+                #{normalGrossprofit,jdbcType=DECIMAL},
+            </if>
+            <if test="actualGrossprofit!=null">
+                #{actualGrossprofit,jdbcType=DECIMAL},
+            </if>
+            <if test="lowerStatus!=null">
+                #{lowerStatus,jdbcType=VARCHAR},
+            </if>
+            sysdate(),
+            sysdate()
+        </trim>
+    </insert>
+    <select id="queryOdsGatePrice"   resultMap="BaseResultMap" parameterType="com.haier.shop.model.GatePrice">
+        select t.BIG_CHANNEL,t.BRAND,t.CATE_GORY,t.LOGISTICS_MODEL,
+        t.SKU,t.VERSION,t.GATE_PRICE,t.CUT,
+        t.PUR_PRICE,t.BACK,t.CHANNEL_RATE,t.BEGIN_TIME,t.END_TIME,
+        t.FROZEN_FLAG,t.CREATE_TIME,t.ID
+        from ods_gate_price t
+        where 1=1
+        and is_valid = 'Y'
+        and (SYSDATE() >= t.begin_time and SYSDATE() <![CDATA[ <  ]]> t.end_time)
+        <if test="bigChannel!=null and bigChannel!=''">
+            and t.BIG_CHANNEL = #{bigChannel}
+        </if>
+        <if test="cateGory!=null and cateGory!=''">
+            and t.CATE_GORY = #{cateGory}
+        </if>
+        <if test="logisticsModel!=null and logisticsModel!=''">
+            and t.LOGISTICS_MODEL = #{logisticsModel}
+        </if>
+        <if test="sku!=null and sku!=''">
+            and t.sku = #{sku}
+        </if>
+        <if test="brand!=null and brand!=''">
+            and t.BRAND = #{brand}
+        </if>
+    </select>
+    <update id="updateOdsGatePrice" parameterType="com.haier.shop.model.GatePrice"  >
+        update ods_gate_price
+        <set >
+                FROZEN_FLAG = #{frozenFlag,jdbcType=VARCHAR},
+                END_TIME =  STR_TO_DATE(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d'),
+                IS_VALID = #{isValid,jdbcType=VARCHAR}
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="queryOdsGatePriceById" resultMap="BaseResultMap" parameterType="String">
+        select t.BIG_CHANNEL,t.BRAND,t.CATE_GORY,t.LOGISTICS_MODEL,
+        t.SKU,t.VERSION,t.GATE_PRICE,t.CUT,
+        t.PUR_PRICE,t.BACK,t.CHANNEL_RATE,t.BEGIN_TIME,t.END_TIME,
+        t.FROZEN_FLAG,t.CREATE_TIME,t.ID,t.bare_price,t.temp_gate_price,
+        DATE_FORMAT(t.temp_begin_time,'%Y-%m-%d') temp_begin_time,
+        DATE_FORMAT(t.temp_end_time,'%Y-%m-%d') temp_end_time,
+        NORMAL_GROSSPROFIT,ACTUAL_GROSSPROFIT,LOWER_STATUS
+        from ods_gate_price t
+        where 1=1
+        and t.id=#{id,jdbcType=VARCHAR}
+        and (sysdate() >= t.begin_time and sysdate() <![CDATA[ <  ]]> t.end_time)
+    </select>
+    <select id="selectBrandList" resultType="String" >
+        SELECT brandName from brands
+    </select>
+
+    <select id="selectCategoryList" resultType="String" >
+        SELECT cateName from productcates WHERE parentId='0'
+    </select>
+    <update id="updateLockGatePrice" parameterType="com.haier.shop.model.GatePrice"  >
+        update ods_gate_price
+        <set >
+            <if test="frozenFlag != null" >
+                FROZEN_FLAG = #{frozenFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="frozenFlag == null" >
+                FROZEN_FLAG = null,
+            </if>
+            <if test="gatePrice!=null">
+                GATE_PRICE = #{gatePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="isValid != null" >
+                is_valid = #{isValid,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy !=null">
+                update_by=#{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="endTime != null" >
+                END_TIME = sysdate(),
+            </if>
+            update_time=sysdate()
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

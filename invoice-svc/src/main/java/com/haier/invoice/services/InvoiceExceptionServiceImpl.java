@@ -2,6 +2,7 @@ package com.haier.invoice.services;
 
 import com.haier.common.util.StringUtil;
 import com.haier.invoice.service.InvoiceExceptionService;
+import com.haier.order.model.ShopEnum;
 import com.haier.shop.model.InvoiceExceptionDispItem;
 import com.haier.shop.service.ShopMemberInvoicesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,13 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
     }
 
     /**
+     * 获得条数
+     */
+    public int getCount() {
+        return shopMemberInvoicesService.getCount();
+    }
+
+    /**
      * 替换数据
      *
      * @param list
@@ -65,6 +73,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
                 lt.setHpFinishDate(timeStamp2Date(lt.getHpFinishDate(), null));//分配时间
                 lt.setInvoiceType(getInvoiceType(lt.getInvoiceType()));//发票类型
                 lt.setState(getState(lt.getState()));//发票审核状态
+                lt.setSource(ShopEnum.getName(lt.getSource()));
             }
         }
         return;
@@ -75,7 +84,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getIsBackend(String isBackend) {
         if (isBackend == null)
-            return "null";
+            return "";
         if ("0".equals(isBackend))
             return "否";
         if ("1".equals(isBackend))
@@ -88,7 +97,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getStockType(String stockType) {
         if (stockType == null)
-            return "null";
+            return "";
         if ("WA".equalsIgnoreCase(stockType))
             return "自有库存网单";
         return stockType;
@@ -108,7 +117,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getStatus(String status) {
         if (status == null)
-            return "null";
+            return "";
         if (status.equals("0"))
             return "处理中";
         if (status.equals("1"))
@@ -149,7 +158,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getcPaymentStatus(String cPaymentStatus) {
         if (cPaymentStatus == null)
-            return "null";
+            return "";
         if (cPaymentStatus.equals("200"))
             return "未付款";
         if (cPaymentStatus.equals("201"))
@@ -166,7 +175,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getPaymentStatus(String paymentStatus) {
         if (paymentStatus == null)
-            return "null";
+            return "";
         if (paymentStatus.equals("100"))
             return "未付款";
 
@@ -185,7 +194,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getPaymentCode(String paymentCode) {
         if (paymentCode == null)
-            return "null";
+            return "";
         if (paymentCode.equals("chinapay"))
             return "银联支付";
         if (paymentCode.equals("alipay"))
@@ -229,7 +238,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getMakeReceiptType(String makeReceiptType) {
         if (makeReceiptType == null)
-            return "null";
+            return "";
         if (makeReceiptType.equals("1"))
             return "库房开票";
         if (makeReceiptType.equals("2"))
@@ -242,7 +251,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getIsMakeReceipt(String isMakeReceipt) {
         if (isMakeReceipt == null)
-            return "null";
+            return "";
         if (isMakeReceipt.equals("1"))
             return "未开票";
         if (isMakeReceipt.equals("9"))
@@ -269,7 +278,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getOrderStatus(String orderStatus) {
         if (orderStatus == null)
-            return "null";
+            return "";
         if (orderStatus.equals("200"))
             return "未确认";
         if (orderStatus.equals("201"))
@@ -321,7 +330,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getInvoiceType(String invoiceType) {
         if (invoiceType == null)
-            return "null";
+            return "";
         if (invoiceType.equals("1"))
             return "增值税发票";
         if (invoiceType.equals("2"))
@@ -334,7 +343,7 @@ public class InvoiceExceptionServiceImpl implements InvoiceExceptionService {
      */
     private String getState(String state) {
         if (state == null)
-            return "null";
+            return "";
         if (state.equals("0"))
             return "待审核";
         if (state.equals("1"))

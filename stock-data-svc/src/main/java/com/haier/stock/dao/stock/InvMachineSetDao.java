@@ -39,5 +39,9 @@ public interface InvMachineSetDao {
     long getPagerCount(@Param("machineSet")InvMachineSet condition);
 
     Integer updateSubSku(@Param("subSku") String sku, @Param("status") Integer s,@Param("optUser") String currentUser);
+    String querySubsku(String sku); //根据网单sku查到子sku
 
+    String findBySubSku(@Param("subSku1")String subSku1, @Param("subSku2")String subSku2);
+
+    public List<Map<String,Object>> selectMainSkuAndSubSku(Map<String,Object> map);
 }

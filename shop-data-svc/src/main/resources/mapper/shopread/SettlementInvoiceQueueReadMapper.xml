@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.SettlementInvoiceQueueReadDao">
+	<resultMap id="settlementInvoiceQueueResult" type="com.haier.shop.model.SettlementInvoiceQueue">
+		<result property="id" column="id" />
+		<result property="invoicesId" column="invoicesId" />
+		<result property="statusType" column="statusType" />
+		<result property="success" column="success" />
+		<result property="count" column="count" />
+		<result property="addTime" column="add_time" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="lastMessage" column="last_message" />
+	</resultMap>
+
+	<select id="get" resultMap="settlementInvoiceQueueResult">
+		select `id`,`invoicesId`,`statusType`,`success`,`count`,`add_time`,`modify_time`,`last_message` from settlement_invoice_queue
+		where id=#{id}
+	</select>
+
+	<select id="getByInvoicesIdAndStatuszType" resultMap="settlementInvoiceQueueResult">
+		select `id`,`invoicesId`,`statusType`,`success`,`count`,`add_time`,`modify_time`,`last_message` from settlement_invoice_queue
+		where invoicesId=#{invoicesId} and statusType=#{statusType}
+	</select>
+
+	<select id="getBySuccess" resultMap="settlementInvoiceQueueResult">
+		<![CDATA[
+		select `id`,`invoicesId`,`statusType`,`success`,`count`,`add_time`,`modify_time`,`last_message` from settlement_invoice_queue
+		where success=0 and count<20
+		limit 1000
+		]]>
+	</select>
+</mapper>

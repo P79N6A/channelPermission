@@ -1118,7 +1118,7 @@ public class OrderRepairModel {
         orderRepairLogs.setSiteId(1);
         orderRepairLogs.setAddTime(((Long) (System.currentTimeMillis() / 1000)).intValue());
         orderRepairLogs.setOrderRepairId(orderRepairs.getId());
-        orderRepairLogs.setOperate("[CBS]" + (StringUtil.isEmpty(operate) ? "退货申请" : operate));
+        orderRepairLogs.setOperate("[HBDM]" + (StringUtil.isEmpty(operate) ? "退货申请" : operate));
         orderRepairLogs.setOperator((StringUtil.isEmpty(operator) ? "系统" : operator));
         orderRepairLogs.setRemark(StringUtil.isEmpty(remark) ? "" : remark);
         orderRepairLogsNewService.insert(orderRepairLogs);
@@ -1701,7 +1701,7 @@ public class OrderRepairModel {
         for(OrderRepairTcRecords record:tcRecords){
        	 OrderRepairTcLogs orderRepairTcLogs = new OrderRepairTcLogs();
             orderRepairTcLogs.setAddTime((int) (new Date().getTime() / 1000));
-            orderRepairTcLogs.setOperator("CBS系统");
+            orderRepairTcLogs.setOperator("系统");
             orderRepairTcLogs.setOperate("(3W正品退仓)vom开提单成功");
             orderRepairTcLogs.setOrderRepairTcId(record.getOrderRepairTcId());
             orderRepairTcLogs.setTcRecordsId(record.getId());
@@ -1792,7 +1792,7 @@ public class OrderRepairModel {
              // 组装数据 - 退货单操作日志
              OrderRepairTcLogs orderRepairTcLogs = new OrderRepairTcLogs();
              orderRepairTcLogs.setAddTime((int) (new Date().getTime() / 1000));
-             orderRepairTcLogs.setOperator("CBS系统");
+             orderRepairTcLogs.setOperator("系统");
              orderRepairTcLogs.setOperate("vom回传退仓入库结果");
              orderRepairTcLogs.setOrderRepairTcId(tcRecords.getOrderRepairTcId());
              orderRepairTcLogs.setTcRecordsId(tcRecords.getId());

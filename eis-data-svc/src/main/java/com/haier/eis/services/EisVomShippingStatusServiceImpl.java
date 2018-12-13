@@ -33,4 +33,9 @@ public class EisVomShippingStatusServiceImpl implements EisVomShippingStatusServ
     public Integer insert(VomShippingStatus shippingStatus){
         return vomShippingStatusDao.insert(shippingStatus);
     }
+
+    @Override
+    public int queryCountByOrderNo(String orderNo) {
+        return vomShippingStatusDao.queryCountByOrderNo(orderNo);
+    }
 }

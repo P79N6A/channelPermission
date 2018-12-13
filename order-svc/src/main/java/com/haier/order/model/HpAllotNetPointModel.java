@@ -208,7 +208,7 @@ public class HpAllotNetPointModel {
         orderOperateLog.setOrderId(orderProducts.getOrderId());
         orderOperateLog.setOrderProductId(Math.toIntExact(orderProducts.getId()));
         orderOperateLog.setNetPointId(orderProducts.getNetPointId());
-        orderOperateLog.setOperator("CBS系统");
+        orderOperateLog.setOperator("系统");
         orderOperateLog.setChangeLog(changeLog);
         orderOperateLog.setRemark(remark);
         orderOperateLog.setStatus(Integer.valueOf(orderProducts.getStatus()));
@@ -227,7 +227,12 @@ public class HpAllotNetPointModel {
         if (StringUtil.isEmpty(dateStr, true)) {
             return 0;
         }
-        Date date = DateUtil.parse(dateStr, "yyyy-MM-dd'T'HH:mm:ss");
+        Date date;
+        if (dateStr.contains("T")){
+            date = DateUtil.parse(dateStr, "yyyy-MM-dd'T'HH:mm:ss");
+        }else {
+            date = DateUtil.parse(dateStr, "yyyy-MM-dd HH:mm:ss");
+        }
         Long longDate = date.getTime() / 1000;
         return longDate.intValue();
     }
@@ -242,8 +247,12 @@ public class HpAllotNetPointModel {
         if (StringUtil.isEmpty(dateStr, true)) {
             return "";
         }
-        Date date = DateUtil.parse(dateStr, "yyyy-MM-dd'T'HH:mm:ss");
-        return DateUtil.format(date, "yyyy-MM-dd HH:mm:ss");
+        if (dateStr.contains("T")){
+            Date date = DateUtil.parse(dateStr, "yyyy-MM-dd'T'HH:mm:ss");
+            return DateUtil.format(date, "yyyy-MM-dd HH:mm:ss");
+        }
+        return dateStr;
+
     }
 
     /**

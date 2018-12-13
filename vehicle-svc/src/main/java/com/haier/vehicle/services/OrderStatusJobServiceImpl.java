@@ -23,13 +23,11 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
@@ -42,6 +40,8 @@ import com.haier.purchase.data.model.vehcile.DepartmentInfoDTO;
 import com.haier.purchase.data.model.vehcile.EisInterfaceFinance;
 import com.haier.purchase.data.model.vehcile.Entry3wOrder;
 import com.haier.purchase.data.model.vehcile.MaterielInfoDTO;
+import com.haier.purchase.data.model.vehcile.OrderLines;
+import com.haier.purchase.data.model.vehcile.TmallCAMachineDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderDetailsDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderZqDTO;
@@ -62,9 +62,11 @@ import com.haier.system.model.PlanInDateEnum;
 import com.haier.system.service.PlanInDateService;
 import com.haier.vehicle.model.SaleBIllDetail;
 import com.haier.vehicle.model.SaleBillMaster;
+import com.haier.vehicle.model.TmallCAMachine;
 import com.haier.vehicle.service.FactoryBaseContrastService;
 import com.haier.vehicle.service.OesMaterielService;
 import com.haier.vehicle.service.OrderStatusJobService;
+import com.haier.vehicle.service.TMallCAMachineService;
 import com.haier.vehicle.service.VehicleLogInService;
 import com.haier.vehicle.util.DateUtil;
 import com.haier.vehicle.util.HttpUtils;
@@ -130,6 +132,8 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 	private PurchaseProductPaymentService purchaseProductPaymentService;
 	@Autowired
 	private VehicleLogInService vehicleLogInService;
+	@Autowired
+	private TMallCAMachineService tmallCAMachineService;
 
 	@Value("${materielPath}")
 	private String materielPath;
@@ -288,13 +292,14 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 	/**
 	 * 物流85和LBX对应关系
 	 */
+//	@Scheduled(cron = "00 25 15 ? * *")
 	public void pushLogistics() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pushStatus", 0);
 		List<Entry3wOrder> enrty3wOrderList = vehicleOrderDetailDao
 				.queryEntry3wOrder(map);
 		if (enrty3wOrderList == null || enrty3wOrderList.size() == 0) {
-			log.info("[pushLogistics]物流推送,没有需要处理的数据");
+//			log.info("[pushLogistics]物流推送,没有需要处理的数据");
 			return;
 		}
 		URL url = this.getClass().getResource(
@@ -350,7 +355,7 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 			return;
 		}
 		for (VehicleOrderDetailsDTO dto : orderDetailList) {
-			// 调用接口获取数据 TODO
+			// 调用接口获取数据
 			VehicleOrderZqDetailsDTO zqDetail = new VehicleOrderZqDetailsDTO();
 			zqDetail.setZqItemNo(dto.getItemNo().replaceAll("ZK", "ZQ"));
 			zqDetail = vehicleOrderZqDetailsService.getOneByCondition(zqDetail);
@@ -402,6 +407,7 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 	 * 更新lbx、入库时间
 	 */
 //	@Scheduled(cron = "0 43 13 ? * *")
+//    @Scheduled(cron = "0 06 21 ? * *")//测试
 	public void addLbx() {
 		List<VehicleOrderDetailsDTO> orderDetailList = vehicleOrderDetailDao
 				.selectByWaitUpdateLbx();
@@ -409,6 +415,12 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 			log.info("[addLbx]更新lbx,没有需要处理的数据");
 			return;
 		}
+//		List<VehicleOrderDetailsDTO> orderDetailListCA = new ArrayList<>();
+//		for(VehicleOrderDetailsDTO dto : orderDetailList){
+//			if("CA".equals(dto.getProductGroup())){
+//				orderDetailListCA.add(dto);
+//			}
+//		}
 		for (VehicleOrderDetailsDTO dto : orderDetailList) {
 				Entry3wOrder entry3wOrder = null;
 				try {
@@ -426,37 +438,123 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 					List<Entry3wOrder> eoList = vehicleOrderDetailDao
 							.queryEntry3wOrder(map);
 					entry3wOrder.setEntryOrderCode(dto.getVbelnDn1());
+					
+					//如果是空调套机并且校验通过
+					boolean caaccess = false;
+					if("CA".equals(dto.getProductGroup()) && caAccess(entry3wOrder.getOrderLines(), dto.getMaterielCode(), entry3wOrder.getEntryOrderCode()) == true){
+						caaccess = true;
+					}
+					
+					
 					// 判断当前85单号是否存在于entry_3w_order
 					if (eoList != null && eoList.size() > 0) {
 						//判断获取的数据LBX与表中LBX是否一致，不一致时要将pushStatus修改为0（需要重新推送物流）
 						if(!eoList.get(0).getEntryOrderId().equals(entry3wOrder.getEntryOrderId())){
 							entry3wOrder.setPushStatus("0");
 						}
+
+                        // status=FULFILLED时将entryOrderId更新到中lbx，将operateTime更新到zspdt中
+                        dto.setLbx(entry3wOrder.getEntryOrderId());
+//                        if (FULFILLED.equals(entry3wOrder.getStatus())) {
+                    	if(!StringUtils.isBlank(entry3wOrder.getOperateTime())){//改为只要有operateTime就更新到数据库中		zhangming	18.04.06
+                            SimpleDateFormat sdf = new SimpleDateFormat(
+                                    "yyyy-MM-dd HH:mm:ss");
+//                            if (entry3wOrder.getOperateTime() != null
+//                                    && !"".equals(entry3wOrder.getOperateTime())) {
+                                try {
+                                    dto.setZspdt(sdf.parse(entry3wOrder
+                                            .getOperateTime()));
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+//                            }
+                        }
 						vehicleOrderDetailDao.updateEntry3wOrder(entry3wOrder);
-					} else {
-						entry3wOrder.setPushStatus("0");
-						vehicleOrderDetailDao.addEntry3wOrder(entry3wOrder);
-					}
+					} else if (entry3wOrder.getPlanQty()!= null && entry3wOrder.getItemCode() != null){
+					    if (!"".equals(entry3wOrder.getItemCode())){
+                            if (caaccess == true || (entry3wOrder.getItemCode().equals(dto.getMaterielCode()) && entry3wOrder.getPlanQty().toString().equals(dto.getQty().toString()))){
+                                entry3wOrder.setPushStatus("0");
+                                dto.setLbxErrMsg("");
+
+                                // status=FULFILLED时将entryOrderId更新到中lbx，将operateTime更新到zspdt中
+                                dto.setLbx(entry3wOrder.getEntryOrderId());
+//                                if (FULFILLED.equals(entry3wOrder.getStatus())) {	
+                                if(!StringUtils.isBlank(entry3wOrder.getOperateTime())){//改为只要有operateTime就更新到数据库中		zhangming	18.04.06
+                                    SimpleDateFormat sdf = new SimpleDateFormat(
+                                            "yyyy-MM-dd HH:mm:ss");
+//                                    if (entry3wOrder.getOperateTime() != null
+//                                            && !"".equals(entry3wOrder.getOperateTime())) {
+                                        try {
+                                            dto.setZspdt(sdf.parse(entry3wOrder
+                                                    .getOperateTime()));
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+//                                    }
+                                }
+
+                                vehicleOrderDetailDao.addEntry3wOrder(entry3wOrder);
+                            } else {
+                                dto.setLbxErrMsg("【预约LBX型号数量与订单不一致，请重新预约】");
+                            }
+                        }
+
+                    }
 
 					// status=FULFILLED时将entryOrderId更新到中lbx，将operateTime更新到zspdt中
-					dto.setLbx(entry3wOrder.getEntryOrderId());
-					if (FULFILLED.equals(entry3wOrder.getStatus())) {
-						SimpleDateFormat sdf = new SimpleDateFormat(
-								"yyyy-MM-dd HH:mm:ss");
-						if (entry3wOrder.getOperateTime() != null
-								&& !"".equals(entry3wOrder.getOperateTime())) {
-							try {
-								dto.setZspdt(sdf.parse(entry3wOrder
-										.getOperateTime()));
-							} catch (ParseException e) {
-								e.printStackTrace();
-							}
-						}
-					}
+//					dto.setLbx(entry3wOrder.getEntryOrderId());
+//					if (FULFILLED.equals(entry3wOrder.getStatus())) {
+//						SimpleDateFormat sdf = new SimpleDateFormat(
+//								"yyyy-MM-dd HH:mm:ss");
+//						if (entry3wOrder.getOperateTime() != null
+//								&& !"".equals(entry3wOrder.getOperateTime())) {
+//							try {
+//								dto.setZspdt(sdf.parse(entry3wOrder
+//										.getOperateTime()));
+//							} catch (ParseException e) {
+//								e.printStackTrace();
+//							}
+//						}
+//					}
 					vehicleOrderDetailDao.updateSelectiveByItemNo(dto);
 				}
 		}
 	}
+	
+	/**
+	 * 产品为空调时的校验
+	 * @param orderLines
+	 * @param materialCode
+	 * @return
+	 */
+	private boolean caAccess(List<OrderLines> orderLines, String materialCode, String vbeln){
+		boolean access = false;
+		if(orderLines != null && orderLines.size() > 0){
+			List<TmallCAMachineDTO> caMacs = tmallCAMachineService.getByMaterialCode(materialCode);
+			if(caMacs != null && caMacs.size() == orderLines.size()){
+				int countSame = 0;
+				for(TmallCAMachineDTO tm : caMacs){
+					String mCode = tm.getCGB_SUBGBID();
+					for(OrderLines ol : orderLines){
+						if(mCode.equals(ol.getItemCode())){
+							countSame++;
+						}
+					}
+				}
+				if(countSame == orderLines.size()){
+					List<VehicleOrderDetailsDTO>  list = vehicleOrderDetailDao.getByVbeln(vbeln);
+					if(list != null && list.size() > 0){
+						if(list.get(0).getQty().intValue() == Integer.valueOf(orderLines.get(0).getPlanQty()).intValue()){
+							access = true;
+						}
+					}
+				}
+			}
+		}
+		
+		return access;
+	}
+
 
 	/**
 	 * 通过85单号调用接口获取lbx、入库时间
@@ -516,6 +614,20 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 						entry3wOrder.setTotalLines(Integer.parseInt(map.get(
 								"totalLines").toString()));
 					}
+                    String str = map.get("orderLines").toString().replace("<orderLine>","").replace("</orderLine>","");
+                    OrderLines orderLines = (OrderLines) XmlUtils.xmlStrToBean(str,OrderLines.class);
+                    List<OrderLines> list = (List<OrderLines>) XmlUtils.xmlStrToList(map.get("orderLines").toString(), OrderLines.class);
+                    entry3wOrder.setOrderLines(list);
+                    if(list != null && list.size() > 0 && !StringUtils.isBlank(list.get(0).getActualQty())){
+                    	entry3wOrder.setActualQty(Integer.valueOf(list.get(0).getActualQty()));
+                    }
+
+                    if (orderLines.getItemCode() != null || "".equals(orderLines.getItemCode())){
+                        entry3wOrder.setItemCode(orderLines.getItemCode());
+                    }
+                    if (orderLines.getPlanQty() != null || "".equals(orderLines.getPlanQty())){
+                        entry3wOrder.setPlanQty(Integer.parseInt(orderLines.getPlanQty()));
+                    }
 					return entry3wOrder;
 				} else {
 					vehicleInterfaceLogService.insertLog(
@@ -537,7 +649,7 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 		List<VehicleOrderDetailsDTO> orderDetailList = vehicleOrderDetailDao
 				.selectByWaitToSap();
 		if (orderDetailList == null || orderDetailList.size() == 0) {
-			log.info("[cnPurchaseStorageToSap]推送SAP,没有需要处理的数据");
+//			log.info("[cnPurchaseStorageToSap]推送SAP,没有需要处理的数据");
 			return;
 		}
 		String[] message = new String[1];
@@ -574,12 +686,45 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 			return false;
 		boolean flag = true;
 		int rsStatus;
+		int index = 1;
 		String rsMessage;
 		ObjectFactory objectFactory = new ObjectFactory();
 		ZMMS0003 request = objectFactory.createZMMS0003();
 		Cn3wPurchaseStock cn3wPurchaseStock = new Cn3wPurchaseStock();
-		String format = sdf.format(orderDetail.getZspdt());
-		request.setZSPDT(format.substring(0, 10));// 订单入库日期(采购订单如何获取)
+		String format = sdf.format(orderDetail.getZspdt()).substring(0, 10);
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		//当前月份
+    	String now = df.format(new Date()).substring(4, 6);
+    	//如果入库日期是本月则填入入库时间，否则填入当前时间
+    	if(now.equals(format.substring(5, 7))){
+    		request.setZSPDT(format);// 订单入库日期
+    	}else{
+    		df = new SimpleDateFormat("yyyy-MM-dd");
+    		request.setZSPDT(df.format(new Date()));
+    	}
+    	
+    	
+    	if("CA".equals(orderDetail.getProductGroup())){
+			String mainCode = orderDetail.getMaterielCode().split("&")[0];
+			String subCode = orderDetail.getMaterielCode().split("&")[1];
+			if(StringUtils.isBlank(mainCode) || StringUtils.isBlank(subCode)){
+				log.error("空调产品物料号应为主物料号&子物料号格式！");
+				return false;
+			}
+			orderDetail.setMaterielCode(subCode);
+			List<TmallCAMachineDTO> list = tmallCAMachineService.getByMaterialCode(mainCode);
+			if(list == null || list.size() == 0){
+				log.error("根据主物料号[" + mainCode + "]查询天猫CA套机接口失败！");
+				return false;
+			}
+			for(int i = 0; i < list.size(); i++){
+				if(list.get(i).getCGB_SUBGBID().equals(subCode)){
+					index = i + 1;
+					break;
+				}
+			}
+		}
+    	
 		request.setMATNR(orderDetail.getMaterielCode());// 物料编码
 		request.setMENGE(new BigDecimal(orderDetail.getQty()));// 交货数量
 		// vehicle_order.delivery_code=area_center_info.delivery_to_code关联出来的数据取wh_code
@@ -615,7 +760,7 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 			request.setZLSGI(lbx);
 		}
 		request.setZFGLG("10");// 批次编号
-		request.setPOSNR("1");// 明细号
+		request.setPOSNR("000" + index);// 明细号
 
 		URL url = this.getClass().getResource(
 				wsdlPath + "/TransDNInfoFromEHAIERToGVS.wsdl");
@@ -690,10 +835,14 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 		}
 		message[0] = message[0] + rsMessage;
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("cnStockSyncsId", orderDetail.getOrderNo());
+		map.put("cnStockSyncsId", orderDetail.getItemNo());
+		if("CA".equals(orderDetail.getProductGroup())){
+			map.put("pushData", orderDetail.getMaterielCode());
+		}
 		List<Cn3wPurchaseStock> list = jobService.queryCn3wPurchaseStock(map);
 		if (list != null && list.size() > 0) {
-			jobService.updateCn3wPurchaseStock(cn3wPurchaseStock);
+			cn3wPurchaseStock.setId(list.get(0).getId());
+			jobService.updateCn3wPurchaseStockById(cn3wPurchaseStock);
 		} else {
 			jobService.addPurchaseStock(cn3wPurchaseStock);
 		}
@@ -701,7 +850,7 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 	}
 
 	// 每三十分钟执行
-//	@Scheduled(cron = "30 30 10 ? * *")
+//	@Scheduled(cron = "0 38 19 ? * *")
 //	@Override
 	public void saleBill() throws BusinessException {
 		PlanInDate planInDate = planInDateService
@@ -880,7 +1029,7 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 		}
 	}
 
-//	@Scheduled(cron = "30 01 14 ? * *")
+//	@Scheduled(cron = "30 26 9 ? * *")
 	@Override
 	public void gainMateriel() {
 		ServiceResult<String> result1 = new ServiceResult<String>();
@@ -890,6 +1039,7 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 		int getcount = 0;
 		String result = vehicleLogInService.getLoginMessage(this.getLogIn(),
 				this.getUserId());
+		
 		String response = null;
 		Map map2 = null;
 		Map json = (Map) JSONObject.parse(result);
@@ -946,10 +1096,14 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 
 					} else {
 						result1.setSuccess(false);
-						result1.setMessage(map1.get("errorMsg").toString());
+						if(map1.get("errorMsg") != null && !"".equals(map1.get("errorMsg"))){
+							result1.setMessage(map1.get("errorMsg").toString());
+						}else{
+							result1.setMessage("请求接口异常");
+						}
 					}
 					getcount++;
-					// System.out.println("查询次数："+getcount);
+//					 System.out.println("总条数："+rowcount);
 				} else {
 					js.put("appFlag", "true");
 					int pageTottle = 0;
@@ -978,10 +1132,17 @@ public class OrderStatusJobServiceImpl implements OrderStatusJobService {
 							}
 						} else {
 							result1.setSuccess(false);
-							result1.setMessage(map1.get("errorMsg").toString());
-							vehicleInterfaceLogService.insertLog(
-									"365整车物料样表数据获取", map1.get("errorMsg")
-											.toString());
+							if(map1.get("errorMsg") != null && !"".equals(map1.get("errorMsg"))){
+								result1.setMessage(map1.get("errorMsg").toString());
+								vehicleInterfaceLogService.insertLog(
+										"365整车物料样表数据获取", map1.get("errorMsg")
+												.toString());
+							}else{
+								result1.setMessage("请求接口异常");
+								vehicleInterfaceLogService.insertLog(
+										"365整车物料样表数据获取", "请求接口异常");
+							}
+							
 						}
 						getcount++;
 						// System.out.println("查询次数："+getcount);

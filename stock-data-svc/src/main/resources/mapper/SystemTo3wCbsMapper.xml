@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.stock.dao.stock.SystemTo3wCbsDao">
+
+  <resultMap id="systemTo3wCbs" type="com.haier.stock.model.SystemTo3wCbs">
+    <result property="id" column="id"/>
+    <result column="data_source" property="dataSource"/>
+    <result column="notify_time" property="notifyTime"/>
+    <result column="interface_flag" property="interfaceFlag"/>
+    <result column="data_type" property="dataType"/>
+    <result column="content" property="content"/>
+    <result column="status" property="status"/>
+    <result column="error_message" property="errorMessage"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
+    <result column="counts" property="counts"/>
+  </resultMap>
+
+  <select id="queryList" resultMap="systemTo3wCbs">
+    SELECT
+      id,
+      data_source,
+      notify_time,
+      interface_flag,
+      data_type,
+      content,
+      STATUS,
+      error_message,
+      create_time,
+      update_time,
+      counts
+    FROM
+      system_to_3w_cbs
+    WHERE
+      interface_flag = #{interfaceFlag}
+      AND STATUS = 0
+      ORDER BY create_time
+      limit 1000
+  </select>
+
+  <select id="queryRetryList" resultMap="systemTo3wCbs">
+    SELECT
+    id,
+    data_source,
+    notify_time,
+    interface_flag,
+    data_type,
+    content,
+    STATUS,
+    error_message,
+    create_time,
+    update_time,
+    counts
+    FROM
+    system_to_3w_cbs
+    WHERE
+    interface_flag = #{interfaceFlag}
+    AND STATUS = 2
+    <![CDATA[ AND  counts < 5 ]]>
+    ORDER BY create_time
+    limit 1000
+  </select>
+
+  <update id="updateById">
+    UPDATE system_to_3w_cbs
+    SET
+    <if test="systemTo3wCbs.status != null and systemTo3wCbs.status !=''">
+      status = #{systemTo3wCbs.status},
+    </if>
+    <if test="systemTo3wCbs.errorMessage != null and systemTo3wCbs.errorMessage !=''">
+      error_message = #{systemTo3wCbs.errorMessage},
+    </if>
+    <if test="systemTo3wCbs.counts != null and systemTo3wCbs.counts !=''">
+      counts = #{systemTo3wCbs.counts},
+    </if>
+    update_time = CURRENT_TIMESTAMP()
+    WHERE id = #{systemTo3wCbs.id}
+
+  </update>
+
+  <select id="queryFailList" parameterType="Map" resultMap="systemTo3wCbs">
+    SELECT
+    id,
+    data_source,
+    notify_time,
+    interface_flag,
+    data_type,
+    content,
+    STATUS,
+    error_message,
+    create_time,
+    update_time,
+    counts
+    FROM
+    system_to_3w_cbs
+    WHERE 1=1
+    <if test="interfaceFlag != null">
+      AND interface_flag = #{interfaceFlag}
+    </if>
+    <if test="cOrderSn != null and cOrderSn != ''">
+      AND content like CONCAT ('%',#{cOrderSn},'%')
+    </if>
+    <if test="createTimeMin !=null and createTimeMin != ''">
+      and notify_time &gt;= #{createTimeMin}
+    </if>
+    <if test="createTimeMax !=null and createTimeMax != ''">
+      and notify_time &lt;= #{createTimeMax}
+    </if>
+    AND STATUS = 2 AND counts >= 5
+    ORDER BY create_time
+    limit #{index},#{rows}
+  </select>
+
+  <select id="getFailCounts" parameterType="Map" resultType="Integer">
+    SELECT
+    COUNT(1)
+    FROM
+    system_to_3w_cbs
+    WHERE 1=1
+    <if test="interfaceFlag != null">
+      AND interface_flag = #{interfaceFlag}
+    </if>
+    <if test="cOrderSn != null and cOrderSn != ''">
+      AND content like CONCAT ('%',#{cOrderSn},'%')
+    </if>
+    <if test="createTimeMin !=null and createTimeMin != ''">
+      and notify_time &gt;= #{createTimeMin}
+    </if>
+    <if test="createTimeMax !=null and createTimeMax != ''">
+      and notify_time &lt;= #{createTimeMax}
+    </if>
+    AND STATUS = 2
+    AND counts >= 5
+  </select>
+
+  <select id="getRecordById" parameterType="Integer" resultMap="systemTo3wCbs">
+    SELECT
+    id,
+    data_source,
+    notify_time,
+    interface_flag,
+    data_type,
+    content,
+    STATUS,
+    error_message,
+    create_time,
+    update_time,
+    counts
+    FROM
+    system_to_3w_cbs
+    WHERE 1=1
+    AND  id = #{id}
+  </select>
+
+</mapper>

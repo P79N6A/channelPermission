@@ -3,6 +3,7 @@ package com.haier.stock.service;
 import java.util.List;
 import java.util.Map;
 
+import com.haier.common.ServiceResult;
 import com.haier.stock.model.InvRrsWarehouse;
 
 public interface StockInvRrsWarehouseService {
@@ -27,4 +28,21 @@ public interface StockInvRrsWarehouseService {
 	
 	
 	 List<InvRrsWarehouse> getRrsWhByEstorgeId(Map<String, Object> params);
+
+	public List<InvRrsWarehouse> getPurRrsWhByEstorgeId(Map<String, Object> param);
+
+	public Integer countTotalService(Map<String, Object> param);
+
+	public Integer checkMainKey(Map<String, Object> param);
+
+	public void insertInvRrsWarehouseService(Map<String, Object> param);
+
+	public void updateInvRrsWarehouseService(Map<String, Object> param);
+
+	public Integer countT2StatusService(Map<String, Object> param);
+
+	public void deleteInvRrsWarehouseService(Map<String, Object> param);
+
+	public List<InvRrsWarehouse> selectInvRrsWarehouseExportService(Map<String, Object> param);
+
 }

@@ -4,6 +4,7 @@ package com.haier.eis.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * LES出库明细。
@@ -487,6 +488,8 @@ public class LesStockTransQueue implements Serializable {
     public final static Integer STATUS_ERROR        = -1;
     public final static Integer STATUS_DELAY        = 2;
     public final static Integer STATUS_UNIDENTIFIED = 13;
+    //不做处理的数据
+    public final static Integer STATUS_NO = 4;
 
     private Integer             status;
 
@@ -692,4 +695,72 @@ public class LesStockTransQueue implements Serializable {
     public void setReviseTime(Date reviseTime) {
         this.reviseTime = reviseTime;
     }
+
+    //2018-8-28 新增字段为关联表eis_interface_finance查询使用
+    private String interfaceCode;
+
+    /**
+     * 获取 接口编码。
+     */
+    public String getInterfaceCode() {
+        return this.interfaceCode;
+    }
+
+    /**
+     * 设置 接口编码。
+     *
+     * @param value 属性值
+     */
+    public void setInterfaceCode(String value) {
+        this.interfaceCode = value;
+    }
+
+    private Integer statusF;
+
+    /**
+     * 获取 0：未知（需调用状态查询接口）。
+     *
+     * <p>
+     * 1：成功<br />
+     * 2：失败（重新发送）<br />
+     * 3：错误（系统无法处理）
+     */
+    public Integer getStatusF() {
+        return this.statusF;
+    }
+
+    /**
+     * 设置 0：未知（需调用状态查询接口）。
+     *
+     * <p>
+     * 1：成功<br />
+     * 2：失败（重新发送）<br />
+     * 3：错误（系统无法处理）
+     *
+     * @param value 属性值
+     */
+    public void setStatusF(Integer value) {
+        this.statusF = value;
+    }
+
+    private Date addTimeF;
+
+    public Date getAddTimeF() {
+        return this.addTimeF;
+    }
+
+    public void setAddTimeF(Date value) {
+        this.addTimeF = value;
+    }
+
+    private Date updateTimeF;
+
+    public Date getUpdateTimeF() {
+        return this.updateTimeF;
+    }
+
+    public void setUpdateTimeF(Date value) {
+        this.updateTimeF = value;
+    }
+
 }

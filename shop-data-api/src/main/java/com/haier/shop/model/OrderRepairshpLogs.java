@@ -1,5 +1,6 @@
 package com.haier.shop.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,15 +9,19 @@ import java.util.Date;
  * @author wukunyang
  *
  */
-public class OrderRepairshpLogs {
+public class OrderRepairshpLogs implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 656902495134472189L;
 	private int id;//主键
 	private String orderRejectSn;//退货单号
 	private String netPointCode;//客户编码 网点86码
 	private String checkResult;//鉴定结果 1:符合退机条件 2:不符合退机条件
 	private String quality; //产品状态 1: 未开箱。2:已开箱正品。3:不良品  4：已使用正品 5:不良品换机 6:不良品退机（现电商只保有1256四个状态）
-	private String macHineNum;//机器编码
-	private String inSpector;//质检员
-	private String inSpectTime;//质检时间
+	private String machineNum;//机器编码
+	private String inspector;//质检员
+	private String inspectTime;//质检时间
 	private String add1;//是否一次质检 1一次；2二次
 	private String add2;//备用字段 1机器完好换好包装箱； 2非正品需买单； 3机器完好无包装箱可换 
 	private String add3;//"1网点；2物流	
@@ -25,11 +30,23 @@ public class OrderRepairshpLogs {
 	private String procType;//处理状态
 	private String woId;//工单号
 	private Date createdDate;//创建时间
+	private Date EstablishDate;//当前数据插入数据库时间
+	
+	
+
+	
+	
 	
 	
 	
 	
 	 
+	public Date getEstablishDate() {
+		return EstablishDate;
+	}
+	public void setEstablishDate(Date establishDate) {
+		EstablishDate = establishDate;
+	}
 	public int getId() {
 		return id;
 	}
@@ -60,23 +77,26 @@ public class OrderRepairshpLogs {
 	public void setQuality(String quality) {
 		this.quality = quality;
 	}
-	public String getMacHineNum() {
-		return macHineNum;
+	
+	public String getMachineNum() {
+		return machineNum;
 	}
-	public void setMacHineNum(String macHineNum) {
-		this.macHineNum = macHineNum;
+	public void setMachineNum(String machineNum) {
+		this.machineNum = machineNum;
 	}
-	public String getInSpector() {
-		return inSpector;
+	
+	
+	public String getInspector() {
+		return inspector;
 	}
-	public void setInSpector(String inSpector) {
-		this.inSpector = inSpector;
+	public void setInspector(String inspector) {
+		this.inspector = inspector;
 	}
-	public String getInSpectTime() {
-		return inSpectTime;
+	public String getInspectTime() {
+		return inspectTime;
 	}
-	public void setInSpectTime(String inSpectTime) {
-		this.inSpectTime = inSpectTime;
+	public void setInspectTime(String inspectTime) {
+		this.inspectTime = inspectTime;
 	}
 	public String getAdd1() {
 		return add1;

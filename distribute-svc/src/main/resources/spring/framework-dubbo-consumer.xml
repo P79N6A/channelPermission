@@ -16,7 +16,7 @@
     <!-- 生成远程服务代理，可以和本地bean一样使用-->
     <!-- <dubbo:reference retries="0" interface="com.haier.distribute.service.DemoService"
                       id="demoService" check="false" timeout="10000"/>-->
-
+    <dubbo:registry  protocol="zookeeper" address="10.138.8.223:2181" timeout="60000" default="false" id="wh_registry"/>
     <dubbo:reference retries="0" interface="com.haier.shop.service.InvoicesService"
                      id="invoicesService" version="1.0.0" timeout="1200000" check="false"/>
     <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TAdjustDataService"
@@ -67,7 +67,31 @@
                      id="TSaleProductStockService" version="1.0.0" timeout="1200000" check="false"/>
     <dubbo:reference retries="0" interface="com.haier.distribute.data.service.TSaleProductPriceService"
                      id="TSaleProductPriceService" version="1.0.0" timeout="1200000" check="false"/>
-    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.DistributeProductTimingService"
-                     id="distributeProductTimingService" version="1.0.0" timeout="1200000" check="false"/>
-
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.DistributeProductDataService"
+                     id="distributeProductDataService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ManualInputOrderService"
+                     id="manualInputOrderService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ManualInputOrderProductService"
+                     id="manualInputOrderProductService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.SaleProductStockDataService"
+                     id="saleProductStockDataService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference id="linkProductUpperReadService"
+                     interface="com.haier.link.upper.service.LinkProductUpperReadService" check="false"
+                     timeout="120000"  registry="wh_registry" version="1.1"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductCenterService"
+                     id="productCenterService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductFeatureService"
+                     id="productFeatureService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductGatefoldService"
+                     id="productGatefoldService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductOuterPackingBoxeService"
+                     id="productOuterPackingBoxeService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductPictureService"
+                     id="productPictureService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductSpecificationService"
+                     id="productSpecificationService" version="1.0.0" timeout="1200000" check="false"/>
+    <dubbo:reference retries="0" interface="com.haier.distribute.data.service.SaleProductService"
+                     id="saleProductService" version="1.0.0" timeout="1200000" check="false"/>
+	<dubbo:reference retries="0" interface="com.haier.distribute.data.service.ProductsShopService"
+                     id="productsShopService" version="1.0.0" timeout="1200000" check="false"/>
 </beans>

@@ -1,9 +1,12 @@
+
 package com.haier.distribute.service;
 
 
 
 
 import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -11,6 +14,7 @@ import com.haier.common.PagerInfo;
 import com.haier.distribute.data.model.*;
 
 public interface DistributeCenterPopProductService {
+
 
     /**
      * 可售商品主表(分页查询)
@@ -92,5 +96,15 @@ public interface DistributeCenterPopProductService {
 
 	DepartmentProductType getDepartment(Integer productTypeId);
 
-	void addProductFromImport(Product productDTO);
+	int addProductFromImport(Product productDTO);
+
+	List<PushData> findPushData(String channelName);
+
+	List<TsendInfoLog> channelCodeSelect(Map<String, Object> params);
+	
+	Producttypes getProductsTypeBySKU(String sku);
+	
+	
+
 }
+

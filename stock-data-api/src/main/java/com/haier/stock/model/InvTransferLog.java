@@ -230,6 +230,14 @@ public class InvTransferLog implements Serializable {
         return this.logRemark;
     }
 
+    public String getContentXml() {
+        return contentXml;
+    }
+
+    public void setContentXml(String contentXml) {
+        this.contentXml = contentXml;
+    }
+
     /**
      * 设置 备注。
      *
@@ -237,6 +245,9 @@ public class InvTransferLog implements Serializable {
      */
     public void setLogRemark(String value) {
         this.logRemark = value;
+
     }
+
+    private String contentXml;
 
 }

@@ -111,7 +111,7 @@ var datagridOptions_itemAttribute = {
         {title: '品类', field: 'category', sortable: false},
         {title: '物料号', field: 'materielNum', sortable: false},
         {title: '机编', field: 'machineNum', sortable: false},
-        {title: '是否套机', field: 'istz', sortable: false,
+/*        {title: '是否套机', field: 'istz', sortable: false,
         	formatter : function(value) {
             	
             		if(value == 0){
@@ -123,7 +123,7 @@ var datagridOptions_itemAttribute = {
             	return value;
         	}
             	
-        },
+        },*/
         {title: '回传换箱结果', field: 'returnExchangeBoxResult', sortable: false},
         {title: '22出库单', field: 'outNum', sortable: false},
         {title: '正品入库单', field: 'GenuineWarehouseNum', sortable: false},

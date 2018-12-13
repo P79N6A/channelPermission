@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.SpecializedInvoiceOrderProductsReadDao">
+
+    <resultMap id="BaseResultMap" type="com.haier.shop.model.OrderProductsVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="cOrderSn" property="cOrderSn" jdbcType="INTEGER"/>
+        <result column="orderSn" property="orderSn" jdbcType="INTEGER"/>
+        <result column="siteId" property="siteid" jdbcType="INTEGER"/>
+        <result column="isTest" property="istest" jdbcType="TINYINT"/>
+        <result column="hasRead" property="hasread" jdbcType="TINYINT"/>
+        <result column="supportOneDayLimit" property="supportonedaylimit" jdbcType="TINYINT"/>
+        <result column="orderId" property="orderid" jdbcType="INTEGER"/>
+        <result column="isBook" property="isBook" jdbcType="TINYINT"/>
+        <result column="cPaymentStatus" property="cPaymentStatus" jdbcType="SMALLINT"/>
+        <result column="cPayTime" property="cPayTime" jdbcType="INTEGER"/>
+        <result column="cpayTimeTs" property="cpayTimeTs" jdbcType="INTEGER"/>
+        <result column="productType" property="productType" jdbcType="INTEGER"/>
+        <result column="productTypeTs" property="productTypeTs" jdbcType="VARCHAR"/>
+        <result column="productId" property="productId" jdbcType="INTEGER"/>
+        <result column="productName" property="productName" jdbcType="VARCHAR"/>
+        <result column="sku" property="sku" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="number" property="number" jdbcType="SMALLINT"/>
+        <result column="lockedNumber" property="lockedNumber" jdbcType="INTEGER"/>
+        <result column="unlockedNumber" property="unlockedNumber" jdbcType="INTEGER"/>
+        <result column="productAmount" property="productAmount" jdbcType="DECIMAL"/>
+        <result column="balanceAmount" property="balanceamount" jdbcType="DECIMAL"/>
+        <result column="couponAmount" property="couponAmount" jdbcType="DECIMAL"/>
+        <result column="esAmount" property="esAmount" jdbcType="DECIMAL"/>
+        <!-- <result column="giftCardNumberId" property="giftcardnumberid" jdbcType="INTEGER" /> -->
+        <result column="usedGiftCardAmount" property="usedgiftcardamount" jdbcType="DECIMAL"/>
+        <result column="couponLogId" property="couponlogid" jdbcType="INTEGER"/>
+        <result column="activityPrice" property="activityprice" jdbcType="DECIMAL"/>
+        <result column="activityId" property="activityid" jdbcType="INTEGER"/>
+        <result column="cateId" property="cateid" jdbcType="INTEGER"/>
+        <result column="brandId" property="brandid" jdbcType="INTEGER"/>
+        <result column="netPointId" property="netPointId" jdbcType="INTEGER"/>
+        <result column="shippingFee" property="shippingFee" jdbcType="DECIMAL"/>
+        <result column="settlementStatus" property="settlementStatus" jdbcType="TINYINT"/>
+        <result column="receiptOrRejectTime" property="receiptOrRejectTime" jdbcType="INTEGER"/>
+        <result column="isWmsSku" property="isWmsSku" jdbcType="TINYINT"/>
+        <result column="sCode" property="sCode" jdbcType="VARCHAR"/>
+        <result column="tsCode" property="tsCode" jdbcType="VARCHAR"/>
+        <result column="tsShippingTime" property="tsshippingtime" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="SMALLINT"/>
+        <result column="productSn" property="productsn" jdbcType="VARCHAR"/>
+        <result column="invoiceNumber" property="invoicenumber" jdbcType="VARCHAR"/>
+        <result column="expressName" property="expressname" jdbcType="VARCHAR"/>
+        <result column="invoiceExpressNumber" property="invoiceexpressnumber" jdbcType="VARCHAR"/>
+        <result column="postMan" property="postman" jdbcType="VARCHAR"/>
+        <result column="postManPhone" property="postmanphone" jdbcType="VARCHAR"/>
+        <result column="isNotice" property="isnotice" jdbcType="SMALLINT"/>
+        <result column="noticeType" property="noticetype" jdbcType="SMALLINT"/>
+        <result column="noticeRemark" property="noticeremark" jdbcType="VARCHAR"/>
+        <result column="noticeTime" property="noticetime" jdbcType="VARCHAR"/>
+        <result column="shippingTime" property="shippingtime" jdbcType="INTEGER"/>
+        <result column="lessOrderSn" property="lessordersn" jdbcType="VARCHAR"/>
+        <result column="waitGetLesShippingInfo" property="waitgetlesshippinginfo" jdbcType="TINYINT"/>
+        <result column="getLesShippingCount" property="getlesshippingcount" jdbcType="INTEGER"/>
+        <result column="outping" property="outping" jdbcType="VARCHAR"/>
+        <result column="lessShipTime" property="lessshiptime" jdbcType="INTEGER"/>
+        <result column="closeTime" property="closetime" jdbcType="INTEGER"/>
+        <result column="isReceipt" property="isReceipt" jdbcType="INTEGER"/>
+        <result column="isMakeReceipt" property="isMakeReceipt" jdbcType="INTEGER"/>
+        <result column="receiptAddTime" property="receiptAddTime" jdbcType="VARCHAR"/>
+        <result column="makeReceiptType" property="makeReceiptType" jdbcType="TINYINT"/>
+        <result column="shippingMode" property="shippingMode" jdbcType="VARCHAR"/>
+        <result column="lastTimeForShippingMode" property="lastTimeForShippingMode" jdbcType="INTEGER"/>
+        <result column="lastEditorForShippingMode" property="lastEditorForShippingMode" jdbcType="VARCHAR"/>
+        <result column="tongshuaiWorkId" property="tongshuaiworkid" jdbcType="INTEGER"/>
+        <result column="orderPromotionId" property="orderpromotionid" jdbcType="INTEGER"/>
+        <result column="externalSaleSettingId" property="externalsalesettingid" jdbcType="INTEGER"/>
+        <result column="recommendationId" property="recommendationid" jdbcType="INTEGER"/>
+        <result column="hasSendAlertNum" property="hassendalertnum" jdbcType="TINYINT"/>
+        <result column="isNoLimitStockProduct" property="isnolimitstockproduct" jdbcType="TINYINT"/>
+        <result column="hpRegisterDate" property="hpregisterdate" jdbcType="INTEGER"/>
+        <result column="hpFailDate" property="hpfaildate" jdbcType="INTEGER"/>
+        <result column="hpFinishDate" property="hpfinishdate" jdbcType="INTEGER"/>
+        <result column="hpReservationDate" property="hpreservationdate" jdbcType="INTEGER"/>
+        <result column="shippingOpporunity" property="shippingopporunity" jdbcType="TINYINT"/>
+        <result column="isTimeoutFree" property="istimeoutfree" jdbcType="TINYINT"/>
+        <result column="itemShareAmount" property="itemshareamount" jdbcType="DECIMAL"/>
+        <result column="lessShipTInTime" property="lessshiptintime" jdbcType="INTEGER"/>
+        <result column="lessShipTOutTime" property="lessshiptouttime" jdbcType="INTEGER"/>
+        <result column="isSAorZP" property="cbsseccode" jdbcType="VARCHAR"/>
+        <result column="points" property="points" jdbcType="INTEGER"/>
+        <result column="modified" property="modified" jdbcType="TIMESTAMP"/>
+        <result column="splitFlag" property="splitflag" jdbcType="TINYINT"/>
+        <result column="splitRelateCOrderSn" property="splitrelatecordersn" jdbcType="VARCHAR"/>
+        <result column="channelId" property="channelid" jdbcType="TINYINT"/>
+        <result column="activityId2" property="activityid2" jdbcType="INTEGER"/>
+        <result column="pdOrderStatus" property="pdOrderStatus" jdbcType="INTEGER"/>
+        <result column="omsOrderSn" property="omsordersn" jdbcType="VARCHAR"/>
+        <result column="couponCode" property="couponcode" jdbcType="VARCHAR"/>
+        <result column="couponCodeValue" property="couponCodeValue" jdbcType="DECIMAL"/>
+        <result column="jfbAmoun" property="jfbAmount" jdbcType="DECIMAL"/>
+        <result column="djAmount" property="djAmount" jdbcType="DECIMAL"/>
+        <result column="hbAmount" property="hbAmount" jdbcType="DECIMAL"/>
+        <result column="storeId" property="storeId" jdbcType="INTEGER"/>
+        <result column="storeType" property="storeType" jdbcType="TINYINT"/>
+        <result column="stockType" property="stockType" jdbcType="VARCHAR"/>
+        <result column="o2oType" property="o2oType" jdbcType="TINYINT"/>
+        <result column="brokerageType" property="brokeragetype" jdbcType="VARCHAR"/>
+        <result column="oid" property="oid" jdbcType="VARCHAR"/>
+        <result column="addTimeMin" property="addTimeMin" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="firstConfirmTime" property="firstConfirmTime" jdbcType="VARCHAR"/>
+        <result column="smManualTime" property="smManualTime" jdbcType="VARCHAR"/>
+        <result column="autoConfirmNum" property="autoConfirmNumMin" jdbcType="VARCHAR"/>
+        <result column="payTime" property="payTimeMin" jdbcType="VARCHAR"/>
+        <result column="sourceOrderSn" property="sourceOrderSn" jdbcType="VARCHAR"/>
+        <result column="tradeSn" property="tradeSn" jdbcType="VARCHAR"/>
+        <result column="orderStatus" property="orderStatus" jdbcType="VARCHAR"/>
+        <result column="paymentName" property="paymentName" jdbcType="VARCHAR"/>
+        <result column="paymentStatus" property="paymentStatus" jdbcType="VARCHAR"/>
+        <result column="source" property="source" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="invoiceType" property="invoiceType" jdbcType="INTEGER"/>
+        <result column="istate" property="istate" jdbcType="VARCHAR"/>
+        <result column="invoiceTitle" property="invoiceTitle" jdbcType="VARCHAR"/>
+        <result column="electricFlag" property="electricFlag" jdbcType="VARCHAR"/>
+        <result column="receiptNum" property="receiptNum" jdbcType="VARCHAR"/>
+        <result column="orowId" property="orowId" jdbcType="VARCHAR"/>
+        <result column="eaiWriteState" property="eaiWriteState" jdbcType="VARCHAR"/>
+        <result column="checkCode" property="checkCode" jdbcType="VARCHAR"/>
+        <result column="firstConfirmPerson" property="firstConfirmPerson"/>
+        <result column="isCod" property="isCod"/>
+        <result column="tbOrderSn" property="tbOrderSn"/>
+        <result column="consignee" property="consignee"/><!--下单人-->
+        <result column="source" property="source"/>
+        <result column="repairId" property="repairId"/>
+    </resultMap>
+    <sql id="findOrderProductSQLCond">
+        FROM
+        orderproducts p
+        LEFT JOIN orders o ON  o.id =p.orderId
+        left join memberinvoices inv ON inv.orderid = o.id
+        where 1=1
+        <if test="cOrderSn !=null and cOrderSn !=''">
+            and p.cOrderSn =#{cOrderSn}
+        </if>
+        <if test="orderSn !=null and orderSn !=''">
+            and o.orderSn = #{orderSn}
+        </if>
+        <if test="sourceOrderSn !=null and sourceOrderSn !=''">
+            and o.sourceOrderSn = #{sourceOrderSn}
+        </if>
+        <if test="mobile !=null and mobile !=''">
+            and o.mobile = #{mobile}
+        </if>
+        <if test="consignee !=null and consignee !=''">
+            and o.consignee like '%${consignee}%'
+        </if>
+        <if test="sku !=null and sku!=''">
+            and p.sku =#{sku}
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            and o.addTime >= unix_timestamp(#{addTimeMin})
+        </if>
+        <if test="addTimeMax != null and addTimeMax != ''">
+            and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{addTimeMax})
+        </if>
+        <if test="scode !=null and scode!=''">
+            and p.sCode =#{scode}
+        </if>
+        <if test="source !=null and source!=''">
+            and o.source = #{source}
+        </if>
+        <if test="paymentCode !=null and paymentCode !=''">
+            and o.paymentCode = #{paymentCode}
+        </if>
+        <if test="cPaymentStatus != null and cPaymentStatus != ''">
+            and p.cPaymentStatus = #{cPaymentStatus}
+        </if>
+        <if test="orderStatus !=null and orderStatus!=''">
+            and o.orderStatus = #{orderStatus}
+        </if>
+        <if test="firstConfirmTime =='0'.toString()">
+            and o.firstConfirmTime is null
+        </if>
+        <if test="firstConfirmTime =='1'.toString()">
+            and o.firstConfirmTime is not null
+        </if>
+        <if test="status!=null and status!=''">
+            and p.status = #{status}
+        </if>
+        <if test="isNotConfirm!=null and isNotConfirm!=''">
+            and o.isNotConfirm = #{isNotConfirm}
+        </if>
+        <if test="isBook!=null and isBook!=''">
+            and p.isBook = #{isBook}
+        </if>
+        <if test="externalSaleSettingId!=null and externalSaleSettingId!=''">
+            and p.externalSaleSettingId = #{externalSaleSettingId}
+        </if>
+        <if test="isReceipt !=null and isReceipt!=''">
+            and p.isReceipt =#{isReceipt}
+        </if>
+        <if test="shippingMode !=null and shippingMode !=''">
+            and p.shippingMode = #{shippingMode}
+        </if>
+        <if test="makeReceiptType !=null and makeReceiptType!=''">
+            and p.makeReceiptType = #{makeReceiptType}
+        </if>
+        <if test="isMakeReceipt!=null and isMakeReceipt!=''  and  isMakeReceipt !='0'.toString()">
+            and p.isMakeReceipt = #{isMakeReceipt}
+        </if>
+        <if test="invoiceType !=null and invoiceType !=''">
+            and inv.invoiceType = #{invoiceType}
+        </if>
+        <if test="istate !=null and istate !=''">
+            and inv.state = #{istate}
+        </if>
+        <if test="stockType !=null and stockType!=''">
+            and p.stockType = #{stockType}
+        </if>
+        <if test="orderType !=null and orderType!=''">
+            and o.orderType = #{orderType}
+        </if>
+        <if test="brandId !=null and brandId!=''">
+            and p.brandId = #{brandId}
+        </if>
+        <if test="cateId !=null and cateId!=''">
+            and p.cateId = #{cateId}
+        </if>
+        <if test="isBackend!=null and isBackend!=''">
+            and o.isBackend = #{isBackend}
+        </if>
+        <if test="isProduceDaily !=null and isProduceDaily!=''">
+            and o.isProduceDaily = #{isProduceDaily}
+        </if>
+        <if test="receiptAddTimeMin != null and receiptAddTimeMin != ''">
+            and p.receiptAddTime >= STR_TO_DATE(#{receiptAddTimeMin,jdbcType=VARCHAR},"%Y-%m-%d ")
+        </if>
+        <if test="receiptAddTimeMax != null and receiptAddTimeMax != ''">
+            and p.receiptAddTime <![CDATA[  <= ]]>  STR_TO_DATE(#{receiptAddTimeMax,jdbcType=VARCHAR},"%Y-%m-%d ")
+        </if>
+        <if test="payTimeMin != null and payTimeMin != ''">
+            and o.payTime >= unix_timestamp(#{payTimeMin,jdbcType=VARCHAR})
+        </if>
+        <if test="payTimeMax != null and payTimeMax != ''">
+            and o.payTime  <![CDATA[  <= ]]>   unix_timestamp(#{payTimeMax,jdbcType=VARCHAR})
+        </if>
+        <if test="confirmTimeMin != null and confirmTimeMin != ''">
+            and o.confirmTime >= unix_timestamp(#{confirmTimeMin,jdbcType=VARCHAR})
+        </if>
+        <if test="confirmTimeMax != null and confirmTimeMax != ''">
+            and o.confirmTime  <![CDATA[  <= ]]>   unix_timestamp(#{confirmTimeMax,jdbcType=VARCHAR})
+        </if>
+    </sql>
+
+    <select id="queryOderProductList" parameterType="com.haier.shop.model.OrderProductsVo" resultMap="BaseResultMap">
+        SELECT
+        p.id,
+        p.cOrderSn,
+        o.orderSn orderSn,
+        o.orderStatus,
+        p.cPaymentStatus,
+        p.isMakeReceipt,
+        p.isReceipt,
+        p.makeReceiptType,
+        p.isMakeReceipt,
+        p.productName,
+        p.price,
+        p.number,
+        p.sCode,
+        p.status,
+        from_unixtime(o.addTime,'%Y-%m-%d %H:%i:%S') addTimeMin,
+        p.productAmount as money,
+        o.remark,
+        from_unixtime(o.firstConfirmTime,'%Y-%m-%d %H:%i:%S') firstConfirmTime,
+        from_unixtime(o.smManualTime,'%Y-%m-%d %H:%i:%S') smManualTime,
+        o.autoConfirmNum
+        <include refid="findOrderProductSQLCond"/>
+        <if test="page!=null and rows!=null">
+            limit ${page},${rows}
+        </if>
+    </select>
+
+    <select id="findOrderProductCNT" resultType="int" parameterType="com.haier.shop.model.OrderProductsVo">
+        SELECT COUNT(1)
+        <include refid="findOrderProductSQLCond"/>
+    </select>
+
+    <select id="getListByParams"  parameterType="com.haier.shop.model.OrderProductsVo" resultType="map">
+        SELECT
+        p.id,
+        p.cOrderSn,
+        o.orderSn orderSn,
+        o.orderStatus,
+        p.cPaymentStatus,
+        p.isMakeReceipt,
+        p.isReceipt,
+        p.productName,
+        p.price,
+        p.number,
+        p.sCode,
+        p.status,
+        from_unixtime(o.addTime,'%Y-%m-%d %H:%i:%S') addTimeMin,
+        p.productAmount as money,
+        o.remark,
+        from_unixtime(o.firstConfirmTime,'%Y-%m-%d %H:%i:%S') firstConfirmTime,
+        from_unixtime(o.smManualTime,'%Y-%m-%d %H:%i:%S') smManualTime,
+        o.autoConfirmNum
+        <include refid="findOrderProductSQLCond"/>
+        <if test="page!=null and rows!=null">
+            limit ${page},${rows}
+        </if>
+    </select>
+
+    <select id="getOrderOroductsDetail" resultMap="BaseResultMap" parameterType="java.lang.String">
+	SELECT
+	   p.cOrderSn,
+        o.orderSn orderSn,
+        p.isReceipt,
+        p.isBook,
+        p.productName,
+        p.price,
+        p.number,
+        p.sCode,
+        p.status,
+        from_unixtime(o.addTime,'%Y-%m-%d %H:%i:%S') addTimeMin,
+         p.productAmount as money,
+        o.remark,
+        from_unixtime(o.firstConfirmTime,'%Y-%m-%d %H:%i:%S') firstConfirmTime,
+        from_unixtime(o.smManualTime,'%Y-%m-%d %H:%i:%S') smManualTime,
+        o.autoConfirmNum
+	FROM
+        orderproducts p
+			LEFT JOIN orders o ON  o.id =p.orderId
+			left join memberinvoices i ON i.orderId = o.id
+	WHERE
+	    o.id = p.orderId AND
+	    p.cOrderSn =#{cOrderSn,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

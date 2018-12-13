@@ -1,5 +1,6 @@
 package com.haier.logistics.Model;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.DateUtil;
@@ -47,8 +48,12 @@ import com.haier.shop.service.OrdersAttributesService;
 import com.haier.shop.service.OrdersNewService;
 import com.haier.shop.service.ShopOrderOperateLogsService;
 import com.haier.shop.service.ShopOrderWorkflowsService;
+import com.haier.stock.model.InvMachineSet;
 import com.haier.stock.model.OrderProductStatus;
 import com.haier.stock.model.OrderStatus;
+import com.haier.stock.service.StockInvMachineSetService;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -109,6 +114,8 @@ public class OrderModel {
     private OrderProductsNewService orderProductsDao;
     @Autowired
     private OrdersNewService ordersDao;
+    @Autowired
+    private StockInvMachineSetService stockInvMachineSetService;
     private DataSourceTransactionManager transactionManager;
 /*
     private PayCenterFallBackService payCenterFallBackService;
@@ -306,14 +313,22 @@ public class OrderModel {
 
         //3W-更新'订单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-27
         //3W-更新'网单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-28
-        OrdersAttributes ordersAttributes = null;
+        //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+        //OrdersAttributes ordersAttributes = null;
+        //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 end
+
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
         //'网单扩展属性表'
-        OrderProductsAttributes orderProductsAttributes = orderProductsAttributesDao
-                .getByOrderProductId(orderProduct.getId());
+        /*OrderProductsAttributes orderProductsAttributes = orderProductsAttributesDao
+                .getByOrderProductId(orderProduct.getId());*/
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
         if (orderProduct.getStockType() != null
                 && orderProduct.getStockType().equalsIgnoreCase("3W")) {
+
+            //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
             //'订单扩展属性表'
-            ordersAttributes = ordersAttributesDao.getByOrderId(Integer.valueOf(order.getId()));
+            /*ordersAttributes = ordersAttributesDao.getByOrderId(Integer.valueOf(order.getId()));
             if (ordersAttributes == null) {
                 log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "],order.id["
                         + order.getId() + "]没有查到[订单扩展属性信息]");
@@ -321,9 +336,12 @@ public class OrderModel {
                 result.setMessage("CaiNiao网单出库：order.id[" + order.getId() + "]在[订单扩展属性表]没有查到");
                 return result;
             }
-            ordersAttributes.setLbx(cainiaoMap.get("lbxSn"));
+            ordersAttributes.setLbx(cainiaoMap.get("lbxSn"));*/
+            order.setLbxSn(cainiaoMap.get("lbxSn"));
+            //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 end
 
-            if (orderProductsAttributes == null) {
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+            /*if (orderProductsAttributes == null) {
                 log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "],orderProduct.id["
                         + orderProduct.getId() + "]没有查到[网单扩展属性信息]");
                 result.setResult(false);
@@ -331,7 +349,9 @@ public class OrderModel {
                         "CaiNiao网单出库：orderProduct.id[" + orderProduct.getId() + "]在[网单扩展属性表]没有查到");
                 return result;
             }
-            orderProductsAttributes.setTbOrderSn(cainiaoMap.get("tbOrderSn"));
+            orderProductsAttributes.setTbOrderSn(cainiaoMap.get("tbOrderSn"));*/
+            orderProduct.setTbOrderSn(cainiaoMap.get("tbOrderSn"));
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
 
             //更新网单相关数据（3W订单没有HP相关业务逻辑，导致网单有的没有数据，但后续业务需要）
             orderProduct.setSCode(cainiaoMap.get("sCode"));
@@ -419,16 +439,26 @@ public class OrderModel {
             //3W-更新'订单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-27
             if (orderProduct.getStockType() != null
                     && orderProduct.getStockType().equalsIgnoreCase("3W")) {
-                int n = ordersAttributesDao.update(ordersAttributes);
+
+                //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+                //int n = ordersAttributesDao.update(ordersAttributes);
+                int n = ordersNewService.updateLbxSn(order);
                 if (n < 1) {
+                    /*log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
+                            + orderProduct.getCOrderSn() + "]跟新'订单扩展属性表'失败！");*/
                     log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
-                            + orderProduct.getCOrderSn() + "]跟新'订单扩展属性表'失败！");
+                        + orderProduct.getCOrderSn() + "]更新'订单表'失败！");
                 }
-                n = orderProductsAttributesDao.update(orderProductsAttributes);
+                //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+
+                //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+                /*n = orderProductsAttributesDao.update(orderProductsAttributes);
                 if (n < 1) {
                     log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
                             + orderProduct.getCOrderSn() + "]跟新'网单扩展属性表'失败！");
-                }
+                }*/
+                //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
                 orderProductsNewDao.updateAfterDelivery3W(orderProduct);
             } else {
                 //更新网单
@@ -917,7 +947,7 @@ public class OrderModel {
     		log.setChangeLog(StringUtil.isEmpty(changeLog) ? "" : changeLog);
     		log.setLogTime(((Long) (System.currentTimeMillis() / 1000)).intValue());
     		log.setNetPointId(orderProduct == null ? 0 : orderProduct.getNetPointId());
-    		log.setOperator("CBS系统");
+    		log.setOperator("系统");
     		log.setOrderId(orderProduct.getOrderId());
     		log.setOrderProductId(orderProduct == null ? 0 : orderProduct.getId());
     		log.setPaymentStatus(orderProduct.getCPaymentStatus());
@@ -1069,7 +1099,7 @@ public class OrderModel {
                         acceptTime.getTime() / 1000);
             }
             //记录网单日志
-            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "CBS系统", "网点接单",
+            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "系统", "网点接单",
                     "网点接单时间为：" + DateUtil.format(acceptTime, "yyyy-MM-dd HH:mm:ss"));
             orderOperateLogsDao.insert(orderProductOperateLogs);
 
@@ -1124,7 +1154,7 @@ public class OrderModel {
                         shipTime.getTime() / 1000);
             }
             //记录网单日志
-            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "CBS系统", "网点出库",
+            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "系统", "网点出库",
                     "网点出库时间为：" + DateUtil.format(shipTime, "yyyy-MM-dd HH:mm:ss"));
             orderOperateLogsDao.insert(orderProductOperateLogs);
 
@@ -1181,7 +1211,7 @@ public class OrderModel {
                     && (hasInfo.getDataStatus() == 1 || hasInfo.getDataStatus() == 4)) {
                 hpSignTimeInterface
                         .setCount(hasInfo.getCount() == null ? 1 : hasInfo.getCount() + 1);
-                hpSignTimeInterface.setLastTime(String.valueOf(new Date().getTime() / 1000));
+                hpSignTimeInterface.setLastTime(String.valueOf(System.currentTimeMillis() / 1000));
                 hpSignTimeInterfaceDao.addCountBySkuAndLbx(hpSignTimeInterface);
                 return true;
             } else {
@@ -1196,6 +1226,7 @@ public class OrderModel {
                         orderProductsNew = opList.get(0);
                     } else {
                         boolean flag = false;
+                        //**2018-7-28针对套购套机的情况会出现，物料编码对比失败的情况，应该对比子套件的物料编码**start**
                         for (OrderProductsNew op : opList) {
                             if (hpSignTimeInterface.getSku().equals(op.getSku())) {
                                 orderProductsNew = op;
@@ -1203,9 +1234,54 @@ public class OrderModel {
                                 break;
                             }
                         }
+                        //暂存重复的套机子件sku
+                        Set<String> repeatsSku = new HashSet<String>(6);
+                        //判断是否是套购的套机
+                        if (!flag){
+                            //非套机 商品sku 网单
+                            Map<String,OrderProductsNew> mainOrderMap = new HashMap<String,OrderProductsNew>(6);
+                            //套机子件sku  网单
+                            Map<String,OrderProductsNew> subOrderMap = new HashMap<String,OrderProductsNew>(6);
+
+                            for (OrderProductsNew op : opList) {
+                                List<InvMachineSet> sets = stockInvMachineSetService.getByMainSku(op.getSku());
+                                if (CollectionUtils.isEmpty(sets)){
+                                    //不是套机的网单
+                                    mainOrderMap.put(op.getSku(),op);
+                                }else {
+                                    //是套机的网单
+                                    for(InvMachineSet machineSet :sets){
+                                        if (!subOrderMap.containsKey(machineSet.getSubSku())&& !repeatsSku.contains(machineSet.getSubSku())){
+                                            //不重复的套机子件sku
+                                            subOrderMap.put(machineSet.getSubSku(),op);
+                                        }else {
+                                            //重复的去掉
+                                            subOrderMap.remove(machineSet.getSubSku());
+                                            //防止多次重复
+                                            repeatsSku.add(machineSet.getSubSku());
+                                        }
+                                    }
+                                }
+                            }
+                            //根据vom回传sku匹配网单
+                            if (mainOrderMap.containsKey(hpSignTimeInterface.getSku())){
+                                orderProductsNew = mainOrderMap.get(hpSignTimeInterface.getSku());
+                                flag = true;
+                            }
+                            //根据vom回传sku匹配网单
+                            if (subOrderMap.containsKey(hpSignTimeInterface.getSku())){
+                                orderProductsNew = subOrderMap.get(hpSignTimeInterface.getSku());
+                                flag = true;
+                            }
+                        }
+                        //**2018-7-28针对套购套机的情况会出现，物流编码对比失败的情况，应该对比子套件的物流编码**end**
                         if (!flag) {
                             mes[0] = "tbNo:" + hpSignTimeInterface.getTbNo() + ",sku:"
                                     + hpSignTimeInterface.getSku() + ",未匹配到相关网单信息";
+                            if (repeatsSku.contains(hpSignTimeInterface.getSku())){
+                                mes[0] = "tbNo:" + hpSignTimeInterface.getTbNo() + ",sku:"
+                                    + hpSignTimeInterface.getSku() + ",为同一笔订单中重复的套件sku，无法区分网单";
+                            }
                             log.error(mes[0]);
                             return false;
                         }
@@ -1266,7 +1342,7 @@ public class OrderModel {
                 if (orderWorkflows.getUserAcceptTime().intValue() == 0) {
                     orderWorkflowsDao.updateUserAcceptTime(orderWorkflows.getId(),
                             signTime.getTime() / 1000);
-                    orderOperateLogsDao.insert(getOrderOperateLog(orders, orderProductsNew, "CBS系统",
+                    orderOperateLogsDao.insert(getOrderOperateLog(orders, orderProductsNew, "系统",
                             "用户签收时间同步", (StringUtil.isEmpty(mes[0]) ? "HP同步用户签收时间:" : mes[0])
                                     + DateUtil.format(signTime, "yyyy-MM-dd HH:mm:ss")));
                     //报表增加更新网单表modified字段，报表使用全流程NetPointArriveTime，但是订单网单没有及时更新
@@ -1350,7 +1426,7 @@ public class OrderModel {
                     if (n == opList.size()) {
                         ordersNewDao.completeClose(Integer.parseInt(orders.getId()), now.getTime() / 1000);
                         orderOperateLogs = getOrderOperateLog(orders, null,
-                                "CBS系统", "订单状态由“"
+                                "系统", "订单状态由“"
                                         + OrderStatus.getByCode(orders.getOrderStatus()).getName()
                                         + "”变成“" + OrderStatus.OS_COMPLETE.getName()
                                         + "”",
@@ -1364,7 +1440,7 @@ public class OrderModel {
 
                 orderProductsNewDao.completeClose(orderProductsNew.getId(), now.getTime() / 1000);
                 orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew,
-                        "CBS系统", "网单状态：由 ”"
+                        "系统", "网单状态：由 ”"
                                 + OrderProductStatus.getByCode(orderProductsNew.getStatus()).getName()
                                 + "“变成 ”" + OrderProductStatus.COMPLETED_CLOSE.getName()
                                 + "“",
@@ -1442,7 +1518,7 @@ public class OrderModel {
                 if (orderWorkflows.getUserAcceptTime().intValue() == 0) {
                     orderWorkflowsDao.updateUserAcceptTime(orderWorkflows.getId(),
                             signTime.getTime() / 1000);
-                    orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew, "CBS系统",
+                    orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew, "系统",
                             "用户签收时间同步",
                             //根据mes[0]区分是否为快递100回传签收
                             (StringUtil.isEmpty(mes[0]) ? "HP同步用户签收时间:" : mes[0])
@@ -1674,7 +1750,7 @@ public class OrderModel {
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         //TransactionStatus status = transactionManager.getTransaction(def);
         try {
-            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "CBS系统", "到达网点",
+            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "系统", "到达网点",
                     "网点到达时间为：" + DateUtil.format(arriveTime, "yyyy-MM-dd HH:mm:ss"));
             orderOperateLogsDao.insert(orderProductOperateLogs);
             orderWorkflowsDao.updateNetPointArriveTime(orderWorkflow.getId(),

@@ -55,24 +55,24 @@ $(function () {
 	    pagination: true,
 	    rownumbers: true,
 		columns: [[
-			{title: '团购名称', field: 'groupName', sortable: true,
+			{title: '团购名称', field: 'groupName', sortable: false,
 			        	formatter: function(value,row,index){
 							return "<span title='" + row.groupName + "'>" + row.groupName + "</span>" ;
 			}},
-			{title: '团购商品sku', field: 'sku', sortable: true},
-			{title: '订金金额', field: 'depositAmount', sortable: true,
+			{title: '团购商品sku', field: 'sku', sortable: false},
+			{title: '订金金额', field: 'depositAmount', sortable: false,
 			        	formatter: function(value,row,index){
 							return "￥"+row.depositAmount ;
 			}},
-			{title: '尾款金额', field: 'balanceAmount', sortable: true,
+			{title: '尾款金额', field: 'balanceAmount', sortable: false,
 			        	formatter: function(value,row,index){
 							return "￥"+row.balanceAmount ;
 			}},
-			{title: '订金开始时间', field: 'depositStartTime', sortable: true},
-			{title: '订金结束时间', field: 'depositEndTime', sortable: true},
-			{title: '尾款开始时间', field: 'balanceStartTime', sortable: true},
-			{title: '尾款结束时间', field: 'balanceEndTime', sortable: true},
-			{title: '发货时机', field: 'shippingOpporunity', sortable: true,
+			{title: '订金开始时间', field: 'depositStartTime', sortable: false},
+			{title: '订金结束时间', field: 'depositEndTime', sortable: false},
+			{title: '尾款开始时间', field: 'balanceStartTime', sortable: false},
+			{title: '尾款结束时间', field: 'balanceEndTime', sortable: false},
+			{title: '发货时机', field: 'shippingOpporunity', sortable: false,
 			        	formatter: function(value,row,index){
 							var isNot="";
 							if(row.shippingOpporunity =='0'){
@@ -83,7 +83,7 @@ $(function () {
 							}
 							return isNot ;
 			}},
-			{title: '状态', field: 'status', sortable: true,
+			{title: '状态', field: 'status', sortable: false,
 			        	formatter: function(value,row,index){
 							var isNot="";
 							if(row.status =='1'){
@@ -93,7 +93,7 @@ $(function () {
 							}
 							return isNot ;
 			}},
-			{title: '套装设置', field: 'productSpecs', sortable: true},
+			{title: '套装设置', field: 'productSpecs', sortable: false},
 		]],
 	});
     dataGrid.datagrid('getPager').pagination({
@@ -138,10 +138,13 @@ $(function () {
         	alert("尾款结束时间不能为空");
         	return;
         }
+             var sku = $("#skugroup").val();
              var productSpecIds = document.getElementsByName("productSpecIds[]");
              var productPrices = document.getElementsByName("productPrices[]");
 			 var SpecIds= document.getElementById("specIds");  
              var Prices = document.getElementById('prices');
+             //如果sku为空则判断套装输入有没有问题
+             if(sku == ''){
 			 if(productSpecIds.length==productPrices.length){
 			 	
 			 	if(productPrices.length ==0 && productPrices.length ==0){
@@ -153,6 +156,8 @@ $(function () {
 		                      if (productSpecIds[i] != null)
 		                      {
 		                      	if(productSpecIds[i].value==null||productSpecIds[i].value==""){
+                                    $('#specIds').val("");
+                                    $('#prices').val("");
 					             	alert("套装sku不能为空");
 									return;
 					            }
@@ -167,6 +172,8 @@ $(function () {
 					             }
 		                      	 var reg = /(^[-+]?[1-9]\d*(\.\d{1,2})?$)|(^[-+]?[0]{1}(\.\d{1,2})?$)/;
 					             if(!reg.test(productPrices[i].value)){
+                                     $('#specIds').val("");
+                                     $('#prices').val("");
 					             	alert("请输入正确的套装价格");
 									return;
 					             }
@@ -179,7 +186,7 @@ $(function () {
 			 	alert("套装内sku数量与价格数量不匹配，请正确添加");
 			 	return;
 			 }
-        
+         }
         var actType = $('#addForm_tbgroupbuy').find('[__actType]').val();
         if (actType === 'add') {
             $.ajax({
@@ -230,7 +237,7 @@ $(function () {
  		el.innerHTML="<div>套装商品Sku&nbsp;：&nbsp;<input name='productSpecIds[]' class='easyui-textbox'/>&nbsp;&nbsp;&nbsp;&nbsp;商品价格：<input name='productPrices[]' class='easyui-numberbox'  data-options='precision:2'/><a href='javascript:void(0)' onclick='delObj(this)'>删除</a></div>";
         document.getElementById("package").appendChild(el);
     });
-    
+
     $("#editBtn_tbgroupbuy").on('click', function () {
         var selected = dataGrid.datagrid('getSelected');
         var selecteds = dataGrid.datagrid('getSelections');

@@ -3,11 +3,15 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.WwwHpRecordsWriteDao">
 
 	<insert id="insert" parameterType="com.haier.shop.model.WwwHpRecords">
-		insert into WwwHpRecords(`id`,`addTime`,`orderProductId`,`orderRepairId`,`sku`,`cOrderSn`,`lbxSn`,`count`,`success`,`flag`,`remark`,`modifytime`,`hpTbSn`,`vomRepairSn`)values(#{id},#{addTime},#{orderProductId},#{orderRepairId},#{sku},#{cOrderSn},#{lbxSn},#{count},#{success},#{flag},#{remark},#{modifytime},#{hpTbSn},#{vomRepairSn})
+		insert into wwwhprecords(`id`,`addTime`,`orderProductId`,`orderRepairId`,`sku`,`cOrderSn`,`lbxSn`,`count`,`success`,`flag`,`remark`,`modifytime`,`hpTbSn`,`vomRepairSn`)values(#{id},#{addTime},#{orderProductId},#{orderRepairId},#{sku},#{cOrderSn},#{lbxSn},#{count},#{success},#{flag},#{remark},#{modifytime},#{hpTbSn},#{vomRepairSn})
 	</insert>
 
 	<update id="update" parameterType="com.haier.shop.model.WwwHpRecords">
-		update WwwHpRecords set `id`=#{id},`addTime`=#{addTime},`orderProductId`=#{orderProductId},`orderRepairId`=#{orderRepairId},`sku`=#{sku},`cOrderSn`=#{cOrderSn},`lbxSn`=#{lbxSn},`count`=#{count},`success`=#{success},`flag`=#{flag},`remark`=#{remark},`modifytime`=#{modifytime},`hpTbSn`=#{hpTbSn},`vomRepairSn`=#{vomRepairSn}
+		update wwwhprecords set `id`=#{id},`addTime`=#{addTime},`orderProductId`=#{orderProductId},`orderRepairId`=#{orderRepairId},`sku`=#{sku},`cOrderSn`=#{cOrderSn},`lbxSn`=#{lbxSn},`count`=#{count},`success`=#{success},`flag`=#{flag},`remark`=#{remark},`modifytime`=#{modifytime},`hpTbSn`=#{hpTbSn},`vomRepairSn`=#{vomRepairSn}
+	</update>
+
+	<update id="Rejectionsinglereset" parameterType="java.lang.Integer">
+		UPDATE wwwhprecords SET orderProductId=0,orderRepairId=0,remark="",count=0,success=0,flag=0 WHERE id=#{id}
 	</update>
 
 </mapper>

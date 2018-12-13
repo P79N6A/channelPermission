@@ -3,15 +3,15 @@ var datagridOptions_orderForecastGoal = {
     singleSelect: true,//多选
     url: '',
     columns: [[
-        {title: '单据号 ', field: 'refNo', sortable: true},
-        {title: '物料编号 ', field: 'sku', sortable: true},
-        {title: '物料型号', field: 'productName', sortable: true},
-        {title: '库位编码', field: 'secCode', sortable: true},
-        {title: '库位名称', field: 'secName', sortable: true},
-        { title:'借贷标志', field: "mark",sortable: true},
-        {title: '日志内容', field: 'content', sortable: true},
+        {title: '单据号 ', field: 'refNo', sortable: false},
+        {title: '物料编号 ', field: 'sku', sortable: false},
+        {title: '物料型号', field: 'productName', sortable: false},
+        {title: '库位编码', field: 'secCode', sortable: false},
+        {title: '库位名称', field: 'secName', sortable: false},
+        { title:'借贷标志', field: "mark",sortable: false},
+        {title: '日志内容', field: 'content', sortable: false},
         {
-            title: '创建时间', field: 'createTime', sortable: true, formatter: formatDatebox
+            title: '创建时间', field: 'createTime', sortable: false, formatter: formatDatebox
         },
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
@@ -76,6 +76,8 @@ $("#searchBtn").on('click', function (event) {
     $("#markData").val(markData);
     $("#billTypeData").val(billTypeData);
 
+
+   
     datagrid = $('#invBaseStockLogTable').datagrid({
         url: "/stock/findBaseStockLogList",
         fit: true,
@@ -97,11 +99,11 @@ $("#searchBtn").on('click', function (event) {
             billType: billTypeData
         },
         columns: [[
-            {title: '单据号 ', field: 'refNo', sortable: true},
-            {title: '物料编号 ', field: 'sku', sortable: true},
-            {title: '物料型号', field: 'productName', sortable: true},
-            {title: '库位编码', field: 'secCode', sortable: true},
-            {title: '库位名称', field: 'secName', sortable: true},
+            {title: '单据号 ', field: 'refNo', sortable: false},
+            {title: '物料编号 ', field: 'sku', sortable: false},
+            {title: '物料型号', field: 'productName', sortable: false},
+            {title: '库位编码', field: 'secCode', sortable: false},
+            {title: '库位名称', field: 'secName', sortable: false},
             {
                 field: "mark",
                 title: '借贷标志',
@@ -115,10 +117,10 @@ $("#searchBtn").on('click', function (event) {
                 }
             },
             {
-                title: '日志内容', field: 'content', sortable: true, width: 400
+                title: '日志内容', field: 'content', sortable: false, width: 400
             },
             {
-                title: '创建时间', field: 'createTime', sortable: true, formatter: formatDatebox,
+                title: '创建时间', field: 'createTime', sortable: false, formatter: formatDatebox,
                 width: 170
             },
         ]],
@@ -184,6 +186,7 @@ var sBillType = {
     ZBCJ: '拒收入库',
     ZGR6: '调拨入库',
     ZRSR: '转运入库',
+    QYRK: '迁移入库',
     DBRR: '取消调拨释放',
     XSRR: '取消销售释放',
     SDRR: '取消手动释放',

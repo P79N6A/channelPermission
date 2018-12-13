@@ -250,23 +250,28 @@ public class VOMOrderModel {
 				} else {
 					paramMap.put("source_order_id", orderNo);
 				}
-
-				flow_flag = purchaseVomOrderService.getFlowFlagByCrmReturnInfo(paramMap);
-				if (iStatus == 140) {
-					if ("15".equals(flow_flag)) {
-						status = "20";
-						paramMap.put("deliveryTime", "yes");
-					} else if ("35".equals(flow_flag)) {
-						status = "50";
+				String storageId=purchaseVomOrderService.getStorageIdByCrmReturnInfo(paramMap);
+				if(!"ZZWA".equals(storageId)){
+					paramMap.put("flow_flag", "40");
+					count = purchaseVomOrderService.updateCrmReturnInfo(paramMap);
+				}else {
+					flow_flag = purchaseVomOrderService.getFlowFlagByCrmReturnInfo(paramMap);
+					if (iStatus == 140) {
+						if ("15".equals(flow_flag)) {
+							status = "20";
+							paramMap.put("deliveryTime", "yes");
+						} else if ("35".equals(flow_flag)) {
+							status = "50";
+						}
+					} else if (iStatus == -120) {
+						status = flow_flag;
+						paramMap.put("error_msg", error_msg);
 					}
-				} else if (iStatus == -120) {
-					status = flow_flag;
-					paramMap.put("error_msg", error_msg);
-				}
-				paramMap.put("flow_flag", status);
-				count = purchaseVomOrderService.updateCrmReturnInfo(paramMap);
+					paramMap.put("flow_flag", status);
+					count = purchaseVomOrderService.updateCrmReturnInfo(paramMap);
 				/*serviceResult.setResult(true);
 				serviceResult.setMessage("订单处理成功");*/
+				}
 			} else if ("WD2".equals(prefix)) {//CGO
 				Map<String, Object> paramMap = new HashMap<String, Object>();
 				if (orderNo.indexOf("T") > 0) {

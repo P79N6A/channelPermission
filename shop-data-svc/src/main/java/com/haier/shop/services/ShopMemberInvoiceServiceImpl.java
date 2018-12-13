@@ -1,22 +1,26 @@
 package com.haier.shop.services;
 
+import com.haier.shop.dao.shopread.InvoicesWwwLogsReadDao;
+import com.haier.shop.dao.shopread.MemberInvoicesReadDao;
+import com.haier.shop.dao.shopread.OrderProductsReadDao;
+import com.haier.shop.dao.shopwrite.InvoiceChangeLogsWriteDao;
+import com.haier.shop.dao.shopwrite.InvoicesWwwLogsWriteDao;
+import com.haier.shop.dao.shopwrite.MemberInvoicesWriteDao;
+import com.haier.shop.dao.shopwrite.OrderOperateLogsWriteDao;
+import com.haier.shop.dao.shopwrite.OrderProductsWriteDao;
+import com.haier.shop.model.*;
+import com.haier.shop.service.OrdersService;
+import com.haier.shop.service.ShopMemberInvoicesService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.haier.shop.dao.shopwrite.InvoiceChangeLogsWriteDao;
-import com.haier.shop.dao.shopwrite.OrderProductsWriteDao;
-import com.haier.shop.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.haier.shop.dao.shopread.MemberInvoicesReadDao;
-import com.haier.shop.dao.shopwrite.MemberInvoicesWriteDao;
-import com.haier.shop.service.ShopMemberInvoicesService;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 用户发票业务实现类（业务专用）
@@ -27,14 +31,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class ShopMemberInvoiceServiceImpl implements ShopMemberInvoicesService {
 
     @Autowired
-    private MemberInvoicesReadDao memberInvoicesReadDao;
+    private MemberInvoicesReadDao     memberInvoicesReadDao;
     @Autowired
-    private MemberInvoicesWriteDao memberInvoicesWriteDao;
+    private MemberInvoicesWriteDao    memberInvoicesWriteDao;
     @Autowired
-    private OrderProductsWriteDao orderProductsWriteDao;
+    private OrderProductsWriteDao     orderProductsWriteDao;
     @Autowired
     private InvoiceChangeLogsWriteDao invoiceChangeLogsWriteDao;
-
+    @Autowired
+    private InvoicesWwwLogsReadDao    invoicesWwwLogsReadDao;
+    @Autowired
+    private InvoicesWwwLogsWriteDao    invoicesWwwLogsWriteDaoDao;
+    @Autowired
+    private OrderProductsReadDao orderProductsReadDao;
+    @Autowired
+    private OrderOperateLogsWriteDao orderOperateLogsWriteDao;
+    @Autowired
+    private OrdersService ordersService;
     @Override
     public MemberInvoices getById(Integer id) {
         return memberInvoicesReadDao.getById(id);
@@ -110,13 +123,20 @@ public class ShopMemberInvoiceServiceImpl implements ShopMemberInvoicesService {
     }
 
     /**
+     * 获得条数
+     */
+    public int getCount() {
+        return memberInvoicesReadDao.getCount();
+    }
+
+    /**
      * 修改核对发票业务操作
      * @param memberInvoices
      * @param oldmemberInvoices
      */
     @Override
     @Transactional(value = "shopTransactionManagerWrite", isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)
-    public void saveInvoiceOperate(List<OrderProducts> orderProductsList,MemberInvoices memberInvoices, MemberInvoices oldmemberInvoices, String auditor) {
+    public void saveInvoiceOperate(List<OrderProducts> orderProductsList,MemberInvoices memberInvoices, MemberInvoices oldmemberInvoices, String auditor,String userName) {
         // 增值税发票的场合
         if (memberInvoices.getInvoiceType().equals(1)) {
             // 将开票类型修改为“共享开票”
@@ -142,14 +162,25 @@ public class ShopMemberInvoiceServiceImpl implements ShopMemberInvoicesService {
                 memberInvoices.setAuditor("系统");
                 memberInvoices.setRemark("该增票信息先前已存在并审核通过,本订单增票信息自动审核通过");
                 memberInvoices.setParentId(queryMemberInvoices.getId());
-                memberInvoicesWriteDao.update(memberInvoices);
+                memberInvoicesWriteDao.update1(memberInvoices);
             } else {
                 memberInvoices.setState(state_t);
-                memberInvoicesWriteDao.update(memberInvoices);
+                memberInvoicesWriteDao.update1(memberInvoices);
             }
         } else {
-            memberInvoicesWriteDao.update(memberInvoices);
+            memberInvoicesWriteDao.update1(memberInvoices);
         }
+        //跟新InvoicesWwwLogs
+        List<InvoicesWwwLogs> invoicesWwwLogsList = invoicesWwwLogsReadDao.getByOrderId(memberInvoices.getOrderId());
+        if(invoicesWwwLogsList != null && invoicesWwwLogsList.size() > 0){
+            for (InvoicesWwwLogs invoicesWwwLogs : invoicesWwwLogsList) {
+                //跟新成功
+                invoicesWwwLogs.setSuccess(1);
+                invoicesWwwLogs.setProcessTime((int) (System.currentTimeMillis() / 1000));
+                invoicesWwwLogsWriteDaoDao.updateInvoiceWwwLogs(invoicesWwwLogs);
+            }
+        }
+
         //插入日志
         InvoiceChangeLogs invoiceChangeLogs = new InvoiceChangeLogs();
         invoiceChangeLogs.setAddTime(new Date().getTime() / 1000);
@@ -231,6 +262,28 @@ public class ShopMemberInvoiceServiceImpl implements ShopMemberInvoicesService {
             invoiceChangeLogs.setRemark(invoiceChangeLogs.getRemark().replace("0", "待审核")
                     .replace("1", "审核通过").replace("2", "拒绝"));
             invoiceChangeLogsWriteDao.insert(invoiceChangeLogs);
+            Integer orderId = oldmemberInvoices.getOrderId();
+            List<OrderProducts> orderProductsByOrderId = orderProductsReadDao.getOrderProductsByOrderId(orderId);
+            Orders orders = ordersService.get(orderId);
+            for (OrderProducts orderProducts : orderProductsByOrderId) {
+        		OrderOperateLogs orderOperateLogs = new OrderOperateLogs();
+				orderOperateLogs.setSiteId(0);
+				orderOperateLogs.setOrderId(orderId);
+				orderOperateLogs.setOrderProductId(orderProducts.getId());
+				orderOperateLogs.setNetPointId(orderProducts.getNetPointId());
+				orderOperateLogs.setOperator(userName);
+				orderOperateLogs.setChangeLog("审核状态：由“" + oldmemberInvoices.getState() + "”变更为“"
+	                    + memberInvoices.getState() + "”");
+				orderOperateLogs.setChangeLog(orderOperateLogs.getChangeLog().replace("0", "待审核")
+	                    .replace("1", "审核通过").replace("2", "拒绝"));
+				orderOperateLogs.setRemark("手动修改发票状态");
+				long time = new Date().getTime();
+				Integer date = (int)time;
+				orderOperateLogs.setLogTime(date);
+				orderOperateLogs.setStatus(orderProducts.getStatus());
+				orderOperateLogs.setPaymentStatus(orders.getPaymentStatus());
+				orderOperateLogsWriteDao.insert(orderOperateLogs);
+			}
         }
         if (!oldmemberInvoices.getRemark().equals(memberInvoices.getRemark())) {
             invoiceChangeLogs.setRemark("备注信息：由“" + oldmemberInvoices.getRemark() + "”变更为“"
@@ -264,5 +317,10 @@ public class ShopMemberInvoiceServiceImpl implements ShopMemberInvoicesService {
         invoiceChangeLogs.setRemark("手动解除发票信息锁定");
         invoiceChangeLogsWriteDao.insert(invoiceChangeLogs);
         return "";
+    }
+
+    @Override
+    public MemberInvoices getMemberInvoiceByInvoiceTitleForYoupin(String invoiceTitle) {
+        return memberInvoicesReadDao.getMemberInvoiceByInvoiceTitleForYoupin(invoiceTitle);
     }
 }

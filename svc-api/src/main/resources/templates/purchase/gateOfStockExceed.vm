@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>测试页面</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
+</head>
+<body>
+<table id="dataGrid"></table>
+<div id="tb" style="padding:5px;height:auto">
+    <form id="filterForm" action="#">
+
+        <a id="add" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" >添加</a>
+        <a id="save" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >保存</a>
+        <a id="delete" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" >删除</a>
+
+	</form>
+</div>
+
+<script type="text/javascript">
+$(function () {
+
+	//取得渠道列表
+	var channelsList = eval('$!channelsList');
+	//取得是否启用列表
+	var isEnabledList = eval('$!isEnabledList');
+	//datagrid
+	var datagrid = $('#dataGrid').datagrid({
+        url: "/stockexceed/findGateOfStockExceedList",
+        fit: true,
+        fitColumns: false,
+        toolbar: $('#tb'),
+        singleSelect: false,
+        nowrap: true,
+        rownumbers: true,
+		selectOnCheck: false,
+		checkOnSelect: false,
+		onClickRow: onClickRow,
+        columns: [
+            [
+             {field:'check',title:'选择',width:40,align:'center', rowspan:2,
+                 checkbox:true
+             },
+
+             {field:'is_enabled',title:'启用',width:70,align:'center', rowspan:2,
+         	    formatter:function(value,row){
+        	        return row.is_enabled_name;
+        	    },
+         	    editor:{
+        	        type:'combobox',
+        	        options:{
+        	            data: isEnabledList,
+        				valueField:'value',
+        				textField:'value_meaning',
+        				panelHeight:'auto',
+        	            editable:false,
+        	            required: true,
+        	            onSelect:function(record){
+        	            }
+        	        }
+				}
+             },
+             {title:'判断方式',align:'center',colspan:2},
+             {title:'关闸方式',align:'center',colspan:5},
+             {field:'summary',title:'说明',width:300,align:'left', rowspan:2, editor: { type: 'text' } }
+         ],[
+             {field:'judge_ed_channel_id',
+            	    title:'渠道',
+            	    width:100,
+            	    align:'center',
+            	    formatter:function(value,row){
+            	        return row.judge_ed_channel_name;
+            	    },
+            	    editor:{
+            	        type:'combobox',
+            	        options:{
+            	            data: channelsList,
+            				valueField:'channelCode',
+            				textField:'name',
+            				panelHeight:'auto',
+            	            editable:false,
+            	            required: true,
+            	            onSelect:function(record){
+            	            }
+            	        }
+					}
+             },
+             {field: 'exceed_age', title: '超期库龄', width: 60, align: 'right',
+                 editor: {
+                     type: 'numberbox',
+                     options: { required: true,decimalSeparator:"",max:999,min:0}
+                 }
+             },
+             {field:'limit_ed_channel_id',title:'渠道',align:'center',width:100,rowspan:1,
+         	    formatter:function(value,row){
+        	        return row.limit_ed_channel_name;
+        	    },
+         	    editor:{
+        	        type:'combobox',
+        	        options:{
+        	            data: channelsList,
+        				valueField:'channelCode',
+        				textField:'name',
+        				panelHeight:'auto',
+        	            editable:false,
+        	            required: true,
+        	            onSelect:function(record){
+        	            }
+        	        }
+				}
+			},
+             {field:'brand_type',title:'品牌',align:'center',width:70,rowspan:1,
+         	    formatter:function(value,row){
+         	    	if(value=="1"){
+         	    		return "本品牌";
+         	    	}else if(value=="0"){
+         	    		return "全品牌";
+         	    	}
+        	    },
+         	    editor:{
+        	        type:'combobox',
+        	        options:{
+        	            data: [{brand_code:'1',brand_name:'本品牌'},{brand_code:'0',brand_name:'全品牌'}],
+        				valueField:'brand_code',
+        				textField:'brand_name',
+        				panelHeight:'auto',
+        	            editable:false,
+        	            required:true,
+        	            onSelect:function(record){
+        	            }
+        	        }
+				}
+			},
+             {field:'category_type',title:'品类',align:'center',width:70,rowspan:1,
+         	    formatter:function(value,row){
+         	    	if(value=="1"){
+         	    		return "本品类";
+         	    	}else if(value=="0"){
+         	    		return "全品类";
+         	    	}
+        	    },
+         	    editor:{
+        	        type:'combobox',
+        	        options:{
+        	            data: [{category_code:'1',category_name:'本品类'},{category_code:'0',category_name:'全品类'}],
+        				valueField:'category_code',
+        				textField:'category_name',
+        				panelHeight:'auto',
+        	            editable:false,
+        	            required:true,
+        	            onSelect:function(record){
+        	            }
+        	        }
+				}
+			},
+             {field:'model_type',title:'型号',align:'center',width:70,rowspan:1,
+         	    formatter:function(value,row){
+         	    	if(value=="1"){
+         	    		return "本型号";
+         	    	}else if(value=="0"){
+         	    		return "全型号";
+         	    	}
+        	    },
+         	    editor:{
+        	        type:'combobox',
+        	        options:{
+        	            data: [{model_code:'1',model_name:'本型号'},{model_code:'0',model_name:'全型号'}],
+        				valueField:'model_code',
+        				textField:'model_name',
+        				panelHeight:'auto',
+        	            editable:false,
+        	            required:true,
+        	            onSelect:function(record){
+        	            }
+        	        }
+				}
+			},
+             {field:'storage_type',title:'库位',align:'center',width:70,rowspan:1,
+         	    formatter:function(value,row){
+         	    	if(value=="1"){
+         	    		return "本库位";
+         	    	}else if(value=="0"){
+         	    		return "全库位";
+         	    	}
+        	    },
+         	    editor:{
+        	        type:'combobox',
+        	        options:{
+        	            data: [{storage_code:'1',storage_name:'本库位'},{storage_code:'0',storage_name:'全库位'}],
+        				valueField:'storage_code',
+        				textField:'storage_name',
+        				panelHeight:'auto',
+        	            editable:false,
+        	            required: true,
+        	            onSelect:function(record){
+        	            }
+        	        }
+				}
+			}, {field:'id',title:'选择',hidden:true}
+
+            ]
+        ],
+        onLoadSuccess:function(data){
+        }
+    });
+	$('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+});
+var editIndex = undefined;
+function endEditing(){
+	if($('#dataGrid').datagrid("getRows").length<=0) return true;
+	if (editIndex == undefined){return true}
+	if ($('#dataGrid').datagrid('validateRow', editIndex)){
+		getNames();
+		var rows = $('#dataGrid').datagrid('getChecked');
+		var editcheck = false;
+		$.each(rows, function(index, item) {
+			if(item==$('#dataGrid').datagrid('getRows')[editIndex])
+				editcheck =true;
+				return false;
+		});
+		$('#dataGrid').datagrid('endEdit', editIndex);
+		if(editcheck) {
+			$('#dataGrid').datagrid('checkRow',editIndex);
+		}
+		//check是否有重行
+		if(!checkduplicate(editIndex)){
+			$.messager.alert('提示', '数据重复!', 'error');
+			$('#dataGrid').datagrid('beginEdit', editIndex);
+			return false;
+		}
+		editIndex = undefined;
+		return true;
+	} else {
+		$.messager.alert('提示', '存在未输入的数据!', 'error');
+		return false;
+	}
+}
+function onClickRow(index){
+	if (editIndex != index){
+		if (endEditing()){
+			$('#dataGrid').datagrid('selectRow', index)
+			.datagrid('beginEdit', index);
+			editIndex = index;
+		} else {
+			$('#dataGrid').datagrid('selectRow', editIndex);
+		}
+	}
+}
+$("#add").click(function(){
+	if (endEditing()){
+		$('#dataGrid').datagrid('appendRow',{is_enabled:'1'});
+		editIndex = $('#dataGrid').datagrid('getRows').length-1;
+		$('#dataGrid').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
+    }
+    return 0;
+});
+        $("#delete").click(function(){
+	 //获取表格选择行
+	var rows = $('#dataGrid').datagrid('getChecked');
+	if (!rows || rows.length == 0) {
+		$.messager.alert('提示', '请选择要删除的数据!', 'info');
+		return;
+	}
+	$.messager.confirm('提示', '确定删除?', function (r) {
+        if (r) {
+        	var removeIds = new Array();
+			$.each(rows,function(index,item){
+				var rowIndex = $('#dataGrid').datagrid('getRowIndex', this);
+				$('#dataGrid').datagrid('deleteRow', rowIndex);
+				//编辑行之前的被删除 editIndex-1
+				if(rowIndex<editIndex) {
+					editIndex=editIndex-1;
+				}
+				//编辑行被删除，editIndex设为undefined
+				if(rowIndex==editIndex) editIndex=undefined;
+				removeIds.push(item.id);
+			});
+			console.info(removeIds);
+			 jQuery.ajax({
+	             url: "/stockexceed/removeGateOfStockExceed",
+	             type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+	             data:{"removeIds": JSON.stringify(removeIds)},
+	             success: function (data) {
+	 				var result = data.message;
+					if(result){
+						$.messager.alert('提示',result,'info', function(){
+							if(data.totalCount==1){
+				             	$('#dataGrid').datagrid('reload');
+				             	$('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+							}else if(data.totalCount==0){
+								$('#dataGrid').datagrid('reload');
+							}
+						});
+					}
+	             }
+	 		});
+		}
+    });
+        });
+$("#save").click(function(){
+	if (endEditing()){
+		$('#dataGrid').datagrid('acceptChanges');
+		var allData = $('#dataGrid').datagrid('getRows');
+		jQuery.ajax({
+        	url: "/stockexceed/saveGateOfStockExceedList",   // 提交的页面
+			type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+			data:{"allData":JSON.stringify(allData)},
+			success: function (data) {
+				var result = data.message;
+				if(result){$.messager.alert('提示',result,'info', function(){
+                    $('#dataGrid').datagrid('reload');
+                    if(data.totalCount==1){
+					}
+				});}
+			}
+ 		});
+	}
+});
+function getChanges(){
+	var rows = $('#dataGrid').datagrid('getChanges');
+	alert(rows.length+' rows are changed!');
+}
+function getNames(){
+	if(!$('#dataGrid').datagrid('getRows')[editIndex]) return;
+	var is_enabled = $('#dataGrid').datagrid('getEditor', {index:editIndex,field:'is_enabled'});
+	var is_enabled_name = $(is_enabled.target).combobox('getText');
+	$('#dataGrid').datagrid('getRows')[editIndex]['is_enabled_name'] = is_enabled_name;
+	var judge_ed_channel = $('#dataGrid').datagrid('getEditor', {index:editIndex,field:'judge_ed_channel_id'});
+	var judge_ed_channel_name = $(judge_ed_channel.target).combobox('getText');
+	$('#dataGrid').datagrid('getRows')[editIndex]['judge_ed_channel_name'] = judge_ed_channel_name;
+	var limit_ed_channel = $('#dataGrid').datagrid('getEditor', {index:editIndex,field:'limit_ed_channel_id'});
+	var limit_ed_channel_name = $(limit_ed_channel.target).combobox('getText');
+	$('#dataGrid').datagrid('getRows')[editIndex]['limit_ed_channel_name'] = limit_ed_channel_name;
+}
+function checkduplicate(editIndex){
+	var allData = $('#dataGrid').datagrid('getRows');
+	if(!$('#dataGrid').datagrid('getRows')[editIndex]) return true;
+	var checkstatus = true;
+	$.each(allData,function(){
+		var rowIndex = $('#dataGrid').datagrid('getRowIndex', this);
+		//是否存在重复行
+		if(rowIndex!=editIndex&&$('#dataGrid').datagrid('getRows')[editIndex]['judge_ed_channel_id']==$('#dataGrid').datagrid('getRows')[rowIndex]['judge_ed_channel_id']
+										   &&$('#dataGrid').datagrid('getRows')[editIndex]['limit_ed_channel_id']==$('#dataGrid').datagrid('getRows')[rowIndex]['limit_ed_channel_id']
+										   &&$('#dataGrid').datagrid('getRows')[editIndex]['brand_type']==$('#dataGrid').datagrid('getRows')[rowIndex]['brand_type']
+										   &&$('#dataGrid').datagrid('getRows')[editIndex]['category_type']==$('#dataGrid').datagrid('getRows')[rowIndex]['category_type']
+										   &&$('#dataGrid').datagrid('getRows')[editIndex]['model_type']==$('#dataGrid').datagrid('getRows')[rowIndex]['model_type']
+		                                   &&$('#dataGrid').datagrid('getRows')[editIndex]['storage_type']==$('#dataGrid').datagrid('getRows')[rowIndex]['storage_type']){
+			checkstatus = false;
+			return false;
+		}
+	});
+	return checkstatus;
+}
+</script>
+</body>

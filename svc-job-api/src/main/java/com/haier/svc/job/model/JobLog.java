@@ -31,6 +31,9 @@ public class JobLog implements Serializable{
 	//
 	private String message;
 
+	//后添加自定义字段  用于绑定job表job名称
+	private String jobName;
+
 	public Integer getLogId() {
 		return logId;
 	}
@@ -94,4 +97,12 @@ public class JobLog implements Serializable{
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+    public String getJobName() {
+        return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
 }

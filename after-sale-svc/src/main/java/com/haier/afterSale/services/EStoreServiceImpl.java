@@ -22,7 +22,7 @@ import com.haier.shop.model.BatchOrderLockVO;
 import com.haier.shop.model.OrderLockResult;
 import com.haier.shop.model.ProductBase;
 import com.haier.shop.model.SgConstants;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.stock.model.BaseStock;
 import com.haier.stock.model.InvSection;
 import com.haier.stock.model.InvStockChannel;

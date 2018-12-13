@@ -12,7 +12,7 @@ var datagridOptions_warehouseListGoal = {
 							width : 120,
 							field : 'sku',
 							align : 'center'
-				            , sortable: true,
+				            , sortable: false,
 				            rowspan:2
 				        },
 				        {
@@ -20,7 +20,7 @@ var datagridOptions_warehouseListGoal = {
 							width : 120,
 							field : 'sec_code',
 							align : 'center'
-				            , sortable: true,
+				            , sortable: false,
 				            rowspan:2
 				        },
 				        {
@@ -28,7 +28,7 @@ var datagridOptions_warehouseListGoal = {
 							width : 120,
 							field : 'channel_name',
 							align : 'center'
-				            , sortable: true,
+				            , sortable: false,
 				            rowspan:2
 				        },
 				        {
@@ -36,7 +36,7 @@ var datagridOptions_warehouseListGoal = {
 							width : 120,
 							field : 'product_type_name',
 							align : 'center'
-				            , sortable: true,
+				            , sortable: false,
 				            rowspan:2
 				        },
 				        {
@@ -44,7 +44,7 @@ var datagridOptions_warehouseListGoal = {
 							width : 150,
 							field : 'product_name',
 							align : 'center'
-				            , sortable: true,
+				            , sortable: false,
 				            rowspan:2
 				        }
 				        
@@ -54,7 +54,7 @@ var datagridOptions_warehouseListGoal = {
 				                title: '渠道锁定',
 				                width: 70,
 				                align: 'left'
-				                , sortable: true,
+				                , sortable: false,
 				                colspan:4
 				            }
 				            
@@ -63,7 +63,7 @@ var datagridOptions_warehouseListGoal = {
 								width : 100,
 								field : 'optUser realeaseQty',
 								align : 'center',
-								  sortable: true,
+								  sortable: false,
 						            rowspan:2,
 						            formatter: function(value,row,index){
 										if(row.channelLockQty==0){
@@ -78,14 +78,14 @@ var datagridOptions_warehouseListGoal = {
 				                title: '渠道共享',
 				                width: 70,
 				                align: 'left'
-				                , sortable: true,
+				                , sortable: false,
 				                colspan:4
 				            },{
 								title : '渠道共享占用',
 								width : 110,
 								field : 'channelLockQty',
 								align : 'center',
-								 sortable: true,
+								 sortable: false,
 						            rowspan:2,
 						            formatter: function(value,row,index){
 										if(row.waLockQty==0){
@@ -222,7 +222,7 @@ $.getJSON("/invParams/getParams?group=GROUP_CHANNEL_STOCK", function (result) {
     });
 	});
 $(function () {
-    var datagrid = $('#dg').datagrid(datagridOptions_warehouseListGoal);
+    var datagrid = $('#datagrid').datagrid(datagridOptions_warehouseListGoal);
 });
 
 function searchselect(){
@@ -263,7 +263,7 @@ function onQuery(pageIndex){
 //    $("#code").val("yes");
 
     //加载分页
-    datagrid = $('#dg').datagrid({
+    datagrid = $('#datagrid').datagrid({
         url: "/stockReserved/queryStockAgeList",
         fit: true,
         singleSelect: true,//多选
@@ -277,7 +277,8 @@ function onQuery(pageIndex){
         queryParams:{
         	ssku:$("#ssku").val(),
         	ssecCode:$("#ssecCode").val(),
-        	channelCode:$("#channelCode").val()
+        	channelCode:$("#channelCode").val(),
+          product_type_name:$("#product_type_name").val()
         	
 //        	$('#filterForm').serialize(),
         },
@@ -287,7 +288,7 @@ function onQuery(pageIndex){
 				width : 120,
 				field : 'sku',
 				align : 'center'
-	            , sortable: true,
+	            , sortable: false,
 	            rowspan:2
 	        },
 	        {
@@ -295,7 +296,7 @@ function onQuery(pageIndex){
 				width : 120,
 				field : 'sec_code',
 				align : 'center'
-	            , sortable: true,
+	            , sortable: false,
 	            rowspan:2
 	        },
 	        {
@@ -303,7 +304,7 @@ function onQuery(pageIndex){
 				width : 120,
 				field : 'channel_name',
 				align : 'center'
-	            , sortable: true,
+	            , sortable: false,
 	            rowspan:2
 	        },
 	        {
@@ -311,7 +312,7 @@ function onQuery(pageIndex){
 				width : 120,
 				field : 'product_type_name',
 				align : 'center'
-	            , sortable: true,
+	            , sortable: false,
 	            rowspan:2
 	        },
 	        {
@@ -319,7 +320,7 @@ function onQuery(pageIndex){
 				width : 150,
 				field : 'product_name',
 				align : 'center'
-	            , sortable: true,
+	            , sortable: false,
 	            rowspan:2
 	        }
 	        
@@ -329,7 +330,7 @@ function onQuery(pageIndex){
 	                title: '渠道锁定',
 	                width: 70,
 	                align: 'left'
-	                , sortable: true,
+	                , sortable: false,
 	                colspan:4
 	            }
 	            
@@ -338,13 +339,13 @@ function onQuery(pageIndex){
 					width : 100,
 					field : 'optUser realeaseQty',
 					align : 'center',
-					  sortable: true,
+					  sortable: false,
 			            rowspan:2,
 			            formatter: function(value,row,index){
 							if(row.channelLockQty==0){
 								return '0';
 							}else {
-								return "<a id='oper' href='javascript:void(0);' onclick='showDetail("+row.sec_code+","+row.sku+","+row.channel_code+">"+row.channelLockQty+"</a>";	
+								return "<a id='oper' href='javascript:void(0);' onclick='showDetail(\""+row.sec_code+"\",\""+row.sku+"\",\""+row.channel_code+"\")'>"+row.channelLockQty+"</a>";
 							}
 							 
 						}
@@ -353,20 +354,20 @@ function onQuery(pageIndex){
 	                title: '渠道共享',
 	                width: 70,
 	                align: 'left'
-	                , sortable: true,
+	                , sortable: false,
 	                colspan:4
 	            },{
 					title : '渠道共享占用',
 					width : 110,
 					field : 'channelLockQty',
 					align : 'center',
-					 sortable: true,
+					 sortable: false,
 			            rowspan:2,
 			            formatter: function(value,row,index){
 							if(row.waLockQty==0){
 								return '0';
 							}else {
-								return "<a id='oper' href='javascript:void(0);' onclick='showDetail("+row.sec_code+","+row.sku+","+row.channel_code+",'1'>"+row.waLockQty+"</a>";	
+								return "<a id='oper' href='javascript:void(0);' onclick='showDetail(\""+row.sec_code+"\",\""+row.sku+"\",\""+row.channel_code+"\",\"1\")'>"+row.waLockQty+"</a>";
 							}
 							 
 						} 
@@ -379,7 +380,7 @@ function onQuery(pageIndex){
 		field : 'optUser1',
 		align : 'center',
 		formatter: function(value,row,index){
-			return '0';
+			return newExplainAgeRow(row.age_data,row.wa_stock_qty,1,0);
 	}
 	},  {
 		title : '7-15天',
@@ -387,7 +388,7 @@ function onQuery(pageIndex){
 		field : 'optUser2',
 		align : 'center',
 		formatter: function(value,row,index){
-			return '0';
+			return newExplainAgeRow(row.age_data,row.wa_stock_qty,2,0);
 	}
 	},  {
 		title : '15-30天',
@@ -395,7 +396,7 @@ function onQuery(pageIndex){
 		field : 'optUser3',
 		align : 'center',
 		formatter: function(value,row,index){
-			return '0';
+			return newExplainAgeRow(row.age_data,row.wa_stock_qty,3,0);
 	}
 	},  {
 		title : '30天以上',
@@ -403,7 +404,7 @@ function onQuery(pageIndex){
 		field : 'optUser4',
 		align : 'center',
 		formatter: function(value,row,index){
-			return '0';
+			return newExplainAgeRow(row.age_data,row.wa_stock_qty,4,0);
 	}
 	},  {
 		title : '1-7天',
@@ -411,7 +412,7 @@ function onQuery(pageIndex){
 		field : 'optUser123',
 		align : 'center',
 		formatter: function(value,row,index){
-			return '0';
+			return newExplainAgeRow(row.age_data,row.wa_stock_qty,0,1);
 	}
 	},  {
 		title : '7-15天',
@@ -419,7 +420,7 @@ function onQuery(pageIndex){
 		field : 'optUser23',
 		align : 'center',
 		formatter: function(value,row,index){
-			return '0';
+			return newExplainAgeRow(row.age_data,row.wa_stock_qty,0,2);
 	}
 	} , {
 		title : '15-30天',
@@ -427,7 +428,7 @@ function onQuery(pageIndex){
 		field : 'optUser34',
 		align : 'center',
 		formatter: function(value,row,index){
-			return '0';
+			return newExplainAgeRow(row.age_data,row.wa_stock_qty,0,3);
 	}
 	} ,{
 		title : '30天以上',
@@ -435,7 +436,7 @@ function onQuery(pageIndex){
 		field : 'optUser333',
 		align : 'center',
 		formatter: function(value,row,index){
-			return '0';
+			return newExplainAgeRow(row.age_data,row.wa_stock_qty,0,4);
 		}
 	}
 	] ],
@@ -668,6 +669,83 @@ function showDetail( secCode, sku, channel, iswa ){
 			$("#dialog-lock-detail").modal('show');
 		}
 	});
+}
+
+function newExplainAgeRow (allAge, waData ,chalId, waId) {
+
+  var entries = JSON.parse(allAge);
+  var map = {"c1":0, "c2":0,"c3":0,"c4":0};
+  for (i=0; i< entries.length; i++){
+    entry = entries[i];
+    var age = entry["age"];
+    var qty = entry["stockQuantity"];
+    var cnt = 0;
+    if ( age >= 0 && age <=7) {
+      cnt = map["c1"]+parseInt(qty);
+      map["c1"]=cnt;
+    } else if( age >7 && age<=15) {
+      cnt = map["c2"]+parseInt(qty);
+      map["c2"]=cnt;
+    } else if ( age > 15 && age <=30){
+      cnt = map["c3"]+parseInt(qty);
+      map["c3"]=cnt;
+    } else {
+      cnt = map["c4"]+parseInt(qty);
+      map["c4"]=cnt;
+    }
+  }
+  waDataAge  = parseInt(waData);
+  var waMap = {"c1":0,"c2":0, "c3":0, "c4":0};
+  var channelMap = {"c1":0,"c2":0, "c3":0, "c4":0};
+
+  //if ( waDataAge > 0 ){
+  var chaC4 = parseInt(map["c4"]) - waDataAge;
+  channelMap["c4"] = chaC4 >=0 ? chaC4: 0;
+  waMap["c4"] = chaC4 >=0 ? waDataAge : parseInt(map["c4"]);
+  //剩下的WA库存
+  waDataAge = chaC4 < 0 ? -chaC4 :0;
+  var chaC3 = parseInt(map["c3"]) - waDataAge;
+  channelMap["c3"] = chaC3 >=0 ? chaC3 : 0;
+  waMap["c3"] = chaC3 >= 0 ? waDataAge : parseInt(map["c3"]);
+  waDataAge = chaC3 <0 ? -chaC3 : 0;
+  var chaC2 = parseInt(map["c2"]) - waDataAge;
+  channelMap["c2"] = chaC2 >= 0 ?chaC2:0;
+  waMap["c2"] = chaC2 >= 0 ? waDataAge : parseInt(map["c2"]);
+  waDataAge = chaC2 <0 ? -chaC2 : 0;
+  var chaC1 = parseInt(map["c1"]) - waDataAge;
+  channelMap["c1"] = chaC1 >= 0 ? chaC1:0;
+  waMap["c1"] = chaC1 >= 0 ? waDataAge : parseInt(map["c1"]);
+  //}
+  // $("#"+chalId+"_c1").text(channelMap["c1"]);
+  // $("#"+chalId+"_c2").text(channelMap["c2"]);
+  // $("#"+chalId+"_c3").text(channelMap["c3"]);
+  // $("#"+chalId+"_c4").text(channelMap["c4"]);
+  if(chalId == 1){
+  	return channelMap["c1"];
+	}else if (chalId == 2){
+  	return channelMap["c2"];
+	}else if (chalId == 3){
+		return channelMap["c3"];
+	}else if (chalId == 4){
+    return channelMap["c4"];
+	}
+
+  if(waId == 1){
+    return waMap["c1"];
+  }else if (waId == 2){
+    return waMap["c2"];
+  }else if (waId == 3){
+    return waMap["c3"];
+  }else if (waId == 4){
+    return waMap["c4"];
+  }
+  return 0;
+
+  // $("#"+waId+"_c1").text(waMap["c1"]);
+  // $("#"+waId+"_c2").text(waMap["c2"]);
+  // $("#"+waId+"_c3").text(waMap["c3"]);
+  // $("#"+waId+"_c4").text(waMap["c4"]);
+  // return map;
 }
 
 

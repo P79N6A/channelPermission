@@ -83,16 +83,16 @@ public class OrderrepairHPrecords implements Serializable{
 	    private String invoIceId; //发票id
 	    private String twoAppraisal;//是否已经成功发起二次鉴定。1是 0否
 	    private Date twoAppraisalDate;//发起二次鉴时间
-	    private String cOrderSn;//扩展字段
+	    private String virtualEntryState;//标识虚入虚出 处理状态 :默认:default   虚入成功:enterSuccess  虚出成功:outSuccess
 	    
 	    
 	    
-	    public String getcOrderSn() {
-			return cOrderSn;
+		public String getVirtualEntryState() {
+			return virtualEntryState;
 		}
 
-		public void setcOrderSn(String cOrderSn) {
-			this.cOrderSn = cOrderSn;
+		public void setVirtualEntryState(String virtualEntryState) {
+			this.virtualEntryState = virtualEntryState;
 		}
 
 		public String getTwoAppraisal() {

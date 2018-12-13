@@ -260,6 +260,24 @@ public class StockTransactionModel<T> {
         }
     }
 
+    /**
+     * 处理库存交易记录，生成库岭计算所需的出入库记录
+     */
+    public void processForGenerateStockAgeInOutHistory() {
+        while (true) {
+            List<InvStockTransaction> stockTransactions = stockInvStockTransactionService.getByProcessStatus(InvStockTransaction.PROCESS_STATUS_UPDATE_STOCK_DOWN);
+            if (stockTransactions.size() <= 0)
+                break;
+            for (InvStockTransaction stockTransaction : stockTransactions) {
+                long startTime = System.currentTimeMillis();
+                processForGenerateStockAgeInOutHistory(stockTransaction);
+                logger.info(LOG_MARK + "处理库存交易(id=" + stockTransaction.getId()
+                    + "),生成库龄inv_stock_in_out,用时: "
+                    + (System.currentTimeMillis() - startTime) + " ms");
+            }
+        }
+    }
+
     private void processForGenerateStockAgeInOut(InvStockTransaction stockTransaction) {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -278,11 +296,14 @@ public class StockTransactionModel<T> {
                 return;
             }
 
-            String itemProperties = stockTransaction.getItemProperty();
+            //******2018/8/14,潘工说产业要求计算所有批次的商品********start***
+
+            /*String itemProperties = stockTransaction.getItemProperty();
             if (!InvSection.W10.equalsIgnoreCase(itemProperties)) {//只有批次10的商品需要计算库龄
 //                transactionManagerStock.commit(status);
                 return;
-            }
+            }*/
+            //******2018/8/14,潘工说产业要求计算所有批次的商品*****end******
 
             //只有WA需要统计库龄
             if (!stockTransaction.getExternalSecCode().endsWith("WA")) {
@@ -345,6 +366,105 @@ public class StockTransactionModel<T> {
             	 throw new BusinessException(result.getMessage());
             }
                
+//            else
+//                transactionManagerStock.commit(status);
+        } catch (Exception e) {
+//            transactionManagerStock.rollback(status);
+            logger.error(
+                LOG_MARK + "处理库存交易（id=" + stockTransaction.getId() + "），生成库龄inv_stock_in_out记录失败:",
+                e);
+            updateToDelay(stockTransaction.getId(), 1, "生成库龄出入库记录失败：" + e.getMessage());
+        }
+    }
+
+    private void processForGenerateStockAgeInOutHistory(InvStockTransaction stockTransaction) {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+//        TransactionStatus status = transactionManagerStock.getTransaction(def);
+        try {
+            int isDelay = stockTransaction.getIsDelay();
+            if (isDelay == 1)
+                isDelay = 2;
+            int effectNum = stockInvStockTransactionService.updateProcessStatus(stockTransaction.getId(),
+                InvStockTransaction.PROCESS_STATUS_BUILD_STOCK_AGE_DOWN,
+                InvStockTransaction.PROCESS_STATUS_UPDATE_STOCK_DOWN, isDelay, "生成库龄计算出入库记录完成");
+            if (effectNum < 1) {
+                logger.info(
+                    LOG_MARK + "生成 inv_stock_in_out 出现并发，不再处理，id=" + stockTransaction.getId());
+//                transactionManagerStock.commit(status);
+                return;
+            }
+
+            //******2018/8/14,潘工说产业要求计算所有批次的商品********start***
+
+            /*String itemProperties = stockTransaction.getItemProperty();
+            if (!InvSection.W10.equalsIgnoreCase(itemProperties)) {//只有批次10的商品需要计算库龄
+//                transactionManagerStock.commit(status);
+                return;
+            }*/
+            //******2018/8/14,潘工说产业要求计算所有批次的商品*****end******
+
+            //只有WA需要统计库龄
+            if (!stockTransaction.getExternalSecCode().endsWith("WA")) {
+//                transactionManagerStock.commit(status);
+                return;
+            }
+
+            InventoryBusinessTypes businessTypes = InventoryBusinessTypes
+                .getByCode(stockTransaction.getBillType());
+            String channel = assertChannelForStockAge(stockTransaction);
+            InvStockInOut stockInOut = buildStockAgeInOutHistory(stockTransaction);
+            stockInOut.setChannelCode(channel);
+            stockInOut.setAgeStatus(0);
+            stockInOut.setAgeType(InvStockInOut.AGE_TYPE_SAMPLE);
+            stockInOut.setType(stockTransaction.getBillType());
+
+            if (businessTypes == InventoryBusinessTypes.IN_TRANSFER
+                || businessTypes == InventoryBusinessTypes.OUT_TRANSFER) {
+                InvTransferLine transferLine = getTransferLine(stockTransaction.getCorderSn());
+                if (transferLine == null) {
+                    logger.error(LOG_MARK + "生成库龄inv_stock_in_out，调拨单："
+                        + stockTransaction.getCorderSn() + "不存在,不处理");
+//                    transactionManagerStock.commit(status);
+                    return;
+                } else if (InvTransferLine.TRANSFER_REASON_XN
+                    .equals(transferLine.getTransferReason())) {
+                    if (InventoryBusinessTypes.OUT_TRANSFER == businessTypes) {
+                        //调出库位
+                        String channelFrom = transferLine.getChannelFrom();
+                        String channelTo = transferLine.getChannelTo();
+                        if (StringUtil.isEmpty(channelFrom) || StringUtil.isEmpty(channelTo)) {
+                            channelFrom = transferLine.getSecFrom().substring(2, 4).toUpperCase();
+                            channelTo = transferLine.getSecTo().substring(2, 4).toUpperCase();
+                            if ("DK".equals(channelFrom))
+                                channelFrom = "DKH";
+                            if ("DK".equals(channelTo))
+                                channelTo = "DKH";
+                        }
+                        stockInOut.setVirtualSecCode(transferLine.getSecFrom());
+                        String channelCode;
+                        if (InvSection.CHANNEL_CODE_WA.equalsIgnoreCase(channelTo)) {//锁定释放到共享
+                            channelCode = channelFrom;
+                            stockInOut.setMark("H");
+                            stockInOut.setAgeType(InvStockInOut.AGE_TYPE_ADD_WA_QTY);
+                        } else {
+                            channelCode = channelTo + "," + channelFrom;
+                            stockInOut.setMark("S");
+                            stockInOut.setAgeType(InvStockInOut.AGE_TYPE_PAN_OF_AGE);
+                        }
+                        stockInOut.setChannelCode(channelCode);
+                    } else {
+//                        transactionManagerStock.commit(status);
+                        return;
+                    }
+                }
+            }
+
+            ServiceResult<Integer> result = stockAgeService.stockInOutRecord(stockInOut);
+            if (!result.getSuccess()){
+                throw new BusinessException(result.getMessage());
+            }
+
 //            else
 //                transactionManagerStock.commit(status);
         } catch (Exception e) {
@@ -422,6 +542,34 @@ public class StockTransactionModel<T> {
         invStockInOut.setQuantity(quantity);
         //修改库龄交易时间为库存更新时间
         invStockInOut.setBillTime(stockTransaction.getLastProcessTime());
+        String cbsBillNo = stockTransaction.getCorderSn();
+        invStockInOut.setCbsBillNo(cbsBillNo);
+        invStockInOut.setNote("");
+        return invStockInOut;
+    }
+
+    /**
+     * 生成库岭计算用的出入库记录
+     * @param stockTransaction 库存交易记录
+     * @return 库龄出入库记录
+     */
+    private InvStockInOut buildStockAgeInOutHistory(InvStockTransaction stockTransaction) {
+        InvStockInOut invStockInOut = new InvStockInOut();
+        invStockInOut.setBillNo("CBS" + stockTransaction.getId());
+        invStockInOut.setMark(stockTransaction.getMark());
+        //sku and itemId
+        invStockInOut.setSku(stockTransaction.getSku());
+        invStockInOut.setItemId(0);
+        //库位
+        String sec_code = stockTransaction.getSecCode();
+        invStockInOut.setVirtualSecCode(sec_code);
+        InvSection section = stockInvSectionService.getBySecCode(sec_code);
+        invStockInOut.setSecCode(section.getLesSecCode());
+        //数量
+        int quantity = stockTransaction.getQuantity();
+        invStockInOut.setQuantity(quantity);
+        //修改库龄交易时间为库存更新时间
+        invStockInOut.setBillTime(stockTransaction.getBillTime());
         String cbsBillNo = stockTransaction.getCorderSn();
         invStockInOut.setCbsBillNo(cbsBillNo);
         invStockInOut.setNote("");

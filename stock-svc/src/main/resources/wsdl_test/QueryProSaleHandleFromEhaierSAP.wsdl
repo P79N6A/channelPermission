@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="QueryProSaleHandleFromEhaierSAP"
+	targetNamespace="http://www.example.org/QueryProSaleHandleFromEhaierSAP/"
+	xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/QueryProSaleHandleFromEhaierSAP/"
+	xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+	<WL5G3N0:types>
+		<xsd:schema targetNamespace="http://www.example.org/QueryProSaleHandleFromEhaierSAP/"
+			xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/QueryProSaleHandleFromEhaierSAP/"
+			xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:element name="QueryProSaleHandleFromEhaierSAP">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="unbounded" minOccurs="0"
+							name="T_SELCOND" type="tns:ZSDS0006" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="QueryProSaleHandleFromEhaierSAPResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="unbounded" minOccurs="0"
+							name="T_ZSDS0003" type="tns:ZSDS0003" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="ZSDS0006">
+				<xsd:sequence>
+					<xsd:element name="ZSYST" type="xsd:string" />
+					<xsd:element name="ZWBDR" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ZSDS0003">
+				<xsd:sequence>
+					<xsd:element name="ZSYST" type="xsd:string" />
+					<xsd:element name="ZWBDR" type="xsd:string" />
+					<xsd:element name="ZSTTS" type="xsd:string" />
+					<xsd:element name="ZTYPE" type="xsd:string" />
+					<xsd:element name="ZMSG" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</WL5G3N0:types>
+	<WL5G3N0:message name="QueryProSaleHandleFromEhaierSAPRequest">
+		<WL5G3N0:part element="WL5G3N1:QueryProSaleHandleFromEhaierSAP"
+			name="parameters" />
+	</WL5G3N0:message>
+	<WL5G3N0:message name="QueryProSaleHandleFromEhaierSAPResponse">
+		<WL5G3N0:part element="WL5G3N1:QueryProSaleHandleFromEhaierSAPResponse"
+			name="parameters" />
+	</WL5G3N0:message>
+	<WL5G3N0:portType name="QueryProSaleHandleFromEhaierSAP">
+		<WL5G3N0:operation name="QueryProSaleHandleFromEhaierSAP">
+			<WL5G3N0:input message="WL5G3N1:QueryProSaleHandleFromEhaierSAPRequest" />
+			<WL5G3N0:output message="WL5G3N1:QueryProSaleHandleFromEhaierSAPResponse" />
+		</WL5G3N0:operation>
+	</WL5G3N0:portType>
+	<WL5G3N0:binding name="QueryProSaleHandleFromEhaierSAPSOAP"
+		type="WL5G3N1:QueryProSaleHandleFromEhaierSAP">
+		<WL5G3N2:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<WL5G3N0:operation name="QueryProSaleHandleFromEhaierSAP">
+			<WL5G3N2:operation
+				soapAction="http://www.example.org/QueryProSaleHandleFromEhaierSAP/QueryProSaleHandleFromEhaierSAP" />
+			<WL5G3N0:input>
+				<WL5G3N2:body use="literal" />
+			</WL5G3N0:input>
+			<WL5G3N0:output>
+				<WL5G3N2:body use="literal" />
+			</WL5G3N0:output>
+		</WL5G3N0:operation>
+	</WL5G3N0:binding>
+	<WL5G3N0:service name="QueryProSaleHandleFromEhaierSAP">
+		<WL5G3N0:port binding="WL5G3N1:QueryProSaleHandleFromEhaierSAPSOAP"
+			name="QueryProSaleHandleFromEhaierSAPSOAP">
+			<!-- <WL5G3N2:address
+				location="${pom.eai.url}/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EAI_INT_0530" /> -->
+			<WL5G3N2:address location="http://10.135.1.110:7001/EAI/service/GVS/QueryProSaleHandleFromEhaierSAP/QueryProSaleHandleFromEhaierSAP" />
+		</WL5G3N0:port>
+	</WL5G3N0:service>
+</WL5G3N0:definitions>

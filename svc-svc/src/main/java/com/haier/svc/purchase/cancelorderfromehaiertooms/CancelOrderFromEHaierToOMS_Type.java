@@ -9,18 +9,20 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- *
- *
+ * <p>anonymous complex type的 Java 类。
+ * 
+ * <p>以下模式片段指定包含在此类中的预期内容。
+ * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="RequestData" type="{http://www.example.org/CancelOrderFromEHaierToOMS/}RequestData"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="RequestData" type="{http://www.example.org/CancelOrderFromEHaierToOMS/}RequestData"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -33,10 +35,11 @@ import javax.xml.bind.annotation.XmlType;
 public class CancelOrderFromEHaierToOMS_Type {
 
     @XmlElement(name = "RequestData", required = true)
-    protected com.haier.svc.purchase.cancelorderfromehaiertooms.RequestData requestData;
+    protected RequestData requestData;
 
     /**
-     *
+     * 获取requestData属性的值。
+     * 
      * @return
      *     possible object is
      *     {@link RequestData }
@@ -47,7 +50,8 @@ public class CancelOrderFromEHaierToOMS_Type {
     }
 
     /**
-     *
+     * 设置requestData属性的值。
+     * 
      * @param value
      *     allowed object is
      *     {@link RequestData }

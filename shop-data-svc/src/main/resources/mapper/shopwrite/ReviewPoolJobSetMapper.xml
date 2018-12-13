@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.workorder.ReviewPoolJobSetDao">
+    <resultMap id="reviewPoolJobSetMap" type="com.haier.shop.model.ReviewPoolJobSet">
+        <result property="id" column="id" />
+        <result property="jobName" column="jobName" />
+        <result property="jobType" column="jobType" />
+        <result property="value" column="value" />
+        <result property="time" column="time" />
+        <result property="isEnable" column="isEnable" />
+
+    </resultMap>
+    <select id="queryReviewPoolJobSet" resultMap="reviewPoolJobSetMap">
+        select * from wo_jobset where value=#{value}
+
+    </select>
+    <select id="queryJobSet" resultMap="reviewPoolJobSetMap">
+        select * from wo_jobset where jobName=#{jobName}
+
+    </select>
+</mapper>

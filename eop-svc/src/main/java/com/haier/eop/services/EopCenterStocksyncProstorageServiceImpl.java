@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.haier.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
@@ -124,22 +125,29 @@ public class EopCenterStocksyncProstorageServiceImpl implements EopCenterStocksy
     }
 
 	public JSONObject jiaoyan(String sku, String sCode, String source) {
-		StocksynCstorage centity=new StocksynCstorage();
-		centity.setsCode(sCode);
-		centity.setSource(source);
-		StocksynCstorage cid=stocksynCstorageService.getId(centity);
+		JSONObject json = new JSONObject();
 		Stocksyncproducts id =stocksyncproductsService.getId(sku,source);
-		 JSONObject json = new JSONObject();
-		 if(cid != null){
-			  json.put("cid", cid.getId());
-		 }else{
-         json.put("cid", 0);
-		 }
 		 if(id != null){
-			   json.put("id", id.getId());
+			 json.put("id", id.getId());
 		 }else{
 			 json.put("id", 0);
 		 }
+		 String[] sCodeArray = sCode.split(",");
+		 String existed = "0";
+		 for (int i = 0; i < sCodeArray.length; i++) {
+			 //查找改库存同步配置是否存在
+			 StocksyncProstorage entity = new StocksyncProstorage();
+			 entity.setIsOn(1);
+			 entity.setSku(sku);
+			 entity.setSource(source);
+			 entity.setsCode(sCodeArray[i]);
+			 int count = StocksyncProstorageService.getPagerCountS(entity);
+			 if(count > 0){
+				 existed = sCodeArray[i];
+				 break;
+			 }
+		 }
+		json.put("count", existed);
 		return json;
 	}
 

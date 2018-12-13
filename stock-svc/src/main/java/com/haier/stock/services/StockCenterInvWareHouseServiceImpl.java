@@ -48,46 +48,56 @@ public class StockCenterInvWareHouseServiceImpl implements StockCenterInvWareHou
     @Override
     public String addInvSection(InvSection condition) {
         long check = invSectionDao.checkSame(condition.getSecCode());
-        if ("insert".equals(condition.getId())) {
-            if (check > 0) {
-                return "codeIsSame";
+        try {
+            if ("insert".equals(condition.getId())) {
+                if (check > 0) {
+                    return "codeIsSame";
+                } else {
+                    condition.setUpdateTime(new Date());
+                    invSectionDao.insertSelective(condition);
+                    return "success";
+                }
             } else {
                 condition.setUpdateTime(new Date());
-                invSectionDao.insertSelective(condition);
+                invSectionDao.updateByPrimaryKeySelective(condition);
                 return "success";
             }
-        } else {
-            condition.setUpdateTime(new Date());
-            invSectionDao.updateByPrimaryKeySelective(condition);
-            return "success";
+        } catch (Exception e) {
+            return e.getMessage().substring(0,1000);
         }
+
     }
 
     @Override
     public String addInvWarehouse(PopInvWarehouse condition) {
         long checkCode = popInvWarehouseDao.checkCodeSame(condition.getWhCode());
         long checkName = popInvWarehouseDao.checkNameSame(condition.getWhCode());
-        if ("insert".equals(condition.getId())) {
-            if (checkCode > 0) {
-                return "codeIsSame";
-            } else if (checkName > 0) {
-                return "nameIsSame";
+        try {
+            if ("insert".equals(condition.getId())) {
+                if (checkCode > 0) {
+                    return "codeIsSame";
+                } else if (checkName > 0) {
+                    return "nameIsSame";
+                } else {
+                    condition.setCreateTime(new Date());
+                    if (1 == popInvWarehouseDao.insertSelective(condition)) {
+                        return "success";
+                    } else {
+                        return "fail";
+                    }
+                }
             } else {
-                condition.setCreateTime(new Date());
-                if (1 == popInvWarehouseDao.insertSelective(condition)) {
+                condition.setUpdateTime(new Date());
+                if (1 == popInvWarehouseDao.updateByPrimaryKeySelective(condition)) {
                     return "success";
                 } else {
                     return "fail";
                 }
             }
-        } else {
-            condition.setUpdateTime(new Date());
-            if (1 == popInvWarehouseDao.updateByPrimaryKeySelective(condition)) {
-                return "success";
-            } else {
-                return "fail";
-            }
+        }catch (Exception e) {
+            return "exception";
         }
+
     }
 
     @Override

@@ -51,7 +51,7 @@ import java.util.Date;
 @XmlType(name = "row", propOrder = { "valueId", "valueSetId", "description", "value",
                                     "valueMeaning", "valueMeaningEn", "parentValueSetId",
                                     "activeFlag", "created", "lastUpd", "deleteFlag",
-                                    "parentValueLow", "start", "size" })
+                                    "parentValueLow", "start", "size" ,"page","rows"})
 public class ItemAttribute implements Serializable {
 
     /**
@@ -408,7 +408,24 @@ public class ItemAttribute implements Serializable {
     public void setCbsCategory(String cbsCategory) {
         this.cbsCategory = cbsCategory;
     }
+    private Integer page;
+    private Integer rows;
 
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getRows() {
+        return rows;
+    }
+
+    public void setRows(Integer rows) {
+        this.rows = rows;
+    }
     /**
      * 开始页
      */

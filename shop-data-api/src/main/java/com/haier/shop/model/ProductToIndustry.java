@@ -13,7 +13,7 @@ public class ProductToIndustry implements Serializable {
 	/**
 	 * 
 	 */
-	private String parentPath; // 判断产业的
+	private int rootId; // 判断产业的
 	private int reject; //拒收数量
 	private int sign; // 揽收数量
 	private byte typeFlag; //判断是拒收还是揽收
@@ -36,13 +36,12 @@ public class ProductToIndustry implements Serializable {
 	public void setTypeFlag(byte typeFlag) {
 		this.typeFlag = typeFlag;
 	}
-	public String getParentPath() {
-		return parentPath;
-	}
-	public void setParentPath(String parentPath) {
-		this.parentPath = parentPath;
+
+	public int getRootId() {
+		return rootId;
 	}
 
-	
- 
+	public void setRootId(int rootId) {
+		this.rootId = rootId;
+	}
 }

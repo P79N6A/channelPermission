@@ -7,17 +7,20 @@ import org.apache.ibatis.annotations.Param;
 import com.haier.eop.data.model.StocksyncProstorage;
 
 public interface StocksyncProstorageDao {
-	 int deleteByPrimaryKey(Integer id);
+	int deleteByPrimaryKey(Integer id);
 
-	    int insert(StocksyncProstorage record);
+	public int deleteBySourceAndSku(@Param("source") String source,
+									@Param("sku") String sku);
 
-	    int insertSelective(StocksyncProstorage record);
+	int insert(StocksyncProstorage record);
 
-	    StocksyncProstorage selectByPrimaryKey(Integer id);
+	int insertSelective(StocksyncProstorage record);
 
-	    int updateByPrimaryKeySelective(StocksyncProstorage record);
+	StocksyncProstorage selectByPrimaryKey(Integer id);
 
-	    int updateByPrimaryKey(StocksyncProstorage record);
-	    List<StocksyncProstorage> Listf(@Param("entity")StocksyncProstorage entity,@Param("start") int start, @Param("rows") int rows);
-	    int getPagerCountS(@Param("entity")StocksyncProstorage entity);
+	int updateByPrimaryKeySelective(StocksyncProstorage record);
+
+	int updateByPrimaryKey(StocksyncProstorage record);
+	List<StocksyncProstorage> Listf(@Param("entity")StocksyncProstorage entity,@Param("start") int start, @Param("rows") int rows);
+	int getPagerCountS(@Param("entity")StocksyncProstorage entity);
 }

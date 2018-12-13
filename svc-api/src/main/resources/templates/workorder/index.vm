@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+        <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+        <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+        <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+        <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+        <link rel="stylesheet" href="../static/css/common.css">
+        <title>工单列表</title>
+        <script src="../static/third/jquery.js"></script>
+        <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+        <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+        <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+        <script src="../static/js/utils.js"></script>
+        <script src="../static/js/customConfig.js"></script>
+        <script src="../static/js/easyui-extention_ws.js"></script>
+        <script src="../static/js/i18n/zh_CN.js"></script>
+        <script src="../static/js/htmlLoading.js"></script>
+
+		<style>
+			.mar_r6px .combo{
+				margin-right:11px;
+			}
+            #dlg tr{
+                line-height:36px !important;
+            }
+            #dlg tr input{
+                height:32px !important;
+            }
+		</style>
+    </head>
+    <body>
+        <table
+            id="dg"
+            title=""
+            class="easyui-datagrid"
+            style="width:100%;height:100%;"
+            data-options="toolbar:'#toolbar',pagination:true,rownumbers:true,singleSelect:true,
+            onClickCell: onClickCell">
+            <thead>
+                <tr>
+                    <!-- <th data-options="field:'ck',checkbox:true"></th> -->
+                    <th field="appealCount1" width="70">上诉次数</th>
+                    <th field="appealCount2" width="100">中间结果上诉次数</th>
+                    <th field="feedBackCount" width="85">用户咨询次数</th>
+                    <th field="company" width="80">工贸</th>
+                    <th field="phone" width="80">物流中心</th>
+                    <th field="id" width="120">工单号</th>
+                    <th field="question1Level1" width="85">责任位一</th>
+                    <th field="question1Level2" width="85">责任位二</th>
+                    <th field="question1Level3" width="85">责任位三</th>
+                    <th field="workOrderTo" width="85">工单去向</th>
+                    <th field="categoryLevelOne" width="85">类别</th>
+                    <th field="categoryLevelTwo" width="85">商城问题一级</th>
+                    <th field="categoryLevelThree" width="85">商城问题二级</th>
+                    <th field="netOrderId" width="140">网单号</th>
+                    <th field="orderId" width="150">订单号</th>
+                    <th field="remark5" width="150">
+                        订单来源</th>
+                    <th field="workStatus" width="80">工单状态</th>
+                    <th field="productAmount" width="80">网单金额</th>
+                    <th field="insertTime" width="140">创建时间</th>
+                    <th field="workOrderTime" width="150">中间结果回复时间</th>
+                    <th field="context" width="340">反馈内容</th>
+                    <th field="remark3" width="50">创建人</th>
+                    <th field="remark1" width="90">中间结果操作人</th>
+                    <th field="remark2" width="90">最终结果操作人</th>
+                    <th field="sqmCount" width="90">SQM单量</th>
+                    <th field="desideText" width="260">传送状态</th>
+                    <th field="workCreateTime" width="260">创建时间</th>
+                    <th field="storeType" width="260">库存类型</th>
+                    <th field="channelName" width="50">订单渠道</th>
+                </tr>
+            </thead>
+        </table>
+        <div id="toolbar">
+            <div class="search-panel">
+                <div class="search-row" style="width: 100%">
+                    <label><input type="radio" radiochange="radioChange" checked="checked" name="tab" value="1"/>工单操作</label>
+                    <label><input type="radio" radiochange="radioChange" name="tab" value="2"/>责任位统计</label>
+                    <label><input type="radio" radiochange="radioChange" name="tab" value="3"/>人员统计</label>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div id="filter1" style="padding:5px">
+                <form id="search" name="search" class="easyui-form" method="get" novalidate="novalidate">                
+					<div class="search-row">
+						<span class="search-row-label">网单号：</span>
+						<input
+							type="text"
+							id="netOrderId_search"
+							name="netOrderId_search"
+							class="easyui-text"
+							size="10"
+                            style="width:137px"
+							/></div>
+					<div class="search-row">
+						<span class="search-row-label">订单号：</span>
+						<input
+							type="text"
+							id="orderId_search"
+							name="orderId_search"
+							class="easyui-text"
+							size="10"
+                            style="width:137px"
+							/></div>
+					<div class="search-row">
+						<span class="search-row-label">工单状态：</span>
+						<select
+							class="easyui-combobox"
+							panelHeight="auto"
+							id="workStatus"
+							name="workStatus"
+							data-options="editable:false"></select>
+					</div>
+					<div class="search-row">
+						<span class="search-row-label">订单来源：</span>
+						<select
+							class="easyui-combobox"
+							id="remark5_search"
+							name="remark5_search"
+							data-options="editable:false"></select>
+					</div>
+					<div class="search-row">
+						<span class="search-row-label">关闭原因：</span>
+						<select
+							class="easyui-combobox"
+							id="closeType_search"
+							name="closeType_search"
+							panelHeight="auto"
+							data-options="editable:false"></select>
+					</div>
+					<div class="search-row">
+						<span class="search-row-label">收货联系人：</span>
+						<input
+							type="text"
+							id="clientName"
+							name="clientName"
+							class="easyui-text"
+							size="10"
+                            style="width:137px"
+							/></div>
+					<div class="search-row">
+						<span class="search-row-label">收货电话：</span>
+						<input
+							type="text"
+							id="clientTel"
+							name="clientTel"
+							validtype="mobile"
+							class="easyui-text"
+							size="10"
+                            style="width:137px"
+							/></div>
+					<div class="search-row">
+						<span class="search-row-label">所属工贸：</span>
+						<select
+							class="easyui-combobox"
+							id="company_search"
+							name="company_search"
+							data-options="editable:false"></select>
+					</div>
+					<div class="search-row">
+						<span class="search-row-label">物流中心：</span>
+						<select
+							class="easyui-combobox"
+							id="phone_search"
+							name="phone_search"
+							data-options="editable:false"></select>
+					</div>
+					<div class="search-row">
+						<span class="search-row-label">人员：</span>
+						<input
+							type="text"
+							id="person_search"
+							name="person_search"
+							class="easyui-text"
+                            style="width:137px"
+							size="10"/>
+                    </div>
+					<div class="search-row">
+						<span class="search-row-label">操作人：</span>
+						<input
+							type="text"
+							id="addsearch_search"
+							name="addsearch_search"
+							class="easyui-text"
+							size="10"
+                            style="width:137px"
+							/></div>
+					<div class="search-row">
+						<span class="search-row-label">开始时间：</span>
+						<input
+							type="text"
+							id="startTime_search"
+							name="startTime_search"
+							class="easyui-datetimebox"
+							data-options="formatter:ww4"
+							size="13"
+							style="width:137px"
+							editable="false"/></div>
+					<div class="search-row">
+						<span class="search-row-label">结束时间：</span>
+						<input
+							type="text"
+							id="endTime_search"
+							name="endTime_search"
+							class="easyui-datetimebox"
+							data-options="formatter:ww4"
+							size="13"
+							style="width:137px"
+							editable="false"/></div>
+					<div class="search-row_nowidth mar_r6px">
+						<span class="search-row-label">责任位：</span>
+						<select
+							class="easyui-combobox"
+							id="level1_search"
+							name="level1_search"
+							data-options="editable:false"></select>
+						<select
+							class="easyui-combobox"
+							id="level2_search"
+							name="level2_search"
+							style="margin-left:10px;"
+							data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+						<select
+							class="easyui-combobox"
+							id="level3_search"
+							name="level3_search"
+							style="margin-left:12px;"
+							data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+					</div>
+					<div class="search-row">
+						<span class="search-row-label">是否投诉：</span>
+						<select
+							class="easyui-combobox"
+							id="complaintFlg_search"
+							name="complaintFlg_search"
+							panelHeight="auto"
+							data-options="editable:false"></select>
+					</div>
+					<div class="search-row">
+						<span class="search-row-label">工单号：</span>
+						<input
+							type="text"
+							id="id_search"
+							name="id_search"
+							class="easyui-text"
+							size="10"
+                            style="width:137px"
+							/></div>
+					<div class="search-row">
+						<span class="search-row-label">商铺编号：</span>
+						<input
+							type="text"
+							id="storeId_search"
+							name="storeId_search"
+							class="easyui-text"
+							size="10"
+                            style="width:137px"
+							/></div>
+					<div class="search-row">
+						<span class="search-row-label">工单去向：</span>
+						<select
+							class="easyui-combobox"
+							panelHeight="auto"
+							id="workOrderTo"
+							name="workOrderTo"
+							data-options="valueField:'id',textField:'text',editable:false"></select>
+					</div>
+					<div class="search-row">
+						<span class="search-row-label">工单类别：</span>
+						<select
+							class="easyui-combobox"
+							panelHeight="auto"
+							id="cType"
+							name="cType"
+							data-options="valueField:'id',textField:'text',editable:false"></select>
+					</div>
+					<div class="search-row">
+						<span class="search-row-label">订单渠道：</span>
+						<select
+							class="easyui-combobox"
+							
+							id="channelName_search"
+							name="channelName_search"
+							data-options="valueField:'id',textField:'text',editable:false"></select>
+					</div>
+                    ## <p>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">网单号：</span><input
+                    ##         type="text"
+                    ##         id="netOrderId_search"
+                    ##         name="netOrderId_search"
+                    ##         class="easyui-text"
+                    ##         size="10"
+                    ##         style="width:111px;"/>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">订单号：</span><input
+                    ##         type="text"
+                    ##         id="orderId_search"
+                    ##         name="orderId_search"
+                    ##         class="easyui-text"
+                    ##         size="10"
+                    ##         style="width:111px;"/>
+                    ##     <!-- <span style="width:90px;text-align:right;display:inline-block;">工单来源:</span><select
+                    ##     class="easyui-combobox" style="width:111px;" id="orderCome_search" name="orderCome_search "
+                    ##     data-options="editable:false"> -->
+                    ##     <!-- </select> -->
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">工单状态：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:111px;"
+                    ##         id="workStatus"
+                    ##         name="workStatus"
+                    ##         data-options="editable:false"></select>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">订单来源：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:156px;"
+                    ##         id="remark5_search"
+                    ##         name="remark5_search"
+                    ##         data-options="editable:false"></select>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">关闭原因：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:80px;"
+                    ##         id="closeType_search"
+                    ##         name="closeType_search"
+                    ##         data-options="editable:false"></select>
+                    ## </p>
+                    ## <p>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">收货联系人：</span><input
+                    ##         type="text"
+                    ##         id="clientName"
+                    ##         name="clientName"
+                    ##         class="easyui-text"
+                    ##         size="6"
+                    ##         style="width:111px;"/>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">收货电话：</span><input
+                    ##         type="text"
+                    ##         id="clientTel"
+                    ##         name="clientTel"
+                    ##         validtype="mobile"
+                    ##         class="easyui-text"
+                    ##         size="10"
+                    ##         style="width:111px;"/>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">所属工贸：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:111px"
+                    ##         id="company_search"
+                    ##         name="company_search"
+                    ##         data-options="editable:false"></select>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">物流中心：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:131px"
+                    ##         id="phone_search"
+                    ##         name="phone_search"
+                    ##         data-options="editable:false"></select>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">人员：</span><input
+                    ##         type="text"
+                    ##         id="person_search"
+                    ##         name="person_search"
+                    ##         class="easyui-text"
+                    ##         size="10"
+                    ##         style="width:126px;"/>
+                    ## </p>
+                    ## <p>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">操作人：</span><input
+                    ##         type="text"
+                    ##         id="addsearch_search"
+                    ##         name="addsearch_search"
+                    ##         class="easyui-text"
+                    ##         size="10"
+                    ##         style="width:111px;"/>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">开始时间：</span><input
+                    ##         type="text"
+                    ##         id="startTime_search"
+                    ##         name="startTime_search"
+                    ##         class="easyui-datetimebox"
+                    ##         data-options="formatter:ww4"
+                    ##         size="13"
+                    ##         style="width:113px;"
+                    ##         editable="false"/>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">结束时间：</span><input
+                    ##         type="text"
+                    ##         id="endTime_search"
+                    ##         name="endTime_search"
+                    ##         class="easyui-datetimebox"
+                    ##         data-options="formatter:ww4"
+                    ##         size="13"
+                    ##         style="width:111px;"
+                    ##         editable="false"/>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">责任位：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:153px"
+                    ##         id="level1_search"
+                    ##         name="level1_search"
+                    ##         data-options="editable:false"></select>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:153px"
+                    ##         id="level2_search"
+                    ##         name="level2_search"
+                    ##         data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:153px"
+                    ##         id="level3_search"
+                    ##         name="level3_search"
+                    ##         data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+                    ## </p>
+                    ## <p>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">是否投诉：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:113px"
+                    ##         id="complaintFlg_search"
+                    ##         name="complaintFlg_search"
+                    ##         data-options="editable:false"></select>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">工单号：</span><input
+                    ##         type="text"
+                    ##         id="id_search"
+                    ##         name="id_search"
+                    ##         class="easyui-text"
+                    ##         size="10"
+                    ##         style="width:111px;"/>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">商铺编号：</span><input
+                    ##         type="text"
+                    ##         id="storeId_search"
+                    ##         name="storeId_search"
+                    ##         class="easyui-text"
+                    ##         size="10"
+                    ##         style="width:111px;"/>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">工单去向：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:111px;"
+                    ##         id="workOrderTo"
+                    ##         name="workOrderTo"
+                    ##         data-options="valueField:'id',textField:'text',editable:false"></select>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">工单类别：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:111px;"
+                    ##         id="cType"
+                    ##         name="cType"
+                    ##         data-options="valueField:'id',textField:'text',editable:false"></select>
+                    ##     <span style="width:90px;text-align:right;display:inline-block;">订单渠道：</span>
+                    ##     <select
+                    ##         class="easyui-combobox"
+                    ##         style="width:111px;"
+                    ##         id="channelName_search"
+                    ##         name="channelName_search"
+                    ##         data-options="valueField:'id',textField:'text',editable:false"></select>
+
+                    ## </p>
+
+                </form>
+            </div>
+            <div id="filter2" style="padding:5px;display:none;">
+                <form id="search2" name="search" class="easyui-form" method="get" novalidate="novalidate">
+                    <p>
+                        <span style="width:90px;text-align:right;display:inline-block;">开始时间：</span><input
+                            type="text"
+                            id="startTime_search2"
+                            name="startTime_search2"
+                            class="easyui-datetimebox"
+                            data-options="formatter:ww4"
+                            size="13"
+                            style="width:113px;"
+                            editable="false"/>
+                        <span style="width:90px;text-align:right;display:inline-block;">结束时间：</span><input
+                            type="text"
+                            id="endTime_search2"
+                            name="endTime_search2"
+                            class="easyui-datetimebox"
+                            data-options="formatter:ww4"
+                            size="13"
+                            style="width:111px;"
+                            editable="false"/>
+                        <span style="width:90px;text-align:right;display:inline-block;">责任位：</span>
+                        <select
+                            class="easyui-combobox"
+                            style="width:125px"
+                            id="level1_search2"
+                            name="level1_search2"
+                            data-options="editable:false"></select>
+                    </p>
+                </form>
+            </div>
+            <div id="filter3" style="padding:5px;display:none;">
+                <form id="search3" name="search" class="easyui-form" method="get" novalidate="novalidate">
+                    <p>
+                        <span style="width:90px;text-align:right;display:inline-block;">开始时间：</span><input
+                            type="text"
+                            id="startTime_search3"
+                            name="startTime_search3"
+                            class="easyui-datetimebox"
+                            data-options="formatter:ww4"
+                            size="13"
+                            style="width:113px;"
+                            editable="false"/>
+                        <span style="width:90px;text-align:right;display:inline-block;">结束时间：</span><input
+                            type="text"
+                            id="endTime_search3"
+                            name="endTime_search3"
+                            class="easyui-datetimebox"
+                            data-options="formatter:ww4"
+                            size="13"
+                            style="width:111px;"
+                            editable="false"/>
+                        <span style="width:90px;text-align:right;display:inline-block;">人员：</span><input
+                            type="text"
+                            id="person_search3"
+                            name="person_search3"
+                            class="easyui-text"
+                            size="10"
+                            style="width:111px;"/>
+                    </p>
+                </form>
+            </div>
+            <div id="filter4">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton"
+                    data-options="iconCls:'icon-search',plain:true"
+                    onclick="searchReview()">查询</a>
+                <a
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton"
+                    data-options="iconCls:'icon-reload',plain:true"
+                    onclick="resetReview()">重置</a>
+                <!-- <input type="reset"name="button"id="button"value="重置"/> -->
+                <a
+                    id="addBtn"
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton"
+                    iconcls="icon-add"
+                    plain="true"
+                    onclick="newBackList()">添加</a>
+                <a
+                    id="lookBtn"
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton"
+                    iconcls="icon-edit"
+                    plain="true"
+                    onclick="viewPool()">查看</a>
+                <!--<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true"
+                onclick="audit()">批量审核</a>,parser:w4-->
+                <a
+                    id="dc"
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton"
+                    iconcls="icon-print"
+                    plain="true"
+                    onclick="exp()">导出
+                </a>
+                <font style="color:#FF0000">每次最大导出条数为20000条</font>
+            </div>
+        </div>
+        <div
+            id="dlg"
+            class="easyui-dialog"
+            style="width:860px;height:550px;padding:10px 20px"
+            closed="true"
+            buttons="#dlg-buttons">
+            <form id="fm" class="easyui-form" method="post" novalidate="novalidate">
+                <input type="reset" style="display:none;"/>
+                <input type='hidden' id="id" name="id"/>
+                <input type='hidden' id="position2" name="position2"/>
+                <input type='hidden' id="position3" name="position3"/>
+                <input type='hidden' id="centerType" name="centerType"/>
+                <input type='hidden' id="sqmType" name="sqmType"/>
+                <input type='hidden' id="sqmState" name="sqmState"/>
+                <input type='hidden' id="sqmStatus" name="sqmStatus"/>
+                <input type='hidden' id="sqmCount" name="sqmCount"/>
+                <input type='hidden' id="workCreateTime" name="workCreateTime"/>
+                <div style="float:left">
+                    <h2>工单</h2>
+                </div>
+                <div style="width:650px;  ">
+                    <div style="width:200px;  "></div>
+                    <div id="ss" style="width:400px; float:right ; "></div>
+                </div>
+                <table class="tables" style="width:680px;">
+                    <tr id="trOrderId">
+                        <input
+                            type="hidden"
+                            required="true"
+                            class="easyui-validatebox textbox"
+                            data-options="missingMessage:'输入订单后,请回车查询',validType:'length[1,128]'"
+                            style="width:140px;"/>
+                        <td style="width:90px" align="right" valign="middle" id="tdOrderId">订单号：</td>
+                        <td>
+                            <input
+                                id='orderIds'
+                                required="true"
+                                name="orderIds"
+                                class="easyui-validatebox textbox"
+                                data-options="missingMessage:'输入订单后,请回车查询',validType:'length[1,128]'"
+                                style="width:140px;"
+                                onblur="blurOrderids(this)"
+                                onfocus="focusOrderids()"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">网单号：</td>
+                        <td>
+                            <input
+                                id='netOrderId'
+                                required="true"
+                                name="netOrderId"
+                                class="easyui-validatebox textbox"
+                                data-options="missingMessage:'输入网单后,请回车查询',validType:'length[1,128]'"
+                                style="width:140px;"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle" colspan="1">
+                            咨询工单:
+                        </td>
+                        <td>
+                            <input type="checkbox" id="askFlg" class="askFlg" name="askFlg" value="1"/></td>
+                        <td style="width:90px" align="right" valign="middle" colspan="1">
+                            投诉信息:
+                        </td>
+                        <td>
+                            <input
+                                style="vertical-align: middle;"
+                                type="checkbox"
+                                id="complaintFlg"
+                                name="complaintFlg"
+                                value="1"
+                                onclick="checkComplaintFlg()"/>
+                            <a id="HPBtn" href="javascript:void(0)" class="easyui-linkbutton" plain="true" iconcls="icon-redo">推送HP系统</a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">订单号：</td>
+                        <td>
+                            <input
+                                id="orderId"
+                                name="orderId"
+                                class="easyui-validatebox textbox"
+                                data-options="validType:'length[0,128]'"
+                                style="width:140px;"
+                                readonly="true"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">宝贝名称：</td>
+                        <td>
+                            <input
+                                id="productName"
+                                name="productName"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,150]'"
+                                readonly="true"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">数量：</td>
+                        <td>
+                            <input
+                                id="number"
+                                name="number"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'intOrFloat'"
+                                readonly="true"></input>
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td style="width:90px" align="right" valign="middle">SKU编码：</td>
+                        <td>
+                            <input
+                                id="sku"
+                                name="sku"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,150]'"
+                                readonly="true"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">发票金额：</td>
+                        <td>
+                            <input
+                                id="productAmount"
+                                name="productAmount"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'currency'"
+                                readonly="true"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">收货电话：</td>
+                        <td>
+                            <input
+                                id="buyerMobile"
+                                name="buyerMobile"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                readonly="true"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">收货联系人：</td>
+                        <td>
+                            <input
+                                id="buyer"
+                                name="buyer"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,20]'"
+                                readonly="true"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">配送网点：</td>
+                        <td>
+                            <input
+                                id="netPointId"
+                                name="netPointId"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,150]'"
+                                readonly="true"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">下单时间：</td>
+                        <td><input
+                            readonly="true"
+                            type="text"
+                            id="createTime"
+                            name="createTime"
+                            class="easyui-datetimebox"
+                            data-options=""
+                            size="13"
+                            style="width:142px;"
+                            editable="false"/></td>
+                    </tr>
+                    <tr>
+
+                        <td style="width:90px" align="right" valign="middle">付款时间：</td>
+                        <td><input
+                            readonly="true"
+                            type="text"
+                            id="payTime"
+                            name="payTime"
+                            class="easyui-datetimebox"
+                            data-options=""
+                            size="13"
+                            style="width:142px;"
+                            editable="false"/></td>
+                        <td style="width:90px" align="right" valign="middle">所属区域：</td>
+                        <td>
+                            <input
+                                id="regionName"
+                                name="regionName"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,150]'"
+                                readonly="true"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">详细地址：</td>
+                        <td>
+                            <input
+                                id="address"
+                                name="address"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,150]'"
+                                readonly="true"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- <td style="width:90px" align="right" valign="middle">型号：</td><td ><input id="productType"
+                        name="productType" class="easyui-validatebox textbox" style="width:140px;"
+                        data-options="validType:'length[0,20]'"></input></td> -->
+                        <td style="width:95px" align="right" valign="middle">配送时效(天)：</td>
+                        <td>
+                            <input
+                                id="orderCome"
+                                name="orderCome"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,10]'"
+                                readonly="true"></input>
+                        </td>
+
+                        <td style="width:90px" align="right" valign="middle">所属工贸：</td>
+                        <td>
+                            <input
+                                id="company"
+                                name="company"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,150]'"
+                                readonly="true"></input>
+                        </td>
+                        <td style="display:none;">
+                            <select
+                                class="easyui-combobox textbox"
+                                style="width:142px;height:19px;"
+                                id="company_hide"
+                                name="company_hide"
+                                data-options="editable:false"></select>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle" id="tdWangId">人员：</td>
+                        <td>
+                            <input
+                                id="wangId"
+                                name="wangId"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="required:true,validType:'length[0,20]'"
+                                readonly="true"></input>
+                        </td>
+                        <td style="display:none;" id="tdWangIdhide">
+                            <select
+                                class="easyui-combobox textbox"
+                                style="width:142px;height:19px;"
+                                id="wangId_hide"
+                                name="wangId_hide"
+                                data-options="editable:false"></select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">物流中心：</td>
+                        <td>
+                            <input
+                                id="phone"
+                                name="phone"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,150]'"
+                                readonly="true"></input>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">订单来源：</td>
+                        <td>
+                            <input
+                                id="remark5"
+                                name="remark5"
+                                class="easyui-validatebox textbox"
+                                style="width:140px;"
+                                data-options="validType:'length[0,150]'"
+                                readonly="true">
+                            <input id="remark4" type='hidden' name="remark4" class="easyui-validatebox textbox">
+                            <input
+                                id="corderPrimary"
+                                name="corderPrimary"
+                                class="easyui-validatebox textbox"
+                                style="display:none;width:140px;"></input>
+                            <input
+                                id="orderPrimary"
+                                name="orderPrimary"
+                                class="easyui-validatebox textbox"
+                                style="display:none;width:140px;"></input>
+                        </td>
+                        <td style="display:none;">
+                            <select
+                                class="easyui-combobox textbox"
+                                style="width:142px;height:19px;"
+                                id="remark5_hide"
+                                name="remark5_hide"
+                                data-options="editable:false"></select>
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">商铺编号：</td>
+                        <td><input
+                            id="storeId"
+                            name="storeId"
+                            class="easyui-validatebox textbox"
+                            style="width:140px;"
+                            data-options="validType:'length[0,150]'"
+                            readonly="true">
+                        </td>
+                    </tr>
+                    <!-- <tr> <td style="width:90px" align="right" valign="middle">类型：</td><td> <select
+                    class="easyui-combobox" data-options="editable:false" required="true" style="width:140px"
+                    id="categoryLevelOne" name="categoryLevelOne"></select> </td> <td style="width:90px" align="right"
+                    valign="middle">商城问题二级：</td><td> <select class="easyui-combobox" data-options="editable:false"
+                    style="width:140px" id="categoryLevelTwo" name="categoryLevelTwo"></select> </td> <td
+                    style="width:90px" align="right" valign="middle">商城问题三级：</td><td> <select class="easyui-combobox"
+                    data-options="editable:false" style="width:140px" id="categoryLevelThree"
+                    name="categoryLevelThree"></select> </td> </tr>-->
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">投诉电话：</td>
+                        <td><input
+                            id="complaintPhone"
+                            name="complaintPhone"
+                            class="easyui-validatebox textbox"
+                            style="width:140px;"
+                            data-options="validType:'length[0,150]'"></td>
+                        <td style="width:90px" align="right" valign="middle">库存类型：</td>
+                        <td><input
+                            id="storeType"
+                            name="storeType"
+                            class="easyui-validatebox textbox"
+                            style="width:140px;"
+                            data-options="validType:'length[0,150]'"
+                            readonly="true">
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">订单渠道：</td>
+                        <td><input
+                            id="channelName"
+                            name="channelName"
+                            class="easyui-validatebox textbox"
+                            style="width:140px;"
+                            data-options="validType:'length[0,150]'"
+                            readonly="true">
+                        </td>
+                        <input type="hidden" id="channelCode" name="channelCode">
+                    </tr>
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">下单人：</td>
+                        <td><input
+                            id="nextUserName"
+                            name="nextUserName"
+                            class="easyui-validatebox textbox"
+                            style="width:140px;"
+                            data-options="validType:'length[0,150]'"
+                            readonly="true">
+                        </td>
+                        <td style="width:90px" align="right" valign="middle">TB单号：</td>
+                        <td><input
+                            id="tbOrderSn"
+                            name="tbOrderSn"
+                            class="easyui-validatebox textbox"
+                            style="width:140px;"
+                            data-options="validType:'length[0,150]'"
+                            readonly="true">
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <!-- 图片上传 -->
+                        <td style="width:90px" align="right" valign="middle" id="tdStr">
+                            <div style="width:90px;height:27px;">上传图片:</div>
+                            <div id="he" style="display:block;width:90px;height:65px;"></div>
+                        </td>
+                        <td colspan="3" style="display:none" id="up">
+                            <iframe
+                                width="300px"
+                                align="center"
+                                height="100px"
+                                id="win"
+                                name="win"
+                                frameborder="0"
+                                scrolling="no"
+                                src=""></iframe>
+                        </td>
+
+                        <td colspan="3" id="down" style="display:none">
+                            <!-- 列出图片 -->
+                            <table id="tb"></table>
+                        </td>
+
+                        <td id="nullImg" style="display:none">
+                            <p>无图片</p>
+                        </td>
+                    </tr>
+                    <tr></tr>
+                </table>
+
+                <h2>用户反馈内容</h2>
+                <table style="width:665px;">
+                    <tr>
+                        <td>
+                            <input type="hidden" id="workStatusTxt"/>
+                            <input id="addComent" type="button" value="添加反馈" onclick="addComentInfo();"/>
+                            <!-- <input type="hidden" name="comment1" id="comment1" class="easyui-validatebox"/> -->
+                            <!-- <input type="hidden" name="comment2" id="comment2" class="easyui-validatebox"/> -->
+
+                            <textarea
+                                id="context"
+                                name="context"
+                                readonly="readonly"
+                                class="easyui-validatebox"
+                                required="true"
+                                style="width:665px;height:75px"
+                                onblur="return fun_trim(this);"
+                                onkeyup="return fun_trim(this);"
+                                data-options="validType:'length[0,500]'"></textarea>
+                            <div id="contextDiv"></div>
+                            <div id="contextDiv2"></div>
+                        </td>
+
+                    </tr>
+                </table>
+                <h2>督办评价</h2>
+                <table style="width:665px;">
+                    <tr>
+                        <td>责任位：</td>
+                        <td>
+                            <select
+                                class="easyui-combobox"
+                                data-options="editable:false"
+                                required="true"
+                                style="width:150px"
+                                id="question1Level1"
+                                name="question1Level1"></select>
+                            <select
+                                class="easyui-combobox"
+                                data-options="valueField: 'value',textField: 'valueMeaning'"
+                                required="true"
+                                style="width:150px"
+                                id="question1Level2"
+                                name="question1Level2"></select>
+                            <select
+                                class="easyui-combobox"
+                                data-options="valueField: 'value',textField: 'valueMeaning'"
+                                style="width:150px"
+                                id="question1Level3"
+                                name="question1Level3"></select>
+                            <input type="hidden" id="question1Level2-hidden" name='question1Level2'/>
+                        </td>
+                    </tr>
+                </table>
+
+                <script type="text/javascript">
+                    function formatItem(row) {
+                        var s = '<span style="font-weight:bold:width:150">' + row.name + '</span><br/>';
+                        return s;
+                    }
+
+                    function level2(prm) {
+                        $('#question1Level2').combobox({
+                            url: '/review/getPositionChild.html?id=' + prm,
+                            method: 'get',
+                            valueField: 'id',
+                            textField: 'name',
+                            panelWidth: 150,
+                            formatter: formatItem
+                        });
+                    }
+                </script>
+
+                <h2>中间结果
+                    <a id="backDiv3" style="word-wrap:break-word;color:red; font-size:18px;"></a>
+                </h2>
+                <table style="width:665px;">
+                    <tr>
+                        <td>
+                            <!-- <input type="hidden" name="comment3" id="comment3" class="easyui-validatebox"/> -->
+                            <textarea
+                                id="backContext2"
+                                name="backContext2"
+                                onkeyup="return fun_trim(this);"
+                                class="easyui-validatebox"
+                                style="width:665px;height:75px"
+                                data-options="validType:'length[0,500]'"></textarea>
+                            <div id="backDiv"></div>
+                            <div id="backDiv2"></div>
+                        </td>
+
+                    </tr>
+                </table>
+
+                <h2>最终结果(<font color="#ff0000">注意:录入最终结果保存后,就不允许再次更改信息</font>)</h2>
+                <div id="jgpd">
+                    <tr>
+                        <td>判定结果：</td>
+                        <td id="passid" style="text-align: left;"><input name="desidePass" type="radio" id="scanInput" value="1"/>
+                            <label for="scanInput">通过</label><input name="desidePass" type="radio" id="handInput" value="0"/>
+                            <label for="handInput">不通过</label>
+                        </td>
+                        <button type="button" class="btn btn-danger btn-sm  radius" onclick="resetJudgeResult()">重置
+                        </button>
+                    </tr>
+                </div>
+                <table style="width:665px;">
+                    <tr>
+                        <td>
+                            <textarea
+                                id="backContext3"
+                                name="backContext3"
+                                onkeyup="return fun_trim(this);"
+                                class="easyui-validatebox"
+                                style="width:665px;height:75px"
+                                data-options="validType:'length[0,500]'"></textarea>
+                            <div id="finalResultDiv"></div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div id="dlg-buttons">
+                <a
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton c6"
+                    iconcls="icon-ok"
+                    onclick="saveOrder()"
+                    style="width:90px">保存</a>
+                <a
+                    href="#"
+                    class="easyui-linkbutton"
+                    iconcls="icon-cancel"
+                    onclick="javascript:$('#dlg').dialog('close')"
+                    style="width:90px">取消</a>
+            </div>
+        </div>
+
+        <div
+            id="dlg2"
+            class="easyui-dialog"
+            style="width:700px;height:200px;padding:10px 20px"
+            closed="true"
+            modal="true"
+            buttons="#dlg-buttons2">
+            <form id="fm2" class="easyui-form" method="post" novalidate="novalidate">
+                <textarea
+                    id="context2"
+                    name="context2"
+                    onkeyup="return fun_trim(this);"
+                    class="easyui-validatebox"
+                    required="true"
+                    style="width:650px;height:75px"
+                    data-options="validType:'length[0,500]'"></textarea>
+            </form>
+            <div id="dlg-buttons2">
+                <a
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton c6"
+                    iconcls="icon-ok"
+                    onclick="saveComment();"
+                    style="width:90px">保存</a>
+                <a
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton"
+                    iconcls="icon-cancel"
+                    onclick="javascript:$('#dlg2').dialog('close')"
+                    style="width:90px">取消</a>
+            </div>
+        </div>
+
+        <div
+            id="dlg3"
+            class="easyui-dialog"
+            style="width:800px;height:450px;padding:10px 20px"
+            closed="true"
+            modal="true"
+            buttons="#dlg-buttons3"
+            align="center">
+            <form id="fm3" class="easyui-form" novalidate="novalidate">
+                <div id="toolbar5">
+                    <div id="filter5" style="padding:5px;display:none;">
+                        <p>
+                            <span style="width:90px;text-align:right;display:inline-block;">开始时间:</span><input
+                                type="text"
+                                id="startTime_search5"
+                                name="startTime_search"
+                                class="easyui-datetimebox"
+                                data-options="formatter:ww4"
+                                size="13"
+                                style="width:113px;"
+                                editable="false"/>
+                            <span style="width:90px;text-align:right;display:inline-block;">结束时间:</span><input
+                                type="text"
+                                id="endTime_search5"
+                                name="endTime_search"
+                                class="easyui-datetimebox"
+                                data-options="formatter:ww4"
+                                size="13"
+                                style="width:111px;"
+                                editable="false"/>
+                            <span style="width:90px;text-align:right;display:inline-block;">人员:</span><input
+                                type="text"
+                                id="wangId5"
+                                name="person_search"
+                                class="easyui-text"
+                                size="10"
+                                style="width:111px;"/>
+                            <span style="width:90px;text-align:right;display:inline-block;">工贸</span><input
+                                type="text"
+                                id="company5"
+                                name="company_search"
+                                class="easyui-text"
+                                size="10"
+                                style="width:111px;"/>
+                            <span style="width:90px;text-align:right;display:inline-block;">责任位1</span><input
+                                type="text"
+                                id="question1Level15"
+                                name="level1_search"
+                                class="easyui-text"
+                                size="10"
+                                style="width:111px;"/>
+                            <span style="width:90px;text-align:right;display:inline-block;">责任位2</span><input
+                                type="text"
+                                id="question1Level25"
+                                name="level2_search"
+                                class="easyui-text"
+                                size="10"
+                                style="width:111px;"/>
+                            <span style="width:90px;text-align:right;display:inline-block;">责任位3</span><input
+                                type="text"
+                                id="question1Level35"
+                                name="level3_search"
+                                class="easyui-text"
+                                size="10"
+                                style="width:111px;"/>
+                            <span style="width:90px;text-align:right;display:inline-block;">状态</span><input
+                                type="text"
+                                id="workStatus5"
+                                name="workStatus"
+                                class="easyui-text"
+                                size="10"
+                                style="width:111px;"/>
+                        </p>
+                    </div>
+                </div>
+                <table
+                    id="dg3"
+                    title="工单列表"
+                    class="easyui-datagrid"
+                    style="width:750px;height:350px;"
+                    data-options="pagination:true,rownumbers:true,singleSelect:true"></table>
+            </form>
+            <div id="dlg-buttons3">
+                <a
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton c6"
+                    iconcls="icon-print"
+                    id="dc3"
+                    onclick="windowExp();"
+                    style="width:90px">导出</a>
+                <a
+                    href="javascript:void(0)"
+                    class="easyui-linkbutton"
+                    iconcls="icon-ok"
+                    onclick="javascript:$('#dlg3').dialog('close')"
+                    style="width:90px">确定</a>
+            </div>
+        </div>
+
+        <!-- 订单详细2015/10/17 -->
+        <div
+            id="dlg4"
+            class="easyui-dialog"
+            style="width:810px;height:140px;padding:5px 10px"
+            closed="true"
+            modal="true">
+            <!-- buttons="#dlg-buttons" -->
+            <form id="fm4" class="easyui-form" method="post" novalidate="novalidate">
+                <table class="tables1" style="width:780px;">
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">订单号：</td>
+                        <td id="orderSn" style="width:140px;"></td>
+                        <td style="width:90px" align="right" valign="middle">订单状态：</td>
+                        <td id="orderStatus" style="width:140px;"></td>
+                        <td style="width:90px" align="right" valign="middle">订单来源：</td>
+                        <td id="source" style="width:140px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">是否日日单：</td>
+                        <td id="isProduceDaily" style="width:140px;"></td>
+                        <td style="width:90px" align="right" valign="middle">外部订单号：</td>
+                        <td id="sourceOrderSn" style="width:140px;"></td>
+                        <td style="width:90px" align="right" valign="middle">订单完成时间：</td>
+                        <td id="finishTime" style="width:140px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">处理人：</td>
+                        <td id="agent" style="width:140px;"></td>
+                        <!-- <td style="width:90px" align="right" valign="middle" >支付流水号：</td><td id="tradeSn"
+                        style="width:140px;"></td> <td style="width:90px" align="right" valign="middle" >同步到表时间：</td><td
+                        id="syncTime" style="width:140px;"></td> -->
+                    </tr>
+                </table>
+            </form>
+            <!-- <div id="dlg-buttons"> <a href="javascript:void(0)" class="easyui-linkbutton c6"
+            iconCls="icon-ok" onclick="saveComment();" style="width:90px">保存</a> <a href="javascript:void(0)"
+            class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg2').dialog('close')"
+            style="width:90px">取消</a> </div> -->
+        </div>
+
+        <!-- 网单详细2015/10/17 -->
+        <div
+            id="dlg5"
+            class="easyui-dialog"
+            style="width:810px;height:170px;padding:5px 10px"
+            closed="true"
+            modal="true">
+            <!-- buttons="#dlg-buttons" -->
+            <form id="fm5" class="easyui-form" method="post" novalidate="novalidate">
+                <table class="tables2" style="width:780px;">
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">网单号：</td>
+                        <td id="orderId1" style="width:140px;"></td>
+                        <td style="width:90px" align="right" valign="middle">商品单价：</td>
+                        <td id="price1" style="width:140px;"></td>
+                        <td style="width:90px" align="right" valign="middle">数量：</td>
+                        <td id="number1" style="width:140px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">网点名称：</td>
+                        <td id="netPointId1" style="width:140px;"></td>
+                        <td style="width:90px" align="right" valign="middle">库位编码：</td>
+                        <td id="sCode1" style="width:140px;"></td>
+                        <td style="width:90px" align="right" valign="middle">状态：</td>
+                        <td id="status1" style="width:140px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="width:90px" align="right" valign="middle">less出库时间：</td>
+                        <td id="lessShipTime1" style="width:140px;"></td>
+                        <!-- <td style="width:90px" align="right" valign="middle" >less订单号：</td><td id="lessOrderSn1"
+                        style="width:140px;"></td> <td style="width:90px" align="right" valign="middle" >开票状态：</td><td
+                        id="isMakeReceipt1" style="width:140px;"></td> -->
+                    </tr>
+                    <!-- <tr> <td style="width:90px" align="right" valign="middle" >发票号：</td><td id="receiptNum1"
+                    style="width:140px;"></td> <td style="width:90px" align="right" valign="middle" >开票时间：</td><td
+                    id="receiptAddTime1" style="width:140px;"></td> <td style="width:90px" align="right" valign="middle"
+                    >开票类型：</td><td id="makeReceiptType1" style="width:140px;"></td> </tr> <tr> <td style="width:90px"
+                    align="right" valign="middle" >配送费用：</td><td id="shippingFee1" style="width:140px;"></td> <td
+                    style="width:90px" align="right" valign="middle" >结算状态：</td><td id="settlementStatus1"
+                    style="width:140px;"></td> <td style="width:80px" align="right" valign="middle" >收货/拒收时间：</td><td
+                    id="receiptOrRejectTime1" style="width:140px;"></td> </tr>-->
+                </table>
+            </form>
+        </div>
+        <!-- <div id="audit" class="easyui-dialog" style="width:450px;height:200px;padding:10px 20px" -->
+        <!-- closed="true" buttons="#audit-buttons"> -->
+        <!-- <form id="auditForm" method="POST" action="/review/audits.html"> -->
+        <!-- <input type="hidden" id="reviewIds" name="reviewIds" ></input> -->
+        <!-- <h2>请选择评价类别:</h2> -->
+        <!-- <span>评价类别:</span> -->
+        <!-- <span><select class="easyui-combobox" required="true" style="width:150px" id="reViewType"
+        name="reViewType"> -->
+        <!-- <option>创感动</option> -->
+        <!-- <option>好评</option> -->
+        <!-- <option>差评</option> -->
+        <!-- <option>影响恶劣</option> -->
+        <!-- </select></span> -->
+        <!-- </div> -->
+
+        <!-- <div id="audit-buttons"> -->
+        <!-- <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok"
+        onclick="reviewAudit()" style="width:90px">保存</a> -->
+        <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+        onclick="javascript:$('#audit').dialog('close')" style="width:90px">取消</a> -->
+        <!-- </div> -->
+
+        <div
+            id="dlg8"
+            class="easyui-dialog"
+            style="width:750px;height:420px;padding:10px 20px"
+            closed="true"
+            buttons="#dlg-buttons8">
+            <table align="center">
+                <tr>
+                    <td align="center">移动工单系统下载</td>
+                    <!-- <td align="center">ISO版应用下载</td> -->
+                </tr>
+                <tr>
+                    <td style="padding: 0px 20px 0px 20px;"><img alt="" src="/resources/images/2weima-gd.png">
+                    </td>
+                    <!-- <td style="padding: 0px 20px 0px 20px;"><img alt="" src="/resources/images/2weima-gd.png"></td>
+                    -->
+                </tr>
+            </table>
+        </div>
+        <div id="dlg-buttons8">
+            <a
+                href="javascript:void(0)"
+                class="easyui-linkbutton"
+                iconcls="icon-ok"
+                onclick="javascript:$('#dlg8').dialog('close')"
+                style="width:90px">确定</a>
+        </div>
+        <script type="text/javascript" src="../static/js/report/index.js?v=2"></script>
+        <script type="text/javascript" src="../static/js/report/validator.js"></script>
+    </body>
+</html>

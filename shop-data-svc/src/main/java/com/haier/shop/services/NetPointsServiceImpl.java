@@ -4,9 +4,12 @@ import com.haier.shop.dao.shopread.NetPointsReadDao;
 import com.haier.shop.dao.shopwrite.NetPointsWriteDao;
 import com.haier.shop.model.NetPoints;
 import com.haier.shop.service.NetPointsService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class NetPointsServiceImpl implements NetPointsService {
@@ -49,5 +52,19 @@ public class NetPointsServiceImpl implements NetPointsService {
 
     public NetPoints getByNetPointByCode(String netPointCode){
         return netPointsReadDao.getByNetPointByCode(netPointCode);
+    }
+
+    @Override
+    public Map<String, Object> getNetPointsList(Map<String, Object> params) {
+
+        List<NetPoints> netPointListList =netPointsReadDao.queryNetPointList(params);
+        //查询总条数
+        int resultCount = netPointsReadDao.getRowCnts();
+
+        Map<String, Object> retMap = new HashMap<>();
+
+        retMap.put("total", resultCount);
+        retMap.put("rows", netPointListList);
+        return retMap;
     }
 }

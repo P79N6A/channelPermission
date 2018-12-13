@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.BdmOrderDao">
+	<resultMap id="bdmOrderResult" type="com.haier.purchase.data.model.BdmOrder">
+		<result property="salesChanManagerID" column="salesChanManagerID" />
+		<result property="salesChanManagerName" column="salesChanManagerName" />
+		<result property="pltype" column="pltype" />
+		<result property="productLineId" column="productLineId" />
+		<result property="plname" column="plname" />
+		<result property="productSeriesId" column="productSeriesId" />
+		<result property="itemcode" column="itemcode" />
+		<result property="itemname" column="itemname" />
+		<result property="categorycode" column="categorycode" />
+		<result property="catn" column="catn" />
+		<result property="tradeCode" column="tradeCode" />
+		<result property="smbCcode" column="smbCcode" />
+		<result property="smbName" column="smbName" />
+		<result property="message" column="message" />
+		<result property="customerCode" column="customerCode" />
+		<result property="customerName" column="customerName" />
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_time" column="update_time" />
+		<result property="delete_user" column="delete_user" />
+		<result property="delete_time" column="delete_time" />
+		<result property="status" column="status" />
+		<result property="syn_time" column="syn_time" />
+	</resultMap>
+	<!-- 查询数据 -->
+	<select id="findBdmOrder" parameterType="Map" resultMap="bdmOrderResult">
+		select
+		salesChanManagerID,salesChanManagerName,pltype,productLineId,plname,productSeriesId,
+		itemcode,itemname,categorycode,catn,tradeCode,smbCcode,smbName,message,customerCode,
+		customerName,create_user,create_time,update_user,update_time,delete_user,delete_time,
+		status,syn_time
+		from bdm_order_t
+		where 1=1
+		<if test="itemcode !=null and itemcode != ''">
+			AND itemcode like CONCAT('%',#{itemcode},'%')
+		</if>
+		<if test="itemname !=null and itemname != ''">
+			AND itemname like CONCAT('%',#{itemname},'%')
+		</if>
+		<if test="smbCcode !=null and smbCcode != ''">
+			AND smbCcode like CONCAT('%',#{smbCcode},'%')
+		</if>
+		<if test="smbName !=null and smbName != ''">
+			AND smbName like CONCAT('%',#{smbName},'%')
+		</if>
+		order by itemcode desc
+		<if test="index != null and rows != null">
+			LIMIT #{index},#{rows}
+		</if>
+
+	</select>
+	<!-- 查询数据条数 -->
+	<select id="findBdmOrderCNT" parameterType="Map" resultType="int">
+		SELECT COUNT(1) from bdm_order_t
+		where 1=1
+		<if test="itemcode !=null and itemcode != ''">
+			AND itemcode like CONCAT('%',#{itemcode},'%')
+		</if>
+		<if test="itemname !=null and itemname != ''">
+			AND itemname like CONCAT('%',#{itemname},'%')
+		</if>
+		<if test="smbCcode !=null and smbCcode != ''">
+			AND smbCcode like CONCAT('%',#{smbCcode},'%')
+		</if>
+		<if test="smbName !=null and smbName != ''">
+			AND smbName like CONCAT('%',#{smbName},'%')
+		</if>
+	</select>
+
+	<!-- 创建数据 -->
+	<insert id="insertBdmOrder" parameterType="Map">
+		INSERT INTO
+		bdm_order_t
+		(
+		<if test="customerCode != null and customerCode != '' ">
+			customerCode,
+		</if>
+		<if test="customerName != null and customerName != '' ">
+			customerName,
+		</if>
+		<if test="tradeCode != null and tradeCode != '' ">
+			tradeCode,
+		</if>
+		itemcode,
+		itemname
+		)
+		VALUES
+		(
+		<if test="customerCode != null and customerCode != '' ">
+			#{customerCode},
+		</if>
+		<if test="customerName != null and customerName != '' ">
+			#{customerName},
+		</if>
+		<if test="tradeCode != null and tradeCode != '' ">
+			#{tradeCode},
+		</if>
+		#{itemcode},
+		#{itemname}
+		);
+	</insert>
+
+	<!-- 调用完接口更新数据 -->
+	<update id="updateBdmOrder" parameterType="Map">
+		UPDATE bdm_order_t
+		<set>
+			<if test="salesChanManagerID != null and salesChanManagerID != ''">
+				salesChanManagerID = #{salesChanManagerID},
+			</if>
+			<if test="salesChanManagerName != null and salesChanManagerName != ''">
+				salesChanManagerName = #{salesChanManagerName},
+			</if>
+			<if test="pltype != null and pltype != ''">
+				pltype = #{pltype},
+			</if>
+			<if test="productLineId != null and productLineId != ''">
+				productLineId = #{productLineId},
+			</if>
+			<if test="plname != null and plname != ''">
+				plname = #{plname},
+			</if>
+			<if test="productSeriesId != null and productSeriesId != ''">
+				productSeriesId = #{productSeriesId},
+			</if>
+			<if test="categorycode != null and categorycode != ''">
+				categorycode = #{categorycode},
+			</if>
+			<if test="catn != null and catn != ''">
+				catn = #{catn},
+			</if>
+			<if test="smbCcode != null and smbCcode != ''">
+				smbCcode = #{smbCcode},
+			</if>
+			<if test="smbName != null and smbName != ''">
+				smbName = #{smbName},
+			</if>
+			<if test="message != null and message != ''">
+				message = #{message},
+			</if>
+			update_time = CURRENT_TIMESTAMP()
+		</set>
+		WHERE
+		itemcode = #{itemcode}
+	</update>
+
+	<!-- 删除数据 -->
+	<delete id="deleteBdmOrder" parameterType="Map">
+		DELETE FROM
+		bdm_order_t WHERE itemcode = #{itemcode}
+	</delete>
+
+	<!-- 清空数据库 -->
+	<delete id="syncDeleteBdmOrder">
+		DELETE FROM
+		bdm_order_t WHERE 1=1
+	</delete>
+	<!-- 同步插入本地数据库 -->
+	<insert id="syncInsertBdmOrder" parameterType="java.util.List">
+		INSERT INTO bdm_order_t
+		(salesChanManagerID,salesChanManagerName,pltype,productLineId,
+		plname,productSeriesId,itemcode,itemname,categorycode,catn,tradeCode,smbCcode,smbName,
+		message,syn_time)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.salesChanManagerID},#{item.salesChanManagerName},#{item.pltype},#{item.productLineId},
+			#{item.plname},#{item.productSeriesId},#{item.itemcode},#{item.itemname},#{item.categorycode},#{item.catn},
+			#{item.tradeCode},#{item.smbCcode},#{item.smbName},#{item.message},CURRENT_TIMESTAMP())
+		</foreach>
+	</insert>
+</mapper>

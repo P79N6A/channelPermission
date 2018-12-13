@@ -17,19 +17,235 @@
 		<result property="remark" column="remark" />
 	</resultMap>
 
-	<select id="getCouponCostPoolByChannelAndChanYeAndYearMonth" parameterType="java.lang.String" resultMap="costPoolsResult">
+	<sql id="displayQueryCondition">
+		<if test="yearMonth !=null and yearMonth != ''">
+			AND yearMonth = #{yearMonth}
+		</if>
+		<if test="batch !=null and batch != ''">
+			AND batch = #{batch}
+		</if>
+		<if test="type !=null and type != ''">
+			AND type = #{type}
+		</if>
+		<if test="channel !=null and channel != ''">
+			AND channel = #{channel}
+		</if>
+		<if test="chanYe !=null and chanYe != ''">
+			AND chanYe = #{chanYe}
+		</if>
+	</sql>
+
+
+	<select id="findCostPoolsByChannel" resultMap="costPoolsResult">
+		SELECT
+		id,
+		siteId,
+		addTime,
+		masterName,
+		type,
+		yearMonth,
+		batch,
+		channel,
+		chanYe,
+		amount,
+		balanceAmount,
+		editTime,
+		remark
+		from costpools
+		where chanYe = #{chanYe}
+		and channel = #{channel}
+		and type=#{type}
+		and yearMonth=#{yearMonth}
+		ORDER BY batch ASC
+	</select>
+
+	<select id="findCostPoolsCount" resultType="int">
+		SELECT
+		COUNT(id)
+		from costpools
+		where chanYe = #{chanYe}
+		and channel = #{channel}
+		and type=#{type}
+		and yearMonth=#{yearMonth}
+		ORDER BY batch ASC
+	</select>
+
+	<select id="findCostPoolsByChannelAndBatchAsc" resultMap="costPoolsResult">
+		SELECT
+		id,
+		type,
+		yearMonth,
+		batch,
+		channel,
+		chanYe
+		from costpools
+		where chanYe = #{chanYe}
+		and channel = #{channel}
+		and type=#{type}
+		and yearMonth=#{yearMonth}
+		ORDER BY batch ASC
+		limit 1
+	</select>
+
+
+	<select id="getCouponCostPoolByChannelAndChanYeAndYearMonth" resultMap="costPoolsResult">
 		select `id`,`siteId`,`addTime`,`masterName`,`type`,`yearMonth`,`batch`,`channel`,chanYe,`amount`,`balanceAmount`,`editTime`,`remark` 
-		from CostPools
+		from costpools
 		where channel = #{channel} and chanYe = #{chanYe} and yearMonth = #{yearMonth} and type = 1 and amount != balanceAmount
 		order by batch
 	</select>
 	
 	<select id="getProductCate" resultType="java.util.Map">
-		select id,parentId,cateName from ProductCates
+		select id,parentId,cateName from productcates
 	</select>
 	
 	<select id="getBrand" resultType="java.util.Map">
-		select id,brandName from Brands
+		select id,brandName from brands
+	</select>
+
+	<select id="findCostPoolsByPage" parameterType="Map" resultMap="costPoolsResult">
+		SELECT SQL_CALC_FOUND_ROWS
+		id,
+        siteId,
+        addTime,
+        masterName,
+        type,
+        yearMonth,
+        batch,
+        channel,
+        chanYe,
+        amount,
+        balanceAmount,
+        editTime,
+        remark
+		from costpools
+		where 1=1
+		<include refid="displayQueryCondition"/>
+		Order By addTime DESC
+		<if test="m!=null and n!=null">
+			Limit ${m},${n}
+		</if>
+	</select>
+
+	<select id="getTotal" resultType="int">
+        select
+        FOUND_ROWS();
+	</select>
+
+
+	<select id="getExportCostPoolsList" parameterType="Map" resultType="Map">
+		SELECT
+		id,
+		siteId,
+		addTime,
+		masterName,
+		type,
+		yearMonth,
+		batch,
+		channel,
+		chanYe,
+		amount,
+		balanceAmount,
+		editTime,
+		remark
+		from costpools
+		WHERE 1=1
+		<include refid="displayQueryCondition"/>
+		ORDER BY yearMonth desc
+		Limit 5000
+	</select>
+
+
+	<select id="findCostPoolsByBatch" resultMap="costPoolsResult" parameterType="com.haier.shop.model.CostPools">
+		SELECT
+		id,
+		siteId,
+		addTime,
+		masterName,
+		type,
+		yearMonth,
+		batch,
+		channel,
+		chanYe,
+		amount,
+		balanceAmount,
+		editTime,
+		remark
+		from costpools
+		where chanYe = #{chanYe}
+		and channel = #{channel}
+		and type=#{type}
+		and yearMonth=#{yearMonth}
+		ORDER BY batch DESC
+		limit 1
+	</select>
+
+	<select id="getId" resultMap="costPoolsResult">
+		SELECT
+		id,
+		siteId,
+		addTime,
+		masterName,
+		type,
+		yearMonth,
+		batch,
+		channel,
+		chanYe,
+		amount,
+		balanceAmount,
+		editTime,
+		remark
+		from costpools
+		where id=#{id}
+		limit 1
+
+	</select>
+
+	<select id="findcostPoolsByTYBC" resultMap="costPoolsResult" parameterType="com.haier.shop.model.CostPools">
+		SELECT
+		id,
+		siteId,
+		addTime,
+		masterName,
+		type,
+		yearMonth,
+		batch,
+		channel,
+		chanYe,
+		amount,
+		balanceAmount,
+		editTime,
+		remark
+		from costpools
+		where chanYe = #{chanYe}
+		and channel = #{channel}
+		and batch = #{batch}
+		and type = #{type}
+		and yearMonth = #{yearMonth}
+		limit 1
+	</select>
+
+	<select id="getReverseCostPools" resultMap="costPoolsResult">
+		SELECT
+		id,
+		siteId,
+		addTime,
+		masterName,
+		type,
+		yearMonth,
+		batch,
+		channel,
+		chanYe,
+		amount,
+		balanceAmount,
+		editTime,
+		remark
+		from costpools
+		where chanYe = #{chanYe}
+		and channel = #{channel}
+		and type = #{type}
+		and yearMonth = #{yearMonth}
+		limit 1
 	</select>
 
 </mapper>

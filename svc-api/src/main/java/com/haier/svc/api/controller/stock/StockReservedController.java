@@ -1,5 +1,7 @@
 package com.haier.svc.api.controller.stock;
 
+import com.haier.svc.api.controller.excel.InvStockAgeExport;
+import com.haier.svc.api.controller.util.excel.MultiHeadExcelHandler;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -8,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -90,28 +93,23 @@ public class StockReservedController {
         params.put("channel_code", channelCode);
         if (rows <= 0) {
         	rows=20;
-		}
-        if(page>0){
-        	page=((page-1)  * rows);
-        	if(page==0){
-        		page =1;
-        	}
-		}else {
-			page =1;
-		}
+		    }
+        if(page<0){
+          page =1;
+        }
         PagerInfo pager = new PagerInfo(rows,page);
         List<Map<String, Object>> stockAgeList = stockReservedModel.queryStockReservedList(pager,
             params);
         modelMap.put("rowList", stockAgeList);
         modelMap.put("pager", pager);
-        
+
         json.put("total", pager.getRowsCount());
         json.put("rows", stockAgeList);
         return json;
     }
 
     @RequestMapping(value = { "/queryStockAgeListExport" }, method = { RequestMethod.GET })
-    public String queryStockAgeListExport(HttpServletRequest request, HttpServletResponse response,
+    public void queryStockAgeListExport(HttpServletRequest request, HttpServletResponse response,
                                           Map<String, Object> modelMap,
                                           @RequestParam(required = false) Integer pageIndex) {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -128,7 +126,7 @@ public class StockReservedController {
         List<Map<String, Object>> stockAgeList = stockReservedModel.queryStockReservedList(pager,
             params);
         processData(stockAgeList);
-        modelMap.put("rowList", stockAgeList);
+        /*modelMap.put("rowList", stockAgeList);
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         String fileName = "库存统计";
         try {
@@ -137,7 +135,30 @@ public class StockReservedController {
             e.printStackTrace();
         }
         response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + ".xls\"");
-        return "stock/stockReservedRowExport";
+        return "stock/stockReservedRowExport";*/
+        List<InvStockAgeExport> myDatas = new LinkedList<InvStockAgeExport>();
+        for (Map<String, Object> demo : stockAgeList) {
+            InvStockAgeExport invStockAgeExport = new InvStockAgeExport();
+            invStockAgeExport.setSku((String) demo.get("sku"));
+            invStockAgeExport.setSecCode((String) demo.get("sec_code"));
+            invStockAgeExport.setChannelName((String) demo.get("channel_name"));
+            invStockAgeExport.setProductTypeName((String) demo.get("product_type_name"));
+            invStockAgeExport.setProductName((String) demo.get("product_name"));
+            invStockAgeExport.setDayLock1((Integer)demo.get("age1_7"));
+            invStockAgeExport.setDayLock2((Integer)demo.get("age7_15"));
+            invStockAgeExport.setDayLock3((Integer)demo.get("age15_30"));
+            invStockAgeExport.setDayLock4((Integer)demo.get("age30"));
+            invStockAgeExport.setLockOccupy(Integer.parseInt(demo.get("channelLockQty").toString()));
+            invStockAgeExport.setDayShare1((Integer)demo.get("waage1_7"));
+            invStockAgeExport.setDayShare2((Integer)demo.get("waage7_15"));
+            invStockAgeExport.setDayShare3((Integer)demo.get("waage15_30"));
+            invStockAgeExport.setDayShare4((Integer)demo.get("waage30"));
+            invStockAgeExport.setChannelShareOccupy(Integer.parseInt(demo.get("waLockQty").toString()));
+            myDatas.add(invStockAgeExport);
+        }
+        MultiHeadExcelHandler excelHandler = new MultiHeadExcelHandler(InvStockAgeExport.class);
+        excelHandler.setData(myDatas);
+        excelHandler.exportExcel(response);
     }
 
     private void processData(List<Map<String, Object>> stockAgeList) {
@@ -254,7 +275,7 @@ public class StockReservedController {
     }
 
     /**
-     * 
+     *
      * @param request
      * @param modelMap
      * @return
@@ -299,7 +320,7 @@ public class StockReservedController {
         //这里的库位是虚拟库位，直接检查输入库位的数量
         ServiceResult<Integer> result = transferLineService.checkStorageForBaseStock(secCode, sku,
             Integer.parseInt(transferCnt));
-        
+
         json.setData(result.getResult());
         json.setMessage(result.getMessage());
         return json;

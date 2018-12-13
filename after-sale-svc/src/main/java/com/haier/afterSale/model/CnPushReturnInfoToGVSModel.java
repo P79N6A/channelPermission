@@ -12,10 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.haier.afterSale.webService.pushSAP.PushReturnInfoToGVS;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -52,6 +54,8 @@ import com.haier.stock.model.InvStockChannel;
 
 import net.sf.json.JSONObject;
 
+import javax.xml.namespace.QName;
+
 /**
  * 3W仓库退货入库，sap交互
  * @Filename: EISWWWStockModel.java
@@ -63,8 +67,7 @@ import net.sf.json.JSONObject;
 @Service
 public class CnPushReturnInfoToGVSModel {
 
-    private Logger                           logger           = LoggerFactory
-                                                                  .getLogger(CnPushReturnInfoToGVSModel.class);
+    private Logger                           logger           = LoggerFactory.getLogger(CnPushReturnInfoToGVSModel.class);
 
     /**
      * wsdl文件名称
@@ -95,7 +98,8 @@ public class CnPushReturnInfoToGVSModel {
     private HelpUtils                        help;
     @Autowired
     private OrderRepairService               orderRepairService;
-
+    @Value("${wsdlPath}")
+    private String wsdlPath;
     private static HashSet<String>           successBackNos   = new HashSet<String>();
 
     private static HashSet<String>           cOrderSns        = new HashSet<String>();
@@ -107,7 +111,7 @@ public class CnPushReturnInfoToGVSModel {
 
     //捞取数据量大小
     private static final int                 fetchSize        = 500;
-
+    public final static QName SERVICE = new QName("http://www.example.org/PushReturnInfoToGVS/", "PushReturnInfoToGVS");
 
     public static void setSuccessBackNos(HashSet<String> successBackNos) {
         CnPushReturnInfoToGVSModel.successBackNos = successBackNos;
@@ -161,11 +165,36 @@ public class CnPushReturnInfoToGVSModel {
     /**
      * webService 返回bean
      */
-    private class Result {
-        int    status = EisInterfaceFinance.STATUS_ERROR;
-        String eiaType;
-        String message;
-        String system;
+    public class Result {
+    	public int    status = EisInterfaceFinance.STATUS_ERROR;
+      public   String eiaType;
+      public  String message;
+      public String system;
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	public String getEiaType() {
+		return eiaType;
+	}
+	public void setEiaType(String eiaType) {
+		this.eiaType = eiaType;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public String getSystem() {
+		return system;
+	}
+	public void setSystem(String system) {
+		this.system = system;
+	}
+      
     }
 
     /**
@@ -236,10 +265,11 @@ public class CnPushReturnInfoToGVSModel {
         //sap普通推送流程 组装数据
         com.haier.afterSale.webService.pushSAP.ObjectFactory objectFactory = new com.haier.afterSale.webService.pushSAP.ObjectFactory();
         InType request = objectFactory.createInType();
-        	request.setZSYST("EHAI");//系统编码 
+        	request.setZSYST("EHAI");//系统编码   
+        	  
 
         request.setZWBDR(corderSn);//退货网单号
-
+//        request.setZWBDR("WD182919358509TH3");
         OrderProductsNew orderProducts = getOrderProducts(corderSn.replaceAll("TH.*", ""));
         OrdersNew order = getOrderByWD(orderProducts);
         if (order == null) {
@@ -253,6 +283,7 @@ public class CnPushReturnInfoToGVSModel {
         } else {
             request.setZWBDRO(orderProducts.getCOrderSn());// 原始网单号
         }
+//        request.setZWBDRO("WD182919358509");
         //定金尾款订单，如销售出库推送了SAP，退货入库也推送SAP，如未推送，则都不推送
 
         if (OrderType.TYPE_GROUP_ADVANCE_TAIL.getValue().equals(order.getOrderType())
@@ -306,11 +337,18 @@ public class CnPushReturnInfoToGVSModel {
         
         List<InType> in = new ArrayList<InType>();
         in.add(request);
-//        com.haier.afterSale.webService.pushSAP.PushReturnInfoToGVS soap = new com.haier.afterSale.webService.pushSAP.PushReturnInfoToGVS_Service(help.getWSDLURL(wsdlFile)).getPushReturnInfoToGVSSOAP();
-        String path = "file:"+ this.getClass().getResource("/wsdl_test/PushReturnInfoToGVS.wsdl").getPath();
+        
+        URL url = this.getClass().getResource(wsdlPath + "/PushReturnInfoToGVS.wsdl");
+//        logger.info(wsdlPath);
+//        logger.info(url.toString());
+        //        String path = "file:"+ this.getClass().getResource("/wsdl_test/PushReturnInfoToGVS.wsdl").getPath();
         com.haier.afterSale.webService.pushSAP.PushReturnInfoToGVS soap = new com.haier.afterSale.webService.pushSAP.PushReturnInfoToGVS_Service(
-        		  new URL(path)).getPushReturnInfoToGVSSOAP();
+        		 url).getPushReturnInfoToGVSSOAP();
 
+//        com.haier.afterSale.webService.pushSAP.PushReturnInfoToGVS soap = new com.haier.afterSale.webService.pushSAP.PushReturnInfoToGVS_Service(help.getWSDLURL(wsdlFile)).getPushReturnInfoToGVSSOAP();
+//        String path = "file:"+ this.getClass().getResource("/wsdl_test/PushReturnInfoToGVS.wsdl").getPath();
+//        com.haier.afterSale.webService.pushSAP.PushReturnInfoToGVS soap = new com.haier.afterSale.webService.pushSAP.PushReturnInfoToGVS_Service(
+//        		  new URL(path)).getPushReturnInfoToGVSSOAP();
         // 要记录接口数据日志
         EisInterfaceDataLog dataLog = new EisInterfaceDataLog();
         dataLog.setForeignKey(corderSn);
@@ -358,7 +396,7 @@ public class CnPushReturnInfoToGVSModel {
         dataLog.setCreateTime(DateUtil.currentDateTime());
         int eaiDataLogId = recordEisInterfaceDataLog(dataLog);
         vomwwwOutinstockAnalysis.setEaiDataLogId(eaiDataLogId);
-
+        cOrderSns.clear();
         return result;
 
     }

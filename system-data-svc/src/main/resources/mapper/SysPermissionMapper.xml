@@ -47,17 +47,7 @@
 				#{id}
 			</foreach>
 	</select>
-
-
-	<select id="findChannelIds" resultType="String">
-		select channelIds
-		from sys_permission p
-		where start_time &lt;= current_timestamp and end_time &gt;= current_timestamp
-		 and p.owner_id =
-			#{ownerId}
-	</select>
-
-
+	
 	<insert id="create" parameterType="com.haier.system.model.SysPermission">
 		insert into `sys_permission`(`owner_id`,`owner_type`,`res_id`,`res_type`,`start_time`,`end_time`,`update_user`)
 		values(#{ownerId},#{ownerType},#{resId},#{resType},#{startTime},#{endTime},#{updateUser})

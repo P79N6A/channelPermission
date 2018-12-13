@@ -2,19 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>3W-CBS登录</title>
+    <title>HBDM</title>
     <link rel="stylesheet" href="static/third/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/third/bootstrap/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="static/css/login.css">
+    <style>
+        .input-group > span{
+            border: none;
+        }
+    </style>
 </head>
 <body class="login-container">
 <div class="login-bg" style="z-index: -1"></div>
-<div class="container">
+<div class="container" style="padding-top: 100px !important;">
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
             <form id="loginForm" class="form-horizontal form-bg" method="post" action="/auth/rest/portal-login">
                 <input name="checkId" type="hidden">
-                <span class="heading">用户登录</span>
+                <span class="heading">海尔商业数据管理中心</span>
                 <div class="form-group">
                     <input name="loginAccount" class="form-control" id="inputEmail3" placeholder="工　号" onkeyup="this.value=this.value.replace(/\s+/g,'')">
                     <i class="fa fa-user"></i>
@@ -23,6 +28,24 @@
                     <input type="password" name="password" class="form-control" id="inputPassword3" placeholder="密　码" onkeyup="this.value=this.value.replace(/\s+/g,'')">
                     <i class="fa fa-lock"></i>
                     <a href="#" class="fa fa-question-circle"></a>
+                </div>
+                <div class="form-group"  style="padding: 0 !important;">
+                    <div class="col-xs-7" style="padding-left: 0 !important;">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-qrcode"></span>
+                                </span>
+                                <input id="randomCode" name="randomCode" class="form-control" placeholder="请输入验证码" maxlength="4" type="text">
+                            </div>
+                            <span style="color:red;display: none;" class="tips"></span>
+                            <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                            <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="col-xs-5" style="margin-left: -20px;padding-right: 20px;padding-left: 0;">
+                        <div id="v_container" style="background: transparent;"></div>
+                    </div>
                 </div>
                 <div id="err" class="form-group help">
                     <div id="errMsg" style="color:red;font-size: 120%;"></div>
@@ -45,7 +68,7 @@
 
 <footer style="width:100%;text-align: center;position:fixed;bottom:0px">
     <p style="color: white">
-        问题反馈请在ESP中创建消息到【顺逛&商城核心业务系统（CBS）】
+        问题反馈请在ESP中创建消息到【电商渠道支撑】
     </p>
 </footer>
 
@@ -53,6 +76,9 @@
 <script src="static/third/bootstrap/js/bootstrap.min.js"></script>
 <script src="static/js/utils.js"></script>
 <script src="static/js/login.js"></script>
-
+<script src="static/js/gVerify.js"></script>
+<script>
+    var verifyCode = new GVerify("v_container");
+</script>
 </body>
 </html>

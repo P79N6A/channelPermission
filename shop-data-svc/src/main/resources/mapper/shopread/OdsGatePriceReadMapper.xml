@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.OdsGatePriceReadDao">
+	<resultMap id="BaseResultMap" type="com.haier.shop.model.GatePrice">
+		<id column="id" property="id" jdbcType="VARCHAR"/>
+		<result column="BIG_CHANNEL" property="bigChannel" jdbcType="VARCHAR"/>
+		<result column="BRAND" property="brand" jdbcType="VARCHAR"/>
+		<result column="CATE_GORY" property="cateGory" jdbcType="VARCHAR"/>
+		<result column="LOGISTICS_MODEL" property="logisticsModel" jdbcType="VARCHAR"/>
+		<result column="VERSION" property="version" jdbcType="VARCHAR"/>
+		<result column="FROZEN_FLAG" property="frozenFlag" jdbcType="VARCHAR"/>
+		<result column="IS_VALID" property="isValid" jdbcType="VARCHAR"/>
+		<result column="SKU" property="sku" jdbcType="VARCHAR"/>
+		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
+		<result column="IP" property="ip" jdbcType="VARCHAR"/>
+		<result column="AUDIT_STATUS" property="auditStatus" jdbcType="VARCHAR"/>
+		<result column="AUDIT_BY" property="auditBy" jdbcType="VARCHAR"/>
+		<result column="AUDIT_IP" property="auditIp" jdbcType="VARCHAR"/>
+		<result column="BEGIN_TIME" property="beginTime" jdbcType="VARCHAR"/>
+		<result column="END_TIME" property="endTime" jdbcType="VARCHAR"/>
+		<result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR"/>
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR"/>
+		<result column="AUDIT_TIME" property="auditTime" jdbcType="VARCHAR"/>
+		<result column="TEMP_BEGIN_TIME" property="tempBeginTime" jdbcType="VARCHAR"/>
+		<result column="TEMP_END_TIME" property="tempEndTime" jdbcType="VARCHAR"/>
+		<result column="GATE_PRICE" property="gatePrice" jdbcType="DECIMAL"/>
+		<result column="PUR_PRICE" property="purPrice" jdbcType="DECIMAL"/>
+		<result column="CUT" property="cut" jdbcType="DECIMAL"/>
+		<result column="BACK" property="back" jdbcType="DECIMAL"/>
+		<result column="CHANNEL_RATE" property="channelRate" jdbcType="DECIMAL"/>
+		<result column="BARE_PRICE" property="barePrice" jdbcType="DECIMAL"/>
+		<result column="TEMP_GATE_PRICE" property="tempGatePrice" jdbcType="DECIMAL"/>
+		<result column="NORMAL_GROSSPROFIT" property="normalGrossprofit" jdbcType="DECIMAL"/>
+		<result column="ACTUAL_GROSSPROFIT" property="actualGrossprofit" jdbcType="DECIMAL"/>
+		<result column="LOWER_STATUS" property="lowerStatus" jdbcType="VARCHAR"/>
+		<result column="FILE_ID" property="fileId" jdbcType="VARCHAR"/>
+
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, BIG_CHANNEL, BRAND, CATE_GORY, LOGISTICS_MODEL, VERSION, FROZEN_FLAG, IS_VALID,
+		SKU, CREATE_BY, UPDATE_BY, AUDIT_STATUS, AUDIT_BY, AUDIT_IP, BEGIN_TIME,END_TIME,CREATE_TIME,UPDATE_TIME,AUDIT_TIME,TEMP_BEGIN_TIME,
+		TEMP_END_TIME,GATE_PRICE,PUR_PRICE,CUT,BACK,CHANNEL_RATE,TEMP_GATE_PRICE,NORMAL_GROSSPROFIT
+	</sql>
+
+	<select id="getOdsGatePriceBySku" parameterType="String" resultMap="BaseResultMap">
+		SELECT
+			CHANNEL_RATE,
+			TEMP_GATE_PRICE,
+			LOGISTICS_MODEL,
+			PUR_PRICE
+		FROM
+			ods_gate_price
+		WHERE SKU = #{sku}
+		AND BEGIN_TIME &lt;= now()
+		AND END_TIME &gt;= now()
+		AND IS_VALID = 'Y'
+		AND FROZEN_FLAG = 'N'
+		limit 1
+	</select>
+
+</mapper>

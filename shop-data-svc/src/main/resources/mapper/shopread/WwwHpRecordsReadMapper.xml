@@ -20,13 +20,22 @@
 	</resultMap>
 
 	<select id="get" resultMap="wwwHpRecordsResult">
-		select `id`,`addTime`,`orderProductId`,`orderRepairId`,`sku`,`cOrderSn`,`lbxSn`,`count`,`success`,`flag`,`remark`,`modifytime`,`hpTbSn`,`vomRepairSn` from WwwHpRecords
+		select `id`,`addTime`,`orderProductId`,`orderRepairId`,`sku`,`cOrderSn`,`lbxSn`,`count`,`success`,`flag`,`remark`,`modifytime`,`hpTbSn`,`vomRepairSn` from wwwhprecords
 	</select>
 
 	<select id="getByVomRepairSnAndSku" resultMap="wwwHpRecordsResult">
 		select `id`,`addTime`,`orderProductId`,`orderRepairId`,`sku`,`cOrderSn`,`lbxSn`,`count`,`success`,`flag`,`remark`,`modifytime`,`hpTbSn`,`vomRepairSn` 
-		from WwwHpRecords
+		from wwwhprecords
 		where `vomRepairSn`=#{vomRepairSn} and `sku`=#{sku} 
+	</select>
+	<select id="queryTHRepairSn" parameterType="java.lang.String" resultType="java.lang.String">
+	SELECT
+		vomRepairSn
+	FROM
+		wwwhprecords
+	WHERE
+		orderRepairId = #{orderRepairId}
+	LIMIT 0,1
 	</select>
 
 </mapper>

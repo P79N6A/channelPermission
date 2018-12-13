@@ -134,4 +134,52 @@ public class StoragesRela implements Serializable {
         this.isMaster = value;
     }
 
+    private String mulStoreName;
+
+    public String getMulStoreName() {
+        return mulStoreName;
+    }
+
+    public void setMulStoreName(String mulStoreName) {
+        this.mulStoreName = mulStoreName;
+    }
+
+    /**
+     * 库位名称
+     */
+    private String name;
+
+    /**
+     * 主库位名称
+     */
+    private String masterName;
+
+    /**
+     * 中心库位名称
+     */
+    private String centerName;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMasterName() {
+        return masterName;
+    }
+
+    public void setMasterName(String masterName) {
+        this.masterName = masterName;
+    }
+
+    public String getCenterName() {
+        return centerName;
+    }
+
+    public void setCenterName(String centerName) {
+        this.centerName = centerName;
+    }
 }

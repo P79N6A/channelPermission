@@ -8,6 +8,7 @@ import com.haier.stock.model.InvSection;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.PopInvWarehouse;
 import com.haier.stock.service.StockCenterInvWareHouseService;
+import com.haier.svc.api.controller.util.ExcelExportUtil;
 import com.haier.svc.api.controller.util.ExcelReader;
 import com.haier.svc.api.controller.util.ExportExcelUtil;
 import com.haier.svc.api.controller.util.HttpJsonResult;
@@ -102,10 +103,11 @@ public class InvWareHouseController {
      */
     @RequestMapping("/addInvSection")
     @ResponseBody
-    public String addInvSection(InvSection condition) {
+    public String addInvSection(InvSection condition, HttpServletRequest request) {
         condition.setUpdateTime(new Date());
-        condition.setCreateUser("系统");
-        condition.setUpdateUser("");
+        condition.setCreateUser(String.valueOf(request.getSession().getAttribute("loginId")));
+        condition.setUpdateUser(String.valueOf(request.getSession().getAttribute("loginId")));
+        condition.setCreateTime(new Date());
 
         return stockCenterInvWareHouseService.addInvSection(condition);
     }
@@ -206,7 +208,13 @@ public class InvWareHouseController {
      */
     @RequestMapping("/addinvWarehouse")
     @ResponseBody
-    public String addinvWarehouse(PopInvWarehouse condition) {
+    public String addinvWarehouse(PopInvWarehouse condition, HttpServletRequest request) {
+        if ("insert".equals(condition.getId())) {
+            condition.setCreateUser(String.valueOf(request.getSession().getAttribute("loginId")));
+            condition.setUpdateUser(String.valueOf(request.getSession().getAttribute("loginId")));
+        } else {
+            condition.setUpdateUser(String.valueOf(request.getSession().getAttribute("loginId")));
+        }
         return stockCenterInvWareHouseService.addInvWarehouse(condition);
     }
 
@@ -597,6 +605,17 @@ public class InvWareHouseController {
                 if (les0eCode.length() > 30) {
                     MsgList = "很抱歉！你导入的Excel数据,第" + i
                             + "行数据的【物流OE码】字符长度不应大于30! 请核查后重新导入！";
+                    if (StringUtil.isEmpty(MsgList, true)) {
+                        sb.append(MsgList);
+                    } else {
+                        MsgList = MsgList + "<br></br>";
+                        sb.append(MsgList);
+                    }
+                    continue;
+                }
+                if (itemProperty.length() > 2) {
+                    MsgList = "很抱歉！你导入的Excel数据,第" + i
+                            + "行数据的【批次】字符长度不应大于2! 请核查后重新导入！";
                     if (StringUtil.isEmpty(MsgList, true)) {
                         sb.append(MsgList);
                     } else {
@@ -1937,9 +1956,9 @@ public class InvWareHouseController {
             for (short i = 0; i < sectionList.size(); i++) {
                 //状态dataStatus
                 if (0 == sectionList.get(i).getStatus()) {
-                    STATUS = "已启用";
-                } else if (1 == sectionList.get(i).getStatus()) {
                     STATUS = "未启用";
+                } else if (1 == sectionList.get(i).getStatus()) {
+                    STATUS = "已启用";
                 }
 
                 row = sheet.createRow(i + 1);
@@ -2063,9 +2082,9 @@ public class InvWareHouseController {
             for (short i = 0; i < warehouseList.size(); i++) {
                 //状态dataStatus
                 if (0 == warehouseList.get(i).getStatus()) {
-                    STATUS = "已启用";
-                } else if (1 == warehouseList.get(i).getStatus()) {
                     STATUS = "未启用";
+                } else if (1 == warehouseList.get(i).getStatus()) {
+                    STATUS = "已启用";
                 }
                 //是否支持货到付款
                 if (0 == warehouseList.get(i).getSupportCod()) {
@@ -2129,5 +2148,21 @@ public class InvWareHouseController {
         ExportExcelUtil.exportCommon(is, fileName, res);
     }
 
+    @RequestMapping(value = { "/downloadTemplate" })
+    public void exportModel(HttpServletRequest request,
+        HttpServletResponse response) {
+        String fileName = "虚拟库位信息导入EXCEL模板";
+        String sheetName = "导入模板";
+        ExcelExportUtil.downloadDataTemplate(logger, request, response,
+            fileName, sheetName, CHECKSTR);
+    }
 
+    @RequestMapping(value = { "/downloadTemplate1" })
+    public void downloadTemplate(HttpServletRequest request,
+        HttpServletResponse response) {
+        String fileName = "基本库位信息导入EXCEL模板";
+        String sheetName = "导入模板";
+        ExcelExportUtil.downloadDataTemplate(logger, request, response,
+            fileName, sheetName, CHECKSTR1);
+    }
 }

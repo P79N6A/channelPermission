@@ -974,18 +974,18 @@ public class InvoiceModel {
             amount = price.multiply(new BigDecimal(op.getNumber()));
         }
         //余额支付订单的金额计算，开票金额扣掉余额支付金额
-        if (op.getBalanceAmount().compareTo(BigDecimal.ZERO) > 0) {
+        if (null!= op.getBalanceAmount()&& op.getBalanceAmount().compareTo(BigDecimal.ZERO) > 0) {
             amount = op.getProductAmount().subtract(op.getBalanceAmount());
         }
         //节能补贴逻辑的金额计算
-        if (op.getEsAmount().compareTo(BigDecimal.ZERO) > 0) {
+        if (null !=op.getEsAmount() && op.getEsAmount().compareTo(BigDecimal.ZERO) > 0) {
             amount = amount.add(op.getEsAmount());
         }
         if (flag) {
             //2014-6-4 金额为零的所有网单，改为开1分钱发票 Benio
-            if (amount.compareTo(BigDecimal.ZERO) == 0
+            if (null != amount &&(amount.compareTo(BigDecimal.ZERO) == 0
                 || amount.divide(new BigDecimal(op.getNumber()), 2, RoundingMode.HALF_UP)
-                    .compareTo(BigDecimal.ZERO) == 0) {
+                    .compareTo(BigDecimal.ZERO) == 0)) {
                 BigDecimal price = new BigDecimal("0.01");
                 amount = price.multiply(new BigDecimal(op.getNumber()));
             }
@@ -4773,7 +4773,7 @@ public class InvoiceModel {
                         }
                         // 开票中的场合
                         if (eachOrderProducts.getIsMakeReceipt() != null
-                            && eachOrderProducts.getIsMakeReceipt().equals(3)
+                            && eachOrderProducts.getIsMakeReceipt().equals(5)
                             && !oldmemberInvoices.getInvoiceType().equals(
                                 paramMemberInvoices.getInvoiceType())) {
                             return "对不起，该订单有网单开票中，不能修改发票类型!";

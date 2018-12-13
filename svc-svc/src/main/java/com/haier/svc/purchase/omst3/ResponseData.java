@@ -13,17 +13,16 @@ import javax.xml.bind.annotation.XmlType;
  * <p>以下模式片段指定包含在此类中的预期内容。
  * 
  * <pre>
- * &lt;complexType name="ResponseData">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="reason" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="faultDetail" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="ResponseData"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="reason" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -31,17 +30,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ResponseData", propOrder = {
     "reason",
-    "status",
-    "faultDetail"
+    "status"
 })
 public class ResponseData {
 
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected String reason;
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected String status;
-    @XmlElement(required = true)
-    protected String faultDetail;
 
     /**
      * 获取reason属性的值。
@@ -89,30 +85,6 @@ public class ResponseData {
      */
     public void setStatus(String value) {
         this.status = value;
-    }
-
-    /**
-     * 获取faultDetail属性的值。
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFaultDetail() {
-        return faultDetail;
-    }
-
-    /**
-     * 设置faultDetail属性的值。
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFaultDetail(String value) {
-        this.faultDetail = value;
     }
 
 }

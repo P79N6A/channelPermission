@@ -1,5 +1,6 @@
 package com.haier.stock.service;
 
+import com.haier.common.ServiceResult;
 import com.haier.stock.model.HaierStockExceedCacheVO;
 import com.haier.stock.model.InvStockAge;
 
@@ -126,4 +127,6 @@ public interface InvStockAgeService {
 	 * @return
 	 */
 	public List<HaierStockExceedCacheVO> findStockTotal();
+
+	public ServiceResult<Integer> updatePriceForStockAge(InvStockAge stockAge);
 }

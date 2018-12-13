@@ -2,6 +2,7 @@ package com.haier.shop.service;
 
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.haier.shop.model.ItemAttribute;
 
 import java.util.List;
@@ -40,6 +41,8 @@ public interface ShopItemAttributeService {
     Integer countItemAttributeWithLike(ItemAttribute itemAttribute);
 
     List<ItemAttribute> queryItemAttributeWithLike(ItemAttribute itemAttribute);
+
+    JSONObject queryItemAttribute(ItemAttribute itemAttribute);
 
     List<ItemAttribute> queryProductGroupByCbsCategory(String cbsCategory);
 

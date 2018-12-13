@@ -181,10 +181,10 @@ public class InvBaseStockController {
         	paramMap.put("lockQty", lockQty);
         }
         if(StringUtils.isNotEmpty(startDate)){
-     		paramMap.put("startDate",startDate+"00:00:00");
+     		paramMap.put("startDate",startDate+" 00:00:00");
      	 }
      	 if(StringUtils.isNotEmpty(endDate)){
-     		paramMap.put("endDate", endDate+"23:59:59");
+     		paramMap.put("endDate", endDate+" 23:59:59");
      	 }
      	 paramMap.put("start", page.getStart());
          paramMap.put("size", page.getPageSize());
@@ -196,7 +196,10 @@ public class InvBaseStockController {
 			
 			json.put("total", page.getRowsCount());
 			json.put("rows", list);
-     }	
+     }else {
+     	json.put("total",0);
+     	json.put("rows",new ArrayList<>());
+		 }
 		//json.put("pager", page);
 		return json;
 

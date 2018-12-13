@@ -178,5 +178,26 @@ public class PurchaseVehicleOrderDetailServiceImpl implements PurchaseVehicleOrd
 		vehicleOrderDetailDao.updateByOrderNo(order);		
 	}
 
+	@Override
+	public List<VehicleOrderDetailsDTO> getByVbeln(String vbeln) {
+		return vehicleOrderDetailDao.getByVbeln(vbeln);
+	}
+
+	@Override
+	public void updateEntry3wOrderById(Cn3wPurchaseStock cn3wPurchaseStock) {
+		vehicleOrderDetailDao.updateEntry3wOrderById(cn3wPurchaseStock);		
+	}
+
+	@Override
+	public int updateVbelnSpareByItemNo(String itemNo, String vbelnSpare) {
+		return vehicleOrderDetailDao.updateVbelnSpareByItemNo(itemNo, vbelnSpare);
+	}
+
+	@Override
+	public boolean vbelnExists(String itemNo, String vbelnSpare) {
+		int count = vehicleOrderDetailDao.vbelnExists(itemNo, vbelnSpare);
+		return count > 0 ? true : false;
+	}
+
 
 }

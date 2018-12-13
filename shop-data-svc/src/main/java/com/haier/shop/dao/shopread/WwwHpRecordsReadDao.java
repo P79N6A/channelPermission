@@ -17,5 +17,7 @@ public interface WwwHpRecordsReadDao {
      */
     WwwHpRecords getByVomRepairSnAndSku(@Param("vomRepairSn") String vomRepairSn,
                                         @Param("sku") String sku);
+    
+    String queryTHRepairSn(String orderRepairId);//根据退货单号查询TH号
 
 }

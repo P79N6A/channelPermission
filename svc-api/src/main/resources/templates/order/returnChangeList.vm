@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
     <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
     <link rel="stylesheet" href="../static/css/common.css">
-    <title>orderForecastGoal</title>
+    <title>退换货列表</title>
     <script src="../static/third/jquery.js"></script>
     <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
     <script src="../static/third/easyui/jquery.easyui.min.js"></script>
@@ -58,13 +58,18 @@
         <div class="slide_line fa fa-window-minimize"></div>
         <div class="slide_circle fa fa-map-marker"></div>
     </div>
-    <form id="paramForm_orderForecastGoal" class="param-form">
+    <form id="paramForm_orderForecastGoal" class="">
         <div class="search-panel" style="font-size: 11px;">
-            <h3>退换货列表</h3>
             <h5>您可以在这里查看所有退换货，或者点击这里	添加退换货申请，或者批量导入。<a href="/operationArea/select_WwwHpRecords"> HP拒收监控日志</a></h5>
             <h5 style="color: red;margin-right: 26px;margin-top: 10px;margin-bottom: 10px;">温馨提示:系统默认每三分钟匹配一次HP回传的拒信息。由于天猫退货信息未接入,菜鸟,售后,物流等系统数据差异导致的首次匹配失败,系统每隔十分钟重新匹配20次,仍然失败的需要人工处理。</h5>
             <div class="search-row_nowidth">
-                <input id="orderSn" class="easyui-textbox" prompt="订单号"></input>
+            <input id="orderSn" class="easyui-textbox" prompt="订单号"></input>
+        </div>
+            <div class="search-row_nowidth">
+                <input id="sourceOrderSn" class="easyui-textbox" prompt="来源订单号"></input>
+            </div>
+            <div class="search-row_nowidth">
+                <input id="tbOrderSn" class="easyui-textbox" prompt="TB单号"></input>
             </div>
             <div class="search-row_nowidth">
                 <input id="cOrderSn" class="easyui-textbox" prompt="网单号"></input>
@@ -114,7 +119,6 @@
                     <option value="122">已入22库</option>
                     <option value="121">已入21库</option>
                     <option value="110">已入10库</option>
-                    <option value="140">已入40库</option>
                     <option value="141">已入41库</option>
                     <option value="121">已入日日顺21库</option>
                     <option value="21">已入金立库</option>
@@ -125,6 +129,64 @@
                     <option value="-1">退换货类型</option>
                     <option value="1" >退货退款</option>
                     <option value="2">退货不退款</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <select name="hpFirst" id="hpFirst" class="easyui-combobox">
+                <option value="-1">HP一次质检结果</option>
+                <option value="3">不良品</option>
+                <option value="2">已开箱正品</option>
+                <option value="1">未开箱正品</option>
+                <option value="6">不良品退机</option>
+                <option value="5">不良品换机</option>
+            </select>
+            </div>
+            <div class="search-row_nowidth">
+                <select name="hpSecond" id="hpSecond" class="easyui-combobox">
+                    <option value="-1">HP二次质检结果</option>
+                    <option value="3">不良品需要买单:包装箱完好一次鉴定网点买单</option>
+                    <option value="2">不良品需要买单:包装箱破损物流买单</option>
+                    <option value="1">开箱正品需要换箱或整新</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth">
+                <select name="hpThird" id="hpThird" class="easyui-combobox">
+                    <option value="-1">HP换箱结果</option>
+                    <option value="3">无需换箱</option>
+                    <option value="2">整新完成</option>
+                    <option value="1">换箱完成</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <select id="source" name="source" class="easyui-combobox" editable="false">
+                    <option value="" selected="">订单来源</option>
+                    <option value="TBSC">海尔官方淘宝旗舰店</option>
+                    <option value="TOPBOILER">海尔热水器专卖店</option>
+                    <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
+                    <option value="TONGSHUAIFX">统帅品牌商</option>
+                    <option value="TOPXB">海尔新宝旗舰店</option>
+                    <option value="MOOKA">mooka模卡官方旗舰店</option>
+                    <option value="WASHER">海尔洗衣机旗舰店</option>
+                    <option value="FRIDGE">海尔冰冷旗舰店</option>
+                    <option value="AIR">海尔空调旗舰店</option>
+                    <option value="TBCT">村淘海尔商家</option>
+                    <option value="GQGYS">生态授权店</option>
+                    <option value="TMKSD">天猫卡萨帝旗舰店</option>
+                    <option value="TMTV">海尔电视旗舰店</option>
+                    <option value="TBCFDD">海尔厨房大电旗舰店</option>
+                    <option value="TBXCR">天猫小超人旗舰店</option>
+                    <option value="TOPSHJD">海尔生活电器专卖店</option>
+                    <option value="TOPDHSC">海尔生活家电旗舰店</option>
+                    <option value="GMZX">国美海尔官方旗舰店</option>
+                    <option value="GMZXTS">国美统帅官方旗舰店</option>
+                    <option value="SNYG">苏宁统帅官方旗舰店</option>
+                    <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
+                    <option value="SNQDZX">苏宁渠道中心</option>
+                    <option value="DDW">当当</option>
+                    <option value="JDHEBXGQ">京东海尔集团冰箱官方旗舰店</option>
+                    <option value="JDHEGQ">京东海尔官方旗舰店</option>
+                    <option value="XSST">线上生态授权店</option>
+                    <option value="DSPTJDST">电商平台-京东生态</option>
                 </select>
             </div>
             <div class="search-row_nowidth">
@@ -141,16 +203,28 @@
                 <input id="addTimeMax" class="easyui-datebox" prompt="退换货单提交时间"></input>
             </div>
             <div class="search-row_nowidth">
+                <select  class="easyui-combobox" style="width:174px;" id="shippingMode" name="shippingMode" data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+            </div>
+            <div class="search-row_nowidth">
+                <select  class="easyui-combobox" style="width:174px;" id="stockType" name="stockType" data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+            </div>
+
+
+  #*          <div class="search-row_nowidth">
                 <input id="paymentTimeMin" class="easyui-datebox" prompt="退款完成时间"></input>--
                 <input id="paymentTimeMax" class="easyui-datebox" prompt="退款完成时间"></input>
-            </div>
+            </div>*#
            
         </div>
-         <div class="search-row_nowidth">
-                <a href="#" class="easyui-linkbutton" id="search">搜索</a>
-                <a href="#" class="easyui-linkbutton" id="export_Excel">导出报表</a>
-                <a href="#" class="easyui-linkbutton" id="export_Excel1">导出待退款报表</a>
-            </div>
+        ##  <div class="search-row_nowidth">
+        ##     <a href="#" class="easyui-linkbutton" id="search">搜索</a>
+        ##     <a href="#" class="easyui-linkbutton" id="export_Excel">导出报表</a>
+        ##     <a href="#" class="easyui-linkbutton" id="export_Excel1">导出待退款报表</a>
+        ## </div>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" id="search">查询</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" id="export_Excel">导出报表</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" id="export_Excel1">导出待退款报表</a>
+        <input id="exportData" name="exportData" type="hidden"/>
     </form>
 </div>
 <div id="addDlg_orderForecastGoal" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"

@@ -1,6 +1,7 @@
 package com.haier.shop.dao.shopwrite;
 
 import com.haier.shop.model.O2OOrderConfirmQueues;
+import com.haier.shop.model.O2OOrderTailendQueues;
 import com.haier.shop.model.O2oOrderCloseQueues;
 import com.haier.shop.model.O2oOrderCloseQueuesExt;
 import org.apache.ibatis.annotations.Mapper;
@@ -54,4 +55,10 @@ public interface AccountCenterWriteDao {
      * @return
      */
     int updateOrderCloseQueue(O2oOrderCloseQueuesExt o2oOrderCloseQueuesExt);
+
+
+    /**
+     * 插入 o2o已付尾款队列表
+     */
+    int insertTailendToAccountCenterList(O2OOrderTailendQueues o2oOrderTailendQueues);
 }

@@ -18,7 +18,7 @@
 
 
     <link rel="stylesheet" href="../static/css/common.css">
-    <title>测试页面</title>
+    <title>手动占用库存释放</title>
     <script src="../static/third/jquery.js"></script>
     <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
     <script src="../static/third/easyui/jquery.easyui.min.js"></script>
@@ -29,7 +29,7 @@
     <script src="../static/js/easyui-extention_ws.js"></script>
     <!--<script src="/static/third/adminlte/js/app.js"></script>-->
     <script src="../static/js/i18n/zh_CN.js"></script>
-    
+
 </head>
 
 <body class="iframe-body">
@@ -95,6 +95,7 @@
                 
                 <input id="size" name="size" type="hidden" />
             </div>
+            
         </div>
         <a href="#" class="easyui-linkbutton" onclick="onQuery(1);"
            data-options="iconCls:'icon-search',plain:true">查询</a>
@@ -128,7 +129,7 @@
         </div>
         <div class="fitem" style="width: 350px;">
             <label>网单号</label>
-            <input class="easyui-textbox"    name="refNos" id="refNos"  style="width:180px"  >
+            <input class="easyui-textbox" disabled   name="refNos" id="refNos"  style="width:180px"  >
             <input type="checkbox" id="chebox" style="width: 30px" wdcheck>
         </div>
         <div style="width: 350px;" class="fitem" id="fitem" wdhwarn style="display: none">
@@ -138,7 +139,7 @@
     <div id="dlg-buttons_dmmtlPbcsMtlMeasure">
         <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn_dmmtlPbcsMtlMeasure" onclick="onLock();" iconCls="icon-ok">确认</a>
         <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
-           onclick="javascript:$('#addDlg_dmmtlPbcsMtlMeasure').dialog('close')">关闭</a>
+           onclick="close_add_dialog()">关闭</a>
     </div>
 </div>
 <script type="application/javascript">
@@ -160,18 +161,35 @@
         singleSelect: true,
         rownumbers: true
     };
+
+    
+
+
     $(function () {
         $("[wdCheck]").on("change", function () {
             var wd = $(this)
             if (wd.is(':checked')) {
-                $("[wdh]").textbox("enable")
-                $("[wdhwarn]").show()
+                $("#refNos").textbox({disabled:false})
+                $("#refNos").textbox("setValue","WD")
+
+              $("[wdhwarn]").show()
             } else {
-                $("[wdh]").textbox("disable")
-                $("[wdhwarn]").hide()
+                $("#refNos").textbox({disabled:true})
+                 $("#refNos").textbox("setValue","")
+
+              $("[wdhwarn]").hide()
             }
-        })
+        });
+
+
+        
+        
     })
+  function close_add_dialog () {
+    $("#refNos").textbox({disabled:true});
+    $('#addDlg_dmmtlPbcsMtlMeasure').dialog('close');
+  }
+
 </script>
 <script src="../static/js/stock/stockLockList.js"></script>
 </body>

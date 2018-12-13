@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>采购预测</title>
+  <link rel="stylesheet" type="text/css" href="../static/css/orderworkflow.css"/>
+  <link rel="stylesheet" href="../static/css/msg.css"></link>
+  <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css"/>
+  <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css"/>
+  <link rel="stylesheet" type="text/css" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
+  <script type="text/javascript" src="../static/third/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script type="text/javascript" src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+<div class="tabbutton">
+  <input id="main_tab_btn" name="typeButton" class="cur" type="button" value="主表" onClick="onTab('main',this)" style="padding: 1px;"/>
+  <input id="channel_tab_btn" name="typeButton" type="button" value="库位" onClick="onTab('channel',this)"  style="padding: 1px"/>
+  <input id="sku_tab_btn" name="typeButton" type="button" value="型号" onClick="onTab('sku',this)"  style="padding: 1px"/>
+</div>
+<div class="easyui-layout" data-options="fit : true,border : false">
+  <div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 120px; overflow: auto;" align="left">
+    <form id="filterForm" name="filterForm" method="post" action="#">
+      <table>
+        <tr>
+          <td>库位</td>
+          <td><input id="sCode" name="sec_code" class="easyui-textbox" style="width:173px"></input>
+          </td>
+          <td>渠道</td>
+          <td>
+            <select id="channel" name="channel" class="easyui-combobox" style="width:173px">
+              <option value="ALL">全部</option>
+              <option value="sc">商城</option>
+              <option value="tb">天猫</option>
+              <option value="dkh">大客户</option>
+            </select>
+          </td>
+          <td>物料编码</td>
+          <td><input id="sku" name="sku" class="easyui-textbox" style="width:173px"></input></td>
+          <td>上单时间</td>
+          <td>
+            <input id="seachYear" name="searchYear" class="easyui-combobox" style="width:173px"></input>
+          </td>
+          <td>年</td>
+          <td>
+            <input id="seachWeek" name="searchWeek" class="easyui-combobox" style="width:173px;"></input>
+          </td>
+          <td>周</td>
+          <td>品类</td>
+          <td><input id="product_type_name" name="product_type_name" class="easyui-combobox" style="width:173px"></td>
+        </tr>
+        <tr>
+          <td colspan="10">
+            <a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+            <a id='export' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
+          </td>
+        </tr>
+      </table>
+      <input name="type" id="type" type="hidden" value="main"/>
+    </form>
+  </div>
+  <div data-options="region:'center',title:'采购预测查询结果',border:true">
+    <table id="dataGrid"></table>
+    <div id="msgMask"></div>
+    <div id="msg">正在处理，请稍待。。。</div>
+  </div>
+  <div data-options="region:'south'" style="height:25px;"></div>
+</div>
+
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    var searchYear = '$!{searchYear}';
+    var searchWeek = '$!{searchWeek}';
+    var year = [];
+    for (var j = 2014; j <= 2024; j++) {
+      year.push({"id": j, "text": j});
+    }
+
+    $("#seachYear").combobox({
+      editable: false,
+      value: searchYear,
+      panelHeight: 'auto',
+      valueField: 'id',
+      textField: 'text'
+    }).combobox("loadData", year);
+
+    var week = [];
+    for (var i = 1; i <= 54; i++) {
+      week.push({"id": i, "text": i});
+    }
+
+    $("#seachWeek").combobox({
+      editable: false,
+      value: searchWeek,
+      panelHeight: '300px',
+      valueField: 'id',
+      textField: 'text'
+    }).combobox("loadData", week);
+
+    $("#channel").combobox({
+      editable: false,
+      panelHeight: 'auto'
+    }).combobox("disable")
+
+  });
+
+  function onTab(type, curButton) {
+
+    var value = $("#channel").combobox('getValue');
+    if (type == 'main') {
+      $("#channel").combobox({
+        editable: false,
+        panelHeight: 'auto',
+        value: 'ALL'
+      }).combobox("disable")
+    } else {
+      $("#channel").combobox({
+        editable: false,
+        panelHeight: 'auto',
+        value: value
+      }).combobox("enable")
+    }
+    $('#type').val(type);
+    $("input[name='typeButton']").attr("class", "");
+    $(curButton).attr("class", "cur");
+  }
+
+  $(function () {
+    //品类---------------
+    jQuery.getJSON("/itemAttribute/getAllProductTypes", function (result) {
+      var JosnList = [];
+      jQuery.each(result.data, function (i, v) {
+        var item = {id: v, text: v};
+        JosnList.push(item);
+      });
+      $("#product_type_name").combobox({
+        data: JosnList,
+        valueField: 'text',
+        textField: 'text',
+        panelHeight: '300px',
+        editable: false,
+        value: '全部'
+      });
+    });
+  });
+
+  var datagrid;
+  //点击查询
+  $('#search').click(function () {
+    //检索列表构筑
+    if (datagrid) {
+      //grid刷新
+      $('#dataGrid').datagrid('load', {sec_code:$("#sCode").val(),
+        channel:$("#channel").val(),
+        sku:$("#sku").val(),
+        type:$("#type").val(),
+        searchWeek:$("#seachWeek").val(),
+        searchYear:$("#seachYear").val(),
+        product_type_name:$("#product_type_name").val()
+      });
+    } else {
+      var type = $("#type").val();
+      if (type == "main") {
+        //生成grid
+        datagrid = $('#dataGrid').datagrid({
+          url: "/purchaseForecast/purchaseForecastList",
+          fit: true,
+          fitColumns: true,
+          pagination: true,
+          singleSelect: true,
+          checkOnSelect:false,
+          striped:true,
+          pageSize: 100,
+          pageList: [100,200,300],
+          nowrap: true,
+          rownumbers: true,
+          queryParams: {
+            sec_code:$("#sCode").val(),
+            channel:$("#channel").val(),
+            sku:$("#sku").val(),
+            type:$("#type").val(),
+            searchWeek:$("#seachWeek").val(),
+            searchYear:$("#seachYear").val(),
+            product_type_name:$("#product_type_name").val()
+          },
+          columns: [
+            [
+              {field: 'secCode', title: '库位', align: 'center', rowspan:2, width:10},
+              {field:'secName', title:'库位名称', align:'center', rowspan:2, width:10},
+              {field: 'productType', title: '品类', align: 'center', rowspan:2, width:10},
+              {field: 'sku', title: '物料号', align: 'center', rowspan:2, width:10},
+              {field:'skuName', title:'型号', align:'center', rowspan:2, width:10},
+              {field:'stock2MonthOverdue', title:'超期60天库存数量', align:'center', rowspan:2, width:10},
+              {title:'商城渠道', align:'center', colspan:5, width:200},
+              {title:'天猫渠道', align:'center', colspan:5, width:200},
+              {title:'大客户渠道', align:'center', colspan:5, width:200},
+            ],[
+              {field: 'shopWeekSale', title: '周均销量', align: 'center'},
+              {field: 'scGoalQty', title: '周目标', align: 'center'},
+              {field: 'shopInTransit', title: '在途', align: 'center'},
+              {field: 'shopSurplusStock', title: '自有库存', align: 'center'},
+              {field: 'shopForecast', title: '预测数量', align: 'center'},
+
+              {field: 'tbWeekSale', title: '周均销量', align: 'center'},
+              {field: 'tbGoalQty', title: '周目标', align: 'center'},
+              {field: 'tbInTransit', title: '在途', align: 'center'},
+              {field: 'tbSurplusStock', title: '自有库存', align: 'center'},
+              {field: 'tbForecast', title: '预测数量', align: 'center'},
+
+              {field: 'keyaccountWeekSale', title: '周均销量', align: 'center'},
+              {field: 'dkhGoalQty', title: '周目标', align: 'center'},
+              {field: 'keyaccountInTransit', title: '在途', align: 'center'},
+              {field: 'keyaccountSurplusStock', title: '自有库存', align: 'center'},
+              {field: 'keyaccountForecast', title: '预测数量', align: 'center'}
+            ]
+          ]
+        })
+      } else if (type == "channel") {
+
+      } else {
+        
+      }
+    }
+  });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.distribute.data.dao.distribute.ProductCenterDao">
+    <resultMap id="ProductMap" type="com.haier.distribute.data.model.ProductCenterDTO">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="model" property="model" jdbcType="VARCHAR" />
+        <result column="series" property="series" jdbcType="VARCHAR" />
+        <result column="brandId" property="brandId" jdbcType="INTEGER" />
+        <result column="brandName" property="brandName" jdbcType="VARCHAR" />
+        <result column="productGroupCode" property="productGroupCode" jdbcType="VARCHAR" />
+        <result column="productGroupName" property="productGroupName" jdbcType="VARCHAR" />
+        <result column="internationalCode" property="internationalCode" jdbcType="VARCHAR" />
+        <result column="dateToMarket" property="dateToMarket" jdbcType="BIGINT" />
+        <result column="dateOffMarket" property="dateOffMarket" jdbcType="BIGINT" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="salePoint" property="salePoint" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="selectByCode" parameterType="java.lang.String" resultMap="ProductMap">
+        select * from t_products WHERE code=#{code};
+    </select>
+    <update id="updateById" parameterType="com.haier.distribute.data.model.ProductCenterDTO" >
+        UPDATE t_products SET code=#{entity.code},name=#{entity.name},model=#{entity.model},series=#{entity.series},
+        brandId=#{entity.brandId},brandName=#{entity.brandName},productGroupCode=#{entity.productGroupCode},
+        productGroupName=#{entity.productGroupName},internationalCode=#{entity.internationalCode},dateToMarket=#{entity.dateToMarket},dateOffMarket=#{entity.dateOffMarket},status=#{entity.status},remark=#{entity.remark},salePoint=#{entity.salePoint}
+        WHERE id=#{entity.id}
+    </update>
+    <insert id="insertProductInfo" parameterType="com.haier.distribute.data.model.ProductCenterDTO" useGeneratedKeys="true" keyColumn="id" keyProperty="entity.id">
+        INSERT INTO t_products(code,name,model,series,brandId,brandName,productGroupCode,productGroupName,internationalCode,dateToMarket,dateOffMarket,status,remark,salePoint)
+        VALUES(#{entity.code},#{entity.name},#{entity.model},#{entity.series},#{entity.brandId},#{entity.brandName},#{entity.productGroupCode},#{entity.productGroupName},#{entity.internationalCode},#{entity.dateToMarket},#{entity.dateOffMarket},#{entity.status},#{entity.remark},#{entity.salePoint})
+</insert>
+    <select id="selectAll" resultMap="ProductMap">
+        SELECT * FROM t_products
+    </select>
+    <select id="selectBySku"  resultMap="ProductMap">
+        SELECT * FROM t_products WHERE code IN
+        <foreach collection="list" item="sku" open="(" close=")"
+                 separator=",">
+            #{sku}
+        </foreach>
+    </select>
+      <select id="selectByProductCode"  resultMap="ProductMap">
+        SELECT * FROM t_sale_product WHERE productCode IN
+        <foreach collection="list" item="productCode" open="(" close=")"
+                 separator=",">
+            #{productCode}
+        </foreach>
+    </select>
+</mapper>

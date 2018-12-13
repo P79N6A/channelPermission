@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>支付宝流水对账</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+<body class="iframe-body">
+<div id="searchPanel_orderForecastGoal" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+    collapsible:false">
+    <table id="datagrid_orderForecastGoal"></table>
+</div>
+
+<div id="datagridToolbar_orderForecastGoal">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm_orderForecastGoal" class="param-form">
+        <div class="search-panel" style="font-size: 11px;">
+            
+            <div class="search-row_nowidth mar_r6px">
+                <input id="orderSn" name="orderSn" class="easyui-textbox" data-options="prompt:'请输入订单号'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="memberLoginId" name="memberLoginId" class="easyui-textbox" data-options="prompt:'对方账户'">
+            </div>
+
+            <div class="search-row_nowidth mar_r6px">
+                <select id="businessTypeCode" name="businessTypeCode" class="easyui-combobox" panelHeight="auto">
+                	<option value="" selected="">业务类型</option>
+                	<option value="code2">交易付款</option>
+                	<option value="code3">交易退款</option>
+                	<option value="code8">在线支付</option>
+                </select>
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="addTimeBegine" name="addTimeBegine" class="easyui-datebox" data-options="prompt:'订单生成时间'">
+                <span>至</span>
+                <input id="addTimeEnd" name="addTimeEnd" class="easyui-datebox" data-options="prompt:'订单生成时间'">
+            </div>
+            <div class="search-row_nowidth mar_r6px">
+                <input id="incomeMoneymin" name="incomeMoneymin" class="easyui-textbox" data-options="prompt:'收入金额'">
+                <span>-</span>
+                <input id="incomeMoneymax" name="incomeMoneymax" class="easyui-textbox" data-options="prompt:'收入金额'">
+            </div>
+
+            <div class="search-row_nowidth mar_r6px">
+                <input id="expenditureMoneymin" name="expenditureMoneymin" class="easyui-textbox" data-options="prompt:'支出金额'">
+                <span>-</span>
+                <input id="expenditureMoneymax" name="expenditureMoneymax" class="easyui-textbox" data-options="prompt:'支出金额'">
+            </div>
+
+            <div class="search-row_nowidth mar_r6px">
+                <input id="remake" name="remake" class="easyui-textbox" data-options="prompt:'备注'">
+            </div>
+
+            <div class="search-row_nowidth mar_r6px">
+                <select id="source" name="source" class="easyui-combobox">
+                    <option value="" selected="">订单来源</option>
+                    <option value="TBSC">海尔官方淘宝旗舰店</option>
+                    <option value="TOPBOILER">海尔热水器专卖店</option>
+                    <option value="TONGSHUAI">淘宝网统帅日日顺乐家专卖店</option>
+                    <option value="TONGSHUAIFX">统帅品牌商</option>
+                    <option value="TOPXB">海尔新宝旗舰店</option>
+                    <option value="MOOKA">mooka模卡官方旗舰店</option>
+                    <option value="WASHER">海尔洗衣机旗舰店</option>
+                    <option value="FRIDGE">海尔冰冷旗舰店</option>
+                    <option value="AIR">海尔空调旗舰店</option>
+                    <option value="TBCT">村淘海尔商家</option>
+                    <option value="GQGYS">生态授权店</option>
+                    <option value="TMKSD">天猫卡萨帝旗舰店</option>
+                    <option value="TMTV">海尔电视旗舰店</option>
+                    <option value="TBCFDD">海尔厨房大电旗舰店</option>
+                    <option value="TBXCR">天猫小超人旗舰店</option>
+                    <option value="TOPSHJD">海尔生活电器专卖店</option>
+                    <option value="TOPDHSC">海尔生活家电旗舰店</option>
+                    <option value="GMZX">国美海尔官方旗舰店</option>
+                    <option value="GMZXTS">国美统帅官方旗舰店</option>
+                    <option value="SNYG">苏宁统帅官方旗舰店</option>
+                    <option value="SNHEGQ">苏宁海尔官方旗舰店</option>
+                    <option value="SNQDZX">苏宁渠道中心</option>
+                    <option value="DDW">当当</option>
+                    <option value="JDHEGQ">京东海尔官方旗舰店</option>
+                    <option value="JDHEBXGQ">京东海尔集团冰箱官方旗舰店</option>
+                </select>
+            </div>
+          	<div class="search-row_nowidth mar_r6px">
+                <select id="differenceStatus" name="differenceStatus" class="easyui-combobox" panelHeight="auto">
+                	<option value="" selected="">是否差异</option>
+                	<option value="1">没有差异</option>
+                	<option value="2">有差异</option>
+                </select>
+            </div>
+           
+           
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn_orderForecastGoal"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderForecastGoal"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <!--<a href="#" class="easyui-linkbutton" id="addBtn_orderForecastGoal"
+           data-options="iconCls:'icon-add',plain:true">增加</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn_orderForecastGoal"
+           data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a href="#" class="easyui-linkbutton" id="deleteBtn_orderForecastGoal"
+           data-options="iconCls:'icon-remove',plain:true">删除</a>-->
+        <a href="#" class="easyui-linkbutton" id="importBtn_orderForecastGoal"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+        <input id="exportData" name="exportData" type="hidden"/>
+    </form>
+</div>
+
+<script type="text/javascript">
+    function slideUpSlideClk(t) {
+        var $this = $(t);
+        if ($this.hasClass('open')) {
+            $this.removeClass('open');
+            setTimeout(function () {
+                $this.addClass('close');
+            }, 0);
+            $(".search-panel").slideUp();
+        } else {
+            $this.removeClass('close');
+            setTimeout(function () {
+                $this.addClass('open');
+            }, 0);
+            $(".search-panel").slideDown();
+        }
+        setTimeout(function () {
+            $('#datagrid_orderForecastGoal').datagrid('resize');
+        }, 500);
+    }
+</script>
+<script src="../static/js/invoice/zfbMatchingOrderDetails.js"></script>
+</body>
+</html>

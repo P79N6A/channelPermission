@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.workorder.WoReviewpoolfordhzxDao">
+	<resultMap id="reviewPoolResult" type="com.haier.shop.model.Reviewpoolfordhzx">
+		<result property="messageNum" column="messageNum" />
+		<result property="userName" column="userName" />
+		<result property="phone1" column="phone1" />
+		<result property="phone2" column="phone2" />
+		<result property="phone3" column="phone3" />
+		<result property="address" column="address" />
+		<result property="store" column="store" />
+		<result property="callTime" column="callTime" />
+		<result property="problem" column="problem" />
+		<result property="recoveryTime" column="recoveryTime" />
+		<result property="id" column="id" />
+		<result property="backContext3" column="backContext3" />
+		<result property="type" column="type" />
+		<result property="region" column="region" />
+		<result property="remark2" column="remark2" />
+		<result property="closeTime" column="closeTime" />
+		<result property="trip" column="trip" />
+		<result property="createTime" column="createTime" />
+		<result property="problemMessage" column="problemMessage" />
+		<result property="storeType" column="storeType" />
+		<result property="productType" column="productType" />
+		<result property="model" column="model" />
+		<result property="workStatus" column="workStatus" />
+	</resultMap>
+	<sql id="pagination_Tail">
+		<if test="pager != null">
+			<![CDATA[ limit #{pager.start},#{pager.pageSize}]]>
+		</if>
+	</sql>
+	<sql id="search_where">
+	<if test="reviewpoolfordhzx.userName != null and reviewpoolfordhzx.userName != ''">
+		and userName = #{reviewpoolfordhzx.userName}
+	</if>
+		<if test="reviewpoolfordhzx.phone1 != null and reviewpoolfordhzx.phone1 != ''">
+			and phone1 = #{reviewpoolfordhzx.phone1}
+		</if>
+		<if test="reviewpoolfordhzx.phone2 != null and reviewpoolfordhzx.phone2 != ''">
+			and phone2 = #{reviewpoolfordhzx.phone2}
+		</if>
+		<if test="reviewpoolfordhzx.phone3 != null and reviewpoolfordhzx.phone3 != ''">
+			and phone3 = #{reviewpoolfordhzx.phone3}
+		</if>
+		<if test="reviewpoolfordhzx.messageNum != null and reviewpoolfordhzx.messageNum != ''">
+			and messageNum = #{reviewpoolfordhzx.messageNum}
+		</if>
+        <if test="reviewpoolfordhzx.workStatus != null and reviewpoolfordhzx.workStatus != ''">
+            and workStatus = #{reviewpoolfordhzx.workStatus}
+        </if>
+		<if test="reviewpoolfordhzx.type != null and reviewpoolfordhzx.type != ''">
+			and type = #{reviewpoolfordhzx.type}
+		</if>
+		<if test="reviewpoolfordhzx.store != null and reviewpoolfordhzx.store != ''">
+			and store = #{reviewpoolfordhzx.store}
+		</if>
+		<if test="reviewpoolfordhzx.startTime != null and reviewpoolfordhzx.startTime != ''">
+			and createTime  <![CDATA[>=]]> #{reviewpoolfordhzx.startTime}
+		</if>
+		<if test="reviewpoolfordhzx.endTime != null and reviewpoolfordhzx.endTime != ''">
+			and createTime  <![CDATA[<=]]> #{reviewpoolfordhzx.endTime}
+		</if>
+		<if test="reviewpoolfordhzx.storeType != null and reviewpoolfordhzx.storeType != ''">
+			and storeType  = #{reviewpoolfordhzx.storeType}
+		</if>
+	</sql>
+	 <select id="page" resultMap="reviewPoolResult">
+		 select
+		 id,
+		 messageNum,
+		 userName,
+		 phone1,
+		 phone2,
+		 phone3,
+		 address,
+		 store,
+		 callTime,
+		 problem,
+		 recoveryTime,
+		 backContext3,
+		 workStatus,
+		 problemMessage,
+		 createTime,
+		 region,
+		 remark2,
+		 closeTime,
+		 storeType,
+		 productType,
+		 model,
+		 case
+		 when type='0' then '物流类工单'
+		 when type='1' then '店铺类工单'
+		 when type='2' then '售后类工单'
+		 ELSE
+		 '不符合工单类型'
+		 end 'type',
+		 trip
+
+		 from  wo_reviewpoolfordhzx  where  1=1
+		 <include refid="search_where" />
+
+		 order by  createTime  desc
+		 <include refid="pagination_Tail" />
+
+	 </select>
+
+	<select id="pageCount" resultType="int">
+		select count(1)
+		from  wo_reviewpoolfordhzx
+		where  1=1
+		<include refid="search_where" />
+	</select>
+	<select id="getQueryReviewpoolfordhzx" resultMap="reviewPoolResult">
+	select * from wo_reviewpoolfordhzx where messageNum = #{reviewpoolfordhzx.messageNum}
+	</select>
+
+	<select id="findReviewByIds" resultMap="reviewPoolResult">
+		select * from wo_reviewpoolfordhzx where id=#{reviewpoolfordhzx.id}
+	</select>
+	<select  id="countReviewpoolfordhzx" resultType="int">
+		select count(*)
+		from  wo_reviewpoolfordhzx
+		where  messageNum= #{reviewpoolfordhzx.reviewPoolId}
+	</select>
+
+
+
+	<insert id="insertReviewpoolDhzx">
+		insert into  wo_reviewpoolfordhzx (id,messageNum,userName,phone1,phone2,phone3,address,store,callTime,recoveryTime,type,trip,createTime,problemMessage,storeType,productType,model)
+		values   (#{reviewpoolfordhzx.id},#{reviewpoolfordhzx.reviewPoolId},#{reviewpoolfordhzx.userName},#{reviewpoolfordhzx.phone1},#{reviewpoolfordhzx.phone2},#{reviewpoolfordhzx.phone3},#{reviewpoolfordhzx.address},#{reviewpoolfordhzx.store},#{reviewpoolfordhzx.callTime},#{reviewpoolfordhzx.recoveryTime},#{reviewpoolfordhzx.type},#{reviewpoolfordhzx.trip},#{reviewpoolfordhzx.createTime},#{reviewpoolfordhzx.problemMessage},#{reviewpoolfordhzx.storeType},#{reviewpoolfordhzx.productType},#{reviewpoolfordhzx.model})
+	</insert>
+	<update id="updateReviewpoolDhzx">
+		update wo_reviewpoolfordhzx
+
+		<set>
+			<include refid="search_update" />
+		</set>
+
+		where
+		id = #{reviewpoolfordhzx.id}
+	</update>
+	<update id="updateReviewpoolDhzxForProblemMessage">
+		update wo_reviewpoolfordhzx
+		set wo_reviewpoolfordhzx.problemMessage=CONCAT( #{reviewpoolfordhzx.problemMessage}                                                   ,wo_reviewpoolfordhzx.problemMessage)
+		where wo_reviewpoolfordhzx.messageNum=#{reviewpoolfordhzx.reviewPoolId}
+
+	</update>
+
+
+	<sql id="search_update">
+
+		<if test="reviewpoolfordhzx.problem != null">
+			problem = #{reviewpoolfordhzx.problem},
+		</if>
+		<if test="reviewpoolfordhzx.region != null">
+			region = #{reviewpoolfordhzx.region},
+		</if>
+		<if test="reviewpoolfordhzx.backContext3 != null">
+			backContext3 = #{reviewpoolfordhzx.backContext3},
+		</if>
+		<if test="reviewpoolfordhzx.workStatus != null">
+			workStatus = #{reviewpoolfordhzx.workStatus},
+		</if>
+		<if test="reviewpoolfordhzx.remark2 != null">
+			remark2 = #{reviewpoolfordhzx.remark2},
+		</if>
+		<if test="reviewpoolfordhzx.closeTime != null">
+			closeTime = #{reviewpoolfordhzx.closeTime},
+		</if>
+		<if test="reviewpoolfordhzx.id != null">
+			id = #{reviewpoolfordhzx.id},
+		</if>
+		<if test="reviewpoolfordhzx.trip != null">
+			trip = #{reviewpoolfordhzx.trip},
+		</if>
+		<if test="reviewpoolfordhzx.storeType != null">
+			storeType = #{reviewpoolfordhzx.storeType},
+		</if>
+		<if test="reviewpoolfordhzx.store != null">
+			store = #{reviewpoolfordhzx.store}
+		</if>
+
+	</sql>
+
+
+</mapper>

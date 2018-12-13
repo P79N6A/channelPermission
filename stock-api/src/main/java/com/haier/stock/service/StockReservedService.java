@@ -1,5 +1,6 @@
 package com.haier.stock.service;
 
+import com.haier.stock.model.InvStockBatch;
 import java.util.List;
 import java.util.Map;
 
@@ -37,4 +38,11 @@ public interface StockReservedService {
      * @return
      */
     ServiceResult<Boolean> updateReservedConfigById(InvReservedConfig config);
+
+    /**
+     * 插入库存预留记录
+     * @return
+     */
+    ServiceResult<Boolean> stockReservedToRelease(InvStockBatch stockBatch,
+        List<InvReservedConfig> configs);
 }

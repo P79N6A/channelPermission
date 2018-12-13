@@ -18,4 +18,17 @@
         update `invoice_queue` set `success`=#{success},`process_time`=#{processTime},`last_message`=#{lastMessage}
         where `id` = #{id}
     </update>
+    <update id="updateInvoiceQueueSuccessByOrderProductId" parameterType="com.haier.shop.model.InvoiceQueue">
+        update `invoice_queue` set `success`=#{success},`process_time`=#{processTime},`last_message`=#{lastMessage}
+        where `order_product_id` = #{orderProductId}
+    </update>
+
+    <update id="updateInvoiceQueueSuccessByOrderProductIds" parameterType="com.haier.shop.model.InvoiceQueue">
+        update invoice_queue iq set iq.success=0 where iq.order_product_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </update>
+
 </mapper>

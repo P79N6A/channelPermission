@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,10 +13,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
+import com.haier.svc.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -53,13 +57,11 @@ import com.haier.svc.api.controller.util.HttpJsonResult;
 import com.haier.svc.api.controller.util.WebUtil;
 import com.haier.svc.api.controller.util.date.DateCal;
 import com.haier.svc.api.service.CommPurchase;
-import com.haier.svc.service.DataDictionaryService;
-import com.haier.svc.service.ItemService;
-import com.haier.svc.service.T2OrderQueryService;
-import com.haier.svc.service.T2OrderService;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * @author 付振兴
+ * @author zsx
  *
  */
 @Controller
@@ -71,7 +73,8 @@ public class PurchaseAllocationManagementController {
 	
     @Autowired
     ItemService itemService;
-    
+    @Autowired
+    EisEaiMdmService eisEaiMdmSerivce;
 	 @RequestMapping("/PageJump")
 	 public String PageJump(){
 		 return  "purchase/productBaseDataManagement";
@@ -192,7 +195,7 @@ public class PurchaseAllocationManagementController {
     	    	update = "";
     	    }
     	    //如果是ALL，品类设为空
-    	    if (category_id == "ALL") {
+    	    if (category_id.equals("ALL")) {
     	    	category_id = "";
     	    }
     	    //如果是ALL，产品组设为空
@@ -207,7 +210,8 @@ public class PurchaseAllocationManagementController {
             params.put("materials_id", materials_id);
             params.put("materials_desc", materials_desc);
             params.put("category_id", category_id);
-
+            params.put("m",0);
+            params.put("n",10000);
     HSSFWorkbook  wb= getDetailsData(params);
     
     SimpleDateFormat sdf =  new SimpleDateFormat("yyyyMMddHHmmss");  
@@ -225,8 +229,41 @@ public class PurchaseAllocationManagementController {
         logger.error("错误", e);
     }
 }
-    
-    
+
+    /**
+     * 手动同步物料信息
+     * @param materialCode
+     * @param modelMap
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = { "/manualSyncMdm" }, method = { RequestMethod.GET })
+    @ResponseBody
+    public HttpJsonResult<Map<String, Object>> manualSyncMdm(@RequestParam(required = false) String materialCode,
+                                                             Map<String, Object> modelMap,
+                                                             HttpServletRequest request,
+                                                             HttpServletResponse response) {
+        HttpJsonResult<Map<String, Object>> result = new HttpJsonResult<Map<String, Object>>();
+
+        try {
+            ServiceResult<Boolean> syncResult = eisEaiMdmSerivce.manualSyncMdmBySku(materialCode,
+                    this.getUserName());
+            if (syncResult != null && syncResult.getSuccess() && syncResult.getResult()) {
+                result.setMessage("物料编码：" + materialCode + "手动同步成功！");
+            } else if (syncResult != null && syncResult.getSuccess() && !syncResult.getResult()) {
+                result.setMessage("物料编码：" + materialCode + "," + syncResult.getMessage());
+            } else {
+                result.setMessage("物料编码：" + materialCode + "手动同步时,item服务发生异常,失败！");
+                logger.error("物料编码：" + materialCode + "手动同步时,item服务发生异常,失败:"
+                        + syncResult.getMessage());
+            }
+        } catch (Exception e) {
+            logger.error("[item][ItemBaseController]物料编码：" + materialCode + "手动同步信息时web发生未知错误", e);
+            result.setMessage("物料编码：" + materialCode + "手动同步信息时web发生异常，失败！");
+        }
+        return result;
+    }
 
 public HSSFWorkbook getDetailsData(Map<String, Object> params) {
     
@@ -286,9 +323,169 @@ public HSSFWorkbook getDetailsData(Map<String, Object> params) {
          row.createCell(13).setCellValue(list.get(i).getCreated());
          row.createCell(14).setCellValue(list.get(i).getLastUpd());
          row.createCell(15).setCellValue(list.get(i).getProBand());
-         row.createCell(16).setCellValue(list.get(i).getIsAutoUpdate());         
-       }
+         row.createCell(16).setCellValue(list.get(i).getIsAutoUpdate());
+         if(list.get(i).getPrice()==null){
+             row.createCell(17).setCellValue("");
+         }else{
+             row.createCell(17).setCellValue(String.valueOf(list.get(i).getPrice()));
+         }
+     }
 	return wb;
 
-} 
+}
+
+    /**
+     * 手动添加产品基础数据
+     * @param materialCodeLabelInsert
+     * @param materialDescriptionInsert
+     * @param productTypeInsert
+     * @param departmentInsert
+     * @param priceInsert
+     * @param modelMap
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = { "/insertItemBase" }, method = { RequestMethod.POST })
+    @ResponseBody
+    public HttpJsonResult<Map<String, Object>> insertItemBase(@RequestParam(required = false) String materialCodeLabelInsert,
+                                                              @RequestParam(required = false) String materialDescriptionInsert,
+                                                              @RequestParam(required = false) String productTypeInsert,
+                                                              @RequestParam(required = false) String departmentInsert,
+                                                              @RequestParam(required = false) String priceInsert,
+                                                              Map<String, Object> modelMap,
+                                                              HttpServletRequest request,
+                                                              HttpServletResponse response) {
+        HttpJsonResult<Map<String, Object>> result = new HttpJsonResult<Map<String, Object>>();
+        try {
+            materialCodeLabelInsert = materialCodeLabelInsert == null ? ""
+                    : materialCodeLabelInsert.trim();
+            materialDescriptionInsert = materialDescriptionInsert == null ? ""
+                    : materialDescriptionInsert.trim();
+            productTypeInsert = productTypeInsert == null ? "" : productTypeInsert.trim();
+            departmentInsert = departmentInsert == null ? "" : departmentInsert.trim();
+            if ("".equals(materialCodeLabelInsert)) {
+                result.setMessage("物料编码不能为空! ");
+                return result;
+            }
+            if (materialCodeLabelInsert.length() > 60) {
+                result.setMessage("物料编码长度不能超过60位! ");
+                return result;
+            }
+            if (materialDescriptionInsert.length() > 400) {
+                result.setMessage("物料名称长度不能超过400位! ");
+                return result;
+            }
+
+            if (priceInsert == null || "".equals(priceInsert)) {
+                priceInsert = "0";
+            } else if (!isDecimal(priceInsert.trim())) {
+                result.setMessage("价格输入格式有误! ");
+                return result;
+            } else {
+                priceInsert = priceInsert.trim();
+            }
+
+            ServiceResult<ItemBase> existResult = itemService
+                    .getItemBaseBySku(materialCodeLabelInsert);
+            if (existResult != null && existResult.getResult() != null) {
+                result.setMessage("物料编码已存在! ");
+                return result;
+            }
+
+            ItemBase itemBase = new ItemBase();
+            itemBase.setMaterialCode(materialCodeLabelInsert);
+            itemBase.setMaterialDescription(materialDescriptionInsert);
+            itemBase.setProductType(productTypeInsert);
+            itemBase.setDepartment(departmentInsert);
+            itemBase.setPrice(new BigDecimal(priceInsert));
+            itemBase.setDeleteFlag(0);
+            itemBase.setCreated(new Date());
+            itemBase.setLastUpd(new Date());
+            itemBase.setModifier(WebUtil.currentUserName(request));
+
+            ServiceResult<Boolean> insertResult = itemService.insertItemBaseInfo(itemBase);
+            if (null != insertResult && (!insertResult.getSuccess() || !insertResult.getResult())) {
+                result.setMessage("添加失败！");
+            }
+        } catch (Exception e) {
+            logger.error("[item][ItemBaseController]添加产品基础数据时发生未知错误", e);
+            result.setMessage("添加失败！");
+        }
+        return result;
+    }
+    private boolean isDecimal(String str) {
+        return Pattern
+                .compile(
+                        "(^[1-9]{1}[0-9]{0,5}$)|((^[1-9]{1}[0-9]{0,5})(\\.[\\d]{1,2}$))|((^0{1})(\\.[\\d]{1,2})$)|^0{1}$")
+                .matcher(str).matches();
+    }
+
+    /**
+     * 根据id修改产品基础数据
+     * @param id
+     * @param materialDescription
+     * @param department
+     * @param status
+     * @param isAutoUpdate
+     * @param modelMap
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = { "/saveItemBase" }, method = { RequestMethod.POST })
+    @ResponseBody
+    public HttpJsonResult<Map<String, Object>> saveItemBase(@RequestParam(required = false) Integer id,
+                                                            @RequestParam(required = false) String materialDescription,
+                                                            @RequestParam(required = false) String department,
+                                                            @RequestParam(required = false) Integer status,
+                                                            @RequestParam(required = false) Integer isAutoUpdate,
+                                                            @RequestParam(required = false) String price,
+                                                            Map<String, Object> modelMap,
+                                                            HttpServletRequest request,
+                                                            HttpServletResponse response) {
+        HttpJsonResult<Map<String, Object>> result = new HttpJsonResult<Map<String, Object>>();
+        try {
+            if (StringUtils.isBlank(materialDescription.trim())) {
+                result.setMessage("型号不能为空! ");
+                return result;
+            }
+
+            if (price == null || "".equals(price)) {
+                price = "0";
+            } else if (!isDecimal(price.trim())) {
+                result.setMessage("价格输入格式有误! ");
+                return result;
+            } else {
+                price = price.trim();
+            }
+
+            ItemBase itemBase = new ItemBase();
+            itemBase.setNumberNull();
+            itemBase.setId(id);
+            itemBase.setMaterialDescription(materialDescription.trim());
+            itemBase.setDepartment(department);
+            itemBase.setStatus(status);
+            itemBase.setIsAutoUpdate(isAutoUpdate);
+            itemBase.setModifier(getUserName());//取登陆用户名为修改人
+            itemBase.setPrice(new BigDecimal(price));
+            ServiceResult<Boolean> updateResult = itemService.updateItemBaseById(itemBase);
+            if (null != updateResult && (!updateResult.getSuccess() || !updateResult.getResult())) {
+                result.setMessage("保存失败！");
+            }
+        } catch (Exception e) {
+            logger.error("[item][ItemBaseController]保存产品基础数据时发生未知错误", e);
+            result.setMessage("保存失败！");
+        }
+        return result;
+    }
+
+    /**
+     * 获取当前登录的用户
+     */
+    private String getUserName() {
+        ServletRequestAttributes attr = (ServletRequestAttributes)
+                RequestContextHolder.currentRequestAttributes();
+        return (String) attr.getRequest().getSession().getAttribute("userName");
+    }
 }

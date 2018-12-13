@@ -5,8 +5,11 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.haier.purchase.data.model.vehcile.Cn3wPurchaseStock;
 import com.haier.purchase.data.model.vehcile.ExportVehicleDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderDTO;
+import com.haier.purchase.data.model.vehcile.VehicleOrderHistoryDTO;
+import com.haier.purchase.data.model.vehcile.VehiclePushToSAP;
 
 /**
  * <p>
@@ -46,4 +49,18 @@ public interface VehicleOrderDao {
 	List<ExportVehicleDTO> selectVehicleExport(Map<String, Object> params);
 
 	String getWhCode (String code);
+
+	public List<Cn3wPurchaseStock> findPushToSAPList(Map<String, Object> params);
+
+	public Integer findPushToSAPListCount(Map<String, Object> params);
+
+	List<VehicleOrderHistoryDTO> getChangeDNPageByCondition(@Param("entity") VehicleOrderDTO condition, @Param("page") int page, @Param("rows") int rows);
+
+	Long getChangeDNPagerCount(@Param("entity") VehicleOrderDTO condition);
+
+	List<VehiclePushToSAP> findPushToSAPList2(Map<String, Object> params);
+
+	int findPushToSAPListCount2(Map<String, Object> params);
+
+	
 }

@@ -2,8 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.haier.shop.dao.shopwrite.ProductsWriteDao" >
     	<update id="updateSaleNumBySku" parameterType="com.haier.shop.model.ProductsNew">
-		update Products set saleNum=saleNum + #{saleNum} where sku = #{sku}
+		update products set saleNum=saleNum + #{saleNum} where sku = #{sku}
 	</update>
+	
+	<insert id="addProduct" parameterType="com.haier.shop.model.Products">
+   		INSERT INTO `products`
+   		(siteId,productName,stockToTaotao,lastSyncTime,taobaoId,wlbItemId,productActivityInfo,productTitle,
+   		brandId,productTypeId,addTime,lastModify,productCateId,productCatePath,onSale,isSpecial,isDelete,supplyPrice,packagePrice,
+   		saleGuidePrice,energySubsidyAmount,energySubsidyProductName,internalPrice,sku,storageType,rejectReason,
+   		state,commentNum,gradeAvg,isVirtual,isNoLimitStockProduct,limitCityIds,isNotConfirm,specailPrice,multiStorage,
+   		inspectType,limitedPrice,isGift,conTaxCode,shippingMode,productTags,sellingPoint,productDetail,productBlockDetail,productDetail2,isStar,isHot
+   		,isBest,isNew,bookable,bookDays,isForbidArrivalNotice,rankPrice,rankGroups,memberRanks,similarProductIds,modifiedFields,keywords,cities,
+   		saleNum,virtualSaleNum,giftCardType,giftCardAmount,sCode,packageId)
+   		VALUES 
+   		(1,#{productName},#{stockToTaotao},#{lastSyncTime},
+		#{taobaoId},#{wlbItemId},#{productActivityInfo},#{productTitle},#{brandId},#{productTypeId},#{addTime},#{lastModify},
+		#{productCateId},"",#{onSale},#{isSpecial},#{isDelete},#{supplyPrice},#{packagePrice},#{saleGuidePrice},
+		#{energySubsidyAmount},#{energySubsidyProductName},#{internalPrice},#{sku},#{storageType},
+		#{rejectReason},#{state},#{commentNum},#{gradeAvg},#{isVirtual},#{isNoLimitStockProduct},#{limitCityIds},
+		#{isNotConfirm},#{specailPrice},#{multiStorage},#{inspectType},#{limitedPrice},#{isGift},#{conTaxCode},#{shippingMode},#{productTags},#{sellingPoint}
+		,#{productDetail},#{productBlockDetail},#{productDetail2},#{isStar},#{isHot},#{isBest},#{isNew},#{bookable},
+		#{bookDays},#{isForbidArrivalNotice},#{rankPrice},#{rankGroups},#{memberRanks},#{similarProductIds},#{modifiedFields},#{keywords},#{cities}
+		,#{saleNum},#{virtualSaleNum},#{giftCardType},#{giftCardAmount},#{sCode},#{packageId})
+   </insert>
+   <update id="updateProduct" parameterType="com.haier.shop.model.Products">
+		UPDATE `products` SET
+		stockToTaotao=#{stockToTaotao},productName=#{productName},stockToTaotao=#{stockToTaotao},lastSyncTime=#{lastSyncTime},taobaoId=#{taobaoId},
+		wlbItemId=#{wlbItemId},productActivityInfo=#{productActivityInfo},productTitle=#{productTitle},brandId=#{brandId},
+		productTypeId=#{productTypeId},addTime=#{addTime},lastModify=#{lastModify},productCateId=#{productCateId},
+		onSale=#{onSale},isSpecial=#{isSpecial},isDelete=#{isDelete},supplyPrice=#{supplyPrice},
+		packagePrice=#{packagePrice},saleGuidePrice=#{saleGuidePrice},energySubsidyAmount=#{energySubsidyAmount},
+		energySubsidyProductName=#{energySubsidyProductName},internalPrice=#{internalPrice},sku=#{sku},storageType=#{storageType},
+		rejectReason=#{rejectReason},state=#{state},commentNum=#{commentNum},
+		gradeAvg=#{gradeAvg},isVirtual=#{isVirtual},isNoLimitStockProduct=#{isNoLimitStockProduct},
+		limitCityIds=#{limitCityIds},isNotConfirm=#{isNotConfirm},specailPrice=#{specailPrice},multiStorage=#{multiStorage},
+		inspectType=#{inspectType},limitedPrice=#{limitedPrice},isGift=#{isGift},conTaxCode=#{conTaxCode},shippingMode=#{shippingMode}
+		WHERE id=#{id}
+   </update>
+   <delete id="delProduct" parameterType="Integer">
+  	 	DELETE FROM products WHERE id=#{id}
+   </delete>
 	<!-- 先解决 与Products 类似的问题-->
 	<resultMap id="productsResult" type="com.haier.shop.model.ProductsNew">
 		<result property="id" column="id" />
@@ -81,13 +119,13 @@
 	</resultMap>
 	<select id="get" parameterType="Integer" resultMap="productsResult">
 		select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
-		from `Products`
+		from `products`
 		where `id` = #{id}
 	</select>
 
 	<select id="getBySku1" parameterType="String" resultType="java.util.Map">
 		select `id`,`siteId`,`productName`,`stockToTaotao`,`lastSyncTime`,`taobaoId`,`wlbItemId`,`productActivityInfo`,`productTitle`,`productTags`,`brandId`,`defaultImageFileId`,`detailImageFileId`,`sceneImageFileId`,`productTypeId`,`sellingPoint`,`productDetail`,`productBlockDetail`,`productDetail2`,`addTime`,`lastModify`,`productCateId`,`productCatePath`,`onSale`,`isStar`,`isHot`,`isBest`,`isNew`,`isSpecial`,`isDelete`,`bookable`,`bookDays`,`isForbidArrivalNotice`,`supplyPrice`,`packagePrice`,`saleGuidePrice`,`energySubsidyAmount`,`energySubsidyProductName`,`internalPrice`,`rankPrice`,`rankGroups`,`sku`,`storageType`,`memberRanks`,`similarProductIds`,`modifiedFields`,`rejectReason`,`state`,`keywords`,`description`,`cities`,`saleNum`,`virtualSaleNum`,`commentNum`,`gradeAvg`,`heroitteCommentNum`,`heroitteAvg`,`shippingMode`,`giftCardType`,`giftCardAmount`,`isVirtual`,`isNoLimitStockProduct`,`sCode`,`limitCityIds`,`isNotConfirm`,`packageId`,`specailPrice`,`multiStorage`,`inspectType`,`limitedPrice`,`isGift`,`conTaxCode`
-		from `Products`
+		from `products`
 		where `sku` = #{sku} limit 1
 	</select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.haier.logistics.Helper;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.DateUtil;
@@ -13,14 +15,18 @@ import com.haier.eis.service.EisStockTrans2ExternalService;
 import com.haier.eis.service.EisVomShippingStatusService;
 
 import com.haier.eis.service.OrdShippingStatusQueueService;
+import com.haier.logistics.Model.OrderModel;
 import com.haier.logistics.service.EisInterfaceDataLogApiService;
 import com.haier.logistics.service.OrderRebackService;
 import com.haier.logistics.service.OrderService;
 import com.haier.logistics.service.StockCommonService;
 import com.haier.logistics.service.VomOrderService;
+import com.haier.logistics.services.HpDispatchServiceImpl;
 import com.haier.purchase.data.model.GoodsBackInfoResponse;
+import com.haier.shop.model.AllotNetPoint;
 import com.haier.shop.model.DateFormatUtilNew;
 import com.haier.shop.model.ExpressInfos;
+import com.haier.shop.model.Json;
 import com.haier.shop.model.LesShippingInfos;
 import com.haier.shop.model.OrderProductsNew;
 import com.haier.shop.model.OrdersNew;
@@ -35,6 +41,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.util.StringUtils;
+
 @Service
 public class OutSaleLogisticsHandler extends LogisticsHandler{
     @Autowired
@@ -57,6 +65,10 @@ public class OutSaleLogisticsHandler extends LogisticsHandler{
     private UnableToProcessLogisticsHandler unableToProcessLogisticsHandler;
     @Autowired
     private OrderRebackService orderRebackService;
+    @Autowired
+    private HpDispatchServiceImpl hpDispatchService;
+    @Autowired
+    private OrderModel orderModel;
     public static final String SHIPPING_MODE_B2C   = "B2C";
     public static final String SHIPPING_MODE_B2B2C = "B2B2C";
     private static final String INVOICE_NAME = "日日顺物流";
@@ -115,6 +127,45 @@ public class OutSaleLogisticsHandler extends LogisticsHandler{
         }
 
         String storeCode = shippingStatus.getStoreCode();
+        //****2018/8/24网单二期修改,当status为OO的时候，storeCode对应网单编码信息*start****
+        //OO-已派工，附网点编码
+        if ("OO".equalsIgnoreCase(status)){
+            if (null != orderProducts.getStatus() &&
+                orderProducts.getStatus().intValue() == OrderProductsNew.STATUS_CANCEL_CLOSE.intValue()){
+                setProcessFailed(shippingStatus.getId(),"网单被取消关闭，无法派工");
+                return;
+            }
+
+            //保存源数据
+            AllotNetPoint allotNetPoint = new AllotNetPoint();
+            allotNetPoint.setCUSTOMER_CODE(storeCode);
+            allotNetPoint.setORDER_NO(refNo);
+            allotNetPoint.setPROC_REMARK(shippingStatus.getContent());
+            //派工时间
+
+            allotNetPoint.setASSIGN_DATE(DateUtil.format(shippingStatus.getOperDate(),"yyyy-MM-dd HH:mm:ss"));
+            //登记时间
+            allotNetPoint.setENTER_TIME(DateUtil.format(shippingStatus.getAddTime(),"yyyy-MM-dd HH:mm:ss"));
+            //VOM回传时间
+            allotNetPoint.setCREATED_DATE(DateUtil.format(shippingStatus.getAddTime(),"yyyy-MM-dd HH:mm:ss"));
+            //派工失败时间，这个为什么是必填？？？
+            allotNetPoint.setSB_DATE(DateUtil.format(shippingStatus.getOperDate(),"yyyy-MM-dd HH:mm:ss"));
+            //这个id目前关联vom_shopping_status表
+            allotNetPoint.setApiLogsId(shippingStatus.getId());
+            allotNetPoint.setCreateTime(new Date());
+            allotNetPoint.setUpdateTime(new Date());
+            String json = JSON.toJSONString(allotNetPoint);
+
+            ServiceResult<String> saveResult = hpDispatchService.saveNetPointFromVom(json);
+           if (saveResult.getSuccess()){
+               setProcessSuccess(shippingStatus.getId(), "");
+           }else {
+               setProcessFailed(shippingStatus.getId(),saveResult.getResult());
+           }
+           return;
+        }
+        //****2018/8/24网单二期修改,当status为OO的时候，storeCode对应网单编码信息*end******
+
         String secCode = getSecCode(storeCode);
         if (StringUtil.isEmpty(secCode)) {
             LOGGER.error(prefix + "日日顺库存[" + storeCode + "]对应的WA库位不存在,请检查库位信息配置");
@@ -145,28 +196,34 @@ public class OutSaleLogisticsHandler extends LogisticsHandler{
             String message = "<receiveFlag>" + EisInterfaceDataLog.RESPONSE_STATUS_SUCCESS
                     + "</receiveFlag>";
             Long startTime = System.currentTimeMillis();
-          /*  //回传预约送货时间
-            if ("YD".equals(status)) {
+            //回传预约送货时间
+            /*if ("YE".equals(status) || "YD".equals(status)) {
                 String hpReservationDate=shippingStatus.getContent();
-                OrderProductsNew orderProduct = orderRebackService.getOrderProductsByCOrderSn(orderProducts.getCOrderSn());
+//                OrderProductsNew orderProduct = orderRebackService.getOrderProductsByCOrderSn(orderProducts.getCOrderSn());
                 //保存预约送货时间
-                orderProduct.setHpReservationDate(orderProducts.getHpReservationDate());
-                boolean flag =orderRebackService.saveHpReservationDateRelation(
-                        orderProduct, hpReservationDate,
-                        "HP回传网单数据");//保存订单日志
-                if (flag) {
-                    orderRebackService.sendSms(orderProduct);
+                String reservationDate = hpReservationDate.substring(hpReservationDate.indexOf("：")+1);
+                long reserveTime = DateUtil.parse(reservationDate,"yyyy-MM-dd HH:mm:ss").getTime()/1000;
+                if (reserveTime != orderProducts.getHpReservationDate()){
+                    orderProducts.setHpReservationDate(Integer.parseInt(String.valueOf(reserveTime)));
+                    boolean flag =orderRebackService.saveHpReservationDateRelation(
+                            orderProducts, hpReservationDate,
+                            "HP回传网单数据");//保存订单日志
+                    if (flag) {
+                        orderRebackService.sendSms(orderProducts);
+                    }
+                    this.recordLog(JsonUtil.toJson(orderProducts), message,
+                            System.currentTimeMillis() - startTime, INTERFACE_HP_HOP_SHOP_API,
+                            orderProducts.getCOrderSn());
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug(prefix + "保存回传预约送货完成");
+                    }
+                    setProcessSuccess(shippingStatus.getId(),"保存此HP回传预约送货时间成功");
+                }else {
+                    setProcessSuccess(shippingStatus.getId(),"已保存此HP回传预约送货时间,无需处理");
                 }
-                this.recordLog(JsonUtil.toJson(orderProducts), message,
-                        System.currentTimeMillis() - startTime, INTERFACE_HP_HOP_SHOP_API,
-                        orderProducts.getCOrderSn());
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug(prefix + "保存回传预约送货完成");
-                }
-            }
-            if ("W1".equals(status)){
-
+                return;
             }*/
+
             //拒单
             if ("WMS_FAILED".equals(status)) {
                 updateCreateOrderToVomStatus(orderProducts, false);
@@ -239,6 +296,32 @@ public class OutSaleLogisticsHandler extends LogisticsHandler{
                 }
             }
 
+            //2018/9/5 新增到达网点和网店出库节点处理W1 和 W2*********start**
+            /*if ("W1".equalsIgnoreCase(shippingStatus.getStatus())){
+                String mes[] = new String[1];
+                boolean suc = orderModel.updateOrderWorkflowNetPointAcceptTime(
+                    orderProducts.getCOrderSn(),shippingStatus.getOperDate() , mes);
+                if (suc){
+                    setProcessSuccess(shippingStatus.getId(),"网点收货处理成功");
+                }else {
+                    setProcessFailed(shippingStatus.getId(), StringUtils.isEmpty(mes[0])?"网点收货处理失败":mes[0]);
+                }
+                return;
+            }
+            if ("W2".equalsIgnoreCase(shippingStatus.getStatus())){
+                String mes[] = new String[1];
+                boolean suc = orderModel.updateOrderWorkflowNetPointShipTime(
+                    orderProducts.getCOrderSn(),shippingStatus.getOperDate(), mes);
+                if (suc){
+                    setProcessSuccess(shippingStatus.getId(),"网点出库配送处理成功");
+                }else {
+                    setProcessFailed(shippingStatus.getId(), StringUtils.isEmpty(mes[0])?"网点出库配送处理失败":mes[0]);
+                }
+                return;
+            }*/
+
+            //2018/9/5 新增到达网点和网店出库节点处理W1 和 W2*********end****
+
             //KQ-快递签收 HQ-回访签收 Q1-直接短信签收 Q0-直接返单签收 A1-用户APP签收 W3-签收成功 Q3-微信用户签收 U1-顺丰用户签收
             if ((SHIPPING_MODE_B2C.equals(shippingMode) && "KQ".equals(status))
                     || "HJ".equals(status) || "HQ".equals(status) || "Q1".equals(status)
@@ -252,6 +335,7 @@ public class OutSaleLogisticsHandler extends LogisticsHandler{
                 }
 
             }
+
         } catch (Exception e) {
             LOGGER.error(getClass().getName() + "处理[" + refNo + "," + status + "]：同步物流数据到商城失败：", e);
             setProcessFailed(shippingStatus.getId(), "同步物流数据到商城失败" + e.getMessage());

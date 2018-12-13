@@ -35,7 +35,7 @@
              top: 20%;
              left: 40%;
              width: 20%;
-             height: 20%;
+             height: 40%;
              z-index: 1001;
              text-align:center;
          }
@@ -52,8 +52,10 @@
         			<input type='text' readonly="readonly" name='textfield'  id='textfield' class='txt' />  
         			<input type="button" class="btn" value="选择..." onclick="document.getElementById('file').click()"/>
         			<input type="submit" id="submit" name="submit" class="btn" value="导入" />
+          <input type="button" id="downloadtmp" name="downloadtmp" class="btn" value="下载模板" />
 					<input type="button" id="close"  class="btn" value="返回" onclick='onGoBack()'/>
         		</form>
+          <form id="download" action="/invwarehouse/downloadTemplate1" method="get"> </form>
     		</div>
 		</fieldset>
 		<div id="list" class="list">
@@ -247,6 +249,11 @@
    		  var url = '/invwarehouse/invWarehouse';
    		  window.location.href=url;
    	  }
+
+     //点击下载模板
+     $("#downloadtmp").click(function(){
+       $('#download').submit();
+     });
     </script>
 </body>
 </html>

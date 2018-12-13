@@ -55,6 +55,8 @@ public interface PurchaseCrmOrderManualService {
      */
     public void insertCRMOrderManual(CrmOrderManualItem rmOrderManualItem);
 
+    List<CrmOrderManualItem> getManualWdOrderId(String wpOrderId);
+
     /**
      * CRM手工采购单详情表录入
      * @param CrmOrderManualDetailItem
@@ -107,4 +109,24 @@ public interface PurchaseCrmOrderManualService {
      * @param map
      */
     public void updateTimeFromCRM(Map map);
+
+    /**
+     * 查找要推送SAP的CRM手工订单
+     * @return
+     */
+	public List<CrmOrderManualDetailItem> findOrdersToSap();
+
+	public void updateStatus80FromLES();
+
+	public void updateTimeInWAFromLES();
+
+	/**
+	 * syncCRMOrderType定时任务执行完后完善crm_order_manual_detail_t表的数据，检索时去掉关联crm_order_t表，加快速度。
+	 * @author zhangming 2018-04-20
+	 */
+	public void updateCrmOrderManualAfterSync();
+
+    CrmOrderManualItem getCrmOrderManualItem(String s);
+
+    List<CrmOrderManualDetailItem> getcrmOrderManualDetailItem(String s);
 }

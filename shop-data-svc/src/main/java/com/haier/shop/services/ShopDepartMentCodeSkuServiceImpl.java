@@ -26,10 +26,6 @@ public class ShopDepartMentCodeSkuServiceImpl implements ShopDepartMentCodeSkuSe
     public Integer selectKt(String sku){
         return departMentCodeSkuReadDao.selectKt(sku);
     }
-    @Override
-    public String querySubsku(String sku){
-        return departMentCodeSkuReadDao.querySubsku(sku);
-    }
 
     @Override
     public int deleteByPrimaryKey(Integer id) {

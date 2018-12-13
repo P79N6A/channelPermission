@@ -32,13 +32,13 @@
         vomSuccess,
         vomSuccessTime,
         vomReturnData
-        FROM OrderRepairLESQueues
+        FROM orderrepairlesqueues
         WHERE orderProductId = #{orderProductId}
         LIMIT 1
     </select>
 
     <select id="existLesShippingInfosByOrderSn" resultType="java.lang.Integer">
-        select count(1) from LesShippingInfos where cOrderSn = #{orderSn}
+        select count(1) from lesshippinginfos where cOrderSn = #{orderSn}
         and nodeCode = "YY"
     </select>
 </mapper>

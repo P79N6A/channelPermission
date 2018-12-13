@@ -2,6 +2,8 @@ package com.haier.shop.service;
 
 import com.haier.shop.model.NetPoints;
 
+import java.util.Map;
+
 public interface NetPointsService {
     int deleteByPrimaryKey(Integer id);
 
@@ -25,4 +27,11 @@ public interface NetPointsService {
     NetPoints get(Integer id);
     
     NetPoints getByNetPointByCode(String netPointCode);
+
+    /**
+     * 网点列表(分页查询)
+     * @param params
+     * @return
+     */
+    Map<String, Object> getNetPointsList(Map<String,Object> params);
 }

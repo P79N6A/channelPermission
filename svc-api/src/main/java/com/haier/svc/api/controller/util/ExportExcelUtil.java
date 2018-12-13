@@ -11,8 +11,14 @@ public final class ExportExcelUtil {
 		public static void exportCommon(InputStream is, String fileName, HttpServletResponse res) throws IOException{
 			res.reset();
 	        res.setContentType("application/vnd.ms-excel;charset=utf-8");
-	        res.setHeader("Content-Disposition", "attachment;filename="
-	            + new String((fileName + ".xls").getBytes("gb2312"), "iso-8859-1"));
+	        if (fileName.contains("WA套机库存")||fileName.contains("WA库存")){
+						res.setHeader("Content-Disposition", "attachment;filename="
+								+ new String((fileName + ".xlsx").getBytes("gb2312"), "iso-8859-1"));
+					}else {
+						res.setHeader("Content-Disposition", "attachment;filename="
+								+ new String((fileName + ".xls").getBytes("gb2312"), "iso-8859-1"));
+					}
+
 	        ServletOutputStream out = res.getOutputStream();
 	        BufferedInputStream bis = null;
 	        BufferedOutputStream bos = null;

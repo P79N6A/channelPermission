@@ -195,6 +195,11 @@ public class EisInterfaceDataLog implements Serializable {
     public static String INTERFACE_CODE_GET_STORE_AVAILABLE_STOCK_FROM_CBS = "get_available_store_stock_from_cbs";
 
     /**
+     * 接口编码 - 向HP推送发货通知信息
+     */
+    public static String INTERFACE_NOTICE_TO_HP            = "notice_to_hp";
+
+    /**
      * 接口编码- 释放门店库存
      */
     public static String INTERFACE_CODE_RELEASE_STORE_FROM_CBS = "release_store_stock_from_cbs";
@@ -261,6 +266,26 @@ public class EisInterfaceDataLog implements Serializable {
      */
     public void setRequestData(String value) {
         this.requestData = value;
+    }
+
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    private String responseDatas;
+
+    public String getResponseDatas() {
+        return responseDatas;
+    }
+
+    public void setResponseDatas(String responseDatas) {
+        this.responseDatas = responseDatas;
     }
 
     private Object responseData;
@@ -423,4 +448,51 @@ public class EisInterfaceDataLog implements Serializable {
         this.elapsedTime = value;
     }
 
+
+    private String zlsin;
+    private String matnr;
+    private String menge;
+    private String zlgorto;
+
+    public String getZlsin() {
+        return zlsin;
+    }
+
+    public void setZlsin(String zlsin) {
+        this.zlsin = zlsin;
+    }
+
+    public String getMatnr() {
+        return matnr;
+    }
+
+    public void setMatnr(String matnr) {
+        this.matnr = matnr;
+    }
+
+    public String getMenge() {
+        return menge;
+    }
+
+    public void setMenge(String menge) {
+        this.menge = menge;
+    }
+
+    public String getZlgorto() {
+        return zlgorto;
+    }
+
+    public void setZlgorto(String zlgorto) {
+        this.zlgorto = zlgorto;
+    }
+
+    public String getZlgorti() {
+        return zlgorti;
+    }
+
+    public void setZlgorti(String zlgorti) {
+        this.zlgorti = zlgorti;
+    }
+
+    private String zlgorti;
 }

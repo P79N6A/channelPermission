@@ -13,7 +13,7 @@ import com.haier.shop.model.OrderrepairHPrecordsVO;
  */
 public interface ShopOrderrepairHPrecordsService {
 	
-	OrderrepairHPrecords selectByHpreCordsId(String id);
+	List<OrderrepairHPrecordsVO> selectByHpreCordsId(String id);
 	
 	int insert(OrderrepairHPrecords orderrepairHPrecords);//插入
 	
@@ -36,4 +36,31 @@ public interface ShopOrderrepairHPrecordsService {
 	    int updataOutOfStorage(String OutOfStorageFlag ,String id);
 	    
 	    List<OrderrepairHPrecordsVO> queryThreeAppraisal(); //查询需要发起三次鉴定的信息
+	    
+	    /**
+	     *更改虚入虚出状态
+	     * @param id
+	     * @param virtualEntryState
+	     * @return
+	     */
+	    int UpdaVirtualEntryState(String id,String virtualEntryState);
+	    List<OrderrepairHPrecordsVO> queryNotOutBoxQuality();//查询未开箱正品信息进行处理
+	    List<OrderrepairHPrecordsVO> quertNotOutBoxStockPishSAP();
+	    OrderrepairHPrecordsVO  querynotOutBoxOrederSn(String id);
+	    List<OrderrepairHPrecordsVO> queryThreeOutOfStorage();//查询发起三次鉴定的信息生成出入库信息
+	    int queryjudgeRejects(String orderRepairId);//根据退货单查询 是否是不良品
+	    List<OrderrepairHPrecordsVO> SigninInvalidatedInvoiceView();//查询未开箱正品信息 需要作废发票的信息
+	    
+	    int updataPushRejects(String id);//更改不良品推送HP状态
+	    OrderrepairHPrecordsVO queryTenLibrary(String id);
+
+	public OrderrepairHPrecordsVO queryRepairOrderInfo(String id);
+
+	List<OrderrepairHPrecordsVO> findByOid(String oid);
+	
+	   OrderrepairHPrecordsVO queryChangeTheboxUnbox(String id); 
+	   
+	    int queryOrderHAdd1(String orderRepairId);//查询hp返回的一次鉴定数据
+
+	OrderrepairHPrecordsVO findInvoice(Integer orderProductId);
 }

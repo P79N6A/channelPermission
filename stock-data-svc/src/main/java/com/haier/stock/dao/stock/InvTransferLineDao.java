@@ -4,4 +4,6 @@ import com.haier.stock.model.InvTransferLine;
 
 public interface InvTransferLineDao {
     InvTransferLine getTransferLine(String refDHNo);
+
+    Integer getByLineNum(String lineNum);
 }

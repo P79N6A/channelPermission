@@ -8,8 +8,9 @@ public enum PaymentStatus {
 	OFFLINE_REFUND(4,"线下已退款"),
     
 	NO_REFUND_REQUIRED(5,"无需退款"),
-	
-	
+
+  /** 买家已付款 */
+  PS_PAID( 101,"PS_PAID"),
 	/** 未付款 */
 	PS_UNPAID(100,"PS_UNPAID"),
     

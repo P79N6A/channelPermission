@@ -24,4 +24,47 @@
 		where status = 1
 	</select>
 
+	<select id="getOrderPriceSourceList" resultType="java.util.Map">
+		SELECT
+		DISTINCT order_source,order_source_name
+		FROM
+		`order_price_source_channel`
+	</select>
+
+	<select id="getOrderPriceSourceChannelMapList" resultType="java.util.Map">
+		SELECT
+		order_source,order_source_name,channel_code,channel_name
+		FROM
+		`order_price_source_channel`
+	</select>
+
+	<select id="getGuaranteePriceChannel" resultType="java.util.Map">
+		SELECT
+		DISTINCT channel_code,channel_name
+		FROM
+		`order_price_source_channel`
+	</select>
+
+	<select id="getGuaranteePriceSource" resultType="java.util.Map">
+		SELECT
+		DISTINCT order_source,order_source_name
+		FROM
+		`order_price_source_channel`
+		<where>
+			<if test="channel !=null and channel !='' ">
+				channel_code=#{channel}
+			</if>
+		</where>
+	</select>
+
+	<select id="getChannelByOrderSource" resultMap="orderPriceSourceChannelResult">
+		SELECT
+		`id`,`channel_code`,`channel_name`
+		FROM
+		`order_price_source_channel`
+		where
+		order_source=#{source}
+		limit 1
+	</select>
+
 </mapper>

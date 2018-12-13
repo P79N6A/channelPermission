@@ -11,8 +11,11 @@ import com.haier.purchase.data.service.PurchaseT2OrderService;
 import com.haier.purchase.data.service.PurchaseWAAddressService;
 import com.haier.stock.model.InvRrsWarehouse;
 import com.haier.stock.model.InvWarehouse;
+import com.haier.stock.model.JdStorage;
 import com.haier.stock.service.StockInvRrsWarehouseService;
 import com.haier.stock.service.StockInvWarehouseService;
+import com.haier.stock.service.StockJdStorageService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,8 @@ public class PurchaseBaseCommonServiceImpl implements PurchaseBaseCommonService 
 	private StockInvWarehouseService stockInvWarehouseService;
 	@Autowired
 	private StockInvRrsWarehouseService stockInvRrsWarehouseService;
+	@Autowired
+	private StockJdStorageService stockJdStorageService;
 	@Autowired
 	private PurchaseInvBudgetOrgService purchaseInvBudgetOrgService;
 	@Autowired
@@ -137,6 +142,26 @@ public class PurchaseBaseCommonServiceImpl implements PurchaseBaseCommonService 
 	}
 	
 	/**
+	 * @Title: getAllRrsWhByEstorgeIdJd
+	 * @Description:默认通过estorge_id字段查询，适用jd
+	 * @author zhangming
+	 */
+	@Override
+	public ServiceResult<List<JdStorage>> getAllRrsWhByEstorgeIdJd(
+			Map<String, Object> params) {
+		ServiceResult<List<JdStorage>> result = new ServiceResult<List<JdStorage>>();
+		try {
+			result.setResult(stockJdStorageService.getAllRrsWhByEstorgeOriginal(params));
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setResult(null);
+			result.setMessage("通过JD电商库位码获取日日顺仓库List：" + e.getMessage());
+			log.error("通过JD电商库位码获取日日顺仓库List：", e);
+		}
+		return result;
+	}
+	
+	/**
 	 * 查询所有数据
 	 * 
 	 * @Description:通过waCode查询表inv_warehouse
@@ -173,6 +198,22 @@ public class PurchaseBaseCommonServiceImpl implements PurchaseBaseCommonService 
 			result.setResult(null);
 			result.setMessage("getDataBySourceOrderId：" + e.getMessage());
 			log.error("getDataBySourceOrderId：", e);
+		}
+		return result;
+	}
+
+	/**
+	 * @Description:通过waCode查询表inv_warehouse
+	 */
+	@Override
+	public ServiceResult<List<WAAddress>> getWAAddressInfo(String waCode) {
+		ServiceResult<List<WAAddress>> result = new ServiceResult<List<WAAddress>>();
+		try {
+			result.setResult(purchaseWAAddressService.getWAAddressInfo(waCode));
+		} catch (Exception e) {
+			log.error("getWAAddressInfo：", e);
+			result.setMessage("getWAAddressInfo：" + e.getMessage());
+			result.setSuccess(false);
 		}
 		return result;
 	}

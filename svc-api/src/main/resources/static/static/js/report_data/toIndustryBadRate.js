@@ -33,8 +33,10 @@
                 myChart.hideLoading();
               }
       });
-         
-
+    //将各个产业的不良品数量加上一起
+    for ( var i = 0; i <totalArray.length; i++){
+        total = total+totalArray[i];
+    }
     // 基于准备好的dom，初始化echarts实例
 var myChart = echarts.init(document.getElementById('main'));
 
@@ -99,7 +101,7 @@ option = {
             data:signArray
         },
         {
-            name:'平均值',
+            name:'不良品总数',
             type:'line',
             label: {
                 normal: {

@@ -58,4 +58,8 @@ public interface VehicleOrderDetailService {
 			Map<String, Object> map);
 
 	public void updateByOrderNo(VehicleOrderDetailsDTO order);
+
+	public int updateVbelnSpareByItemNo(String itemNo, String vbelnSpare);
+
+	public boolean vbelnExists(String itemNo, String vbelnSpare);
 }

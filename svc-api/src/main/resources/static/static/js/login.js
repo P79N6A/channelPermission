@@ -32,15 +32,20 @@ $(function () {
     event.preventDefault();
     $("#errMsg").text('');
     $("#err").hide();
-    var param = $('#loginForm').serializeObject();
-    $.post('/auth/rest/login', param).success(function (res) {
-      if(res.success){
-        window.location='/main';
-      }else{
-        $("#errMsg").text(res.errorMessages);
-        $("#err").show();
-      }
-    });
+
+        var param = $('#loginForm').serializeObject();
+        $.post('/auth/rest/login', param).success(function (res) {
+            if(res.success){
+                window.location='/main';
+            }else{
+                $("#errMsg").text(res.errorMessages);
+                
+                $("#err").show();
+                
+            }
+        });
+   
+
   });
   //判断是否是顶级窗口，如果不是顶级窗口，刷新顶级窗口
   if(!(window.top==window.self)){
@@ -62,19 +67,29 @@ $("#loginBtn_zhushidiao").click(function () {
 });
 
 function login() {
-    $.ajax({
-        url:"/login/toLogin",
-        type:"post",
-        data:{
-            "userCode": $("#inputEmail3").val(),
-            "userPassword":$("#inputPassword3").val()
-        },success:function (data) {
-            // alert("111");
-            if (data == "密码正确") {
-                window.location.href="main.html";
-            }else {
-                alert(data);
+    console.log(11);
+    var res = verifyCode.validate(document.getElementById("randomCode").value);
+
+    if(res){
+        $.ajax({
+            url:"/login/toLogin",
+            type:"post",
+            data:{
+                "userCode": $("#inputEmail3").val(),
+                "userPassword":$("#inputPassword3").val()
+            },success:function (data) {
+                // alert("111");
+                if (data == "密码正确") {
+                    window.location.href="main.html";
+                }else {
+                    alert(data);
+                }
             }
-        }
-    });
+        });
+    }
+    else {
+        alert("验证码错误");
+        $("#randomCode").val("");
+    }
+
 }

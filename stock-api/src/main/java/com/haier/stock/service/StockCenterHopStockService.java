@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.haier.common.ServiceResult;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 /*import com.haier.svc.bean.pop.InvStockLock;
 import com.haier.svc.bean.pop.InventoryBusinessTypes;
 import com.haier.svc.bean.pop.Stock;*/
@@ -224,7 +224,22 @@ public interface StockCenterHopStockService {
     ServiceResult<String> frozeStockQty(String sku, String secCode, Integer frozenQty, String refNo,
                                         String channelCode, InventoryBusinessTypes billType,
                                         boolean useRRS);
-
+    /**
+     * 在修改网单库位时调用此方法
+     *
+     * 冻结库存  -- 按照仓库冻结
+     * @param sku 物料
+     * @param secCode 库位
+     * @param frozenQty 占用数量
+     * @param refNo 业务单据号
+     * @param channelCode 渠道编码
+     * @param billType 交易类型
+     * @param useRRS 是否使用日日顺库存
+     * @return 所占用库存的库位
+     */
+    ServiceResult<String> frozeStockQtyByNewsCode(String sku, String secCode, Integer frozenQty, String refNo,
+                                        String channelCode, InventoryBusinessTypes billType,
+                                        boolean useRRS);
     /**
      * 冻结库存 -- 默认不冻结RRS库存
      * @param sku 物料

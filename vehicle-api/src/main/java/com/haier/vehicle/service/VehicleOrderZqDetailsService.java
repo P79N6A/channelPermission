@@ -44,4 +44,9 @@ public interface VehicleOrderZqDetailsService {
 
 	public int updateMessageDetail(String orderNo, String mesageg);
 
+	public List<VehicleOrderZqDetailsDTO> getListByOrderNo(String orderNo);
+
+	public void updateSelectiveByZqOrderNo(
+			VehicleOrderZqDetailsDTO zqOrderDetail);
+
 }

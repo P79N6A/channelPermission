@@ -15,7 +15,7 @@
 				and l.sec_code like  '%${stockLock.secCode}%'
 		</if>
 		<if test="stockLock.refno != null and stockLock.refno !=''">
-				and l.refno like '${stockLock.refno}%'
+				and l.refno like '%${stockLock.refno}%'
 		</if>
 		<if test="stockLock.optUser != null and stockLock.optUser !='' ">
 				and l.opt_user like '%${stockLock.optUser}%'
@@ -30,7 +30,8 @@
 				and DATE_FORMAT(l.lock_time,"%Y-%m-%d") <![CDATA[<=]]>#{stockLock.endLockTime}
 		</if>
 		and l.refno like 'SD%' 
-		<if test="pager.pageSize != null and pager.pageSize &gt; 0">limit #{pager.pageIndex},#{pager.pageSize}</if> 
+		<if test="pager.pageSize != null and pager.pageSize &gt; 0">
+			limit #{pager.rowsCount},#{pager.pageSize}</if>
 	</select>
 	
 	<select id="queryMemStockWDLockList" parameterType="com.haier.stock.model.InvStockLockEx" resultType="com.haier.stock.model.InvStockLockEx">

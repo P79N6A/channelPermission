@@ -1,180 +1,184 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
 <head>
+    <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>T+2订单综合查询</title>
-	<link rel="stylesheet" href="../static/css/jqueryui/base/jquery.ui.all.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css"/>
-    <script type="text/javascript" src="../static/third/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
-
-    <script type="text/javascript" src="../static/third/easyui/plugins/jquery.form.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.core.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.widget.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.mouse.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.button.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.draggable.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.position.js"></script>
-    <script src="../static/third/jqueryui/jquery.ui.resizable.js"></script>
-    <script src="../static/third/jqueryui/jquery.dialog.js"></script>
-    <style type="text/css">
-        .layoutdis {
-            display: none;
-            position: absolute;
-            top: 20%;
-            left: 40%;
-            width: 20%;
-            height: 20%;
-            z-index: 1001;
-            text-align: center;
-        }
-
-        .manual-dialog {
-            font-size: 14px
-        }
-    </style>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>T+2订单查询</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
 
 </head>
-<body>
-<div class="easyui-layout" data-options="fit : true,border : false">
-	
-    <div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 178px;overflow:auto;" align="left">
-        <form id="filterForm" action="#">
-            <table>
-                <tr>
-                    <td> 到货开始周</td>
-                    <td style="position: relative"><input id="arrival_year_week_start_txt" name="arrival_year_week_start_txt"
-                               style="position:absolute;width:130px;height:16px;z-index:1" readonly="readonly"/>
-                        <input id="arrival_year_week_start" name="arrival_year_week_start"
-                               data-options="formatter:myformatter_arrival_start,parser:myparser" editable="false"/>
-                    </td>
-                    <td>结束周</td>
-                    <td style="position: relative"><input id="arrival_year_week_end_txt" name="arrival_year_week_end_txt"
-                               style="position:absolute;width:130px;height:16px;z-index:1" readonly="readonly"/>
-                        <input id="arrival_year_week_end" name="arrival_year_week_end"
-                               data-options="formatter:myformatter_arrival_end,parser:myparser" editable="false"/>
-                    </td>
-                    <td>渠道</td>
-                    <td><input id="channel" name="channel" class="easyui-combobox"
-                                style="width: 154px"/>
-                    </td>
-                    <td>品类</td>
-                    <td><input id="cbs_catgory" name="cbs_catgory" class="easyui-combobox"
-                               style="width: 154px"/>
-                    </td>
-                    <td> 产品组</td>
-                    <td><input id="product_group" name="product_group" class="easyui-combobox"
-                               style="width: 154px"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td> WP订单号</td>
-                    <td><input id="wp_order_id" name="wp_order_id" class="txt" style="width: 150px"/>
-                    </td>
-                    <td> OMS订单号</td>
-                    <td><input id="oms_order_id" name="oms_order_id" class="txt" style="width: 150px"/>
-                    </td>
-                    <td> 品牌</td>
-                    <td><input id="brand" name="brand" class="easyui-combobox"
-                               style="width: 154px"/>
-                    </td>
-                    <td> 物料编码</td>
-                    <td><input id="materials_id" name="materials_id" class="txt" style="width: 150px"/>
-                    </td>
-                    <td> 型号</td>
-                    <td><input id="materials_description" name="materials_description" class="txt"
-                               style="width: 150px"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>WA库码</td>
-                    <td><input id="storage_id" name="storage_id" class="txt" style="width: 150px"/>
-                    </td>
-                    <td>状态</td>
-                    <td><input id="flow_flag" name="flow_flag" class="easyui-combobox"
-                               style="width: 154px"/>
-                    </td>
-                    <td>一次发运</br>组合号</td>
-                    <td><input id="shipment_combination_id" name="shipment_combination_id" class="txt"
-                               style="width: 150px"/>
-                    </td>
-                    <td>GVS订单号</td>
-                    <td><input id="gvs_order_id" name="gvs_order_id" class="txt" style="width: 150px"/>
-                    </td>
-                    <td>客户订单号</td>
-                    <td><input id="custom_order_id" name="custom_order_id" class="txt" style="width: 150px"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>定制</td>
-                    <td><input id="customization" name="customization" class="easyui-combobox"
-                               style="width: 154px"/>
-                    </td>
-                    <td>订单类型</td>
-                    <td><input id="order_type" name="order_type" class="easyui-combobox"
-                               style="width: 154px"/>
-                    </td>
-                    <td>提报开始周</td>
-                    <td style="position: relative"><input id="datestart_txt" name="datestart_txt"
-                               style="position:absolute;width:130px;height:16px;z-index:1" readonly="readonly" class="text"
-                               />
-                        <input id="datestart" name="date"
-                               data-options="formatter:myformatter_start,parser:myparser" editable="false"/></td>
-                    <td>结束周</td>
-                    <td style="position: relative"><input id="dateend_txt" name="dateend_txt" style="position:absolute;width:130px;height:16px;z-index:1"
-                               readonly="readonly" class="text"/>
-                        <input id="dateend" name="date"
-                               data-options="formatter:myformatter_end,parser:myparser" editable="false"/></td>
-                    <td>订单类别</td>
-                    <td>
-                        <input id="order_category" name="order_category" class="easyui-combobox"></input></td>
-                </tr>
-                <tr>
-                    <td colspan="10">
-                        <a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
-                        <a id='posearch' href="#" class="easyui-linkbutton" iconCls="icon-search">查看PO</a>
-                        <a id='manualCloseOrder' href="#" class="easyui-linkbutton" iconCls="icon-edit">手工关单</a>
-                        <a id='manualClose' href="#" class="easyui-linkbutton" iconCls="icon-edit">批量手工关单</a>
-                        <a id='cancelCloseOrder' href="#" class="easyui-linkbutton" iconCls="icon-edit">撤消手工关单</a>
-                        <a id='commitAgain' href="#" class="easyui-linkbutton" iconCls="icon-ok">已冻结推送</a>
-                        <a id='export' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
-                        <a id='exportall' href="#" class="easyui-linkbutton" iconCls="icon-save">全部导出</a>
-                        <input id="DXS" type="checkbox" style="" name="source_Index">PO详情导出</input>
-                    </td>
-                </tr>
-            </table>
-            <input id="arrival_year_week_start_save" name="arrival_year_week_start_save" type="hidden"/>
-            <input id="arrival_year_week_end_save" name="arrival_year_week_end_save" type="hidden"/>
-            <input id="ed_channel_id_save" name="ed_channel_id_save" type="hidden"/>
-            <input id="product_group_id_save" name="product_group_id_save" type="hidden"/>
-            <input id="wp_order_id_save" name="wp_order_id_save" type="hidden"/>
-            <input id="oms_order_id_save" name="oms_order_id_save" type="hidden"/>
-            <input id="brand_save" name="brand_save" type="hidden"/>
-            <input id="materials_id_save" name="materials_id_save" type="hidden"/>
-            <input id="materials_description_save" name="materials_description_save" type="hidden"/>
-            <input id="storage_id_save" name="storage_id_save" type="hidden"/>
-            <input id="flow_flag_save" name="flow_flag_save" type="hidden"/>
-            <input id="shipment_combination_id_save" name="shipment_combination_id_save" type="hidden"/>
-            <input id="gvs_order_id_save" name="gvs_order_id_save" type="hidden"/>
-            <input id="custom_order_id_save" name="custom_order_id_save" type="hidden"/>
-            <input id="customization_save" name="customization_save" type="hidden"/>
-            <input id="order_type_save" name="order_type_save" type="hidden"/>
-            <input id="cbs_catgory_save" name="cbs_catgory_save" type="hidden"/>
-            <input id="order_category_save" name="order_category_save" type="hidden"/>
-            <!-- 下面隐藏控件用来存放点击导出后的数据 -->
-            <input id="exportData" name="exportData" type="hidden"/>
-            <input id="datestart_save" name="datestart_save" type="hidden"/>
-            <input id="dateend_save" name="dateend_save" type="hidden"/>
-            <input id="commitData" name="order_id" type="hidden"/>
-        </form>
-    </div>
-    <div data-options="region:'center',title:'T+2订单综合查询结果',border:false">
-        <table id="dataGrid"></table>
-    </div>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+    </table>
 </div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">到货开始周</span>
+                <input id="arrival_year_week_start_txt" name="arrival_year_week_start_txt"
+                       style="position:absolute;width:120px;height:26px;z-index:1" readonly="readonly"/>
+                <input id="arrival_year_week_start" name="arrival_year_week_start"
+                       data-options="formatter:myformatter_arrival_start,parser:myparser" class="easyui-datebox" style="width:120px" editable="false"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">结束周</span>
+                <input id="arrival_year_week_end_txt" name="arrival_year_week_end_txt"
+                       style="position:absolute;width:120px;height:26px;z-index:1" readonly="readonly"/>
+                <input id="arrival_year_week_end" name="arrival_year_week_end"
+                       data-options="formatter:myformatter_arrival_end,parser:myparser" class="easyui-datebox" style="width:120px" editable="false"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">渠道</span>
+                <input id="channel" name="channel"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">品类</span>
+                <input id="cbs_catgory" name="cbs_catgory"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">产品组</span>
+                <input id="product_group" name="product_group"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">WP订单号</span>
+                <input id="wp_order_id" name="wp_order_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">OMS订单号</span>
+                <input id="oms_order_id" name="oms_order_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">品牌</span>
+                <input id="brand" name="brand"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">物料编码</span>
+                <input id="materials_id" name="materials_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">型号</span>
+                <input id="materials_description" name="materials_description"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">WA库码</span>
+                <input id="storage_id" name="storage_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">状态</span>
+                <input id="flow_flag" name="flow_flag"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">一次发运组合号</span>
+                <input id="shipment_combination_id" name="shipment_combination_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">GVS订单号</span>
+                <input id="gvs_order_id" name="gvs_order_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">客户订单号</span>
+                <input id="custom_order_id" name="custom_order_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">定制</span>
+                <input id="customization" name="customization"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">订单类型</span>
+                <input id="order_type" name="order_type"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">订单类别</span>
+                <input id="order_category" name="order_category"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">提报开始周</span>
+                <input id="datestart_txt" name="datestart_txt"
+                       style="position:absolute;width:120px;height:26px;z-index:1" readonly="readonly" class="text"/>
+                <input id="datestart" name="date" class="easyui-datebox"
+                       data-options="formatter:myformatter_start,parser:myparser" style="width:120px" editable="false"/>            </div>
+            <div class="search-row">
+                <span class="search-row-label">结束周</span>
+                <input id="dateend_txt" name="dateend_txt" style="position:absolute;width:120px;height:26px;z-index:1"
+                       readonly="readonly" class="text"/>
+                <input id="dateend" name="date" class="easyui-datebox"
+                       data-options="formatter:myformatter_end,parser:myparser" style="width:120px" editable="false"/>            </div>
+
+        </div>
+
+
+        <a id='search' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a id='posearch' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查看PO</a>
+        <a id='manualCloseOrder' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">手工关单</a>
+        <a id='manualClose' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">批量手工关单</a>
+        <a id='cancelCloseOrder' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">撤消手工关单</a>
+        <a id='commitAgain' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true">已冻结推送</a>
+        <a id='export' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">导出</a>
+        <a id='exportall' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">全部导出</a>
+        <input id="DXS" type="checkbox" style="" name="source_Index">PO详情导出</input>
+
+        <input id="arrival_year_week_start_save" name="arrival_year_week_start_save" type="hidden"/>
+        <input id="arrival_year_week_end_save" name="arrival_year_week_end_save" type="hidden"/>
+        <input id="ed_channel_id_save" name="ed_channel_id_save" type="hidden"/>
+        <input id="product_group_id_save" name="product_group_id_save" type="hidden"/>
+        <input id="wp_order_id_save" name="wp_order_id_save" type="hidden"/>
+        <input id="oms_order_id_save" name="oms_order_id_save" type="hidden"/>
+        <input id="brand_save" name="brand_save" type="hidden"/>
+        <input id="materials_id_save" name="materials_id_save" type="hidden"/>
+        <input id="materials_description_save" name="materials_description_save" type="hidden"/>
+        <input id="storage_id_save" name="storage_id_save" type="hidden"/>
+        <input id="flow_flag_save" name="flow_flag_save" type="hidden"/>
+        <input id="shipment_combination_id_save" name="shipment_combination_id_save" type="hidden"/>
+        <input id="gvs_order_id_save" name="gvs_order_id_save" type="hidden"/>
+        <input id="custom_order_id_save" name="custom_order_id_save" type="hidden"/>
+        <input id="customization_save" name="customization_save" type="hidden"/>
+        <input id="order_type_save" name="order_type_save" type="hidden"/>
+        <input id="cbs_catgory_save" name="cbs_catgory_save" type="hidden"/>
+        <input id="order_category_save" name="order_category_save" type="hidden"/>
+        <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+        <input id="exportData" name="exportData" type="hidden"/>
+        <input id="datestart_save" name="datestart_save" type="hidden"/>
+        <input id="dateend_save" name="dateend_save" type="hidden"/>
+        <input id="commitData" name="order_id" type="hidden"/>
+    </form>
+</div>
+
 <div id="manualDiv" class="easyui-dialog" title="批量手工关单" style="display:none;">
     <br/>
     <table>
@@ -196,30 +200,87 @@
 
 
 <div id="passDiv" title="已冻结推送操作" class="easyui-layout" data-options="border : false" style="display:none;">
-	<div data-options="region:'center',border:false" style="height: 220px;overflow: auto; " align="left">
-		<form id="passForm" action="#">
-			<table align="left" >
-				<tr>
-					<td>已冻结推送意见</td>
-					<td>
-						<input id='pass_reason' name='pass_reason' style="width:250px;height:110px;" autofocus =true style="overflow:auto" class="easyui-validatebox" data-options="validType:'minLength[5]'"validType="maxLength[2000]"></input>
-					</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td  width="200px">
-						<a id='passReview' href="#" class="easyui-linkbutton" iconCls="icon-ok" >已冻结推送</a>
-						&nbsp;
-	    				<a id='close' href="#" class="easyui-linkbutton" iconCls="icon-back">返回</a>
-		 			</td>
-				</tr>
-			</table>
-		</form>
-	</div>
+    <div data-options="region:'center',border:false" style="height: 220px;overflow: auto; " align="left">
+        <form id="passForm" action="#">
+            <table align="left" >
+                <tr>
+                    <td>已冻结推送意见</td>
+                    <td>
+                        <input id='pass_reason' name='pass_reason' style="width:250px;height:110px;" autofocus =true style="overflow:auto" class="easyui-validatebox" data-options="validType:'minLength[5]'"validType="maxLength[2000]"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td  width="200px">
+                        <a id='passReview' href="#" class="easyui-linkbutton" iconCls="icon-ok" >已冻结推送</a>
+                        &nbsp;
+                        <a id='close' href="#" class="easyui-linkbutton" iconCls="icon-back">返回</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 </div>
 
-<script type="text/javascript"></script>
 <script src="../static/js/report/t2OrderQuery.js"></script>
+<script type="application/javascript">
 
+    var authMap = $!{authMap};
+    if(authMap.productGroup.length == 1 && authMap.productGroup[0] == ''){
+        $.messager.alert('错误', '请联系管理员分配权限', 'error');
+    }
+    $(document).ready(function(){
+        //接收当前周
+        $(".textbox-text").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+        $(".txt").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+
+        //datebox增加周列
+        $('.easyui-datebox').each(function(){
+            $(this).datebox('calendar').calendar({
+                firstDay:0,
+                showWeek:true,
+                weekNumberHeader:"周",
+                getWeekNumber:function(date){
+                    if(date.getMonth() == 11 && ( date.getDate() == 26 || date.getDate() == 27 || date.getDate() == 28 || date.getDate() == 29 || date.getDate() == 30 || date.getDate() == 31 ) ){
+                        return 1;
+                    }
+                    else if(date.getFullYear() == 2006 || date.getFullYear() == 2012 || date.getFullYear() == 2017 || date.getFullYear() == 2023 || date.getFullYear() == 2034 || date.getFullYear() == 2040 || date.getFullYear() == 2045 || date.getFullYear() == 2051){
+                        var today = new Date(date);
+                        var firstDay = new Date(today.getFullYear(), 0, 1);
+                        var dayOfWeek = firstDay.getDay();
+                        var spendDay = 1;
+                        if (dayOfWeek != 0) {
+                            spendDay = 7 - dayOfWeek + 1;
+                        }
+                        firstDay = new Date(today.getFullYear(), 0, 1 + spendDay);
+                        var d = Math.ceil((today.valueOf() - firstDay.valueOf()) / 86400000);
+                        var result = Math.ceil(d / 7);
+                        return result + 1;
+                    }
+                    else{
+                        var today = new Date(date);
+                        var firstDay = new Date(today.getFullYear(), 0, 1);
+                        var dayOfWeek = firstDay.getDay();
+                        var spendDay = 1;
+                        if (dayOfWeek != 0) {
+                            spendDay = 7 - dayOfWeek + 1;
+                        }
+                        firstDay = new Date(today.getFullYear(), 0, 1 + spendDay);
+                        var d = Math.ceil((today.valueOf() - firstDay.valueOf()) / 86400000);
+                        var result = Math.ceil(d / 7);
+                        return result + 2;
+                    }
+                    
+                }
+            });
+        });
+
+
+    });
+</script>
 </body>
 </html>

@@ -1,9 +1,12 @@
 package com.haier.afterSale.util;
 
+import java.text.SimpleDateFormat;
 /**
  * Created by zhangbo on 2017/11/6.
  */
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

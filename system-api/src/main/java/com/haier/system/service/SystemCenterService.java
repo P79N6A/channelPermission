@@ -25,8 +25,7 @@ public abstract interface SystemCenterService {
 
 	public abstract ServiceResult<SysUser> getUserByLoginId(String loginId);
 
-	public abstract ServiceResult<Boolean> updateUser(SysUser paramSysUser,
-			int paramInt);
+	public abstract ServiceResult<Boolean> updateUser(SysUser paramSysUser);
 
 	public abstract ServiceResult<Integer> createUser(SysUser paramSysUser);
 

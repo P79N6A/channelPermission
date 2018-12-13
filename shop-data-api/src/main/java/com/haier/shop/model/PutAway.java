@@ -36,7 +36,7 @@ public class PutAway implements Serializable {
     private String outNum; //22出库单号
     private String GenuineWarehouseNum;//正品入库单号
     private String UndesirableWarehouseNum;//不良品入库单号
-    private String parentPath;//用来判断产业的
+    private int rootId;//用来判断产业的
     private String oneInspectorNum;
     private String rejectOneResult;
     private String twoInspectorResult;//二次质检结果
@@ -206,12 +206,7 @@ public class PutAway implements Serializable {
 	public void setUndesirableWarehouseNum(String undesirableWarehouseNum) {
 		UndesirableWarehouseNum = undesirableWarehouseNum;
 	}
-	public void setParentPath(String parentPath) {
-		this.parentPath = parentPath;
-	}
-	public String getParentPath() {
-		return parentPath;
-	}
+
 	public String getOneInspectorNum() {
 		return oneInspectorNum;
 	}
@@ -331,5 +326,13 @@ public class PutAway implements Serializable {
 	}
 	 public String getOnePushTime() {
 		return OnePushTime;
+	}
+
+	public int getRootId() {
+		return rootId;
+	}
+
+	public void setRootId(int rootId) {
+		this.rootId = rootId;
 	}
 }

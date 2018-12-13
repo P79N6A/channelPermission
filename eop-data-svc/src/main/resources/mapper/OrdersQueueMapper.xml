@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.eop.data.dao.OrdersQueueDao">
+  <resultMap id="BaseResultMap" type="com.haier.eop.data.model.OrdersQueue">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="add_time" jdbcType="BIGINT" property="addTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="error_log" jdbcType="VARCHAR" property="errorLog" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="order_info" jdbcType="VARCHAR" property="orderInfo" />
+    <result column="order_time" jdbcType="TIMESTAMP" property="orderTime" />
+    <result column="order_total_price" jdbcType="DECIMAL" property="orderTotalPrice" />
+    <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+    <result column="orders_state" jdbcType="VARCHAR" property="ordersState" />
+    <result column="source_order_sn" jdbcType="VARCHAR" property="sourceOrderSn" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="sync_count" jdbcType="INTEGER" property="syncCount" />
+    <result column="sync_time" jdbcType="BIGINT" property="syncTime" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, add_time, creator, error_log, modify_time, order_info, order_time, order_total_price, 
+    order_type, orders_state, source_order_sn, source, sync_count, sync_time, pay_time, 
+    type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orders_queue
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectBysourceOrderSnAndsource" parameterType="com.haier.eop.data.model.OrdersQueue" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from orders_queue
+    where  source_order_sn=#{entity.sourceOrderSn} AND source = #{entity.source}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from orders_queue
+    where sourceOrderSn = #{sourceOrderSn,jdbcType=VARCHAR} and source = #{source,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.haier.eop.data.model.OrdersQueue">
+    insert into orders_queue (id, add_time, creator, 
+      error_log, modify_time, order_info, 
+      order_time, order_total_price, order_type, 
+      orders_state, source_order_sn, source, 
+      sync_count, sync_time, pay_time, 
+      `type`)
+    values (#{id,jdbcType=BIGINT}, #{addTime,jdbcType=BIGINT}, #{creator,jdbcType=VARCHAR}, 
+      #{errorLog,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{orderInfo,jdbcType=VARCHAR}, 
+      #{orderTime,jdbcType=TIMESTAMP}, #{orderTotalPrice,jdbcType=DECIMAL}, #{orderType,jdbcType=VARCHAR}, 
+      #{ordersState,jdbcType=VARCHAR}, #{sourceOrderSn,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{syncCount,jdbcType=INTEGER}, #{syncTime,jdbcType=BIGINT}, #{payTime,jdbcType=TIMESTAMP}, 
+      #{type,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.eop.data.model.OrdersQueue">
+    update orders_queue
+    <set>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=BIGINT},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="errorLog != null">
+        error_log = #{errorLog,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderInfo != null">
+        order_info = #{orderInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null">
+        order_time = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderTotalPrice != null">
+        order_total_price = #{orderTotalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderType != null">
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersState != null">
+        orders_state = #{ordersState,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceOrderSn != null">
+        source_order_sn = #{sourceOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="syncCount != null">
+        sync_count = #{syncCount,jdbcType=INTEGER},
+      </if>
+      <if test="syncTime != null">
+        sync_time = #{syncTime,jdbcType=BIGINT},
+      </if>
+      <if test="payTime != null">
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.eop.data.model.OrdersQueue">
+    update orders_queue
+    set add_time = #{addTime,jdbcType=BIGINT},
+      creator = #{creator,jdbcType=VARCHAR},
+      error_log = #{errorLog,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      order_info = #{orderInfo,jdbcType=VARCHAR},
+      order_time = #{orderTime,jdbcType=TIMESTAMP},
+      order_total_price = #{orderTotalPrice,jdbcType=DECIMAL},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      orders_state = #{ordersState,jdbcType=VARCHAR},
+      source_order_sn = #{sourceOrderSn,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      sync_count = #{syncCount,jdbcType=INTEGER},
+      sync_time = #{syncTime,jdbcType=BIGINT},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      `type` = #{type,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

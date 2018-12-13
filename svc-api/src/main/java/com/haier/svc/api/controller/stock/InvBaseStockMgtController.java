@@ -8,24 +8,27 @@ import com.haier.common.util.StringUtil;
 import com.haier.stock.model.*;
 import com.haier.stock.service.InvBaseStockMgtService;
 import com.haier.svc.api.controller.util.*;
+import java.util.ArrayList;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.jsondoc.core.annotation.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -115,8 +118,8 @@ public class InvBaseStockMgtController {
         }
         page = page == 0 ? 1 : page;
         PagerInfo pager = new PagerInfo(rows, page);
-
-        return invBaseStockMgtService.getInvBaseStockLogList(pager, invBaseStockLog);
+        JSONObject jsonObject = invBaseStockMgtService.getInvBaseStockLogList(pager, invBaseStockLog);
+        return jsonObject;
     }
 
     //店铺库存
@@ -309,18 +312,31 @@ public class InvBaseStockMgtController {
         condition.setProductName(productNameData);
         condition.setStockQtyCode(stockQtyCodeData);
         condition.setAvaiableQtyCode(avaiableQtyCodeData);
-        List<InvBaseStock> invBaseStocks = null;
+        List<InvBaseStock> invBaseStocks = new ArrayList<>();
+        int pageIndex = 1;
         if ("yes".equals(code)) {
-            invBaseStocks = invBaseStockMgtService.exportBaseStockList(condition);
+//            invBaseStocks = invBaseStockMgtService.exportBaseStockList(condition);
+            List<InvBaseStock> invBaseStockList = new ArrayList<InvBaseStock>();
+            do {
+                invBaseStockList = invBaseStockMgtService.exportBaseStockListByCondition(condition,(pageIndex-1)*10000,10000);
+                pageIndex++;
+                invBaseStocks.addAll(invBaseStockList);
+            }while (invBaseStockList.size() == 10000);
         }
         if ("mYes".equals(code)) {
-            invBaseStocks = invBaseStockMgtService.exportMachineBaseStockList(condition);
+//            invBaseStocks = invBaseStockMgtService.exportMachineBaseStockList(condition);
+            List<InvBaseStock> invBaseStockList = new ArrayList<InvBaseStock>();
+            do {
+                invBaseStockList = invBaseStockMgtService.exportMachineBaseStockListByContion(condition,(pageIndex-1)*10000,10000);
+                pageIndex++;
+                invBaseStocks.addAll(invBaseStockList);
+            }while (invBaseStockList.size() == 10000);
         }
 
         // 1.创建一个workbook，对应一个Excel文件
-        HSSFWorkbook wb = new HSSFWorkbook();
+        SXSSFWorkbook wb = new SXSSFWorkbook(200);
         // 2.在workbook中添加一个sheet，对应Excel中的一个sheet
-        HSSFSheet sheet = wb.createSheet("WA库存列表");
+        Sheet sheet = wb.createSheet("WA库存列表");
         sheet.setColumnWidth(0, (int) (21.57 * 256));
         sheet.setColumnWidth(1, (int) 21.57 * 256);
         sheet.setColumnWidth(2, (int) 21.57 * 256);
@@ -328,20 +344,22 @@ public class InvBaseStockMgtController {
         sheet.setColumnWidth(4, (int) 21.57 * 256);
         if ("yes".equals(code)) {
             sheet.setColumnWidth(5, (int) 11.14 * 256);
-            sheet.setColumnWidth(6, (int) 8.57 * 256);
-            sheet.setColumnWidth(7, (int) 21.57 * 256);
+            sheet.setColumnWidth(6, (int) 11.14 * 256);
+            sheet.setColumnWidth(7, (int) 8.57 * 256);
             sheet.setColumnWidth(8, (int) 21.57 * 256);
+            sheet.setColumnWidth(9, (int) 21.57 * 256);
         }
         if ("mYes".equals(code)) {
             sheet.setColumnWidth(5, (int) 11.14 * 256);
-            sheet.setColumnWidth(6, (int) 8.57 * 256);
+            sheet.setColumnWidth(6, (int) 11.14 * 256);
             sheet.setColumnWidth(7, (int) 21.57 * 256);
+            sheet.setColumnWidth(8, (int) 21.57 * 256);
         }
 
         // 3.在sheet中添加表头第0行，老版本poi对excel行数列数有限制short
-        HSSFRow row = sheet.createRow(0);
+        Row row = sheet.createRow(0);
         // 4.创建单元格，设置值表头，设置表头居中
-        HSSFCellStyle style = wb.createCellStyle();
+        CellStyle style = wb.createCellStyle();
         // 居中格式
         style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
         style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -356,7 +374,7 @@ public class InvBaseStockMgtController {
             int length = ExportData.baseStockListTitle.length;
             // 设置表头
             for (int i = 0; length - 1 >= i; i++) {
-                HSSFCell cell = row.createCell(i);
+                Cell cell = row.createCell(i);
                 cell.setCellValue(ExportData.baseStockListTitle[i]);
                 cell.setCellStyle(style);
             }
@@ -366,7 +384,7 @@ public class InvBaseStockMgtController {
             int length = ExportData.machineBaseStockListTitle.length;
             // 设置表头
             for (int i = 0; length - 1 >= i; i++) {
-                HSSFCell cell = row.createCell(i);
+                Cell cell = row.createCell(i);
                 cell.setCellValue(ExportData.machineBaseStockListTitle[i]);
                 cell.setCellStyle(style);
             }
@@ -375,7 +393,7 @@ public class InvBaseStockMgtController {
         //向单元格里添加数据
         if (invBaseStocks != null) {
 
-            for (short i = 0; i < invBaseStocks.size(); i++) {
+            for (int i = 0; i < invBaseStocks.size(); i++) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                 String createTime = sdf.format(invBaseStocks.get(i).getCreateTime());
@@ -388,15 +406,17 @@ public class InvBaseStockMgtController {
                 row.createCell(3).setCellValue(invBaseStocks.get(i).getSecCode());
                 row.createCell(4).setCellValue(invBaseStocks.get(i).getSecName());
                 if ("yes".equals(code)) {
-                    row.createCell(5).setCellValue(invBaseStocks.get(i).getStockStockQty());
-                    row.createCell(6).setCellValue(invBaseStocks.get(i).getStockFrozenQty());
-                    row.createCell(7).setCellValue(createTime);
-                    row.createCell(8).setCellValue(updateTime);
+                    row.createCell(5).setCellValue(changeCodeToName(invBaseStocks.get(i).getStockItemProperty()));
+                    row.createCell(6).setCellValue(invBaseStocks.get(i).getStockStockQty());
+                    row.createCell(7).setCellValue(invBaseStocks.get(i).getStockFrozenQty());
+                    row.createCell(8).setCellValue(createTime);
+                    row.createCell(9).setCellValue(updateTime);
                 }
                 if ("mYes".equals(code)) {
-                    row.createCell(5).setCellValue(invBaseStocks.get(i).getAvaiableQty());
-                    row.createCell(6).setCellValue(createTime);
-                    row.createCell(7).setCellValue(updateTime);
+                    row.createCell(5).setCellValue(changeCodeToName(invBaseStocks.get(i).getStockItemProperty()));
+                    row.createCell(6).setCellValue(invBaseStocks.get(i).getAvaiableQty());
+                    row.createCell(7).setCellValue(createTime);
+                    row.createCell(8).setCellValue(updateTime);
                 }
 
             }
@@ -415,6 +435,25 @@ public class InvBaseStockMgtController {
         byte[] content = os.toByteArray();
         InputStream is = new ByteArrayInputStream(content);
         ExportExcelUtil.exportCommon(is, fileName, res);
+    }
+
+    private String changeCodeToName(String value){
+        if (StringUtils.isBlank(value)){
+            return "";
+        }
+        if (value.equals("10")) {
+            return "正品";
+        }else if (value.equals("21")) {
+            return "不良品";
+        } else if (value.equals("22")) {
+            return "开箱正品";
+        } else if (value.equals("40")) {
+            return "样品";
+        } else if (value.equals("41")) {
+            return "夺宝机";
+        }else {
+            return value;
+        }
     }
 
     /**
@@ -525,7 +564,7 @@ public class InvBaseStockMgtController {
     public void exportStoreList(String storeCodeData, String skuData, String stockQtyData, String productTypeNameData,
                                 String productNameData,
                                 HttpServletResponse res, String code) throws IOException, ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         InvStore condition = new InvStore();
 
         condition.setStoreCode(storeCodeData);
@@ -587,8 +626,8 @@ public class InvBaseStockMgtController {
                 row.createCell(3).setCellValue(invStores.get(i).getCbsCategory());
                 row.createCell(4).setCellValue(invStores.get(i).getProductName());
                 row.createCell(5).setCellValue(invStores.get(i).getStockqty());
-                row.createCell(6).setCellValue(updateTime);
-                row.createCell(7).setCellValue(storeTs);
+                row.createCell(6).setCellValue(storeTs);
+                row.createCell(7).setCellValue(updateTime);
             }
         }
 

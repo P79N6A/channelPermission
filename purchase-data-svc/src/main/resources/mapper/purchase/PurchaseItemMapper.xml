@@ -1,85 +1,361 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haier.purchase.data.dao.purchase.PurchaseItemDao">
-    <resultMap id="purchaseItemResult" type="com.haier.purchase.data.model.PurchaseItem">
-        <result property="poItemId" column="po_item_id"/>
-        <result property="poItemNo" column="po_item_no"/>
-        <result property="sourceSn" column="source_sn"/>
-        <result property="poId" column="po_id"/>
-        <result property="sku" column="sku"/>
-        <result property="brand" column="brand"/>
-        <result property="poQty" column="po_qty"/>
-        <result property="inputQty" column="input_qty"/>
-        <result property="price" column="price"/>
-        <result property="poItemAmount" column="po_item_amount"/>
-        <result property="unit" column="unit"/>
-        <result property="secCode" column="sec_code"/>
-        <result property="itemType" column="item_type"/>
-        <result property="sign" column="sign"/>
-        <result property="collect" column="collect"/>
-        <result property="payStatus" column="pay_status"/>
-        <result property="status" column="status"/>
-        <result property="inputTime" column="input_time"/>
-        <result property="poTime" column="po_time"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
-    </resultMap>
-    <resultMap id="purchaseItemPDResult" extends="purchaseItemResult" type="com.haier.purchase.data.model.PurchaseItem">
-        <result property="productType" column="product_type"/>
-        <result property="productTypeName" column="product_type_name"/>
-        <result property="rrsSecCode" column="rrs_sec_code"/>
-        <result property="machineCode" column="machine_code"/>
-        <result property="series" column="series"/>
-        <result property="latestRevDate" column="latest_rev_date"/>
-        <result property="planSendDate" column="plan_send_date"/>
-        <result property="planCustRevDate" column="plan_cust_rev_date"/>
-        <result property="custSendDate" column="cust_send_date"/>
-        <result property="expectReceiveDate" column="expect_receive_date"/>
-        <result property="transitArrivalDate" column="transit_arrival_date"/>
-        <result property="tradeSendDate" column="trade_send_date"/>
-        <result property="signDate" column="sign_date"/>
-        <result property="podDate" column="pod_date"/>
-        <result property="transitCode" column="transit_code"/>
-        <result property="madeFactoryName" column="made_factory_name"/>
-        <result property="madeFactoryCode" column="made_factory_code"/>
-        <result property="custRevQty" column="cust_rev_qty"/>
-        <result property="abortReason" column="abort_reason"/>
-        <result property="gvsOrderCode" column="gvs_order_code"/>
-        <result property="gvsDN" column="gvs_dn"/>
-        <result property="createOrderToLessDate" column="create_order_to_less_date"/>
-        <result property="lesPing" column="les_ping"/>
-        <result property="submitDate" column="submit_date"/>
-        <result property="orderRevYear" column="order_rev_year"/>
-        <result property="orderRevWeekNumber" column="order_rev_week_number"/>
-        <result property="custPoDetailCode" column="cust_po_detail_code"/>
-        <result property="reviewDate" column="review_date"/>
-        <result property="prodDate" column="prod_date"/>
-    </resultMap>
+  <resultMap id="purchaseItemResult" type="com.haier.purchase.data.model.PurchaseItem">
+    <result property="poItemId" column="po_item_id"/>
+    <result property="poItemNo" column="po_item_no"/>
+    <result property="sourceSn" column="source_sn"/>
+    <result property="poId" column="po_id"/>
+    <result property="sku" column="sku"/>
+    <result property="brand" column="brand"/>
+    <result property="poQty" column="po_qty"/>
+    <result property="inputQty" column="input_qty"/>
+    <result property="price" column="price"/>
+    <result property="poItemAmount" column="po_item_amount"/>
+    <result property="unit" column="unit"/>
+    <result property="secCode" column="sec_code"/>
+    <result property="itemType" column="item_type"/>
+    <result property="sign" column="sign"/>
+    <result property="collect" column="collect"/>
+    <result property="payStatus" column="pay_status"/>
+    <result property="status" column="status"/>
+    <result property="inputTime" column="input_time"/>
+    <result property="poTime" column="po_time"/>
+    <result property="createTime" column="create_time"/>
+    <result property="updateTime" column="update_time"/>
+  </resultMap>
+  <resultMap id="purchaseItemPDResult" extends="purchaseItemResult" type="com.haier.purchase.data.model.PurchaseItem">
+    <result property="productType" column="product_type"/>
+    <result property="productTypeName" column="product_type_name"/>
+    <result property="rrsSecCode" column="rrs_sec_code"/>
+    <result property="machineCode" column="machine_code"/>
+    <result property="series" column="series"/>
+    <result property="latestRevDate" column="latest_rev_date"/>
+    <result property="planSendDate" column="plan_send_date"/>
+    <result property="planCustRevDate" column="plan_cust_rev_date"/>
+    <result property="custSendDate" column="cust_send_date"/>
+    <result property="expectReceiveDate" column="expect_receive_date"/>
+    <result property="transitArrivalDate" column="transit_arrival_date"/>
+    <result property="tradeSendDate" column="trade_send_date"/>
+    <result property="signDate" column="sign_date"/>
+    <result property="podDate" column="pod_date"/>
+    <result property="transitCode" column="transit_code"/>
+    <result property="madeFactoryName" column="made_factory_name"/>
+    <result property="madeFactoryCode" column="made_factory_code"/>
+    <result property="custRevQty" column="cust_rev_qty"/>
+    <result property="abortReason" column="abort_reason"/>
+    <result property="gvsOrderCode" column="gvs_order_code"/>
+    <result property="gvsDN" column="gvs_dn"/>
+    <result property="createOrderToLessDate" column="create_order_to_less_date"/>
+    <result property="lesPing" column="les_ping"/>
+    <result property="submitDate" column="submit_date"/>
+    <result property="orderRevYear" column="order_rev_year"/>
+    <result property="orderRevWeekNumber" column="order_rev_week_number"/>
+    <result property="custPoDetailCode" column="cust_po_detail_code"/>
+    <result property="reviewDate" column="review_date"/>
+    <result property="prodDate" column="prod_date"/>
+  </resultMap>
+  <resultMap id="purchaseItemPDResultDaily" extends="purchaseItemResult"
+    type="com.haier.purchase.data.model.ProduceDailyPurchaseItem">
+    <result property="productType" column="product_type"/>
+    <result property="productTypeName" column="product_type_name"/>
+    <result property="rrsSecCode" column="rrs_sec_code"/>
+    <result property="machineCode" column="machine_code"/>
+    <result property="series" column="series"/>
+    <result property="latestRevDate" column="latest_rev_date"/>
+    <result property="planSendDate" column="plan_send_date"/>
+    <result property="planCustRevDate" column="plan_cust_rev_date"/>
+    <result property="custSendDate" column="cust_send_date"/>
+    <result property="expectReceiveDate" column="expect_receive_date"/>
+    <result property="transitArrivalDate" column="transit_arrival_date"/>
+    <result property="tradeSendDate" column="trade_send_date"/>
+    <result property="signDate" column="sign_date"/>
+    <result property="podDate" column="pod_date"/>
+    <result property="transitCode" column="transit_code"/>
+    <result property="madeFactoryName" column="made_factory_name"/>
+    <result property="madeFactoryCode" column="made_factory_code"/>
+    <result property="custRevQty" column="cust_rev_qty"/>
+    <result property="abortReason" column="abort_reason"/>
+    <result property="gvsOrderCode" column="gvs_order_code"/>
+    <result property="gvsDN" column="gvs_dn"/>
+    <result property="lesPing" column="les_ping"/>
+    <result property="submitDate" column="submit_date"/>
+    <result property="orderRevYear" column="order_rev_year"/>
+    <result property="orderRevWeekNumber" column="order_rev_week_number"/>
+    <result property="custPoDetailCode" column="cust_po_detail_code"/>
+    <result property="reviewDate" column="review_date"/>
+    <result property="receiver" column="receiver"/>
+    <result property="deliveryToName" column="delivery_to_name"/>
+    <result property="createOrderToLessDate" column="create_order_to_less_date"/>
+    <result property="supplier" column="suplier"/>
+    <result property="channel" column="channel_code"/>
+  </resultMap>
 
- <select id="getPurchaseItemByPoItemNo" parameterType="String" resultMap="purchaseItemResult">
-     SELECT
-            `po_item_id`,
-            `po_item_no`,
-            `source_sn`,
-            `po_id`,
-            `sku`,
-            `brand`,
-            `po_qty`,
-            `input_qty`,
-            `price`,
-            `unit`,
-            `sec_code`,
-            `item_type`,
-            `sign`,
-            `collect`,
-            `pay_status`,
-            `status`,
-            `po_time`,
-            `create_time`,
-            `update_time`
-        FROM `purchase_item`
-        WHERE `po_item_no` = #{poItemNo}
-        LIMIT 0, 1
-    </select>
-    
- </mapper>
+  <select id="getPurchaseItemForPD" parameterType="String" resultMap="purchaseItemPDResult">
+    SELECT *
+    FROM `purchase_item`
+    WHERE `po_item_no` = #{poItemNo}
+  </select>
+
+  <update id="updatePurchaseItemStatus" parameterType="com.haier.purchase.data.model.PurchaseItem">
+    <![CDATA[
+        UPDATE `purchase_item`
+        SET `status` = #{status}, `input_qty` = #{inputQty}, `input_time` = #{inputTime}, `update_time` = #{updateTime}
+        WHERE `po_item_id` = #{poItemId} AND `status` <> 100
+        ]]>
+  </update>
+
+  <select id="getPurchaseItemByPoItemNo" parameterType="String" resultMap="purchaseItemResult">
+    SELECT
+    `po_item_id`,
+    `po_item_no`,
+    `source_sn`,
+    `po_id`,
+    `sku`,
+    `brand`,
+    `po_qty`,
+    `input_qty`,
+    `price`,
+    `unit`,
+    `sec_code`,
+    `item_type`,
+    `sign`,
+    `collect`,
+    `pay_status`,
+    `status`,
+    `po_time`,
+    `create_time`,
+    `update_time`
+    FROM `purchase_item`
+    WHERE `po_item_no` = #{poItemNo}
+    LIMIT 0, 1
+  </select>
+
+  <select id="isExistPurchaseItem" resultType="Integer">
+    SELECT count(`po_item_id`)
+    FROM `purchase_item`
+    WHERE `source_sn` = #{sourceSn} AND `sku` = #{sku} AND `sec_code` = #{secCode}
+  </select>
+
+  <insert id="insert" parameterType="com.haier.purchase.data.model.PurchaseItem">
+    insert into
+    `purchase_item`(`po_item_no`,`source_sn`,`po_id`,`sku`,`brand`,`po_qty`,`input_qty`,`price`,`po_item_amount`,`unit`,`sec_code`,`item_type`,`sign`,`collect`,`pay_status`,`status`,`po_time`,`create_time`,`update_time`,`latest_rev_date`,`product_type_name`)
+    values(#{poItemNo},#{sourceSn},#{poId},#{sku},#{brand},#{poQty},0,#{price},#{poItemAmount},#{unit},#{secCode},#{itemType},#{sign},#{collect},#{payStatus},10,#{poTime},#{createTime},#{updateTime},#{latestRevDate},#{productTypeName})
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="poItemId" statementType="STATEMENT">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <update id="updatePoItemNo" parameterType="com.haier.purchase.data.model.PurchaseItem">
+    UPDATE `purchase_item`
+    SET `po_item_no` = #{poItemNo}
+    WHERE `po_item_id` = #{poItemId}
+  </update>
+
+  <select id="get" parameterType="Integer" resultMap="purchaseItemResult">
+    SELECT
+    `po_item_id`,
+    `po_item_no`,
+    `source_sn`,
+    `po_id`,
+    `sku`,
+    `brand`,
+    `po_qty`,
+    `input_qty`,
+    `price`,
+    `po_item_amount`,
+    `unit`,
+    `sec_code`,
+    `item_type`,
+    `sign`,
+    `collect`,
+    `pay_status`,
+    `status`,
+    `input_time`,
+    `po_time`,
+    `create_time`,
+    `update_time`
+    FROM `purchase_item`
+    WHERE `po_item_id` = #{poItemId}
+  </select>
+
+  <select id="getItemByPOID" parameterType="Integer" resultMap="purchaseItemResult">
+    SELECT
+    `po_item_id`,
+    `po_item_no`,
+    `source_sn`,
+    `po_id`,
+    `sku`,
+    `brand`,
+    `po_qty`,
+    `input_qty`,
+    `price`,
+    `po_item_amount`,
+    `unit`,
+    `sec_code`,
+    `item_type`,
+    `sign`,
+    `collect`,
+    `pay_status`,
+    `status`,
+    `input_time`,
+    `po_time`,
+    `create_time`,
+    `update_time`
+    FROM `purchase_item`
+    WHERE `po_id` = #{po_id}
+  </select>
+
+  <update id="updatePurchaseItemStatusbyID" parameterType="com.haier.purchase.data.model.PurchaseItem">
+    <![CDATA[
+        UPDATE `purchase_item`
+        SET `status` = #{status}, `update_time` = #{updateTime}
+        WHERE `po_item_id` = #{poItemId} AND `status` <> 100
+        ]]>
+  </update>
+
+  <select id="findPurchaseItemByPoIdAndStatus" resultMap="purchaseItemPDResult">
+    <![CDATA[
+      select `po_item_id`,`po_item_no`,`source_sn`,`po_id`,`sku`,`brand`,`po_qty`,`input_qty`,`price`,`po_item_amount`,`unit`,`sec_code`,`item_type`,`sign`,`collect`,`pay_status`,`status`,`input_time`,`po_time`,`create_time`,`update_time`,`product_type`,`product_type_name`
+      from `purchase_item`
+		where `po_id` = #{poId}
+		]]>
+    <if test="status != -1">
+      <if test="status == 0">
+        and `status`!= 100
+      </if>
+      <if test="status !=0">
+        and `status`=#{status}
+      </if>
+    </if>
+  </select>
+
+  <select id="findPurchaseItems" parameterType="Map" resultMap="purchaseItemPDResultDaily">
+    select SQL_CALC_FOUND_ROWS o.suplier,o.channel_code,item.* from purchase_order o inner join purchase_item
+    item
+    on o.po_id = item.po_id
+    where (o.po_type='3PL' or o.po_type = '' or o.po_type = null) and
+    <choose>
+      <when test="poItemNo != null and poItemNo !='' ">
+        item.`po_item_no`=#{poItemNo}
+      </when>
+      <otherwise>
+        <![CDATA[
+						`po_time` >= #{startTime} and `po_time` < #{endTime}
+					]]>
+        <if test="status != 0">
+          and item.`status`=#{status}
+        </if>
+        <if test="sourceSn != null and sourceSn !='' ">
+          and item.`source_sn`=#{sourceSn}
+        </if>
+        <if test="channel != null and channel !='' ">
+          and o.`channel_code`=#{channel}
+        </if>
+        <if test="supplier != null and supplier !='' ">
+          and o.`suplier`=#{supplier}
+        </if>
+        <if test="sku != null and sku !='' ">
+          and item.`sku`=#{sku}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="start != null and start !=null ">
+      limit ${start},${size}
+    </if>
+  </select>
+  <select id="getRowCnt" resultType="int">
+    SELECT
+    FOUND_ROWS();
+  </select>
+
+  <select id="getConfirmItem" parameterType="Integer" resultMap="purchaseItemResult">
+    SELECT
+    `po_item_id`,
+    `po_item_no`,
+    `source_sn`,
+    `po_id`,
+    `sku`,
+    `brand`,
+    `po_qty`,
+    `input_qty`,
+    `price`,
+    `po_item_amount`,
+    `unit`,
+    `sec_code`,
+    `item_type`,
+    `sign`,
+    `collect`,
+    `pay_status`,
+    `status`,
+    `input_time`,
+    `po_time`,
+    `create_time`,
+    `update_time`
+    FROM `purchase_item`
+    WHERE `po_item_id` = #{poItemId} AND `status` = 15
+  </select>
+
+  <update id="updateFromOMS" parameterType="com.haier.purchase.data.model.PurchaseItem">
+    UPDATE `purchase_item`
+    SET
+    source_sn = #{sourceSn},
+    brand = #{brand},
+    po_item_amount = #{poItemAmount},
+    `status` = (CASE `status`
+    WHEN 100
+    THEN 100
+    ELSE #{status} END),
+    po_time = #{poTime},
+    update_time = #{updateTime},
+    product_type = #{productType},
+    product_type_name = #{productTypeName},
+    rrs_sec_code = #{rrsSecCode},
+    machine_code = #{machineCode},
+    series = #{series},
+    latest_rev_date = #{latestRevDate},
+    plan_send_date = #{planSendDate},
+    plan_cust_rev_date = #{planCustRevDate},
+    cust_send_date = #{custSendDate},
+    expect_receive_date = #{expectReceiveDate},
+    transit_arrival_date = #{transitArrivalDate},
+    trade_send_date = #{tradeSendDate},
+    sign_date = #{signDate},
+    pod_date = #{podDate},
+    transit_code = #{transitCode},
+    made_factory_name = #{madeFactoryName},
+    made_factory_code = #{madeFactoryCode},
+    cust_rev_qty = #{custRevQty},
+    abort_reason = #{abortReason},
+    gvs_order_code = #{gvsOrderCode},
+    gvs_dn = #{gvsDN},
+    submit_date = #{submitDate},
+    les_ping = #{lesPing},
+    order_rev_year = #{orderRevYear},
+    order_rev_week_number = #{orderRevWeekNumber},
+    cust_po_detail_code = #{custPoDetailCode},
+    review_date = #{reviewDate}
+    WHERE po_item_id = #{poItemId}
+  </update>
+
+  <update id="updateLessPing">
+    UPDATE purchase_item
+    SET les_ping                    = #{lesPing},
+    `create_order_to_less_date` = #{createOrderToLessDate},
+    `status`                    = (CASE `status`
+    WHEN 100
+    THEN 100
+    ELSE 1112 END)
+    WHERE po_item_id = #{id}
+  </update>
+
+  <update id="updateProdDate" parameterType="com.haier.purchase.data.model.PurchaseItem">
+    UPDATE `purchase_item`
+    SET `prod_date` = #{prodDate}
+    WHERE `po_item_id` = #{poItemId}
+  </update>
+
+  <select id="getByPoItemNo" resultType="java.lang.Integer">
+    SELECT count(*) FROM purchase_item WHERE po_item_no = #{poItemNo}
+  </select>
+</mapper>

@@ -24,7 +24,7 @@ public class StockTransactionTimeServiceImpl implements StockTransactionTimeServ
 	   /**
      * 根据库存交易生成库龄计算数据
      */
-//    @Override
+    @Override
 //	 @Scheduled(cron="0/5 * *  * * ?")
     public ServiceResult<Boolean> processForGenerateStockAgeInOut() {
         ServiceResult<Boolean> result = new ServiceResult<Boolean>();
@@ -38,11 +38,29 @@ public class StockTransactionTimeServiceImpl implements StockTransactionTimeServ
         }
         return result;
     }
+
+  /**
+   * 根据库存交易生成库龄计算数据
+   */
+  @Override
+//	 @Scheduled(cron="0/5 * *  * * ?")
+  public ServiceResult<Boolean> processForGenerateStockAgeInOutHistory() {
+    ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+    try {
+      stockTransactionModel.processForGenerateStockAgeInOutHistory();
+    } catch (Exception e) {
+      result.setResult(false);
+      result.setSuccess(false);
+      result.setMessage("更新库存交易的业务处理状态失败：" + e.getMessage());
+      logger.info(LOG_MARK + "更新库存交易的业务处理状态失败:", e);
+    }
+    return result;
+  }
     
     /**
 	 * 根据库存交易更新库存
 	 */
-//    @Override
+    @Override
 //    @Scheduled(cron="0/5 * *  * * ?")
     public ServiceResult<Boolean> processForUpdateStock() {
         ServiceResult<Boolean> result = new ServiceResult<Boolean>();
@@ -63,6 +81,7 @@ public class StockTransactionTimeServiceImpl implements StockTransactionTimeServ
 		库龄计算分渠道出入库信息
 	 */
 //    @Scheduled(cron="0/5 * *  * * ?")
+    @Override
     public ServiceResult<Boolean> processLessStockTransQueue() {
         ServiceResult<Boolean> result = new ServiceResult<Boolean>();
         try {

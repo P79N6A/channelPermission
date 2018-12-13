@@ -3,8 +3,8 @@ package com.haier.afterSale.services;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import com.haier.shop.model.Orders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +16,13 @@ import com.haier.afterSale.service.OrderService;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.StringUtil;
 import com.haier.shop.model.HpSignTimeInterface;
+import com.haier.shop.model.MemberInvoices;
 import com.haier.shop.model.OrderProductsAttributes;
 import com.haier.shop.model.OrderProductsNew;
 import com.haier.shop.model.OrderRepairsNew;
 import com.haier.shop.model.OrderShippedQueue;
+import com.haier.shop.model.Orders;
 import com.haier.shop.model.OrdersNew;
-import com.haier.shop.service.OrderProductsNewService;
-import com.haier.shop.service.OrdersNewService;
-import com.haier.shop.service.ShopOrderWorkflowsService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -364,4 +363,113 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+    
+    @Override
+    public ServiceResult<Boolean> updateSourceOrderNumber(String inputSourceOrderNumber,String sourceOrderNumber,String orderNumber,String userName,Integer id) {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            result = orderModel.updateSourceOrderNumber(inputSourceOrderNumber, sourceOrderNumber,orderNumber,userName,id);
+        } catch (Exception e) {
+            log.error("修改来源单号异常(sourceOrderSn:" + inputSourceOrderNumber + ",orderSn:" + orderNumber + ")，出现未知异常:", e);
+            result.setMessage("服务器发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+        }
+        return result;
+    }
+    
+    @Override
+    public ServiceResult<Boolean> updatePayState(String spanState,String selectState,String orderNumber,String userName,Integer id) {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            result = orderModel.updatePayState(spanState, selectState,orderNumber,userName,id);
+        } catch (Exception e) {
+            log.error("修改支付状态异常(state:" + selectState + ",orderSn:" + orderNumber + ")，出现未知异常:", e);
+            result.setMessage("服务器发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+        }
+        return result;
+    }
+    
+    
+    @Override
+    public ServiceResult<Boolean> updateNotes(String notes,String textNotes,String orderNumber,String userName,Integer id) {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            result = orderModel.updateNotes(notes, textNotes,orderNumber,userName,id);
+        } catch (Exception e) {
+            log.error("修改支付状态异常(textNotes:" + textNotes + ",orderSn:" + orderNumber + ")，出现未知异常:", e);
+            result.setMessage("服务器发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+        }
+        return result;
+    }
+    
+    @Override
+    public ServiceResult<Boolean> updateInvoiceAddress(String userName,String province,String citys,String county,String newAddress,Orders orders) {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            result = orderModel.updateInvoiceAddress(userName,province,citys,county,newAddress,orders);
+        } catch (Exception e) {
+            log.error("修改发票邮寄地址(userName:" + userName + ",orderSn:" + orders.getOrderSn() + ")，出现未知异常:", e);
+            result.setMessage("服务器发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+        }
+        return result;
+    }
+    
+    @Override
+    public ServiceResult<Boolean> updateInvoiceState(String userName,String orderNumber,Integer id,String isLockI) {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            result = orderModel.updateInvoiceState(userName, orderNumber,id,isLockI);
+        } catch (Exception e) {
+            log.error("修改发票状态异常(isLockI:" + isLockI + ",orderSn:" + orderNumber + ")，出现未知异常:", e);
+            result.setMessage("服务器发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+        }
+        return result;
+    }
+    
+    @Override
+    public ServiceResult<Boolean> updateInvoiceInfo(String userName,String orderNumber,Integer id,MemberInvoices memberInvoices,String invoiceTypeI) {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            result = orderModel.updateInvoiceInfo(userName, orderNumber,id,memberInvoices,invoiceTypeI);
+        } catch (Exception e) {
+            log.error("修改发票信息异常,orderSn:" + orderNumber + ")，出现未知异常:", e);
+            result.setMessage("服务器发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+        }
+        return result;
+    }
+    
+    
+    @Override
+    public ServiceResult<Boolean> updateAddress(String userName,String orderNumber,Integer id,Orders orders) {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            result = orderModel.updateAddress(userName, orderNumber,id,orders);
+        } catch (Exception e) {
+            log.error("修改收货地址信息异常,orderSn:" + orderNumber + ")，出现未知异常:", e);
+            result.setMessage("服务器发生未知异常：" + e.getMessage());
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+    
+	@Override
+	public ServiceResult<Map<String, Object>> doBatchConfirmationPayment(String cOrderSns,
+			Map<String, Object> modelMap,String userName) {
+		ServiceResult<Map<String, Object>> result = new ServiceResult<Map<String, Object>>();
+		try {
+			result = orderModel.doBatchConfirmationPayment(cOrderSns,modelMap,userName);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			log.error("[order][doBatchConfirmationPayment]批量确认收款时发生未知错误", e);
+            result.setMessage("批量确认收款失败！");
+		}
+		return result;
+	}
 }

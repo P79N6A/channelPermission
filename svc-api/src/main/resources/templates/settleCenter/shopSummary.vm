@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+  <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+  <link rel="stylesheet" href="../static/css/common.css">
+  <title>返利汇总(生态店)</title>
+  <script src="../static/third/jquery.js"></script>
+  <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+  <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+  <script src="../static/js/utils.js"></script>
+  <script src="../static/js/customConfig.js"></script>
+  <script src="../static/js/easyui-extention_ws.js"></script>
+  <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+  <table id="dg">
+  </table>
+</div>
+
+<div id="datagridToolbar">
+  <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_line fa fa-window-minimize"></div>
+    <div class="slide_circle fa fa-map-marker"></div>
+  </div>
+  <form id="paramForm" class="param-form">
+    <div class="search-panel">
+      <div class="search-row">
+        <span class="search-row-label">
+          年度
+        </span>
+        <select class="easyui-combobox" name="year" style="width: 174px;" panelHeight="auto">
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          期间
+        </span>
+        <select class="easyui-combobox" name="month" style="width: 174px;">
+            <option value="">&nbsp;</option>
+            <option value="01">1月</option>
+            <option value="02">2月</option>
+            <option value="03">3月</option>
+            <option value="04">4月</option>
+            <option value="05">5月</option>
+            <option value="06">6月</option>
+            <option value="07">7月</option>
+            <option value="08">8月</option>
+            <option value="09">9月</option>
+            <option value="10">10月</option>
+            <option value="11">11月</option>
+            <option value="12">12月</option>
+            <option value="Q1">Q1</option>
+            <option value="Q2">Q2</option>
+            <option value="Q3">Q3</option>
+            <option value="Q4">Q4</option>
+            <option value="N">N</option>
+        </select>
+      </div>
+      <div class="search-row">
+        <span class="search-row-label">
+          生态店
+        </span>
+        <input class="easyui-textbox" name="ecologyShop"/>
+      </div>
+    </div>
+    <a href="#" class="easyui-linkbutton" id="searchBtn"
+       data-options="iconCls:'icon-search',plain:true">查询</a>
+    <a href="#" class="easyui-linkbutton" id="export" onclick="exp()"
+       data-options="iconCls:'icon-save',plain:true">导出</a>
+  </form>
+</div>
+
+<div id="addDlg" data-options="title:'',resizable:true,modal:true"
+     class="easyui-dialog add-dlg"
+     style="width:600px;height:300px;"
+     closed="true" buttons="#dlg-buttons">
+  <form id="addForm" method="post">
+    <input name="id" type="text" style="display:none;">
+    <input __acttype="" type="hidden" value="add">
+    <input type="hidden" name="userId">
+    <div class="fitem">
+      <label>生态店</label>
+      <input class="easyui-textbox" name="ecologyShop" required="true">
+    </div>
+    <div class="fitem">
+      <label>年度</label>
+      <select class="easyui-combobox" name="year">
+      </select>
+    </div>
+    <div class="fitem">
+      <label>期间</label>
+      <select class="easyui-combobox" name="month">
+          <option value="">&nbsp;</option>
+          <option value="01">1月</option>
+          <option value="02">2月</option>
+          <option value="03">3月</option>
+          <option value="04">4月</option>
+          <option value="05">5月</option>
+          <option value="06">6月</option>
+          <option value="07">7月</option>
+          <option value="08">8月</option>
+          <option value="09">9月</option>
+          <option value="10">10月</option>
+          <option value="11">11月</option>
+          <option value="12">12月</option>
+          <option value="Q1">Q1</option>
+          <option value="Q2">Q2</option>
+          <option value="Q3">Q3</option>
+          <option value="Q4">Q4</option>
+          <option value="N">N</option>
+      </select>
+    </div>
+    <div class="fitem">
+      <label>品牌</label>
+      <input class="easyui-textbox" name="brand" required="true">
+    </div>
+    <div class="fitem">
+      <label>费用描述</label>
+      <input class="easyui-textbox" name="costDes" required="true">
+    </div>
+    <div class="fitem">
+      <label>其他费用描述</label>
+      <input class="easyui-numberbox" name="qtCostAmount">
+    </div>
+  </form>
+  <div id="dlg-buttons">
+    <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn" iconCls="icon-ok">确认</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#addDlg').dialog('close')">关闭</a>
+  </div>
+</div>
+<div id="importExcel" class="easyui-dialog"
+     data-options="title:'报表导入',resizable:true,modal:true"
+     closed="true" style="width:500px;height:300px;">
+  <div class="import-panel">
+    <input type="hidden" id="rowId"/>
+    <table>
+      <tr>
+        <td colspan="2">
+          请仔细阅读以下注意事项：
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          1、请使用最新的导入模板导入数据，最新模板为<a href='/static/excel/odsTMFXPromotionCost.xls' target='_blank'>【营销费用维护导入.xls】</a>。
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          2、请直接在<b><span
+            style="color:#dc143c">导入模板的基础上 拷贝粘贴实际业务数据，不要添加删除行或列，也不要更改模板的公式、格式等</span></b>。
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          3、模板中的<b><span style="color:#dc143c">数据不能超过2000行</span></b>，超过后请分成多个excel导入。
+        </td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>EXCEL 导入：</td>
+        <td>
+          <input type="file" id="file" name="file" label="上传文件"/>
+          <input type="hidden" id="uploadfileId">
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <button id="upload" href="javascript:void(0)"
+                  class="btn btn-default easyui-linkbutton c6 " style="width:250px">导入
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<script type="application/javascript">
+  var dataGrid = $('#dg').datagrid({
+    url: "/scRebatesSummary/shopSummaryPage",
+    method: "get",
+    fit: true,
+    fitColumns: false,
+    pagination: true,
+    pageSize: 50,
+    pageList: [50, 100, 200],
+    pageNumber: 1,
+    autoRowHeight: true,
+    striped: true,
+    toolbar: '#datagridToolbar',
+    rownumbers: true,
+    nowrap: false,
+    columns: [
+      [
+        {
+          field: 'id',
+          hidden: true,
+          align: 'center',
+          checkbox: false
+        },
+        {
+          field: 'year',
+          title: '会计年度',
+          align: 'center'
+        },
+        {
+          field: 'month',
+          title: '期间',
+          align: 'center'
+        },
+        {
+          field: 'ecologyShop',
+          title: '生态店',
+          align: 'center'
+        },
+        {
+          field: 'type',
+          title: '类型',
+          align: 'center',
+          formatter: function (value) {
+            if (value == 'y') {
+              return "年度";
+            }
+            if (value == 'm') {
+              return "月度";
+            }
+            if (value == 'q') {
+              return "季度";
+            }
+          }
+        },
+        {
+          field: 'target',
+          title: '目标',
+          align: 'center'
+        },
+        {
+          field: 'saleAmount',
+          title: '实际销售额',
+          align: 'center'
+        },
+        {
+          field: 'completion',
+          title: '完成率',
+          align: 'center'
+        },
+        {
+          field: 'monthlyCashAmount',
+          title: '兑现总额',
+          align: 'center'
+        },
+        {
+          field: 'qtCost',
+          title: '其他费用',
+          align: 'center'
+        },
+        {
+          field: 'rebatesAmount',
+          title: '返利总额',
+          align: 'center'
+        }
+      ]
+    ]
+  });
+
+
+</script>
+<script src="../static/js/settleCenter/ajaxfileupload.js"></script>
+<script src="../static/js/settleCenter/shopSummary.js"></script>
+##<script src="../static/js/report/workOrder.js"></script>
+</body>
+</html>

@@ -11,13 +11,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.Date;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WriteLogProxy implements ApplicationContextAware {
     private static org.apache.log4j.Logger          log = org.apache.log4j.LogManager
             .getLogger(WriteLogProxy.class);
     private static ApplicationContext applicationContext;
-    private static EisInterfaceDataLogService eisInterfaceDataLogDao;
-    private static VomwwwOutstockSynchronizeLogsService vomwwwOutstockSynchronizeLogsDao;
+    private static EisInterfaceDataLogService eisInterfaceDataLogService;
+    private static VomwwwOutstockSynchronizeLogsService vomwwwOutstockSynchronizeLogsService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -52,7 +54,7 @@ public class WriteLogProxy implements ApplicationContextAware {
             dataLog.setResponseStatus(EisInterfaceDataLog.RESPONSE_STATUS_ERROR);
         }
         try {
-            eisInterfaceDataLogDao.insert(dataLog);
+            getDao().insert(dataLog);
         } catch (Exception e) {
             log.error("调用接口" + interfaceCode + ",foreignKey(" + foreignKey + "),记录日志发生异常："
                             + e.getMessage(),
@@ -100,7 +102,7 @@ public class WriteLogProxy implements ApplicationContextAware {
             dataLog.setStatus(VomwwwOutstockSynchronizeLogs.RESPONSE_STATUS_ERROR);
         }
         try {
-            vomwwwOutstockSynchronizeLogsDao.insert(dataLog);
+            getVomwwwOutstockSynchronizeLogsDao().insert(dataLog);
         } catch (Exception e) {
             log.error("调用接口" + interfaceCode + ",记录日志发生异常：" + e.getMessage(), e);
         }
@@ -134,7 +136,7 @@ public class WriteLogProxy implements ApplicationContextAware {
             dataLog.setResponseStatus(EisInterfaceDataLog.RESPONSE_STATUS_ERROR);
         }
         try {
-            eisInterfaceDataLogDao.insertAndReturnId(dataLog);
+            getDao().insertAndReturnId(dataLog);
         } catch (Exception e) {
             log.error("调用接口" + interfaceCode + ",foreignKey(" + foreignKey + "),记录日志发生异常："
                             + e.getMessage(),
@@ -142,5 +144,21 @@ public class WriteLogProxy implements ApplicationContextAware {
             return null;
         }
         return dataLog.getId();
+    }
+
+    private static EisInterfaceDataLogService getDao() {
+        if (null == eisInterfaceDataLogService) {
+            eisInterfaceDataLogService = (EisInterfaceDataLogService) applicationContext
+                .getBean("eisInterfaceDataLogService");
+        }
+        return eisInterfaceDataLogService;
+    }
+
+    private static VomwwwOutstockSynchronizeLogsService getVomwwwOutstockSynchronizeLogsDao() {
+        if (null == vomwwwOutstockSynchronizeLogsService) {
+            vomwwwOutstockSynchronizeLogsService = (VomwwwOutstockSynchronizeLogsService) applicationContext
+                .getBean("vomwwwOutstockSynchronizeLogsDao");
+        }
+        return vomwwwOutstockSynchronizeLogsService;
     }
 }

@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.OdsTMFXPointMaintainDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.OdsTMFXPointMaintain" >
+      <result property="id" column="id" />
+      <result property="ecologyShop" column="ecology_shop" />
+      <result property="year" column="year" />
+      <result property="beginMonth" column="begin_month" />
+      <result property="endMonth" column="end_month" />
+      <result property="industry" column="industry" />
+      <result property="sku" column="sku" />
+      <result property="modelDes" column="model_des" />
+      <result property="brand" column="brand" />
+      <result property="type" column="type" />
+      <result property="beginTarget" column="begin_target" />
+      <result property="endTarget" column="end_target" />
+      <result property="basePoint" column="base_point" />
+      <result property="extraRebate" column="extra_rebate" />
+      <result property="createTime" column="create_time" />
+      <result property="createBy" column="create_by" />
+      <result property="auditState" column="audit_state" />
+      <result property="deleteTab" column="delete_tab" />
+      <result property="auditBy" column="audit_by" />
+      <result property="auditTime" column="audit_time" />
+      <result property="rewardType" column="reward_type" />
+      <result property="stepPoint" column="step_point" />
+      <result property="markPoint" column="mark_point" />
+      <result property="fixedAmount" column="fixed_amount" />
+      <result property="skuStepPoint" column="sku_step_point" />
+      <result property="amountPoint" column="amount_point" />
+
+      <result property="intervalRule" column="interval_rule" />
+      <result property="bettingTarget" column="betting_target" />
+      <result property="calculationType" column="calculation_type" />
+      <result property="bettingCoefficient" column="betting_coefficient" />
+  </resultMap>
+  <sql id="tb" >
+    ods_tmfx_pointmaintain
+  </sql>
+  <sql id="cols_all" >
+    id,ecology_shop,year,begin_month,end_month,industry,sku,model_des,brand,type,begin_target,end_target,base_point,extra_rebate,create_time,create_by,audit_state,delete_tab,audit_by,audit_time,reward_type,step_point,mark_point,fixed_amount,sku_step_point,amount_point,interval_rule,betting_target,calculation_type,betting_coefficient
+  </sql>
+  <sql id="cols_exclude_id" >
+  
+   ecology_shop,
+   year,
+   begin_month,
+   end_month,
+   industry,
+   sku,
+   model_des,
+   brand,
+   type,
+   begin_target,
+   end_target,
+   base_point,
+   extra_rebate,
+   create_time,
+   create_by,
+   audit_state,
+   delete_tab,
+   audit_by,
+   audit_time,
+   reward_type,
+   step_point,
+   mark_point,
+   fixed_amount,
+   sku_step_point,
+   amount_point,
+
+   interval_rule,
+   betting_target,
+   calculation_type,
+   betting_coefficient
+  </sql>
+  <sql id="vals" >
+  
+  #{ecologyShop},
+  #{year},
+  #{beginMonth},
+  #{endMonth},
+  #{industry},
+  #{sku},
+  #{modelDes},
+  #{brand},
+  #{type},
+  #{beginTarget},
+  #{endTarget},
+  #{basePoint},
+  #{extraRebate},
+  now(),
+  #{createBy},
+  #{auditState},
+  #{deleteTab},
+  #{auditBy},
+  #{auditTime},
+  #{rewardType},
+  #{stepPoint},
+  #{markPoint},
+  #{fixedAmount},
+  #{skuStepPoint},
+  #{amountPoint},
+
+  #{intervalRule},
+  #{bettingTarget},
+  #{calculationType},
+  #{bettingCoefficient}
+  </sql>
+  <select id="load" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="cols_all" />
+    from <include refid="tb" />
+    where id = #{id}
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from  <include refid="tb" />
+    where id = #{id}
+  </delete>
+    <update id="delBatch">
+        update <include refid="tb" />
+        set delete_tab = 'Y'
+        where id in
+        <foreach collection="list" item="id" open="(" close=")" separator="," index="index">
+            #{id}
+        </foreach>
+    </update>
+  <insert id="insert" parameterType="com.haier.shop.model.OdsTMFXPointMaintain" >
+    insert into <include refid="tb" /> (
+      id,<include refid="cols_exclude_id" />
+    )
+    values (
+      REPLACE(UUID(),'-',''),<include refid="vals" />
+    )
+  </insert>
+  <update id="update" parameterType="com.haier.shop.model.OdsTMFXPointMaintain" >
+    update <include refid="tb" />
+    <set >
+
+        <if test="ecologyShop != null" >
+            ecology_shop = #{ecologyShop},
+        </if>
+
+        <if test="year != null" >
+            year = #{year},
+        </if>
+
+        <if test="beginMonth != null" >
+            begin_month = #{beginMonth},
+        </if>
+
+        <if test="endMonth != null" >
+            end_month = #{endMonth},
+        </if>
+
+        <if test="industry != null" >
+            industry = #{industry},
+        </if>
+
+        <if test="sku != null" >
+            sku = #{sku},
+        </if>
+
+        <if test="modelDes != null" >
+            model_des = #{modelDes},
+        </if>
+
+        <if test="brand != null" >
+            brand = #{brand},
+        </if>
+
+        <if test="type != null" >
+            type = #{type},
+        </if>
+
+        <if test="beginTarget != null" >
+            begin_target = #{beginTarget},
+        </if>
+
+        <if test="endTarget != null" >
+            end_target = #{endTarget},
+        </if>
+
+        <if test="basePoint != null" >
+            base_point = #{basePoint},
+        </if>
+
+        <if test="extraRebate != null" >
+            extra_rebate = #{extraRebate},
+        </if>
+
+
+        <if test="createBy != null" >
+            create_by = #{createBy},
+        </if>
+
+        <if test="auditState != null" >
+            audit_state = #{auditState},
+        </if>
+
+        <if test="deleteTab != null" >
+            delete_tab = #{deleteTab},
+        </if>
+
+        <if test="auditBy != null" >
+            audit_by = #{auditBy},
+        </if>
+
+        <if test="auditTime != null" >
+            audit_time = #{auditTime},
+        </if>
+
+        <if test="rewardType != null" >
+            reward_type = #{rewardType},
+        </if>
+
+        <if test="stepPoint != null" >
+            step_point = #{stepPoint},
+        </if>
+
+        <if test="markPoint != null" >
+            mark_point = #{markPoint},
+        </if>
+
+        <if test="fixedAmount != null" >
+            fixed_amount = #{fixedAmount},
+        </if>
+
+        <if test="skuStepPoint != null" >
+            sku_step_point = #{skuStepPoint},
+        </if>
+
+        <if test="amountPoint != null" >
+            amount_point = #{amountPoint},
+        </if>
+
+
+        <if test="intervalRule != null" >
+            interval_rule = #{intervalRule},
+        </if>
+        <if test="bettingTarget != null" >
+            betting_target = #{bettingTarget},
+        </if>
+        <if test="calculationType != null" >
+            calculation_type = #{calculationType},
+        </if>
+        <if test="bettingCoefficient != null" >
+            betting_coefficient = #{bettingCoefficient}
+        </if>
+
+
+    </set>
+    where id = #{id}
+  </update>
+
+    <sql id="pagingSql" >
+      from <include refid="tb" /> t
+
+    </sql>
+    <sql id="pagingWhere">
+        <where>
+            1=1 and delete_tab = 'N'
+            <if test="param.industry!=null and param.industry!=''">
+                and INDUSTRY = #{param.industry,jdbcType=VARCHAR}
+            </if>
+            <if test="param.ecologyShop!=null and param.ecologyShop!=''">
+                and ECOLOGY_SHOP = #{param.ecologyShop,jdbcType=VARCHAR}
+            </if>
+            <if test="param.type!=null and param.type!=''">
+                and TYPE = #{param.type,jdbcType=CHAR}
+            </if>
+            <if test="param.year!=null and param.year!=''">
+                and YEAR = #{param.year,jdbcType=VARCHAR}
+            </if>
+            <if test="param.month!=null and param.month!='' and param.type!=null and param.type=='m'.toString()">
+                and(
+                (CASE when type='m' then CONVERT(BEGIN_MONTH,SIGNED) END ) &lt;= #{param.month,jdbcType=VARCHAR}
+                and (CASE when type='m' then CONVERT(END_MONTH,SIGNED) END )>= #{param.month,jdbcType=VARCHAR}
+                )
+            </if>
+            <if test="param.month!=null and param.month!='' and param.type!=null and param.type!='m'.toString()">
+                and (BEGIN_MONTH = #{param.month,jdbcType=VARCHAR}
+                or END_MONTH =#{param.month,jdbcType=VARCHAR}
+                or substring(BEGIN_MONTH,6,2)=#{param.month,jdbcType=VARCHAR}
+                or substring(END_MONTH,6,2)=#{param.month,jdbcType=VARCHAR}
+              )
+            </if>
+            <if test="param.deleteTab!=null and param.deleteTab!=''">
+                and DELETE_TAB = #{param.deleteTab,jdbcType=VARCHAR}
+            </if>
+            <if test="param.auditState!=null and param.auditState!=''">
+                and AUDIT_STATE = #{param.auditState,jdbcType=VARCHAR}
+            </if>
+            <if test="param.sku!=null and param.sku!=''">
+                and sku = #{param.sku,jdbcType=VARCHAR}
+            </if>
+            <if test="param.rewardType!=null and param.rewardType!=''">
+                and reward_type = #{param.rewardType,jdbcType=VARCHAR}
+            </if>
+<!--            <if test="searchParams !=null and searchParams !=''">
+                and (t.name LIKE CONCAT('%', #{searchParams} ,'%')    )
+            </if>-->
+        </where>
+    </sql>
+    <select id="count" parameterType="map" resultType="long">
+        select  count(1)
+        <include refid="pagingSql" />
+        <include refid="pagingWhere" />
+    </select>
+    <sql id="pagingSqlColumn">
+        select t.id ,t.ecology_shop ,t.year ,t.begin_month ,t.end_month ,t.industry ,t.sku ,t.model_des ,t.brand ,t.type ,t.begin_target ,t.end_target ,t.base_point ,t.extra_rebate ,DATE_FORMAT( t.create_time, '%Y-%m-%d') create_time ,t.create_by ,t.audit_state ,t.delete_tab ,t.audit_by ,DATE_FORMAT( t.audit_time, '%Y-%m-%d') audit_time,t.reward_type ,t.step_point ,t.mark_point ,t.fixed_amount ,t.sku_step_point ,t.amount_point,t.interval_rule,t.betting_target,t.calculation_type,t.betting_coefficient
+    </sql>
+    <select id="paging"   resultMap="BaseResultMap" >
+        select t.id ,t.ecology_shop  ,t.year ,t.begin_month ,t.end_month ,t.industry ,t.sku ,t.model_des ,t.brand ,t.type ,t.begin_target ,t.end_target ,t.base_point ,t.extra_rebate ,DATE_FORMAT( t.create_time, '%Y-%m-%d') create_time ,t.create_by ,t.audit_state ,t.delete_tab ,t.audit_by ,DATE_FORMAT( t.audit_time, '%Y-%m-%d') audit_time,t.reward_type ,t.step_point ,t.mark_point ,t.fixed_amount ,t.sku_step_point ,t.amount_point,t.interval_rule,t.betting_target,t.calculation_type,t.betting_coefficient
+        <include refid="pagingSql" />
+        <include refid="pagingWhere" />
+        order by
+<!--        <if test="sort !=null and sort !=''">
+            ${sort} ${order},
+        </if>-->
+        t.create_time desc
+        LIMIT #{page.start}, #{page.pageSize}
+
+    </select>
+
+    <select id="export"   resultType="map" >
+        select t.id id,t.ecology_shop ecologyShop,t.year year,t.begin_month beginMonth,t.end_month endMonth,
+        t.industry industry,t.sku sku,t.model_des modelDes,t.brand brand,
+        (select case t.type when 'm' then '月度' when 'q' then '季度' when 'y' then'年度' when 'd' then'日期' end ) type,
+        t.begin_target beginTarget,
+        t.end_target endTarget,t.base_point basePoint,t.extra_rebate extraRebate,
+        DATE_FORMAT( t.create_time, '%Y-%m-%d') createTime,t.create_by createBy,
+        (select case t.audit_state when 'B' then '待业务审核' when 'F' then '待财务审核' when 'A' then'审核通过' end )auditState,
+        (select case t.delete_tab when 'Y' then '已删除' when 'N' then '未删除'  end ) deleteTab,
+        t.audit_by auditBy,
+        DATE_FORMAT( t.audit_time, '%Y-%m-%d') auditTime,t.reward_type rewardType,
+        t.step_point stepPoint,t.mark_point markPoint,t.fixed_amount fixedAmount,
+        t.sku_step_point skuStepPoint,t.amount_point amountPoint,
+        t.interval_rule  intervalRule,t.betting_target bettingTarget,
+        case t.calculation_type
+        WHEN 'target' then  '按目标'
+        WHEN 'actual' then  '按实际'
+        ELSE '' END   calculationType,
+        t.betting_coefficient bettingCoefficient
+        <include refid="pagingSql" />
+        <include refid="pagingWhere" />
+        order by
+        <!--        <if test="sort !=null and sort !=''">
+                    ${sort} ${order},
+                </if>-->
+        t.create_time desc
+
+
+    </select>
+    <select id="getFormData"  parameterType="Long"  resultType="map">
+        <include refid="pagingSqlColumn" />
+        <include refid="pagingSql" />
+        where t.id = #{id}
+
+    </select>
+
+    <select id="simpleCombobox" resultType="map">
+        select
+        t.id id,t.name text
+        from <include refid="tb" /> t
+        where is_deleted=0
+    </select>
+
+    <select id="queryRepetition" resultMap="BaseResultMap">
+        <include refid="pagingSqlColumn" />
+        FROM  <include refid="tb" /> t
+        WHERE 1=1
+        and DELETE_TAB='N'
+        <if test="industry!=null and industry!=''">
+            and INDUSTRY = #{industry,jdbcType=VARCHAR}
+        </if>
+        <if test="ecologyShop!=null and ecologyShop!=''">
+            and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+        </if>
+        <if test="type!=null and type!=''">
+            and TYPE = #{type,jdbcType=CHAR}
+        </if>
+        <if test="year!=null and year!=''">
+            and YEAR = #{year,jdbcType=VARCHAR}
+        </if>
+        <if test="beginMonth!=null and beginMonth!=''">
+            and BEGIN_MONTH = #{beginMonth}
+        </if>
+        <if test="endMonth!=null and endMonth!=''">
+            and END_MONTH = #{endMonth}
+        </if>
+        <if test="brand!=null and brand!=''">
+            and BRAND = #{brand,jdbcType=VARCHAR}
+        </if>
+        <if test="sku!=null and sku!=''">
+            and sku = #{sku}
+        </if>
+        <if test="rewardType!=null and rewardType!=''">
+            and REWARD_TYPE = #{rewardType}
+        </if>
+        <if test="beginTarget!=null and beginTarget!=''">
+            and BEGIN_TARGET = #{beginTarget}
+        </if>
+        <if test="endTarget!=null and endTarget!=''">
+            and END_TARGET = #{endTarget}
+        </if>
+        <if test="bettingTarget!=null and bettingTarget!=''">
+            and betting_target = #{bettingTarget}
+        </if>
+    </select>
+
+    <select id="queryPointByDistribution" resultMap="BaseResultMap">
+        SELECT
+        <include refid="cols_all"/>
+        FROM ods_tmfx_pointmaintain
+        WHERE 1=1
+        and delete_tab='N'
+        and audit_state = 'A'
+        <if test="industry!=null and industry!=''">
+            and industry = #{industry,jdbcType=VARCHAR}
+        </if>
+        <if test="ecologyShop!=null and ecologyShop!=''">
+            and ecology_shop = #{ecologyShop,jdbcType=VARCHAR}
+        </if>
+        <if test="ecologyShop==null">
+            and (ecology_shop is null or  ecology_shop ='')
+        </if>
+        <if test="type!=null and type!=''">
+            and type = #{type,jdbcType=CHAR}
+        </if>
+        <if test="year!=null and year!=''">
+            and year = #{year,jdbcType=VARCHAR}
+        </if>
+        <if test="month!=null and month!='' and type!=null and type=='m'.toString()">
+            and(
+            (case type when 'm' then cast(begin_month as SIGNED) end )<![CDATA[ <=]]> #{month,jdbcType=VARCHAR}
+            and (case type when 'm' then cast(end_month as SIGNED) end ) >= #{month,jdbcType=VARCHAR}
+            )
+        </if>
+        <if test="month!=null and month!='' and type!=null and type!='m'.toString()">
+            and (begin_month = #{month,jdbcType=VARCHAR}
+            or end_month =#{month,jdbcType=VARCHAR})
+        </if>
+        <if test="brand!=null and brand!=''">
+            and brand = #{brand,jdbcType=VARCHAR}
+        </if>
+        <if test="sku!=null and sku!=''">
+            and sku = #{sku}
+        </if>
+        <if test="sku==null">
+            and (sku is null or  sku ='')
+        </if>
+        <if test="rewardType!=null and rewardType!=''">
+            and reward_type = #{rewardType,jdbcType=VARCHAR}
+        </if>
+        order by create_time desc
+        limit 1
+    </select>
+    <select id="queryPointByDistribution2" resultMap="BaseResultMap">
+        SELECT
+        <include refid="cols_all"/>
+        FROM ods_tmfx_pointmaintain
+        WHERE 1=1
+        and delete_tab='N'
+        and audit_state = 'A'
+        <if test="industry!=null and industry!=''">
+            and industry = #{industry,jdbcType=VARCHAR}
+        </if>
+        <if test="ecologyShop!=null and ecologyShop!=''">
+            and ecology_shop = #{ecologyShop,jdbcType=VARCHAR}
+        </if>
+        <if test="type!=null and type!=''">
+            and type = #{type,jdbcType=CHAR}
+        </if>
+        <if test="year!=null and year!=''">
+            and year = #{year,jdbcType=VARCHAR}
+        </if>
+        <if test="month!=null and month!='' and type!=null and type=='m'.toString()">
+            and(
+            (CASE type when 'm' then cast(begin_month as SIGNED) END )<![CDATA[ <=]]> #{month,jdbcType=VARCHAR}
+            and (CASE type when 'm' then cast(end_month as SIGNED) END ) >= #{month,jdbcType=VARCHAR}
+            )
+        </if>
+        <if test="month!=null and month!='' and type!=null and type!='m'.toString()">
+            and (begin_month = #{month,jdbcType=VARCHAR}
+            or end_month =#{month,jdbcType=VARCHAR})
+        </if>
+        <if test="brand!=null and brand!=''">
+            and brand = #{brand,jdbcType=VARCHAR}
+        </if>
+        <if test="rewardType!=null and rewardType!=''">
+            and reward_type = #{rewardType,jdbcType=VARCHAR}
+        </if>
+        limit 1
+    </select>
+    <select id="queryPointByDistribution3" resultMap="BaseResultMap">
+        SELECT a.* FROM (
+        SELECT
+        <include refid="cols_all"/>
+        FROM ods_tmfx_pointmaintain
+        WHERE 1=1
+        and delete_tab='N'
+        and audit_state = 'A'
+        <if test="industry!=null and industry!=''">
+            and industry = #{industry,jdbcType=VARCHAR}
+        </if>
+        <if test="ecologyShop!=null and ecologyShop!=''">
+            and ecology_shop = #{ecologyShop,jdbcType=VARCHAR}
+        </if>
+        <if test="ecologyShop==null">
+            and (ecology_shop is null or ecology_shop='')
+        </if>
+        <if test="type!=null and type!=''">
+            and type = #{type,jdbcType=CHAR}
+        </if>
+        <if test="year!=null and year!=''">
+            and year = #{year,jdbcType=VARCHAR}
+        </if>
+        <if test="month!=null and month!='' and type!=null and type=='m'.toString()">
+            and(
+            (case type when 'm' then cast(begin_month as SIGNED) end )<![CDATA[ <=]]> #{month,jdbcType=VARCHAR}
+            and (case type when 'm' then cast(end_month as SIGNED) end ) >= #{month,jdbcType=VARCHAR}
+            )
+        </if>
+        <if test="month!=null and month!='' and type!=null and type!='m'.toString()">
+            and (begin_month = #{month,jdbcType=VARCHAR}
+            or end_month =#{month,jdbcType=VARCHAR})
+        </if>
+        <if test="brand!=null and brand!=''">
+            and brand = #{brand,jdbcType=VARCHAR}
+        </if>
+        <if test="sku!=null and sku!=''">
+            and sku = #{sku}
+        </if>
+        <if test="sku==null">
+            and (sku is null or sku='')
+        </if>
+        <if test="rewardType!=null and rewardType!=''">
+            and reward_type = #{rewardType,jdbcType=VARCHAR}
+        </if>
+        order by create_time asc
+        ) a
+    </select>
+
+    <insert id="bulkImport" parameterType="java.util.List">
+        INSERT  INTO  <include refid="tb" />
+        (
+        id,ecology_shop, year, begin_month, end_month, industry, sku, model_des, brand,
+        reward_type, type, begin_target, end_target, base_point, extra_rebate,create_by,step_point, mark_point, fixed_amount, sku_step_point, amount_point,create_time,delete_tab,audit_state,
+        interval_rule,betting_target,calculation_type,betting_coefficient
+        )select * from
+        <foreach collection="list" item="opm" separator="union" open="(" close=")" index="index">
+            select
+            REPLACE(UUID(),'-','') t1,#{opm.ecologyShop,jdbcType=VARCHAR} t2,#{opm.year,jdbcType=VARCHAR} t3,
+            #{opm.beginMonth,jdbcType=VARCHAR}t4,#{opm.endMonth,jdbcType=VARCHAR} t5,#{opm.industry,jdbcType=VARCHAR} t6,
+            #{opm.sku,jdbcType=VARCHAR} t7,#{opm.modelDes,jdbcType=VARCHAR} t8,#{opm.brand,jdbcType=VARCHAR} t9,
+            #{opm.rewardType,jdbcType=VARCHAR} t10,#{opm.type,jdbcType=CHAR} t11,
+            #{opm.beginTarget,jdbcType=VARCHAR} t12,#{opm.endTarget,jdbcType=VARCHAR} t13,#{opm.basePoint,jdbcType=DECIMAL} t14,
+            #{opm.extraRebate,jdbcType=DECIMAL} t15,#{opm.createBy,jdbcType=VARCHAR} t16,
+            #{opm.stepPoint,jdbcType=DECIMAL} t17,#{opm.markPoint,jdbcType=DECIMAL} t18,#{opm.fixedAmount,jdbcType=DECIMAL} t19,
+            #{opm.skuStepPoint,jdbcType=DECIMAL} t20,#{opm.amountPoint,jdbcType=DECIMAL} t21,now() t22,'N' t23,'B' t24,
+            #{opm.intervalRule,jdbcType=VARCHAR} t25,#{opm.bettingTarget,jdbcType=VARCHAR} t26,#{opm.calculationType,jdbcType=VARCHAR} t27,#{opm.bettingCoefficient,jdbcType=VARCHAR} t28
+            FROM dual
+        </foreach>
+        t
+    </insert>
+
+
+
+
+  <select id="queryPointByDistribution4" resultMap="BaseResultMap">
+    SELECT
+    <include refid="cols_all"/>
+    FROM ods_tmfx_pointmaintain
+    WHERE 1=1
+    and delete_tab='N'
+    and audit_state = 'A'
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ecology_shop = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop==null">
+      and (ecology_shop is null or  ecology_shop ='')
+    </if>
+    <if test="year!=null and year!=''">
+      and year = #{year,jdbcType=VARCHAR}
+    </if>
+
+    <if test="brand!=null and brand!=''">
+      and brand = #{brand,jdbcType=VARCHAR}
+    </if>
+    <if test="sku!=null and sku!=''">
+      and sku = #{sku}
+    </if>
+    <if test="sku==null">
+      and (sku is null or  sku ='')
+    </if>
+    <if test="rewardType!=null and rewardType!=''">
+      and reward_type = #{rewardType,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null and type=='q'.toString() and month!=null and month=='Q1'.toString()">
+      and month in ('1','2','3')
+    </if>
+    <if test="type!=null and type=='q'.toString() and month!=null and month=='Q2'.toString()">
+      and month in ('4','5','6')
+    </if>
+    <if test="type!=null and type=='q'.toString() and month!=null and month=='Q3'.toString()">
+      and month in ('7','8','9')
+    </if>
+    <if test="type!=null and type=='q'.toString() and month!=null and month=='Q4'.toString()">
+      and month in ('10','11','12')
+    </if>
+    order by create_time desc
+    limit 1
+  </select>
+
+
+
+
+  <select id="queryPointByDistribution5" resultMap="BaseResultMap">
+    SELECT
+    t.begin_month,
+    t.end_month
+    FROM ods_tmfx_pointmaintain t
+    WHERE 1=1
+    and t.delete_tab='N'
+    and t.audit_state = 'A'
+    and t.type = 'd'
+    <if test="industry!=null and industry!=''">
+      and t.industry = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and t.ecology_shop = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop==null">
+      and (t.ecology_shop is null or  t.ecology_shop ='')
+    </if>
+    <if test="year!=null and year!=''">
+      and t.year = #{year,jdbcType=VARCHAR}
+    </if>
+
+    <if test="brand!=null and brand!=''">
+      and t.brand = #{brand,jdbcType=VARCHAR}
+    </if>
+    <if test="sku!=null and sku!=''">
+      and t.sku = #{sku}
+    </if>
+    <if test="sku==null">
+      and (t.sku is null or  t.sku ='')
+    </if>
+    <if test="rewardType!=null and rewardType!=''">
+      and t.reward_type = #{rewardType,jdbcType=VARCHAR}
+    </if>
+
+     and left(t.begin_month, 7) = concat(#{year},'-',#{month})
+
+    GROUP BY t.ecology_shop,t.`year`,t.begin_month,t.end_month,t.industry,t.brand,t.sku
+    order by t.create_time desc
+
+  </select>
+
+
+  <select id="queryPointByDistribution6" resultMap="BaseResultMap">
+    SELECT
+    <include refid="cols_all"/>
+    FROM ods_tmfx_pointmaintain
+    WHERE 1=1
+    and delete_tab='N'
+    and audit_state = 'A'
+    and type = 'd'
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ecology_shop = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop==null">
+      and (ecology_shop is null or  ecology_shop ='')
+    </if>
+    <if test="type!=null and type!=''">
+      and type = #{type,jdbcType=CHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and year = #{year,jdbcType=VARCHAR}
+    </if>
+
+    <if test="beginMonth!=null and beginMonth!=''">
+      and begin_month = #{beginMonth,jdbcType=VARCHAR}
+    </if>
+
+    <if test="endMonth!=null and endMonth!=''">
+      and  end_month =#{endMonth,jdbcType=VARCHAR}
+    </if>
+
+    <if test="brand!=null and brand!=''">
+      and brand = #{brand,jdbcType=VARCHAR}
+    </if>
+    <if test="sku!=null and sku!=''">
+      and sku = #{sku}
+    </if>
+    <if test="sku==null">
+      and (sku is null or sku ='')
+    </if>
+    <if test="rewardType!=null and rewardType!=''">
+      and reward_type = #{rewardType,jdbcType=VARCHAR}
+    </if>
+    order by create_time asc
+
+  </select>
+
+</mapper>

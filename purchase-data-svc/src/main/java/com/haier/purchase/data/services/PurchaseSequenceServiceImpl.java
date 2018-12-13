@@ -27,6 +27,10 @@ public class PurchaseSequenceServiceImpl implements PurchaseSequenceService {
     }
 
     @Override
+    public Integer selectSequenceId() {
+        return sequenceDao.selectSequenceId();
+    }
+    @Override
     public void insertSequence(Map map) {
         sequenceDao.insertSequence(map);
     }

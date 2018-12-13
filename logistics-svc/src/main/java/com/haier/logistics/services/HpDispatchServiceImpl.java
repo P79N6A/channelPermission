@@ -16,10 +16,23 @@ public class HpDispatchServiceImpl implements HpDispatchService {
     @Override
     public ServiceResult<String> saveNetPoint(String requestXml) {
 
+        return this.saveNetPointFromVom(requestXml);
+    }
+
+    @Override
+    public ServiceResult<String> saveNetPointFromVom(String requestData) {
+
+
         ServiceResult<String> result = new ServiceResult<String>();
         try {
-            String response = hpAllotNetPointModel.saveNetPoint(requestXml);
-            result.setSuccess(true);
+            String response = "";
+            if (requestData.contains("<?xml")){
+                response = hpAllotNetPointModel.saveNetPoint(requestData);
+                result.setSuccess(true);
+            }else {
+                response = hpAllotNetPointModel.saveNetPointFromVom(requestData);
+                result.setSuccess("保存网点数据成功".equals(response));
+            }
             result.setResult(response);
         } catch (Exception e) {
             result.setSuccess(false);

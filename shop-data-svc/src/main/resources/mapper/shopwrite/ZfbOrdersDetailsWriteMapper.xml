@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.ZfbOrdersDetailsWriteDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.ZfbOrdersDetails" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="accounts_no" property="accountsNo" jdbcType="VARCHAR" />
+    <result column="business_no" property="businessNo" jdbcType="VARCHAR" />
+    <result column="orderSn" property="ordersn" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="member_login_id" property="memberLoginId" jdbcType="VARCHAR" />
+    <result column="income_money" property="incomeMoney" jdbcType="DECIMAL" />
+    <result column="expenditure_money" property="expenditureMoney" jdbcType="DECIMAL" />
+    <result column="account_balance" property="accountBalance" jdbcType="DECIMAL" />
+    <result column="payment_code" property="paymentCode" jdbcType="VARCHAR" />
+    <result column="payment_name" property="paymentName" jdbcType="VARCHAR" />
+    <result column="business_type_code" property="businessTypeCode" jdbcType="VARCHAR" />
+    <result column="business_type_name" property="businessTypeName" jdbcType="VARCHAR" />
+    <result column="remake" property="remake" jdbcType="LONGVARCHAR" />
+    <result column="taobao_business_type" property="taobaoBusinessType" jdbcType="VARCHAR" />
+    <result column="matching_status" property="matchingStatus" jdbcType="TINYINT" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, accounts_no, business_no, orderSn, product_name, create_time, member_login_id, 
+    income_money, expenditure_money, account_balance, payment_code, payment_name, business_type_code, 
+    business_type_name, remake, taobao_business_type, matching_status, file_name
+  </sql>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from zfb_orders_details
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.haier.shop.model.ZfbOrdersDetails" >
+    insert into zfb_orders_details (id, accounts_no, business_no, 
+      orderSn, product_name, create_time, 
+      member_login_id, income_money, expenditure_money, 
+      account_balance, payment_code, payment_name, 
+      business_type_code, business_type_name, remake, 
+      taobao_business_type, matching_status, file_name
+      )
+    values (#{id,jdbcType=BIGINT}, #{accountsNo,jdbcType=VARCHAR}, #{businessNo,jdbcType=VARCHAR}, 
+      #{ordersn,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{memberLoginId,jdbcType=VARCHAR}, #{incomeMoney,jdbcType=DECIMAL}, #{expenditureMoney,jdbcType=DECIMAL}, 
+      #{accountBalance,jdbcType=DECIMAL}, #{paymentCode,jdbcType=VARCHAR}, #{paymentName,jdbcType=VARCHAR}, 
+      #{businessTypeCode,jdbcType=VARCHAR}, #{businessTypeName,jdbcType=VARCHAR}, #{remake,jdbcType=LONGVARCHAR}, 
+      #{taobaoBusinessType,jdbcType=VARCHAR}, #{matchingStatus,jdbcType=TINYINT}, #{fileName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.shop.model.ZfbOrdersDetails" >
+    insert into zfb_orders_details
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="accountsNo != null" >
+        accounts_no,
+      </if>
+      <if test="businessNo != null" >
+        business_no,
+      </if>
+      <if test="ordersn != null" >
+        orderSn,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="memberLoginId != null" >
+        member_login_id,
+      </if>
+      <if test="incomeMoney != null" >
+        income_money,
+      </if>
+      <if test="expenditureMoney != null" >
+        expenditure_money,
+      </if>
+      <if test="accountBalance != null" >
+        account_balance,
+      </if>
+      <if test="paymentCode != null" >
+        payment_code,
+      </if>
+      <if test="paymentName != null" >
+        payment_name,
+      </if>
+      <if test="businessTypeCode != null" >
+        business_type_code,
+      </if>
+      <if test="businessTypeName != null" >
+        business_type_name,
+      </if>
+      <if test="remake != null" >
+        remake,
+      </if>
+      <if test="taobaoBusinessType != null" >
+        taobao_business_type,
+      </if>
+      <if test="matchingStatus != null" >
+        matching_status,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="accountsNo != null" >
+        #{accountsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessNo != null" >
+        #{businessNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersn != null" >
+        #{ordersn,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memberLoginId != null" >
+        #{memberLoginId,jdbcType=VARCHAR},
+      </if>
+      <if test="incomeMoney != null" >
+        #{incomeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="expenditureMoney != null" >
+        #{expenditureMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="accountBalance != null" >
+        #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentCode != null" >
+        #{paymentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentName != null" >
+        #{paymentName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessTypeCode != null" >
+        #{businessTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="businessTypeName != null" >
+        #{businessTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="remake != null" >
+        #{remake,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="taobaoBusinessType != null" >
+        #{taobaoBusinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="matchingStatus != null" >
+        #{matchingStatus,jdbcType=TINYINT},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.shop.model.ZfbOrdersDetails" >
+    update zfb_orders_details
+    <set >
+      <if test="accountsNo != null" >
+        accounts_no = #{accountsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessNo != null" >
+        business_no = #{businessNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersn != null" >
+        orderSn = #{ordersn,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memberLoginId != null" >
+        member_login_id = #{memberLoginId,jdbcType=VARCHAR},
+      </if>
+      <if test="incomeMoney != null" >
+        income_money = #{incomeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="expenditureMoney != null" >
+        expenditure_money = #{expenditureMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="accountBalance != null" >
+        account_balance = #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentCode != null" >
+        payment_code = #{paymentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentName != null" >
+        payment_name = #{paymentName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessTypeCode != null" >
+        business_type_code = #{businessTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="businessTypeName != null" >
+        business_type_name = #{businessTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="remake != null" >
+        remake = #{remake,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="taobaoBusinessType != null" >
+        taobao_business_type = #{taobaoBusinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="matchingStatus != null" >
+        matching_status = #{matchingStatus,jdbcType=TINYINT},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.shop.model.ZfbOrdersDetails" >
+    update zfb_orders_details
+    set accounts_no = #{accountsNo,jdbcType=VARCHAR},
+      business_no = #{businessNo,jdbcType=VARCHAR},
+      orderSn = #{ordersn,jdbcType=VARCHAR},
+      product_name = #{productName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      member_login_id = #{memberLoginId,jdbcType=VARCHAR},
+      income_money = #{incomeMoney,jdbcType=DECIMAL},
+      expenditure_money = #{expenditureMoney,jdbcType=DECIMAL},
+      account_balance = #{accountBalance,jdbcType=DECIMAL},
+      payment_code = #{paymentCode,jdbcType=VARCHAR},
+      payment_name = #{paymentName,jdbcType=VARCHAR},
+      business_type_code = #{businessTypeCode,jdbcType=VARCHAR},
+      business_type_name = #{businessTypeName,jdbcType=VARCHAR},
+      remake = #{remake,jdbcType=LONGVARCHAR},
+      taobao_business_type = #{taobaoBusinessType,jdbcType=VARCHAR},
+      matching_status = #{matchingStatus,jdbcType=TINYINT},
+      file_name = #{fileName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

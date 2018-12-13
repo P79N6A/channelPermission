@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,29 +18,23 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.haier.stock.service.StockAgeService;
+import com.haier.purchase.data.model.*;
+import com.haier.stock.model.InvStockChannel;
+import com.haier.stock.model.InvTransferLine;
+import com.haier.svc.service.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
-import com.haier.purchase.data.model.DataDictionary;
-import com.haier.purchase.data.model.GateItem;
-import com.haier.purchase.data.model.GateOfLimitItem;
-import com.haier.purchase.data.model.GateOfStockExceedCatchItem;
-import com.haier.purchase.data.model.GateOfStockExceedItem;
-import com.haier.purchase.data.model.PrivilegeItem;
 import com.haier.shop.model.ItemAttribute;
 import com.haier.shop.model.ItemBase;
 import com.haier.stock.model.StockAgeWapped;
+import com.haier.stock.service.StockAgeService;
 import com.haier.svc.api.controller.util.CommUtil;
 import com.haier.svc.api.controller.util.HttpJsonResult;
-import com.haier.svc.api.controller.util.WebUtil;
 import com.haier.svc.api.controller.util.date.DateCal;
-import com.haier.svc.service.DataDictionaryService;
-import com.haier.svc.service.GateService;
-import com.haier.svc.service.PurchaseCommonService;
-import com.haier.svc.service.T2OrderService;
 
 /**
  * 
@@ -69,7 +64,10 @@ public class CommPurchase {
 	T2OrderService t2OrderService;
 	@Autowired
 	StockAgeService stockAgeService;
-	
+	@Autowired
+	private PurchaseCommonService purchaseComService;
+	@Autowired
+	private CrmGenuineRejectService crmGenuineRejectService;
 
 	/**
 	 * 取得渠道map
@@ -161,7 +159,7 @@ public class CommPurchase {
 	 *            需要检索的数据分类
 	 * @return HttpJsonResult类的result对象，其中的data属性为所需的list
 	 */
-	public List<DataDictionary> getByValueSetId(
+	public static List<DataDictionary> getByValueSetId(
 			DataDictionaryService dataDictionaryService, String valueSetId) {
 
 		// 设置参数
@@ -209,7 +207,7 @@ public class CommPurchase {
 	 *            需要检索的数据分类
 	 * @return
 	 */
-	public Map<String, String> getValueMeaningMap(
+	public static Map<String, String> getValueMeaningMap(
 			DataDictionaryService dataDictionaryService, String valueSetId) {
 		// 在service中获取数据字典中的list
 		List<DataDictionary> list = getByValueSetId(dataDictionaryService,
@@ -230,10 +228,8 @@ public class CommPurchase {
 	/**
 	 * 订单号取得
 	 * 
-	 * @param dataDictionaryService
-	 *            需要调用的Dubbo Service
-	 * @param valueSetId
-	 *            需要检索的数据分类
+	 * @param
+	 * @param
 	 * @return
 	 */
 	public String getWPOrderId(
@@ -275,6 +271,181 @@ public class CommPurchase {
 	}
 
 	/**
+	 * 订单号取得
+	 *
+	 * @param
+	 * @param
+	 * @return
+	 */
+	public String getT2OrderId(
+			PurchaseCommonService purchaseCommonService, String businesskbn) {
+		String wpOrderId = "";
+		// 正向流程,WP开头. 退货流程，WD开头
+		if (businesskbn.startsWith("C")) {
+			// WP + businesskbn(C01:CRM自动采购，C02:CRM手工采购......)
+			wpOrderId = "WP" + businesskbn.substring(1);
+		} else if (businesskbn.startsWith("T")) {
+			// WD + businesskbn(T01:CRM正品退货......)
+			wpOrderId = "WD" + businesskbn.substring(2);
+		}
+		// 年月加入
+		Calendar cal = Calendar.getInstance();
+		// 当前年
+		String currentYear = String.valueOf(cal.get(Calendar.YEAR));
+		// 当前月
+		String currentMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);
+		if (currentMonth.length() == 1) {
+			currentMonth = "0" + currentMonth;
+		}
+		//当前日
+		String currentDate = String.valueOf(cal.get(Calendar.DATE));
+		if (currentDate.length() == 1) {
+			currentDate = "0" + currentDate;
+		}
+
+		wpOrderId = wpOrderId + currentYear.substring(2) + currentMonth + currentDate;
+
+		// 订单流水号取得
+		ServiceResult<Integer> nextVal = purchaseCommonService.getNextVal();
+		if (nextVal.getSuccess() == true) {
+			String newVal = String.valueOf(nextVal.getResult());
+			while (newVal.length() < 5) {
+				newVal = "0" + newVal;
+			}
+
+			// 订单流水号加入
+			wpOrderId = wpOrderId + newVal;
+		}
+
+		return wpOrderId;
+	}
+
+
+	/**
+	 * 订单号取得
+	 *
+	 * @return
+	 */
+	public String getManualWPOrderId(
+			PurchaseCommonService purchaseCommonService, String businesskbn) {
+		String wpOrderId = "";
+		// 正向流程,WP开头. 退货流程，WD开头
+		if (businesskbn.startsWith("C")) {
+			// WP + businesskbn(C01:CRM自动采购，C02:CRM手工采购......)
+			wpOrderId = "WP" + businesskbn.substring(1);
+		} else if (businesskbn.startsWith("T")) {
+			// WD + businesskbn(T01:CRM正品退货......)
+			wpOrderId = "WD" + businesskbn.substring(2);
+		}
+		// 年月加入
+		Calendar cal = Calendar.getInstance();
+		// 当前年
+		String currentYear = String.valueOf(cal.get(Calendar.YEAR));
+		// 当前月
+		String currentMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);
+		if (currentMonth.length() == 1) {
+			currentMonth = "0" + currentMonth;
+		}
+		//当前日
+		String currentDate = String.valueOf(cal.get(Calendar.DATE));
+		if (currentDate.length() == 1) {
+			currentDate = "0" + currentDate;
+		}
+
+		wpOrderId = wpOrderId + currentYear.substring(2) + currentMonth + currentDate;
+
+		// 订单流水号取得
+		String wpOrderIdstr=this.getManualWdOrderIdStringSequence(wpOrderId);
+		wpOrderId=wpOrderId+wpOrderIdstr;
+		return wpOrderId;
+	}
+
+	private String getManualWdOrderIdStringSequence(String wpOrderId){
+		Integer intSeq = this.getManualWdOrderIdIntSequence(wpOrderId);
+		String req = String.valueOf(intSeq);
+		StringBuilder sb = new StringBuilder();
+		if (req.length() < 5) {
+			for (int i = 5 - req.length(); i > 0; i--) {
+				sb.append("0");
+			}
+			sb.append(req);
+			req = sb.toString();
+		}
+		return req;
+	}
+
+	private Integer getManualWdOrderIdIntSequence(String wpOrderId) {
+		List<CrmOrderManualItem> lines = purchaseComService.getManualWdOrderId(wpOrderId);
+		Integer ret = 1;
+		if (lines != null && lines.size() > 0) {
+			CrmOrderManualItem line = lines.get(0);
+			ret = Integer.parseInt(line.getWp_order_id().substring(10)) + 1;
+		}
+		return ret;
+	}
+	/**
+	 * 订单号取得
+	 *
+	 * @return
+	 */
+	public String getRejectWPOrderId(
+			PurchaseCommonService purchaseCommonService, String businesskbn) {
+		String wpOrderId = "";
+		// 正向流程,WP开头. 退货流程，WD开头
+		if (businesskbn.startsWith("C")) {
+			// WP + businesskbn(C01:CRM自动采购，C02:CRM手工采购......)
+			wpOrderId = "WP" + businesskbn.substring(1);
+		} else if (businesskbn.startsWith("T")) {
+			// WD + businesskbn(T01:CRM正品退货......)
+			wpOrderId = "WD" + businesskbn.substring(2);
+		}
+		// 年月加入
+		Calendar cal = Calendar.getInstance();
+		// 当前年
+		String currentYear = String.valueOf(cal.get(Calendar.YEAR));
+		// 当前月
+		String currentMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);
+		if (currentMonth.length() == 1) {
+			currentMonth = "0" + currentMonth;
+		}
+		//当前日
+		String currentDate = String.valueOf(cal.get(Calendar.DATE));
+		if (currentDate.length() == 1) {
+			currentDate = "0" + currentDate;
+		}
+
+		wpOrderId = wpOrderId + currentYear.substring(2) + currentMonth + currentDate;
+
+		// 订单流水号取得
+		String wpOrderIdstr=this.getRejectWdOrderIdStringSequence(wpOrderId);
+		wpOrderId=wpOrderId+wpOrderIdstr;
+		return wpOrderId;
+	}
+
+	private String getRejectWdOrderIdStringSequence(String wpOrderId){
+		Integer intSeq = this.getRejectWdOrderIdIntSequence(wpOrderId);
+		String req = String.valueOf(intSeq);
+		StringBuilder sb = new StringBuilder();
+		if (req.length() < 5) {
+			for (int i = 5 - req.length(); i > 0; i--) {
+				sb.append("0");
+			}
+			sb.append(req);
+			req = sb.toString();
+		}
+		return req;
+	}
+
+	private Integer getRejectWdOrderIdIntSequence(String wpOrderId) {
+		List<CrmGenuineRejectItem> lines = crmGenuineRejectService.getRejectWdOrderId(wpOrderId);
+		Integer ret = 1;
+		if (lines != null && lines.size() > 0) {
+			CrmGenuineRejectItem line = lines.get(0);
+			ret = Integer.parseInt(line.getWp_order_id().substring(9)) + 1;
+		}
+		return ret;
+	}
+	/**
 	 * 时间闸口过闸
 	 * 
 	 * @param gateService
@@ -282,7 +453,7 @@ public class CommPurchase {
 	 * @param settingId
 	 *            传入开闸闸口的setting_id
 	 */
-	public boolean isInTimeGate(GateService gateService, String settingId) {
+	public static boolean isInTimeGate(GateService gateService, String settingId) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		// 当前日期
 		Date currentDate = new Date();
@@ -411,6 +582,17 @@ public class CommPurchase {
 		return productgroupmap;
 	}
 
+	public Map<String, String> getzChannelMap(Map<String, String> invstockchannelmap) {
+		List<InvStockChannel> InvStockChannel = t2OrderService
+				.getzChannelMap();
+		if (InvStockChannel != null) {
+			for (InvStockChannel item : InvStockChannel) {
+				invstockchannelmap.put(item.getChannelCode(), item.getName());// 将value作为key，valueMeaning作为value存入map中
+			}
+		}
+		return invstockchannelmap;
+	}
+
 	/**
 	 * 取得品牌map
 	 * 
@@ -438,7 +620,7 @@ public class CommPurchase {
 	 * @param channel
 	 *            渠道
 	 */
-	public ServiceResult<PrivilegeItem> getAuthMap(PurchaseCommonService purchaseCommonService,
+	public static ServiceResult<PrivilegeItem> getAuthMap(PurchaseCommonService purchaseCommonService,
 			HttpServletRequest request, String product_group, String channel,
 			String cbs_catgory, Map<String, Object> authMap) {
 
@@ -473,8 +655,12 @@ public class CommPurchase {
 		// 品类数组设定
 		if (cbs_catgory == null || cbs_catgory == "" || cbs_catgory == "ALL"
 				|| "全部".equals(cbs_catgory)) {
-			cbsCatgoryList = privilegeData.getResult().getCbs_catgory()
-					.split(",");
+			if (null == privilegeData.getResult() || null == privilegeData.getResult().getCbs_catgory()) {
+				cbsCatgoryList = new String[]{};
+			} else {
+				cbsCatgoryList = privilegeData.getResult().getCbs_catgory()
+						.split(",");
+			}
 		} else {
 			cbsCatgoryList = new String[] { cbs_catgory };
 		}
@@ -485,6 +671,80 @@ public class CommPurchase {
 		authMap.put("productGroup", productGroupList);
 		// 品类数组
 		authMap.put("cbsCatgory", cbsCatgoryList);
+		// 闸口秒杀
+		authMap.put("gateLimit", privilegeData.getResult().getGate_limit());
+		
+		return privilegeData;
+	}
+	
+	
+	public ServiceResult<PrivilegeItem> getAuthMap(HttpServletRequest request, String product_group, String channel,
+			String cbs_catgory, Map<String, Object> authMap) {
+		
+		String[] channelList = null;
+		String[] productGroupList = null;
+		String[] cbsCatgoryList = null;
+		
+		HttpSession session = request.getSession();
+		String userId = String.valueOf(session.getAttribute("userId"));
+		
+		// 权限定义产品组取得
+//		ServiceResult<PrivilegeItem> privilegeData = purchaseCommonService
+//				.getPrivilege(String.valueOf(WebUtil.currentUserId(request)));
+		ServiceResult<PrivilegeItem> privilegeData = purchaseComService
+				.getPrivilege(userId);
+		if(privilegeData.getResult() == null){
+			privilegeData.setResult(new PrivilegeItem(){
+				{
+					setCbs_catgory("");
+					setEd_channel_id("");
+					setGate_limit("");
+					setProduct_group_id("");
+				}
+			});
+		}
+		// 渠道数组设定
+		if (StringUtils.isBlank(channel) || "ALL".equalsIgnoreCase(channel)) {
+			channelList = privilegeData.getResult().getEd_channel_id()
+			.split(",");
+		} else {
+			if(Arrays.asList(privilegeData.getResult().getEd_channel_id().split(",")).contains(channel)){
+				channelList = new String[] { channel };
+			}else{
+				channelList = new String[]{"*"};
+			}
+		}
+		// 产品组数组设定
+		if (StringUtils.isBlank(product_group) || "ALL".equalsIgnoreCase(product_group)) {
+			productGroupList = privilegeData.getResult().getProduct_group_id().split(",");
+		} else {
+			if(Arrays.asList(privilegeData.getResult().getProduct_group_id().split(",")).contains(product_group)){
+				productGroupList = new String[] { product_group };
+			}else{
+				productGroupList = new String[]{"*"};
+			}
+		}
+		// 品类数组设定
+		if (StringUtils.isBlank(cbs_catgory) || "ALL".equalsIgnoreCase(cbs_catgory) || "全部".equalsIgnoreCase(cbs_catgory)) {
+			if (null == privilegeData.getResult() || StringUtils.isBlank(privilegeData.getResult().getCbs_catgory())) {
+				cbsCatgoryList = new String[]{"*"};
+			} else {
+				cbsCatgoryList = privilegeData.getResult().getCbs_catgory().split(",");
+			}
+		} else {
+			if(Arrays.asList(privilegeData.getResult().getCbs_catgory().split(",")).contains(cbs_catgory)){
+				cbsCatgoryList = new String[] { cbs_catgory };
+			}else{
+				cbsCatgoryList = new String[]{"*"};
+			}
+		}
+		
+		// 渠道数组
+		authMap.put("channel", channelList);
+		// 产品组数组
+		authMap.put("productGroup", productGroupList);
+		// 品类数组
+		authMap.put("cbsCategory", cbsCatgoryList);
 		// 闸口秒杀
 		authMap.put("gateLimit", privilegeData.getResult().getGate_limit());
 		

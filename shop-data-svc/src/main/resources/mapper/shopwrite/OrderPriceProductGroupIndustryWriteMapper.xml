@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.OrderPriceProductGroupIndustryWriteDao">
+
+	<resultMap id="orderPriceProductGroupIndustryResult" type="com.haier.shop.model.OrderPriceProductGroupIndustry">
+		<result property="id" column="id" />
+		<result property="industryCode" column="industry_code" />
+		<result property="industryName" column="industry_name" />
+		<result property="productGroup" column="product_group" />
+		<result property="productGroupName" column="product_group_name" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<insert id="createOrderPriceProductGroupIndustry" parameterType="com.haier.shop.model.OrderPriceProductGroupIndustry">
+		insert into `order_price_product_group_industry`
+		(`industry_code`,`industry_name`,`product_group`,`product_group_name`,`create_time`,`update_time`)
+		select
+		#{industryCode},#{industryName},#{productGroup},#{productGroupName},now(),now()
+		from
+		dual
+		where not exists (select 1 from order_price_product_group_industry where industry_code = #{industryCode} and product_group = #{productGroup} )
+	</insert>
+
+	<update id="updateOrderPriceProductGroupIndustry" parameterType="com.haier.shop.model.OrderPriceProductGroupIndustry">
+		update `order_price_product_group_industry`
+		set product_group=#{productGroup},product_group_name=#{productGroupName},industry_code=#{industryCode},industry_name=#{industryName},update_time=now()
+		where `id` = #{id}
+	</update>
+
+	<delete id="deleteOrderPriceProductGroupIndustryById" parameterType="Integer" statementType="PREPARED">
+		delete
+		from
+		`order_price_product_group_industry`
+		where
+		`id`= #{id}
+	</delete>
+
+</mapper>

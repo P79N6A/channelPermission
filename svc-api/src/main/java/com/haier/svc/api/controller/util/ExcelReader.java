@@ -54,6 +54,28 @@ public class ExcelReader {
         // 返回值集合
         return list;
     }
+
+    /**
+     * 判断导入文档表头是否正确
+     *
+     * @param firstLineData 导入表头
+     * @param checkStr 表头
+     * @return
+     */
+    public static boolean checkDataTemplate(String[] firstLineData, String checkStr) {
+        boolean flag = false;
+        StringBuffer sb = new StringBuffer();
+        for (String str : firstLineData) {
+            if (sb.length() > 0)
+                sb.append(",");
+            sb.append(str.trim());
+        }
+        String nullStr = sb.toString().replace(checkStr, "").replace(",", "");
+        if (nullStr == null || "".equals(nullStr)) {
+            flag = true;
+        }
+        return flag;
+    }
     //
     //    public static void main(String[] args) {
     //        String excelFileName = "abc.xls";

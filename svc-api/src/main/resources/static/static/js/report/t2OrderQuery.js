@@ -1,3 +1,409 @@
+var datagrid;
+var queryParameters;
+var LEVEL1_QJ={};
+$(function () {
+    datagrid = {
+        fit: true,
+        fitColumns: false,
+        toolbar: '#datagridToolbar',
+        striped: true,
+        singleSelect: false,
+        pagination: true,
+        pagePosition: 'bottom',
+        columns: [[
+            {
+                field: 'check',
+                title: '全选',
+                width: 20,
+                align: 'center',
+                checkbox: true
+            },
+            {
+                field: 'order_category_name',
+                title: '订单类别',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'flow_flag_name',
+                title: '状态',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'order_id',
+                title: 'WP单号',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'channel_commit_time_display',
+                title: '渠道提交时间',
+                width: 220,
+                align: 'center'
+            },
+            {
+                field: 'channel_commit_user',
+                title: '渠道提交人',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'audit_time_display',
+                title: '审核时间',
+                width: 220,
+                align: 'center'
+            },
+            {
+                field: 'audit_user',
+                title: '审核人',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'order_close_time_display',
+                title: '手工关单时间',
+                width: 220,
+                align: 'center'
+            },
+            {
+                field: 'order_close_user',
+                title: '手工关单人',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'oms_order_id',
+                title: 'OMS订单号',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'custom_desc',
+                title: '客户名称',
+                width: 260,
+                align: 'center'
+            },
+            {
+                field: 'ggg',
+                title: '售达方',
+                width: 230,
+                align: 'center',
+                formatter: function (value, rowData, rowIndex) {
+                    return '重庆新日日顺家电销售有限公司';
+                }
+
+            },
+            {
+                field: 'transmit_desc',
+                title: '送达方',
+                width: 230,
+                align: 'center'
+            },
+            {
+                field: 'report_year_week',
+                title: '提报年',
+                width: 90,
+                align: 'center'
+            },
+            {
+                field: 'report_year_week_display',
+                title: '提报周',
+                width: 90,
+                align: 'center'
+            },
+            {
+                field: 'arrive_year_week',
+                title: '到货年',
+                width: 90,
+                align: 'center',
+                formatter: function (value, rowData, rowIndex) {
+                    return value.substr(0, 5);
+                }
+            },
+            {
+                field: 'arrive_year_week_display',
+                title: '到货周',
+                width: 90,
+                align: 'center',
+                formatter: function (value, rowData, rowIndex) {
+                    return value.substr(5);
+                }
+            },
+
+            {
+                field: 'industry_trade_desc',
+                title: '工贸',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'ed_channel_name',
+                title: '渠道',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'category_id',
+                title: '品类',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'product_group_name',
+                title: '产品组',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'brand_id',
+                title: '品牌',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'materials_id',
+                title: '物料编码',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'materials_desc',
+                title: '型号',
+                width: 220,
+                align: 'center'
+            },
+            {
+                field: 'order_type_name',
+                title: '订单类型',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 't2_delivery_prediction',
+                title: '数量',
+                width: 50,
+                align: 'center'
+            },
+            {
+                field: 'price',
+                title: '样表单价',
+                width: 60,
+                align: 'center'
+            },
+            {
+                field: 'amount',
+                title: '样表金额',
+                width: 60,
+                align: 'center'
+            },
+            {
+                field: 'storage_id',
+                title: 'WA库位码',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'storage_name',
+                title: 'WA库位名称',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'arrival_storage_desc',
+                title: '日日顺库位名称',
+                width: 200,
+                align: 'center'
+            },
+            {
+                field: 'series_id',
+                title: '系列',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'status',
+                title: 'OMS状态',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'latest_arrive_date_display',
+                title: '最晚到货日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'plan_deliver_date_display',
+                title: '计划发货日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'promise_arrive_date_display',
+                title: '承诺到货日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'actual_deliver_date_display',
+                title: '实际发货日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'predict_arrive_date_display',
+                title: '预计到货日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'industry_trade_take_date_display',
+                title: '工贸收货日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'custom_sign_date_display',
+                title: '工贸签收日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'return_order_date_display',
+                title: '工贸返单日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'latest_leave_base_date_display',
+                title: '最晚离基地日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'factory_id',
+                title: '发运工厂编码',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'factory_name',
+                title: '发运工厂名称',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'shipment_combination_id',
+                title: '一次发运单号',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'sign_num',
+                title: '工贸签收数量',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'no_pass_reason',
+                title: 'OMS拒单原因',
+                width: 200,
+                align: 'left'
+            },
+            {
+                field: 'gvs_order_id',
+                title: 'GVS订单号',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'dn_id',
+                title: '日日顺DN号',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'custpodetailcode',
+                title: '客户订单号',
+                width: 110,
+                align: 'center'
+            },
+            {
+                field: 'commit_time_display',
+                title: '提交日期',
+                width: 150,
+                align: 'center'
+            },
+            {
+                field: 'customization_name',
+                title: '定制',
+                width: 50,
+                align: 'center'
+            },
+            {
+                field: 'satisfy_type_name',
+                title: '满足方式',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'WAqty',
+                title: '已入WA库数量',
+                width: 100,
+                align: 'center'
+            },
+            {
+                field: 'error_msg',
+                title: '备注',
+                width: 250,
+                align: 'center'
+            },
+            {
+                field: 'pass_reason',
+                title: '冻结推送意见',
+                width: 200,
+                align: 'center'
+            },
+            {
+                field: 'sapStatus',
+                title: '推送sap状态',
+                width: 100,
+                align: 'center',
+                formatter : function(value) {
+                    if(value == 1){
+                        return "成功";
+                    }
+                    if(value == 0){
+                        return "未推送";
+                    }
+                    if(value == 2){
+                        return "推送失败";
+                    }
+                }
+            },
+            {
+                field: 'sapMessage',
+                title: '推送sap信息',
+                width: 200,
+                align: 'center'
+            },
+            {
+                field: 'sapProcessTime',
+                title: '推送sap时间',
+                width: 220,
+                align: 'center'
+            }
+            ]],
+        pageSize: 100,
+        pageList: [100,200,300],
+        rownumbers: true
+    }
+
+    $('#datagrid').datagrid(datagrid);
+
+});
+
 var dateweek_start;
 var dateweek_end;
 
@@ -27,9 +433,221 @@ function compareDate(startdate, enddate, replaceblag, message) {
     }
     return true;
 }
+function myformatter_arrival_end(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    date = y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+    date_end = date;
+    jQuery.getJSON("findateWeek?date=" + date, function (result) {
+        dateweek_end = result.data;
+        $('#arrival_year_week_end_txt').val(dateweek_end);
+    });
+    return date;
+}
+
+
+function myformatter_start(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    date = y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+    jQuery.getJSON("findateWeek?date=" + date + "&type=0", function (result) {
+        report_dateweek_start = result.data;
+        $('#datestart_txt').val(report_dateweek_start);
+    });
+    return date;
+}
+
+function myformatter_end(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    date = y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+    jQuery.getJSON("findateWeek?date=" + date + "&type=0", function (result) {
+        report_dateweek_end = result.data;
+        $('#dateend_txt').val(report_dateweek_end);
+    });
+    return date;
+}
+
+//PO查询
+$("#posearch").click(function () {
+    if (!datagrid) {
+        $.messager.alert('提示', '请查询！', 'info');
+        return;
+    }
+
+    //获得选中行
+    var checkedItems = $('#datagrid').datagrid('getChecked');
+    var poDetailData = new Array();
+    //判断是否存在选择行
+    $.each(checkedItems, function (index, item) {
+        //flow_flag=30 - 80item.flow_flag==30||item.flow_flag==40||item.flow_flag==50||
+        //item.flow_flag==60||item.flow_flag==70||item.flow_flag==80
+        //if(){
+        poDetailData.push(item.order_id);
+        //}
+    });
+    if (poDetailData == null || poDetailData.length == 0) {
+        $.messager.alert('错误', '请至少选择一行！', 'error');
+        return;
+    }
+    var url = '/T2OrderQuery/purchaseOrderQueryList' + '?poDetailData=' + JSON.stringify(poDetailData);
+    var win = window.open(url, '_blank');
+    return false;
+
+});
+//手工关单
+$("#manualCloseOrder").click(function () {
+    if (!datagrid) {
+        $.messager.alert('提示', '请查询！', 'info');
+        return;
+    }
+    //获得选中行
+    var checkedItems = $('#datagrid').datagrid('getChecked');
+    var manualCloseData = new Array();
+    //判断是否存在已入WA库（WA入库数量小于采购数量）的行
+    $.each(checkedItems, function (index, item) {
+        //flow_flag=70 已开入WA库提单(并且WA入库数量小于采购数量)
+        //if(item.flow_flag==70&&item.WAqty<item.t2_delivery_prediction){
+        //flow_flag=60 已入日日顺库
+        if (item.flow_flag == 60) {
+            manualCloseData.push(item.order_id);
+        }
+    });
+    //判断是否存在已开入WA提单的行
+    if (manualCloseData == null || manualCloseData.length == 0) {
+        $.messager.alert('错误', '请至少选择一行已入日日顺库的行！', 'error');
+        return;
+    }
+    $.messager.confirm('确认', '确定要手动关单吗？（只关闭已入日日顺库）的行）', function (r) {
+        if (r) {
+            jQuery.ajax({
+                url: "manualCloseOrderList",   // 提交的页面
+                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                data: {"manualCloseData": JSON.stringify(manualCloseData)},
+                success: function (data) {
+                    $.messager.alert('提示', '手动关单完成', 'info');
+                    $('#datagrid').datagrid('reload',
+                        {
+                            arrival_start_week: $("#arrival_year_week_start_save").val(),
+                            arrival_end_week: $("#arrival_year_week_end_save").val(),
+                            report_start_week: $("#datestart_save").val(),
+                            report_end_week: $("#dateend_save").val(),
+                            ed_channel_id: $("#ed_channel_id_save").val(),
+                            product_group_id: $("#product_group_id_save").val(),
+                            order_id: $("#wp_order_id_save").val(),
+                            oms_order_id: $("#oms_order_id_save").val(),
+                            brand_id: $("#brand_save").val(),
+                            materials_id: $("#materials_id_save").val(),
+                            materials_desc: $("materials_description_save").val(),
+                            storage_id: $("#storage_id_save").val(),
+                            flow_flag: $("#flow_flag_save").val(),
+                            shipment_combination_id: $("#shipment_combination_id_save").val(),
+                            gvs_order_id: $("#gvs_order_id_save").val(),
+                            custom_order_id: $("#custom_order_id_save").val(),
+                            customization: $("#customization_save").val(),
+                            order_type: $("#order_type_save").val(),
+                            category_id: $("#cbs_catgory_save").val(),
+                            order_category: $("#order_category_save").val()
+                        });
+                    $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+                }
+            });
+        }
+    });
+});
+
+//撤消手工关单
+$("#cancelCloseOrder").click(function () {
+    if (!datagrid) {
+        $.messager.alert('提示', '请查询！', 'info');
+        return;
+    }
+    //获得选中行
+    var checkedItems = $('#datagrid').datagrid('getChecked');
+    var cancelCloseData = new Array();
+    //判断是否已经关闭状态
+    $.each(checkedItems, function (index, item) {
+        //flow_flag=-70 完成关闭
+        if (item.flow_flag == '-70') {
+            cancelCloseData.push(item.order_id);
+        }
+    });
+    //判断是否存在已开入WA提单或者已入日日顺库的行
+    if (cancelCloseData == null || cancelCloseData.length == 0) {
+        $.messager.alert('错误', '请至少选择一行已完成关闭的行！', 'error');
+        return;
+    }
+    $.messager.confirm('确认', '确定要撤消手动关单吗？（只撤消已完成关闭的行）', function (r) {
+        if (r) {
+            jQuery.ajax({
+                url: "cancelCloseOrderList",   // 提交的页面
+                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                data: {"cancelCloseData": JSON.stringify(cancelCloseData)},
+                success: function (data) {
+                    $.messager.alert('提示', '撤消手动关单完成', 'info');
+                    $('#datagrid').datagrid('reload',
+                        {
+                            arrival_start_week: $("#arrival_year_week_start_save").val(),
+                            arrival_end_week: $("#arrival_year_week_end_save").val(),
+                            report_start_week: $("#datestart_save").val(),
+                            report_end_week: $("#dateend_save").val(),
+                            ed_channel_id: $("#ed_channel_id_save").val(),
+                            product_group_id: $("#product_group_id_save").val(),
+                            order_id: $("#wp_order_id_save").val(),
+                            oms_order_id: $("#oms_order_id_save").val(),
+                            brand_id: $("#brand_save").val(),
+                            materials_id: $("#materials_id_save").val(),
+                            materials_desc: $("materials_description_save").val(),
+                            storage_id: $("#storage_id_save").val(),
+                            flow_flag: $("#flow_flag_save").val(),
+                            shipment_combination_id: $("#shipment_combination_id_save").val(),
+                            gvs_order_id: $("#gvs_order_id_save").val(),
+                            custom_order_id: $("#custom_order_id_save").val(),
+                            customization: $("#customization_save").val(),
+                            order_type: $("#order_type_save").val(),
+                            category_id: $("#cbs_catgory_save").val(),
+                            order_category: $("#order_category_save").val()
+                        });
+                    $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+                }
+            });
+        }
+    });
+});
+
+
+function myformatter_arrival_start(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    date = y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+    date_start = date;
+    jQuery.getJSON("findateWeek?date="+ date, function (result) {
+        dateweek_start = result.data;
+        $('#arrival_year_week_start_txt').val(dateweek_start);
+    });
+    return date;
+}
+
+function myparser(s) {
+    if (!s) return new Date();
+    var ss = (s.split('-'));
+    var y = parseInt(ss[0], 10);
+    var m = parseInt(ss[1], 10);
+    var d = parseInt(ss[2], 10);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+        return new Date(y, m - 1, d);
+    } else {
+        return new Date();
+    }
+}
+
 
 //点击查询
-$("#search").on('click', function createTbody(){
+$('#search').click(function () {
     if (!compareDate($('#arrival_year_week_start_txt').val(), $('#arrival_year_week_end_txt').val(), 1, "到货开始周大于结束周，请重新选择!")) {
         return false;
     }
@@ -72,12 +690,12 @@ $("#search").on('click', function createTbody(){
     if (cbs_catgory == "ALL") {
         cbs_catgory = "";
     }
-	//订单类别保存
-	var order_category = $("#order_category").combobox("getValues").join(",");
-	//如果包含ALL，设置为空
-	if(order_category.indexOf("ALL")>=0){
-		 order_category="";
-	}
+    //订单类别保存
+    var order_category = $("#order_category").combobox("getValues").join(",");
+    //如果包含ALL，设置为空
+    if(order_category.indexOf("ALL")>=0){
+        order_category="";
+    }
     //到货开始周保存
     $("#arrival_year_week_start_save").val(date_start);
     //到货结束周保存
@@ -116,674 +734,444 @@ $("#search").on('click', function createTbody(){
     $("#order_type_save").val(order_type);
     //品类保存
     $("#cbs_catgory_save").val(cbs_catgory);
-	//订单类别
-	$("#order_category_save").val(order_category);
-    //grid加载
-    if (datagrid) {
-        $('#dataGrid').datagrid('load',
+    //订单类别
+    $("#order_category_save").val(order_category);
+    //生成grid
+    datagrid = $('#datagrid').datagrid({
+        url: "findMultipleOrder",
+        type:"post",
+        fit: true,
+        pagination: true,
+        singleSelect: true,
+        pageSize: 100,
+        pageList: [50, 100, 200],
+        nowrap: false,
+        rownumbers: true,
+        singleSelect: false,
+        selectOnCheck: true,
+        checkOnSelect: true,
+        collapsible: true,
+        striped: true,
+        loadFilter: function(data){
+            window.total = data.total;
+            return data;
+        },
+        queryParams: {
+            arrival_start_week: $("#arrival_year_week_start_save").val(),
+            arrival_end_week: $("#arrival_year_week_end_save").val(),
+            report_start_week: $("#datestart_save").val(),
+            report_end_week: $("#dateend_save").val(),
+            ed_channel_id: channel,
+            product_group_id: product_group,
+            order_id: $("#wp_order_id").val(),
+            oms_order_id: $("#oms_order_id").val(),
+            brand_id: brand,
+            materials_id: $("#materials_id").val(),
+            materials_desc: $("#materials_description").val(),
+            storage_id: $("#storage_id").val(),
+            flow_flag: flow_flag,
+            shipment_combination_id: $("#shipment_combination_id").val(),
+            gvs_order_id: $("#gvs_order_id").val(),
+            custom_order_id: $("#custom_order_id").val(),
+            customization: customization,
+            order_type: order_type,
+            category_id: cbs_catgory,
+            order_category: order_category
+        },
+        columns: [
+            [
+
                 {
-                    arrival_start_week: $("#arrival_year_week_start_save").val(),
-                    arrival_end_week: $("#arrival_year_week_end_save").val(),
-                    report_start_week: $("#datestart_save").val(),
-                    report_end_week: $("#dateend_save").val(),
-                    ed_channel_id: channel,
-                    product_group_id: product_group,
-                    order_id: $("#wp_order_id").val(),
-                    oms_order_id: $("#oms_order_id").val(),
-                    brand_id: brand,
-                    materials_id: $("#materials_id").val(),
-                    materials_desc: $("#materials_description").val(),
-                    storage_id: $("#storage_id").val(),
-                    flow_flag: flow_flag,
-                    shipment_combination_id: $("#shipment_combination_id").val(),
-                    gvs_order_id: $("#gvs_order_id").val(),
-                    custom_order_id: $("#custom_order_id").val(),
-                    customization: customization,
-                    order_type: order_type,
-                    category_id: cbs_catgory,
-                    order_category: order_category
-                });
-    } else {
-        datagrid = $('#dataGrid').datagrid({
-            url: "findMultipleOrder",
-            type:"post",
-            fit: true,
-            pagination: true,
-            singleSelect: true,
-            pageSize: 100,
-            pageList: [50, 100, 200],
-            nowrap: false,
-            rownumbers: true,
-            singleSelect: false,
-            selectOnCheck: true,
-            checkOnSelect: true,
-            collapsible: true,
-            striped: true,
-            queryParams: {
-                arrival_start_week: $("#arrival_year_week_start_save").val(),
-                arrival_end_week: $("#arrival_year_week_end_save").val(),
-                report_start_week: $("#datestart_save").val(),
-                report_end_week: $("#dateend_save").val(),
-                ed_channel_id: channel,
-                product_group_id: product_group,
-                order_id: $("#wp_order_id").val(),
-                oms_order_id: $("#oms_order_id").val(),
-                brand_id: brand,
-                materials_id: $("#materials_id").val(),
-                materials_desc: $("#materials_description").val(),
-                storage_id: $("#storage_id").val(),
-                flow_flag: flow_flag,
-                shipment_combination_id: $("#shipment_combination_id").val(),
-                gvs_order_id: $("#gvs_order_id").val(),
-                custom_order_id: $("#custom_order_id").val(),
-                customization: customization,
-                order_type: order_type,
-                category_id: cbs_catgory,
-                order_category: order_category
-            },
-            columns: [
-                [
-
-                    {
-                        field: 'check',
-                        title: '全选',
-                        width: 20,
-                        align: 'center',
-                        checkbox: true
-                    },
-					{
-                        field: 'order_category_name',
-                        title: '订单类别',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'flow_flag_name',
-                        title: '状态',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'order_id',
-                        title: 'WP单号',
-                        width: 150,
-                        align: 'center'
-                    },
-                    {
-                        field: 'channel_commit_time_display',
-                        title: '渠道提交时间',
-                        width: 150,
-                        align: 'center'
-                    },
-                    {
-                        field: 'channel_commit_user',
-                        title: '渠道提交人',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'audit_time_display',
-                        title: '审核时间',
-                        width: 150,
-                        align: 'center'
-                    },
-                    {
-                        field: 'audit_user',
-                        title: '审核人',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'order_close_time_display',
-                        title: '手工关单时间',
-                        width: 150,
-                        align: 'center'
-                    },
-                    {
-                        field: 'order_close_user',
-                        title: '手工关单人',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'oms_order_id',
-                        title: 'OMS订单号',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'custom_desc',
-                        title: '客户名称',
-                        width: 230,
-                        align: 'center'
-                    },
-                    {
-                        field: 'ggg',
-                        title: '售达方',
-                        width: 230,
-                        align: 'center',
-                        formatter: function (value, rowData, rowIndex) {
-                            return '重庆新日日顺家电销售有限公司';
-                        }
-
-                    },
-                    {
-                        field: 'transmit_desc',
-                        title: '送达方',
-                        width: 230,
-                        align: 'center'
-                    },
-                    {
-                        field: 'report_year_week',
-                        title: '提报年',
-                        width: 90,
-                        align: 'center'
-                    },
-                    {
-                        field: 'report_year_week_display',
-                        title: '提报周',
-                        width: 90,
-                        align: 'center'
-                    },
-                    {
-                        field: 'arrive_year_week',
-                        title: '到货年',
-                        width: 90,
-                        align: 'center',
-                        formatter: function (value, rowData, rowIndex) {
-                            return value.substr(0, 5);
-                        }
-                    },
-                    {
-                        field: 'arrive_year_week_display',
-                        title: '到货周',
-                        width: 90,
-                        align: 'center',
-                        formatter: function (value, rowData, rowIndex) {
-                            return value.substr(5);
-                        }
-                    },
-
-                    {
-                        field: 'industry_trade_desc',
-                        title: '工贸',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'ed_channel_name',
-                        title: '渠道',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'category_id',
-                        title: '品类',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'product_group_name',
-                        title: '产品组',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'brand_id',
-                        title: '品牌',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'materials_id',
-                        title: '物料编码',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'materials_desc',
-                        title: '型号',
-                        width: 220,
-                        align: 'center'
-                    },
-                    {
-                        field: 'order_type_name',
-                        title: '订单类型',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 't2_delivery_prediction',
-                        title: '数量',
-                        width: 50,
-                        align: 'center'
-                    },
-                    {
-                        field: 'price',
-                        title: '样表单价',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                        field: 'amount',
-                        title: '样表金额',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
-                        field: 'storage_id',
-                        title: 'WA库位码',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'storage_name',
-                        title: 'WA库位名称',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'arrival_storage_desc',
-                        title: '日日顺库位名称',
-                        width: 200,
-                        align: 'center'
-                    },
-                    {
-                        field: 'series_id',
-                        title: '系列',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'status',
-                        title: 'OMS状态',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'latest_arrive_date_display',
-                        title: '最晚到货日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'plan_deliver_date_display',
-                        title: '计划发货日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'promise_arrive_date_display',
-                        title: '承诺到货日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'actual_deliver_date_display',
-                        title: '实际发货日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'predict_arrive_date_display',
-                        title: '预计到货日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'industry_trade_take_date_display',
-                        title: '工贸收货日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'custom_sign_date_display',
-                        title: '工贸签收日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'return_order_date_display',
-                        title: '工贸返单日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'latest_leave_base_date_display',
-                        title: '最晚离基地日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'factory_id',
-                        title: '发运工厂编码',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'factory_name',
-                        title: '发运工厂名称',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'shipment_combination_id',
-                        title: '一次发运单号',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'sign_num',
-                        title: '工贸签收数量',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'no_pass_reason',
-                        title: 'OMS拒单原因',
-                        width: 200,
-                        align: 'left'
-                    },
-                    {
-                        field: 'gvs_order_id',
-                        title: 'GVS订单号',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'dn_id',
-                        title: '日日顺DN号',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'custpodetailcode',
-                        title: '客户订单号',
-                        width: 110,
-                        align: 'center'
-                    },
-                    {
-                        field: 'commit_time_display',
-                        title: '提交日期',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'customization_name',
-                        title: '定制',
-                        width: 50,
-                        align: 'center'
-                    },
-                    {
-                        field: 'satisfy_type_name',
-                        title: '满足方式',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'WAqty',
-                        title: '已入WA库数量',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        field: 'error_msg',
-                        title: '备注',
-                        width: 250,
-                        align: 'center'
-                    },
-                    {
-                        field: 'pass_reason',
-                        title: '冻结推送意见',
-                        width: 200,
-                        align: 'center'
-                    },
-                    {
-                        field: 'sapStatus',
-                        title: '推送sap状态',
-                        width: 100,
-                        align: 'center',
-                        formatter : function(value) {
-                        	if(value == 1){
-	                    		return "成功";
-	                    	}
-	                    	if(value == 0){
-	                    		return "未推送";
-	                    	}
-	                    	if(value == 2){
-	                    		return "推送失败";
-	                    	}
-	                    }
-                    },
-                    {
-                        field: 'sapMessage',
-                        title: '推送sap信息',
-                        width: 200,
-                        align: 'center'
-                    },
-                    {
-                        field: 'sapProcessTime',
-                        title: '推送sap时间',
-                        width: 200,
-                        align: 'center'
+                    field: 'check',
+                    title: '全选',
+                    width: 20,
+                    align: 'center',
+                    checkbox: true
+                },
+                {
+                    field: 'order_category_name',
+                    title: '订单类别',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'flow_flag_name',
+                    title: '状态',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'order_id',
+                    title: 'WP单号',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'channel_commit_time_display',
+                    title: '渠道提交时间',
+                    width: 220,
+                    align: 'center'
+                },
+                {
+                    field: 'channel_commit_user',
+                    title: '渠道提交人',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'audit_time_display',
+                    title: '审核时间',
+                    width: 220,
+                    align: 'center'
+                },
+                {
+                    field: 'audit_user',
+                    title: '审核人',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'order_close_time_display',
+                    title: '手工关单时间',
+                    width: 220,
+                    align: 'center'
+                },
+                {
+                    field: 'order_close_user',
+                    title: '手工关单人',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'oms_order_id',
+                    title: 'OMS订单号',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'custom_desc',
+                    title: '客户名称',
+                    width: 260,
+                    align: 'center'
+                },
+                {
+                    field: 'ggg',
+                    title: '售达方',
+                    width: 230,
+                    align: 'center',
+                    formatter: function (value, rowData, rowIndex) {
+                        return '重庆新日日顺家电销售有限公司';
                     }
-                ]
+
+                },
+                {
+                    field: 'transmit_desc',
+                    title: '送达方',
+                    width: 230,
+                    align: 'center'
+                },
+                {
+                    field: 'report_year_week',
+                    title: '提报年',
+                    width: 90,
+                    align: 'center'
+                },
+                {
+                    field: 'report_year_week_display',
+                    title: '提报周',
+                    width: 90,
+                    align: 'center'
+                },
+                {
+                    field: 'arrive_year_week',
+                    title: '到货年',
+                    width: 90,
+                    align: 'center',
+                    formatter: function (value, rowData, rowIndex) {
+                        return value.substr(0, 5);
+                    }
+                },
+                {
+                    field: 'arrive_year_week_display',
+                    title: '到货周',
+                    width: 90,
+                    align: 'center',
+                    formatter: function (value, rowData, rowIndex) {
+                        return value.substr(5);
+                    }
+                },
+
+                {
+                    field: 'industry_trade_desc',
+                    title: '工贸',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'ed_channel_name',
+                    title: '渠道',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'category_id',
+                    title: '品类',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'product_group_name',
+                    title: '产品组',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'brand_id',
+                    title: '品牌',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'materials_id',
+                    title: '物料编码',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'materials_desc',
+                    title: '型号',
+                    width: 220,
+                    align: 'center'
+                },
+                {
+                    field: 'order_type_name',
+                    title: '订单类型',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 't2_delivery_prediction',
+                    title: '数量',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 'price',
+                    title: '样表单价',
+                    width: 60,
+                    align: 'center'
+                },
+                {
+                    field: 'amount',
+                    title: '样表金额',
+                    width: 60,
+                    align: 'center'
+                },
+                {
+                    field: 'storage_id',
+                    title: 'WA库位码',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'storage_name',
+                    title: 'WA库位名称',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'arrival_storage_desc',
+                    title: '日日顺库位名称',
+                    width: 200,
+                    align: 'center'
+                },
+                {
+                    field: 'series_id',
+                    title: '系列',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'status',
+                    title: 'OMS状态',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'latest_arrive_date_display',
+                    title: '最晚到货日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'plan_deliver_date_display',
+                    title: '计划发货日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'promise_arrive_date_display',
+                    title: '承诺到货日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'actual_deliver_date_display',
+                    title: '实际发货日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'predict_arrive_date_display',
+                    title: '预计到货日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'industry_trade_take_date_display',
+                    title: '工贸收货日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'custom_sign_date_display',
+                    title: '工贸签收日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'return_order_date_display',
+                    title: '工贸返单日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'latest_leave_base_date_display',
+                    title: '最晚离基地日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'factory_id',
+                    title: '发运工厂编码',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'factory_name',
+                    title: '发运工厂名称',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'shipment_combination_id',
+                    title: '一次发运单号',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'sign_num',
+                    title: '工贸签收数量',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'no_pass_reason',
+                    title: 'OMS拒单原因',
+                    width: 200,
+                    align: 'left'
+                },
+                {
+                    field: 'gvs_order_id',
+                    title: 'GVS订单号',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'dn_id',
+                    title: '日日顺DN号',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'custpodetailcode',
+                    title: '客户订单号',
+                    width: 110,
+                    align: 'center'
+                },
+                {
+                    field: 'commit_time_display',
+                    title: '提交日期',
+                    width: 150,
+                    align: 'center'
+                },
+                {
+                    field: 'customization_name',
+                    title: '定制',
+                    width: 50,
+                    align: 'center'
+                },
+                {
+                    field: 'satisfy_type_name',
+                    title: '满足方式',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'WAqty',
+                    title: '已入WA库数量',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'error_msg',
+                    title: '备注',
+                    width: 250,
+                    align: 'center'
+                },
+                {
+                    field: 'pass_reason',
+                    title: '冻结推送意见',
+                    width: 200,
+                    align: 'center'
+                },
+                {
+                    field: 'sapStatus',
+                    title: '推送sap状态',
+                    width: 100,
+                    align: 'center',
+                    formatter : function(value) {
+                        if(value == 1){
+                            return "成功";
+                        }
+                        if(value == 0){
+                            return "未推送";
+                        }
+                        if(value == 2){
+                            return "推送失败";
+                        }
+                    }
+                },
+                {
+                    field: 'sapMessage',
+                    title: '推送sap信息',
+                    width: 200,
+                    align: 'center'
+                },
+                {
+                    field: 'sapProcessTime',
+                    title: '推送sap时间',
+                    width: 220,
+                    align: 'center'
+                }
             ]
-        });
-    }
-    $('#dataGrid').parent().find("div.datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
-});
-//PO查询
-$("#posearch").click(function () {
-    if (!datagrid) {
-        $.messager.alert('提示', '请查询！', 'info');
-        return;
-    }
-    
-    //获得选中行
-    var checkedItems = $('#dataGrid').datagrid('getChecked');
-    var poDetailData = new Array();
-    //判断是否存在选择行
-    $.each(checkedItems, function (index, item) {
-        //flow_flag=30 - 80item.flow_flag==30||item.flow_flag==40||item.flow_flag==50||
-        //item.flow_flag==60||item.flow_flag==70||item.flow_flag==80
-        //if(){
-        poDetailData.push(item.order_id);
-        //}
+        ]
     });
-    if (poDetailData == null || poDetailData.length == 0) {
-        $.messager.alert('错误', '请至少选择一行！', 'error');
-        return;
-    }
-    var url = '/T2OrderQuery/purchaseOrderQueryList' + '?poDetailData=' + JSON.stringify(poDetailData);
-    var win = window.open(url, '_blank');
-    return false;
+    $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
 
 });
-//手工关单
-$("#manualCloseOrder").click(function () {
-    if (!datagrid) {
-        $.messager.alert('提示', '请查询！', 'info');
-        return;
-    }
-    //获得选中行
-    var checkedItems = $('#dataGrid').datagrid('getChecked');
-    var manualCloseData = new Array();
-    //判断是否存在已入WA库（WA入库数量小于采购数量）的行
-    $.each(checkedItems, function (index, item) {
-        //flow_flag=70 已开入WA库提单(并且WA入库数量小于采购数量)
-        //if(item.flow_flag==70&&item.WAqty<item.t2_delivery_prediction){
-        //flow_flag=60 已入日日顺库
-        if (item.flow_flag == 60) {
-            manualCloseData.push(item.order_id);
-        }
-    });
-    //判断是否存在已开入WA提单的行
-    if (manualCloseData == null || manualCloseData.length == 0) {
-        $.messager.alert('错误', '请至少选择一行已入日日顺库的行！', 'error');
-        return;
-    }
-    $.messager.confirm('确认', '确定要手动关单吗？（只关闭已入日日顺库）的行）', function (r) {
-        if (r) {
-            jQuery.ajax({
-                url: "manualCloseOrderList",   // 提交的页面
-                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
-                data: {"manualCloseData": JSON.stringify(manualCloseData)},
-                success: function (data) {
-                    $.messager.alert('提示', '手动关单完成', 'info');
-                    $('#dataGrid').datagrid('reload',
-                            {
-                                arrival_start_week: $("#arrival_year_week_start_save").val(),
-                                arrival_end_week: $("#arrival_year_week_end_save").val(),
-                                report_start_week: $("#datestart_save").val(),
-                                report_end_week: $("#dateend_save").val(),
-                                ed_channel_id: $("#ed_channel_id_save").val(),
-                                product_group_id: $("#product_group_id_save").val(),
-                                order_id: $("#wp_order_id_save").val(),
-                                oms_order_id: $("#oms_order_id_save").val(),
-                                brand_id: $("#brand_save").val(),
-                                materials_id: $("#materials_id_save").val(),
-                                materials_desc: $("materials_description_save").val(),
-                                storage_id: $("#storage_id_save").val(),
-                                flow_flag: $("#flow_flag_save").val(),
-                                shipment_combination_id: $("#shipment_combination_id_save").val(),
-                                gvs_order_id: $("#gvs_order_id_save").val(),
-                                custom_order_id: $("#custom_order_id_save").val(),
-                                customization: $("#customization_save").val(),
-                                order_type: $("#order_type_save").val(),
-                                category_id: $("#cbs_catgory_save").val(),
-                                order_category: $("#order_category_save").val()
-                            });
-                    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
-                }
-            });
-        }
-    });
-});
 
-//撤消手工关单
-$("#cancelCloseOrder").click(function () {
-    if (!datagrid) {
-        $.messager.alert('提示', '请查询！', 'info');
-        return;
-    }
-    //获得选中行
-    var checkedItems = $('#dataGrid').datagrid('getChecked');
-    var cancelCloseData = new Array();
-    //判断是否已经关闭状态
-    $.each(checkedItems, function (index, item) {
-        //flow_flag=-70 完成关闭
-        if (item.flow_flag == '-70') {
-            cancelCloseData.push(item.order_id);
-        }
-    });
-    //判断是否存在已开入WA提单或者已入日日顺库的行
-    if (cancelCloseData == null || cancelCloseData.length == 0) {
-        $.messager.alert('错误', '请至少选择一行已完成关闭的行！', 'error');
-        return;
-    }
-    $.messager.confirm('确认', '确定要撤消手动关单吗？（只撤消已完成关闭的行）', function (r) {
-        if (r) {
-            jQuery.ajax({
-                url: "cancelCloseOrderList",   // 提交的页面
-                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
-                data: {"cancelCloseData": JSON.stringify(cancelCloseData)},
-                success: function (data) {
-                    $.messager.alert('提示', '撤消手动关单完成', 'info');
-                    $('#dataGrid').datagrid('reload',
-                            {
-                                arrival_start_week: $("#arrival_year_week_start_save").val(),
-                                arrival_end_week: $("#arrival_year_week_end_save").val(),
-                                report_start_week: $("#datestart_save").val(),
-                                report_end_week: $("#dateend_save").val(),
-                                ed_channel_id: $("#ed_channel_id_save").val(),
-                                product_group_id: $("#product_group_id_save").val(),
-                                order_id: $("#wp_order_id_save").val(),
-                                oms_order_id: $("#oms_order_id_save").val(),
-                                brand_id: $("#brand_save").val(),
-                                materials_id: $("#materials_id_save").val(),
-                                materials_desc: $("materials_description_save").val(),
-                                storage_id: $("#storage_id_save").val(),
-                                flow_flag: $("#flow_flag_save").val(),
-                                shipment_combination_id: $("#shipment_combination_id_save").val(),
-                                gvs_order_id: $("#gvs_order_id_save").val(),
-                                custom_order_id: $("#custom_order_id_save").val(),
-                                customization: $("#customization_save").val(),
-                                order_type: $("#order_type_save").val(),
-                                category_id: $("#cbs_catgory_save").val(),
-                                order_category: $("#order_category_save").val()
-                            });
-                    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
-                }
-            });
-        }
-    });
-});
 
-function myformatter_arrival_start(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    date = y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
-    date_start = date;
-    jQuery.getJSON("findateWeek?date="+ date, function (result) {
-        dateweek_start = result.data;
-        $('#arrival_year_week_start_txt').val(dateweek_start);
-    });
-    return date;
-}
-
-function myformatter_arrival_end(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    date = y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
-    date_end = date;
-    jQuery.getJSON("findateWeek?date=" + date, function (result) {
-        dateweek_end = result.data;
-        $('#arrival_year_week_end_txt').val(dateweek_end);
-    });
-    return date;
-}
-
-function myformatter_start(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    date = y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
-    jQuery.getJSON("findateWeek?date=" + date + "&type=0", function (result) {
-        report_dateweek_start = result.data;
-        $('#datestart_txt').val(report_dateweek_start);
-    });
-    return date;
-}
-
-function myformatter_end(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    date = y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
-    jQuery.getJSON("findateWeek?date=" + date + "&type=0", function (result) {
-        report_dateweek_end = result.data;
-        $('#dateend_txt').val(report_dateweek_end);
-    });
-    return date;
-}
-
-function myparser(s) {
-    if (!s) return new Date();
-    var ss = (s.split('-'));
-    var y = parseInt(ss[0], 10);
-    var m = parseInt(ss[1], 10);
-    var d = parseInt(ss[2], 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-        return new Date(y, m - 1, d);
-    } else {
-        return new Date();
-    }
-}
-
-var datagrid;
 $(function () {
     var buttonsStart = $.extend([], $.fn.datebox.defaults.buttons);
     buttonsStart.splice(1, 0, {
@@ -859,8 +1247,9 @@ $(function () {
             data: dataList,
             valueField: 'value',
             textField: 'value_meaning',
-            panelHeight: '300',
+            panelHeight: 'auto',
             editable: false,
+            multiple:true,
             value: 'ALL'
         });
     });
@@ -871,9 +1260,18 @@ $(function () {
             data: result.data,
             valueField: 'value',
             textField: 'valueMeaning',
-            panelHeight: '300',
+            panelHeight: 'auto',
             editable: false,
-            value: 'ALL'
+            value: 'ALL',
+            loadFilter: function(data){
+                var datas = [];
+                $.each(data, function(k, v){
+                    if($.inArray(v.value, authMap.productGroup) > -1 || v.value == 'ALL'){
+                        datas.push(v);
+                    }
+                });
+                return datas;
+            }
 
         });
     });
@@ -888,7 +1286,16 @@ $(function () {
             textField: 'name',
             panelHeight: 'auto',
             editable: false,
-            value: 'ALL'
+            value: 'ALL',
+            loadFilter: function(data){
+                var datas = [];
+                $.each(data, function(k, v){
+                    if($.inArray(v.channelCode, authMap.channel) > -1 || v.channelCode == 'ALL'){
+                        datas.push(v);
+                    }
+                });
+                return datas;
+            }
         });
     });
     jQuery.getJSON("/purchase/getCbsCategoryByAuth", function (result) {
@@ -905,7 +1312,16 @@ $(function () {
             textField: 'text',
             panelHeight: 'auto',
             editable: false,
-            value: 'ALL'
+            value: 'ALL',
+            loadFilter: function(data){
+                var datas = [];
+                $.each(data, function(k, v){
+                    if($.inArray(v.text, authMap.cbsCategory) > -1 || v.text == '全部'){
+                        datas.push(v);
+                    }
+                });
+                return datas;
+            }
         });
     });
 
@@ -966,75 +1382,76 @@ $(function () {
             valueField: 'value',
             textField: 'value_meaning',
             panelHeight: 'auto',
-			width:'154',
+            width:'154',
             editable: false,
             value: 'ALL'
         });
     });
 
 //构筑批量手工关单的dialog
-/*    $("#manualDiv").dialog({
-    	title:"批量手工关单",
-        //autoOpen: false,
-        modal: true,
-        //closeOnEscape: false,
-        width: 400,
-        buttons: {
-            "确定": function () {
-                var manualClose = $("#manualOrderId").val();
-                if (manualClose == '') {
-                    $.messager.alert('提示', '请输入WA单号', 'info');
-                    //return;
-                }
-                $.messager.confirm('确认', '确定要手动关单吗？（只关闭已入日日顺库的行）', function (r) {
-                    if (r) {
-                        jQuery.ajax({
-                            url: "batchManualCloseOrderList",   // 提交的页面
-                            type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
-                            data: {"manualCloseData": $("#manualOrderId").val()},
-                            success: function (data) {
-                                $.messager.alert('提示', '手动关单完成', 'info');
-                                $("#manualOrderId").val("");
-                                $("#manualDiv").dialog('close');
-                                $('#dataGrid').datagrid('reload',
-                                        {
-                                            arrival_start_week: $("#arrival_year_week_start_save").val(),
-                                            arrival_end_week: $("#arrival_year_week_end_save").val(),
-                                            report_start_week: $("#datestart_save").val(),
-                                            report_end_week: $("#dateend_save").val(),
-                                            ed_channel_id: $("#ed_channel_id_save").val(),
-                                            product_group_id: $("#product_group_id_save").val(),
-                                            order_id: $("#wp_order_id_save").val(),
-                                            oms_order_id: $("#oms_order_id_save").val(),
-                                            brand_id: $("#brand_save").val(),
-                                            materials_id: $("#materials_id_save").val(),
-                                            materials_desc: $("materials_description_save").val(),
-                                            storage_id: $("#storage_id_save").val(),
-                                            flow_flag: $("#flow_flag_save").val(),
-                                            shipment_combination_id: $("#shipment_combination_id_save").val(),
-                                            gvs_order_id: $("#gvs_order_id_save").val(),
-                                            custom_order_id: $("#custom_order_id_save").val(),
-                                            customization: $("#customization_save").val(),
-                                            order_type: $("#order_type_save").val(),
-                                            category_id: $("#cbs_catgory_save").val(),
-                                            order_category: $("#order_category_save").val()
-                                        });
-                                $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
-                            }
-                        });
+    /*    $("#manualDiv").dialog({
+            title:"批量手工关单",
+            //autoOpen: false,
+            modal: true,
+            //closeOnEscape: false,
+            width: 400,
+            buttons: {
+                "确定": function () {
+                    var manualClose = $("#manualOrderId").val();
+                    if (manualClose == '') {
+                        $.messager.alert('提示', '请输入WA单号', 'info');
+                        //return;
                     }
-                });
+                    $.messager.confirm('确认', '确定要手动关单吗？（只关闭已入日日顺库的行）', function (r) {
+                        if (r) {
+                            jQuery.ajax({
+                                url: "batchManualCloseOrderList",   // 提交的页面
+                                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+                                data: {"manualCloseData": $("#manualOrderId").val()},
+                                success: function (data) {
+                                    $.messager.alert('提示', '手动关单完成', 'info');
+                                    $("#manualOrderId").val("");
+                                    $("#manualDiv").dialog('close');
+                                    $('#datagrid').datagrid('reload',
+                                            {
+                                                arrival_start_week: $("#arrival_year_week_start_save").val(),
+                                                arrival_end_week: $("#arrival_year_week_end_save").val(),
+                                                report_start_week: $("#datestart_save").val(),
+                                                report_end_week: $("#dateend_save").val(),
+                                                ed_channel_id: $("#ed_channel_id_save").val(),
+                                                product_group_id: $("#product_group_id_save").val(),
+                                                order_id: $("#wp_order_id_save").val(),
+                                                oms_order_id: $("#oms_order_id_save").val(),
+                                                brand_id: $("#brand_save").val(),
+                                                materials_id: $("#materials_id_save").val(),
+                                                materials_desc: $("materials_description_save").val(),
+                                                storage_id: $("#storage_id_save").val(),
+                                                flow_flag: $("#flow_flag_save").val(),
+                                                shipment_combination_id: $("#shipment_combination_id_save").val(),
+                                                gvs_order_id: $("#gvs_order_id_save").val(),
+                                                custom_order_id: $("#custom_order_id_save").val(),
+                                                customization: $("#customization_save").val(),
+                                                order_type: $("#order_type_save").val(),
+                                                category_id: $("#cbs_catgory_save").val(),
+                                                order_category: $("#order_category_save").val()
+                                            });
+                                    $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+                                }
+                            });
+                        }
+                    });
 
-            },
-            "取消": function () {
-                $(this).dialog('close');
+                },
+                "取消": function () {
+                    $(this).dialog('close');
+                }
             }
-        }
-    });*/
+        });*/
 });
 
+
 $("#y").click(function () {
-	var manualClose = $("#manualOrderId").val();
+    var manualClose = $("#manualOrderId").val();
     if (manualClose == '') {
         $.messager.alert('提示', '请输入WA单号', 'info');
         //return;
@@ -1049,42 +1466,42 @@ $("#y").click(function () {
                     $.messager.alert('提示', '手动关单完成', 'info');
                     $("#manualOrderId").val("");
                     $("#manualDiv").dialog('close');
-                    $('#dataGrid').datagrid('reload',
-                            {
-                                arrival_start_week: $("#arrival_year_week_start_save").val(),
-                                arrival_end_week: $("#arrival_year_week_end_save").val(),
-                                report_start_week: $("#datestart_save").val(),
-                                report_end_week: $("#dateend_save").val(),
-                                ed_channel_id: $("#ed_channel_id_save").val(),
-                                product_group_id: $("#product_group_id_save").val(),
-                                order_id: $("#wp_order_id_save").val(),
-                                oms_order_id: $("#oms_order_id_save").val(),
-                                brand_id: $("#brand_save").val(),
-                                materials_id: $("#materials_id_save").val(),
-                                materials_desc: $("materials_description_save").val(),
-                                storage_id: $("#storage_id_save").val(),
-                                flow_flag: $("#flow_flag_save").val(),
-                                shipment_combination_id: $("#shipment_combination_id_save").val(),
-                                gvs_order_id: $("#gvs_order_id_save").val(),
-                                custom_order_id: $("#custom_order_id_save").val(),
-                                customization: $("#customization_save").val(),
-                                order_type: $("#order_type_save").val(),
-                                category_id: $("#cbs_catgory_save").val(),
-                                order_category: $("#order_category_save").val()
-                            });
-                    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+                    $('#datagrid').datagrid('reload',
+                        {
+                            arrival_start_week: $("#arrival_year_week_start_save").val(),
+                            arrival_end_week: $("#arrival_year_week_end_save").val(),
+                            report_start_week: $("#datestart_save").val(),
+                            report_end_week: $("#dateend_save").val(),
+                            ed_channel_id: $("#ed_channel_id_save").val(),
+                            product_group_id: $("#product_group_id_save").val(),
+                            order_id: $("#wp_order_id_save").val(),
+                            oms_order_id: $("#oms_order_id_save").val(),
+                            brand_id: $("#brand_save").val(),
+                            materials_id: $("#materials_id_save").val(),
+                            materials_desc: $("materials_description_save").val(),
+                            storage_id: $("#storage_id_save").val(),
+                            flow_flag: $("#flow_flag_save").val(),
+                            shipment_combination_id: $("#shipment_combination_id_save").val(),
+                            gvs_order_id: $("#gvs_order_id_save").val(),
+                            custom_order_id: $("#custom_order_id_save").val(),
+                            customization: $("#customization_save").val(),
+                            order_type: $("#order_type_save").val(),
+                            category_id: $("#cbs_catgory_save").val(),
+                            order_category: $("#order_category_save").val()
+                        });
+                    $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
                 }
             });
         }
     });
 });
 $("#n").click(function () {
-/*	$(this).dialog('close');*/
-	$("#manualDiv").window('close');
+    /*	$(this).dialog('close');*/
+    $("#manualDiv").window('close');
 });
 
 $(function(){
-	$("#manualDiv").panel('close');
+    $("#manualDiv").panel('close');
 });
 
 //批量手工关单
@@ -1105,7 +1522,7 @@ $('#export').click(function () {
     }
     //获得选中行
 
-    var checkedItems = $('#dataGrid').datagrid('getChecked');
+    var checkedItems = $('#datagrid').datagrid('getChecked');
     var exportData = new Array();
     //将订单号存入Array
     $.each(checkedItems, function (index, item) {
@@ -1130,26 +1547,108 @@ $('#exportall').click(function () {
         $.messager.alert('提示', '请查询！', 'info');
         return;
     }
-    if ($("#dataGrid").datagrid("getData").rows.length == 0) {
-        $.messager.alert('提示', '无有效数据！', 'info');
+    if(window.total && window.total > 20000){
+        $.messager.alert('提示', '最多导出20000条记录，请缩小查询范围！', 'info');
         return;
     }
-    //PO详情导出
-    var exportPo = $("#DXS").attr("checked") == 'checked';
-    if (exportPo) {
-        //获得所有行
-        var getItems = $('#dataGrid').datagrid('getRows');
-        var exportData = new Array();
-        //将订单号存入Array
-        $.each(getItems, function (index, item) {
-            exportData.push(item.order_id);
-        });
-        $("#exportData").val(JSON.stringify(exportData));
+//    if ($("#datagrid").datagrid("getData").rows.length == 0) {
+//        $.messager.alert('提示', '无有效数据！', 'info');
+//        return;
+//    }
+
+    if (!compareDate($('#arrival_year_week_start_txt').val(), $('#arrival_year_week_end_txt').val(), 1, "到货开始周大于结束周，请重新选择!")) {
+        return false;
     }
+    if (!compareDate($('#datestart_txt').val(), $('#dateend_txt').val(), 1, "提报开始周大于结束周，请重新选择!")) {
+        return false;
+    }
+    var product_group = $("#product_group").combobox("getValue");
+    //如果是ALL，产品组设为空
+    if (product_group == "ALL") {
+        product_group = "";
+    }
+    var channel = $("#channel").combobox("getValue");
+    //如果是ALL，渠道设为空
+    if (channel == "ALL") {
+        channel = "";
+    }
+    var brand = $("#brand").combobox("getValue");
+    //如果是ALL，品牌设为空
+    if (brand == "ALL") {
+        brand = "";
+    }
+    //状态保存
+    var flow_flag = $("#flow_flag").combobox("getValues").join(",");
+    //如果包含ALL，设置为空
+    if (flow_flag.indexOf("ALL") >= 0) {
+        flow_flag = "";
+    }
+    var customization = $("#customization").combobox("getValue");
+    //如果是ALL，定制设为空
+    if (customization == "ALL") {
+        customization = "";
+    }
+    var order_type = $("#order_type").combobox("getValue");
+    //如果是ALL，订单类型设为空
+    if (order_type == "ALL") {
+        order_type = "";
+    }
+    var cbs_catgory = $("#cbs_catgory").combobox("getValue");
+    //如果是ALL，品类设为空
+    if (cbs_catgory == "ALL") {
+        cbs_catgory = "";
+    }
+    //订单类别保存
+    var order_category = $("#order_category").combobox("getValues").join(",");
+    //如果包含ALL，设置为空
+    if(order_category.indexOf("ALL")>=0){
+        order_category="";
+    }
+    //到货开始周保存
+    $("#arrival_year_week_start_save").val(date_start);
+    //到货结束周保存
+    $("#arrival_year_week_end_save").val(date_end);
+    //提报开始周保存
+    $("#datestart_save").val(report_dateweek_start);
+    //提报结束周保存
+    $("#dateend_save").val(report_dateweek_end);
+    //产品组保存
+    $("#product_group_id_save").val(product_group);
+    //渠道保存
+    $("#ed_channel_id_save").val(channel);
+    //订单号保存
+    $("#wp_order_id_save").val($("#wp_order_id").val());
+    //OMS订单号保存
+    $("#oms_order_id_save").val($("#oms_order_id").val());
+    //品牌保存
+    $("#brand_save").val(brand);
+    //物料号保存
+    $("#materials_id_save").val($("#materials_id").val());
+    //型号保存
+    $("#materials_description_save").val($("#materials_description").val());
+    //库位保存
+    $("#storage_id_save").val($("#storage_id").val());
+    //状态保存
+    $("#flow_flag_save").val(flow_flag);
+    //一次发运组合号保存
+    $("#shipment_combination_id_save").val($("#shipment_combination_id").val());
+    //GVS订单号保存
+    $("#gvs_order_id_save").val($("#gvs_order_id").val());
+    //客户订单号保存
+    $("#custom_order_id_save").val($("#custom_order_id").val());
+    //定制保存
+    $("#customization_save").val(customization);
+    //订单类型保存
+    $("#order_type_save").val(order_type);
+    //品类保存
+    $("#cbs_catgory_save").val(cbs_catgory);
+    //订单类别
+    $("#order_category_save").val(order_category);
+
     $.messager.confirm('确认', '确定要全部导出吗？', function (r) {
         if (r) {
             $("#exportData").val('');
-            $('#filterForm').attr("action", 'exportAllT2OrderList.export');
+            $('#filterForm').attr("action", 'exportAllT2OrderQueryList.export');
             $('#filterForm').submit();
         }
     });
@@ -1162,7 +1661,7 @@ $('#commitAgain').click(function () {
         return;
     }
     //获得选中行
-    var checkedItems = $('#dataGrid').datagrid('getChecked');
+    var checkedItems = $('#datagrid').datagrid('getChecked');
     $('#oms_order_id_save').val('');
     //判断xuanzhong
     if (checkedItems.length != 1) {
@@ -1180,69 +1679,69 @@ $('#commitAgain').click(function () {
         $.messager.alert('提示', '请至少选择一行状态为[OMS冻结]的行！', 'info');
         return;
     }else{
-	    $("#passDiv").show();
-	    $("#passDiv").window('open');
-	}
+        $("#passDiv").show();
+        $("#passDiv").window('open');
+    }
 });
 
 //已冻结推送
 $('#passReview').click(function () {
-  var flag=true;
-  $('#passForm input').each(function () {
-	    if ($(this).attr('validType')) {
-		    if (!$(this).validatebox('isValid')) {
-		        flag = false;
-		        return;
-		    }
-	    }
-	});
-  if(flag){
-  $("#passReview").linkbutton('disable');
-     jQuery.ajax({
-                url: "commitAgainOrderMultipleList",   // 提交的页面
-                type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
-                data: {"oms_order_id": $('#oms_order_id_save').val(),
-				       "pass_reason":$("#pass_reason").val(),
-				     },
-		        dataType: "JSON",
-			    beforeSend: function(){
-		              var win = $.messager.progress({  
-		                   title:'请等待',  
-		                   msg:'数据处理中...',
-		                   text:'处理中',
-		                   interval:700
-		                   });  
-		        },  
-			    complete: function(){  
-		                //AJAX请求完成时隐藏loading提示  
-		                $.messager.progress('close'); 
-		        }, 
-                success: function (data) {
-                    if (data == true) {
-                        $.messager.alert('提示', '推送完成', 'info');
-                    }else {
-				        $.messager.alert('提示','推送失败','info');
-					 }
-				    $('#oms_order_id_save').val("");
-					$("#passDiv").window('close');
-					$("#passForm").form("clear");
-                    $('#dataGrid').datagrid('reload');
-					$("#passReview").linkbutton('enable');
-                    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+    var flag=true;
+    $('#passForm input').each(function () {
+        if ($(this).attr('validType')) {
+            if (!$(this).validatebox('isValid')) {
+                flag = false;
+                return;
+            }
+        }
+    });
+    if(flag){
+        $("#passReview").linkbutton('disable');
+        jQuery.ajax({
+            url: "commitAgainOrderMultipleList",   // 提交的页面
+            type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+            data: {"oms_order_id": $('#oms_order_id_save').val(),
+                "pass_reason":$("#pass_reason").val(),
+            },
+            dataType: "JSON",
+            beforeSend: function(){
+                var win = $.messager.progress({
+                    title:'请等待',
+                    msg:'数据处理中...',
+                    text:'处理中',
+                    interval:700
+                });
+            },
+            complete: function(){
+                //AJAX请求完成时隐藏loading提示  
+                $.messager.progress('close');
+            },
+            success: function (data) {
+                if (data == true) {
+                    $.messager.alert('提示', '推送完成', 'info');
+                }else {
+                    $.messager.alert('提示','推送失败','info');
                 }
-			});
-		 }else{
-		     $.messager.alert('提示',"请输入正确数据",'error');
-	     }
+                $('#oms_order_id_save').val("");
+                $("#passDiv").window('close');
+                $("#passForm").form("clear");
+                $('#datagrid').datagrid('reload');
+                $("#passReview").linkbutton('enable');
+                $('#datagrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+            }
+        });
+    }else{
+        $.messager.alert('提示',"请输入正确数据",'error');
+    }
 });
 
 //返回查询页面
 $("#close").click(function() {
-					 $("#passForm").form("clear");
-					 $("#passDiv").window('close');
-					 $('#oms_order_id_save').val("");
-					 $("#passForm").form("clear");
-				});	
+    $("#passForm").form("clear");
+    $("#passDiv").window('close');
+    $('#oms_order_id_save').val("");
+    $("#passForm").form("clear");
+});
 
 //冻结推送原因windows框
 $('#passDiv').window({
@@ -1251,14 +1750,14 @@ $('#passDiv').window({
     autoOpen: false,
     closed:true,
     width:360,
-	height:260,
+    height:260,
     collapsible:false,
     minimizable:false,
     maximizable:false,
     modal:true,
     closeOnEscape: true
-    });
-	
+});
+
 //推送意见框长度校验	
 $.extend($.fn.validatebox.defaults.rules, {
     maxLength: {

@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.distribute.data.dao.distribute.ManualInputOrderDao">
+    <resultMap id="invBaseStockResult" type="com.haier.distribute.data.model.TOrdersManual">
+        <result property="id" column="id"/>
+        <result property="channelCode" column="channelCode"/>
+        <result property="orderSn" column="orderSn"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="addTime" column="addTime"/>
+        <result property="payTime" column="payTime"/>
+        <result property="paymentStatus" column="paymentStatus"/>
+        <result property="orderFee" column="orderFee"/>
+        <result property="paidFee" column="paidFee"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="mobile" column="mobile"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="district" column="district"/>
+        <result property="districtCode" column="districtCode"/>
+        <result property="street" column="street"/>
+        <result property="address" column="address"/>
+        <result property="zip" column="zip"/>
+        <result property="invoiceType" column="invoiceType"/>
+        <result property="invoiceTitle" column="invoiceTitle"/>
+        <result property="productsInfo" column="productsInfo"/>
+        <result property="notes" column="notes"/>
+        <result property="finishTime" column="finishTime"/>
+        <result property="hasSync" column="hasSync"/>
+        <result property="syncTime" column="syncTime"/>
+        <result property="syncCount" column="syncCount"/>
+        <result property="message" column="message"/>
+        <result property="createBy" column="createBy"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateBy" column="updateBy"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+    
+    <select id="getManualInputOrderAll" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+	`orderSn`,
+	`channelCode`,
+	`addTime`,
+	`payTime`,
+	`orderFee`,
+	`name`,
+	`phone`,
+	`mobile`,
+	`id`,
+	`invoiceType`,
+	`orderStatus`,
+	`notes`,
+	`remark`,
+	`invoiceTitle`,
+	`province`,
+	`city`,
+	`district`,
+	`districtCode`,
+	`street`,
+	`address` ,
+	`zip`
+	FROM
+	<include refid="wherefrage"></include>
+    </select>
+ 	<select id="getManualInputOrderAllCount" parameterType="java.util.Map" resultType="Integer">
+	    select count(*) from
+	    <include refid="wherefrage" />
+	</select>
+	<sql id="wherefrage">
+		t_orders_manual tmanual
+		WHERE 1=1
+        <if test="channelCode != null and channelCode !=''">
+                <![CDATA[ and tmanual.channelCode= #{channelCode}]]>
+            </if>
+            <if test="orderStatus != null and orderStatus !=''">
+                <![CDATA[ and tmanual.orderStatus= #{orderStatus}]]>
+            </if> 
+            <if test="invoiceType != null and invoiceType !=''">
+                <![CDATA[ and tmanual.invoiceType= #{invoiceType}]]>
+            </if> 
+            <if test="orderSn != null and orderSn !=''">
+                <![CDATA[ and tmanual.orderSn LIKE CONCAT('%', #{orderSn} ,'%') ]]>
+            </if>
+            <if test="startDate != null and startDate !='' and endDate != null and endDate !='' ">
+                <![CDATA[ and tmanual.addTime BETWEEN  #{startDate} and #{endDate} ]]>
+            </if> 
+	</sql>
+	<update id="updateManualInputOrder" parameterType="com.haier.distribute.data.model.TOrdersManual">
+	
+		UPDATE t_orders_manual SET orderFee=#{orderFee},
+				payTime=#{payTime},
+				notes=#{notes},
+				name=#{name},
+				phone=#{phone},
+				mobile=#{mobile},
+				province=#{province},
+				city=#{city},
+				district=#{district},
+				address=#{address},
+				zip=#{zip},
+				invoiceType=#{invoiceType},
+				invoiceTitle=#{invoiceTitle},
+				productsInfo=#{productsInfo},
+				updateBy=#{updateBy},
+				updateTime=now()
+		WHERE id=#{id}
+	</update>
+	<insert id="inserManualInputOrder" parameterType="com.haier.distribute.data.model.TOrdersManual">
+	insert into t_warehouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            
+            <if test="channelCode != null">
+                channelCode,
+            </if>
+            <if test="orderSn != null">
+                orderSn,
+            </if>
+            <if test="orderStatus != null">
+                orderStatus,
+            </if>
+            <if test="addTime != null">
+                addTime,
+            </if>
+            <if test="payTime != null">
+                payTime,
+            </if>
+            <if test="paymentStatus != null">
+                paymentStatus,
+            </if>
+            <if test="orderFee != null">
+                orderFee,
+            </if>
+            <if test="paidFee != null">
+                paidFee,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="district != null">
+                district,
+            </if>
+            <if test="districtCode != null">
+                districtCode,
+            </if>
+            <if test="street != null">
+                street,
+            </if>
+            <if test="invoiceType != null">
+                invoiceType,
+            </if>
+            <if test="invoiceTitle != null">
+            invoiceTitle,
+            </if>
+            <if test="productsInfo != null">
+            productsInfo,
+            </if>
+            <if test="notes != null">
+            notes,
+            </if>
+            <if test="finishTime != null">
+            finishTime,
+            </if>
+            <if test="hasSync != null">
+            hasSync,
+            </if>
+            <if test="syncTime != null">
+            syncTime,
+            </if>
+            <if test="syncCount != null">
+            syncCount,
+            </if>
+            <if test="message != null">
+            message,
+            </if>
+            <if test="createBy != null">
+            createBy,
+            </if>
+            <if test="createTime != null">
+            createTime,
+            </if>
+            <if test="remark != null">
+            remark
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            
+            <if test="channelCode != null">
+                #{channelCode},
+            </if>
+            <if test="orderSn != null">
+                #{orderSn},
+            </if>
+            <if test="orderStatus != null">
+                #{orderStatus},
+            </if>
+            <if test="addTime != null">
+                #{addTime},
+            </if>
+            <if test="payTime != null">
+                #{payTime},
+            </if>
+            <if test="paymentStatus != null">
+                #{paymentStatus},
+            </if>
+            <if test="orderFee != null">
+                #{orderFee},
+            </if>
+            <if test="paidFee != null">
+                #{paidFee},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="mobile != null">
+                #{mobile},
+            </if>
+            <if test="province != null">
+                #{province},
+            </if>
+            <if test="city != null">
+                #{city},
+            </if>
+            <if test="district != null">
+                #{district},
+            </if>
+            <if test="districtCode != null">
+                #{districtCode},
+            </if>
+            <if test="street != null">
+                #{street},
+            </if>
+            <if test="invoiceType != null">
+                #{invoiceType},
+            </if>
+            <if test="invoiceTitle != null">
+           		#{invoiceTitle},
+            </if>
+            <if test="productsInfo != null">
+            	#{productsInfo},
+            </if>
+            <if test="notes != null">
+            	#{notes},
+            </if>
+            <if test="finishTime != null">
+            	#{finishTime},
+            </if>
+            <if test="hasSync != null">
+            	#{hasSync},
+            </if>
+            <if test="syncTime != null">
+            	#{syncTime},
+            </if>
+            <if test="syncCount != null">
+            	#{syncCount},
+            </if>
+            <if test="message != null">
+            	#{message},
+            </if>
+            <if test="createBy != null">
+            	#{createBy},
+            </if>
+            <if test="createTime != null">
+            	now(),
+            </if>
+            <if test="remark != null">
+           		#{remark}
+            </if>
+        </trim>
+	    <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER" statementType="STATEMENT">
+      	select last_insert_id()
+    	</selectKey>
+	</insert>
+
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.CnReplenishEntryOrderItemDao">
+
+	<resultMap type="com.haier.purchase.data.model.CnReplenishEntryOrderItem" id="CnReplenishEntryOrderItemResultMapper">
+		<result property="id" column="id"/>
+		<result property="replEntryOrderId" column="replEntryOrderId"/>
+		<result property="orderItemId" column="orderItemId"/>
+		<result property="userId" column="userId"/>
+		<result property="userName" column="userName"/>
+		<result property="itemId" column="itemId"/>
+		<result property="itemName" column="itemName"/>
+		<result property="itemCode" column="itemCode"/>
+		<result property="isMachineSet" column="isMachineSet"/>
+		<result property="mainSku" column="mainSku"/>
+		<result property="menge" column="menge"/>
+		<result property="inventoryType" column="inventoryType"/>
+		<result property="itemPrice" column="itemPrice"/>
+		<result property="itemQuantity" column="itemQuantity"/>
+		<result property="confirmQty" column="confirmQty"/>
+		<result property="itemVersion" column="itemVersion"/>
+		<result property="batchRemark" column="batchRemark"/>
+		<result property="insertTime" column="insertTime"/>
+		<result property="modityTime" column="modityTime"/>
+		<result property="inSap" column="inSap"/>
+		<result property="itemNum" column="itemNum"/>
+		<result property="inSapTime" column="inSapTime"/>
+		<result property="sapMsg" column="sapMsg"/>
+		<result property="type" column="type"/>
+		<result property="inCount" column="inCount"/>
+		<result property="remnantNum" column="remnantNum"/>
+		<result property="outSap" column="outSap"/>
+		<result property="outSapTime" column="outSapTime"/>
+	</resultMap>
+
+	<select id="getByReplEntryOrderId" resultMap="CnReplenishEntryOrderItemResultMapper">
+		SELECT t.*
+		FROM cn_replenish_entry_order_item t
+		WHERE t.replEntryOrderId = #{id}
+	</select>
+	
+	<update id="updateStatusAfterInPushToSAP" parameterType="com.haier.purchase.data.model.CnReplenishEntryOrderItem">
+		update cn_replenish_entry_order_item set inSap = #{inSap}, inSapTime = #{inSapTime}
+		<if test="sapMsg != null and sapMsg != ''">
+			<![CDATA[ , sapMsg = #{sapMsg} ]]>
+		</if>
+		<if test="itemNum != null and itemNum != ''">
+			<![CDATA[ , itemNum = #{itemNum} ]]>
+		</if>
+		where id = #{id}
+	</update>
+	
+	<update id="updateStatusAfterOutPushToSAP" parameterType="com.haier.purchase.data.model.CnReplenishEntryOrderItem">
+		update cn_replenish_entry_order_item set outSap = #{outSap}, outSapTime = #{outSapTime}
+		<if test="sapMsg != null and sapMsg != ''">
+			<![CDATA[ , sapMsg = #{sapMsg} ]]>
+		</if>
+		<if test="outSapMsg != null and outSapMsg != ''">
+			<![CDATA[ , outSapMsg = #{outSapMsg} ]]>
+		</if>
+		<if test="itemNum != null and itemNum != ''">
+			<![CDATA[ , itemNum = #{itemNum} ]]>
+		</if>
+		where id = #{id}
+	</update>
+
+	<update id="updateItemAfterPush" parameterType="com.haier.purchase.data.model.CnReplenishEntryOrderItem">
+		update cn_replenish_entry_order_item set inSap = #{inSap}, inSapTime = #{inSapTime}
+		<if test="sapMsg != null and sapMsg != ''">
+			<![CDATA[ , sapMsg = #{sapMsg} ]]>
+		</if>
+		<if test="outSapMsg != null and outSapMsg != ''">
+			<![CDATA[ , outSapMsg = #{outSapMsg} ]]>
+		</if>
+		<if test="itemNum != null and itemNum != ''">
+			<![CDATA[ , itemNum = #{itemNum} ]]>
+		</if>
+		where id = #{id}
+	</update>
+</mapper>

@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.OdsTMFXRebatesSummaryDao">
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.OdsTMFXRebatesSummary">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-07 16:45
+    -->
+    <id column="ID" property="id" jdbcType="VARCHAR"/>
+    <result column="ECOLOGY_SHOP" property="ecologyShop" jdbcType="VARCHAR"/>
+    <result column="YEAR" property="year" jdbcType="VARCHAR"/>
+    <result column="MONTH" property="month" jdbcType="VARCHAR"/>
+    <result column="TYPE" property="type" jdbcType="CHAR"/>
+    <result column="INDUSTRY" property="industry" jdbcType="VARCHAR"/>
+    <result column="BRAND" property="brand" jdbcType="VARCHAR"/>
+    <result column="SALE_AMOUNT" property="saleAmount" jdbcType="DECIMAL"/>
+    <result column="REBATES_AMOUNT" property="rebatesAmount" jdbcType="DECIMAL"/>
+    <result column="TARGET" property="target" jdbcType="DECIMAL"/>
+    <result column="COMPLETION" property="completion" jdbcType="DECIMAL"/>
+    <result column="BASE_POINT" property="basePoint" jdbcType="DECIMAL"/>
+    <result column="EXTRA_REBATE" property="extraRebate" jdbcType="DECIMAL"/>
+    <result column="BASE_REBATES_AMOUNT" property="baseRebatesAmount" jdbcType="DECIMAL"/>
+    <result column="EXTRA_REBATES_AMOUNT" property="extraRebatesAmount" jdbcType="DECIMAL"/>
+    <result column="YX_COST" property="yxCost" jdbcType="DECIMAL"/>
+    <result column="QT_COST" property="qtCost" jdbcType="DECIMAL"/>
+    <result column="SHARE_PROPORTION" property="shareProportion" jdbcType="DECIMAL"/>
+    <result column="INDUSTRY_TARGET" property="industryTarget" jdbcType="DECIMAL"/>
+    <result column="INDUSTRY_COMPLETION" property="industryCompletion" jdbcType="DECIMAL"/>
+    <result column="STEP_POINT" property="stepPoint" jdbcType="DECIMAL"/>
+    <result column="MARK_POINT" property="markPoint" jdbcType="DECIMAL"/>
+    <result column="STEP_REBATES_AMOUNT" property="stepRebatesAmount" jdbcType="DECIMAL"/>
+    <result column="MARK_REBATES_AMOUNT" property="markRebatesAmount" jdbcType="DECIMAL"/>
+    <result column="FIXED_AMOUNT" property="fixedAmount" jdbcType="DECIMAL"/>
+    <result column="SKU_STEP_POINT" property="skuStepPoint" jdbcType="DECIMAL"/>
+    <result column="SKU_STEP_REBATES_AMOUNT" property="skuStepRebatesAmount" jdbcType="DECIMAL"/>
+    <result column="CASH_AMOUNT" property="cashAmount" jdbcType="DECIMAL"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-07 16:45
+    -->
+    ID, ECOLOGY_SHOP, YEAR, MONTH, TYPE, INDUSTRY, BRAND, SALE_AMOUNT, REBATES_AMOUNT,
+    TARGET, COMPLETION, INDUSTRY_TARGET, INDUSTRY_COMPLETION, BASE_POINT, EXTRA_REBATE, STEP_POINT,
+    MARK_POINT, SKU_STEP_POINT, BASE_REBATES_AMOUNT, EXTRA_REBATES_AMOUNT,
+    STEP_REBATES_AMOUNT, MARK_REBATES_AMOUNT, FIXED_AMOUNT, SKU_STEP_REBATES_AMOUNT, YX_COST,
+    QT_COST, SHARE_PROPORTION, CASH_AMOUNT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-07 16:45
+    -->
+    select
+    <include refid="Base_Column_List"/>
+    from ODS_TMFX_REBATES_SUMMARY
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-07 16:45
+    -->
+    delete from ODS_TMFX_REBATES_SUMMARY
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-07 16:45
+    -->
+    insert into ods_tmfx_rebates_summary
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="ecologyShop != null">
+        ecology_shop,
+      </if>
+      <if test="year != null">
+        year,
+      </if>
+      <if test="month != null">
+        month,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="industry != null">
+        industry,
+      </if>
+      <if test="brand != null">
+        brand,
+      </if>
+      <if test="saleAmount != null">
+        sale_amount,
+      </if>
+      <if test="rebatesAmount != null">
+        rebates_amount,
+      </if>
+      <if test="target != null">
+        target,
+      </if>
+      <if test="completion != null">
+        completion,
+      </if>
+      <if test="industryTarget != null">
+        industry_target,
+      </if>
+      <if test="industryCompletion != null">
+        industry_completion,
+      </if>
+      <if test="basePoint != null">
+        base_point,
+      </if>
+      <if test="extraRebate != null">
+        extra_rebate,
+      </if>
+      <if test="stepPoint != null">
+        step_point,
+      </if>
+      <if test="markPoint != null">
+        mark_point,
+      </if>
+      <if test="skuStepPoint != null">
+        sku_step_point,
+      </if>
+      <if test="baseRebatesAmount != null">
+        base_rebates_amount,
+      </if>
+      <if test="extraRebatesAmount != null">
+        extra_rebates_amount,
+      </if>
+      <if test="stepRebatesAmount != null">
+        step_rebates_amount,
+      </if>
+      <if test="markRebatesAmount != null">
+        mark_rebates_amount,
+      </if>
+      <if test="fixedAmount != null">
+        fixed_amount,
+      </if>
+      <if test="skuStepRebatesAmount != null">
+        sku_step_rebates_amount,
+      </if>
+      <if test="yxCost != null">
+        yx_cost,
+      </if>
+      <if test="qtCost != null">
+        qt_cost,
+      </if>
+      <if test="shareProportion != null">
+        share_proportion,
+      </if>
+      <if test="cashAmount != null">
+        cash_amount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        replace(uuid(),'-',''),
+      </if>
+      <if test="ecologyShop != null">
+        #{ecologyShop,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null">
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="industry != null">
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="saleAmount != null">
+        #{saleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="rebatesAmount != null">
+        #{rebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="target != null">
+        #{target,jdbcType=DECIMAL},
+      </if>
+      <if test="completion != null">
+        #{completion,jdbcType=DECIMAL},
+      </if>
+      <if test="industryTarget != null">
+        #{industryTarget,jdbcType=DECIMAL},
+      </if>
+      <if test="industryCompletion != null">
+        #{industryCompletion,jdbcType=DECIMAL},
+      </if>
+      <if test="basePoint != null">
+        #{basePoint,jdbcType=DECIMAL},
+      </if>
+      <if test="extraRebate != null">
+        #{extraRebate,jdbcType=DECIMAL},
+      </if>
+      <if test="stepPoint != null">
+        #{stepPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="markPoint != null">
+        #{markPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="skuStepPoint != null">
+        #{skuStepPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="baseRebatesAmount != null">
+        #{baseRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="extraRebatesAmount != null">
+        #{extraRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="stepRebatesAmount != null">
+        #{stepRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="markRebatesAmount != null">
+        #{markRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fixedAmount != null">
+        #{fixedAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="skuStepRebatesAmount != null">
+        #{skuStepRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="yxCost != null">
+        #{yxCost,jdbcType=DECIMAL},
+      </if>
+      <if test="qtCost != null">
+        #{qtCost,jdbcType=DECIMAL},
+      </if>
+      <if test="shareProportion != null">
+        #{shareProportion},
+      </if>
+      <if test="cashAmount != null">
+        #{cashAmount},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-11-07 16:45
+    -->
+    update ods_tmfx_rebates_summary
+    <set>
+      <if test="ecologyShop != null">
+        ecology_shop = #{ecologyShop,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null">
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        month = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=CHAR},
+      </if>
+      <if test="industry != null">
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="saleAmount != null">
+        sale_amount = #{saleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="rebatesAmount != null">
+        rebates_amount = #{rebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="target != null">
+        target = #{target,jdbcType=DECIMAL},
+      </if>
+      <if test="completion != null">
+        completion = #{completion,jdbcType=DECIMAL},
+      </if>
+      <if test="industryTarget != null">
+        industry_target = #{industryTarget,jdbcType=DECIMAL},
+      </if>
+      <if test="industryCompletion != null">
+        industry_completion = #{industryCompletion,jdbcType=DECIMAL},
+      </if>
+      <if test="basePoint != null">
+        base_point = #{basePoint,jdbcType=DECIMAL},
+      </if>
+      <if test="extraRebate != null">
+        extra_rebate = #{extraRebate,jdbcType=DECIMAL},
+      </if>
+      <if test="stepPoint != null">
+        step_point = #{stepPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="markPoint != null">
+        mark_point = #{markPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="skuStepPoint != null">
+        sku_step_point = #{skuStepPoint,jdbcType=DECIMAL},
+      </if>
+      <if test="baseRebatesAmount != null">
+        base_rebates_amount = #{baseRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="extraRebatesAmount != null">
+        extra_rebates_amount = #{extraRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="stepRebatesAmount != null">
+        step_rebates_amount = #{stepRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="markRebatesAmount != null">
+        mark_rebates_amount = #{markRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fixedAmount != null">
+        fixed_amount = #{fixedAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="skuStepRebatesAmount != null">
+        sku_step_rebates_amount = #{skuStepRebatesAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="yxCost != null">
+        yx_cost = #{yxCost,jdbcType=DECIMAL},
+      </if>
+      <if test="qtCost != null">
+        qt_cost = #{qtCost,jdbcType=DECIMAL},
+      </if>
+      <if test="shareProportion != null">
+        share_proportion = #{shareProportion,jdbcType=DECIMAL},
+      </if>
+      <if test="cashAmount != null">
+        cash_amount = #{cashAmount,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="clearHistoryData">
+    DELETE
+    FROM ods_tmfx_rebates_summary
+    WHERE 1=1
+    <if test="year != null">
+      and year = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month != null">
+      and month = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null">
+      and type = #{type,jdbcType=CHAR}
+    </if>
+  </delete>
+  <select id="findSummaryByShop" resultMap="BaseResultMap">
+    select
+    t.ecology_shop,
+    t.year,
+    t.month,
+    t.type,
+    sum(t.sale_amount)sale_amount,
+    sum(t.base_rebates_amount)base_rebates_amount,
+    sum(t.extra_rebates_amount)extra_rebates_amount
+    from ods_tmfx_rebates_summary t
+    WHERE 1=1
+    <if test="ecologyShop != null">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year != null">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month != null">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null">
+      and TYPE = #{type,jdbcType=CHAR}
+    </if>
+    group by
+    t.ecology_shop,
+    t.year,
+    t.month,
+    t.type
+  </select>
+  <select id="queryRebatesSummaryCount" resultType="int">
+    SELECT
+    count(1)
+    FROM ods_tmfx_rebates_summary
+    WHERE 1=1
+    <if test="year != null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month != null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop != null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and INDUSTRY = #{industry,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryRebatesSummaryList" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ods_tmfx_rebates_summary
+    WHERE 1=1
+    <if test="year != null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month != null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop != null and ecologyShop!=''">
+      and ECOLOGY_SHOP =#{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and INDUSTRY = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="start != null and rows != null ">
+      LIMIT #{start}, #{rows}
+    </if>
+  </select>
+  <select id="queryRebatesSummaryExcel" resultMap="BaseResultMap">
+    SELECT
+    ID, ECOLOGY_SHOP, YEAR, MONTH, case TYPE when 'y' then '年度' when 'q' then '季度' when 'm' then
+    '月度' end TYPE, INDUSTRY, BRAND,
+    SALE_AMOUNT, REBATES_AMOUNT,
+    TARGET, COMPLETION, INDUSTRY_TARGET, INDUSTRY_COMPLETION, BASE_POINT, EXTRA_REBATE, STEP_POINT,
+    MARK_POINT, SKU_STEP_POINT, BASE_REBATES_AMOUNT, EXTRA_REBATES_AMOUNT,
+    STEP_REBATES_AMOUNT, MARK_REBATES_AMOUNT, FIXED_AMOUNT, SKU_STEP_REBATES_AMOUNT, YX_COST,
+    QT_COST, SHARE_PROPORTION, CASH_AMOUNT
+    FROM ods_tmfx_rebates_summary
+    WHERE 1=1
+    <if test="year != null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month != null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="ecologyShop != null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and INDUSTRY = #{industry,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryAllRebatesSummary" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ods_tmfx_rebates_summary
+    WHERE 1=1
+    <if test="year != null and year!=''">
+      and year = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month != null and month!=''">
+      and month = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="type!=null and type!=''">
+      and type = #{type,jdbcType=CHAR}
+    </if>
+  </select>
+  <select id="queryRebatesAmountByBrand" resultType="java.math.BigDecimal">
+    select
+    nvl(sum(s.rebates_amount),0)rebates_amount
+    from ods_tmfx_rebates_summary s
+    where 1=1
+    <if test="year!=null and year!=''">
+      and s.year = #{year}
+    </if>
+    <if test="month!=null and month!=''">
+      and s.month = #{month}
+    </if>
+    <if test="type!=null and type!=''">
+      and s.type = #{type}
+    </if>
+    <if test="brand!=null and brand!=''">
+      and s.brand=#{brand}
+    </if>
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and s.ECOLOGY_SHOP=#{ecologyShop}
+    </if>
+  </select>
+  <select id="queryByIndustry" resultMap="BaseResultMap">
+    select
+    r.year,
+    r.month,
+    r.type,
+    r.industry,
+    r.brand,
+    IFNULL(sum(r.rebates_amount),0)rebates_amount,
+    IFNULL(sum(r.yx_cost),0)yx_cost,
+    IFNULL(sum(r.sale_amount),0)sale_amount
+    from ods_tmfx_rebates_summary r
+    WHERE 1=1
+    <if test="year!=null and year!=''">
+      and r.year = #{year}
+    </if>
+    <if test="month!=null and month!=''">
+      and r.month = #{month}
+    </if>
+    <if test="type!=null and type!=''">
+      and r.type = #{type}
+    </if>
+    group by
+    r.year,
+    r.month,
+    r.type,
+    r.industry,
+    r.brand
+  </select>
+  <select id="querySummaryByShop" resultMap="BaseResultMap">
+    select
+    r.year,
+    r.month,
+    r.ecology_shop,
+    r.type,
+    IFNULL(sum(r.sale_amount),0) sale_amount,
+    IFNULL(sum(r.target),0) target,
+    IFNULL(sum(r.qt_cost),0) qt_cost,
+    IFNULL(sum(r.rebates_amount),0) rebates_amount
+    from ods_tmfx_rebates_summary r
+    WHERE 1=1
+    <if test="year!=null and year!=''">
+      and r.year = #{year}
+    </if>
+    <if test="month!=null and month!=''">
+      and r.month = #{month}
+    </if>
+    <if test="type!=null and type!=''">
+      and r.type = #{type}
+    </if>
+    group by
+    r.year,
+    r.month,
+    r.ecology_shop,
+    r.type
+  </select>
+  <select id="querySummaryAmount" resultType="java.math.BigDecimal">
+    select
+    IFNULL(sum(r.sale_amount),0) sale_amount
+    from ods_tmfx_rebates_summary r
+    where r.year = #{year,jdbcType=VARCHAR}
+    and r.month = #{month,jdbcType=VARCHAR}
+    and r.type='m'
+    and r.ecology_shop = #{ecologyShop,jdbcType=VARCHAR}
+  </select>
+  <select id="queryAmountByIndustry" resultType="java.math.BigDecimal">
+    select
+    IFNULL(sum(r.sale_amount),0) sale_amount
+    from ods_tmfx_rebates_summary r
+    WHERE 1=1
+    <if test="year!=null and year!=''">
+      and r.year = #{year}
+    </if>
+    <if test="month!=null and month!=''">
+      and r.month = #{month}
+    </if>
+    <if test="type!=null and type!=''">
+      and r.type = #{type}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and r.industry = #{industry}
+    </if>
+    <if test="brand!=null and brand!=''">
+      and r.brand = #{brand}
+    </if>
+  </select>
+</mapper>

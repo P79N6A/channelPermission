@@ -6,7 +6,7 @@
     <result column="source" property="source" jdbcType="VARCHAR" />
     <result column="productId" property="productId" jdbcType="INTEGER" />
     <result column="sku" property="sku" jdbcType="VARCHAR" />
-    <result column="sourceProductId" jdbcType="VARCHAR" />
+    <result column="sourceProductId" property="sourceProductId" jdbcType="VARCHAR" />
     <result column="tzSku" property="tzSku" jdbcType="VARCHAR" />
     <result column="stype" property="stype" jdbcType="INTEGER" />
     <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
@@ -17,7 +17,8 @@
   </sql>
   
     <select id="Listf" resultMap="BaseResultMap">
-SELECT *
+    SELECT
+    <include refid="Base_Column_List" />
 	FROM stocksyncproducts
 	where 1=1
 	<if test="entity!=null">
@@ -27,8 +28,11 @@ SELECT *
 	  <if test="entity.sku!= null and entity.sku!='' ">
         <![CDATA[ and sku like #{entity.sku}]]>
       </if>
- 	<if test="entity.tzSku != null and entity.tzSku !='' ">
+ 	  <if test="entity.tzSku != null and entity.tzSku !='' ">
         <![CDATA[ and tzSku like #{entity.tzSku}]]>
+      </if>
+      <if test="entity.sourceProductId != null and entity.sourceProductId !='' ">
+        and sourceProductId = #{entity.sourceProductId}
       </if>
 	</if>
 	<include refid="pagination" />
@@ -39,8 +43,15 @@ SELECT *
 	where
        sku = #{sku,jdbcType=VARCHAR} 
        and
-       source =#{source,jdbcType=VARCHAR} 
-        </select>
+       source =#{source,jdbcType=VARCHAR}
+   </select>
+   <select id="getBySourceAndSku" resultMap="BaseResultMap">
+       select
+       <include refid="Base_Column_List" />
+       from stocksyncproducts
+       where source=#{source} and sku=#{sku}
+       order by id desc limit 1
+   </select>
    <select id="getPagerCountS" resultType="int">
 		SELECT count(id)
 	FROM stocksyncproducts

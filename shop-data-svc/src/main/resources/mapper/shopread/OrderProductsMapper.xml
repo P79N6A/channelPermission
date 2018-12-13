@@ -1,435 +1,964 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.haier.shop.dao.shopread.OperationAreaReadDao" >
-	<resultMap id="BaseResultMap" type="com.haier.shop.model.OrderProductsVo" >
-		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="cOrderSn" property="cOrderSn" jdbcType="INTEGER" />
-		<result column="orderSn" property="orderSn" jdbcType="INTEGER" />
-		<result column="siteId" property="siteid" jdbcType="INTEGER" />
-		<result column="isTest" property="istest" jdbcType="TINYINT" />
-		<result column="hasRead" property="hasread" jdbcType="TINYINT" />
-		<result column="supportOneDayLimit" property="supportonedaylimit" jdbcType="TINYINT" />
-		<result column="orderId" property="orderid" jdbcType="INTEGER" />
-		<result column="isBook" property="isBook" jdbcType="TINYINT" />
-		<result column="cPaymentStatus" property="cPaymentStatus" jdbcType="SMALLINT" />
-		<result column="cPayTime" property="cPayTime" jdbcType="INTEGER" />
-		<result column="cpayTimeTs" property="cpayTimeTs" jdbcType="INTEGER" />
-		<result column="productType" property="productType" jdbcType="INTEGER" />
-		<result column="productTypeTs" property="productTypeTs" jdbcType="VARCHAR" />
-		<result column="productId" property="productId" jdbcType="INTEGER" />
-		<result column="productName" property="productName" jdbcType="VARCHAR" />
-		<result column="sku" property="sku" jdbcType="VARCHAR" />
-		<result column="price" property="price" jdbcType="DECIMAL" />
-		<result column="number" property="number" jdbcType="SMALLINT" />
-		<result column="lockedNumber" property="lockedNumber" jdbcType="INTEGER" />
-		<result column="unlockedNumber" property="unlockedNumber" jdbcType="INTEGER" />
-		<result column="productAmount" property="productAmount" jdbcType="DECIMAL" />
-		<result column="balanceAmount" property="balanceamount" jdbcType="DECIMAL" />
-		<result column="couponAmount" property="couponAmount" jdbcType="DECIMAL" />
-		<result column="esAmount" property="esAmount" jdbcType="DECIMAL" />
-		<!-- <result column="giftCardNumberId" property="giftcardnumberid" jdbcType="INTEGER" /> -->
-		<result column="usedGiftCardAmount" property="usedgiftcardamount" jdbcType="DECIMAL" />
-		<result column="couponLogId" property="couponlogid" jdbcType="INTEGER" />
-		<result column="activityPrice" property="activityprice" jdbcType="DECIMAL" />
-		<result column="activityId" property="activityid" jdbcType="INTEGER" />
-		<result column="cateId" property="cateid" jdbcType="INTEGER" />
-		<result column="brandId" property="brandid" jdbcType="INTEGER" />
-		<result column="netPointId" property="netPointId" jdbcType="INTEGER" />
-		<result column="shippingFee" property="shippingFee" jdbcType="DECIMAL" />
-		<result column="settlementStatus" property="settlementStatus" jdbcType="TINYINT" />
-		<result column="receiptOrRejectTime" property="receiptOrRejectTime" jdbcType="INTEGER" />
-		<result column="isWmsSku" property="isWmsSku" jdbcType="TINYINT" />
-		<result column="sCode" property="sCode" jdbcType="VARCHAR" />
-		<result column="tsCode" property="tsCode" jdbcType="VARCHAR" />
-		<result column="tsShippingTime" property="tsshippingtime" jdbcType="INTEGER" />
-		<result column="status" property="status" jdbcType="SMALLINT" />
-		<result column="productSn" property="productsn" jdbcType="VARCHAR" />
-		<result column="invoiceNumber" property="invoicenumber" jdbcType="VARCHAR" />
-		<result column="expressName" property="expressname" jdbcType="VARCHAR" />
-		<result column="invoiceExpressNumber" property="invoiceexpressnumber" jdbcType="VARCHAR" />
-		<result column="postMan" property="postman" jdbcType="VARCHAR" />
-		<result column="postManPhone" property="postmanphone" jdbcType="VARCHAR" />
-		<result column="isNotice" property="isnotice" jdbcType="SMALLINT" />
-		<result column="noticeType" property="noticetype" jdbcType="SMALLINT" />
-		<result column="noticeRemark" property="noticeremark" jdbcType="VARCHAR" />
-		<result column="noticeTime" property="noticetime" jdbcType="VARCHAR" />
-		<result column="shippingTime" property="shippingtime" jdbcType="INTEGER" />
-		<result column="lessOrderSn" property="lessordersn" jdbcType="VARCHAR" />
-		<result column="waitGetLesShippingInfo" property="waitgetlesshippinginfo" jdbcType="TINYINT" />
-		<result column="getLesShippingCount" property="getlesshippingcount" jdbcType="INTEGER" />
-		<result column="outping" property="outping" jdbcType="VARCHAR" />
-		<result column="lessShipTime" property="lessshiptime" jdbcType="INTEGER" />
-		<result column="closeTime" property="closetime" jdbcType="INTEGER" />
-		<result column="isReceipt" property="isReceipt" jdbcType="INTEGER" />
-		<result column="isMakeReceipt" property="isMakeReceipt" jdbcType="INTEGER" />
-		<result column="receiptAddTime" property="receiptAddTime" jdbcType="VARCHAR" />
-		<result column="makeReceiptType" property="makeReceiptType" jdbcType="TINYINT" />
-		<result column="shippingMode" property="shippingMode" jdbcType="VARCHAR" />
-		<result column="lastTimeForShippingMode" property="lastTimeForShippingMode" jdbcType="INTEGER" />
-		<result column="lastEditorForShippingMode" property="lastEditorForShippingMode" jdbcType="VARCHAR" />
-		<result column="tongshuaiWorkId" property="tongshuaiworkid" jdbcType="INTEGER" />
-		<result column="orderPromotionId" property="orderpromotionid" jdbcType="INTEGER" />
-		<result column="externalSaleSettingId" property="externalsalesettingid" jdbcType="INTEGER" />
-		<result column="recommendationId" property="recommendationid" jdbcType="INTEGER" />
-		<result column="hasSendAlertNum" property="hassendalertnum" jdbcType="TINYINT" />
-		<result column="isNoLimitStockProduct" property="isnolimitstockproduct" jdbcType="TINYINT" />
-		<result column="hpRegisterDate" property="hpregisterdate" jdbcType="INTEGER" />
-		<result column="hpFailDate" property="hpfaildate" jdbcType="INTEGER" />
-		<result column="hpFinishDate" property="hpfinishdate" jdbcType="INTEGER" />
-		<result column="hpReservationDate" property="hpreservationdate" jdbcType="INTEGER" />
-		<result column="shippingOpporunity" property="shippingopporunity" jdbcType="TINYINT" />
-		<result column="isTimeoutFree" property="istimeoutfree" jdbcType="TINYINT" />
-		<result column="itemShareAmount" property="itemshareamount" jdbcType="DECIMAL" />
-		<result column="lessShipTInTime" property="lessshiptintime" jdbcType="INTEGER" />
-		<result column="lessShipTOutTime" property="lessshiptouttime" jdbcType="INTEGER" />
-		<result column="cbsSecCode" property="cbsseccode" jdbcType="VARCHAR" />
-		<result column="points" property="points" jdbcType="INTEGER" />
-		<result column="modified" property="modified" jdbcType="TIMESTAMP" />
-		<result column="splitFlag" property="splitflag" jdbcType="TINYINT" />
-		<result column="splitRelateCOrderSn" property="splitrelatecordersn" jdbcType="VARCHAR" />
-		<result column="channelId" property="channelid" jdbcType="TINYINT" />
-		<result column="activityId2" property="activityid2" jdbcType="INTEGER" />
-		<result column="pdOrderStatus" property="pdOrderStatus" jdbcType="INTEGER" />
-		<result column="omsOrderSn" property="omsordersn" jdbcType="VARCHAR" />
-		<result column="couponCode" property="couponcode" jdbcType="VARCHAR" />
-		<result column="couponCodeValue" property="couponCodeValue" jdbcType="DECIMAL" />
-		<result column="jfbAmoun" property="jfbAmount" jdbcType="DECIMAL" />
-		<result column="djAmount" property="djAmount" jdbcType="DECIMAL" />
-		<result column="hbAmount" property="hbAmount" jdbcType="DECIMAL" />
-		<result column="storeId" property="storeId" jdbcType="INTEGER" />
-		<result column="storeType" property="storeType" jdbcType="TINYINT" />
-		<result column="stockType" property="stockType" jdbcType="VARCHAR" />
-		<result column="o2oType" property="o2oType" jdbcType="TINYINT" />
-		<result column="brokerageType" property="brokeragetype" jdbcType="VARCHAR" />
-		<result column="oid" property="oid" jdbcType="VARCHAR" />
-		<result column="addTime" property="addTimeMin" jdbcType="VARCHAR" />
-		<result column="remark" property="remark" jdbcType="VARCHAR" />
-		<result column="firstConfirmTime" property="firstConfirmTime" jdbcType="VARCHAR" />
-		<result column="smManualTime" property="smManualTime" jdbcType="VARCHAR" />
-		<result column="autoConfirmNum" property="autoConfirmNumMin" jdbcType="VARCHAR" />
-		<result column="payTime" property="payTimeMin" jdbcType="VARCHAR" />
-		<result column="sourceOrderSn" property="sourceOrderSn" jdbcType="VARCHAR" />
-		<result column="tradeSn" property="tradeSn" jdbcType="VARCHAR" />
-		<result column="orderStatus" property="orderStatus" jdbcType="VARCHAR" />
-		<result column="paymentName" property="paymentName" jdbcType="VARCHAR" />
-		<result column="paymentStatus" property="paymentStatus" jdbcType="VARCHAR" />
-		<result column="source" property="source" jdbcType="VARCHAR" />
-		<result column="type" property="type" jdbcType="VARCHAR" />
-		<result column="istate" property="istate" jdbcType="VARCHAR" />
-		<result column="invoiceTitle" property="invoiceTitle" jdbcType="VARCHAR" />
-		<result column="electricFlag" property="electricFlag" jdbcType="VARCHAR" />
-		<result column="receiptNum" property="receiptNum" jdbcType="VARCHAR" />
-		<result column="orowId" property="orowId" jdbcType="VARCHAR" />
-		<result column="eaiWriteState" property="eaiWriteState" jdbcType="VARCHAR" />
-		<result column="checkCode" property="checkCode" jdbcType="VARCHAR" />
-		<result column="firstConfirmPerson" property="firstConfirmPerson"  />
-		<result column="isCod" property="isCod"  />
+<mapper namespace="com.haier.shop.dao.shopread.OperationAreaReadDao">
+    <resultMap id="BaseResultMap" type="com.haier.shop.model.OrderProductsVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="cOrderSn" property="cOrderSn" jdbcType="INTEGER"/>
+        <result column="orderSn" property="orderSn" jdbcType="INTEGER"/>
+        <result column="siteId" property="siteid" jdbcType="INTEGER"/>
+        <result column="isTest" property="istest" jdbcType="TINYINT"/>
+        <result column="hasRead" property="hasread" jdbcType="TINYINT"/>
+        <result column="supportOneDayLimit" property="supportonedaylimit" jdbcType="TINYINT"/>
+        <result column="orderId" property="orderid" jdbcType="INTEGER"/>
+        <result column="isBook" property="isBook" jdbcType="TINYINT"/>
+        <result column="cPaymentStatus" property="cPaymentStatus" jdbcType="SMALLINT"/>
+        <result column="cPayTime" property="cPayTime" jdbcType="INTEGER"/>
+        <result column="cpayTimeTs" property="cpayTimeTs" jdbcType="INTEGER"/>
+        <result column="productType" property="productType" jdbcType="INTEGER"/>
+        <result column="productTypeTs" property="productTypeTs" jdbcType="VARCHAR"/>
+        <result column="productId" property="productId" jdbcType="INTEGER"/>
+        <result column="productName" property="productName" jdbcType="VARCHAR"/>
+        <result column="sku" property="sku" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="number" property="number" jdbcType="SMALLINT"/>
+        <result column="lockedNumber" property="lockedNumber" jdbcType="INTEGER"/>
+        <result column="unlockedNumber" property="unlockedNumber" jdbcType="INTEGER"/>
+        <result column="productAmount" property="productAmount" jdbcType="DECIMAL"/>
+        <result column="balanceAmount" property="balanceamount" jdbcType="DECIMAL"/>
+        <result column="couponAmount" property="couponAmount" jdbcType="DECIMAL"/>
+        <result column="esAmount" property="esAmount" jdbcType="DECIMAL"/>
+        <!-- <result column="giftCardNumberId" property="giftcardnumberid" jdbcType="INTEGER" /> -->
+        <result column="usedGiftCardAmount" property="usedgiftcardamount" jdbcType="DECIMAL"/>
+        <result column="couponLogId" property="couponlogid" jdbcType="INTEGER"/>
+        <result column="activityPrice" property="activityprice" jdbcType="DECIMAL"/>
+        <result column="activityId" property="activityid" jdbcType="INTEGER"/>
+        <result column="cateId" property="cateid" jdbcType="INTEGER"/>
+        <result column="brandId" property="brandid" jdbcType="INTEGER"/>
+        <result column="netPointId" property="netPointId" jdbcType="INTEGER"/>
+        <result column="shippingFee" property="shippingFee" jdbcType="DECIMAL"/>
+        <result column="settlementStatus" property="settlementStatus" jdbcType="TINYINT"/>
+        <result column="receiptOrRejectTime" property="receiptOrRejectTime" jdbcType="INTEGER"/>
+        <result column="isWmsSku" property="isWmsSku" jdbcType="TINYINT"/>
+        <result column="sCode" property="sCode" jdbcType="VARCHAR"/>
+        <result column="tsCode" property="tsCode" jdbcType="VARCHAR"/>
+        <result column="tsShippingTime" property="tsshippingtime" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="SMALLINT"/>
+        <result column="productSn" property="productsn" jdbcType="VARCHAR"/>
+        <result column="invoiceNumber" property="invoicenumber" jdbcType="VARCHAR"/>
+        <result column="expressName" property="expressName" jdbcType="VARCHAR"/>
+        <result column="invoiceExpressNumber" property="invoiceExpressNumber" jdbcType="VARCHAR"/>
+        <result column="postMan" property="postman" jdbcType="VARCHAR"/>
+        <result column="postManPhone" property="postmanphone" jdbcType="VARCHAR"/>
+        <result column="isNotice" property="isnotice" jdbcType="SMALLINT"/>
+        <result column="noticeType" property="noticetype" jdbcType="SMALLINT"/>
+        <result column="noticeRemark" property="noticeremark" jdbcType="VARCHAR"/>
+        <result column="noticeTime" property="noticetime" jdbcType="VARCHAR"/>
+        <result column="shippingTime" property="shippingtime" jdbcType="INTEGER"/>
+        <result column="lessOrderSn" property="lessordersn" jdbcType="VARCHAR"/>
+        <result column="waitGetLesShippingInfo" property="waitgetlesshippinginfo" jdbcType="TINYINT"/>
+        <result column="getLesShippingCount" property="getlesshippingcount" jdbcType="INTEGER"/>
+        <result column="outping" property="outping" jdbcType="VARCHAR"/>
+        <result column="lessShipTime" property="lessshiptime" jdbcType="INTEGER"/>
+        <result column="closeTime" property="closetime" jdbcType="INTEGER"/>
+        <result column="isReceipt" property="isReceipt" jdbcType="INTEGER"/>
+        <result column="isMakeReceipt" property="isMakeReceipt" jdbcType="INTEGER"/>
+        <result column="receiptAddTime" property="receiptAddTime" jdbcType="VARCHAR"/>
+        <result column="makeReceiptType" property="makeReceiptType" jdbcType="TINYINT"/>
+        <result column="shippingMode" property="shippingMode" jdbcType="VARCHAR"/>
+        <result column="lastTimeForShippingMode" property="lastTimeForShippingMode" jdbcType="INTEGER"/>
+        <result column="lastEditorForShippingMode" property="lastEditorForShippingMode" jdbcType="VARCHAR"/>
+        <result column="tongshuaiWorkId" property="tongshuaiworkid" jdbcType="INTEGER"/>
+        <result column="orderPromotionId" property="orderpromotionid" jdbcType="INTEGER"/>
+        <result column="externalSaleSettingId" property="externalsalesettingid" jdbcType="INTEGER"/>
+        <result column="recommendationId" property="recommendationid" jdbcType="INTEGER"/>
+        <result column="hasSendAlertNum" property="hassendalertnum" jdbcType="TINYINT"/>
+        <result column="isNoLimitStockProduct" property="isnolimitstockproduct" jdbcType="TINYINT"/>
+        <result column="hpRegisterDate" property="hpregisterdate" jdbcType="INTEGER"/>
+        <result column="hpFailDate" property="hpfaildate" jdbcType="INTEGER"/>
+        <result column="hpFinishDate" property="hpfinishdate" jdbcType="INTEGER"/>
+        <result column="hpReservationDate" property="hpreservationdate" jdbcType="INTEGER"/>
+        <result column="shippingOpporunity" property="shippingopporunity" jdbcType="TINYINT"/>
+        <result column="isTimeoutFree" property="istimeoutfree" jdbcType="TINYINT"/>
+        <result column="itemShareAmount" property="itemshareamount" jdbcType="DECIMAL"/>
+        <result column="lessShipTInTime" property="lessshiptintime" jdbcType="INTEGER"/>
+        <result column="lessShipTOutTime" property="lessshiptouttime" jdbcType="INTEGER"/>
+        <result column="isSAorZP" property="isSAorZP" jdbcType="VARCHAR"/>
+        <result column="points" property="points" jdbcType="INTEGER"/>
+        <result column="modified" property="modified" jdbcType="TIMESTAMP"/>
+        <result column="splitFlag" property="splitflag" jdbcType="TINYINT"/>
+        <result column="splitRelateCOrderSn" property="splitrelatecordersn" jdbcType="VARCHAR"/>
+        <result column="channelId" property="channelid" jdbcType="TINYINT"/>
+        <result column="activityId2" property="activityid2" jdbcType="INTEGER"/>
+        <result column="pdOrderStatus" property="pdOrderStatus" jdbcType="INTEGER"/>
+        <result column="omsOrderSn" property="omsordersn" jdbcType="VARCHAR"/>
+        <result column="couponCode" property="couponcode" jdbcType="VARCHAR"/>
+        <result column="couponCodeValue" property="couponCodeValue" jdbcType="DECIMAL"/>
+        <result column="jfbAmoun" property="jfbAmount" jdbcType="DECIMAL"/>
+        <result column="djAmount" property="djAmount" jdbcType="DECIMAL"/>
+        <result column="hbAmount" property="hbAmount" jdbcType="DECIMAL"/>
+        <result column="storeId" property="storeId" jdbcType="INTEGER"/>
+        <result column="storeType" property="storeType" jdbcType="TINYINT"/>
+        <result column="stockType" property="stockType" jdbcType="VARCHAR"/>
+        <result column="o2oType" property="o2oType" jdbcType="TINYINT"/>
+        <result column="brokerageType" property="brokeragetype" jdbcType="VARCHAR"/>
+        <result column="oid" property="oid" jdbcType="VARCHAR"/>
+        <result column="addTimeMin" property="addTimeMin" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="firstConfirmTime" property="firstConfirmTime" jdbcType="VARCHAR"/>
+        <result column="smManualTime" property="smManualTime" jdbcType="VARCHAR"/>
+        <result column="autoConfirmNum" property="autoConfirmNumMin" jdbcType="VARCHAR"/>
+        <result column="payTime" property="payTimeMin" jdbcType="VARCHAR"/>
+        <result column="sourceOrderSn" property="sourceOrderSn" jdbcType="VARCHAR"/>
+        <result column="tradeSn" property="tradeSn" jdbcType="VARCHAR"/>
+        <result column="orderStatus" property="orderStatus" jdbcType="VARCHAR"/>
+        <result column="paymentName" property="paymentName" jdbcType="VARCHAR"/>
+        <result column="paymentStatus" property="paymentStatus" jdbcType="VARCHAR"/>
+        <result column="source" property="source" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="istate" property="istate" jdbcType="VARCHAR"/>
+        <result column="invoiceTitle" property="invoiceTitle" jdbcType="VARCHAR"/>
+        <result column="electricFlag" property="electricFlag" jdbcType="VARCHAR"/>
+        <result column="receiptNum" property="receiptNum" jdbcType="VARCHAR"/>
+        <result column="orowId" property="orowId" jdbcType="VARCHAR"/>
+        <result column="eaiWriteState" property="eaiWriteState" jdbcType="VARCHAR"/>
+        <result column="checkCode" property="checkCode" jdbcType="VARCHAR"/>
+        <result column="firstConfirmPerson" property="firstConfirmPerson"/>
+        <result column="isCod" property="isCod"/>
+        <result column="tbOrderSn" property="tbOrderSn"/>
+        <result column="consignee" property="consignee"/><!--下单人-->
+        <result column="source" property="source"/>
+        <result column="repairId" property="repairId"/>
+        <result column="fiscalCode" property="fiscalCode"/>
+        <result column="netPointName" property="netPointName"/>
 
-	</resultMap>
-	<sql id="Base_Column_List" >
-    id, order_product_id, order_id, commission_proportion, platform_proportion, oid, 
+
+    </resultMap>
+    <resultMap id="BaseResultMap1" type="com.haier.shop.model.LesQueues">
+        <result property="id" column="id" />
+        <result property="orderProductId" column="orderProductId" />
+        <result property="action" column="action" />
+        <result property="pushData" column="pushData" />
+        <result property="success" column="success" />
+        <result property="count" column="count" />
+        <result property="addTime" column="addTime" />
+        <result property="lastMessage" column="lastMessage" />
+        <result property="isLock" column="isLock" />
+        <result property="isStop" column="isStop" />
+        <result property="successTime" column="successTime" />
+        <result property="lastTryTime" column="lastTryTime" />
+    </resultMap>
+
+
+    <resultMap id="OrderProductsResultMap" type="com.haier.shop.model.OrderProducts">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="cOrderSn" property="cOrderSn" jdbcType="INTEGER"/>
+        <result column="orderSn" property="orderSn" jdbcType="INTEGER"/>
+        <result column="siteId" property="siteId" jdbcType="INTEGER"/>
+        <result column="isTest" property="isTest" jdbcType="TINYINT"/>
+        <result column="hasRead" property="hasRead" jdbcType="TINYINT"/>
+        <result column="supportOneDayLimit" property="supportOneDayLimit" jdbcType="TINYINT"/>
+        <result column="orderId" property="orderId" jdbcType="INTEGER"/>
+        <result column="isBook" property="isBook" jdbcType="TINYINT"/>
+        <result column="cPaymentStatus" property="cPaymentStatus" jdbcType="SMALLINT"/>
+        <result column="cPayTime" property="cPayTime" jdbcType="INTEGER"/>
+        <result column="cpayTimeTs" property="cpayTimeTs" jdbcType="INTEGER"/>
+        <result column="productType" property="productType" jdbcType="INTEGER"/>
+        <result column="productTypeTs" property="productTypeTs" jdbcType="VARCHAR"/>
+        <result column="productId" property="productId" jdbcType="INTEGER"/>
+        <result column="productName" property="productName" jdbcType="VARCHAR"/>
+        <result column="sku" property="sku" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="number" property="number" jdbcType="SMALLINT"/>
+        <result column="lockedNumber" property="lockedNumber" jdbcType="INTEGER"/>
+        <result column="unlockedNumber" property="unlockedNumber" jdbcType="INTEGER"/>
+        <result column="productAmount" property="productAmount" jdbcType="DECIMAL"/>
+        <result column="balanceAmount" property="balanceAmount" jdbcType="DECIMAL"/>
+        <result column="couponAmount" property="couponAmount" jdbcType="DECIMAL"/>
+        <result column="esAmount" property="esAmount" jdbcType="DECIMAL"/>
+        <!-- <result column="giftCardNumberId" property="giftcardnumberid" jdbcType="INTEGER" /> -->
+        <result column="usedGiftCardAmount" property="usedGiftCardAmount" jdbcType="DECIMAL"/>
+        <result column="couponLogId" property="couponLogId" jdbcType="INTEGER"/>
+        <result column="activityPrice" property="activityPrice" jdbcType="DECIMAL"/>
+        <result column="activityId" property="activityId" jdbcType="INTEGER"/>
+        <result column="cateId" property="cateId" jdbcType="INTEGER"/>
+        <result column="brandId" property="brandId" jdbcType="INTEGER"/>
+        <result column="netPointId" property="netPointId" jdbcType="INTEGER"/>
+        <result column="shippingFee" property="shippingFee" jdbcType="DECIMAL"/>
+        <result column="settlementStatus" property="settlementStatus" jdbcType="TINYINT"/>
+        <result column="receiptOrRejectTime" property="receiptOrRejectTime" jdbcType="INTEGER"/>
+        <result column="isWmsSku" property="isWmsSku" jdbcType="TINYINT"/>
+        <result column="sCode" property="sCode" jdbcType="VARCHAR"/>
+        <result column="tsCode" property="tsCode" jdbcType="VARCHAR"/>
+        <result column="tsShippingTime" property="tsShippingTime" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="SMALLINT"/>
+        <result column="productSn" property="productSn" jdbcType="VARCHAR"/>
+        <result column="invoiceNumber" property="invoiceNumber" jdbcType="VARCHAR"/>
+        <result column="expressName" property="expressName" jdbcType="VARCHAR"/>
+        <result column="invoiceExpressNumber" property="invoiceExpressNumber" jdbcType="VARCHAR"/>
+        <result column="postMan" property="postMan" jdbcType="VARCHAR"/>
+        <result column="postManPhone" property="postManPhone" jdbcType="VARCHAR"/>
+        <result column="isNotice" property="isNotice" jdbcType="SMALLINT"/>
+        <result column="noticeType" property="noticeType" jdbcType="SMALLINT"/>
+        <result column="noticeRemark" property="noticeRemark" jdbcType="VARCHAR"/>
+        <result column="noticeTime" property="noticeTime" jdbcType="VARCHAR"/>
+        <result column="shippingTime" property="shippingTime" jdbcType="INTEGER"/>
+        <result column="lessOrderSn" property="lessOrderSn" jdbcType="VARCHAR"/>
+        <result column="waitGetLesShippingInfo" property="waitGetLesShippingInfo" jdbcType="TINYINT"/>
+        <result column="getLesShippingCount" property="getLesShippingCount" jdbcType="INTEGER"/>
+        <result column="outping" property="outping" jdbcType="VARCHAR"/>
+        <result column="lessShipTime" property="lessShipTime" jdbcType="INTEGER"/>
+        <result column="closeTime" property="closeTime" jdbcType="INTEGER"/>
+        <result column="isReceipt" property="isReceipt" jdbcType="INTEGER"/>
+        <result column="isMakeReceipt" property="isMakeReceipt" jdbcType="INTEGER"/>
+        <result column="receiptAddTime" property="receiptAddTime" jdbcType="VARCHAR"/>
+        <result column="makeReceiptType" property="makeReceiptType" jdbcType="TINYINT"/>
+        <result column="shippingMode" property="shippingMode" jdbcType="VARCHAR"/>
+        <result column="lastTimeForShippingMode" property="lastTimeForShippingMode" jdbcType="INTEGER"/>
+        <result column="lastEditorForShippingMode" property="lastEditorForShippingMode" jdbcType="VARCHAR"/>
+        <result column="tongshuaiWorkId" property="tongshuaiWorkId" jdbcType="INTEGER"/>
+        <result column="orderPromotionId" property="orderPromotionId" jdbcType="INTEGER"/>
+        <result column="externalSaleSettingId" property="externalSaleSettingId" jdbcType="INTEGER"/>
+        <result column="recommendationId" property="recommendationId" jdbcType="INTEGER"/>
+        <result column="hasSendAlertNum" property="hasSendAlertNum" jdbcType="TINYINT"/>
+        <result column="isNoLimitStockProduct" property="isNoLimitStockProduct" jdbcType="TINYINT"/>
+        <result column="hpRegisterDate" property="hpRegisterDate" jdbcType="INTEGER"/>
+        <result column="hpFailDate" property="hpFailDate" jdbcType="INTEGER"/>
+        <result column="hpFinishDate" property="hpFinishDate" jdbcType="INTEGER"/>
+        <result column="hpReservationDate" property="hpReservationDate" jdbcType="INTEGER"/>
+        <result column="shippingOpporunity" property="shippingOpporunity" jdbcType="TINYINT"/>
+        <result column="isTimeoutFree" property="isTimeoutFree" jdbcType="TINYINT"/>
+        <result column="itemShareAmount" property="itemShareAmount" jdbcType="DECIMAL"/>
+        <result column="lessShipTInTime" property="lessShipTInTime" jdbcType="INTEGER"/>
+        <result column="lessShipTOutTime" property="lessShipTOutTime" jdbcType="INTEGER"/>
+        <result column="isSAorZP" property="cbsSecCode" jdbcType="VARCHAR"/>
+        <result column="points" property="points" jdbcType="INTEGER"/>
+        <result column="modified" property="modified" jdbcType="TIMESTAMP"/>
+        <result column="splitFlag" property="splitFlag" jdbcType="TINYINT"/>
+        <result column="splitRelateCOrderSn" property="splitRelateCOrderSn" jdbcType="VARCHAR"/>
+        <result column="channelId" property="channelId" jdbcType="TINYINT"/>
+        <result column="activityId2" property="activityId2" jdbcType="INTEGER"/>
+        <result column="pdOrderStatus" property="pdOrderStatus" jdbcType="INTEGER"/>
+        <result column="omsOrderSn" property="omsOrderSn" jdbcType="VARCHAR"/>
+        <result column="couponCode" property="couponCode" jdbcType="VARCHAR"/>
+        <result column="couponCodeValue" property="couponCodeValue" jdbcType="DECIMAL"/>
+        <result column="jfbAmount" property="jfbAmount" jdbcType="DECIMAL"/>
+        <result column="djAmount" property="djAmount" jdbcType="DECIMAL"/>
+        <result column="hbAmount" property="hbAmount" jdbcType="DECIMAL"/>
+        <result column="storeId" property="storeId" jdbcType="INTEGER"/>
+        <result column="storeType" property="storeType" jdbcType="TINYINT"/>
+        <result column="stockType" property="stockType" jdbcType="VARCHAR"/>
+        <result column="o2oType" property="o2oType" jdbcType="TINYINT"/>
+        <result column="brokerageType" property="brokerageType" jdbcType="VARCHAR"/>
+        <result column="oid" property="oid" jdbcType="VARCHAR"/>
+        <result column="addTimeMin" property="addTimeMin" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="firstConfirmTime" property="firstConfirmTime" jdbcType="VARCHAR"/>
+        <result column="smManualTime" property="smManualTime" jdbcType="VARCHAR"/>
+        <result column="autoConfirmNum" property="autoConfirmNumMin" jdbcType="VARCHAR"/>
+        <result column="payTime" property="payTimeMin" jdbcType="VARCHAR"/>
+        <result column="sourceOrderSn" property="sourceOrderSn" jdbcType="VARCHAR"/>
+        <result column="tradeSn" property="tradeSn" jdbcType="VARCHAR"/>
+        <result column="orderStatus" property="orderStatus" jdbcType="VARCHAR"/>
+        <result column="paymentName" property="paymentName" jdbcType="VARCHAR"/>
+        <result column="paymentStatus" property="paymentStatus" jdbcType="VARCHAR"/>
+        <result column="source" property="source" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="istate" property="istate" jdbcType="VARCHAR"/>
+        <result column="invoiceTitle" property="invoiceTitle" jdbcType="VARCHAR"/>
+        <result column="electricFlag" property="electricFlag" jdbcType="VARCHAR"/>
+        <result column="receiptNum" property="receiptNum" jdbcType="VARCHAR"/>
+        <result column="orowId" property="orowId" jdbcType="VARCHAR"/>
+        <result column="eaiWriteState" property="eaiWriteState" jdbcType="VARCHAR"/>
+        <result column="checkCode" property="checkCode" jdbcType="VARCHAR"/>
+        <result column="firstConfirmPerson" property="firstConfirmPerson"/>
+        <result column="isCod" property="isCod"/>
+        <result column="isCd" property="isCd"/>
+        <result column="tbOrderSn" property="tbOrderSn"/>
+        <result column="consignee" property="consignee"/><!--下单人-->
+        <result column="source" property="source"/>
+        <result column="repairId" property="repairId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+     order_product_id, order_id, commission_proportion, platform_proportion, oid, 
     is_nofrozenstock, tb_order_sn, is_tz, tz_sku, is_cd, create_time, update_time, is_self_sell, 
     customer_id, is_dispatching, diamond_count, diamond_amt, diamond_commi_settle, diamond_payment_settle, 
     diamond_billing, seashell_count, seashell_amt, seashell_commi_settle, seashell_payment_settle, 
     seashell_billing, insurance_count, insurance_amt, insurance_commi_settle, insurance_payment_settle, 
     insurance_billing
   </sql>
+    <select id="queryGetId" resultType="com.haier.shop.model.OrderProducts" parameterType="java.lang.String">
+SELECT
+	`orderproducts`.`id`,
+	`orderproducts`.`isTest`,
+	`orderproducts`.`supportOneDayLimit`,
+	`orderproducts`.`orderId`,
+	`orderproducts`.`cOrderSn`,
+	`orderproducts`.`isBook`,
+	`orderproducts`.`cPaymentStatus`,
+	`orderproducts`.`cPayTime`,
+	`orderproducts`.`productType`,
+	`orderproducts`.`productId`,
+	`orderproducts`.`productName`,
+	`orderproducts`.`sku`,
+	`orderproducts`.`price`,
+	`orderproducts`.`number`,
+	`orderproducts`.`lockedNumber`,
+	`orderproducts`.`unlockedNumber`,
+	`orderproducts`.`productAmount`,
+	`orderproducts`.`couponAmount`,
+	`orderproducts`.`esAmount`,
+	`orderproducts`.`cateId`,
+	`orderproducts`.`brandId`,
+	`orderproducts`.`netPointId`,
+	`orderproducts`.`shippingFee`,
+	`orderproducts`.`settlementStatus`,
+	`orderproducts`.`receiptOrRejectTime`,
+	`orderproducts`.`isWmsSku`,
+	`orderproducts`.`sCode`,
+	`orderproducts`.`tsCode`,
+	`orderproducts`.`tsShippingTime`,
+	`orderproducts`.`status`,
+	`orderproducts`.`invoiceNumber`,
+	`orderproducts`.`expressName`,
+	`orderproducts`.`invoiceExpressNumber`,
+	`orderproducts`.`shippingTime`,
+	`orderproducts`.`lessOrderSn`,
+	`orderproducts`.`waitGetLesShippingInfo`,
+	`orderproducts`.`getLesShippingCount`,
+	`orderproducts`.`outping`,
+	`orderproducts`.`lessShipTime`,
+	`orderproducts`.`closeTime`,
+	`orderproducts`.`isReceipt`,
+	`orderproducts`.`isMakeReceipt`,
+	`orderproducts`.`receiptNum`,
+	`orderproducts`.`receiptAddTime`,
+	`orderproducts`.`makeReceiptType`,
+	`orderproducts`.`shippingMode`,
+	`orderproducts`.`lastTimeForShippingMode`,
+	`orderproducts`.`lastEditorForShippingMode`,
+	`orderproducts`.`systemRemark`,
+	`orderproducts`.`externalSaleSettingId`,
+	`orderproducts`.`isNoLimitStockProduct`,
+	`orderproducts`.`hpRegisterDate`,
+	`orderproducts`.`hpFailDate`,
+	`orderproducts`.`hpFinishDate`,
+	`orderproducts`.`hpReservationDate`,
+	`orderproducts`.`shippingOpporunity`,
+	`orderproducts`.`isTimeoutFree`,
+	`orderproducts`.`itemShareAmount`,
+	`orderproducts`.`lessShipTInTime`,
+	`orderproducts`.`lessShipTOutTime`,
+	`orderproducts`.`isSAorZP`,
+	`orderproducts`.`points`,
+	`orderproducts`.`modified`,
+	`orderproducts`.`splitFlag`,
+	`orderproducts`.`splitRelateCOrderSn`,
+	`orderproducts`.`channelId`,
+	`orderproducts`.`activityId2`,
+	`orderproducts`.`pdOrderStatus`,
+	`orderproducts`.`omsOrderSn`,
+	`orderproducts`.`couponCode`,
+	`orderproducts`.`couponCodeValue`,
+	`orderproducts`.`jfbAmount`,
+	`orderproducts`.`djAmount`,
+	`orderproducts`.`hbAmount`,
+	`orderproducts`.`storeId`,
+	`orderproducts`.`storeType`,
+	`orderproducts`.`stockType`,
+	`orderproducts`.`o2oType`,
+	`orderproducts`.`brokerageType`,
+	`orderproducts`.`oid`,
+	`orderproducts`.`addTime`,
+	`orderproducts`.`tzSku`,
+	`orderproducts`.`isCd`,
+	`orderproducts`.`tbOrderSn`
+FROM
+	`shop`.`orderproducts`
+WHERE
+	`orderproducts`.`id` =#{id}
+</select>
 
-
-	<select id="queryOderProductList" parameterType="com.haier.shop.model.OrderProductsVo" resultMap="BaseResultMap">
-		SELECT
-		p.cOrderSn,
-		o.orderSn orderSn,
-		p.isReceipt,
-		p.isBook,
-		p.productName,
-		p.price,
-		p.number,
-		p.sCode,
-		p.status,
-		from_unixtime(o.addTime) addTimeMin,
-		(ifnull(p.price,0) * ifnull(p.number,0)) money,
-		o.remark,
-		from_unixtime(o.firstConfirmTime) firstConfirmTime,
-		from_unixtime(o.smManualTime)   smManualTime,
-		o.firstConfirmPerson,
-		o.isCod,
-		o.autoConfirmNum
-		<include refid="findOrderProductSQLCond" />
-		<if test="page!=null and rows!=null">
-			limit ${page},${rows}
-		</if>
-	</select> 
-	
-		<select id="searchcod" parameterType="com.haier.shop.model.OrderProductsVo" resultMap="BaseResultMap">
-		SELECT
-		o.orderSn orderSn,
-		from_unixtime(o.addTime) addTime,
-		from_unixtime(o.firstConfirmTime) firstConfirmTime,
-		o.firstConfirmPerson,
-		o.isCod,
-		o.source,
-		from_unixtime(o.payTime) payTime,
-		o.autoConfirmNum
-		<include refid="findCodConfirmSQLCond" />
-		<if test="page!=null and rows!=null">
-			limit ${page},${rows}
-		</if>
+    <select id="findOrderProduct" resultMap="OrderProductsResultMap">
+			SELECT
+			p.`id`,
+            p.`isTest`,
+            p.`supportOneDayLimit`,
+            p.`orderId`,
+            p.`cOrderSn`,
+            p.`isBook`,
+            p.`cPaymentStatus`,
+            p.`cPayTime`,
+            p.`productType`,
+            p.`productId`,
+            p.`productName`,
+            p.`sku`,
+            p.`price`,
+            p.`number`,
+            p.`lockedNumber`,
+            p.`unlockedNumber`,
+            p.`productAmount`,
+            p.`couponAmount`,
+            p.`esAmount`,
+            p.`cateId`,
+            p.`brandId`,
+            p.`netPointId`,
+            p.`shippingFee`,
+            p.`settlementStatus`,
+            p.`receiptOrRejectTime`,
+            p.`isWmsSku`,
+            p.`sCode`,
+            p.`tsCode`,
+            p.`tsShippingTime`,
+            p.`status`,
+            p.`invoiceNumber`,
+            p.`expressName`,
+            p.`invoiceExpressNumber`,
+            p.`shippingTime`,
+            p.`lessOrderSn`,
+            p.`waitGetLesShippingInfo`,
+            p.`getLesShippingCount`,
+            p.`outping`,
+            p.`lessShipTime`,
+            p.`closeTime`,
+            p.`isReceipt`,
+            p.`isMakeReceipt`,
+            p.`receiptNum`,
+            p.`receiptAddTime`,
+            p.`makeReceiptType`,
+            p.`shippingMode`,
+            p.`lastTimeForShippingMode`,
+            p.`lastEditorForShippingMode`,
+            p.`systemRemark`,
+            p.`externalSaleSettingId`,
+            p.`isNoLimitStockProduct`,
+            p.`hpRegisterDate`,
+            p.`hpFailDate`,
+            p.`hpFinishDate`,
+            p.`hpReservationDate`,
+            p.`shippingOpporunity`,
+            p.`isTimeoutFree`,
+            p.`itemShareAmount`,
+            p.`lessShipTInTime`,
+            p.`lessShipTOutTime`,
+            p.`isSAorZP`,
+            p.`points`,
+            p.`modified`,
+            p.`splitFlag`,
+            p.`splitRelateCOrderSn`,
+            p.`channelId`,
+            p.`activityId2`,
+            p.`pdOrderStatus`,
+            p.`omsOrderSn`,
+            p.`couponCode`,
+            p.`couponCodeValue`,
+            p.`jfbAmount`,
+            p.`djAmount`,
+            p.`hbAmount`,
+            p.`storeId`,
+            p.`storeType`,
+            p.`stockType`,
+            p.`o2oType`,
+            p.`brokerageType`,
+            p.`oid`,
+            p.`addTime`,
+            p.`tzSku`,
+            p.`isCd`,
+            p.`tbOrderSn`,
+                 r.id repairId
+				FROM
+        orderrepairs r,
+        orders o,
+        orderproducts p
+			WHERE
+				1=1
+			AND r.orderProductId = p.id
+			AND o.id = r.orderId
+              AND o.sourceOrderSn =#{sourceOrderSn}
+              AND p.sku = #{sku}
+              AND r.exchangeStatus = 0
 	</select>
 
-	<select id="findOrderProductCNT" resultType="int" parameterType="com.haier.shop.model.OrderProductsVo">
-		SELECT COUNT(1)
-		<include refid="findOrderProductSQLCond" />
-	</select>
-	
-		<select id="findCodConfirmCNT" resultType="int" parameterType="com.haier.shop.model.OrderProductsVo">
-		SELECT COUNT(1)
-		<include refid="findCodConfirmSQLCond" />
+    <select id="findByTradeSn" resultMap="OrderProductsResultMap">
+			SELECT
+			p.`id`,
+            p.`isTest`,
+            p.`supportOneDayLimit`,
+            p.`orderId`,
+            p.`cOrderSn`,
+            p.`isBook`,
+            p.`cPaymentStatus`,
+            p.`cPayTime`,
+            p.`productType`,
+            p.`productId`,
+            p.`productName`,
+            p.`sku`,
+            p.`price`,
+            p.`number`,
+            p.`lockedNumber`,
+            p.`unlockedNumber`,
+            p.`productAmount`,
+            p.`couponAmount`,
+            p.`esAmount`,
+            p.`cateId`,
+            p.`brandId`,
+            p.`netPointId`,
+            p.`shippingFee`,
+            p.`settlementStatus`,
+            p.`receiptOrRejectTime`,
+            p.`isWmsSku`,
+            p.`sCode`,
+            p.`tsCode`,
+            p.`tsShippingTime`,
+            p.`status`,
+            p.`invoiceNumber`,
+            p.`expressName`,
+            p.`invoiceExpressNumber`,
+            p.`shippingTime`,
+            p.`lessOrderSn`,
+            p.`waitGetLesShippingInfo`,
+            p.`getLesShippingCount`,
+            p.`outping`,
+            p.`lessShipTime`,
+            p.`closeTime`,
+            p.`isReceipt`,
+            p.`isMakeReceipt`,
+            p.`receiptNum`,
+            p.`receiptAddTime`,
+            p.`makeReceiptType`,
+            p.`shippingMode`,
+            p.`lastTimeForShippingMode`,
+            p.`lastEditorForShippingMode`,
+            p.`systemRemark`,
+            p.`externalSaleSettingId`,
+            p.`isNoLimitStockProduct`,
+            p.`hpRegisterDate`,
+            p.`hpFailDate`,
+            p.`hpFinishDate`,
+            p.`hpReservationDate`,
+            p.`shippingOpporunity`,
+            p.`isTimeoutFree`,
+            p.`itemShareAmount`,
+            p.`lessShipTInTime`,
+            p.`lessShipTOutTime`,
+            p.`isSAorZP`,
+            p.`points`,
+            p.`modified`,
+            p.`splitFlag`,
+            p.`splitRelateCOrderSn`,
+            p.`channelId`,
+            p.`activityId2`,
+            p.`pdOrderStatus`,
+            p.`omsOrderSn`,
+            p.`couponCode`,
+            p.`couponCodeValue`,
+            p.`jfbAmount`,
+            p.`djAmount`,
+            p.`hbAmount`,
+            p.`storeId`,
+            p.`storeType`,
+            p.`stockType`,
+            p.`o2oType`,
+            p.`brokerageType`,
+            p.`oid`,
+            p.`addTime`,
+            p.`tzSku`,
+            p.`isCd`,
+            p.`tbOrderSn`,
+                 r.id repairId
+				FROM
+        orderrepairs r,
+        orders o,
+        orderproducts p
+			WHERE
+				1=1
+			AND r.orderProductId = p.id
+			AND o.id = r.orderId
+              AND o.tradeSn =#{tradeSn}
+              AND p.sku = #{sku}
+              AND r.exchangeStatus = 0
 	</select>
 
-	<sql id="findOrderProductSQLCond" >
-		FROM
-		OrderProducts p,
-		Orders o
-		where o.id =p.orderId
-		<if test="cOrderSn !=null and cOrderSn !=''">
-			and p.cOrderSn like '%${cOrderSn}%'
-		</if>
-		<if test="orderSn !=null and orderSn !=''">
-			and o.orderSn like '%${orderSn}%'
-		</if>
-		<if test="productName !=null and productName !=''">
-			and p.productName like '%${productName}%'
-		</if>
-		<if test="sku !=null and sku!=''">
-			and p.sku like '%${sku}%'
-		</if>
-		<if test="price!=null and price!=''">
-			and p.price =#{price,jdbcType=VARCHAR}
-		</if>
-		<if test="numberMin !=null and numberMin !=''">
-			and p.number  >= #{numberMin}
-		</if>
-		<if test="numberMax !=null and numberMax!=''">
-			and p.number  <![CDATA[ <=]]> #{numberMax}
-		</if>
-		<if test="scode !=null and scode!=''">
-			and p.sCode =#{scode}
-		</if>
-		<if test="status!=null and status!=''">
-			and p.status = #{status}
-		</if>
-		<if test="supportOneDayLimit !=null and supportOneDayLimit !=''">
-			and p.supportOneDayLimit = #{supportOneDayLimit}
-		</if>
-		<if test="isBook!=null and isBook!=''">
-			and p.isBook = #{isBook}
-		</if>
-		<!-- <if test="isnotice !=null and isnotice!=''">
-			and p.isNotice = #{isnotice}
-		</if> -->
-		<!-- <if test="noticetime !=null and noticetime!=''">
-			and p.noticeTime = #{noticetime}
-		</if> -->
-		<if test="isReceipt !=null and isReceipt!=''">
-			and p.isReceipt =#{isReceipt}
-		</if>
-		<if test="shippingMode !=null and shippingMode !=''">
-			and p.shippingMode = #{shippingMode}
-		</if>
-		<if test="makeReceiptType !=null and makeReceiptType!=''">
-			and p.makeReceiptType = #{makeReceiptType}
-		</if>
-		<if test="isMakeReceipt!=null and isMakeReceipt!=''  and  isMakeReceipt !='0'.toString()">
-			and p.isMakeReceipt = #{isMakeReceipt}
-		</if>
-		<if test="brandId !=null and brandId!=''">
-			and p.brandId = #{brandId}
-		</if>
-		<if test="cateId !=null and cateId!=''">
-			and p.cateId = #{cateId}
-		</if>
-		<if test="receiptAddTimeMin != null and receiptAddTimeMin != ''">
-			and p.receiptAddTime >=  STR_TO_DATE(#{receiptAddTimeMin,jdbcType=VARCHAR},"%Y-%m-%d ")
-		</if>
-		<if test="receiptAddTimeMax != null and receiptAddTimeMax != ''">
-			and   p.receiptAddTime <![CDATA[  <= ]]>  STR_TO_DATE(#{receiptAddTimeMax,jdbcType=VARCHAR},"%Y-%m-%d ")
-		</if>
-		<if test="isSelfSell !=null and isSelfSell!=''">
-			and a.is_self_sell = #{isSelfSell}
-		</if>
-		<if test="couponCode !=null and couponCode!=''">
-			and p.couponCode like  '%${couponCode}%'
-		</if>
-		<if test="mobile !=null and mobile!=''">
-			and o.mobile like '%${mobile}%'
-		</if>
-		<if test="consignee !=null and consignee !=''">
-			and o.consignee like '%${consignee}%'
-		</if>
-		<if test="source !=null and source!=''">
-			and o.source = #{source}
-		</if>
-		<if test="paymentCode !=null and paymentCode !=''">
-			and o.paymentCode = #{paymentCode}
-		</if>
-		<if test="paymentStatus !=null and paymentStatus!=''">
-			and o.paymentStatus = #{paymentStatus}
-		</if>
-		<if test="orderStatus !=null and orderStatus!=''">
-			and o.orderStatus = #{orderStatus}
-		</if>
-		<if test="firstConfirmTime =='0'.toString()">
-			and o.firstConfirmTime is null
-		</if>
-		<if test="firstConfirmTime =='1'.toString()">
-			and o.firstConfirmTime is not null
-		</if>
-		<if test="isNotConfirm!=null and isNotConfirm!=''">
-			and o.isNotConfirm = #{isNotConfirm}
-		</if>
-		<if test="isBackend!=null and isBackend!=''">
-			and o.isBackend = #{isBackend}
-		</if>
-		<if test="autoConfirmNumMin != null and autoConfirmNumMin != ''">
-			and o.autoConfirmNum >=  #{autoConfirmNumMin}
-		</if>
-		<if test="autoConfirmNumMax != null and autoConfirmNumMax != ''">
-			and o.autoConfirmNum  <![CDATA[  <= ]]>  #{autoConfirmNumMax}
-		</if>
-		<if test="payTimeMin != null and payTimeMin != ''">
-			and o.payTime >=  unix_timestamp(#{#{payTimeMin},jdbcType=VARCHAR})
-		</if>
-		<if test="payTimeMax != null and payTimeMax != ''">
-			and o.payTime  <![CDATA[  <= ]]>   unix_timestamp(#{#{payTimeMax},jdbcType=VARCHAR})
-		</if>
-		<if test="confirmTimeMin != null and confirmTimeMin != ''">
-			and o.confirmTime >=  unix_timestamp(#{#{confirmTimeMin},jdbcType=VARCHAR})
-		</if>
-		<if test="confirmTimeMax != null and confirmTimeMax != ''">
-			and o.confirmTime  <![CDATA[  <= ]]>   unix_timestamp(#{#{confirmTimeMax},jdbcType=VARCHAR})
-		</if>
+    <select id="findOrderProductByOid" resultType="com.haier.shop.model.OrderProducts">
+			SELECT
+				p.cOrderSn,
+				p.sku,
+				p.tbOrderSn,
+				p.id,
+				p. STATUS,
+				i.statusType,
+				sap.success sapSuccess,
+				i.success,
+				i.id invoIceId,
+				r.vomRepairSn
+			FROM
+        orderrepairs r,
+        orderproducts p
+			LEFT JOIN invoices i ON p.id = i.orderProductId
+			LEFT JOIN invoicesaplogs sap ON i.id = sap.invoiceId
+			WHERE
+				r.orderProductId = p.id
+			 and p.oid = #{oid}
+				</select>
+    <select id="queryOderProductList" parameterType="com.haier.shop.model.OrderProductsVo" resultMap="BaseResultMap">
+        SELECT
+        p.cOrderSn,
+        o.orderSn orderSn,
+        p.isReceipt,
+        p.isBook,
+        p.productName,
+        p.price,
+        p.number,
+        p.sCode,
+        p.status,
+        from_unixtime(o.addTime,'%Y-%m-%d %H:%i:%S') addTimeMin,
+        (ifnull(p.price,0) * ifnull(p.number,0)) money,
+        o.remark,
+        from_unixtime(o.firstConfirmTime,'%Y-%m-%d %H:%i:%S') firstConfirmTime,
+        from_unixtime(o.smManualTime,'%Y-%m-%d %H:%i:%S') smManualTime,
+        o.firstConfirmPerson,
+        o.isCod,
+        o.autoConfirmNum
+        <include refid="findOrderProductSQLCond"/>
+        <if test="page!=null and rows!=null">
+            limit ${page},${rows}
+        </if>
+    </select>
+
+    <select id="searchcod" parameterType="com.haier.shop.model.OrderProductsVo" resultMap="BaseResultMap">
+        SELECT
+        o.orderSn orderSn,
+        from_unixtime(o.addTime,'%Y-%m-%d %H:%i:%S') addTimeMin,
+        from_unixtime(o.firstConfirmTime,'%Y-%m-%d %H:%i:%S') firstConfirmTime,
+        o.firstConfirmPerson,
+        o.isCod,
+        o.source,
+        from_unixtime(o.payTime,'%Y-%m-%d %H:%i:%S') payTime,
+        o.autoConfirmNum
+        <include refid="findCodConfirmSQLCond"/>
+        <if test="page!=null and rows!=null">
+            limit ${page},${rows}
+        </if>
+    </select>
+
+    <select id="findOrderProductCNT" resultType="int" parameterType="com.haier.shop.model.OrderProductsVo">
+        SELECT COUNT(1)
+        <include refid="findOrderProductSQLCond"/>
+    </select>
+
+    <select id="findCodConfirmCNT" resultType="int" parameterType="com.haier.shop.model.OrderProductsVo">
+        SELECT COUNT(1)
+        <include refid="findCodConfirmSQLCond"/>
+    </select>
+
+    <sql id="findOrderProductSQLCond">
+        FROM
+        orderproducts p
+        left join orderworkflows os on os.orderProductId = p.id ,
+        orders o
+		left join regions r on  r.id = o.province
+        where o.id =p.orderId 
+        <if test="cOrderSn !=null and cOrderSn !=''">
+            and p.cOrderSn =#{cOrderSn}
+        </if>
+        <if test="orderSn !=null and orderSn !=''">
+            and o.orderSn = #{orderSn}
+        </if>
+        <if test="productName !=null and productName !=''">
+            and p.productName =#{productName}
+        </if>
+        <if test="sku !=null and sku!=''">
+            and p.sku =#{sku}
+        </if>
+        <if test="sourceOrderSn !=null and sourceOrderSn != ''">
+            and o.sourceOrderSn =#{sourceOrderSn}
+        </if>
+        <if test="price!=null and price!=''">
+            and p.price =#{price,jdbcType=VARCHAR}
+        </if>
+        <if test="numberMin !=null and numberMin !=''">
+            and p.number >= #{numberMin}
+        </if>
+        <if test="numberMax !=null and numberMax!=''">
+            and p.number  <![CDATA[ <=]]> #{numberMax}
+        </if>
+        <if test="scode !=null and scode!=''">
+            and p.sCode =#{scode}
+        </if>
+        <if test="status != null and status != '' or 0 == status ">
+            and p.status = #{status}
+        </if>
+        
+        <if test="supportOneDayLimit != null and supportOneDayLimit != '' or  supportOneDayLimit == 0 ">
+            and p.supportOneDayLimit = #{supportOneDayLimit}
+        </if>
+        
+        <if test="isBook != null and isBook != '' or  isBook == 0 ">
+            and p.isBook = #{isBook}
+        </if>
+        <if test="orderType != null and orderType != '' or  orderType == 0 ">
+        	and o.orderType = #{orderType}
+        </if>
+        <!-- <if test="isnotice !=null and isnotice!=''">
+            and p.isNotice = #{isnotice}
+        </if> -->
+        <!-- <if test="noticetime !=null and noticetime!=''">
+            and p.noticeTime = #{noticetime}
+        </if> -->
+        <if test="isReceipt !=null ">
+            and p.isReceipt =#{isReceipt}
+        </if>
+        <if test="shippingMode !=null and shippingMode !=''">
+            and p.shippingMode = #{shippingMode}
+        </if>
+        <if test="makeReceiptTypeStatus != null and makeReceiptTypeStatus != '' and makeReceiptTypeStatus !='0'.toString()">
+            and p.makeReceiptType = #{makeReceiptTypeStatus}
+        </if>
+        <if test="isMakeReceipt !=null and isMakeReceipt !=''  and  isMakeReceipt !='0'.toString()">
+            and p.isMakeReceipt = #{isMakeReceipt}
+        </if>
+        <if test="brandId !=null and brandId!=''">
+            and p.brandId = #{brandId}
+        </if>
+        <if test="cateId != null and cateId != '' ">
+            and ( p.cateId = #{cateId} or (
+            p.cateId IN (SELECT id FROM productcates WHERE parentId = #{cateId} )
+            or p.cateId IN (SELECT id FROM productcates WHERE rootId = #{cateId} )))
+        </if>
+        <if test="receiptAddTimeMin != null and receiptAddTimeMin != ''">
+            and p.receiptAddTime >= #{receiptAddTimeMin,jdbcType=VARCHAR}
+        </if>
+        <if test="receiptAddTimeMax != null and receiptAddTimeMax != ''">
+            and p.receiptAddTime <![CDATA[  <= ]]>  #{receiptAddTimeMax,jdbcType=VARCHAR}
+        </if>
+        <!-- <if test="isSelfSell !=null and isSelfSell!=''">
+            and a.is_self_sell = #{isSelfSell}
+        </if> -->
+        <if test="couponCode !=null and couponCode!=''">
+            and p.couponCode like '%${couponCode}%'
+        </if>
+        <if test="mobile != null and mobile != ''  ">
+            and o.mobile  = #{mobile}
+        </if>
+        <if test="consignee != null and consignee != ''  ">
+            and o.consignee = #{consignee}
+        </if>
+        <if test="source !=null and source!=''">
+            <!-- and INSTR(#{source} , o.source ) > 0 -->
+            and o.source = #{source}
+        </if>
+        <if test="paymentCode !=null and paymentCode !=''">
+            and o.paymentCode = #{paymentCode}
+        </if>
+        <if test="paymentStatus !=null and paymentStatus!=''">
+            and p.cPaymentStatus = #{paymentStatus}
+        </if>
+        <if test="orderStatus !=null and orderStatus!=''">
+            and o.orderStatus = #{orderStatus}
+        </if>
 		
-		<if test="isProduceDaily !=null and isProduceDaily!=''">
-			and o.isProduceDaily = #{isProduceDaily}
-		</if>
-		<if test="lessShipTimeMin != null and lessShipTimeMin != ''">
-			and p.lessShipTime >=  unix_timestamp(#{#{lessShipTimeMin},jdbcType=VARCHAR})
-		</if>
-		<if test="lessShipTimeMax != null and lessShipTimeMax != ''">
-			and p.lessShipTime  <![CDATA[  <= ]]>   unix_timestamp(#{#{lessShipTimeMax},jdbcType=VARCHAR})
-		</if>
-		<if test="addTimeMin != null and addTimeMin != ''">
-			and o.addTime >=  unix_timestamp(#{#{addTimeMin},jdbcType=VARCHAR})
-		</if>
-		<if test="addTimeMix != null and addTimeMix != ''">
-			and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{#{addTimeMix},jdbcType=VARCHAR})
-		</if>
+		<if test="firstConfirmTime != null and firstConfirmTime == '0'.toString()"> 
+            and o.firstConfirmTime is null
+        </if>
+        <if test="firstConfirmTime != null and firstConfirmTime == '1'.toString()"> 
+            and o.firstConfirmTime is not null
+        </if>
+        <if test="isNotConfirm!=null and isNotConfirm!=''">
+            and o.isNotConfirm = #{isNotConfirm}
+        </if>
+        <if test="isBackend!=null and isBackend!=''">
+            and o.isBackend = #{isBackend}
+        </if>
+        <if test="autoConfirmNumMin != null and autoConfirmNumMin != ''">
+            and o.autoConfirmNum >= #{autoConfirmNumMin}
+        </if>
+        <if test="autoConfirmNumMax != null and autoConfirmNumMax != ''">
+            and o.autoConfirmNum  <![CDATA[  <= ]]>  #{autoConfirmNumMax}
+        </if>
+        <if test="payTimeMin != null and payTimeMin != ''">
+            and o.payTime >= unix_timestamp(#{payTimeMin})
+        </if>
+        <if test="payTimeMax != null and payTimeMax != ''">
+            and o.payTime  <![CDATA[  <= ]]>   unix_timestamp(#{payTimeMax})
+        </if>
+        <if test="confirmTimeMin != null and confirmTimeMin != ''">
+            and o.confirmTime >= unix_timestamp(#{confirmTimeMin})
+        </if>
+        <if test="confirmTimeMax != null and confirmTimeMax != ''">
+            and o.confirmTime  <![CDATA[  <= ]]>   unix_timestamp(#{confirmTimeMax})
+        </if>
 
-	</sql>
-	
-	<sql id="findCodConfirmSQLCond" >
-		FROM
-		OrderProducts p,
-		Orders o
-		where o.id =p.orderId and codConfirmState = '1'
+        <if test="isProduceDaily !=null and isProduceDaily!=''">
+            and o.isProduceDaily = #{isProduceDaily}
+        </if>
+        <if test="lessShipTimeMin != null and lessShipTimeMin != ''">
+            and p.lessShipTime >= unix_timestamp(#{lessShipTimeMin})
+        </if>
+        <if test="lessShipTimeMax != null and lessShipTimeMax != ''">
+            and p.lessShipTime  <![CDATA[  <= ]]>   unix_timestamp(#{lessShipTimeMax})
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            and o.addTime >= unix_timestamp(#{addTimeMin})
+        </if>
+        <if test="addTimeMax != null and addTimeMax != ''">
+            and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{addTimeMax})
+        </if>
+        <if test="provinceId !=null and provinceId!=-1">
+            and o.province = #{provinceId}
+        </if>
+        <if test="userAcceptTimeMin != null and userAcceptTimeMin != ''">
+            and os.userAcceptTime >= unix_timestamp(#{userAcceptTimeMin})
+        </if>
+        <if test="userAcceptTimeMax != null and userAcceptTimeMax != ''">
+            and os.userAcceptTime  <![CDATA[  <= ]]>   unix_timestamp(#{userAcceptTimeMax})
+        </if>
+        <if test="stockType != null and stockType != ''">
+        	and p.stockType = #{stockType}
+        </if>
+        <if test="isExternal != null and isExternal != '' ">
+            and p.externalSaleSettingId = #{isExternal}
+        </if>
+        <!--<if test="regionAssign != null and regionAssign != '' ">-->
+        	<!--and INSTR( #{regionAssign}, r.regionName) > 0-->
+        <!--</if>-->
+        <if test="regionAssign != null and regionAssign == 'north' ">
+            <include refid="north"></include>
+        </if>
+        <if test="regionAssign != null and regionAssign == 'south' ">
+            <include refid="south"></include>
+        </if>
+        <if test="regionAssign != null and regionAssign == 'west' ">
+            <include refid="west"></include>
+        </if>
+        <if test="regionAssign != null and regionAssign == 'east' ">
+            <include refid="east"></include>
+        </if>
+        <if test="isTsCode != null and isTsCode == '0'.toString()"> 
+            and p.tsCode is null
+        </if>
+        <if test="isTsCode != null and isTsCode == '1'.toString()"> 
+            and p.tsCode is not null
+        </if>
+        <if test="idGift != null ">
+            and o.idGift = #{idGift}
+        </if>
+    </sql>
 
-		<if test="orderSn !=null and orderSn !=''">
-			and o.orderSn like '%${orderSn}%'
-		</if>
+    <sql id="findCodConfirmSQLCond">
+        FROM
+        orderproducts p,
+        orders o
+        where o.id =p.orderId and codConfirmState = '1'
 
-		<if test="source !=null and source!=''">
-			and o.source = #{source}
-		</if>
-		<if test="addTimeMin != null and addTimeMin != ''">
-			and o.addTime >=  unix_timestamp(#{addTimeMin})
-		</if>
-		<if test="addTimeMix != null and addTimeMix != ''">
-			and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{addTimeMix})
-		</if>
-		
-	</sql>
+        <if test="orderSn !=null and orderSn !=''">
+            and o.orderSn like '%${orderSn}%'
+        </if>
 
-	<select id="queryOrdeProduct" parameterType="java.lang.String"  resultMap="BaseResultMap" >
+        <if test="source !=null and source!=''">
+            and o.source = #{source}
+        </if>
+        <if test="addTimeMin != null and addTimeMin != ''">
+            and o.addTime >= unix_timestamp(#{addTimeMin})
+        </if>
+        <if test="addTimeMax != null and addTimeMax != ''">
+            and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{addTimeMax})
+        </if>
+
+    </sql>
+
+    <select id="queryOrdeProduct" parameterType="java.lang.String" resultMap="BaseResultMap">
 		SELECT
 			p.id,
 			p.cOrderSn,
 			p.status,
 			p.price,
 			p.number,
-			from_unixtime(p.shippingTime)shippingTimeTs,
+			p.shippingTime,
+			CASE WHEN  p.shippingTime  <![CDATA[ <= ]]> 0 THEN  ''
+			else FROM_UNIXTIME(p.shippingTime)
+			END shippingTimeTs,
 			p.cPaymentStatus,
-			from_unixtime(p.cPayTime)cpayTimeTs,
+			CASE WHEN  p.cPayTime  <![CDATA[ <= ]]> 0 THEN  ''
+			else FROM_UNIXTIME(p.cPayTime)
+			END cpayTimeTs,
 			o.orderSn,
 			o.sourceOrderSn,
 			o.tradeSn,
 			o.id orowId,
-			from_unixtime(o.addTime) addTime,
+			from_unixtime(o.addTime,'%Y-%m-%d %H:%i:%S') addTimeMin,
 			o.orderStatus,
 			o.paymentName,
-			from_unixtime(o.payTime) payTime,
+			from_unixtime(o.payTime,'%Y-%m-%d %H:%i:%S') payTime,
 			o.paymentStatus,
 			o.source,
-			
 			o.remark,
 			o.consignee,
 			o.mobile,
 			p.makeReceiptType,
 			p.isMakeReceipt,
-			p.receiptNum,
-			p.receiptAddTime,
+			p.tbOrderSn,
+			p.outping,
+			i.invoiceNumber receiptNum,
 			i.type,
 			i.invoiceTitle,
-			i.state istate,
+			mi.state istate,
 			i.eaiWriteState,
 			i.electricFlag,
-			i.checkCode
-
+			i.checkCode,
+			i.fiscalCode,
+			p.stockType,
+			p.shippingMode,
+			FROM_UNIXTIME(i.billingTime,'%Y-%m-%d %H:%i:%s') receiptAddTime,
+			p.sCode,
+			p.invoiceNumber,
+			p.expressName,
+			p.invoiceExpressNumber,
+			p.lockedNumber,
+			p.isSAorZP
 		FROM
-			OrderProducts p
-			LEFT JOIN Orders o ON  o.id =p.orderId
-			left join Invoices i ON i.orderProductId = p.id
+        orderproducts p
+			LEFT JOIN orders o ON  o.id =p.orderId
+			LEFT JOIN memberinvoices mi ON  p.orderId =mi.orderId
+			left join invoices i ON i.orderProductId = p.id
 			where 
-		  p.cOrderSn =#{cOrderSn,jdbcType=VARCHAR}
+		    p.cOrderSn =#{cOrderSn,jdbcType=VARCHAR}
+		    order by i.id desc
+		    limit 1
 	</select>
-	<select id="queryTBorderSn"  parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT
-		a.tb_order_sn
-	FROM
-		OrderProducts p,
-		OrderProductsAttributes a
-	where 
-		p.id = a.order_product_id
-	 and p.cOrderSn =#{orderSn,jdbcType=VARCHAR}
-	</select>
-	<select id="queryWwwHpTbSn"  parameterType="java.lang.String" resultType="int">
+    <select id="queryTBorderSn" parameterType="java.lang.String" resultType="java.lang.String">
 	SELECT
-		count(1)
+		p.tbOrderSn
 	FROM
-		WwwHpRecords
-	WHERE
-		hpTbSn =#{tbSn}
-	and success ='0'
-		
+        orderproducts p
+	where 
+	 p.cOrderSn =#{orderSn,jdbcType=VARCHAR}
 	</select>
-	<select id="queryTmallTiming"  parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="queryWwwHpTbSn" parameterType="java.lang.String" resultType="int">
+        SELECT
+        count(1)
+        FROM
+        wwwhprecords
+        WHERE
+        hpTbSn =#{tbSn}
+        <!-- and success ='1' -->
+    </select>
+    <select id="queryTmallTiming" parameterType="java.lang.String" resultMap="BaseResultMap">
 	SELECT
 			p.id,
 			p.cOrderSn,
 			p.status,
 			p.price,
 			p.number,
-			from_unixtime(p.shippingTime)shippingTimeTs,
+			from_unixtime(p.shippingTime,'%Y-%m-%d %H:%i:%S')shippingTimeTs,
 			p.cPaymentStatus,
-			from_unixtime(p.cPayTime)cpayTimeTs,
+			from_unixtime(p.cPayTime,'%Y-%m-%d %H:%i:%S')cpayTimeTs,
 			o.orderSn,
 			o.sourceOrderSn,
 			o.tradeSn,
 			o.id orowId,
-			from_unixtime(o.addTime) addTime,
+			from_unixtime(o.addTime,'%Y-%m-%d %H:%i:%S') addTimeMin,
 			o.orderStatus,
 			o.paymentName,
-			from_unixtime(o.payTime) payTime,
+			from_unixtime(o.payTime,'%Y-%m-%d %H:%i:%S') payTime,
 			o.paymentStatus,
 			o.source,
 			o.remark,
@@ -438,540 +967,1508 @@
 			p.makeReceiptType,
 			p.isMakeReceipt,
 			p.receiptNum,
-			p.receiptAddTime
+			p.shippingMode,
+			p.receiptAddTime,
+			p.outping,
+			p.sCode
 		FROM
-			OrderProducts p,
-			Orders o
+        orderproducts p,
+        orders o
 		where 
 		    o.id =p.orderId
+		    AND o.addTime > UNIX_TIMESTAMP('2018-06-12 12:00:00')
 			and p.sku=#{sku,jdbcType=VARCHAR}
 			and o.source = #{source,jdbcType=VARCHAR}
 			and o.sourceOrderSn=#{tid,jdbcType=VARCHAR}
 	</select>
-	<select id="queryCommodity" resultMap="BaseResultMap" parameterType="java.lang.String">
-	SELECT 
+    <select id="queryTmallTimingoid" parameterType="java.lang.String" resultMap="BaseResultMap">
+	SELECT
+			p.id,
+			p.cOrderSn,
+			p.status,
+			p.price,
+			p.number,
+			from_unixtime(p.shippingTime,'%Y-%m-%d %H:%i:%S')shippingTimeTs,
+			p.cPaymentStatus,
+			from_unixtime(p.cPayTime,'%Y-%m-%d %H:%i:%S')cpayTimeTs,
+			o.orderSn,
+			o.sourceOrderSn,
+			o.tradeSn,
+			o.id orowId,
+			from_unixtime(o.addTime,'%Y-%m-%d %H:%i:%S') addTimeMin,
+			o.orderStatus,
+			o.paymentName,
+			from_unixtime(o.payTime,'%Y-%m-%d %H:%i:%S') payTime,
+			o.paymentStatus,
+			o.source,
+			o.remark,
+			o.consignee,
+			o.mobile,
+			p.makeReceiptType,
+			p.isMakeReceipt,
+			p.receiptNum,
+			p.shippingMode,
+			p.receiptAddTime,
+			p.outping,
+			p.sCode
+		FROM
+        orderproducts p,
+        orders o
+		where
+		    o.id =p.orderId
+		    AND o.addTime > UNIX_TIMESTAMP('2018-06-12 12:00:00')
+			and p.oid = #{oid,jdbcType=VARCHAR}
+			and o.sourceOrderSn=#{tid,jdbcType=VARCHAR}
+	</select>
+    <select id="queryCommodity" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+		p.id,
 	    p.cOrderSn,
 	    p.shippingMode,
 	    p.productName,
 	    p.sku,
-	    p.productType productTypeTs,
-	    p.netPointId,
-	    p.sCode,
-	    p.tsCode,
+	   	t.typeName productTypeTs,
+	    n.netPointName,
+	    p.sCode as scode,
+		p.tsCode as tscode,
 	    p.pdOrderStatus,
 	    p.isMakeReceipt,
 	    p.price,
 	    p.shippingFee,
 	    p.number,
-	    p.couponCodeValue,
+	    p.couponAmount,
 	    p.esAmount,
-	   <!--  p.orderPromotionAmount, -->
+	    p.tbOrderSn,
 	    (IFNULL(p.number, 0) * IFNULL(p.price, 0) + IFNULL(p.shippingFee, 0) - IFNULL(p.couponCodeValue, 0) - IFNULL(p.esAmount, 0)) money
 	FROM
-	    OrderProducts p
+        orderproducts p
+		LEFT JOIN netpoints n ON n.id = p.netPointId
+		LEFT JOIN producttypes t ON  t.id =p.productType
 	WHERE
-	    p.cOrderSn =#{cOrderSn,jdbcType=VARCHAR}
+	 p.cOrderSn =#{cOrderSn,jdbcType=VARCHAR}
+		</select>
+    <resultMap id="orderDetail" type="java.util.Map"><!--基本信息内容返回-->
+        <result column="orderSn" property="orderSn"/><!--订单号-->
+        <result column="addTime" property="addTime"/><!--下单时间-->
+        <result column="consignee" property="consignee"/><!--下单人-->
+        <result column="firstConfirmTime" property="firstConfirmTime"/><!--首次确认 时间-->
+        <result column="tradeSn" property="tradeSn"/><!--交易流水号-->
+        <result column="source" property="source"/><!--来源-->
+        <result column="paymentStatus" property="paymentStatus"/><!--是否付款-->
+        <result column="payTime" property="payTime"/><!--付款时间-->
+        <result column="paymentName" property="paymentName"/><!--支付方式-->
+        <result column="shippingTime" property="shippingTime"/><!--配送时效-->
+        <result column="shippingDistance" property="shippingDistance"/><!--配送距离-->
+
+        <result column="sourceOrderSn" property="sourceOrderSn"/><!--来源订单编号(待确认)-->
+        <result column="isProduceDaily" property="isProduceDaily"/><!--是否日日单-->
+        <result column="sellpeople" property="sellpeople"/><!--销售代表-->
+        <result column="orderStatus" property="orderStatus"/><!--订单状态-->
+        <result column="remark" property="remark"/><!--备注-->
+        <result column="receiptConsignee" property="receiptConsignee"/><!--发票收件人-->
+        <result column="receiptAddress" property="receiptAddress"/><!--邮寄地址-->
+        <result column="receiptZipcode" property="receiptZipcode"/><!--邮编-->
+        <result column="receiptMobile" property="receiptMobile"/><!--联系电话-->
+        <result column="regionName" property="regionName"/><!--所在地-->
+        <result column="province" property="province"/><!--省份-->
+        <result column="city" property="city"/><!-- 城市-->
+        <result column="region" property="region"/><!-- 区-->
+        <result column="street" property="street"/><!-- 街道-->
+        <result column="address" property="address"/><!-- 区下面的详细地址-->
+        <result column="poiId" property="poiId"/><!-- poiId-->
+        <result column="poiName" property="poiName"/><!-- poiName-->
+        <result column="orderType" property="orderType"/><!-- 订单类型-->
+        <result column="smConfirmStatus" property="smConfirmStatus"/><!-- 标建确认状态-->
+    </resultMap>
+    <select id="orderNumberSelect" parameterType="java.lang.String" resultMap="orderDetail">
+		SELECT
+	      orderSn,
+	      from_unixtime( addTime, '%Y-%m-%d %H:%i:%S' ) AS addTime,
+	      consignee,
+	      from_unixtime( firstConfirmTime, '%Y-%m-%d %H:%i:%S' ) AS firstConfirmTime,
+	      tradeSn,
+	      source,
+	      paymentStatus,
+	      from_unixtime( payTime, '%Y-%m-%d %H:%i:%S' ) AS payTime,
+	      paymentName,
+	      sourceOrderSn,
+	      isProduceDaily,
+	      orderStatus,
+	      remark,
+	      receiptConsignee,
+	      receiptAddress,
+	      receiptZipcode,
+	      receiptMobile,
+	      regionName,
+	      ( SELECT shippingTime FROM regions r WHERE r.id = o.region) AS shippingTime,
+	      ( SELECT shippingDistance FROM regions r WHERE r.id = o.region) AS shippingDistance,
+	      province,
+	      city,
+	      region,
+	      street,
+	      smConfirmStatus,
+	      address,
+	      poiId,
+	      poiName,
+	      orderType,
+	      id,
+	      zipcode,
+	      mobile,
+	      phone,
+	      sellpeople
+        FROM
+	      orders o
+        WHERE
+	      orderSn =#{orderSn}
 	</select>
-	<!--
-	zhangbo
-	-->
-	<resultMap id="xxxx" type="java.util.Map"><!--基本信息内容返回-->
-		<result column="orderSn" property="orderSn"  /><!--订单号-->
-		<result column="addTime" property="addTime"  /><!--下单时间-->
-		<result column="consignee" property="consignee"  /><!--下单人-->
-		<result column="firstConfirmTime" property="firstConfirmTime"  /><!--首次确认 时间-->
-		<result column="tradeSn" property="tradeSn"  /><!--交易流水号-->
-		<result column="source" property="source"  /><!--来源-->
-		<result column="paymentStatus" property="paymentStatus"  /><!--是否付款-->
-		<result column="payTime" property="payTime"  /><!--付款时间-->
-		<result column="paymentName" property="paymentName"  /><!--支付方式-->
-		
-		
-		<result column="sourceOrderSn" property="sourceOrderSn"  /><!--来源订单编号(待确认)-->
-		<result column="isProduceDaily" property="isProduceDaily"  /><!--是否日日单-->
-		
-		<result column="orderStatus" property="orderStatus"  /><!--订单状态-->
-		<result column="remark" property="remark"  /><!--备注-->
-		<result column="receiptConsignee" property="receiptConsignee"  /><!--发票收件人-->
-		<result column="receiptAddress" property="receiptAddress"  /><!--邮寄地址-->
-		<result column="receiptZipcode" property="receiptZipcode"  /><!--邮编-->
-		<result column="receiptMobile" property="receiptMobile"  /><!--联系电话-->
-		<result column="regionName" property="regionName"  /><!--所在地-->
-		<result column="province" property="province"  /><!--省份-->
-		<result column="city" property="city"  /><!-- 城市-->
-		<result column="region" property="region"  /><!-- 区-->
-		<result column="address" property="address"  /><!-- 区下面的详细地址-->
-		<result column="poiId" property="poiId"  /><!-- poiId-->
-		<result column="orderType" property="orderType"  /><!-- 订单类型-->
-	</resultMap>
-	<select id="orderNumberSelect" parameterType="java.lang.String" resultMap="xxxx">
-		SELECT orderSn,from_unixtime(addTime) as addTime,consignee,from_unixtime(firstConfirmTime) as firstConfirmTime,tradeSn,source,paymentStatus,
-		from_unixtime(payTime) as payTime,paymentName,sourceOrderSn,isProduceDaily,orderStatus,remark
-		,receiptConsignee,receiptAddress,receiptZipcode,receiptMobile,regionName,province,region,address,poiId,city,orderType
-		from Orders
-		WHERE orderSn=#{orderSn}
+    <resultMap id="getShippingModeAndStockTypes" type="java.util.Map"><!--基本信息内容返回-->
+        <result column="shippingMode" property="shippingMode"/><!--订单号-->
+        <result column="stockType" property="stockType"/><!--WA or 3W-->
+
+    </resultMap>
+    <select id="getShippingModeAndStockType" parameterType="java.lang.String" resultMap="getShippingModeAndStockTypes">
+        SELECT p.shippingMode,p.stockType  FROM orderproducts p INNER JOIN orders o ON o.id = p.orderId WHERE o.orderSn = #{orderSn}
+    </select>
+
+    <resultMap id="getRegions" type="com.haier.shop.model.Regions">
+        <result column="id" property="id"/>
+        <result column="regionName" property="regionName"/>
+    </resultMap>
+    <select id="getRegion" parameterType="java.lang.Integer" resultMap="getRegions" >
+          SELECT
+            id,
+            regionName
+          FROM
+	        regions
+          WHERE
+	      parentId = #{parentId} AND activeFlag = 1
+    </select>
+    <select id="getRegionB2C" parameterType="java.lang.Integer" resultMap="getRegions" >
+          SELECT
+            id,
+            regionName
+          FROM
+	        regions
+          WHERE
+	      parentId = #{parentId} AND visible = 1
+    </select>
+    <select id="getOneRegion" parameterType="java.lang.Integer" resultMap="getRegions" >
+          SELECT
+            id,
+            regionName
+          FROM
+	        regions
+          WHERE
+	      id = #{id}
+    </select>
+    <resultMap id="getRegionName" type="com.haier.shop.model.Orders">
+        <result column="regionName" property="regionName"/>
+    </resultMap>
+    <select id="getRegionName" parameterType="java.lang.String" resultMap="getRegionName" >
+          SELECT
+            regionName
+          FROM
+	        orders
+          WHERE
+	        orderSn =#{orderSn}
+    </select>
+
+    <select id="exportBadCommentsList" resultType="java.util.Map">
+        SELECT
+            t.sourceOrderSn as sourceOrderSn,
+            t.consignee as consignee,
+            t.regionName as regionName,
+            t.mobile as mobile
+        FROM
+            orders t
+        WHERE
+            t.sourceOrderSn IN
+        <foreach collection="sourceOrderSn" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </select>
+
+
+
+
+    <!--
+    优惠券信息查询
+    -->
+    <resultMap id="CouponMap" type="java.util.Map">
+        <result column="productName" property="productName"/><!--商品名称-->
+        <result column="couponCodeValue" property="couponCodeValue"/><!--优惠券金额-->
+        <result column="couponCode " property="couponCode "/><!--优惠券文件编号-->
+        <result column="couponCode " property="couponCode "/><!--优惠券文件编号-->
+    </resultMap>
+    <select id="selectCoupon" parameterType="java.lang.String" resultMap="CouponMap">
+		SELECT p.productName,p.couponCodeValue,p.couponCode from orderproducts p, orders o WHERE o.id=p.orderId AND o.orderSn=#{orderSn}
 	</select>
-	<!--
-	优惠券信息查询
-	-->
-	<resultMap id="CouponMap" type="java.util.Map">
-		<result column="productName" property="productName"  /><!--商品名称-->
-		<result column="couponCodeValue" property="couponCodeValue"  /><!--优惠券金额-->
-		<result column="couponCode " property="couponCode "  /><!--优惠券文件编号-->
-		<result column="couponCode " property="couponCode "  /><!--优惠券文件编号-->
-	</resultMap>
-	<select id="selectCoupon" parameterType="java.lang.String" resultMap="CouponMap">
-		SELECT p.productName,p.couponCodeValue,p.couponCode from OrderProducts p, Orders o WHERE o.id=p.orderId AND o.orderSn=#{orderSn}
-	</select>
-	<!--
-	订单操作日志
-	-->
-	<resultMap id="OrderOperateLogsMap" type="java.util.Map">
-		<result column="logTime" property="logTime"  /><!--操作时间-->
-		<result column="cOrderSn" property="cOrderSn"  /><!--网单号-->
-		<result column="operator" property="operator"  /><!--操作人-->
-		<result column="changeLog" property="changeLog"  /><!--更改内容-->
-		<result column="remark" property="remark"  /><!--备注-->
-	</resultMap>
-	<select id="selectOrderOperateLogs" parameterType="java.lang.String" resultMap="OrderOperateLogsMap">
-		SELECT from_unixtime(l.logTime) AS logTime,p.cOrderSn,l.operator,l.changeLog,l.remark FROM OrderOperateLogs l,Orders o,OrderProducts p WHERE o.id=l.orderId AND
+    <!--
+    订单操作日志
+    -->
+    <resultMap id="OrderOperateLogsMap" type="java.util.Map">
+        <result column="logTime" property="logTime"/><!--操作时间-->
+        <result column="cOrderSn" property="cOrderSn"/><!--网单号-->
+        <result column="operator" property="operator"/><!--操作人-->
+        <result column="changeLog" property="changeLog"/><!--更改内容-->
+        <result column="remark" property="remark"/><!--备注-->
+    </resultMap>
+    <select id="selectOrderOperateLogs" parameterType="java.lang.String" resultMap="OrderOperateLogsMap">
+		SELECT from_unixtime(l.logTime,'%Y-%m-%d %H:%i:%S') AS logTime,p.cOrderSn,l.operator,l.changeLog,l.remark FROM orderoperatelogs l,orders o,orderproducts p WHERE o.id=l.orderId AND
 		l.orderProductId=p.id AND o.orderSn=#{orderSn}
+		ORDER BY logTime DESC
 	</select>
-	<!--
-	订单详情里面的商品详情
-	-->
-	<resultMap id="commodityMap" type="java.util.Map"><!--基本信息内容返回-->
-		<result column="shippingMode" property="shippingMode"  /><!--当前物流模式-->
-		<result column="cOrderSn" property="cOrderSn"  /><!--网单号-->
-		<result column="productName" property="productName"  /><!--商品名称-->
-		<result column="sku" property="sku"  /><!--商品编号-->
-		<result column="scode" property="scode"  /><!--库位-->
-		<result column="tscode" property="tscode"  /><!--转运库位-->
-		<result column="productType" property="productType"  /><!--商品类型-->
-		<result column="netpointid" property="netpointid"  /><!--网点-->
-		<result column="seasonPer" property="seasonPer"  /><!--处理状态-->
-		<result column="pdorderstatus" property="pdorderstatus"  /><!--日日单状态-->
-		<result column="price" property="price"  /><!--价格-->
-		<result column="shippingfee" property="shippingfee"  /><!--配送费-->
-		<result column="number" property="number"  /><!--数量-->
-		<result column="couponcodevalue" property="couponcodevalue"  /><!--商城优惠券-->
-		<result column="customer_id" property="customer_id"  /><!--自营转单Id-->
-		<result column="money" property="money"  /><!--使用礼品卡-->
-	</resultMap>
-	<select id="selectPrudevtDatail" parameterType="java.lang.String" resultMap="commodityMap">
-		SELECT q.shippingMode,q.cOrderSn,q.productName,q.sku,q.scode,q.tscode,q.productType,q.netpointid,q.pdorderstatus,
-		q.price,q.shippingfee,number,q.couponcodevalue,a.customer_id FROM OrderProducts q,OrderProductsAttributes a,Orders o
-		WHERE a.is_self_sell=1 AND q.id=a.order_product_id AND o.id=q.orderId AND o.orderSn=#{orderSn}
-	</select>
-	<!--查询发票信息的参数-->
-	<resultMap id="billMap" type="java.util.Map"><!--基本信息内容返回-->
-		<result column="invoiceType" property="invoiceType"  /><!--发票类型-->
-		<result column="Mstate" property="Mstate"  /><!--审核状态-->
-		<result column="invoiceTitle" property="invoiceTitle"  /><!--审核状态-->
-	</resultMap>
-	<select id="selectMemberInvoicesByorderSn" parameterType="java.lang.String" resultMap="billMap">
-		select m.invoiceType,m.state AS  Mstate,m.invoiceTitle FROM MemberInvoices m,Orders o WHERE o.id=m.orderId AND o.orderSn=#{orderSn}
-	</select>
-	<!--
-	Hp拒收表格显示
-	@author zhangbo
-	-->
-	<resultMap id="recordsMap" type="java.util.Map">
-		<result column="vomRepairSn" property="vomRepairSn"  /><!--VOM退货单号-->
-		<result column="cOrderSn" property="cOrderSn"  /><!--网单号-->
-		<result column="hpTbSn" property="hpTbSn"  /><!--TB单号-->
-		<result column="success" property="success"  /><!--匹配状态-->
-		<result column="remark" property="remark"  /><!--备注-->
-		<result column="addTime" property="addTime"  /><!--添加时间-->
-		<result column="modifytime" property="modifytime"  /><!--最后更新时间-->
-	</resultMap>
-	<!--
-		表格显示的内容
-	-->
-	<select id="datagrid_WwwHpRecords" parameterType="java.util.Map" resultMap="recordsMap">
-		SELECT w.vomRepairSn,w.cOrderSn,w.hpTbSn,w.success*1 AS success,w.remark,from_unixtime(w.addTime) as addTime,w.modifytime,w.sku
-		FROM WwwHpRecords w
-		WHERE  1=1
-		<if test="success==1">
-			AND w.success=${success}
-		</if>
-		<if test="success==2">
-			AND w.success=${success}
-		</if>
-		<if test="success==0">
-			AND w.success=${success}
-		</if>
-		<if test="success==3">
-			AND w.success=${success}
-		</if>
-		<if test="vomRepairSn!=null and vomRepairSn!=''">
-			AND w.vomRepairSn=#{vomRepairSn}
-		</if>
-		<if test="cOrderSn!=null and cOrderSn!=''">
-			AND w.cOrderSn=#{cOrderSn}
-		</if>
-		<if test="hpTbSn!=null and hpTbSn!=''">
-			AND w.hpTbSn=#{hpTbSn}
-		</if>
-		<if test="cOrderSn!=null and cOrderSn!=''">
-			AND w.cOrderSn=#{cOrderSn}
-		</if>
-		<if test="addTimeMin!=null and addTimeMin!=''">
-			AND w.addTime>=#{addTimeMin}
-		</if>
-		<if test="addTimeMax!=null and addTimeMax!=''">
-			AND #{addTimeMax}>=w.modifytime
-		</if>
-		<if test="page!=null and rows!=null">
-			limit ${page},${rows}
-		</if>
-	</select>
-	<!--
-	获取总记录数
-	-->
-	<select id="datagrid_WwwHpRecords1" parameterType="java.util.Map" resultMap="recordsMap">
-		SELECT w.vomRepairSn,w.cOrderSn,w.hpTbSn,w.success*1 as success,w.remark,from_unixtime(w.addTime) as addTime,w.modifytime
-		FROM WwwHpRecords w
-		WHERE  1=1
-		<if test="success==1">
-			AND w.success=${success}
-		</if>
-		<if test="success==2">
-			AND w.success=${success}
-		</if>
-		<if test="success==0">
-			AND w.success=${success}
-		</if>
-		<if test="success==3">
-			AND w.success=${success}
-		</if>
-	</select>
-	<!--
+    <!--
+    订单详情里面的商品详情
+    -->
+    <resultMap id="commodityMap" type="java.util.Map"><!--基本信息内容返回-->
+        <result column="shippingMode" property="shippingMode"/><!--当前物流模式-->
+        <result column="cOrderSn" property="cOrderSn"/><!--网单号-->
+        <result column="productName" property="productName"/><!--商品名称-->
+        <result column="sku" property="sku"/><!--商品编号-->
+        <result column="scode" property="scode"/><!--库位-->
+        <result column="tscode" property="tscode"/><!--转运库位-->
+        <result column="productType" property="productType"/><!--商品类型-->
+        <result column="netpointid" property="netpointid"/><!--网点-->
+        <result column="status" property="status"/><!--处理状态-->
+        <result column="pdorderstatus" property="pdorderstatus"/><!--日日单状态-->
+        <result column="price" property="price"/><!--价格-->
+        <result column="shippingfee" property="shippingfee"/><!--配送费-->
+        <result column="number" property="number"/><!--数量-->
+        <result column="couponAmount" property="couponAmount"/><!--商城优惠券-->
+        <result column="customer_id" property="customer_id"/><!--自营转单Id-->
+        <result column="money" property="money"/><!--使用礼品卡-->
+        <result column="netPointName" property="netPointName"/><!--使用礼品卡-->
+        <result column="isMakeReceipt" property="isMakeReceipt"/><!--开票状态-->
+    </resultMap>
+    <select id="selectPrudevtDatail" parameterType="java.lang.String" resultMap="commodityMap">
 
-	//查询在网单表已经存在的网单号并返回存在的网单号
-	-->
-	<resultMap id="statusMap" type="java.util.Map">
-		<result column="cOrderSn" property="cOrderSn"  /><!--网单号-->
-		<result column="hpTbSn" property="hpTbSn"  /><!--TB单号-->
-		<result column="sku" property="sku"  /><!--物料号-->
-		<result column="orderProductId" property="orderProductId"  /><!--网单ID-->
-		<result column="th_id" property="th_id"  /><!--退货单ID-->
-	</resultMap>
-	<select id="check_cOrderSn_isExist" parameterType="java.util.List" resultMap="statusMap">
-		<foreach collection="list" index="index" item="item" separator="union">
-			SELECT b.*,i.orderProductId AS orderProductId,i.id AS th_id FROM OrderRepairs i
-			RIGHT JOIN
-			(SELECT q.cOrderSn as cOrderSn,w.tb_order_sn as hpTbSn,q.sku AS sku,q.id AS id FROM
-			OrderProducts q
-			INNER JOIN
-			(SELECT order_product_id,tb_order_sn FROM OrderProductsAttributes
-			WHERE tb_order_sn=#{item.hpTbSn}) w
-			ON
-			w.order_product_id=q.id) b
-			ON b.id=i.orderProductId
-		</foreach>
+        SELECT
+            p.shippingMode ,
+	        p.productName,
+	        p.sku,
+	        pt.typeName as productType,
+			p.id,
+			p.cOrderSn,
+			p.status,
+			p.price,
+			p.number,
+			p.pdOrderStatus,
+			p.shippingFee,
+			p.couponAmount,
+			p.sCode as scode,
+			p.tsCode as tscode,
+			n.netPointName,
+			p.pdOrderStatus,
+			o.orderSn,
+			o.sourceOrderSn,
+			o.tradeSn,
+			o.id orowId,
+			o.orderAmount as money,
+			o.paidAmount,
+			o.points,
+			p.isMakeReceipt
+		FROM
+        orderproducts p
+			LEFT JOIN orders o ON  o.id =p.orderId
+			LEFT JOIN netpoints n ON n.id = p.netPointId
+			LEFT JOIN producttypes pt ON pt.id = p.productType
+			where
+		    o.orderSn =#{orderSn,jdbcType=VARCHAR}
 	</select>
-	<!--
-	更新WwwHpRecords表中的匹配次数
-	-->
-	<update id="update_WwwHpRecordsCount" parameterType="java.util.List">
-		update WwwHpRecords
-		INNER JOIN
-		(SELECT count,cOrderSn,hpTbSn FROM WwwHpRecords WHERE hpTbSn in
-		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-		) q
-		ON q.hpTbSn=WwwHpRecords.hpTbSn
-		SET WwwHpRecords.count=q.count+1,
-		WwwHpRecords.remark='单据匹配失败,出库信息未获取。待人工处理';
-	</update>
-	<!--
-	批量更新hp拒收表的success字段
-	-->
-	<update id="updateFlagBatch" parameterType="java.util.List">
-		<foreach collection="list" index="index" item="item" separator=";">
-			UPDATE WwwHpRecords
-			SET success=1 WHERE cOrderSn=#{item}
-		</foreach>
-	</update>
-	<!--
-	查询报表导出的数据
-	-->
-	<select id="select_export_ExcelData" parameterType="java.util.Map" resultMap="recordsMap">
-		SELECT w.vomRepairSn,w.cOrderSn,w.hpTbSn,w.success*1 as success,w.remark,from_unixtime(w.addTime) as addTime,w.modifytime
-		FROM WwwHpRecords w
-		WHERE  1=1
-		<if test="success==1">
-			AND w.success=${success}
-		</if>
-		<if test="success==2">
-			AND w.success=${success}
-		</if>
-		<if test="success==0">
-			AND w.success=${success}
-		</if>
-		<if test="success==3">
-			AND w.success=${success}
-		</if>
-		<if test="vomRepairSn!=null and vomRepairSn!=''">
-			AND w.vomRepairSn=#{vomRepairSn}
-		</if>
-		<if test="cOrderSn!=null and cOrderSn!=''">
-			AND w.cOrderSn=#{cOrderSn}
-		</if>
-		<if test="hpTbSn!=null and hpTbSn!=''">
-			AND w.hpTbSn=#{hpTbSn}
-		</if>
-		<if test="cOrderSn!=null and cOrderSn!=''">
-			AND w.cOrderSn=#{cOrderSn}
-		</if>
-		<if test="addTimeMin!=null and addTimeMin!=''">
-			AND w.addTime>=#{addTimeMin}
-		</if>
-		<if test="addTimeMax!=null and addTimeMax!=''">
-			AND #{addTimeMax}>=w.modifytime
-		</if>
+    <!--查询发票信息的参数-->
+    <resultMap id="billMap" type="java.util.Map"><!--基本信息内容返回-->
+        <result column="invoiceType" property="invoiceType"/><!--发票类型-->
+        <result column="Mstate" property="Mstate"/><!--审核状态-->
+        <result column="invoiceTitle" property="invoiceTitle"/><!--审核状态-->
+        <result column="electricFlag" property="electricFlag"/>
+        <result column="taxPayerNumber" property="taxPayerNumber"/>
+        <result column="registerAddress" property="registerAddress"/>
+        <result column="registerPhone" property="registerPhone"/>
+        <result column="bankName" property="bankName"/>
+        <result column="bankCardNumber" property="bankCardNumber"/>
+        <result column="isLock" property="isLock"/>
+    </resultMap>
+    <select id="selectMemberInvoicesByorderSn" parameterType="java.lang.String" resultMap="billMap">
+		select m.invoiceType*1 AS invoiceType,m.state AS  Mstate,m.invoiceTitle,m.electricFlag,m.taxPayerNumber
+			  ,m.registerAddress,m.registerPhone,m.bankName,m.bankCardNumber,m.remark AS invoiceRemark,m.isLock*1 AS isLock,o.id
+			  FROM memberinvoices m,orders o WHERE o.id=m.orderId AND o.orderSn=#{orderSn} limit 1
 	</select>
+    <!--
+    Hp拒收表格显示
+    @author zhangbo
+    -->
+    <resultMap id="recordsMap" type="java.util.Map">
+        <result column="vomRepairSn" property="vomRepairSn"/><!--VOM退货单号-->
+        <result column="cOrderSn" property="cOrderSn"/><!--网单号-->
+        <result column="hpTbSn" property="hpTbSn"/><!--TB单号-->
+        <result column="success" property="success"/><!--匹配状态-->
+        <result column="remark" property="remark"/><!--备注-->
+        <result column="addTime" property="addTime"/><!--添加时间-->
+        <result column="modifytime" property="modifytime"/><!--最后更新时间-->
+    </resultMap>
+    <!--
+        表格显示的内容
+    -->
+    <select id="datagrid_WwwHpRecords" parameterType="java.util.Map" resultMap="recordsMap">
+        SELECT w.id,w.vomRepairSn,w.cOrderSn,w.hpTbSn,w.success*1 AS success,w.remark,from_unixtime(w.addTime,'%Y-%m-%d
+        %H:%i:%S') as addTime,w.modifytime,w.sku
+        FROM wwwhprecords w
+        WHERE 1=1
+        <if test="success==1">
+            AND w.success=${success}
+        </if>
+        <if test="success==2">
+            AND w.success=${success}
+        </if>
+        <if test="success==0">
+            AND w.success=${success}
+        </if>
+        <if test="success==3">
+            AND w.success=${success}
+        </if>
+        <if test="vomRepairSn!=null and vomRepairSn!=''">
+            AND w.vomRepairSn=#{vomRepairSn}
+        </if>
+        <if test="cOrderSn!=null and cOrderSn!=''">
+            AND w.cOrderSn=#{cOrderSn}
+        </if>
+        <if test="hpTbSn!=null and hpTbSn!=''">
+            AND w.hpTbSn=#{hpTbSn}
+        </if>
+        <if test="cOrderSn!=null and cOrderSn!=''">
+            AND w.cOrderSn=#{cOrderSn}
+        </if>
+        <if test="addTimeMin!=null and addTimeMin!=''">
+            AND w.addTime>=#{addTimeMin}
+        </if>
+        <if test="addTimeMax!=null and addTimeMax!=''">
+            AND #{addTimeMax}>=w.modifytime
+        </if>
+        <if test="page!=null and rows!=null">
+            limit ${page},${rows}
+        </if>
+    </select>
+    <!--
+    获取总记录数
+    -->
+    <select id="datagrid_WwwHpRecords1" parameterType="java.util.Map" resultMap="recordsMap">
+        SELECT w.vomRepairSn,w.cOrderSn,w.hpTbSn,w.success*1 as success,w.remark,from_unixtime(w.addTime,'%Y-%m-%d
+        %H:%i:%S') as addTime,w.modifytime
+        FROM wwwhprecords w
+        WHERE 1=1
+        <if test="success==1">
+            AND w.success=${success}
+        </if>
+        <if test="success==2">
+            AND w.success=${success}
+        </if>
+        <if test="success==0">
+            AND w.success=${success}
+        </if>
+        <if test="success==3">
+            AND w.success=${success}
+        </if>
+    </select>
+    <!--
 
-	<!--
-		hp回传信息添加到日志表
-	-->
-	<insert id="insertHPlogs" parameterType="java.util.Map" >
-		INSERT INTO OrderRepairWwwHPLogs(addTime,receiveData,success,rowid) VALUES(unix_timestamp(now()),#{XMLString},1,#{xmlMap.rowid})
+    //查询在网单表已经存在的网单号并返回存在的网单号
+    -->
+    <resultMap id="statusMap" type="java.util.Map">
+        <result column="cOrderSn" property="cOrderSn"/><!--网单号-->
+        <result column="tbOrderSn" property="hpTbSn"/><!--TB单号-->
+        <result column="sku" property="sku"/><!--物料号-->
+        <result column="orderProductId" property="orderProductId"/><!--网单ID-->
+        <result column="th_id" property="th_id"/><!--退货单ID-->
+    </resultMap>
+    <!--<select id="check_cOrderSn_isExist" parameterType="java.util.List" resultMap="statusMap">
+        <foreach collection="list" index="index" item="item" separator="union">
+            SELECT b.*,i.orderProductId AS orderProductId,i.id AS th_id FROM orderrepairs i
+            RIGHT JOIN
+            (SELECT q.cOrderSn as cOrderSn,w.tb_order_sn as hpTbSn,q.sku AS sku,q.id AS id FROM
+            orderproducts q
+            INNER JOIN
+            (SELECT order_product_id,tb_order_sn FROM OrderProductsAttributes
+            WHERE tb_order_sn=#{item.hpTbSn}) w
+            ON
+            w.order_product_id=q.id) b
+            ON b.id=i.orderProductId
+        </foreach>
+    </select>-->
+    <select id="check_cOrderSn_isExist" parameterType="java.util.List" resultMap="statusMap">
+        <foreach collection="list" index="index" item="item" separator="union">
+            SELECT b.*,i.orderProductId AS orderProductId,i.id AS th_id FROM orderrepairs i
+            RIGHT JOIN
+            (SELECT q.cOrderSn as cOrderSn,q.sku AS sku,q.id AS id,q.tbOrderSn AS tbOrderSn FROM
+            orderproducts q WHERE q.tbOrderSn=#{item.hpTbSn}) b
+            ON b.id=i.orderProductId
+        </foreach>
+    </select>
+    <!--
+    更新WwwHpRecords表中的匹配次数
+    -->
+    <update id="update_WwwHpRecordsCount" parameterType="java.util.List">
+        update wwwhprecords
+        INNER JOIN
+        (SELECT count,cOrderSn,hpTbSn FROM wwwhprecords WHERE hpTbSn in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ) q
+        ON q.hpTbSn=wwwhprecords.hpTbSn
+        SET wwwhprecords.count=q.count+1,
+        wwwhprecords.remark='单据匹配失败,出库信息未获取。待人工处理';
+    </update>
+    <!--
+    批量更新hp拒收表的success字段
+    -->
+    <update id="updateFlagBatch" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            UPDATE wwwhprecords
+            SET success=1 WHERE cOrderSn=#{item}
+        </foreach>
+    </update>
+    <!--
+    查询报表导出的数据
+    -->
+    <select id="select_export_ExcelData" parameterType="java.util.Map" resultMap="recordsMap">
+        SELECT w.vomRepairSn,w.cOrderSn,w.hpTbSn,w.success*1 as success,w.remark,w.sku,from_unixtime(w.addTime,'%Y-%m-%d
+        %H:%i:%S') as addTime,w.modifytime
+        FROM wwwhprecords w
+        WHERE 1=1
+        <if test="success==1">
+            AND w.success=${success}
+        </if>
+        <if test="success==2">
+            AND w.success=${success}
+        </if>
+        <if test="success==0">
+            AND w.success=${success}
+        </if>
+        <if test="success==3">
+            AND w.success=${success}
+        </if>
+        <if test="vomRepairSn!=null and vomRepairSn!=''">
+            AND w.vomRepairSn=#{vomRepairSn}
+        </if>
+        <if test="cOrderSn!=null and cOrderSn!=''">
+            AND w.cOrderSn=#{cOrderSn}
+        </if>
+        <if test="hpTbSn!=null and hpTbSn!=''">
+            AND w.hpTbSn=#{hpTbSn}
+        </if>
+        <if test="cOrderSn!=null and cOrderSn!=''">
+            AND w.cOrderSn=#{cOrderSn}
+        </if>
+        <if test="addTimeMin!=null and addTimeMin!=''">
+            AND w.addTime>=#{addTimeMin}
+        </if>
+        <if test="addTimeMax!=null and addTimeMax!=''">
+            AND #{addTimeMax}>=w.modifytime
+        </if>
+    </select>
+
+    <!--
+        hp回传信息添加到日志表
+    -->
+    <insert id="insertHPlogs" parameterType="java.util.Map">
+		INSERT INTO orderrepairwwwhplogs(addTime,receiveData,success,rowid) VALUES(unix_timestamp(now()),#{XMLString},1,#{xmlMap.rowid})
 	</insert>
-	<!--
-	查询hp拒收回传日志
-	-->
-	<select id="selectHPlogsRowid" parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT  rowid FROM  OrderRepairWwwHPLogs WHERE rowid=#{rowid}
+    <!--
+    查询hp拒收回传日志
+    -->
+    <select id="selectHPlogsRowid" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT  rowid FROM  orderrepairwwwhplogs WHERE rowid=#{rowid}
 	</select>
-	<!--
-	HP拒收推送信息插入到HP拒收表
-	-->
-	<insert id="insertWwwHpRecords" parameterType="java.util.Map" >
-		INSERT into WwwHpRecords(addTime,sku,lbxSn,remark,hpTbSn,vomRepairSn) VALUES (unix_timestamp(now()),#{prodtype},#{add2},#{remark},#{orderno},#{sourceno});
+
+    <select id="selectAllHPlogs" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT  * FROM  orderrepairwwwhplogs
+	</select>
+
+    <!--
+    HP拒收推送信息插入到HP拒收表
+    -->
+    <insert id="insertWwwHpRecords" parameterType="java.util.Map">
+		INSERT into wwwhprecords(addTime,sku,lbxSn,remark,hpTbSn,vomRepairSn,success) VALUES (unix_timestamp(now()),#{prodtype},#{add2},#{remark},#{orderno},#{sourceno},2);
 	</insert>
 
-	<!--
-	更新HP拒收信息
-	-->
-	<update id="update_WwwHpRecordsInfo" parameterType="java.util.List">
-		<foreach collection="list" index="index" item="item" separator=";">
-			UPDATE WwwHpRecords
-			SET success=1,remark='单据匹配成功',orderProductId=${item.orderProductId},orderRepairId=${item.th_id},cOrderSn=#{item.cOrderSn}
-			WHERE hpTbSn=#{item.hpTbSn}
-		</foreach>
-	</update>
-	<resultMap id="th_infoMap" type="java.util.Map">
-		<result column="consignee" property="consignee"  /><!--联系人-->
-		<result column="mobile" property="mobile"  /><!--手机号-->
-		<result column="number" property="number"  /><!--退货数量-->
-		<result column="cOrderSn" property="cOrderSn"  /><!--网单号-->
-		<result column="orderId" property="orderId"  /><!--网单号关联订单号Id-->
-	</resultMap>
-	<select id="select_ThInfo" parameterType="java.lang.String" resultMap="th_infoMap">
+    <!--
+    更新HP拒收信息
+    -->
+    <update id="update_WwwHpRecordsInfo" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            UPDATE wwwhprecords
+            SET
+            success=1,remark='单据匹配成功',orderProductId=${item.orderProductId},orderRepairId=${item.th_id},cOrderSn=#{item.cOrderSn}
+            WHERE hpTbSn=#{item.hpTbSn}
+        </foreach>
+    </update>
+    <resultMap id="th_infoMap" type="java.util.Map">
+        <result column="consignee" property="consignee"/><!--联系人-->
+        <result column="mobile" property="mobile"/><!--手机号-->
+        <result column="number" property="number"/><!--退货数量-->
+        <result column="cOrderSn" property="cOrderSn"/><!--网单号-->
+        <result column="orderId" property="orderId"/><!--网单号关联订单号Id-->
+    </resultMap>
+    <select id="select_ThInfo" parameterType="java.lang.String" resultMap="th_infoMap">
 		SELECT
 		w.consignee,
 		w.mobile,
 		b.number,
 		b.cOrderSn,
 		b.orderId
-		FROM Orders w
+		FROM orders w
 		INNER  JOIN
-		(SELECT orderId,number,cOrderSn FROM OrderProducts WHERE cOrderSn=#{cOrderSn}) b
+		(SELECT orderId,number,cOrderSn FROM orderproducts WHERE cOrderSn=#{cOrderSn}) b
 		ON b.orderId=w.id
 	</select>
-	<select id="selectOrderSn" parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT o.repairSn
-		FROM OrderRepairs o
-		RIGHT JOIN
-		(SELECT id FROM OrderProducts where
-		cOrderSn=#{cOrderSn}) b
-		ON b.id=o.orderProductId
-		WHERE o.handleStatus!=1 OR o.handleStatus!=2
-		ORDER BY o.repairSn desc 
+    <select id="selectOrderSn" parameterType="java.lang.String" resultType="com.haier.shop.model.OrderRepairs">
+		SELECT
+			o.handleStatus,
+			o.id
+		FROM
+        orderrepairs o,
+        orderproducts p
+		WHERE
+		o.orderProductId =p.id
+		and p.cOrderSn=#{cOrderSn}
+		ORDER BY
+			o.id DESC
 		LIMIT 0,1
 	</select>
-	<!--
-	退换货列表显示
-	-->
-	<resultMap id="returnMap" type="java.util.Map">
-		<result column="cOrderSn" property="cOrderSn"  /><!--网单号-->
-		<result column="orderSn" property="orderSn"  /><!--订单号-->
-		<result column="repairSn" property="repairSn"  /><!--退货单号-->
-		<result column="typeActual" property="typeActual"  /><!--退换货类型-->
-		<result column="count" property="count"  /><!--退换货数量-->
-		<result column="handleStatus" property="handleStatus"  /><!--处理状态-->
-		<result column="addTime" property="addTime"  /><!--提交时间-->
-		<result column="PaymentStatus" property="PaymentStatus"  /><!--付款状态-->
-		<result column="receiptStatus" property="receiptStatus"  /><!--发票状态-->
-		<result column="storageStatus" property="storageStatus"  /><!--出入库状态-->
-		<result column="contactName" property="contactName"  /><!--联系人姓名-->
-		<result column="contactMobile" property="contactMobile"  /><!--联系人电话-->
-		<result column="xxx" property="xxx"  /><!--订单地区分配-->
-		<result column="province" property="province"  /><!--省份-->
-	</resultMap>
-	<select id="datagrid_orderForecastGoal" parameterType="java.util.Map" resultMap="returnMap">
-		SELECT
-		r.regionName AS province,t.cOrderSn,t.orderSn,t.addTime,t.repairSn,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
-		FROM Regions r
-		INNER JOIN
-		(SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM OrderProducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM Orders o INNER JOIN
-		(SELECT a.addTime,a.orderId,a.orderProductId,a.id AS repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
-		a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
-		FROM OrderRepairs a) b
-		ON
-		o.id=b.orderId) c
-		ON c.orderProductId=w.id) t
-		ON
-		t.province=r.id
-		WHERE 1=1
-		<if test="orderSn!=null and orderSn!=''">
-			AND t.orderSn=#{orderSn}
-		</if>
-		<if test="cOrderSn!=null and cOrderSn!=''">
-			AND t.cOrderSn=#{cOrderSn}
-		</if>
-		<if test="repairSn!=null and repairSn!=''">
-			AND t.repairSn=#{repairSn}
-		</if>
-		<if test="contactName!=null and contactName!=''">
-			AND t.contactName=#{contactName}
-		</if>
-		<if test="contactMobile!=null and contactMobile!=''">
-			AND t.contactMobile=#{contactMobile}
-		</if>
-		<if test="handleStatus!=-1 and handleStatus!=''">
-			AND t.handleStatus=${handleStatus}
-		</if>
-		<if test="paymentStatus!=-1 and paymentStatus!=''">
-			AND t.paymentStatus=${paymentStatus}
-		</if>
-		<if test="receiptStatus!=-1 and receiptStatus!=''">
-			AND t.receiptStatus=${receiptStatus}
-		</if>
-		<if test="typeActual!=-1 and typeActual!=''">
-			AND t.typeActual=${typeActual}
-		</if>
-		<if test="storageStatus!=-1 and storageStatus!=''">
-			AND t.storageStatus=${storageStatus}
-		</if>
-		<if test="page!=null and rows!=null">
-			limit ${page},${rows}
-		</if>
-	</select>
-	<select id="datagrid_orderForecastGoalcount" parameterType="java.util.Map" resultMap="returnMap">
-		SELECT
-		r.regionName AS province,t.cOrderSn,t.orderSn,t.addTime,t.repairSn,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
-		FROM Regions r
-		INNER JOIN
-		(SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM OrderProducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM Orders o INNER JOIN
-		(SELECT a.addTime,a.orderId,a.orderProductId,a.id AS repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
-		a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
-		FROM OrderRepairs a) b
-		ON
-		o.id=b.orderId) c
-		ON c.orderProductId=w.id) t
-		ON
-		t.province=r.id
-		WHERE 1=1
-		<if test="orderSn!=null and orderSn!=''">
-			AND t.orderSn=#{orderSn}
-		</if>
-		<if test="cOrderSn!=null and cOrderSn!=''">
-			AND t.cOrderSn=#{cOrderSn}
-		</if>
-		<if test="repairSn!=null and repairSn!=''">
-			AND t.repairSn=#{repairSn}
-		</if>
-		<if test="contactName!=null and contactName!=''">
-			AND t.contactName=#{contactName}
-		</if>
-		<if test="contactMobile!=null and contactMobile!=''">
-			AND t.contactMobile=#{contactMobile}
-		</if>
-		<if test="handleStatus!=-1 and handleStatus!=''">
-			AND t.handleStatus=${handleStatus}
-		</if>
-		<if test="paymentStatus!=-1 and paymentStatus!=''">
-			AND t.paymentStatus=${paymentStatus}
-		</if>
-		<if test="receiptStatus!=-1 and receiptStatus!=''">
-			AND t.receiptStatus=${receiptStatus}
-		</if>
-		<if test="typeActual!=-1 and typeActual!=''">
-			AND t.typeActual=${typeActual}
-		</if>
-		<if test="storageStatus!=-1 and storageStatus!=''">
-			AND t.storageStatus=${storageStatus}
-		</if>
-	</select>
-	<select id="export_ExcelOrderRepairs" parameterType="java.util.Map" resultMap="returnMap">
-		SELECT
-		r.regionName AS province,t.cOrderSn,t.orderSn,t.addTime,t.repairSn,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
-		FROM Regions r
-		INNER JOIN
-		(SELECT w.cOrderSn,w.cPaymentStatus,c.* FROM OrderProducts w INNER JOIN (SELECT o.orderSn,o.province,b.* FROM Orders o INNER JOIN
-		(SELECT a.addTime,a.orderId,a.orderProductId,a.id AS repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
-		a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
-		FROM OrderRepairs a) b
-		ON
-		o.id=b.orderId) c
-		ON c.orderProductId=w.id) t
-		ON
-		t.province=r.id
-		WHERE 1=1
-		<if test="type==1">
-		<if test="orderSn!=null and orderSn!=''">
-			AND t.orderSn=#{orderSn}
-		</if>
-		<if test="cOrderSn!=null and cOrderSn!=''">
-			AND t.cOrderSn=#{cOrderSn}
-		</if>
-		<if test="repairSn!=null and repairSn!=''">
-			AND t.repairSn=#{repairSn}
-		</if>
-		<if test="contactName!=null and contactName!=''">
-			AND t.contactName=#{contactName}
-		</if>
-		<if test="contactMobile!=null and contactMobile!=''">
-			AND t.contactMobile=#{contactMobile}
-		</if>
-		<if test="handleStatus!=-1 and handleStatus!=''">
-			AND t.handleStatus=${handleStatus}
-		</if>
-		<if test="paymentStatus!=-1 and paymentStatus!=''">
-			AND t.paymentStatus=${paymentStatus}
-		</if>
-		<if test="receiptStatus!=-1 and receiptStatus!=''">
-			AND t.receiptStatus=${receiptStatus}
-		</if>
-		<if test="typeActual!=-1 and typeActual!=''">
-			AND t.typeActual=${typeActual}
-		</if>
-		<if test="storageStatus!=-1 and storageStatus!=''">
-			AND t.storageStatus=${storageStatus}
-		</if>
-		</if>
-		<if test="type==2">
-			AND t.paymentStatus=2
-		</if>
-	</select>
-	<select id="selectPhoneAndName" parameterType="java.lang.String" resultType="java.util.Map">
-		SELECT b.mobile,b.consignee,a.number FROM Orders b
+    <select id="Checkstate" parameterType="java.lang.String" resultType="com.haier.shop.model.OrderRepairs">
+        SELECT
+         o.handleStatus,
+         o.id
+      FROM
+        orderrepairs o,
+        orderproducts p
+      WHERE
+      o.orderProductId =p.id
+      and o.handleStatus IN (1, 2)
+      and p.cOrderSn=#{cOrderSn}
+      ORDER BY
+      o.id DESC
+      LIMIT 0,1
+    </select>
+    <!--
+    退换货列表显示
+    -->
+    <resultMap id="returnMap" type="java.util.Map">
+        <result column="cOrderSn" property="cOrderSn"/><!--网单号-->
+        <result column="orderSn" property="orderSn"/><!--订单号-->
+        <result column="repairSn" property="repairSn"/><!--退货单号-->
+        <result column="typeActual" property="typeActual"/><!--退换货类型-->
+        <result column="count" property="count"/><!--退换货数量-->
+        <result column="handleStatus" property="handleStatus"/><!--处理状态-->
+        <result column="addTime" property="addTime"/><!--提交时间-->
+        <result column="PaymentStatus" property="PaymentStatus"/><!--付款状态-->
+        <result column="receiptStatus" property="receiptStatus"/><!--发票状态-->
+        <result column="storageStatus" property="storageStatus"/><!--出入库状态-->
+        <result column="contactName" property="contactName"/><!--联系人姓名-->
+        <result column="contactMobile" property="contactMobile"/><!--联系人电话-->
+        <result column="xxx" property="xxx"/><!--订单地区分配-->
+        <result column="province" property="province"/><!--省份-->
+    </resultMap>
+    <select id="datagrid_orderForecastGoal" parameterType="java.util.Map" resultMap="returnMap">
+        SELECT
+        r.regionName AS
+        province,t.cOrderSn,t.orderSn,t.opId,t.addTime,t.repairSn,t.source,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
+        FROM regions r
+        right JOIN
+        (SELECT w.cOrderSn,w.id opId,w.tbOrderSn,w.cPaymentStatus,c.* FROM orderproducts w INNER JOIN (SELECT o.orderSn,o.sourceOrderSn,o.source,o.province,b.* FROM
+        orders o INNER JOIN
+        (SELECT a.addTime,a.paymentTime,a.orderId,a.orderProductId,a.id AS
+        repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
+        a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
+        FROM orderrepairs a) b
+        ON
+        o.id=b.orderId
+        ) c ON c.orderProductId=w.id
+        WHERE  1=1
+        <if test="shippingMode!='' ">
+            and w.shippingMode=#{shippingMode}
+        </if>
+        <if test="stockType!='' ">
+            and w.stockType=#{stockType}
+        </if>
+        ) t
+        ON t.province=r.id
+        <if test="hpFirst!=-1 and hpFirst!='' ">
+            LEFT JOIN orderrepairhprecords h1
+            on   h1.orderRepairId =t.repairSn and h1.orderProductId = t.opId
+        </if>
+        <if test="hpSecond!=-1 and hpSecond!='' ">
+            LEFT JOIN orderrepairhprecords h2
+            on   h2.orderRepairId =t.repairSn and h2.orderProductId = t.opId
+        </if>
+        <if test="hpThird!=-1 and hpThird!='' ">
+            LEFT JOIN orderrepairhprecords h3
+            on   h3.orderRepairId =t.repairSn and h3.orderProductId = t.opId
+        </if>
+        WHERE 1=1
+        <if test="orderSn!=null and orderSn!=''">
+            AND t.orderSn=#{orderSn}
+        </if>
+        <if test="sourceOrderSn!=null and sourceOrderSn!=''">
+            AND t.sourceOrderSn=#{sourceOrderSn}
+        </if>
+        <if test="tbOrderSn!=null and tbOrderSn!=''">
+            AND t.tbOrderSn=#{tbOrderSn}
+        </if>
+        <if test="cOrderSn!=null and cOrderSn!=''">
+            AND t.cOrderSn=#{cOrderSn}
+        </if>
+        <if test="repairSn!=null and repairSn!=''">
+            AND t.repairSn=#{repairSn}
+        </if>
+        <if test="addTimeMin!=null and addTimeMin!=''">
+            <![CDATA[ AND t.addTime >= unix_timestamp(#{addTimeMin}) ]]>
+        </if>
+        <if test="addTimeMax!=null and addTimeMax!=''">
+            <![CDATA[ AND t.addTime <=unix_timestamp(#{addTimeMax}) ]]>
+        </if>
+        <if test="paymentTimeMin!=null and paymentTimeMin!=''">
+            <![CDATA[ AND t.paymentTime >= unix_timestamp(#{paymentTimeMin}) ]]>
+        </if>
+        <if test="paymentTimeMax!=null and paymentTimeMax!=''">
+            <![CDATA[ AND t.paymentTime <= unix_timestamp(#{paymentTimeMax}) ]]>
+        </if>
+        <if test="contactName!=null and contactName!=''">
+            AND t.contactName=#{contactName}
+        </if>
+        <if test="contactMobile!=null and contactMobile!=''">
+            AND t.contactMobile=#{contactMobile}
+        </if>
+        <if test="handleStatus!=-1 and handleStatus!=''">
+            AND t.handleStatus=${handleStatus}
+        </if>
+        <if test="paymentStatus!=-1 and paymentStatus!=''">
+            AND t.paymentStatus=${paymentStatus}
+        </if>
+        <if test="receiptStatus!=-1 and receiptStatus!=''">
+            AND t.receiptStatus=${receiptStatus}
+        </if>
+        <if test="typeActual!=-1 and typeActual!=''">
+            AND t.typeActual=${typeActual}
+        </if>
+        <if test="storageStatus!=-1 and storageStatus!=''">
+            AND t.storageStatus=${storageStatus}
+        </if>
+        <if test="source  != null and source !=''">
+            and t.source=#{source}
+        </if>
+        <if test="hpFirst!=-1 and hpFirst!=''">
+            AND h1.checkType = 1 and h1.quality=${hpFirst}
+        </if>
+        <if test="hpSecond!=-1 and hpSecond!=''">
+            AND h2.checkType = 2 and  h2.packResult=${hpSecond}
+        </if>
+        <if test="hpThird!=-1 and hpThird!=''">
+            AND h3.checkType = 3 and h3.packResult=${hpThird}
+        </if>
+
+        ORDER BY t.repairSn desc
+        <if test="page!=null and rows!=null">
+            limit ${page},${rows}
+        </if>
+
+    </select>
+    <select id="datagrid_orderForecastGoalcount" parameterType="java.util.Map" resultMap="returnMap">
+        SELECT
+        r.regionName AS
+        province,t.cOrderSn,t.orderSn,t.opId,t.addTime,t.repairSn,t.source,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus
+        FROM regions r
+        right JOIN
+        (SELECT w.cOrderSn,w.id opId,w.tbOrderSn,w.cPaymentStatus,c.* FROM orderproducts w INNER JOIN (SELECT o.orderSn,o.source,o.sourceOrderSn,o.province,b.* FROM
+        orders o INNER JOIN
+        (SELECT a.addTime,a.paymentTime,a.orderId,a.orderProductId,a.id AS
+        repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,
+        a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus
+        FROM orderrepairs a) b
+        ON
+        o.id=b.orderId) c
+        ON c.orderProductId=w.id
+        WHERE 1=1
+        <if test="shippingMode!='' ">
+            and w.shippingMode=#{shippingMode}
+        </if>
+        <if test="stockType!='' ">
+            and w.stockType=#{stockType}
+        </if>
+        ) t
+        ON
+        t.province=r.id
+        <if test="hpFirst!=-1 and hpFirst!='' ">
+        LEFT JOIN orderrepairhprecords h1
+        on   h1.orderRepairId =t.repairSn and h1.orderProductId = t.opId
+        </if>
+        <if test="hpSecond!=-1 and hpSecond!='' ">
+            LEFT JOIN orderrepairhprecords h2
+            on   h2.orderRepairId =t.repairSn and h2.orderProductId = t.opId
+        </if>
+        <if test="hpThird!=-1 and hpThird!='' ">
+            LEFT JOIN orderrepairhprecords h3
+            on   h3.orderRepairId =t.repairSn and h3.orderProductId = t.opId
+        </if>
+        WHERE 1=1
+        <if test="orderSn!=null and orderSn!=''">
+            AND t.orderSn=#{orderSn}
+        </if>
+        <if test="sourceOrderSn!=null and sourceOrderSn!=''">
+            AND t.sourceOrderSn=#{sourceOrderSn}
+        </if>
+        <if test="tbOrderSn!=null and tbOrderSn!=''">
+            AND t.tbOrderSn=#{tbOrderSn}
+        </if>
+        <if test="cOrderSn!=null and cOrderSn!=''">
+            AND t.cOrderSn=#{cOrderSn}
+        </if>
+        <if test="repairSn!=null and repairSn!=''">
+            AND t.repairSn=#{repairSn}
+        </if>
+        <if test="addTimeMin!=null and addTimeMin!=''">
+            <![CDATA[ AND t.addTime >= unix_timestamp(#{addTimeMin}) ]]>
+        </if>
+        <if test="addTimeMax!=null and addTimeMax!=''">
+            <![CDATA[ AND t.addTime <=unix_timestamp(#{addTimeMax}) ]]>
+        </if>
+        <if test="paymentTimeMin!=null and paymentTimeMin!=''">
+            <![CDATA[ AND t.paymentTime >= unix_timestamp(#{paymentTimeMin}) ]]>
+        </if>
+        <if test="paymentTimeMax!=null and paymentTimeMax!=''">
+            <![CDATA[ AND t.paymentTime <= unix_timestamp(#{paymentTimeMax}) ]]>
+        </if>
+        <if test="contactName!=null and contactName!=''">
+            AND t.contactName=#{contactName}
+        </if>
+        <if test="contactMobile!=null and contactMobile!=''">
+            AND t.contactMobile=#{contactMobile}
+        </if>
+        <if test="handleStatus!=-1 and handleStatus!=''">
+            AND t.handleStatus=${handleStatus}
+        </if>
+        <if test="paymentStatus!=-1 and paymentStatus!=''">
+            AND t.paymentStatus=${paymentStatus}
+        </if>
+        <if test="receiptStatus!=-1 and receiptStatus!=''">
+            AND t.receiptStatus=${receiptStatus}
+        </if>
+        <if test="typeActual!=-1 and typeActual!=''">
+            AND t.typeActual=${typeActual}
+        </if>
+        <if test="storageStatus!=-1 and storageStatus!=''">
+            AND t.storageStatus=${storageStatus}
+        </if>
+        <if test="source  != null and source !=''">
+            and t.source=#{source}
+        </if>
+        <if test="hpFirst!=-1 and hpFirst!='' ">
+            AND h1.checkType = 1 and h1.quality=${hpFirst}
+        </if>
+        <if test="hpSecond!=-1 and hpSecond!=''">
+            AND h2.checkType = 2 and  h2.packResult=${hpSecond}
+        </if>
+        <if test="hpThird!=-1 and hpThird!=''">
+            AND h3.checkType = 3 and h3.packResult=${hpThird}
+        </if>
+    </select>
+    <select id="export_ExcelOrderRepairs" parameterType="java.util.Map" resultMap="returnMap">
+        SELECT
+        r.regionName AS province,
+        t.cOrderSn,t.orderSn,t.productName,t.addTime,t.tradeSn,t.paymentTime,t.paymentName,t.repairSn,t.source,t.typeActual,t.count,t.handleStatus,t.receiptStatus,t.contactName,t.contactMobile,t.PaymentStatus,t.storageStatus,t.reason,t.description,t.hpFirstAddTime,t.offlineAmount,
+        h1.quality,h1.woId, h1.addTime hpTime,h1.checkResult,h1.machineNum,
+        pt.typeName,
+        n.netPointName,
+        ow.userAcceptTime
+        FROM regions r
+        INNER JOIN
+        (SELECT w.cOrderSn,w.id opId,w.tbOrderSn,w.productName,w.productType,w.cPaymentStatus,c.* FROM orderproducts w INNER JOIN (SELECT o.orderSn,o.sourceOrderSn,o.tradeSn,o.source,o.province,b.* FROM
+        orders o INNER JOIN
+        (SELECT a.addTime,a.paymentTime,a.orderId,a.orderProductId,a.id AS
+        repairSn,a.typeActual,a.count,a.handleStatus,a.storageStatus,a.paymentName,
+        a.receiptStatus,a.contactName,a.contactMobile,a.PaymentStatus,a.reason,a.description,a.hpFirstAddTime,a.offlineAmount
+        FROM orderrepairs a) b
+        ON
+        o.id=b.orderId) c
+        ON c.orderProductId=w.id) t
+        ON
+        t.province=r.id
+            LEFT JOIN orderrepairhprecords h1
+            on   h1.orderRepairId =t.repairSn and h1.orderProductId = t.opId  and  h1.checkType = 1
+        LEFT JOIN netpoints n
+        on h1.netPointCode = n.netPointN8
+        LEFT JOIN producttypes pt
+        on t.productType = pt.id
+        LEFT JOIN orderworkflows ow
+        on  ow.orderProductId = t.opId
+        <if test="map.hpSecond!=-1 and map.hpSecond!=''">
+            LEFT JOIN orderrepairhprecords h2
+            on   h2.orderRepairId =t.repairSn and h2.orderProductId = t.opId
+        </if>
+        <if test="map.hpThird!=-1 and map.hpThird!=''">
+            LEFT JOIN orderrepairhprecords h3
+            on   h3.orderRepairId =t.repairSn and h3.orderProductId = t.opId
+        </if>
+        WHERE 1=1
+        <if test="map.type==1">
+            <if test="map.orderSn!=null and map.orderSn!=''">
+                AND t.orderSn=#{map.orderSn}
+            </if>
+            <if test="map.sourceOrderSn!=null and map.sourceOrderSn!=''">
+                AND t.sourceOrderSn=#{map.sourceOrderSn}
+            </if>
+            <if test="map.tbOrderSn!=null and map.tbOrderSn!=''">
+                AND t.tbOrderSn=#{map.tbOrderSn}
+            </if>
+            <if test="map.cOrderSn!=null and map.cOrderSn!=''">
+                AND t.cOrderSn=#{map.cOrderSn}
+            </if>
+            <if test="map.repairSn!=null and map.repairSn!=''">
+                AND t.repairSn=#{map.repairSn}
+            </if>
+            <if test="map.addTimeMin!=null and map.addTimeMin!=''">
+                <![CDATA[ AND t.addTime >= unix_timestamp(#{map.addTimeMin}) ]]>
+            </if>
+            <if test="map.addTimeMax!=null and map.addTimeMax!=''">
+                <![CDATA[ AND t.addTime <=unix_timestamp(#{map.addTimeMax}) ]]>
+            </if>
+            <if test="map.paymentTimeMin!=null and map.paymentTimeMin!=''">
+                <![CDATA[ AND t.paymentTime >= unix_timestamp(#{map.paymentTimeMin}) ]]>
+            </if>
+            <if test="map.paymentTimeMax!=null and map.paymentTimeMax!=''">
+                <![CDATA[ AND t.paymentTime <= unix_timestamp(#{map.paymentTimeMax}) ]]>
+            </if>
+            <if test="map.contactName!=null and map.contactName!=''">
+                AND t.contactName=#{map.contactName}
+            </if>
+            <if test="map.contactMobile!=null and map.contactMobile!=''">
+                AND t.contactMobile=#{map.contactMobile}
+            </if>
+            <if test="map.handleStatus!=-1 and map.handleStatus!=''">
+                AND t.handleStatus=${map.handleStatus}
+            </if>
+            <if test="map.paymentStatus!=-1 and map.paymentStatus!=''">
+                AND t.paymentStatus=${map.paymentStatus}
+            </if>
+            <if test="map.receiptStatus!=-1 and map.receiptStatus!=''">
+                AND t.receiptStatus=${map.receiptStatus}
+            </if>
+            <if test="map.typeActual!=-1 and map.typeActual!=''">
+                AND t.typeActual=${map.typeActual}
+            </if>
+            <if test="map.storageStatus!=-1 and map.storageStatus!=''">
+                AND t.storageStatus=${map.storageStatus}
+            </if>
+            <if test="map.source  != null and map.source !=''">
+                and t.source=#{map.source}
+            </if>
+            <if test="map.hpFirst!=-1 and map.hpFirst!=''">
+                and h1.quality=${map.hpFirst}
+            </if>
+            <if test="map.hpSecond!=-1 and map.hpSecond!=''">
+                AND h2.checkType = 2 and  h2.packResult=${map.hpSecond}
+            </if>
+            <if test="map.hpThird!=-1 and map.hpThird!=''">
+                AND h3.checkType = 3 and h3.packResult=${map.hpThird}
+            </if>
+        </if>
+        <if test="map.type==2">
+            AND t.paymentStatus=2
+        </if>
+    </select>
+    <select id="selectPhoneAndName" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT b.mobile,b.consignee,a.number FROM orders b
 		RIGHT JOIN
-		(SELECT orderId,number FROM OrderProducts WHERE cOrderSn=#{cOrderSn}) a
+		(SELECT orderId,number FROM orderproducts WHERE cOrderSn=#{cOrderSn}) a
 		ON a.orderId=b.id
 	</select>
-	<select id="selectOrderProductId" parameterType="java.lang.Integer" resultType="java.lang.String">
-		SELECT orderProductId FROM OrderRepairs WHERE id=${th_id}
+    <select id="selectOrderProductId" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT orderProductId FROM orderrepairs WHERE id=${th_id}
 	</select>
+
+    <resultMap id="selectOrderProductMap" type="java.util.Map">
+    <result column="id" property="id"/>
+    <result column="productName" property="productName"/>
+    <result column="price" property="price"/>
+    <result column="number" property="number"/>
+    <result column="money" property="money"/>
+    <result column="limitedPrice" property="limitedPrice"/>
+    </resultMap>
+    <select id="selectOrderProductView" parameterType="java.lang.String" resultMap="selectOrderProductMap">
+	SELECT
+		op.id,
+		op.productName,
+		op.price,
+		op.number,
+		op.shippingFee,
+		ifnull(op.price, 0) * ifnull(op.number, 0) money,
+		p.limitedPrice as limitedPrice
+	FROM
+        orderproducts op
+		LEFT JOIN products p on p.sku = op.sku
+	where
+	    op.id = #{id}
+	</select>
+    <select id="selectOrderProductViewTwo" parameterType="java.lang.String" resultMap="selectOrderProductMap">
+        SELECT
+        op.id,
+        op.productName,
+        op.price,
+        op.number,
+        op.shippingFee,
+        ifnull(op.price, 0) * ifnull(op.number, 0) money,
+        p.limitedPrice as limitedPrice
+        FROM
+        orderproducts op
+        LEFT JOIN orders o ON o.id = op.orderId
+        LEFT JOIN products p on p.sku = op.sku
+        where
+        o.orderSn = #{id}
+    </select>
+	<select id="queryDataSumByOrderIds" parameterType="java.util.List" resultType="java.util.Map">
 	
-	<update id="updateStatus" parameterType="java.lang.String">
-	UPDATE OrderProducts
-	SET `status` = #{Status}
-	WHERE
-	id=#{id}
-	</update>
-</mapper>
+		SELECT o.id as "id",
+				 o.sourceOrderSn  as "sourceOrderSn",
+					SUM(IFNULL(op.number,0)) as "number",
+					SUM(IFNULL(op.couponAmount,0)) as "couponAmount" ,
+					SUM(IFNULL(op.esAmount,0)) as "esAmount" ,
+					SUM(IFNULL(op.itemShareAmount,0)) as "itemShareAmount" ,
+					SUM(IFNULL(op.points,0)) as "points" ,
+					SUM(IFNULL(op.jfbAmount,0)) as "jfbAmount" ,
+					SUM(IFNULL(op.djAmount,0)) as "djAmount" ,
+					SUM(IFNULL(op.hbAmount,0)) as "hbAmount" ,
+					SUM(IFNULL(op.productAmount,0)) as "productAmount" ,
+					o.shippingAmount  as "shippingAmount",
+					o.totalEsAmount  as "totalEsAmount",
+					o.productAmount  as "productAmounto",
+					o.orderAmount  as "orderAmount"
+					FROM orders o ,orderproducts op  WHERE  op.orderId = o.id
+					and o.id in
+				<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+		                #{item}       
+		      </foreach>    
+		      GROUP BY  o.id
+	</select>
+
+    <select id="queryOrderProductStatus" resultType="com.haier.shop.model.OrderProducts" parameterType="java.lang.String">
+        SELECT `orderproducts`.`id`,
+        `orderproducts`.`isTest`,
+        `orderproducts`.`supportOneDayLimit`,
+        `orderproducts`.`orderId`,
+        `orderproducts`.`cOrderSn`,
+        `orderproducts`.`isBook`,
+        `orderproducts`.`cPaymentStatus`,
+        `orderproducts`.`cPayTime`,
+        `orderproducts`.`productType`,
+        `orderproducts`.`productId`,
+        `orderproducts`.`productName`,
+        `orderproducts`.`sku`,
+        `orderproducts`.`price`,
+        `orderproducts`.`number`,
+        `orderproducts`.`lockedNumber`,
+        `orderproducts`.`unlockedNumber`,
+        `orderproducts`.`productAmount`,
+        `orderproducts`.`couponAmount`,
+        `orderproducts`.`esAmount`,
+        `orderproducts`.`cateId`,
+        `orderproducts`.`brandId`,
+        `orderproducts`.`netPointId`,
+        `orderproducts`.`shippingFee`,
+        `orderproducts`.`settlementStatus`,
+        `orderproducts`.`receiptOrRejectTime`,
+        `orderproducts`.`isWmsSku`,
+        `orderproducts`.`sCode`,
+        `orderproducts`.`tsCode`,
+        `orderproducts`.`tsShippingTime`,
+        `orderproducts`.`status`,
+        `orderproducts`.`invoiceNumber`,
+        `orderproducts`.`expressName`,
+        `orderproducts`.`invoiceExpressNumber`,
+        `orderproducts`.`shippingTime`,
+        `orderproducts`.`lessOrderSn`,
+        `orderproducts`.`waitGetLesShippingInfo`,
+        `orderproducts`.`getLesShippingCount`,
+        `orderproducts`.`outping`,
+        `orderproducts`.`lessShipTime`,
+        `orderproducts`.`closeTime`,
+        `orderproducts`.`isReceipt`,
+        `orderproducts`.`isMakeReceipt`,
+        `orderproducts`.`receiptNum`,
+        `orderproducts`.`receiptAddTime`,
+        `orderproducts`.`makeReceiptType`,
+        `orderproducts`.`shippingMode`,
+        `orderproducts`.`lastTimeForShippingMode`,
+        `orderproducts`.`lastEditorForShippingMode`,
+        `orderproducts`.`systemRemark`,
+        `orderproducts`.`externalSaleSettingId`,
+        `orderproducts`.`isNoLimitStockProduct`,
+        `orderproducts`.`hpRegisterDate`,
+        `orderproducts`.`hpFailDate`,
+        `orderproducts`.`hpFinishDate`,
+        `orderproducts`.`hpReservationDate`,
+        `orderproducts`.`shippingOpporunity`,
+        `orderproducts`.`isTimeoutFree`,
+        `orderproducts`.`itemShareAmount`,
+        `orderproducts`.`lessShipTInTime`,
+        `orderproducts`.`lessShipTOutTime`,
+        `orderproducts`.`isSAorZP`,
+        `orderproducts`.`points`,
+        `orderproducts`.`modified`,
+        `orderproducts`.`splitFlag`,
+        `orderproducts`.`splitRelateCOrderSn`,
+        `orderproducts`.`channelId`,
+        `orderproducts`.`activityId2`,
+        `orderproducts`.`pdOrderStatus`,
+        `orderproducts`.`omsOrderSn`,
+        `orderproducts`.`couponCode`,
+        `orderproducts`.`couponCodeValue`,
+        `orderproducts`.`jfbAmount`,
+        `orderproducts`.`djAmount`,
+        `orderproducts`.`hbAmount`,
+        `orderproducts`.`storeId`,
+        `orderproducts`.`storeType`,
+        `orderproducts`.`stockType`,
+        `orderproducts`.`o2oType`,
+        `orderproducts`.`brokerageType`,
+        `orderproducts`.`oid`,
+        `orderproducts`.`addTime`,
+        `orderproducts`.`tzSku`,
+        `orderproducts`.`isCd`,
+        `orderproducts`.`tbOrderSn`
+        FROM `shop`.`orderproducts`
+        WHERE status != '110'
+        AND orderId =#{orderId}
+    </select>
+    <!--
+    查询出入库凭证号
+    -->
+    <select id="selectOutping" resultType="java.lang.String">
+        SELECT outping FROM orderproducts WHERE cOrderSn=#{cOrderSn}
+    </select>
+    <select id="selectlessOrderSn" resultType="java.util.Map">
+        SELECT id,lessOrderSn FROM orderproducts WHERE cOrderSn=#{cOrderSn}
+    </select>
+    <select id="queryisStop" resultMap="BaseResultMap1">
+        SELECT id,isStop from lesqueues WHERE orderProductId=#{id}
+    </select>
+    <select id="selecctLockedNumber" resultType="java.util.Map">
+        select lockedNumber,sku,orderId from orderproducts WHERE cOrderSn=#{cOrderSn};
+    </select>
+    <update id="updateOPStatus" >
+        UPDATE orderproducts SET unlockedNumber=#{lockedNumber},status=110 WHERE cOrderSn=#{cOrderSn}
+    </update>
+    <select id="selectOPCount" resultType="java.util.Map">
+        SELECT status,cOrderSn,orderId from orderproducts WHERE orderId=#{orderId} order by id
+    </select>
+    <select id="selectStatus" resultType="java.lang.Integer">
+        select status from orderproducts WHERE cOrderSn=#{cOrderSn};
+    </select>
+    <select id="queryOrderProductByTB" resultType="java.util.Map">
+            SELECT
+            b.*,
+            i.orderProductId AS orderProductId,
+            i.id AS th_id,
+            i.handleStatus as handleStatus,
+            i.repairSn as repairSn
+            FROM
+        orderrepairs i
+            RIGHT JOIN (
+            SELECT
+            q.cOrderSn AS cOrderSn,
+            q.tbOrderSn AS hpTbSn,
+            q.sku AS sku,
+            q.id AS id
+            FROM
+        orderproducts q where tbOrderSn=#{hpTbSn}
+            ) b ON b.id = i.orderProductId
+            order by i.id desc
+    </select>
+
+    <select id="queryRepairsOrderProductByTB" resultType="java.util.Map">
+            SELECT
+            b.*,
+            i.orderProductId AS orderProductId,
+            i.id AS th_id,
+            i.handleStatus as handleStatus,
+            i.repairSn as repairSn
+            FROM
+        orderrepairs i
+            RIGHT JOIN (
+            SELECT
+            q.cOrderSn AS cOrderSn,
+            q.tbOrderSn AS hpTbSn,
+            q.sku AS sku,
+            q.id AS id
+            FROM
+        orderproducts q where q.tbOrderSn=#{hpTbSn} and q.sku=#{sku}
+            ) b ON b.id = i.orderProductId
+            where i.handleStatus = 2
+    </select>
+
+    <select id="queryRepairsOrderProductByTBSKU" resultType="java.util.Map">
+            SELECT
+            b.*,
+            i.orderProductId AS orderProductId,
+            i.id AS th_id,
+            i.handleStatus as handleStatus,
+            i.repairSn as repairSn
+            FROM
+        orderrepairs i
+            RIGHT JOIN (
+            SELECT
+            q.cOrderSn AS cOrderSn,
+            q.tbOrderSn AS hpTbSn,
+            q.sku AS sku,
+            q.id AS id
+            FROM
+        orderproducts q where q.tbOrderSn=#{hpTbSn} and q.sku=#{sku}
+            ) b ON b.id = i.orderProductId
+            order by i.id desc
+    </select>
+
+    <select id="queryNetSheetExportDate" parameterType="com.haier.shop.model.OrderProductsVo" resultType="java.util.HashMap">
+        		 SELECT
+                    DISTINCT
+					o.orderSn,<!-- #订单号 -->
+	        		o.sourceOrderSn,<!-- #来源订单号 -->
+	        		o.relationOrderSn,<!-- #关联订单号 -->
+	        		p.cOrderSn ,<!-- #网单编号 -->
+	        		p.stockType,<!-- #网单库存类型 -->
+	        		p.sku,<!-- #物料编码 -->
+	        		brand.brandName,<!-- #品牌 -->
+	        		p.price,<!-- #价格 -->
+	        		p.number,<!--  #数量 -->
+	        		p.productAmount,<!-- #金额 -->
+	        		p.couponAmount,<!-- #优惠券抵用金额 -->
+	        		o.points,<!-- #订单使用积分 -->
+	        		p.isBook,<!-- #是否为预定网单 -->
+	        		o.isBackend,<!-- #是否后台下单 -->
+	        		p.status,<!--  #网单状态 -->
+	        		p.cPaymentStatus,<!-- #网单付款状态	 -->
+	        		p.isMakeReceipt,<!-- #开票状态 -->
+	        		o.source,<!-- #订单来源 -->
+                    pts.typeName,<!-- #商品分类 -->
+	        		ps.productName,<!-- #产品型号 -->
+	        		o.paymentName,<!-- #付款方式 -->
+	        		p.shippingMode,<!-- #订单模式 -->
+	        		<!-- #所属库房sCode -->
+	        		p.tsCode,<!-- #转运库房 -->
+	        		p.tsShippingTime,<!-- #转运时效 -->
+                    (select regionName from regions re where o.province = re.id) as province,<!-- #省 -->
+                    (select regionName from regions re where o.city = re.id) as city,<!-- #市 -->
+                    (select regionName from regions re where o.region = re.id) as region,<!-- #区县 -->
+                    (select regionName from regions re where o.street = re.id) as street,<!-- #街道 -->
+                    from_unixtime(o.addTime,'%Y-%m-%d %H:%i:%S') as addTime,<!-- #下单时间 -->
+                    from_unixtime(o.syncTime,'%Y-%m-%d %H:%i:%S') as syncTime,<!-- #同步到商城时间 -->
+                    from_unixtime(o.payTime,'%Y-%m-%d %H:%i:%S') as payTime,<!-- #付款时间 -->
+                    from_unixtime(o.smManualTime,'%Y-%m-%d %H:%i:%S') as smManualTime,<!-- #转人工时间 -->
+	        		o.smManualRemark,<!-- #转人工原因 -->
+                    from_unixtime(o.confirmTime,'%Y-%m-%d %H:%i:%S') as confirmTime,<!-- #确认时间 -->
+                    from_unixtime(os.hpAllotNetPointTime,'%Y-%m-%d %H:%i:%S') as hpAllotNetPointTime,<!-- #分配时间 -->
+	        		netpoint.netPointName,<!-- #分配网点 -->
+                <!--from_unixtime(p.lessShipTime,'%Y-%m-%d %H:%i:%S') as lessShipTime, #Les开单时间 -->
+                    from_unixtime(p.lessShipTime,'%Y-%m-%d %H:%i:%S') as lessShipTime,<!-- #Les出库时间 -->
+                    p.lessOrderSn,<!-- #Les出库号 -->
+                    from_unixtime(os.netPointAcceptTime,'%Y-%m-%d %H:%i:%S') as netPointAcceptTime,<!-- #网点签收时间 -->
+                    from_unixtime(os.netPointShipTime,'%Y-%m-%d %H:%i:%S') as netPointShipTime,<!-- #网点出库时间 -->
+                    from_unixtime(os.userAcceptTime,'%Y-%m-%d %H:%i:%S') as  userAcceptTime,<!-- #用户签收时间 -->
+                    p.receiptAddTime,<!-- #开票时间 -->
+                    from_unixtime(os.cancelTime,'%Y-%m-%d %H:%i:%S') as cancelTime,<!-- #取消时间 -->
+	        		os.shippingTime,<!-- #配送时效(天) -->
+	        		o.remark,<!-- #订单备注 -->
+                    from_unixtime(o.firstConfirmTime,'%Y-%m-%d %H:%i:%S') as firstConfirmTime,<!-- #首次确认时间 -->
+	        		o.firstConfirmPerson,<!-- #首次确认人 -->
+	        		<!-- #预约(最晚)送货时间 -->
+	        		p.isTimeoutFree,<!-- #是否超时免单 -->
+                    from_unixtime(p.hpReservationDate,'%Y-%m-%d %H:%i:%S') as hpReservationDate,<!-- #HP回传预约时间 -->
+	        		o.orderType,<!-- #订单类型 -->
+	        		o.consignee,<!-- #收货人 -->
+                    from_unixtime(p.lessShipTOutTime,'%Y-%m-%d %H:%i:%S') as lessShipTOutTime,<!-- #转运出库时间 -->
+                    from_unixtime(p.lessShipTInTime,'%Y-%m-%d %H:%i:%S') as lessShipTInTime,<!-- #转运入库时间 -->
+                    from_unixtime(os.netPointArriveTime,'%Y-%m-%d %H:%i:%S') as netPointArriveTime,<!-- #物流到网点时间 -->
+	        		<!-- #终端号 -->
+	        		o.tradeType,<!-- #交易类型 -->
+	        		<!-- #pos付款时间 -->
+	        		o.paidAmount,<!-- #交易金额 -->
+	        		<!-- #交易参考号 -->
+                    from_unixtime(o.tailPayTime,'%Y-%m-%d %H:%i:%S') as tailPayTime,<!-- #尾款付款时间 -->
+                    o.sellpeople,<!-- #销售代表 -->
+                    o.address,<!-- #用户地址 -->
+                    p.sCode, <!-- #库位编码 -->
+                    CASE
+                    WHEN p.sCode IS NULL
+                    OR p.sCode = '' THEN 0
+                    WHEN p.sCode = br.masterCode THEN
+                    masterShippingTime
+                    WHEN p.sCode = br.centerCode THEN
+                    centerShippingTime ELSE 0
+                    END AS addhours,
+                    o.payTime AS payTimes,
+                    r.shippingTime AS lastTime,
+                    o.idGift <!-- #是否是赠品 -->
+                 FROM
+                    orderproducts p <!-- #网单 -->
+                    INNER JOIN orders o ON o.id =p.orderId <!-- #订单 -->
+                    LEFT JOIN brands brand ON brand.id = p.brandId <!-- #品牌 -->
+                    LEFT JOIN netpoints netpoint ON netpoint.id =  p.netPointId <!-- #网点 -->
+                    LEFT JOIN orderworkflows os ON os.orderProductId = p.id <!-- 订单全流程监控 -->
+                    LEFT JOIN regions r ON  r.id = o.region <!-- 地区表 -->
+                    LEFT JOIN bigstoragesrela br ON br.CODE = p.tsCode AND br.flag = 1
+                    LEFT JOIN producttypes pts ON pts.id = p.productType
+                    LEFT JOIN products ps ON ps.id = p.productId
+
+
+	        <where>
+		        <if test="cOrderSn !=null and cOrderSn !=''">
+		            and p.cOrderSn =#{cOrderSn}
+		        </if>
+		        <if test="orderSn !=null and orderSn !=''">
+		            and o.orderSn = #{orderSn}
+		        </if>
+		        <if test="productName !=null and productName !=''">
+		            and p.productName =#{productName}
+		        </if>
+		        <if test="sku !=null and sku!=''">
+		            and p.sku =#{sku}
+		        </if>
+		        <if test="sourceOrderSn !=null and sourceOrderSn != ''">
+		            and o.sourceOrderSn =#{sourceOrderSn}
+		        </if>
+		        <if test="price!=null and price!=''">
+		            and p.price =#{price,jdbcType=VARCHAR}
+		        </if>
+		        <if test="numberMin !=null and numberMin !=''">
+		            and p.number >= #{numberMin}
+		        </if>
+		        <if test="numberMax !=null and numberMax!=''">
+		            and p.number  <![CDATA[ <=]]> #{numberMax}
+		        </if>
+		        <if test="scode !=null and scode!=''">
+		            and p.sCode =#{scode}
+		        </if>
+		        <if test="status != null and status != '' or 0 == status ">
+		            and p.status = #{status}
+		        </if>
+		        
+		        <if test="supportOneDayLimit != null and supportOneDayLimit != '' or  supportOneDayLimit == 0 ">
+		            and p.supportOneDayLimit = #{supportOneDayLimit}
+		        </if>
+		        
+		        <if test="isBook != null and isBook != '' or  isBook == 0 ">
+		            and p.isBook = #{isBook}
+		        </if>
+		        <if test="orderType != null and orderType != '' or  orderType == 0 ">
+		        	and o.orderType = #{orderType}
+		        </if>
+		        <!-- <if test="isnotice !=null and isnotice!=''">
+		            and p.isNotice = #{isnotice}
+		        </if> -->
+		        <!-- <if test="noticetime !=null and noticetime!=''">
+		            and p.noticeTime = #{noticetime}
+		        </if> -->
+		        <if test="isReceipt !=null ">
+		            and p.isReceipt =#{isReceipt}
+		        </if>
+		        <if test="shippingMode !=null and shippingMode !=''">
+		            and p.shippingMode = #{shippingMode}
+		        </if>
+		        <if test="makeReceiptTypeStatus != null and makeReceiptTypeStatus != '' and makeReceiptTypeStatus !='0'.toString()">
+		            and p.makeReceiptType = #{makeReceiptTypeStatus}
+		        </if>
+		        <if test="isMakeReceipt!=null and isMakeReceipt!=''  and  isMakeReceipt !='0'.toString()">
+		            and p.isMakeReceipt = #{isMakeReceipt}
+		        </if>
+		        <if test="brandId !=null and brandId!=''">
+		            and p.brandId = #{brandId}
+		        </if>
+		        <if test="cateId != null and cateId != '' ">
+                    and ( p.cateId = #{cateId} or (
+                    p.cateId IN (SELECT id FROM productcates WHERE parentId = #{cateId} )
+                    or p.cateId IN (SELECT id FROM productcates WHERE rootId = #{cateId} )))
+		        </if>
+		        <if test="receiptAddTimeMin != null and receiptAddTimeMin != ''">
+		            and p.receiptAddTime >= STR_TO_DATE(#{receiptAddTimeMin,jdbcType=VARCHAR},"%Y-%m-%d ")
+		        </if>
+		        <if test="receiptAddTimeMax != null and receiptAddTimeMax != ''">
+		            and p.receiptAddTime <![CDATA[  <= ]]>  STR_TO_DATE(#{receiptAddTimeMax,jdbcType=VARCHAR},"%Y-%m-%d ")
+		        </if>
+		        <!-- <if test="isSelfSell !=null and isSelfSell!=''">
+		            and a.is_self_sell = #{isSelfSell}
+		        </if> -->
+		        <if test="couponCode !=null and couponCode!=''">
+		            and p.couponCode like '%${couponCode}%'
+		        </if>
+		        <if test="mobile != null and mobile != ''  ">
+		            and o.mobile  = #{mobile}
+		        </if>
+		        <if test="consignee != null and consignee != ''  ">
+		            and o.consignee = #{consignee}
+		        </if>
+		        <if test="source !=null and source!=''">
+                    <!-- and INSTR(#{source} , o.source ) > 0 -->
+                     and o.source = #{source}
+                 </if>
+                 <if test="paymentCode !=null and paymentCode !=''">
+                     and o.paymentCode = #{paymentCode}
+                 </if>
+                 <if test="paymentStatus !=null and paymentStatus!=''">
+                     and p.cPaymentStatus = #{paymentStatus}
+                 </if>
+                 <if test="orderStatus !=null and orderStatus!=''">
+                     and o.orderStatus = #{orderStatus}
+                 </if>
+
+                 <if test="firstConfirmTime != null and firstConfirmTime == '0'.toString()">
+                     and o.firstConfirmTime is null
+                 </if>
+                 <if test="firstConfirmTime != null and firstConfirmTime == '1'.toString()">
+                     and o.firstConfirmTime is not null
+                 </if>
+                 <if test="isNotConfirm!=null and isNotConfirm!=''">
+                     and o.isNotConfirm = #{isNotConfirm}
+                 </if>
+                 <if test="isBackend!=null and isBackend!=''">
+                     and o.isBackend = #{isBackend}
+                 </if>
+                 <if test="autoConfirmNumMin != null and autoConfirmNumMin != ''">
+                     and o.autoConfirmNum >= #{autoConfirmNumMin}
+                 </if>
+                 <if test="autoConfirmNumMax != null and autoConfirmNumMax != ''">
+                     and o.autoConfirmNum  <![CDATA[  <= ]]>  #{autoConfirmNumMax}
+                 </if>
+                 <if test="payTimeMin != null and payTimeMin != ''">
+                     and o.payTime >= unix_timestamp(#{payTimeMin})
+                 </if>
+                 <if test="payTimeMax != null and payTimeMax != ''">
+                     and o.payTime  <![CDATA[  <= ]]>   unix_timestamp(#{payTimeMax})
+                 </if>
+                 <if test="confirmTimeMin != null and confirmTimeMin != ''">
+                     and o.confirmTime >= unix_timestamp(#{confirmTimeMin})
+                 </if>
+                 <if test="confirmTimeMax != null and confirmTimeMax != ''">
+                     and o.confirmTime  <![CDATA[  <= ]]>   unix_timestamp(#{confirmTimeMax})
+                 </if>
+
+                 <if test="isProduceDaily !=null and isProduceDaily!=''">
+                     and o.isProduceDaily = #{isProduceDaily}
+                 </if>
+                 <if test="lessShipTimeMin != null and lessShipTimeMin != ''">
+                     and p.lessShipTime >= unix_timestamp(#{lessShipTimeMin})
+                 </if>
+                 <if test="lessShipTimeMax != null and lessShipTimeMax != ''">
+                     and p.lessShipTime  <![CDATA[  <= ]]>   unix_timestamp(#{lessShipTimeMax})
+                 </if>
+                 <if test="addTimeMin != null and addTimeMin != ''">
+                     and o.addTime >= unix_timestamp(#{addTimeMin})
+                 </if>
+                 <if test="addTimeMax != null and addTimeMax != ''">
+                     and o.addTime  <![CDATA[  <= ]]>   unix_timestamp(#{addTimeMax})
+                 </if>
+                 <if test="provinceId !=null and provinceId!=-1">
+                     and o.province = #{provinceId}
+                 </if>
+                 <if test="userAcceptTimeMin != null and userAcceptTimeMin != ''">
+                     and os.userAcceptTime >= unix_timestamp(#{userAcceptTimeMin})
+                 </if>
+                 <if test="userAcceptTimeMax != null and userAcceptTimeMax != ''">
+                     and os.userAcceptTime  <![CDATA[  <= ]]>   unix_timestamp(#{userAcceptTimeMax})
+                 </if>
+                 <if test="stockType != null and stockType != ''">
+                     and p.stockType = #{stockType}
+                 </if>
+                 <if test="isExternal != null and isExternal != '' ">
+                     and p.externalSaleSettingId = #{isExternal}
+                 </if>
+                 <if test="regionAssign != null and regionAssign == 'north' ">
+                     <include refid="north"></include>
+                 </if>
+                 <if test="regionAssign != null and regionAssign == 'south' ">
+                     <include refid="south"></include>
+                 </if>
+                 <if test="regionAssign != null and regionAssign == 'west' ">
+                     <include refid="west"></include>
+                 </if>
+                 <if test="regionAssign != null and regionAssign == 'east' ">
+                     <include refid="east"></include>
+                 </if>
+                 <if test="isTsCode != null and isTsCode == '0'.toString()">
+                     and p.tsCode is null
+                 </if>
+                 <if test="isTsCode != null and isTsCode == '1'.toString()">
+                     and p.tsCode is not null
+                 </if>
+                 <if test="idGift != null ">
+                    AND o.idGift = #{idGift}
+                 </if>
+              </where>
+              LIMIT 0,50000
+     </select>
+     <sql id="north">
+         AND (
+			 o.province = 2
+			 OR o.province = 3
+			 OR o.province = 4
+			 OR o.province = 5
+			 OR o.province = 6
+			 OR o.province = 7
+			 OR o.province = 8
+			 OR o.province = 9
+			 OR o.province = 17
+		 )
+     </sql>
+
+    <sql id="south">
+         AND (
+			 o.province = 14
+			 OR o.province = 18
+			 OR o.province = 19
+			 OR o.province = 20
+			 OR o.province = 21
+			 OR o.province = 22
+		 )
+     </sql>
+
+    <sql id="west">
+         AND (
+			 o.province = 5
+			 OR o.province = 26
+			 OR o.province = 25
+			 OR o.province = 29
+			 OR o.province = 27
+			 OR o.province = 24
+			 OR o.province = 30
+			 OR o.province = 32
+			 OR o.province = 31
+			 OR o.province = 23
+			 OR o.province = 28
+		 )
+     </sql>
+
+    <sql id="east">
+         AND (
+			 o.province = 10
+			 OR o.province = 11
+			 OR o.province = 12
+			 OR o.province = 13
+			 OR o.province = 15
+			 OR o.province = 16
+		 )
+     </sql>
+
+     <select id="selectData" resultType="java.util.Map">
+       SELECT id,orderId,netPointId,cPaymentStatus,status,shippingMode FROM orderproducts WHERE cOrderSn=#{cOrderSn}
+     </select>
+    <resultMap id="selectIdAndIsMakeReceipt" type="com.haier.shop.model.OrderProductsVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="isMakeReceipt" property="isMakeReceipt" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="selectIdAndIsMakeReceiptBycOrderSn" parameterType="java.lang.String" resultMap="selectIdAndIsMakeReceipt">
+         SELECT id,isMakeReceipt FROM orderproducts WHERE cOrderSn=#{cOrderSn}
+    </select>
+
+
+
+
+ </mapper>

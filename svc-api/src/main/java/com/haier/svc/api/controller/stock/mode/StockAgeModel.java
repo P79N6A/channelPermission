@@ -1,15 +1,19 @@
 package com.haier.svc.api.controller.stock.mode;
 
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
+import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
 import com.haier.stock.model.InvStockAge;
+import com.haier.stock.model.InvStockAge.StockAgeData;
 import com.haier.stock.model.InvStockAgeLog;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.StockAgeHandler;
 import com.haier.stock.model.StockAgeWapped;
-import com.haier.stock.service.StockAgeService;
+import com.haier.stock.service.StockAgeInStorageService;
 import com.haier.stock.service.StockCommonService;
 import com.haier.stock.service.StockInvStockAgeService;
+import com.haier.stock.service.StockTransactionTimeService;
 import com.haier.stock.service.StockinvStockAgeLogService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -29,6 +33,10 @@ public class StockAgeModel {
     private StockinvStockAgeLogService stockinvStockAgeLogService;
     @Autowired
     private StockInvStockAgeService stockInvStockAgeService;
+    @Autowired
+    private StockAgeInStorageService stockAgeInStorageService;
+    @Autowired
+    private StockTransactionTimeService stockTransactionTimeService;
     /**
      * 按渠道统计库龄
      * @param clearDate
@@ -706,5 +714,144 @@ public class StockAgeModel {
                 .countStockGroupByChannelWhthSku(clearDate, productGroupName);
 
         return prepareReportChannelList(stockAgeGroupByChannel);
+    }
+
+    public ServiceResult<List<StockAgeWapped>> getStockAgeListByPurchase(PagerInfo pagerInfo,
+        Map<String, Object> params) {
+        ServiceResult<List<StockAgeWapped>> rt = new ServiceResult<List<StockAgeWapped>>();
+        List<InvStockAge> stockAges = stockInvStockAgeService.getStockAgeListByMap(params);
+        if (stockAges == null || stockAges.size() == 0) {
+            rt.setSuccess(false);
+            rt.setMessage("获取库龄信息失败,库存服务器返回为空");
+        } else {
+            List<StockAgeWapped> wappedAges = wappedStockAges(stockAges);
+            for (StockAgeWapped ageWapped : wappedAges) {
+
+                StockAgeData totalAgeData = ageWapped.getStockAge().new StockAgeData();
+                int totalQuantity = 0;
+                BigDecimal totalValue = new BigDecimal("0.0");
+                totalAgeData.setAge(-1005);
+
+                for (StockAgeData ageData : ageWapped.getAgeDatas()) {
+                    BigDecimal value = ageData.getValue();
+                    value.setScale(2);
+                    value = value.divide(new BigDecimal(10000), BigDecimal.ROUND_HALF_UP);//金额万元
+                    ageData.setValue(value);
+                    totalQuantity += ageData.getStockQuantity();
+                    totalValue = totalValue.add(ageData.getValue());
+                }
+                totalAgeData.setStockQuantity(totalQuantity);
+                totalAgeData.setValue(totalValue);
+                ageWapped.getAgeDatas().add(0, totalAgeData);
+            }
+            rt.setResult(wappedAges);
+        }
+        return rt;
+    }
+
+    /**
+     * 按报表要求包装数据
+     * @param stockAges
+     * @return
+     */
+    private List<StockAgeWapped> wappedStockAges(List<InvStockAge> stockAges) {
+        List<StockAgeWapped> stockAgeWappeds = new ArrayList<StockAgeWapped>();
+        for (InvStockAge invStockAge : stockAges) {
+            StockAgeWapped ageWapped = new StockAgeWapped(invStockAge);
+            ageWapped.wappenAgeDatas();
+            stockAgeWappeds.add(ageWapped);
+        }
+        return stockAgeWappeds;
+    }
+
+    public ServiceResult<List<StockAgeWapped>> getStockAgeList( Map<String, Object> params) {
+        ServiceResult<List<StockAgeWapped>> rt = new ServiceResult<List<StockAgeWapped>>();
+        List<InvStockAge> result = stockInvStockAgeService.getStockAgeList(params);
+        int counts = stockInvStockAgeService.getStockAgeListCounts(params);
+        PagerInfo pagerInfo = new PagerInfo();
+        pagerInfo.setRowsCount(counts);
+        rt.setPager(pagerInfo);
+        if (CollectionUtils.isEmpty(result)) {
+            rt.setSuccess(false);
+            rt.setResult(new ArrayList<>());
+            rt.setMessage("查询库龄数据为空");
+        } else {
+            List<StockAgeWapped> wappedAges = wappedStockAges(result);
+            for (StockAgeWapped ageWapped : wappedAges) {
+
+                StockAgeData totalAgeData = ageWapped.getStockAge().new StockAgeData();
+                int totalQuantity = 0;
+                BigDecimal totalValue = new BigDecimal("0.0");
+                totalAgeData.setAge(-1005);
+
+                for (StockAgeData ageData : ageWapped.getAgeDatas()) {
+                    BigDecimal value = ageData.getValue();
+                    value.setScale(2);
+                    value = value.divide(new BigDecimal(10000), BigDecimal.ROUND_HALF_UP);//金额万元
+                    ageData.setValue(value);
+                    totalQuantity += ageData.getStockQuantity();
+                    totalValue = totalValue.add(ageData.getValue());
+                }
+                totalAgeData.setStockQuantity(totalQuantity);
+                totalAgeData.setValue(totalValue);
+                ageWapped.getAgeDatas().add(0, totalAgeData);
+            }
+            rt.setResult(wappedAges);
+        }
+        return rt;
+    }
+
+    public ServiceResult<List<StockAgeWapped>> getStockAgeListForExport( Map<String, Object> params) {
+        ServiceResult<List<StockAgeWapped>> rt = new ServiceResult<List<StockAgeWapped>>();
+        List<InvStockAge> result = stockInvStockAgeService.getStockAgeList(params);
+        if (CollectionUtils.isEmpty(result)) {
+            rt.setSuccess(false);
+            rt.setResult(new ArrayList<>());
+            rt.setMessage("查询库龄数据为空");
+        } else {
+            List<StockAgeWapped> wappedAges = wappedStockAges(result);
+            for (StockAgeWapped ageWapped : wappedAges) {
+
+                StockAgeData totalAgeData = ageWapped.getStockAge().new StockAgeData();
+                int totalQuantity = 0;
+                BigDecimal totalValue = new BigDecimal("0.0");
+                totalAgeData.setAge(-1005);
+
+                for (StockAgeData ageData : ageWapped.getAgeDatas()) {
+                    BigDecimal value = ageData.getValue();
+                    value.setScale(2);
+                    value = value.divide(new BigDecimal(10000), BigDecimal.ROUND_HALF_UP);//金额万元
+                    ageData.setValue(value);
+                    totalQuantity += ageData.getStockQuantity();
+                    totalValue = totalValue.add(ageData.getValue());
+                }
+                totalAgeData.setStockQuantity(totalQuantity);
+                totalAgeData.setValue(totalValue);
+                ageWapped.getAgeDatas().add(0, totalAgeData);
+            }
+            rt.setResult(wappedAges);
+        }
+        return rt;
+    }
+
+    public List<String> getProductGroups(String productType) {
+        ServiceResult<List<String>> rs = stockInvStockAgeService.getProductGroupsInStockAge(productType);
+        if (!rs.getSuccess()) {
+            logger.error("获取库龄报表中的产品组信息出错：" + rs.getMessage());
+            return new ArrayList<String>();
+        }
+        return rs.getResult();
+    }
+
+    public ServiceResult<Boolean> calculateStockAgeTimeHistory(Date today){
+        return stockAgeInStorageService.calculateStockAgeTimeHistory(today);
+    }
+
+    public ServiceResult<Boolean> calculateStockAgeDayHistory(Date today){
+        return stockAgeInStorageService.calculateStockAgeDayHistory(today);
+    }
+
+    public void processForGenerateStockAgeInOutHistory(){
+        stockTransactionTimeService.processForGenerateStockAgeInOutHistory();
     }
 }

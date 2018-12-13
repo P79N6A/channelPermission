@@ -1,57 +1,13 @@
 package com.haier.afterSale.model;
 
-import com.haier.afterSale.service.ItemService;
-import com.haier.afterSale.service.PayCenterFallBackService;
-import com.haier.afterSale.util.OrderSnUtil;
-import com.haier.afterSale.util.PayCenterJsonUtils;
-import com.haier.afterSale.util.ReadWriteRoutingDataSourceHolder;
-import com.haier.afterSale.util.SignUtil;
-import com.haier.common.BusinessException;
-import com.haier.common.ServiceResult;
-import com.haier.common.util.DateUtil;
-
-import com.haier.common.util.JsonUtil;
-
-import com.haier.common.util.StringUtil;
-import com.haier.distribute.data.model.ProductCates;
-import com.haier.shop.model.BenefitTypeReqVO;
-import com.haier.shop.model.CmtCommentOrderProducts;
-import com.haier.shop.model.HpReservationDateLogs;
-import com.haier.shop.model.HpSignTimeInterface;
-import com.haier.shop.model.InvoiceQueue;
-import com.haier.shop.model.InvoicesReady;
-import com.haier.shop.model.NetPoints;
-import com.haier.shop.model.OrderOperateLogs;
-import com.haier.shop.model.OrderProductsAttributes;
-import com.haier.shop.model.OrderProductsNew;
-import com.haier.shop.model.OrderRepairHPRecordsNew;
-import com.haier.shop.model.OrderRepairsNew;
-import com.haier.shop.model.OrderShippedQueue;
-import com.haier.shop.model.OrderType;
-import com.haier.shop.model.OrderWorkflowRegion;
-import com.haier.shop.model.OrderWorkflows;
-import com.haier.shop.model.Orders;
-import com.haier.shop.model.OrdersAttributes;
-import com.haier.shop.model.OrdersNew;
-
-import com.haier.shop.model.ProductsNew;
-import com.haier.shop.service.CmtCommentOrderProductsService;
-import com.haier.shop.service.HpReservationDateLogsService;
-import com.haier.shop.service.HpSignTimeInterfaceService;
-import com.haier.shop.service.InvoiceQueueService;
-import com.haier.shop.service.InvoicesReadyService;
-import com.haier.shop.service.OrderProductsAttributesService;
-import com.haier.shop.service.OrderProductsNewService;
-import com.haier.shop.service.OrderRepairHPRecordsnNewService;
-import com.haier.shop.service.OrderRepairsNewService;
-import com.haier.shop.service.OrderShippedQueueService;
-import com.haier.shop.service.OrderWorkflowRegionService;
-import com.haier.shop.service.OrdersAttributesService;
-import com.haier.shop.service.OrdersNewService;
-import com.haier.shop.service.ShopOrderOperateLogsService;
-import com.haier.shop.service.ShopOrderWorkflowsService;
-import com.haier.stock.model.OrderProductStatus;
-import com.haier.stock.model.OrderStatus;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -62,18 +18,58 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.Assert;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import java.math.BigDecimal;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.haier.afterSale.service.ItemService;
+import com.haier.afterSale.service.PayCenterFallBackService;
+import com.haier.afterSale.util.OrderSnUtil;
+import com.haier.afterSale.util.ReadWriteRoutingDataSourceHolder;
+import com.haier.common.BusinessException;
+import com.haier.common.ServiceResult;
+import com.haier.common.util.DateUtil;
+import com.haier.common.util.StringUtil;
+import com.haier.distribute.data.model.ProductCates;
+import com.haier.shop.model.CmtCommentOrderProducts;
+import com.haier.shop.model.HpReservationDateLogs;
+import com.haier.shop.model.HpSignTimeInterface;
+import com.haier.shop.model.InvoiceQueue;
+import com.haier.shop.model.InvoicesReady;
+import com.haier.shop.model.InvoicesWwwLogs;
+import com.haier.shop.model.MemberInvoices;
+import com.haier.shop.model.NetPoints;
+import com.haier.shop.model.OrderOperateLogs;
+import com.haier.shop.model.OrderProducts;
+import com.haier.shop.model.OrderProductsAttributes;
+import com.haier.shop.model.OrderProductsNew;
+import com.haier.shop.model.OrderRepairHPRecordsNew;
+import com.haier.shop.model.OrderRepairsNew;
+import com.haier.shop.model.OrderShippedQueue;
+import com.haier.shop.model.OrderType;
+import com.haier.shop.model.OrderWorkflowRegion;
+import com.haier.shop.model.OrderWorkflows;
+import com.haier.shop.model.Orders;
+import com.haier.shop.model.OrdersNew;
+import com.haier.shop.model.ProductsNew;
+import com.haier.shop.service.CmtCommentOrderProductsService;
+import com.haier.shop.service.HpReservationDateLogsService;
+import com.haier.shop.service.HpSignTimeInterfaceService;
+import com.haier.shop.service.InvoiceQueueService;
+import com.haier.shop.service.InvoicesReadyService;
+import com.haier.shop.service.InvoicesWwwLogsService;
+import com.haier.shop.service.MemberInvoicesService;
+import com.haier.shop.service.OrderProductsAttributesService;
+import com.haier.shop.service.OrderProductsNewService;
+import com.haier.shop.service.OrderRepairHPRecordsnNewService;
+import com.haier.shop.service.OrderRepairsNewService;
+import com.haier.shop.service.OrderShippedQueueService;
+import com.haier.shop.service.OrderWorkflowRegionService;
+import com.haier.shop.service.OrdersAttributesService;
+import com.haier.shop.service.OrdersNewService;
+import com.haier.shop.service.OrdersService;
+import com.haier.shop.service.ShopMemberInvoicesService;
+import com.haier.shop.service.ShopOrderOperateLogsService;
+import com.haier.shop.service.ShopOrderProductsService;
+import com.haier.shop.service.ShopOrderWorkflowsService;
+import com.haier.stock.model.OrderProductStatus;
+import com.haier.stock.model.OrderStatus;
 @Configuration
 @Service
 public class OrderModel {
@@ -82,7 +78,7 @@ public class OrderModel {
     private static org.apache.log4j.Logger log = org.apache.log4j.LogManager
             .getLogger(OrderModel.class);
     @Autowired
-    private OrderProductsNewService orderProductsNewDao;
+    private OrderProductsNewService orderProductsNewService;
     @Autowired
     private OrderProductsAttributesService orderProductsAttributesDao;
     @Autowired
@@ -115,6 +111,17 @@ public class OrderModel {
     private OrderRepairHPRecordsnNewService orderRepairHPRecordsDao;
     @Autowired
     private OrdersNewService ordersNewService;
+    @Autowired
+    private OrdersService ordersService;
+    @Autowired
+    private ShopMemberInvoicesService shopMemberInvoicesService;
+    @Autowired
+    private ShopOrderProductsService shopOrderProductsService;
+    @Autowired
+    private MemberInvoicesService memberInvoicesReadDao;
+    @Autowired
+    private InvoicesWwwLogsService invoicesWwwLogsService;
+    
     private static final String RAS_PRIVATE_KEY = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBALEOFaUEqEG7cfWcv0SLpHlQmr3qIiFH3ttwBVmnffwF/9xVp2zAZCbgOFDPu+tCedXgEWD13d2W6xG/qp8vhe+Oqo93+J19LnajRyjyGkmDH+pzCn5aS7D7SZ/j1cIu2CuNQNwj9IFmGEEASgimRhHeFnGGfY7PzZqI3XRlzbr/AgMBAAECgYBKTKzMmQ26t9x0w5iIPUmCF084jz5PVQeycmnsW5tE3YengNJHktz0a3d2ghZL/ZN/Kw5f8A1w5dozkokZUCoV0Mpd63JE0BZF9LQH7vJpHSC8MaPHntXB4di9O2//A8KrWDzz8f0lNcnw9vxvDzL3VnAUIiIaFkCwEhcToOJwsQJBANZR47SMc+KziSmg+F8d7dR6mFCczmrB1BEMcASEf45Ij6JFwuU67s1Z5ZmTSH2sFWGJKUEUy20v3oXVyBwCkaMCQQDTfO4PRAWwMidwXAhyH7X/KjuRQTMtuXpl/3ZRF5AAQSD7h0gYRV+1SoQgT4UXQBlnbV4k2KEzkHBiDuYhj971AkAaPykdwV2n08jmejowm9+2d9UTekClPluUQuutAfUFHcnJW7XEkPUR3QKLTkhAa8SqjzuoJr3K/2PHDClXlND1AkB3uZjXYY3K0onLLP7HBLa2TkVMlNmRQBhPl9B2Vd16l2RBoLMqslNdQWMNG5dfszTufVa3iz+u/kzw5jhXtaflAkAb/IPuTy3afvI7f04alHqkSDRQuDoO0QP0dTCQbih0kFPItNGB/l0J86fbGYiF4Uiugdm1aGUJ9dwKR8uO2aMx";
     @SuppressWarnings("serial")
     private static Map<Integer, String> orderStatusMap = new HashMap<Integer, String>() {
@@ -166,7 +173,7 @@ public class OrderModel {
         }
         //获取列表
         try {
-            result.setResult(orderProductsNewDao.getByCOrderSnList(snList));
+            result.setResult(orderProductsNewService.getByCOrderSnList(snList));
             result.setSuccess(true);
             return result;
         } catch (Exception ex) {
@@ -306,14 +313,21 @@ public class OrderModel {
 
         //3W-更新'订单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-27
         //3W-更新'网单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-28
-        OrdersAttributes ordersAttributes = null;
+        //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+        //OrdersAttributes ordersAttributes = null;
+        //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 end
+
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
         //'网单扩展属性表'
-        OrderProductsAttributes orderProductsAttributes = orderProductsAttributesDao
-                .getByOrderProductId(orderProduct.getId());
+        /*OrderProductsAttributes orderProductsAttributes = orderProductsAttributesDao
+                .getByOrderProductId(orderProduct.getId());*/
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
         if (orderProduct.getStockType() != null
                 && orderProduct.getStockType().equalsIgnoreCase("3W")) {
+            //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
             //'订单扩展属性表'
-            ordersAttributes = ordersAttributesDao.getByOrderId(Integer.valueOf(order.getId()));
+            /*ordersAttributes = ordersAttributesDao.getByOrderId(Integer.valueOf(order.getId()));
             if (ordersAttributes == null) {
                 log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "],order.id["
                         + order.getId() + "]没有查到[订单扩展属性信息]");
@@ -321,17 +335,22 @@ public class OrderModel {
                 result.setMessage("CaiNiao网单出库：order.id[" + order.getId() + "]在[订单扩展属性表]没有查到");
                 return result;
             }
-            ordersAttributes.setLbx(cainiaoMap.get("lbxSn"));
+            ordersAttributes.setLbx(cainiaoMap.get("lbxSn"));*/
+            order.setLbxSn(cainiaoMap.get("lbxSn"));
+            //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 end
 
-            if (orderProductsAttributes == null) {
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+            /*if (orderProductsAttributes == null) {
                 log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "],orderProduct.id["
                         + orderProduct.getId() + "]没有查到[网单扩展属性信息]");
                 result.setResult(false);
                 result.setMessage(
                         "CaiNiao网单出库：orderProduct.id[" + orderProduct.getId() + "]在[网单扩展属性表]没有查到");
                 return result;
-            }
-            orderProductsAttributes.setTbOrderSn(cainiaoMap.get("tbOrderSn"));
+            }*/
+            //orderProductsAttributes.setTbOrderSn(cainiaoMap.get("tbOrderSn"));
+            orderProduct.setTbOrderSn(cainiaoMap.get("tbOrderSn"));
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
 
             //更新网单相关数据（3W订单没有HP相关业务逻辑，导致网单有的没有数据，但后续业务需要）
             orderProduct.setSCode(cainiaoMap.get("sCode"));
@@ -419,20 +438,30 @@ public class OrderModel {
             //3W-更新'订单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-27
             if (orderProduct.getStockType() != null
                     && orderProduct.getStockType().equalsIgnoreCase("3W")) {
-                int n = ordersAttributesDao.update(ordersAttributes);
+
+                //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+                //int n = ordersAttributesDao.update(ordersAttributes);
+                int n = ordersNewService.updateLbxSn(order);
                 if (n < 1) {
+                    /*log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
+                            + orderProduct.getCOrderSn() + "]跟新'订单扩展属性表'失败！");*/
                     log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
-                            + orderProduct.getCOrderSn() + "]跟新'订单扩展属性表'失败！");
+                        + orderProduct.getCOrderSn() + "]更新'订单表'失败！");
                 }
-                n = orderProductsAttributesDao.update(orderProductsAttributes);
+                //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 end
+
+                //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+                /*n = orderProductsAttributesDao.update(orderProductsAttributes);
                 if (n < 1) {
                     log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
                             + orderProduct.getCOrderSn() + "]跟新'网单扩展属性表'失败！");
-                }
-                orderProductsNewDao.updateAfterDelivery3W(orderProduct);
+                }*/
+                //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
+                orderProductsNewService.updateAfterDelivery3W(orderProduct);
             } else {
                 //更新网单
-                orderProductsNewDao.updateAfterDelivery(orderProduct);
+                orderProductsNewService.updateAfterDelivery(orderProduct);
             }
             //添加日志
             if (StringUtil.isEmpty(lesDoNo)) {//出库凭证号为空的异常
@@ -633,7 +662,7 @@ public class OrderModel {
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             //更新网单
-            orderProductsNewDao.updateAfterTransferFirstOut(orderProduct);
+            orderProductsNewService.updateAfterTransferFirstOut(orderProduct);
             //添加日志
             if (StringUtil.isEmpty(lesDoNo)) {
                 OrderOperateLogs log = this.getOrderOperateLog(order, orderProduct, "系统", "LES出库",
@@ -737,7 +766,7 @@ public class OrderModel {
             orderProduct.setLessShipTInTime(lesInputTime.getTime() / 1000);
             //            orderProduct.setSystemRemark("本地转运库入库成功-把网单状态改为待转运出库;");
             orderProduct.setSystemRemark(null);
-            orderProductsNewDao.updateAfterTransferIn(orderProduct);
+            orderProductsNewService.updateAfterTransferIn(orderProduct);
             //更新网单日志
             log = this.getOrderOperateLog(order, orderProduct, "系统", "LES出库",
                     "本地转运库入库，单号：" + lesIoNo + ".'，时间：" + lesInputTime + "。");
@@ -799,7 +828,7 @@ public class OrderModel {
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             //更新网单
-            orderProductsNewDao.updateAfterDelivery(orderProduct);
+            orderProductsNewService.updateAfterDelivery(orderProduct);
             //添加日志
             if (StringUtil.isEmpty(lesDoNo)) {
                 OrderOperateLogs log = this.getOrderOperateLog(order, orderProduct, "系统", "LES出库",
@@ -885,7 +914,7 @@ public class OrderModel {
      * @return
      */
     public OrderProductsNew getOrderProductByCOrderSn(String cOrderSn) {
-        return orderProductsNewDao.getByCOrderSn(cOrderSn);
+        return orderProductsNewService.getByCOrderSn(cOrderSn);
     }
     /**
      * 保存saveHpReservationDateRelation信息
@@ -899,7 +928,7 @@ public class OrderModel {
     	TransactionStatus status = transactionManager.getTransaction(def);
     	try {
     		//更新预约时间
-    		orderProductsNewDao.updateOpHpReservationDate(orderProduct);
+    		orderProductsNewService.updateOpHpReservationDate(orderProduct);
     		//保存送货时间日记信息
     		HpReservationDateLogs hpReservationDateLogs = new HpReservationDateLogs();
     		hpReservationDateLogs.setOrderId(orderProduct.getOrderId());
@@ -917,7 +946,7 @@ public class OrderModel {
     		log.setChangeLog(StringUtil.isEmpty(changeLog) ? "" : changeLog);
     		log.setLogTime(((Long) (System.currentTimeMillis() / 1000)).intValue());
     		log.setNetPointId(orderProduct == null ? 0 : orderProduct.getNetPointId());
-    		log.setOperator("CBS系统");
+    		log.setOperator("系统");
     		log.setOrderId(orderProduct.getOrderId());
     		log.setOrderProductId(orderProduct == null ? 0 : orderProduct.getId());
     		log.setPaymentStatus(orderProduct.getCPaymentStatus());
@@ -929,7 +958,7 @@ public class OrderModel {
     		//            int orderId = orderProduct.getOrderId();
     		//            String mobileNumber = "";
     		//            if (orderId > 0) {
-    		//                Orders orders = ordersDao.get(orderId);
+    		//                Orders orders = ordersService.get(orderId);
     		//                if (orders != null) {
     		//                    //获取手机号码
     		//                    if (StringUtil.isEmpty(orders.getMobile()) && orders.getMemberId() > 0) {
@@ -1019,9 +1048,9 @@ public class OrderModel {
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             //更新网单信息
-            orderProductsNewDao.forceCancelClose(orderProducts.getId(), new Date().getTime() / 1000);
+            orderProductsNewService.forceCancelClose(orderProducts.getId(), new Date().getTime() / 1000);
             //更新订单状态
-            List<OrderProductsNew> opList = orderProductsNewDao.getByOrderId(orderProducts.getOrderId());
+            List<OrderProductsNew> opList = orderProductsNewService.getByOrderId(orderProducts.getOrderId());
             //查询所有网单
             int n = 0;
             if (opList != null && opList.size() > 0) {
@@ -1073,7 +1102,7 @@ public class OrderModel {
     }
     public boolean updateOrderWorkflowNetPointAcceptTime(String orderSn, Date acceptTime,
                                                          String mes[]){
-        OrderProductsNew orderProducts = orderProductsNewDao.getByCOrderSn(orderSn);
+        OrderProductsNew orderProducts = orderProductsNewService.getByCOrderSn(orderSn);
         if (orderProducts == null) {
             mes[0] = "网点接单:网单没有记录，orderSn=" + orderSn;
             log.error(mes[0]);
@@ -1105,7 +1134,7 @@ public class OrderModel {
             //更新网单信息
             if (orderProducts.getStatus() < OrderProductStatus.WAIT_DELIVERY.getCode()) {
                 orderProducts.setStatus(OrderProductStatus.WAIT_DELIVERY.getCode());
-                orderProductsNewDao.updateStatus(orderProducts.getId(), orderProducts.getStatus());
+                orderProductsNewService.updateStatus(orderProducts.getId(), orderProducts.getStatus());
             }
             //更新网点接单时间
             if (!(netPointAcceptTime != null && netPointAcceptTime > 0)) {
@@ -1113,7 +1142,7 @@ public class OrderModel {
                         acceptTime.getTime() / 1000);
             }
             //记录网单日志
-            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "CBS系统", "网点接单",
+            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "系统", "网点接单",
                     "网点接单时间为：" + DateUtil.format(acceptTime, "yyyy-MM-dd HH:mm:ss"));
             orderOperateLogsDao.insert(orderProductOperateLogs);
 
@@ -1128,7 +1157,7 @@ public class OrderModel {
     }
     public boolean updateOrderWorkflowNetPointShipTime(String orderSn, Date shipTime,
                                                        String mes[]) {
-        OrderProductsNew orderProducts = orderProductsNewDao.getByCOrderSn(orderSn);
+        OrderProductsNew orderProducts = orderProductsNewService.getByCOrderSn(orderSn);
         if (orderProducts == null) {
             mes[0] = "网点出库:网单没有记录，orderSn=" + orderSn;
             log.error(mes[0]);
@@ -1160,7 +1189,7 @@ public class OrderModel {
             //更新网单信息
             if (orderProducts.getStatus() < OrderProductStatus.WAIT_DELIVER.getCode()) {
                 orderProducts.setStatus(OrderProductStatus.WAIT_DELIVER.getCode());
-                orderProductsNewDao.updateStatus(orderProducts.getId(), orderProducts.getStatus());
+                orderProductsNewService.updateStatus(orderProducts.getId(), orderProducts.getStatus());
             }
             //更新网点出库时间
             if (!(netPointShipTime != null && netPointShipTime > 0)) {
@@ -1168,7 +1197,7 @@ public class OrderModel {
                         shipTime.getTime() / 1000);
             }
             //记录网单日志
-            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "CBS系统", "网点出库",
+            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "系统", "网点出库",
                     "网点出库时间为：" + DateUtil.format(shipTime, "yyyy-MM-dd HH:mm:ss"));
             orderOperateLogsDao.insert(orderProductOperateLogs);
 
@@ -1229,7 +1258,7 @@ public class OrderModel {
                 hpSignTimeInterfaceDao.addCountBySkuAndLbx(hpSignTimeInterface);
                 return true;
             } else {
-                List<OrderProductsNew> opList = orderProductsNewDao
+                List<OrderProductsNew> opList = orderProductsNewService
                         .getByTbNo(hpSignTimeInterface.getTbNo());
                 if (opList == null || opList.size() == 0) {
                     mes[0] = "tbNo:" + hpSignTimeInterface.getTbNo() + "关联的网单不存在";
@@ -1272,7 +1301,7 @@ public class OrderModel {
             return false;
         }
         if (orderProductsNew == null) {
-            orderProductsNew = orderProductsNewDao.getByCOrderSn(corderSn);
+            orderProductsNew = orderProductsNewService.getByCOrderSn(corderSn);
         }
         if (orderProductsNew == null) {
             mes[0] = corderSn + "关联的网单不存在";
@@ -1310,11 +1339,11 @@ public class OrderModel {
                 if (orderWorkflows.getUserAcceptTime().intValue() == 0) {
                     orderWorkflowsDao.updateUserAcceptTime(orderWorkflows.getId(),
                             signTime.getTime() / 1000);
-                    orderOperateLogsDao.insert(getOrderOperateLog(orders, orderProductsNew, "CBS系统",
+                    orderOperateLogsDao.insert(getOrderOperateLog(orders, orderProductsNew, "系统",
                             "用户签收时间同步", (StringUtil.isEmpty(mes[0]) ? "HP同步用户签收时间:" : mes[0])
                                     + DateUtil.format(signTime, "yyyy-MM-dd HH:mm:ss")));
                     //报表增加更新网单表modified字段，报表使用全流程NetPointArriveTime，但是订单网单没有及时更新
-                    orderProductsNewDao.updateOpModify(orderProductsNew.getId());
+                    orderProductsNewService.updateOpModify(orderProductsNew.getId());
                 } else {
                     log.error(corderSn + "用户签收时间已存在，新接收时间："
                             + DateUtil.format(signTime, "yyyy-MM-dd HH:mm:ss"));
@@ -1348,7 +1377,7 @@ public class OrderModel {
             log.error(mes[0]);
             return false;
         }
-        OrderProductsNew orderProductsNew = orderProductsNewDao.getByCOrderSn(corderSn);
+        OrderProductsNew orderProductsNew = orderProductsNewService.getByCOrderSn(corderSn);
         if (orderProductsNew == null) {
             mes[0] = corderSn + "关联的网单不存在";
             log.error(mes[0]);
@@ -1375,7 +1404,7 @@ public class OrderModel {
             //更新网单状态为完成关闭
             if (orderProductsNew.getCPaymentStatus() != 200) {//未付款的等待付款后自动签收
                 //更新订单状态
-                List<OrderProductsNew> opList = orderProductsNewDao
+                List<OrderProductsNew> opList = orderProductsNewService
                         .getByOrderId(orderProductsNew.getOrderId());
                 int n = 0;
                 if (opList != null && opList.size() > 0) {
@@ -1394,7 +1423,7 @@ public class OrderModel {
                     if (n == opList.size()) {
                         ordersNewDao.completeClose(Integer.parseInt(orders.getId()), now.getTime() / 1000);
                         orderOperateLogs = getOrderOperateLog(orders, null,
-                                "CBS系统", "订单状态由“"
+                                "系统", "订单状态由“"
                                         + OrderStatus.getByCode(orders.getOrderStatus()).getName()
                                         + "”变成“" + OrderStatus.OS_COMPLETE.getName()
                                         + "”",
@@ -1406,9 +1435,9 @@ public class OrderModel {
                     }
                 }
 
-                orderProductsNewDao.completeClose(orderProductsNew.getId(), now.getTime() / 1000);
+                orderProductsNewService.completeClose(orderProductsNew.getId(), now.getTime() / 1000);
                 orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew,
-                        "CBS系统", "网单状态：由 ”"
+                        "系统", "网单状态：由 ”"
                                 + OrderProductStatus.getByCode(orderProductsNew.getStatus()).getName()
                                 + "“变成 ”" + OrderProductStatus.COMPLETED_CLOSE.getName()
                                 + "“",
@@ -1486,14 +1515,14 @@ public class OrderModel {
                 if (orderWorkflows.getUserAcceptTime().intValue() == 0) {
                     orderWorkflowsDao.updateUserAcceptTime(orderWorkflows.getId(),
                             signTime.getTime() / 1000);
-                    orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew, "CBS系统",
+                    orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew, "系统",
                             "用户签收时间同步",
                             //根据mes[0]区分是否为快递100回传签收
                             (StringUtil.isEmpty(mes[0]) ? "HP同步用户签收时间:" : mes[0])
                                     + DateUtil.format(signTime, "yyyy-MM-dd HH:mm:ss"));
                     orderOperateLogsDao.insert(orderProductOperateLogs);
                     //报表增加更新网单表modified字段，报表使用全流程NetPointArriveTime，但是订单网单没有及时更新
-                    orderProductsNewDao.updateOpModify(orderProductsNew.getId());
+                    orderProductsNewService.updateOpModify(orderProductsNew.getId());
                 } else {
                     log.error(corderSn + "用户签收时间已存在，新接收时间："
                             + DateUtil.format(signTime, "yyyy-MM-dd HH:mm:ss"));
@@ -1554,7 +1583,9 @@ public class OrderModel {
     			log.error("HPRecords没有不良品退机信息,单号:" + repairSn + ",退换货ID:" + ors.getId());
     			return true;
     		}
-    		OrderProductsAttributes opAttribute = orderProductsAttributesDao
+
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+    		/*OrderProductsAttributes opAttribute = orderProductsAttributesDao
     				.getByOrderProductId(orderProduct.getId());
     		if (opAttribute == null) {
     			return true;
@@ -1655,7 +1686,9 @@ public class OrderModel {
     				message[0] = "调用支付中心回退接口失败！Success=false," + JsonUtil.toJson(result);
     				return false;
     			}
-    		}
+    		}*/
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
     		return true;
     	} catch (Exception e) {
     		message[0] = "不良品调用支付中心回退接口异常" + e.getMessage();
@@ -1677,7 +1710,7 @@ public class OrderModel {
      * @return
      */
     public List<OrderProductsNew> getOrderProductsByIds(List<Integer> ids) {
-        return orderProductsNewDao.getByIds(ids);
+        return orderProductsNewService.getByIds(ids);
     }
     /**
      * 删除指定的出库队列
@@ -1695,4 +1728,498 @@ public class OrderModel {
     public OrdersNew getOrder(Integer orderId) {
         return ordersNewService.get(orderId);
     }
+    
+    /**
+     * 根据订单号修改来源单号
+     * @return
+     */
+    public ServiceResult<Boolean> updateSourceOrderNumber(String inputSourceOrderNumber,String sourceOrderNumber,String orderNumber,String userName,Integer id){
+    	ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+    	List<Orders> orderList = ordersService.getOrderList(sourceOrderNumber);
+    	if(orderList!=null && orderList.size()>0) {
+    		result.setSuccess(false);
+			result.setMessage("来源单号不能重复，请重新修改来源单号。");
+			return result;
+    	}
+    	OrderOperateLogs orderOperateLogs = new OrderOperateLogs();
+    	OrderProductsNew orderProductsNew = orderProductsNewService.getOrderId(id);
+    	if(orderProductsNew!=null) {
+    		Integer netPointId = orderProductsNew.getNetPointId();
+    		orderOperateLogs.setNetPointId(netPointId);
+    		Integer status = orderProductsNew.getStatus();
+    		orderOperateLogs.setStatus(status);
+    		Integer id2 = orderProductsNew.getId();
+    		orderOperateLogs.setOrderProductId(id2);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("修改来源订单号失败，请重新修改来源单号。");
+			return result;
+    	}
+    	Orders orders = ordersService.get(id);
+    	if(orders!=null) {
+    		Integer paymentStatus = orders.getPaymentStatus();
+    		orderOperateLogs.setPaymentStatus(paymentStatus);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("修改来源订单号失败，请重新修改来源单号。");
+			return result;
+    	}
+    	long time = new Date().getTime();
+    	Integer date = (int)time;
+    	orderOperateLogs.setLogTime(date);
+    	orderOperateLogs.setSiteId(0);
+    	orderOperateLogs.setOperator(userName);
+    	orderOperateLogs.setChangeLog("来源订单号由"+inputSourceOrderNumber+"更改为"+sourceOrderNumber);
+    	orderOperateLogs.setRemark("来源订单号由"+inputSourceOrderNumber+"更改为"+sourceOrderNumber);
+    	orderOperateLogs.setOrderId(id);
+    	ordersService.updateSourceOrderNumber(sourceOrderNumber,orderNumber,orderOperateLogs);
+    	return result;
+    }
+    
+    
+    
+    /**
+     * 根据订单号修改支付状态
+     * @return
+     */
+    public ServiceResult<Boolean> updatePayState(String spanState,String selectState,String orderNumber,String userName,Integer id){
+    	ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+    	OrderOperateLogs orderOperateLogs = new OrderOperateLogs();
+    	OrderProductsNew orderProductsNew = orderProductsNewService.getOrderId(id);
+    	if(orderProductsNew!=null) {
+    		Integer netPointId = orderProductsNew.getNetPointId();
+    		orderOperateLogs.setNetPointId(netPointId);
+    		Integer status = orderProductsNew.getStatus();
+    		orderOperateLogs.setStatus(status);
+    		Integer id2 = orderProductsNew.getId();
+    		orderOperateLogs.setOrderProductId(id2);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("支付状态修改失败，请重新修改");
+			return result;
+    	}
+    	Orders orders = ordersService.get(id);
+    	if(orders!=null) {
+    		Integer paymentStatus = orders.getPaymentStatus();
+    		orderOperateLogs.setPaymentStatus(paymentStatus);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("支付状态修改失败，请重新修改");
+			return result;
+    	}
+    	long time = new Date().getTime();
+    	Integer date = (int)time;
+    	orderOperateLogs.setLogTime(date);
+    	orderOperateLogs.setSiteId(0);
+    	orderOperateLogs.setOperator(userName);
+    	String spanStateString ="";
+    	String selectStateString ="";
+    	int cPaymentStatus=200;
+    	if(spanState.equals("100")) {
+    		spanStateString="未付款";
+    	}else if(spanState.equals("101")) {
+    		spanStateString="已付款";
+    	}else if(spanState.equals("102")) {
+    		spanStateString="待退款";
+    	}else if(spanState.equals("103")) {
+    		spanStateString="已退款";
+    	}
+    	
+    	if(selectState.equals("100")) {
+    		selectStateString="未付款";
+            cPaymentStatus=200;
+        }else if(selectState.equals("101")) {
+    		selectStateString="已付款";
+            cPaymentStatus=201;
+        }else if(selectState.equals("102")) {
+    		selectStateString="待退款";
+            cPaymentStatus=206;
+    	}else if(selectState.equals("103")) {
+    		selectStateString="已退款";
+            cPaymentStatus=207;
+    	}
+    	orderOperateLogs.setChangeLog("支付状态由"+spanStateString+"更改为"+selectStateString);
+    	orderOperateLogs.setRemark("支付状态由"+spanStateString+"更改为"+selectStateString);
+    	orderOperateLogs.setOrderId(id);
+    	ordersService.updatePayState(id,selectState,orderOperateLogs,spanState);
+
+    	//修改网单付款状态
+        orderProductsNewService.updatePaymentStatusByOrderId(id,cPaymentStatus);
+
+
+        return result;
+    }
+    
+    /**
+     * 根据订单号修改支付状态
+     * @return
+     */
+    public ServiceResult<Boolean> updateNotes(String notes,String textNotes,String orderNumber,String userName,Integer id){
+    	ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+    	OrderOperateLogs orderOperateLogs = new OrderOperateLogs();
+    	OrderProductsNew orderProductsNew = orderProductsNewService.getOrderId(id);
+    	if(orderProductsNew!=null) {
+    		Integer netPointId = orderProductsNew.getNetPointId();
+    		orderOperateLogs.setNetPointId(netPointId);
+    		Integer status = orderProductsNew.getStatus();
+    		orderOperateLogs.setStatus(status);
+    		Integer id2 = orderProductsNew.getId();
+    		orderOperateLogs.setOrderProductId(id2);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单备注信息修改失败，请重新修改");
+			return result;
+    	}
+    	Orders orders = ordersService.get(id);
+    	if(orders!=null) {
+    		Integer paymentStatus = orders.getPaymentStatus();
+    		orderOperateLogs.setPaymentStatus(paymentStatus);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单备注信息修改失败，请重新修改");
+			return result;
+    	}
+    	long time = new Date().getTime();
+    	Integer date = (int)time;
+    	orderOperateLogs.setLogTime(date);
+    	orderOperateLogs.setSiteId(0);
+    	orderOperateLogs.setOperator(userName);
+    	
+    	orderOperateLogs.setChangeLog("订单备注由"+notes+"更改为"+textNotes);
+    	orderOperateLogs.setRemark("订单备注由"+notes+"更改为"+textNotes);
+    	orderOperateLogs.setOrderId(id);
+    	ordersService.updateNotes(id,textNotes,orderOperateLogs);
+    	return result;
+    }
+    
+    
+    /**
+     * 根据订单号修改发票地址
+     * @return
+     */
+    public ServiceResult<Boolean> updateInvoiceAddress(String userName,String province,String citys,String county,String newAddress,Orders orderss){
+    	ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+    	OrderOperateLogs orderOperateLogs = new OrderOperateLogs();
+    	OrderProductsNew orderProductsNew = orderProductsNewService.getOrderId(orderss.getId());
+    	if(orderProductsNew!=null) {
+    		Integer netPointId = orderProductsNew.getNetPointId();
+    		orderOperateLogs.setNetPointId(netPointId);
+    		Integer status = orderProductsNew.getStatus();
+    		orderOperateLogs.setStatus(status);
+    		Integer id2 = orderProductsNew.getId();
+    		orderOperateLogs.setOrderProductId(id2);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单发票地址信息修改失败，请重新修改");
+			return result;
+    	}
+    	Orders orders = ordersService.get(orderss.getId());
+    	if(orders!=null) {
+    		Integer paymentStatus = orders.getPaymentStatus();
+    		orderOperateLogs.setPaymentStatus(paymentStatus);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单发票地址信息修改失败，请重新修改");
+			return result;
+    	}
+    	long time = new Date().getTime();
+    	Integer date = (int)time;
+    	orderOperateLogs.setLogTime(date);
+    	orderOperateLogs.setSiteId(0);
+    	orderOperateLogs.setOperator(userName);
+    	String changeLog="";
+    	String remark="";
+    	if(!orderss.getReceiptConsignee().equals(orders.getReceiptConsignee())) {
+    		changeLog="订单发票收件人由"+orders.getReceiptConsignee()+"更改为"+orderss.getReceiptConsignee();
+    		remark="订单发票收件人由"+orders.getReceiptConsignee()+"更改为"+orderss.getReceiptConsignee();
+    	}
+    	if(!orderss.getReceiptZipcode().equals(orders.getReceiptZipcode())) {
+    		changeLog = changeLog + "订单发票邮编由"+orders.getReceiptZipcode()+"更改为"+orderss.getReceiptZipcode();
+    		remark = remark + "订单发票邮编由"+orders.getReceiptZipcode()+"更改为"+orderss.getReceiptZipcode();
+    	}
+    	if(!orderss.getReceiptMobile().equals(orders.getReceiptMobile())) {
+    		changeLog = changeLog + "订单发票联系电话由"+orders.getReceiptMobile()+"更改为"+orderss.getReceiptMobile();
+    		remark = remark + "订单发票联系电话由"+orders.getReceiptMobile()+"更改为"+orderss.getReceiptMobile();
+    	}
+    	if(!StringUtil.isEmpty(province) && !StringUtil.isEmpty(citys) && !StringUtil.isEmpty(county) && !StringUtil.isEmpty(newAddress)) {
+    		changeLog = changeLog + "订单发票邮寄地址由"+orders.getReceiptAddress()+"更改为"+province+citys+county+newAddress;
+    		remark = remark + "订单发票邮寄地址由"+orders.getReceiptAddress()+"更改为"+province+citys+county+newAddress;
+    	}
+    	String address = province+citys+county+newAddress;
+    	if(!StringUtil.isEmpty(address)) {
+    		orderss.setReceiptAddress(address);
+    	}
+    	orderOperateLogs.setChangeLog(changeLog);
+    	orderOperateLogs.setRemark(remark);
+    	orderOperateLogs.setOrderId(orderss.getId());
+    	ordersService.updateInvoiceAddress(orderss.getId(),orderss,orderOperateLogs);
+    	return result;
+    }
+    
+    /**
+     * 根据订单号修改发票状态
+     * @return
+     */
+    public ServiceResult<Boolean> updateInvoiceState(String userName,String orderNumber,Integer id,String isLockI){
+    	ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+    	OrderOperateLogs orderOperateLogs = new OrderOperateLogs();
+    	OrderProductsNew orderProductsNew = orderProductsNewService.getOrderId(id);
+    	if(orderProductsNew!=null) {
+    		Integer netPointId = orderProductsNew.getNetPointId();
+    		orderOperateLogs.setNetPointId(netPointId);
+    		Integer status = orderProductsNew.getStatus();
+    		orderOperateLogs.setStatus(status);
+    		Integer id2 = orderProductsNew.getId();
+    		orderOperateLogs.setOrderProductId(id2);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单发票状态信息修改失败，请重新修改");
+			return result;
+    	}
+    	Orders orders = ordersService.get(id);
+    	if(orders!=null) {
+    		Integer paymentStatus = orders.getPaymentStatus();
+    		orderOperateLogs.setPaymentStatus(paymentStatus);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单发票状态信息修改失败，请重新修改");
+			return result;
+    	}
+    	long time = new Date().getTime();
+    	Integer date = (int)time;
+    	orderOperateLogs.setLogTime(date);
+    	orderOperateLogs.setSiteId(0);
+    	orderOperateLogs.setOperator(userName);
+    	
+    	int isLock = 0;
+    	if(!StringUtil.isEmpty(isLockI)) {
+    		if(isLockI.equals("1")) {
+    			isLockI = "0";
+    			isLock = Integer.valueOf(isLockI);
+    			orderOperateLogs.setChangeLog("发票状态由锁定更改为未锁定");
+    	    	orderOperateLogs.setRemark("发票状态由锁定更改为未锁定");
+    		}else {
+    			isLockI = "1";
+    			isLock = Integer.valueOf(isLockI);
+    			orderOperateLogs.setChangeLog("发票状态由未锁定更改为锁定");
+    	    	orderOperateLogs.setRemark("发票状态由未锁定更改为锁定");
+    		}
+    	}
+    	
+    	orderOperateLogs.setOrderId(id);
+    	ordersService.updateInvoiceState(id,isLock,orderOperateLogs);
+    	return result;
+    }
+    
+    /**
+     * 根据订单号修改发票信息
+     * @return
+     */
+    public ServiceResult<Boolean> updateInvoiceInfo(String userName,String orderNumber,Integer id,MemberInvoices memberInvoices,String invoiceTypeI){
+    	ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+    	OrderOperateLogs orderOperateLogs = new OrderOperateLogs();
+    	OrderProductsNew orderProductsNew = orderProductsNewService.getOrderId(id);
+    	
+    	MemberInvoices memberInvoices2 = shopMemberInvoicesService.getByOrderId(id);
+    	if(memberInvoices2==null) {
+    		result.setSuccess(false);
+			result.setMessage("对不起，该发票信息不存在!");
+			return result;
+    	}
+    	 // 根据OrderId获得OrderProducts信息
+        List<OrderProducts> orderProductsList = shopOrderProductsService
+                .getOrderProductsByOrderId(id);
+        // 获得所有的Id信息
+        List<Integer> idsList = new ArrayList<Integer>();
+        if (orderProductsList != null && orderProductsList.size() > 0) {
+            for (OrderProducts eachOrderProducts : orderProductsList) {
+                idsList.add(eachOrderProducts.getId());
+            }
+        }
+        // 根据ID信息取得OrderProducts信息
+        if (idsList.size() > 0) {
+            orderProductsList.clear();
+            orderProductsList = shopOrderProductsService.getByIds(idsList);
+            if (orderProductsList != null && orderProductsList.size() > 0) {
+                for (OrderProducts eachOrderProducts : orderProductsList) {
+                    // 开票中的场合
+                    if (eachOrderProducts.getIsMakeReceipt() != null
+                            && eachOrderProducts.getIsMakeReceipt().equals(5)
+                            && !memberInvoices2.getInvoiceType().toString().equals(memberInvoices.getInvoiceType().toString())) {
+                    	result.setSuccess(false);
+            			result.setMessage("对不起，该订单有网单开票中，不能修改发票类型!");
+            			return result;
+                    }
+                }
+            }
+        }
+    	
+    	
+    	if(orderProductsNew!=null) {
+    		Integer netPointId = orderProductsNew.getNetPointId();
+    		orderOperateLogs.setNetPointId(netPointId);
+    		Integer status = orderProductsNew.getStatus();
+    		orderOperateLogs.setStatus(status);
+    		Integer id2 = orderProductsNew.getId();
+    		orderOperateLogs.setOrderProductId(id2);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单发票信息修改失败，请重新修改");
+			return result;
+    	}
+    	Orders orders = ordersService.get(id);
+    	if(orders!=null) {
+    		Integer paymentStatus = orders.getPaymentStatus();
+    		orderOperateLogs.setPaymentStatus(paymentStatus);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单发票信息修改失败，请重新修改");
+			return result;
+    	}
+    	long time = new Date().getTime();
+    	Integer date = (int)time;
+    	orderOperateLogs.setLogTime(date);
+    	orderOperateLogs.setSiteId(0);
+    	orderOperateLogs.setOperator(userName);
+    	MemberInvoices byOrderId = memberInvoicesReadDao.getByOrderId(id);
+    	String changeLog="";
+    	String remark="";
+    	if(!byOrderId.getRemark().equals(memberInvoices.getRemark())) {
+    		changeLog = changeLog + "订单发票备注信息由"+byOrderId.getRemark()+"更改为"+memberInvoices.getRemark();
+    		remark = remark + "订单发票备注信息由"+byOrderId.getRemark()+"更改为"+memberInvoices.getRemark();
+    	}
+    	if(!byOrderId.getTaxPayerNumber().equals(memberInvoices.getTaxPayerNumber())) {
+    		changeLog = changeLog + "订单发票纳税人识别号由"+byOrderId.getTaxPayerNumber()+"更改为"+memberInvoices.getTaxPayerNumber();
+    		remark = remark + "订单发票纳税人识别号由"+byOrderId.getTaxPayerNumber()+"更改为"+memberInvoices.getTaxPayerNumber();
+    	}
+    	if(!byOrderId.getRegisterPhone().equals(memberInvoices.getRegisterPhone())) {
+    		changeLog = changeLog + "订单发票注册电话由"+byOrderId.getRegisterPhone()+"更改为"+memberInvoices.getRegisterPhone();
+    		remark = remark + "订单发票注册电话由"+byOrderId.getRegisterPhone()+"更改为"+memberInvoices.getRegisterPhone();
+    	}
+    	if(!byOrderId.getRegisterAddress().equals(memberInvoices.getRegisterAddress())) {
+    		changeLog = changeLog + "订单发票注册地址由"+byOrderId.getRegisterAddress()+"更改为"+memberInvoices.getRegisterAddress();
+    		remark = remark + "订单发票注册地址由"+byOrderId.getRegisterAddress()+"更改为"+memberInvoices.getRegisterAddress();
+    	}
+    	if(!byOrderId.getBankName().equals(memberInvoices.getBankName())) {
+    		changeLog = changeLog + "订单发票开户银行由"+byOrderId.getBankName()+"更改为"+memberInvoices.getBankName();
+    		remark = remark + "订单发票开户银行由"+byOrderId.getBankName()+"更改为"+memberInvoices.getBankName();
+    	}
+    	if(!byOrderId.getBankCardNumber().equals(memberInvoices.getBankCardNumber())) {
+    		changeLog = changeLog + "订单发票银行帐户由"+byOrderId.getBankCardNumber()+"更改为"+memberInvoices.getBankCardNumber();
+    		remark = remark + "订单发票银行帐户由"+byOrderId.getBankCardNumber()+"更改为"+memberInvoices.getBankCardNumber();
+    	}
+    	if(!byOrderId.getInvoiceTitle().equals(memberInvoices.getInvoiceTitle())) {
+    		changeLog = changeLog + "订单发票发票抬头由"+byOrderId.getInvoiceTitle()+"更改为"+memberInvoices.getInvoiceTitle();
+    		remark = remark + "订单发票发票抬头由"+byOrderId.getInvoiceTitle()+"更改为"+memberInvoices.getInvoiceTitle();
+    	}
+    	String invoiceTypeStr = "";
+    	String invoiceTypeStrM = "";
+    	if(byOrderId.getInvoiceType() != memberInvoices.getInvoiceType()) {
+    		if(byOrderId.getInvoiceType()==1) {
+    			invoiceTypeStr="增值税发票";
+    		}else {
+    			invoiceTypeStr="普通发票";
+    		}
+    		if(memberInvoices.getInvoiceType()==1){
+    			invoiceTypeStrM ="增值税发票";
+    		}else {
+    			invoiceTypeStrM ="普通发票";
+    		}
+    		changeLog = changeLog + "订单发票发票抬头由"+invoiceTypeStr+"更改为"+invoiceTypeStrM;
+    		remark = remark + "订单发票发票抬头由"+invoiceTypeStr+"更改为"+invoiceTypeStrM;
+    	}
+    	orderOperateLogs.setChangeLog(changeLog);
+    	orderOperateLogs.setRemark(remark);
+    	orderOperateLogs.setOrderId(id);
+    	List<InvoicesWwwLogs> invoicesWwwLogsList = invoicesWwwLogsService.getByOrderId(id);
+        if(invoicesWwwLogsList != null && invoicesWwwLogsList.size() > 0){
+        	for (InvoicesWwwLogs invoicesWwwLogs : invoicesWwwLogsList) {
+        		invoicesWwwLogs.setSuccess(1);
+                invoicesWwwLogs.setProcessTime((int) (System.currentTimeMillis() / 1000));
+			}
+        }
+        List<OrderProducts> orderProductsLists = shopOrderProductsService
+                .getOrderProductsByOrderId(id);
+    	ordersService.updateInvoiceInfo(id,memberInvoices,orderOperateLogs,invoicesWwwLogsList,orderProductsLists);
+    	return result;
+    }
+    
+    /**
+     * 根据订单号修改地址信息
+     * @return
+     */
+    public ServiceResult<Boolean> updateAddress(String userName,String orderNumber,Integer id,Orders orderss){
+    	ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+    	OrderOperateLogs orderOperateLogs = new OrderOperateLogs();
+    	OrderProductsNew orderProductsNew = orderProductsNewService.getOrderId(id);
+    	if(orderProductsNew!=null) {
+    		Integer netPointId = orderProductsNew.getNetPointId();
+    		orderOperateLogs.setNetPointId(netPointId);
+    		Integer status = orderProductsNew.getStatus();
+    		orderOperateLogs.setStatus(status);
+    		Integer id2 = orderProductsNew.getId();
+    		orderOperateLogs.setOrderProductId(id2);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单地址信息修改失败，请重新修改");
+			return result;
+    	}
+    	Orders orders = ordersService.get(id);
+    	if(orders!=null) {
+    		Integer paymentStatus = orders.getPaymentStatus();
+    		orderOperateLogs.setPaymentStatus(paymentStatus);
+    	}else {
+    		result.setSuccess(false);
+			result.setMessage("订单地址信息修改失败，请重新修改");
+			return result;
+    	}
+    	long time = new Date().getTime();
+    	Integer date = (int)time;
+    	orderOperateLogs.setLogTime(date);
+    	orderOperateLogs.setSiteId(0);
+    	orderOperateLogs.setOperator(userName);
+    	
+    	String changeLog="";
+    	String remark="";
+    	if(!orders.getAddress().equals(orderss.getAddress())) {
+    		changeLog = changeLog + "收货地址由"+ orders.getAddress() + "更改为" + orderss.getAddress();
+    		remark = remark + "收货地址由"+ orders.getAddress() + "更改为" + orderss.getAddress();
+    	}
+    	if(!orders.getConsignee().equals(orderss.getConsignee())) {
+    		changeLog = changeLog + "收货人"+ orders.getConsignee() + "更改为" + orderss.getConsignee();
+    		remark = remark + "收货人由"+ orders.getConsignee() + "更改为" + orderss.getConsignee();
+    	}
+    	if(!orders.getZipcode().equals(orderss.getZipcode())) {
+    		changeLog = changeLog + "收货邮编由"+ orders.getZipcode() + "更改为" + orderss.getZipcode();
+    		remark = remark + "收货邮编由"+ orders.getZipcode() + "更改为" + orderss.getZipcode();
+    	}
+    	if(!orders.getMobile().equals(orderss.getMobile())) {
+    		changeLog = changeLog + "收货人手机号由"+ orders.getMobile() + "更改为" + orderss.getMobile();
+    		remark = remark + "收货人手机号由"+ orders.getMobile() + "更改为" + orderss.getMobile();
+    	}
+    	if(!orders.getPhone().equals(orderss.getPhone())) {
+    		changeLog = changeLog + "收货人固定电话号由"+ orders.getPhone() + "更改为" + orderss.getPhone();
+    		remark = remark + "收货人固定电话号由"+ orders.getPhone() + "更改为" + orderss.getPhone();
+    	}
+    	orderOperateLogs.setChangeLog(changeLog);
+    	orderOperateLogs.setRemark(remark);
+    	orderOperateLogs.setOrderId(id);
+    	ordersService.updateAddress(id,orderss,orderOperateLogs);
+    	return result;
+    }
+    
+    
+	public ServiceResult<Map<String, Object>> doBatchConfirmationPayment(String cOrderSns,
+			Map<String, Object> modelMap,String userName) {
+		// TODO Auto-generated method stub
+		ServiceResult<Map<String, Object>> result = new ServiceResult<Map<String, Object>>();
+		try {
+			result = ordersService.doBatchConfirmationPayment(cOrderSns,modelMap,userName);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("[order][doBatchConfirmationPayment]批量确认收款时发生未知错误", e);
+            result.setMessage("批量确认收款失败！");
+		}
+		return result;
+	}
 }

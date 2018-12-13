@@ -78,6 +78,12 @@ public class PurchaseCrmOrderManualServiceImpl implements PurchaseCrmOrderManual
 		crmOrderManualDao.insertCRMOrderManual(rmOrderManualItem);
 	}
 
+
+	@Override
+	public List<CrmOrderManualItem> getManualWdOrderId(String wpOrderId){
+		return crmOrderManualDao.getManualWdOrderId(wpOrderId);
+	}
+
     /**
      * CRM手工采购单详情表录入
      * @param CrmOrderManualDetailItem
@@ -154,4 +160,35 @@ public class PurchaseCrmOrderManualServiceImpl implements PurchaseCrmOrderManual
     public void updateTimeFromCRM(Map map){
 		crmOrderManualDao.updateTimeFromCRM(map);;	
 	}
+
+	@Override
+	public List<CrmOrderManualDetailItem> findOrdersToSap() {
+		return crmOrderManualDao.findOrdersToSap();
+	}
+
+	@Override
+	public void updateStatus80FromLES() {
+		crmOrderManualDao.updateStatus80FromLES();
+	}
+
+	@Override
+	public void updateTimeInWAFromLES() {
+		crmOrderManualDao.updateTimeInWAFromLES();
+	}
+
+	@Override
+	public void updateCrmOrderManualAfterSync() {
+		crmOrderManualDao.updateCrmOrderManualAfterSync();
+	}
+
+	@Override
+	public CrmOrderManualItem getCrmOrderManualItem(String s) {
+		return crmOrderManualDao.getCrmOrderManualItem(s);
+	}
+
+	@Override
+	public List<CrmOrderManualDetailItem> getcrmOrderManualDetailItem(String s) {
+		return crmOrderManualDao.getcrmOrderManualDetailItem(s);
+	}
+
 }

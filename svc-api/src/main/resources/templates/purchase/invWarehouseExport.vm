@@ -1,0 +1,85 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<table class="table table-striped table-bordered bootstrap-datatable datatable dataTable" id="simpleList" border="1">
+    <thead>
+    <tr role="row">
+        <th class="sorting" style="min-width:100px; text-align:center;">仓库（TC）代码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">仓库名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">网单中心代码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">创建者</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">创建时间</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">最后更新人</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">最后更新时间</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">电商库位码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">电商库位名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">送达方代码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">送达方名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">0E码（LES）</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">管理客户编码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">管理客户名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">工贸代码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">工贸描述</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">颗粒度编码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">网单经营体编码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">电商售达方编码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">电商售达方名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">销售组织编码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">分公司地址</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">电商付款方编码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">电商付款方名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">地区编码（CRM专用）</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">日日顺配送编码</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">日日顺配送名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">日日顺售达方</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">日日顺售达方名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">OMS重庆新日日顺付款方</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">OMS重庆新日日顺付款方名称</th>
+        <th class="sorting" style="min-width:100px; text-align:center;">启用/禁用</th>
+    </tr>
+    </thead>
+    <tbody role="alert" aria-live="polite" aria-relevant="all">
+        #set($count=0)
+        #foreach($row in $!rowList)
+            #if($count%2==0)
+            <tr>
+            #else
+            <tr class="tr-bg">
+            #end
+            #set($count=$count+1)
+			<td style="text-align:center;">$!{row.whCode}</td>
+            <td style="text-align:center;">$!{row.whName}</td>
+            <td style="text-align:center;">$!{row.centerCode}</td>
+            <td style="text-align:center;">$!{row.createUser}</td>
+            <td style="text-align:center;">$!{row.createTime}</td>
+            <td style="text-align:center;">$!{row.updateUser}</td>
+            <td style="text-align:center;">$!{row.updateTime}</td>
+            <td style="text-align:center;">$!{row.estorge_id}</td>
+            <td style="text-align:center;">$!{row.estorge_name}</td>
+            <td style="text-align:center;">$!{row.transmit_id}</td>
+            <td style="text-align:center;">$!{row.transmit_desc}</td>
+            <td style="text-align:center;">$!{row.les_OE_id}</td>
+            <td style="text-align:center;">$!{row.custom_id}</td>
+            <td style="text-align:center;">$!{row.custom_desc}</td>
+            <td style="text-align:center;">$!{row.industry_trade_id}</td>
+            <td style="text-align:center;">$!{row.industry_trade_desc}</td>
+            <td style="text-align:center;">$!{row.graininess_id}</td>
+            <td style="text-align:center;">$!{row.net_management_id}</td>
+            <td style="text-align:center;">$!{row.esale_id}</td>
+            <td style="text-align:center;">$!{row.esale_name}</td>
+            <td style="text-align:center;">$!{row.sale_org_id}</td>
+            <td style="text-align:center;">$!{row.branch}</td>
+            <td style="text-align:center;">$!{row.payment_id}</td>
+            <td style="text-align:center;">$!{row.payment_name}</td>
+            <td style="text-align:center;">$!{row.area_id}</td>
+            <td style="text-align:center;">$!{row.rrs_distribution_id}</td>
+            <td style="text-align:center;">$!{row.rrs_distribution_name}</td>
+            <td style="text-align:center;">$!{row.rrs_sale_id}</td>
+            <td style="text-align:center;">$!{row.rrs_sale_name}</td>
+            <td style="text-align:center;">$!{row.oms_rrs_payment_id}</td>
+            <td style="text-align:center;">$!{row.oms_rrs_payment_name}</td>
+            <td style="text-align:center;">$!{row.is_enabled_name}</td>
+        </tr>
+        #end
+    </tbody>
+</table>

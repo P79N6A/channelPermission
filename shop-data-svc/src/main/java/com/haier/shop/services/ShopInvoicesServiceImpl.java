@@ -1,9 +1,11 @@
 package com.haier.shop.services;
 
 import com.haier.common.BusinessException;
+import com.haier.shop.dao.settleCenter.SettlementInvoiceDataDao;
 import com.haier.shop.dao.shopread.*;
 import com.haier.shop.dao.shopwrite.*;
 import com.haier.shop.model.*;
+import com.haier.shop.service.SettlementInvoiceQueueService;
 import com.haier.shop.service.ShopInvoiceService;
 import com.haier.shop.util.DateFormatUtil;
 import com.haier.shop.util.InvoiceServiceUtil;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +68,18 @@ public class ShopInvoicesServiceImpl implements ShopInvoiceService {
     private InvoiceSAPLogsReadDao invoiceSAPLogsReadDao;
     @Autowired
     private InvoiceSAPLogsWriteDao invoiceSAPLogsWriteDao ;
+    @Autowired
+    private ZfbOrdersDetailsMatchingReadDao zfbOrdersDetailsMatchingReadDao;
+    @Autowired
+    private ZfbOrdersDetailsMatchingWriteDao zfbOrdersDetailsMatchingWriteDao;
+
+    @Autowired
+    private SettlementInvoiceQueueService settlementInvoiceQueueService;
+
+    @Autowired
+    private BrandsReadDao brandsReadDao;
+    @Autowired
+    private SettlementInvoiceDataDao settlementInvoiceDataDao;
 
     @Override
     public Invoices getInvoicesByCOrderSn(String cOrderSn) {
@@ -80,6 +95,12 @@ public class ShopInvoicesServiceImpl implements ShopInvoiceService {
     public Invoices getById(Integer id) {
         return invoicesReadDao.getById(id);
     }
+    @Override
+    public int insertInvoices(Invoices invoices) {
+        return invoicesWriteDao.insertInvoice(invoices);
+    }
+
+
 
     @Override
     public Map<String, Object> getInvoiceMakeOutListByPage(Map<String, Object> paramMap) {
@@ -327,7 +348,9 @@ public class ShopInvoicesServiceImpl implements ShopInvoiceService {
             }
         }
     }
-
+    public List<OrderRepairs> getOrderRepairsByOrderProductId(Integer orderProductId){
+    	return orderRepairsReadDao.getByOrderProductId(orderProductId);
+    }
     /**
      * 更新会员发票信息
      * @param invoice
@@ -500,6 +523,50 @@ public class ShopInvoicesServiceImpl implements ShopInvoiceService {
 
                 //创建发票成功后同步HP队列表插入数据，单独运行，表`invoice_electric_2_out`,另外写job读取该表数据执行上面的电子发票信息传HP功能
                 this.insertInvoiceElectric2Out(invoice.getId(), "HP");
+
+                //TODO 插入结算发票队列 (开票)
+                //2017-10-9 XinM 佣金核算【订单来源是GQGYS[生态授权店]】——电子发票开票
+                //判断order是否为null
+                if(order!= null){
+                    String orderSource = order.getSource();
+                    if (orderSource != null && orderSource.equalsIgnoreCase("GQGYS")
+//                            && order.getSellpeople() != null
+//                            && !order.getSellpeople().equals("")
+                            ) {
+                        //添加到发票队列,1:开票
+                        //settlementInvoiceQueueService.addSettlementInvoiceQueue(invoice,1);
+                        //根据网单号和发票状态查询数据
+                        SettlementInvoiceData settlementInvoiceData = settlementInvoiceDataDao.getByCOrderSnAndStatusType(invoice.getCOrderSn(), statusType);
+                        if(settlementInvoiceData == null){
+                            createSettlementInvoiceData(invoice,order,statusType);
+                        }
+
+                    }
+                }
+
+                //TODO 计算支付宝流水与发票差异 (开票)
+                /*if(orderId!=0) {
+                	BigDecimal amountSum=new BigDecimal(0);
+                	List<Invoices> invoices=invoicesReadDao.queryDataByOrderId(orderId);
+                	if(!invoices.isEmpty());
+                	{
+                		for (Invoices invoices2 : invoices) {
+							if(invoices2.getSuccess()==InvoiceConst.SUCCESS.intValue())
+							{
+								if(invoices2.getStatusType()==InvoiceConst.one_type.intValue()){
+									amountSum=amountSum.add(invoices2.getAmount());
+								}
+							}
+						}
+                		ZfbOrdersDetailsMatching detailsmatching= zfbOrdersDetailsMatchingReadDao.queryZfbOrderDetailNegative(orderId);
+                		if(detailsmatching!=null && detailsmatching.getIncomeMoney().compareTo(amountSum)==0) {
+                			detailsmatching.setBillAmount(amountSum);
+                			detailsmatching.setDifferenceStatus(1);
+                			zfbOrdersDetailsMatchingWriteDao.updateByPrimaryKeySelective(detailsmatching);
+                		}
+                	}
+
+                }*/
             }
         }
 
@@ -575,6 +642,7 @@ public class ShopInvoicesServiceImpl implements ShopInvoiceService {
      * 更新作废发票信息后处理订单操作
      */
     private void handelOrderAfterUpdateInvalidInvoice(Invoices invoices, Map<String, String> attMap) {
+    	Integer orderId = 0;
         if (invoices.getCOrderType().equals(InvoiceConst.COMMON_CORDER_TYPE)) {
             OrderProducts op = orderProductsReadDao.get(invoices.getOrderProductId());
             if (op != null) {
@@ -582,6 +650,7 @@ public class ShopInvoicesServiceImpl implements ShopInvoiceService {
                 orderProductsWriteDao.updateMakeReceiptType(op);
 
                 Orders order = ordersReadDao.get(op.getOrderId());
+                orderId = order.getId();
                 //记录开票操作日志
                 OrderOperateLogs log = InvoiceServiceUtil.assemblyOrderOperateLog(order, op, "发票状态变更为“红冲”",
                         "发票状态更改", "电子发票同步系统");
@@ -596,6 +665,48 @@ public class ShopInvoicesServiceImpl implements ShopInvoiceService {
                 if (iesllist == null || iesllist.size() < 1) {
                     invoiceElectricSyncLogsWriteDao.insert(invoiceElectricSyncLogs);
                 }
+
+                //TODO 插入结算发票队列 (作废)
+                //判断order是否为null;
+                if(order != null){
+                    //TODO 插入发票结算
+                    //2017-10-9 XinM 佣金核算【订单来源是GQGYS[生态授权店]】——同步电子发票作废
+                    if (order.getSource() != null && order.getSource().equalsIgnoreCase("GQGYS")
+                            && order.getSellpeople() != null
+                            && !order.getSellpeople().equals("")) {
+                        //添加到发票队列,4:作废
+                        //settlementInvoiceQueueService.addSettlementInvoiceQueue(invoices,4);
+                        //根据网单号和发票状态查询数据
+                        SettlementInvoiceData settlementInvoiceData = settlementInvoiceDataDao.getByCOrderSnAndStatusType(invoices.getCOrderSn(), 4);
+                        if(settlementInvoiceData == null){
+                            createSettlementInvoiceData(invoices,order,4);
+                        }
+                    }
+                }
+
+                //TODO 计算支付宝流水与发票差异 (作废)
+//                if(orderId!=0) {
+//                	BigDecimal amountSum=new BigDecimal(0);
+//                	List<Invoices> lists=invoicesReadDao.queryDataByOrderId(orderId);
+//                	if(!lists.isEmpty());
+//                	{
+//                		for (Invoices invoices2 : lists) {
+//							if(invoices2.getSuccess()==InvoiceConst.SUCCESS.intValue())
+//							{
+//								if(invoices2.getStatusType()==InvoiceConst.four_type.intValue()){
+//									amountSum=amountSum.add(invoices2.getAmount());
+//								}
+//							}
+//						}
+//                		ZfbOrdersDetailsMatching detailsmatching= zfbOrdersDetailsMatchingReadDao.queryZfbOrderDetailPositive(orderId);
+//                		if(detailsmatching!=null && detailsmatching.getIncomeMoney().compareTo(amountSum)==0) {
+//                			detailsmatching.setBillAmount(amountSum);
+//                			detailsmatching.setDifferenceStatus(1);
+//                			zfbOrdersDetailsMatchingWriteDao.updateByPrimaryKeySelective(detailsmatching);
+//                		}
+//                	}
+//
+//                }
             }
 
             //插入或更新电子发票日志    ---需要设置推送和返回数据信息
@@ -656,4 +767,202 @@ public class ShopInvoicesServiceImpl implements ShopInvoiceService {
         return true;
     }
 
+	@Override
+	public List<Invoices> getByOrderProductId(Integer opId) {
+		return invoicesReadDao.getByOrderProductId(opId);
+	}
+
+    /**
+     * 天猫税控码查询(开票列表)
+     * @param params
+     * @return
+     */
+    @Override
+    public Map<String, Object> getTianMaoFiscalCodeListByPage(Map<String, Object> params) {
+        //获取开单列表List
+        List<InvoicesDispItem> result = invoicesReadDao.getTianMaoFiscalCodeList(params);
+        //获得条数
+        int resultcount = invoicesReadDao.getRowCnts();
+        Map<String, Object> retMap = new HashMap<String, Object>();
+        retMap.put("total", resultcount);
+        retMap.put("rows", result);
+        return retMap;
+    }
+
+    /**
+     * 查询导出发票信息
+     * @param params
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> getExportTianMaoFiscalCodeList(Map<String, Object> params) {
+        return invoicesReadDao.getExportTianMaoFiscalCodeList(params);
+    }
+
+    /**
+     * 税控码查询
+     * @param params
+     * @return
+     */
+    @Override
+    public Map<String, Object> getFiscalCodeListByPage(Map<String, Object> params) {
+        List<InvoicesDispItem> result = invoicesReadDao.getFiscalCodeList(params);
+        //获得条数
+        int resultcount = invoicesReadDao.getRowCnts();
+        Map<String, Object> retMap = new HashMap<String, Object>();
+        retMap.put("total", resultcount);
+        retMap.put("rows", result);
+        return retMap;
+    }
+
+    private void createSettlementInvoiceData(Invoices invoice,Orders order,int statusType){
+        // 修改代码部分
+        SettlementInvoiceData settlementInvoiceData = null;
+        Brands brandsEntity = null;
+        OrderProducts op = null;
+        String brandName = "";
+        Long invoiceTime = null;
+        String incoiceTimeString = "";
+        String year = "";
+        String month = "";
+        try {
+            op = orderProductsReadDao.get(invoice.getOrderProductId());
+            brandsEntity = brandsReadDao.get(op.getBrandId());
+
+            if (brandsEntity != null) {
+                brandName = brandsEntity.getBrandName();
+            } else {
+                brandName = op.getBrandId() + "";
+            }
+
+            if (statusType == 4) {
+                invoiceTime = invoice.getInvalidTime();
+            } else {
+                invoiceTime = invoice.getBillingTime();
+            }
+
+            try {
+                incoiceTimeString = DateFormatUtil.formatTime(invoiceTime);
+                year = incoiceTimeString.substring(0, 4);
+                month = Integer.parseInt(incoiceTimeString.substring(5, 7)) + "";
+            } catch (Exception e) {
+                logger.error("创建佣金核算数据推送队列，时间处理异常：", e);
+            }
+
+            settlementInvoiceData = new SettlementInvoiceData();
+            //添加settlementInvoiceData中的数据
+            settlementInvoiceData.setCordersn(invoice.getCOrderSn());// '网单号[发票表]
+            settlementInvoiceData.setOldcordersn(op.getCOrderSn());//网单号[网单表]
+            settlementInvoiceData.setSourceordersn(order.getSourceOrderSn());//来源订单号[订单表]
+            settlementInvoiceData.setSource(getSourceName(order.getSource()));//订单来源[订单表]已转名称
+            settlementInvoiceData.setSellpeople(order.getSellpeople());//销售代表[订单表]
+            settlementInvoiceData.setProductcatename(invoice.getProductCateName());//品类[发票表]
+            settlementInvoiceData.setBrandname(brandName);//品牌[Brands表]
+            settlementInvoiceData.setSku(op.getSku());//SKU[网单表]
+            settlementInvoiceData.setProductname(op.getProductName());//宝贝型号[网单表]
+            settlementInvoiceData.setConsignee(order.getConsignee());//收货人姓名[订单表]
+            settlementInvoiceData.setPaytime(order.getPayTime().intValue());//订单付款时间
+
+            settlementInvoiceData
+                    .setNumber(statusType == 4 ? -invoice
+                            .getNumber() : invoice.getNumber());//销售数量[发票表]
+            settlementInvoiceData
+                    .setAmount(statusType == 4 ? invoice
+                            .getAmount().multiply(new BigDecimal(-1)) : invoice.getAmount());//总价(发票金额)[发票表]
+            settlementInvoiceData.setMonth(month);//期间
+            settlementInvoiceData.setYear(year);//年度
+            settlementInvoiceData.setIsmakereceipt(getIsMakeReceiptName(op.getIsMakeReceipt()
+                    .intValue(), invoice));//开票状态[网单表]已转名称
+            settlementInvoiceData.setSettlementtype(1);//结算方式,0:人工,1:系统
+            settlementInvoiceData.setSuccess(0);//是否成功,0:否,1:是,2:不再处理
+            settlementInvoiceData.setCount(0);//推送次数, 超过20就不在处理
+
+            settlementInvoiceData.setStatustype(statusType);//数据标识,1:已开票,4:冲红/作废
+
+            settlementInvoiceData.setInvoicetime(invoiceTime);//发票时间(开票/作废时间)
+            settlementInvoiceData.setState(0);//审核状态,0:无需审核,1:待业务审核,-1:业务审核拒绝,2:待财务审核,-2:财务审核拒绝,3:审核通过
+            settlementInvoiceData.setBusauditorpeople("");//业务审核人
+            settlementInvoiceData.setBusauditortime(null);//业务审核时间
+            settlementInvoiceData.setFinauditorpeople("");//财务审核人
+            settlementInvoiceData.setFinauditortime(null);//财务审核时间
+            settlementInvoiceData.setPushdata("");//推送数据
+            settlementInvoiceData.setReturndata("");//反馈数据
+            settlementInvoiceData.setLastmessage("");//信息
+            settlementInvoiceData.setAddpeople("系统");//数据添加人
+
+             settlementInvoiceDataDao.create(settlementInvoiceData);
+        }catch (Exception e){
+            logger.error("创建佣金核算数据推送队列，数据处理异常", e);
+        }
+    }
+
+    /**
+     * 订单来源处理
+     * @param source
+     * @return
+     */
+    private String getSourceName(String source) {
+        if (source == null) {
+            return "null";
+        } else if (source.equalsIgnoreCase("GQGYS")) {
+            return "生态授权店";
+        } else {
+            return source;
+        }
+    }
+
+    //获取网单的开票状态
+    private String getIsMakeReceiptName(int isMakeReceipt, Invoices invoice) {
+        //电子发票作废，网单开票状态特殊处理
+        if (invoice.getElectricFlag().intValue() == 1 && invoice.getStatusType().intValue() == 4) {
+            //            Long billingTime = invoice.getBillingTime();
+            //            Long invalidTime = invoice.getInvalidTime();
+            try {
+                //                String billingTimeString = timeStamp2Date(String.valueOf(billingTime), null);
+                //                String invalidTimeString = timeStamp2Date(String.valueOf(invalidTime), null);
+                String billingTime = DateFormatUtil.formatTime(invoice.getBillingTime());
+                String invalidTime = DateFormatUtil.formatTime(invoice.getInvalidTime());
+                if (billingTime.substring(0, 7).equals(invalidTime.substring(0, 7))) {
+                    return "当月冲红";
+                } else {
+                    return "跨月冲红";
+                }
+            } catch (Exception e) {
+                logger.error("获取网单的开票状态：", e);
+                return "开票状态异常";
+            }
+        }
+        switch (isMakeReceipt) {
+            case 1:
+                return "未开票";
+            case 2:
+                return "已开票";
+            case 3:
+                return "当月作废";
+            case 4:
+                return "跨月冲红";
+            case 5:
+                return "开票中";
+            case 6:
+                return "开票失败";
+            case 9:
+                return "待开票";
+            case 10:
+                return "取消开票";
+            case 20:
+                return "SAP期初封存";
+            default:
+                return isMakeReceipt + "";
+        }
+    }
+
+    @Override
+    public List<Invoices> getByDiffId(Integer diffId) {
+        return invoicesReadDao.getByDiffId(diffId);
+    }
+
+    @Override
+    public Invoices getLatestInvoicesByCOrderSn(String cOrderSn) {
+        return invoicesReadDao.getLatestInvoicesByCOrderSn(cOrderSn);
+    }
 }

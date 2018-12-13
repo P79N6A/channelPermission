@@ -29,30 +29,34 @@
 		<result property="addTime" column="add_time" />
 		<result property="processTime" column="process_time" />
 		<result property="lastMessage" column="last_message" />
+		<result property="cOrderSn" column="cOrderSn" />
 	</resultMap>
 
 	<select id="get" parameterType="Integer" resultMap="invoicesWwwLogsResult">
 		select `id`,`order_product_id`,`order_id`,`order_sn`,`source_sn`,`source`,`success`,`flag`,`add_time`,`process_time`,`last_message` 
-		from InvoicesWwwLogs
+		from invoiceswwwlogs
 		where order_product_id = #{orderProductId}
 	</select>
 
 	<select id="getByOrderId" parameterType="Integer" resultMap="invoicesWwwLogsResult">
 		select `id`,`order_product_id`,`order_id`,`order_sn`,`source_sn`,`source`,`success`,`flag`,`add_time`,`process_time`,`last_message`
-		from InvoicesWwwLogs
+		from invoiceswwwlogs
 		where order_id = #{orderId}
 	</select>
 
 	<select id="findInvoiceWwwLogList" parameterType="Map" resultMap="invoicesWwwLogDispItemResult">
 		select
 		SQL_CALC_FOUND_ROWS
-		order_product_id,order_id,order_sn,source,source_sn,success,
+		op.cOrderSn, order_product_id,order_id,order_sn,source,source_sn,success,
 		CASE WHEN add_time=0 THEN '' ELSE FROM_UNIXTIME(add_time) END as add_time,
 		CASE WHEN process_time=0 THEN '' ELSE FROM_UNIXTIME(process_time) END as process_time
-		from `InvoicesWwwLogs`
+		from `invoiceswwwlogs` inv left JOIN `orderproducts` op on inv.order_product_id = op.id
 		where 1=1
 		<if test="sourceSn !=null and sourceSn != ''">
 			and source_sn = #{sourceSn}
+		</if>
+		<if test="cOrderSn !=null and cOrderSn != ''">
+			and op.cOrderSn = #{cOrderSn}
 		</if>
 		<if test="source !=null and source != ''">
 			and source=#{source}
@@ -66,7 +70,7 @@
 		<if test="addTimeMax !=null and addTimeMax != ''">
 			and add_time &lt;= UNIX_TIMESTAMP(#{addTimeMax})
 		</if>
-		order by id desc
+		order by inv.id desc
 		<if test="m!=null and n!=null">
 			Limit ${m},${n}
 		</if>

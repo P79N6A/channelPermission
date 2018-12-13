@@ -3,25 +3,44 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.MemberInvoicesWriteDao">
 
     <update id="updateLockStatus" parameterType="com.haier.shop.model.MemberInvoices">
-        update `MemberInvoices`
+        update `memberinvoices`
         set
         `isLock`=#{isLock}
         where `id` = #{id}
     </update>
 
     <update id="update" parameterType="com.haier.shop.model.MemberInvoices">
-        update `MemberInvoices` set `invoiceType`=#{invoiceType},`memberId`=#{memberId},`memberName`=#{memberName},`invoiceTitle`=#{invoiceTitle},`taxPayerNumber`=#{taxPayerNumber},`registerAddress`=#{registerAddress},`registerPhone`=#{registerPhone},`bankName`=#{bankName},`bankCardNumber`=#{bankCardNumber},`addTime`=#{addTime},`state`=#{state},`auditTime`=#{auditTime},`auditor`=#{auditor},`remark`=#{remark},`isLock`=#{isLock},`orderId`=#{orderId}
+        update `memberinvoices` set `invoiceType`=#{invoiceType},`memberId`=#{memberId},`memberName`=#{memberName},`invoiceTitle`=#{invoiceTitle},`taxPayerNumber`=#{taxPayerNumber},`registerAddress`=#{registerAddress},`registerPhone`=#{registerPhone},`bankName`=#{bankName},`bankCardNumber`=#{bankCardNumber},`addTime`=#{addTime},`state`=#{state},`auditTime`=#{auditTime},`auditor`=#{auditor},`remark`=#{remark},`isLock`=#{isLock},`orderId`=#{orderId},`electricFlag`=#{electricFlag}
+        where `id` = #{id}
+    </update>
+
+    <update id="update1" parameterType="com.haier.shop.model.MemberInvoices">
+        update `memberinvoices` set `invoiceType`=#{invoiceType},`memberId`=#{memberId},`memberName`=#{memberName},`invoiceTitle`=#{invoiceTitle},`taxPayerNumber`=#{taxPayerNumber},`registerAddress`=#{registerAddress},`registerPhone`=#{registerPhone},`bankName`=#{bankName},`bankCardNumber`=#{bankCardNumber},`addTime`=#{addTime},`state`=#{state},`auditTime`=#{auditTime},`auditor`=#{auditor},`remark`=#{remark},`isLock`=#{isLock},`orderId`=#{orderId},`electricFlag`=#{electricFlag},`vatremark`=#{vatremark}
         where `id` = #{id}
     </update>
 
     <update id="updateForsynInvoices" parameterType="com.haier.shop.model.MemberInvoices">
-        update `MemberInvoices` set `isLock`=#{isLock}
+        update `memberinvoices` set `isLock`=#{isLock}
         where `id` = #{id}
     </update>
 
     <insert id="insert" parameterType="com.haier.shop.model.MemberInvoices">
-        insert into `MemberInvoices`(`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`parentId`,`electricFlag`)
+        insert into `memberinvoices`(`invoiceType`,`memberId`,`memberName`,`invoiceTitle`,`taxPayerNumber`,`registerAddress`,`registerPhone`,`bankName`,`bankCardNumber`,`addTime`,`state`,`auditTime`,`auditor`,`remark`,`isLock`,`orderId`,`parentId`,`electricFlag`)
         values(#{invoiceType},#{memberId},#{memberName},#{invoiceTitle},#{taxPayerNumber},#{registerAddress},#{registerPhone},#{bankName},#{bankCardNumber},#{addTime},#{state},#{auditTime},#{auditor},#{remark},#{isLock},#{orderId},#{parentId},#{electricFlag})
         <selectKey resultType="int" keyProperty="id" order="AFTER">select last_insert_id()</selectKey>
     </insert>
+
+    <update id="updateByTitleAndNumber" parameterType="com.haier.shop.model.MemberInvoices">
+        update `memberinvoices`
+        <set>
+                invoiceTitle = #{invoiceTitle},
+                taxPayerNumber = #{taxPayerNumber},
+                registerAddress = #{registerAddress},
+                registerPhone = #{registerPhone},
+                bankName = #{bankName},
+                bankCardNumber = #{bankCardNumber},
+        </set>
+        where `orderId`=#{orderId} and (`electricFlag`=#{electricFlag} or `invoiceType`=#{invoiceType})
+    </update>
+
 </mapper>

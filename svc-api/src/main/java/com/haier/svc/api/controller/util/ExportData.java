@@ -149,8 +149,9 @@ public final class ExportData {
     public static final String STOCKPRODUCTNAME ="产品型号";
     public static final String SECCODE ="库位编码";
     public static final String SECNAME ="库位名称";
+    public static final String STOCKITEMPROPERTY ="商品属性";
     public static final String STOCKSTOCKQTY ="实际库存";
-    public static final String STOCKFROZENQTY ="占有库存";
+    public static final String STOCKFROZENQTY ="占用库存";
     public static final String AVAIABLEQTY ="可用库存";
     public static final String MODIFIER = "最后更新人";
     public static final String product_type ="产品类型";
@@ -171,7 +172,103 @@ public final class ExportData {
 	public static final String STORENAME ="店铺名称";
 	public static final String STORKQTY ="总库存量";
 	public static final String ECTIME ="EC库存更新时间";
-	public static String[] orderListQuery = {ORDER_CATEGORY_NAME,FLOW_FLAG_NAME,ORDER_ID,CHANNEL_COMMIT_TIME_DISPLAY,
+	public static final String ORDER_NUM_73 ="参考单号(73单号)";
+	public static final String SEND_FLAG ="更改发货方向标识(Y)";
+	public static final String ITEM_PRICE ="价格";
+
+	public static final String ID="编码";
+	public static final String CHHANNEL_NAME ="渠道";
+	public static final String TARGET_NUM ="指标";
+	public static final String LIMIT_NUM ="额度";
+	public static final String TOTAL_NUM ="总库存";
+	public static final String ON_WAY_NUM ="在途";
+	public static final String LOAN_NUM ="拆借";
+	public static final String USED_NUM ="本周已用";
+	public static final String AVAILABLE_NUM ="可用额度";
+
+
+	public static final String S_CODE ="库位码";
+	public static final String CENTER_NAME ="所属中心";
+	public static final String C_CODE ="中心代码";
+	public static final String PROVINCE ="所属省级";
+	public static final String CITY ="市";
+	public static final String COUNTY ="县区";
+	public static final String LESCODE ="LES省级代码";
+	public static final String ADDRESS ="地址";
+	public static final String ZIPCODE ="邮编";
+	public static final String CONTACT_CGODBM ="CGO\\DBM正品退货联系人";
+	public static final String CONTACT_CRM ="CRM正品退货联系人";
+	public static final String MOBILEPHONE ="联系电话(手机)";
+	public static final String PHONE ="固定电话";
+	public static final String IS_ENABLED_NAME ="状态";
+
+
+	public static final String RRS_WH_CODE ="日日顺库位码";
+	public static final String RRS_WH_NAME ="日日顺仓库名称";
+	public static final String T2_DEFAULT ="T+2上单默认";
+	public static final String TRANSPORT_PRESCRIPTION ="交通码";
+	public static final String CREATE_TIME_WEB ="创建时间";
+	public static final String UPDATE_TIME_WEB ="最后更新时间";
+
+
+	public static final String   WH_CODE   =		"仓库（TC）代码";
+	public static final String   WH_NAME   =		"仓库名称";
+	public static final String   CENTER_CODE   =		"网单中心代码";
+	public static final String   CREATE_USER   =		"创建者";
+	public static final String   CREATE_TIME   =		"创建时间";
+	public static final String   UPDATE_USER   =		"最后更新人";
+	public static final String   UPDATE_TIME   =		"最后更新时间";
+	public static final String   ESTORGE_ID   =		"电商库位码";
+	public static final String   ESTORGE_NAME   =		"电商库位名称";
+	public static final String   TRANSMIT_ID   =		"送达方代码";
+	public static final String   TRANSMIT_NAME  =		"送达方名称";
+	public static final String   LES_OE_ID   =		"0E码（LES）";
+	public static final String   CUSTOM_ID   =		"管理客户编码";
+	public static final String   CUSTOM_NAME   =		"管理客户名称";
+	public static final String   INDUSTRY_TRADE_ID   =		"工贸代码";
+	public static final String   INDUSTRY_TRADE_DESC   =		"工贸描述";
+	public static final String   GRAININESS_ID   =		"颗粒度编码";
+	public static final String   NET_MANAGEMENT_ID   =		"网单经营体编码";
+	public static final String   ESALE_ID   =		"电商售达方编码";
+	public static final String   ESALE_NAME   =		"电商售达方名称";
+	public static final String   SALE_ORG_ID   =		"销售组织编码";
+	public static final String   BRANCH   =		"分公司地址";
+	public static final String   PAYMENT_ID   =		"电商付款方编码";
+	public static final String   PAYMENT_NAME   =		"电商付款方名称";
+	public static final String   AREA_ID   =		"地区编码（CRM专用）";
+	public static final String   RRS_DISTRIBUTION_ID   =		"日日顺配送编码";
+	public static final String   RRS_DISTRIBUTION_NAME   =		"日日顺配送名称";
+	public static final String   RRS_SALE_ID   =		"日日顺售达方";
+	public static final String   RRS_SALE_NAME   =		"日日顺售达方名称";
+	public static final String   OMS_RRS_PAYMENT_ID   =		"OMS重庆新日日顺付款方";
+	public static final String   OMS_RRS_PAYMENT_NAME   =		"OMS重庆新日日顺付款方名称";
+	public static final String   IS_ENABLED_NAMEE   =		"启用/禁用";
+
+	public static final String   OPER_USER_NAME   =		"操作人";
+	public static final String   LOG_TIME   =		"操作时间";
+	public static final String   TYPE_NAMEL   =		"操作类型";
+	public static final String   CONTENTL   =		"操作内容";
+
+	public static final String DELIVERYTO_CODE = "送达方编码";
+	public static final String DISTRIBUTION_CENTRECODE = "配送中心编码";
+	public static final String DISTRIBUTION_CENTRENAME = "配送中心名称";
+	public static final String WAREHOUSE_CODE = "配送中心简码";
+	public static final String WAREHOUSE_NAME = "配送中心简码名称";
+	public static final String WH_ZCODE = "仓库编码";
+	public static final String AREA_CODE = "区域编码";
+	public static final String AREA_NAME = "区域名称";
+	public static final String RRSCENTER_CODE = "日日顺中心编码";
+	public static final String RRSCENTER_NAME = "日日顺中心名称";
+	public static final String ACTIVE_FLAGNAME = "启用/禁用状态";
+	public static final String STOCK_TYPE = "仓库类型";
+	public static final String CREATE_BY = "创建人";
+	public static final String LASTUPDATE_BY = "更新人";
+	public static final String CREATETIME_SHOW = "创建时间";
+	public static final String LASTUPDATETIME_SHOW = "更新时间";
+
+
+
+	public static String[] orderListQuery = {ORDER_CATEGORY_NAME,FLOW_FLAG_NAME,ORDER_ID,ORDER_NUM_73,SEND_FLAG,CHANNEL_COMMIT_TIME_DISPLAY,
 		CHANNEL_COMMIT_USER,AUDIT_TIME_DISPLAY,AUDIT_USER,ORDER_CLOSE_TIME_DISPLAY,ORDER_CLOSE_USER,OMS_ORDER_ID,
 		CUSTOM_DESC,GGG,TRANSMIT_DESC,REPORT_YEAR_WEEK,REPORT_YEAR_WEEK_DISPLAY,ARRIVE_TEAR_WEEK,ARRIVE_TEAR_WEEK_DISPLAY,
 		INDUSTRT_TRADE_DESC,ED_CHANNEL_NAME,CATEGORY_ID,PRODUCT_GROUP_NAME,BRAND_ID,MATERIALS_ID,
@@ -224,7 +321,7 @@ public final class ExportData {
 	public static final String STATUS = "状态";
 	*/
 	/**	 * 订单列表导出的表头	 */
-	public static String[] orderListTitle = {ED_CHANNEL_NAME,CATEGORY_ID,PRODUCT_GROUP_NAME,ORDER_ID,MATERIALS_ID,STORAGE_ID,T2_DELIVERY_PREDICTION,PRICE,AMOUNT,MATERIALS_DESC,FLOW_FLAG_NAME
+	public static String[] orderListTitle = {ED_CHANNEL_NAME,CATEGORY_ID,PRODUCT_GROUP_NAME,ORDER_ID,MATERIALS_ID,STORAGE_ID,T2_DELIVERY_PREDICTION,PRICE,AMOUNT,MATERIALS_DESC,ORDER_NUM_73,SEND_FLAG,FLOW_FLAG_NAME
 		,ORDER_TYPE_NAME,CHANNEL_COMMIT_USER,CHANNEL_COMMIT_TIME_DISPLAY,AUDIT_DEPART_USER,AUDIT_DEPART_TIME_DISPLAY,AUDIT_USER,AUDIT_TIME_DISPLAY,ERROR_MSG
 	};
 	/**订单佣金信息*/
@@ -260,9 +357,20 @@ public final class ExportData {
     public static String[] commission_invoice4 = {INDEX,INDEX,INDEX,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,INVOICE1,INVOICE2,INVOICE3,INVOICE4,
     };
 
-    public static String[] baseStockListTitle = {COMSKU,CATEGORY,STOCKPRODUCTNAME,SECCODE,SECNAME,STOCKSTOCKQTY,STOCKFROZENQTY,CREATETIME,UPDATETIME};
+    public static String[] baseStockListTitle = {COMSKU,CATEGORY,STOCKPRODUCTNAME,SECCODE,SECNAME,STOCKITEMPROPERTY,STOCKSTOCKQTY,STOCKFROZENQTY,CREATETIME,UPDATETIME};
     public static String[] baseStockLogListTitle = {REFNO,COMSKU,PRODUCTNAMES,SECCODE,SECNAME,LOG,CREATETIME};
-    public static String[] machineBaseStockListTitle = {COMSKU,CATEGORY,STOCKPRODUCTNAME,SECCODE,SECNAME,AVAIABLEQTY,CREATETIME,UPDATETIME};
+    public static String[] machineBaseStockListTitle = {COMSKU,CATEGORY,STOCKPRODUCTNAME,SECCODE,SECNAME,STOCKITEMPROPERTY,AVAIABLEQTY,CREATETIME,UPDATETIME};
     public static String[] storeListTitle = {STORECODE,STORENAME,COMSKU,CATEGORY,STOCKPRODUCTNAME,STORKQTY,ECTIME,CREATETIME};
-    public static String[] itemBaseListTitle = {COMSKU,MATERIALS_DESC,MATERIALS_TYPE,PRODUCT_GROUP_NAME,FLOW_FLAG_NAME,MODIFIER,product_type,LENGTH,HEIGHT,WIDTH,WEIGHT,weight_unit,delete_flag,CREATETIME,UPDATETIME,is_auto_update,pro_band};
+    public static String[] itemBaseListTitle = {COMSKU,MATERIALS_DESC,MATERIALS_TYPE,PRODUCT_GROUP_NAME,FLOW_FLAG_NAME,MODIFIER,product_type,LENGTH,HEIGHT,WIDTH,WEIGHT,weight_unit,delete_flag,CREATETIME,UPDATETIME,is_auto_update,pro_band,ITEM_PRICE};
+	public static String[] gateOfHistoryTitle={ID, CATEGORY_ID , CHHANNEL_NAME, TARGET_NUM , LIMIT_NUM , TOTAL_NUM , ON_WAY_NUM , LOAN_NUM , USED_NUM , AVAILABLE_NUM};
+	public static String[] waAddressTitle={S_CODE , CENTER_NAME , C_CODE , PROVINCE , CITY , COUNTY, LESCODE , ADDRESS , ZIPCODE , CONTACT_CGODBM, CONTACT_CRM , MOBILEPHONE , PHONE , IS_ENABLED_NAME};
+	public static String[] invRrsWarehouseTitle={RRS_WH_CODE , RRS_WH_NAME , ESTORGE_ID , T2_DEFAULT , TRANSPORT_PRESCRIPTION, CREATE_USER, CREATE_TIME_WEB, UPDATE_USER , UPDATE_TIME_WEB,IS_ENABLED_NAME};
+	public static String[] invWarehouseTitle={ WH_CODE, WH_NAME, CENTER_CODE  , CREATE_USER   , CREATE_TIME   , UPDATE_USER   , UPDATE_TIME   , ESTORGE_ID   , ESTORGE_NAME   , TRANSMIT_ID   , TRANSMIT_NAME   , LES_OE_ID   , CUSTOM_ID  , CUSTOM_NAME   , INDUSTRY_TRADE_ID   , INDUSTRY_TRADE_DESC   , GRAININESS_ID   , NET_MANAGEMENT_ID   , ESALE_ID  , ESALE_NAME  , SALE_ORG_ID   , BRANCH   , PAYMENT_ID  , PAYMENT_NAME  , AREA_ID  , RRS_DISTRIBUTION_ID   , RRS_DISTRIBUTION_NAME, RRS_SALE_ID   , RRS_SALE_NAME  , OMS_RRS_PAYMENT_ID   , OMS_RRS_PAYMENT_NAME, IS_ENABLED_NAMEE};
+
+	public static String[] logAuditInfoTitle={OPER_USER_NAME,LOG_TIME,TYPE_NAMEL,CONTENTL};
+	public static String[] areaCenterInfoTitle={DELIVERYTO_CODE , DISTRIBUTION_CENTRECODE , DISTRIBUTION_CENTRENAME , WAREHOUSE_CODE , WAREHOUSE_NAME , WH_ZCODE, AREA_CODE ,
+			AREA_NAME , RRSCENTER_CODE , RRSCENTER_NAME, ACTIVE_FLAGNAME  , CREATE_BY , LASTUPDATE_BY,CREATETIME_SHOW,LASTUPDATETIME_SHOW};
+	public static String[] tmypCenterInfoTitle={DELIVERYTO_CODE , DISTRIBUTION_CENTRECODE , DISTRIBUTION_CENTRENAME , WAREHOUSE_CODE , WAREHOUSE_NAME , WH_ZCODE, AREA_CODE ,
+			AREA_NAME , RRSCENTER_CODE , RRSCENTER_NAME, ACTIVE_FLAGNAME  , CREATE_BY , LASTUPDATE_BY,CREATETIME_SHOW,LASTUPDATETIME_SHOW};
+
 }

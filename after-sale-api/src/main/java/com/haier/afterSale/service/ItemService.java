@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import com.haier.distribute.data.model.ProductCates;
 import com.haier.common.ServiceResult;
-import com.haier.purchase.data.model.LesFiveYardInfo;
+import com.haier.shop.model.LesFiveYardInfo;
 import com.haier.shop.model.*;
 
 /**

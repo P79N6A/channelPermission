@@ -71,6 +71,7 @@ public class ProductsNewServiceImpl implements ProductsNewService {
      * 根据sku列表，获取对应的产品列表(只查询上架的sku)
      * @return
      */
+    @Override
     public List<ProductBase> getListBySkus( List<String> skuList){
         return productsNewDao.getListBySkus(skuList);
     }

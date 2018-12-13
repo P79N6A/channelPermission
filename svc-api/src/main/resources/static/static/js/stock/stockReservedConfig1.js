@@ -244,7 +244,8 @@ function saveConfig () {
 * */
 $('#redo').click(function() {
 
-        $('#status').combobox('setValue', "-1");
+        $('#statusValue').combobox('setValue', "-1");
+
         $('#channelCode').textbox('setValue', "");
         $('#ref').textbox('setValue', "");
     }

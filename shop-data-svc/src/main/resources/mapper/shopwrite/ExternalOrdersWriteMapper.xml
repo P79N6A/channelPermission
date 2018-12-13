@@ -2,7 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haier.shop.dao.shopwrite.ExternalOrdersWriteDao">
     <update id="updateAtferShipped" parameterType="com.haier.shop.model.ExternalOrders">
-        update `ExternalOrders` set `hasShipped` = 1
+        update `externalorders` set `hasShipped` = 1
         where `orderId` = #{orderId}
     </update>
+
+    <insert id="insertExternalOrdersInfo" parameterType="com.haier.shop.model.ExternalOrders">
+		insert into `externalorders`(`configId`,`orderSn`,`sourceOrderSn`,`orderId`,`hasShipped`,`orderState`,`errorLog`,`syncTime`,`syncCount`,`addTime`,`creator`,`type`,`stepTradeStatus`,`stepPaidFee`,`taobaoGroupId`,`shouldPaidFee`,`taobaoModifiedTime`)
+			select #{configId},#{orderSn},#{sourceOrderSn},#{orderId},#{hasShipped},#{orderState},#{errorLog},#{syncTime},#{syncCount},#{addTime},#{creator},#{type},#{stepTradeStatus},#{stepPaidFee},#{taobaoGroupId},#{shouldPaidFee},#{taobaoModifiedTime}
+            FROM dual
+			WHERE not exists (select 1 from `externalorders` where `sourceOrderSn` = #{sourceOrderSn})
+	</insert>
+    <update id="updateExternalOrdersInfo">
+		UPDATE externalorders
+           SET syncCount = 0,orderState = #{orderState},errorLog = #{errorLog}
+         WHERE sourceOrderSn = #{sourceOrderSn}
+	</update>
 </mapper>

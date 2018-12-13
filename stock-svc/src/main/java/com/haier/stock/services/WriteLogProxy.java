@@ -24,21 +24,16 @@ import java.util.Date;
  * @Email: yaoyu@ehaier.com
  *
  */
-@Import(value={EisInterfaceDataLogService.class})
-public class WriteLogProxy implements ApplicationContextAware {
+@Import(value={EisInterfaceDataLogService.class,VomwwwOutstockSynchronizeLogsService.class})
+public class WriteLogProxy {
 
     private static org.apache.log4j.Logger          log = org.apache.log4j.LogManager
             .getLogger(WriteLogProxy.class);
     private static ApplicationContext               applicationContext;
-    @Autowired
-    private static EisInterfaceDataLogService eisInterfaceDataLogService;
 
-    private static VomwwwOutstockSynchronizeLogsService vomwwwOutstockSynchronizeLogsService;
+    private static EisInterfaceDataLogService eisInterfaceDataLogService = null;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        WriteLogProxy.applicationContext = applicationContext;
-    }
+    private static VomwwwOutstockSynchronizeLogsService vomwwwOutstockSynchronizeLogsService = null;
 
     public static void writeLog(String foreignKey, String interfaceCode, String requestData,
                                 IExecute iExecute) {
@@ -161,19 +156,21 @@ public class WriteLogProxy implements ApplicationContextAware {
     }
 
     private static EisInterfaceDataLogService getDao() {
-        EisInterfaceDataLogService userFooterService = (EisInterfaceDataLogService) SpringContextUtil.getBean("eisInterfaceDataLogService");
 
-        /*if (null == eisInterfaceDataLogService) {
-            eisInterfaceDataLogService = (EisInterfaceDataLogService) applicationContext
-                    .getBean("eisInterfaceDataLogService");
-        }*/
-        return userFooterService;
+        if (null == eisInterfaceDataLogService) {
+            eisInterfaceDataLogService = (EisInterfaceDataLogService) SpringContextUtil.getBean("eisInterfaceDataLogService");
+
+            /*eisInterfaceDataLogService = (EisInterfaceDataLogService) applicationContext
+                    .getBean("eisInterfaceDataLogService");*/
+        }
+        return eisInterfaceDataLogService;
     }
 
     private static VomwwwOutstockSynchronizeLogsService getVomwwwOutstockSynchronizeLogsDao() {
         if (null == vomwwwOutstockSynchronizeLogsService) {
-            vomwwwOutstockSynchronizeLogsService = (VomwwwOutstockSynchronizeLogsService) applicationContext
-                    .getBean("vomwwwOutstockSynchronizeLogsDao");
+            vomwwwOutstockSynchronizeLogsService = (VomwwwOutstockSynchronizeLogsService) SpringContextUtil.getBean("vomwwwOutstockSynchronizeLogsService");
+            /*vomwwwOutstockSynchronizeLogsService = (VomwwwOutstockSynchronizeLogsService) applicationContext
+                    .getBean("vomwwwOutstockSynchronizeLogsService");*/
         }
         return vomwwwOutstockSynchronizeLogsService;
     }

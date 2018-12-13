@@ -60,35 +60,21 @@ public class QueryOrderParameter implements Serializable {
 		SOURCE_MAP.put("FRIDGE", "海尔冰冷旗舰店");
 		SOURCE_MAP.put("AIR", "海尔空调旗舰店");
 		SOURCE_MAP.put("TBCT", "村淘海尔商家");
-		SOURCE_MAP.put("GQGYS", "海尔官方旗舰店供应商");
+		SOURCE_MAP.put("GQGYS", "生态授权店");
 		SOURCE_MAP.put("TMKSD", "天猫卡萨帝旗舰店");
 		SOURCE_MAP.put("TMTV", "海尔电视旗舰店");
 		SOURCE_MAP.put("TBCFDD", "海尔厨房大电旗舰店");
 		SOURCE_MAP.put("TBXCR", "天猫小超人旗舰店");
 		SOURCE_MAP.put("TOPSHJD", "海尔生活电器专卖店");
 		SOURCE_MAP.put("TOPDHSC", "海尔生活家电旗舰店");
-		SOURCE_MAP.put("GMZX", "统帅国美旗舰店");
-		SOURCE_MAP.put("GMZXTS", "统帅国美官方旗舰店");
-		SOURCE_MAP.put("GMTSZYCW", "统帅国美旗舰店(厨卫)");
-		SOURCE_MAP.put("GMTSZYKT", "统帅国美旗舰店(空调)");
-		SOURCE_MAP.put("GMTSZYBX", "统帅国美旗舰店(冰箱)");
-		SOURCE_MAP.put("GMTSZYXYJ", "统帅国美旗舰店(洗衣机)");
-		SOURCE_MAP.put("yihaodian", "一号店");
-		SOURCE_MAP.put("yihaodiants", "一号店统帅");
-		SOURCE_MAP.put("YHDZY", "一号店自营");
-		SOURCE_MAP.put("YHDQWZY", "一号店全网自营");
-		SOURCE_MAP.put("jianhang", "建行");
-		SOURCE_MAP.put("ICBC", "工商");
-		SOURCE_MAP.put("YMX", "亚马逊");
-		SOURCE_MAP.put("SNYG", "苏宁");
-		SOURCE_MAP.put("SNHEGQ", "苏宁海尔集团官方旗舰店");
+		SOURCE_MAP.put("GMZX", "国美海尔官方旗舰店");
+		SOURCE_MAP.put("GMZXTS", "国美统帅官方旗舰店");
+		SOURCE_MAP.put("SNYG", "苏宁统帅官方旗舰店");
+		SOURCE_MAP.put("SNHEGQ", "苏宁海尔官方旗舰店");
 		SOURCE_MAP.put("SNQDZX", "苏宁渠道中心");
 		SOURCE_MAP.put("DDW", "当当");
-		SOURCE_MAP.put("YLW", "邮乐");
-		SOURCE_MAP.put("YDYZ", "有赞微商城");
-		SOURCE_MAP.put("KDGW", "微店");
-		SOURCE_MAP.put("MD", "萌店");
-		SOURCE_MAP.put("JDXYJ", "京东");
+		SOURCE_MAP.put("JDHEGQ", "京东海尔官方旗舰店");
+		SOURCE_MAP.put("JDHEBXGQ", "京东海尔集团冰箱官方旗舰店");
 	};
 	
 	
@@ -128,6 +114,16 @@ public class QueryOrderParameter implements Serializable {
 	private String syncTime;
 	private String firstConfirmTime;
 	private Integer autoConfirmNum;
+	
+	private String productId;//网单id（主键）
+	
+	
+	public String getProductId() {
+		return productId;
+	}
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
 	public Integer getSmConfirmStatus() {
 		return smConfirmStatus;
 	}

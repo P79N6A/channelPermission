@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.eop.data.dao.TransferOrderDao">
+
+    <resultMap id="TransferOrderResult" type="com.haier.eop.data.model.TransferOrder">
+        <result property="id" column="id"/>
+        <result property="fromStoreCode" column="fromStoreCode"/>
+        <result property="toStoreCode" column="toStoreCode"/>
+        <result property="scItemCode" column="scItemCode"/>
+        <result property="inventoryType" column="inventoryType"/>
+        <result property="count" column="count"/>
+        <result property="transferOrderCode" column="transferOrderCode"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="outCount" column="outCount"/>
+        <result property="inCount" column="inCount"/>
+        <result property="orderCode" column="orderCode"/>
+        <result property="productCate" column="productCate"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="createTime"/>
+        <result property="remnantNum" column="remnantNum"/>
+        <result property="errorMessage" column="errorMessage"/>
+        <result property="transferOutOrderCode" column="transferOutOrderCode"/>
+        <result property="transferInOrderCode" column="transferInOrderCode"/>
+        <result property="confirmOutTime" column="confirmOutTime"/>
+        <result property="confirmInTime" column="confirmInTime"/>
+        <result property="itemNum" column="itemNum"/>
+    </resultMap>
+
+    <resultMap id="TransferOrderDisplayResult" type="com.haier.eop.data.model.TransferOrderDisplayItem">
+        <result property="id" column="id"/>
+        <result property="fromStoreCode" column="fromStoreCode"/>
+        <result property="toStoreCode" column="toStoreCode"/>
+        <result property="scItemCode" column="scItemCode"/>
+        <result property="transferOrderCode" column="transferOrderCode"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="outCount" column="outCount"/>
+        <result property="inCount" column="inCount"/>
+        <result property="orderCode" column="orderCode"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="createTime"/>
+        <result property="remnantNum" column="remnantNum"/>
+        <result property="transferOutOrderCode" column="transferOutOrderCode"/>
+        <result property="transferInOrderCode" column="transferInOrderCode"/>
+        <result property="confirmOutTime" column="confirmOutTime"/>
+        <result property="confirmInTime" column="confirmInTime"/>
+        <result property="sapErrorMessage" column="sapErrorMessage"/>
+    </resultMap>
+
+    <sql id="displayQueryCondition">
+        <if test="startTime !=null and startTime != ''">
+            AND UNIX_TIMESTAMP(createTime)>=UNIX_TIMESTAMP(#{startTime})
+        </if>
+        <if test="endTime !=null and endTime != ''">
+            AND UNIX_TIMESTAMP(createTime)&lt;=UNIX_TIMESTAMP(#{endTime})
+        </if>
+        <if test="transferOrderCode !=null and transferOrderCode != ''">
+            AND transferOrderCode = #{transferOrderCode}
+        </if>
+        <if test="transferOutOrderCode !=null and transferOutOrderCode != ''">
+            AND transferOutOrderCode = #{transferOutOrderCode}
+        </if>
+        <if test="transferInOrderCode !=null and transferInOrderCode != ''">
+            AND transferInOrderCode = #{transferInOrderCode}
+        </if>
+        <if test="scItemCode !=null and scItemCode != ''">
+            AND scItemCode = #{scItemCode}
+        </if>
+        <if test="orderStatus !=null and orderStatus != ''">
+            AND orderStatus = #{orderStatus}
+        </if>
+        <if test="difference !='' and difference != null and difference == '0'.toString()">
+            AND outCount <![CDATA[ <> ]]> inCount
+        </if>
+        <if test="difference !='' and difference != null and difference == '1'.toString()">
+            AND outCount = inCount
+        </if>
+        <if test="fromStoreCode !=null and fromStoreCode != ''">
+            AND fromStoreCode = #{fromStoreCode}
+        </if>
+        <if test="toStoreCode !=null and toStoreCode != ''">
+            AND toStoreCode = #{toStoreCode}
+        </if>
+    </sql>
+
+    <select id="getOrders" parameterType="Map" resultMap="TransferOrderDisplayResult">
+        SELECT SQL_CALC_FOUND_ROWS
+        id,fromStoreCode,toStoreCode,scItemCode,transferOrderCode,orderStatus,outCount,inCount,orderCode,creater,
+        date_format(createTime, '%Y-%m-%d %T') as createTime,
+        date_format(confirmOutTime, '%Y-%m-%d %T') as confirmOutTime,
+        date_format(confirmInTime, '%Y-%m-%d %T') as confirmInTime,
+        remnantNum,transferOutOrderCode,transferInOrderCode,sapErrorMessage
+        FROM transferorder
+        WHERE 1=1
+        <include refid="displayQueryCondition"/>
+        Order By id DESC
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getRowCnts" resultType="int">
+        select
+        FOUND_ROWS();
+    </select>
+
+    <select id="getByTransferOrderCode" resultMap="TransferOrderResult">
+        SELECT id,fromStoreCode,toStoreCode,scItemCode,inventoryType,count,transferOrderCode,orderStatus,
+        outCount,inCount,orderCode,creater,createTime,remnantNum,errorMessage,transferOutOrderCode,transferInOrderCode,
+        confirmOutTime,confirmInTime,itemNum
+        FROM transferorder
+        WHERE transferOrderCode = #{transferOrderCode}
+        ORDER BY id Desc
+    </select>
+
+    <update id="syncUpdate" parameterType="com.haier.eop.data.model.TransferOrder">
+        update `transferorder`
+        <set>
+            <if test="orderStatus != null">
+                `orderStatus`=#{orderStatus},
+            </if>
+            <if test="confirmInTime != null">
+                `confirmInTime`=#{confirmInTime},
+            </if>
+            <if test="inCount != null">
+                `inCount`=#{inCount},
+            </if>
+            <if test="remnantNum != null">
+                `remnantNum`=#{remnantNum},
+            </if>
+            <if test="errorMessage != null">
+                `errorMessage`=#{errorMessage},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <insert id="insert" parameterType="com.haier.eop.data.model.TransferOrder">
+        INSERT INTO `transferorder`(`fromStoreCode`,`toStoreCode`,`expectStartTime`,`attributes`,
+        `scItemCode`,`inventoryType`,`count`,`transferOrderCode`,`expectOutStoreTime`,`expectInStoreTime`
+        ,`orderStatus`,`outCount`,`inCount`,`orderCode`,`productCate`,`ownerCode`
+        ,`creater`,`createTime`,`remnantNum`,`machinelossNum`,`boxlossNum`,`freeze`,`pullon`,`errorMessage`,`insertTime`
+        ,`transferOutOrderCode`,`transferInOrderCode`,`confirmOutTime`,`confirmInTime`)
+        VALUES(#{fromStoreCode},#{toStoreCode},#{expectStartTime},#{attributes},
+        #{scItemCode},#{inventoryType},#{count},#{transferOrderCode},#{expectOutStoreTime},#{expectInStoreTime}
+        ,#{orderStatus},#{outCount},#{inCount},#{orderCode},#{productCate},#{ownerCode}
+        ,#{creater},now(),#{remnantNum},#{machinelossNum},#{boxlossNum},#{freeze},#{pullon},#{errorMessage},now()
+        ,#{transferOutOrderCode},#{transferInOrderCode},#{confirmOutTime},#{confirmInTime})
+    </insert>
+
+    <update id="update" parameterType="com.haier.eop.data.model.TransferOrder">
+        update `transferorder`
+        <set>
+            <if test="orderCode != null">
+                `orderCode`=#{orderCode},
+            </if>
+            <if test="orderStatus != null">
+                `orderStatus`=#{orderStatus},
+            </if>
+            <if test="fromStoreCode != null">
+                `fromStoreCode`=#{fromStoreCode},
+            </if>
+            <if test="toStoreCode != null">
+                `toStoreCode`=#{toStoreCode},
+            </if>
+            <if test="transferOutOrderCode != null">
+                `transferOutOrderCode`=#{transferOutOrderCode},
+            </if>
+            <if test="transferInOrderCode != null">
+                `transferInOrderCode`=#{transferInOrderCode},
+            </if>
+            <if test="createTime != null">
+                `createTime`=#{createTime},
+            </if>
+            <if test="confirmOutTime != null">
+                `confirmOutTime`=#{confirmOutTime},
+            </if>
+            <if test="confirmInTime != null">
+                `confirmInTime`=#{confirmInTime},
+            </if>
+            <if test="ownerCode != null">
+                `ownerCode`=#{ownerCode},
+            </if>
+            <if test="inventoryType != null">
+                `inventoryType`=#{inventoryType},
+            </if>
+            <if test="count != null">
+                `count`=#{count},
+            </if>
+            <if test="outCount != null">
+                `outCount`=#{outCount},
+            </if>
+            <if test="inCount != null">
+                `inCount`=#{inCount},
+            </if>
+            <if test="remnantNum != null">
+                `remnantNum`=#{remnantNum},
+            </if>
+            <if test="errorMessage != null">
+                `errorMessage`=#{errorMessage},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+    <select id="getManualOrderCount" resultType="java.lang.Integer">
+        select count(id) from transferorder where `orderStatus` = 110 and inventoryType = 1;
+    </select>
+
+    <select id="getManualOrderCodes" resultType="java.lang.String">
+        select transferOrderCode
+        from `transferorder`
+        where `orderStatus` = 110 and inventoryType = 1
+        order by `id` Asc
+        limit ${pageSize*pageNo}, ${pageSize};
+    </select>
+
+    <select id="getExportTransferOrderOutList" parameterType="Map" resultType="Map">
+        SELECT
+        fromStoreCode,
+        toStoreCode,
+        scItemCode,
+        transferOrderCode,
+        orderStatus,
+        outCount,
+        inCount,
+        orderCode,
+        creater,
+        createTime,
+        remnantNum,
+        transferOutOrderCode,
+        transferInOrderCode,
+        confirmOutTime,
+        confirmInTime,
+        sapErrorMessage
+        FROM transferorder
+        WHERE 1=1
+        <include refid="displayQueryCondition"/>
+        ORDER BY createTime desc
+        <if test="m!=null and n!=null">
+            Limit ${m},${n}
+        </if>
+    </select>
+
+    <select id="getExistTransferOrderCodes" parameterType="java.util.Map" resultType="java.lang.String">
+        select transferOrderCode from transferorder
+        where
+        transferOrderCode in
+        <foreach collection="orderCodes" index="index" item="cos" open="(" separator="," close=")">
+            #{cos}
+        </foreach>
+    </select>
+
+    <insert id="createTransferOrders" parameterType="java.util.List">
+        INSERT INTO `transferorder`(`messageIdStr`,`fromStoreCode`,`toStoreCode`,`expectStartTime`,`attributes`,
+        `scItemCode`,`inventoryType`,`count`,`transferOrderCode`,`expectOutStoreTime`,`expectInStoreTime`
+        ,`orderStatus`,`outCount`,`inCount`,`orderCode`,`productCate`
+        ,`creater`,`createTime`,`remnantNum`,`machinelossNum`,`boxlossNum`,`freeze`,`pullon`,`errorMessage`,
+        `transferOutOrderCode`,`transferInOrderCode`,`confirmOutTime`,`confirmInTime`,`ownerCode`,`itemNum`,`insertTime`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.messageIdStr},#{item.fromStoreCode},#{item.toStoreCode},#{item.expectStartTime},#{item.attributes},
+            #{item.scItemCode},#{item.inventoryType},#{item.count},#{item.transferOrderCode},#{item.expectOutStoreTime}
+            ,#{item.expectInStoreTime},#{item.orderStatus},#{item.outCount},#{item.inCount},#{item.orderCode},#{item.productCate}
+            ,#{item.creater},#{item.createTime},#{item.remnantNum},#{item.machinelossNum},#{item.boxlossNum},#{item.freeze}
+            ,#{item.pullon},#{item.errorMessage},#{item.transferOutOrderCode},#{item.transferInOrderCode}
+            ,#{item.confirmOutTime},#{item.confirmInTime},#{item.ownerCode},#{item.itemNum},now())
+        </foreach>
+    </insert>
+</mapper>

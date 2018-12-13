@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.TianMaoDataStatisticsReadDao">
+<resultMap id="TianMaoDataStatistics"
+		   type="com.haier.shop.model.TianMaoDataStatisticsVo">
+	<result column="typeName" property="typeName" />
+	<result column="money" property="money"/>
+	<result column="countNumber" property="countNumber"/>
+</resultMap>
+	<select id="getTianMaoDataStatistics" parameterType="map" resultMap="TianMaoDataStatistics">
+		SELECT  '销售额' as typeName, SUM( op.productAmount) as money , SUM( op.number ) as countNumber
+		FROM  `orderproducts` op
+		INNER JOIN externalorders e ON op.orderId = e.orderId
+		WHERE 1=1
+		<if test="addTimeMin != null and addTimeMin != ''">
+			and e.`addTime` >  STR_TO_DATE(#{addTimeMin,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%S")
+		</if>
+		<if test="addTimeMax != null and addTimeMax != ''">
+			and e.`addTime`  <![CDATA[  < ]]>  STR_TO_DATE(#{addTimeMax,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%S")
+		</if>
+		AND e.orderId >0
+		<if test="producttypesIds != null and producttypesIds.size() &gt; 0">
+			and op.productType  in
+			<foreach collection="producttypesIds" index="index" item="producttypesId" open="(" separator="," close=")">
+				#{producttypesId}
+			</foreach>
+		</if>
+		AND op.status !=110
+		union all
+		SELECT '出库额' as typeName, SUM( op.productAmount) as money , SUM( op.number ) as countNumber
+		FROM  `orderproducts` op
+		INNER JOIN externalorders e ON op.orderId = e.orderId
+		WHERE e.orderId >0
+		AND op.status !=110
+		AND op.status >8
+		<if test="producttypesIds != null and producttypesIds.size() &gt; 0">
+			and op.productType  in
+			<foreach collection="producttypesIds" index="index" item="producttypesId" open="(" separator="," close=")">
+				#{producttypesId}
+			</foreach>
+		</if>
+		<if test="addTimeMin != null and addTimeMin != ''">
+			AND op.lessShipTime > UNIX_TIMESTAMP(#{addTimeMin})
+		</if>
+		<if test="addTimeMax != null and addTimeMax != ''">
+			AND op.lessShipTime  <![CDATA[  < ]]>   UNIX_TIMESTAMP(#{addTimeMax})
+		</if>
+		union all
+		SELECT  '开票额' as typeName ,  SUM( op.productAmount ) as money , SUM( op.number ) as countNumber
+		FROM  `orderproducts` op
+		INNER JOIN invoices i ON op.id = i.orderProductId
+		INNER JOIN externalorders e ON e.orderId = op.orderId
+		WHERE e.orderId >0
+		<if test="producttypesIds != null and producttypesIds.size() &gt; 0">
+			and op.productType  in
+			<foreach collection="producttypesIds" index="index" item="producttypesId" open="(" separator="," close=")">
+				#{producttypesId}
+			</foreach>
+		</if>
+		<if test="addTimeMin != null and addTimeMin != ''">
+			AND i.billingTime > UNIX_TIMESTAMP(#{addTimeMin})
+		</if>
+		<if test="addTimeMax != null and addTimeMax != ''">
+			AND i.billingTime  <![CDATA[  < ]]>   UNIX_TIMESTAMP(#{addTimeMax})
+		</if>
+		AND i.success =1
+		AND i.statusType =1
+		union  all
+		select '推送sap' as typeName ,sum(op.productAmount) as money , count(1) as countNumber
+		from orderproducts op  INNER JOIN invoicesaplogs isap ON isap.orderProductId=op.id
+		INNER JOIN externalorders e ON e.orderId=op.orderId
+		where
+		op.isMakeReceipt=2
+		and e.orderId >0
+		and isap.pushType = 1
+		and isap.success = 1
+		<if test="addTimeMin != null and addTimeMin != ''">
+			AND isap.lastTime > UNIX_TIMESTAMP(#{addTimeMin})
+		</if>
+		<if test="addTimeMax != null and addTimeMax != ''">
+			AND isap.lastTime  <![CDATA[  < ]]>   UNIX_TIMESTAMP(#{addTimeMax})
+		</if>
+		<if test="producttypesIds != null and producttypesIds.size() &gt; 0">
+			and op.productType  in
+			<foreach collection="producttypesIds" index="index" item="producttypesId" open="(" separator="," close=")">
+				#{producttypesId}
+			</foreach>
+		</if>
+		union all
+		SELECT  '全渠道' as typeName, SUM( op.productAmount ) as money, SUM( op.number ) as countNumber
+		FROM  `orderproducts` op
+		INNER JOIN externalorders e ON op.orderId = e.orderId
+
+		<if test="addTimeMin != null and addTimeMin != ''">
+			and e.`addTime` >  STR_TO_DATE(#{addTimeMin,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%S")
+		</if>
+		<if test="addTimeMax != null and addTimeMax != ''">
+			and e.`addTime`  <![CDATA[  < ]]>  STR_TO_DATE(#{addTimeMax,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%S")
+		</if>
+		AND e.orderId >0
+		AND op.status !=110
+		AND op.sku
+		IN (
+		'AA8MV1000','AA9AK0000','AA98SB000','AA30SV000','AA30ST000','AA30SU000','AA30SQ000','AA30SW000','AA30SR000','AA30SP000','AA30SX001','AA30SX000','AA30SN000','AA30SS000','AA9K94000','AA9JT3000','AA9KK7004','AA9KKD000','AA24B0000','AA8VE9000','AA8LCJ000','GA0R10005',  'GA0R11005',  'GA0SR1000',  'GA0SR3000',  'GA0R9601C',  'GD0QR6003',  'GD0QR5003',  'GD0QR7001',  'GD0QP1003',  'GD0RA100W',  'GA0RC4006', 'GA0RC5006',  'GA0RD3006',  'GA0SM301B',  'GA0R7401B',  'GA0SRL007',  'GA0SRH007',  'GA0R9A007',  'GA0R99007',  'GE0Q6700W',  'GE0Q6900W',  'GE0Q6B00W', 'GE0Q6400W',  'GD0QZR00W',  'GD0QZQ00W',  'GD0QRE00V',  'GD0QRC00V',  'GD0RA300V',  'GD0RB800W',  'GD0RBF00W',  'GD0RB900W',  'FC5115M0U',  'FB28S8M2B', 'FB28BKM13',  'FC514000U'
+		)
+	</select>
+
+</mapper>

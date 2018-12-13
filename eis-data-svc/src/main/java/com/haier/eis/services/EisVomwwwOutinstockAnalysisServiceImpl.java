@@ -37,4 +37,16 @@ public class EisVomwwwOutinstockAnalysisServiceImpl implements EisVomwwwOutinsto
 		return vomwwwOutinstockAnalysisDao.quereyVOMthNO(tbNo);
 	}
 
+	@Override
+	public VomwwwOutinstockAnalysis quereyBackNo(String backNo) {
+		// TODO Auto-generated method stub
+		return vomwwwOutinstockAnalysisDao.quereyBackNo(backNo);
+	}
+
+	@Override
+	public List<VomwwwOutinstockAnalysis> outStockSap(String tbNo) {
+		// TODO Auto-generated method stub
+		return vomwwwOutinstockAnalysisDao.outStockSap(tbNo);
+	}
+
 }

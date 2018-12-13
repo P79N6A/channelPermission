@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.haier.distribute.data.dao.distribute.ProductTypesDao;
+import com.haier.distribute.data.dao.shop.ProductsShopDao;
 import com.haier.distribute.data.model.ProductTypesNew;
 import com.haier.distribute.data.model.Producttypes;
 import com.haier.distribute.data.service.ProductTypesService;
@@ -16,6 +17,9 @@ public class ProductTypesServiceImpl implements ProductTypesService {
 
 	@Autowired
 	ProductTypesDao productTypesDao;
+	
+	@Autowired
+	ProductsShopDao productsShopDao;
 
 	@Override
 	public List<Producttypes> selectByProducttypesSku(int id) {
@@ -40,5 +44,11 @@ public class ProductTypesServiceImpl implements ProductTypesService {
 	@Override
 	public Producttypes getOneById(long l) {
 		return productTypesDao.getOneById(l);
+	}
+
+	@Override
+	public Producttypes getProductsTypeBySKU(String sku) {
+		int id=productsShopDao.getProductTypesIdBySKU(sku);
+		return productsShopDao.getProducttypesById(id);
 	}
 }

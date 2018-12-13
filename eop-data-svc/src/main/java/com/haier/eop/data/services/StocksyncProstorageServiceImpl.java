@@ -20,6 +20,11 @@ StocksyncProstorageDao stocksyncProstorageDao;
 	}
 
 	@Override
+	public int deleteBySourceAndSku(String source, String sku) {
+		return stocksyncProstorageDao.deleteBySourceAndSku(source,sku);
+	}
+
+	@Override
 	public int insert(StocksyncProstorage record) {
 		// TODO Auto-generated method stub
 		return stocksyncProstorageDao.insert(record);

@@ -39,13 +39,14 @@
 		p.remark,
 		s.cOrderSn
 	FROM
-		OrderRepairLogs p,
-		OrderRepairs a,
-		OrderProducts s
+        orderrepairlogs p,
+        orderrepairs a,
+        orderproducts s
 	where 
 		p.orderRepairId = a.id
 	and a.orderProductId = s.id
 	AND a.repairSn =#{id}
+	ORDER BY p.id desc
     </select>
 
 </mapper>

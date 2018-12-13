@@ -1,423 +1,959 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>用户管理</title>
-	<link rel="stylesheet" href="../../static/css/jqueryui/base/jquery.ui.all.css"/>
-    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css"></link>
-    <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css"></link>
-    <link rel="stylesheet" href="../../static/css/msg.css"></link>
-    <link rel="stylesheet" type="text/css" href="../../static/third/easyui/themes/gray/easyui.css"/>
-    <link rel="stylesheet" href="../../static/css/reset.css"></link>
-	<script src="../../static/third/jquery-1.8.3.min.js"></script>
-    <script src="../../static/third/easyui/jquery.easyui.min.js"></script>
-    <script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../../static/third/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../static/third/adminlte/css/AdminLTE.min.css">
+        <link rel="stylesheet" href="../../static/third/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui_animation.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/easyui_plus.css">
+        <link rel="stylesheet" href="../../static/third/easyui/themes/insdep/icon.css">
+        <link rel="stylesheet" href="../../static/css/common.css">
+        <title>用户管理</title>
 
-    <style type="text/css">
-        .centent
-        {
-            width: 260px;
-        }
-        .cententl
-        {
-            float: left;
-        }
-        
-        .btnAdd
-        {
-            float: left;
-            padding:30px 5px;
-        }
-    </style>
-</head>
+        <style type="text/css">
+            .dlg {
+                width: 400px;
+                height: 100px;
+                padding: 10px;
+                margin-top: 20px;
+            }
 
-<body>
-<div id="panel" class="easyui-layout" data-options="fit : true,border : false">
-	<div data-options="region:'north',title:'查询条件',border:false" style="display:none;height: 120px;overflow: auto;" align="left" class="new-form-box">
-		<form id="filterForm" action="#">
-	    	<table>
-	    		<tr>
-	    			<td>登录账号</td>
-	    			<td><input id="loginId"  name="loginId" class="easyui-textbox" style="width:173px"/></td>
-	    			<td>用户姓名</td>
-	    			<td><input id="userName"  name="userName" class="easyui-textbox" style="width:173px"/></td>
-	    			<td>状态</td>
-	    			<td>
-	    			<input id="status" name="status" class="easyui-combobox" style="width:173px"></input>
-	    		</tr>
-	    		<tr>
-	    			<td colspan="10">
-		    			<a id='search' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-search">查询</a>
-		    			<a id='import' href="#" class="easyui-linkbutton new-l-btn" iconCls="icon-edit">保存</a>
-	    			</td>
-	    		</tr>
-	    	</table>
-	    </form>
-    </div>
-    <div data-options="region:'center',title:'用户查询结果',border:false">
-		    <table id="dataGrid"></table>
-		    <div id="msgMask"></div>
-			<div id="msg">正在处理，请稍待。。。</div>
-	</div>
-</div>
+            .easyui-panel {
+                overflow-x: show;
+            }
+            .cententLeft{
+                float:left;
+                width:175px;
+                height: 240px;
+                margin:8px 3px;
+                padding:0;
+                border:0;
+            }
+            .btnAdd{
+                float:left;
+                width:30px;
+                height:240px;
+                margin:0;
+                padding:0;
+                border:0;
+                text-align:center;
+            }
+            .cententRight{
+                float:right;
+                width:175px;
+                height: 240px;
+                margin:8px 3px;
+                padding:0;
+                border:0;
+            }
+        </style>
 
-<div id="role" class="centent easyui-dialog" title="分配用户角色" style="display:none;width: 260px; height: 200px;" modal="true">
-	<div style="display: none"><input id="id"></input></div>
-	<div style="display: none"><input id="roleList"></input></div>
-    <div class="cententl">
-        <select multiple="multiple" id="select1" style="width: 100px; height: 160px;">
-        </select>
-    </div>
-    <div class="btnAdd">
-        <input type="button" id="btnAdd" value=" < " /><br />
-        <input type="button" id="btnDel" value=" > " /><br />
-    </div>
-    <div>
-        <select multiple="multiple" id="select2" style="width: 100px; height: 160px;">
-        </select>
-    </div>
-</div>
+    </head>
+    <body class="iframe-body">
+        <div
+            id="searchPanel"
+            class="easyui-panel"
+            style="width:100%;height:100%;"
+            data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,collapsible:false">
+            <table id="dataGrid"></table>
+            ## <div id="msgMask"></div>
+            ## <div id="msg">正在处理，请稍待。。。</div>
+        </div>
 
-<script type="application/javascript">
+        <div id="datagridToolbar">
+            <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_circle fa fa-map-marker"></div>
 
-var dataList;
-jQuery.getJSON("/sys/user/getStatus",function(result){
-    dataList = result.data;
-});
+            </div>
+            <form id="filterForm" class="param-form">
+                <div class="search-panel" style="font-size: 12px;">
+                    <div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">登录账号</span>
+                        <input id="loginId" name="loginId" class="easyui-textbox" data-options="prompt:''">
+                    </div>
+                    <div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">用户姓名</span>
+                        <input id="userName" name="userName" class="easyui-textbox" data-options="prompt:''">
+                    </div>
+                    <div class="search-row_nowidth mar_r6px">
+                        <span class="search-row-label_80">状态</span>
+                        <select name="status" id="status" class="easyui-combobox" panelheight="auto" style="width: 141px;"></select>
+                    </div>
+                </div>
 
-//点击查询
-$('#search').click(function () {
+                <a href="#" class="easyui-linkbutton" id="search" data-options="iconCls:'icon-search',plain:true">查询</a>
+                <a
+                    href="javascript:void(0);"
+                    class="easyui-linkbutton"
+                    id="add"
+                    data-options="iconCls:'icon-add',plain:true">创建用户</a>
+                <a
+                    href="javascript:void(0);"
+                    class="easyui-linkbutton"
+                    id="import"
+                    data-options="iconCls:'icon-save',plain:true">保存</a>
 
-//alert($("#userName").val());
-	var status;
-	if($("#status").val()=="ALL"){
-		status = "";
-	}else{
-		status = $("#status").val();
-	}
-	//检索列表构筑
-	if(datagrid){
-		//grid刷新
-	    $('#dataGrid').datagrid('load',
-	    		{
-		    	 loginId:$("#loginId").val(),
-	    	     userName:$("#userName").val(),
-	    	     status:status
-	   	 });
-	}else{
-		//生成grid
-	    datagrid = $('#dataGrid').datagrid({
-	       url: "/sys/user/find",
-	        fit: true,
-	        pagination: true,
-	        singleSelect: true,
-	        checkOnSelect:true,
-	        onDblClickCell:onDblClickCell,
-	        pageSize: 100,
-	        pageList: [1,2,100,200,300],
-	        nowrap: false,
-	        rownumbers: true,
-	        queryParams: {
-	        	 loginId:$("#loginId").val(),
-	    	     userName:$("#userName").val(),
-	    	     status:status
-	        },
-	        columns: [
-	            [
-	    	        {
-	    	        	field:'operation', 
-	    	        	title:'操作', 
-	    	        	width:'100', 
-	    	        	align:'center',
-	                    formatter : function(value,row, index) {
-	                    	return "<a id='oper' href='#' onclick='operation("+row.userId+")'>操作</a>";
-	                    }
-	    	        },
-        	        {
-        	        	field:'userId', 
-        	        	title:'用户ID', 
-        	        	width:'10', 
-        	        	align:'center',
-        	        	hidden:true
-        	        },
-			        {
-			        	field:'userName', 
-			        	title:'用户姓名', 
-			        	width:'100', 
-			        	align:'center',
-			        	editor:'text'
-			        },
-			        {
-			        	field:'status', 
-			        	title:'状态', 
-			        	width:'60', 
-			        	align:'center',
-			        	editor:{type:'combobox',
-			        		options:{
-			        		valueField:'value',
-			        		textField:'value_meaning',
-			        		data:dataList,
-			        		required:true
-			        		}
-			        	},
-	                    formatter : function(value) {
-	                    	if(value == 1){
-	                    		return "有效";
-	                    	}
-	                    	if(value == 0){
-	                    		return "禁用";
-	                    	}
-	                    	if(value == -1){
-	                    		return "删除";
-	                    	}
-	                    }
-			        },
-			        {
-			        	field:'loginId', 
-			        	title:'登录账号',
-			        	width:'100', 
-			        	align:'center'
-//			        	editor:'text'
-			        },
-			        {field:'email', title:'邮箱', width:'120', align:'center',editor:'text'},
-			        {field:'phone', title:'电话', width:'60', align:'center',editor:'text'},
-			        {field:'mobile', title:'手机', width:'60', align:'center',editor:'text'},
-			        {field:'updateUser', title:'最后更新人', width:'80'},
-			        {field:'updateTime', title:'最后更新时间', width:'180',
-	                    formatter : function(value) {
-	                        var date = new Date(value);
-	                        var year = date.getFullYear().toString();
-	                        var month = (date.getMonth() + 1);
-	                        var day = date.getDate().toString();
-	                        var hour = date.getHours().toString();
-	                        var minutes = date.getMinutes().toString();
-	                        var seconds = date.getSeconds().toString();
-	                        if (month < 10) {
-	                            month = "0" + month;
-	                        }
-	                        if (day < 10) {
-	                            day = "0" + day;
-	                        }
-	                        if (hour < 10) {
-	                            hour = "0" + hour;
-	                        }
-	                        if (minutes < 10) {
-	                            minutes = "0" + minutes;
-	                        }
-	                        if (seconds < 10) {
-	                            seconds = "0" + seconds;
-	                        }
-	                        return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
-	                    }
-			        },
-			        {field:'createUser', title:'创建人', width:'80', align:'center'},
-			        {field:'createTime', title:'创建时间', width:'180', align:'center',
-	                    formatter : function(value) {
-	                        var date = new Date(value);
-	                        var year = date.getFullYear().toString();
-	                        var month = (date.getMonth() + 1);
-	                        var day = date.getDate().toString();
-	                        var hour = date.getHours().toString();
-	                        var minutes = date.getMinutes().toString();
-	                        var seconds = date.getSeconds().toString();
-	                        if (month < 10) {
-	                            month = "0" + month;
-	                        }
-	                        if (day < 10) {
-	                            day = "0" + day;
-	                        }
-	                        if (hour < 10) {
-	                            hour = "0" + hour;
-	                        }
-	                        if (minutes < 10) {
-	                            minutes = "0" + minutes;
-	                        }
-	                        if (seconds < 10) {
-	                            seconds = "0" + seconds;
-	                        }
-	                        return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
-	                    }
-			        }
-	            ]
-	        ]
-	    });
-	}
-    $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
-});
+            </form>
+        </div>
 
-var editIndex = undefined;
-function onDblClickCell(index,field,value){
-	//启用单元格编辑
-	//$("#dataGrid").datagrid('beginEdit', index);
-	//var ed = $("#dataGrid").datagrid('getEditor', {index:index,field:field});
-	
-    if(endEdit()){
-    	//给editIndex对象赋值，index为当前行的索引
-        editIndex = index;  
-        var selectRow = $('#dataGrid').datagrid('selectRow', editIndex);
-        //启用单元格编辑  
-        selectRow.datagrid('beginEdit', editIndex);  
-    }
-}
+        <div  id="role"  class="centent easyui-dialog" title="分配用户角色"  style="display:none;width: 400px; height: 300px;" modal="true">
+            <div style="display: none">
+                <input id="id" />
+            </div>
+            <div style="display: none">
+                <input id="roleList" />
+            </div>
+            <div class="cententLeft">
+                <select multiple="multiple" id="select1" style="width: 100%; height: 100%;border:0;outline:none;"></select>
+            </div>
+            <div class="btnAdd">
+                <input type="button" id="btnAdd" style="width:30px;margin-top:108px;border:0;" value="<" /><br />
+                <input type="button" id="btnDel" style="width:30px;border:0;margin-top:4px;" value=">" /><br/>
+            </div>
+            <div class="cententRight">
+                <select multiple="multiple" id="select2" style="width: 100%; height: 100%;border:0;outline:none;"></select>
+            </div>
+        </div>
 
-function endEdit() {
-	//对editIndex进行判断单元格是否可以编辑
-    if(editIndex == undefined) {
-    	return true;
-    }
-      
-    if($('#dataGrid').datagrid('validateRow',editIndex)) {
-    	//结束当前行编辑
-        $('#dataGrid').datagrid('endEdit',editIndex);
-        editIndex = undefined;   
-        return true;//重置编辑行索引对象，返回true，允许编辑  
-     }  
-    else {  
-        return false;  
-    }
-}
+        <div  id="add_User"  class="easyui-dialog" style="display:none;width:550px;height:220px;"  title="创建用户" modal="true">
+            <div class="search-panel" style="font-size: 12px;margin:8px;">
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">用户姓名</span>
+                    <input id="user_Name" name="user_Name" class="easyui-textbox" required="true" data-options="prompt:''">
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">状态</span>
+                    <select name="user_Status" id="user_Status" class="easyui-combobox" panelheight="auto">
+                        <option value="ALL">全部</option>
+                        <option value="1">有效</option>
+                        <option value="0">禁用</option>
+                        <option value="-1">删除</option>
+                    </select>
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">登录账户</span>
+                    <input id="user_Login" name="user_Login" class="easyui-textbox" required="true" data-options="prompt:''">
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">邮箱</span>
+                    <input id="user_Email" name="user_Email" class="easyui-textbox" data-options="prompt:''">
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">电话</span>
+                    <input id="user_Phone" name="user_Phone" class="easyui-textbox" data-options="prompt:''">
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">手机</span>
+                    <input id="user_Mobile" name="user_Mobile" class="easyui-textbox" data-options="prompt:''">
+                </div>       
+            </div>
+            <div style="width:100%;margin-top:10px;text-align:center;">
+                <button id="user_Pre" class="easyui-linkbutton">保存</button>
+                <button id="user_Close" class="easyui-linkbutton">关闭</button>
+            </div>
+           
 
-$("#panel").click(function () {
-    $('#dataGrid').datagrid('endEdit',editIndex);
-    editIndex = undefined;   
-    return true;//重置编辑行索引对象，返回true，允许编辑 
-});
+            ## <table>
+            ##     <tr>
+            ##         <td>用户姓名:</td>
+            ##         <td>
+            ##             <input id="user_Name" class="easyui-textbox" style="width:160px" required="true"></input>
+            ##         </td>
+            ##         <td>状态:</td>
+            ##         <td>
+            ##             <select id="user_Status" class="easyui-combobox" style="width:160px">
+            ##                 <option value="ALL">全部</option>
+            ##                 <option value="1">有效</option>
+            ##                 <option value="0">禁用</option>
+            ##                 <option value="-1">删除</option>
+            ##             </select>
+            ##         </td>
+            ##     </tr>
+            ##     <tr>
+            ##         <td>登录账户:</td>
+            ##         <td>
+            ##             <input id="user_Login" class="easyui-textbox" style="width:160px" required="true"></input>
+            ##         </td>
+            ##         <td>邮箱:</td>
+            ##         <td>
+            ##             <input id="user_Email" class="easyui-textbox" style="width:160px"></input>
+            ##         </td>
+            ##     </tr>
+            ##     <tr>
+            ##         <td>电话:</td>
+            ##         <td>
+            ##             <input id="user_Phone" class="easyui-textbox" style="width:160px"></input>
+            ##         </td>
+            ##         <td>手机:</td>
+            ##         <td>
+            ##             <input id="user_Mobile" class="easyui-textbox" style="width:160px"></input>
+            ##         </td>
+            ##     </tr>
+            ##     <tr>
+            ##         <td>
+            ##             <button id="user_Pre" class="easyui-linkbutton">保存</button>
+            ##         </td>
+            ##         <td>
+            ##             <button id="user_Close" class="easyui-linkbutton">关闭</button>
+            ##         </td>
+            ##     </tr>
+            ## </table>
+        </div>
 
-$("#import").click(function(){
-	var row = $('#dataGrid').datagrid('getSelected');
-	
-	jQuery.ajax({
-	    url: "/sys/user/update",
-	    type: "POST",
-	    data: {
-	    		"userId": row.userId,
-	    		"userName": row.userName,
-	    		"userStatus": row.status,
-	    		"loginId": row.loginId,
-	    		"userEmail": row.email,
-	    		"userPhone": row.phone,
-	    		"userMobile": row.mobile
-	    	},
-		    success: function (data) {
-		    	$('#add_Role').dialog('close');
-		        $.messager.alert('提示', '用户修改成功', 'info');
-			    $('#dataGrid').datagrid('load',{
-		        	 loginId:$("#loginId").val(),
-		    	     userName:$("#userName").val(),
-		    	     status:status
-			   	});
-		    },
-		    error: function (data) {
-		    	$('#add_Role').dialog('close');
-		    	$.messager.alert('提示', '用户修改失败', 'err');
-		    }
-	});
-});
+        ## <div id="addDlg" data-options="title:'增加',resizable:true,modal:true" class="easyui-dialog add-dlg"
+        ##      style="width:562px;height:363px;"
+        ##      closed="true" buttons="#dlgBtn">
+        ##     <form id="addForm_invSection" method="post">
+        ##         <div class="search-panel" style="font-size: 12px;">
+        ##             <input id="id" name="id" type="text" style="display:none;" />
+        ##             <input __actType type="hidden" />
+        ##             <div class="search-row_nowidth mar_r6px">
+        ##                 <span class="search-row-label_80">库位编码</span>
+        ##                 <input id="secCode" name="secCode" class="easyui-textbox" data-options="required:true" />
+        ##             </div>
+        ##             <div class="search-row_nowidth mar_r6px">
+        ##                 <span class="search-row-label_80">库位编码</span>
+        ##                 <input id="secCode" name="secCode" class="easyui-textbox" data-options="required:true" />
+        ##             </div>
+        ##             <div class="search-row_nowidth mar_r6px">
+        ##                 <span class="search-row-label_80">库位编码</span>
+        ##                 <input id="secCode" name="secCode" class="easyui-textbox" data-options="required:false" />
+        ##             </div>
+        ##             <div class="search-row_nowidth mar_r6px">
+        ##                 <span class="search-row-label_80">库位编码</span>
+        ##                 <input id="secCode" name="secCode" class="easyui-textbox" data-options="required:false" />
+        ##             </div>
+        ##             <div class="search-row_nowidth mar_r6px">
+        ##                 <span class="search-row-label_80">库位编码</span>
+        ##                 <input id="secCode" name="secCode" class="easyui-textbox" data-options="required:true" />
+        ##             </div>
+        ##             <div class="search-row_nowidth mar_r6px">
+        ##                 <span class="search-row-label_80">状态</span>
+        ##                 <select id="status" name="status" class="easyui-combobox" panelHeight="auto">
+        ##                     <option value="0">未启用</option>
+        ##                     <option value="1">已启用</option>
+        ##                 </select>
+        ##             </div>
+        ##         </div>
+        ##     </form>
+        ##     <div id="dlgBtn">
+        ##         <a href="javascript:void(0);" class="easyui-linkbutton" id="addDlgSaveBtn" data-options="iconCls:'icon-ok',plain:true">保存</a>
+        ##         <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true"
+        ##            onclick="javascript:$('#addDlg').dialog('close')">取消</a>
+        ##     </div>
+        ## </div>
+        ## <div id="export">
+        ##     <form id="exportForm" action="#">
+        ##         <input id="e_sec_code" name="e_sec_code" type="text">
+        ##         <input id="e_les_sec_code" name="e_les_sec_code" type="hidden">
+        ##         <input id="e_sec_name" name="e_sec_name" type="hidden">
+        ##         <input id="code" name="code" type="hidden">
+        ##     </form>
+        ## </div>
 
-var datagrid;
-$(function () {
-	//取得状态
-	jQuery.getJSON("/sys/user/getStatus", function(result){
-		var count = result.totalCount;
-		var dataList = result.data;
-		//添加全部
-		dataList.unshift( {value:'ALL',value_meaning:'全部'});
-		$("#status").combobox({
-			 data:dataList,
-		     valueField:'value',
-			 textField:'value_meaning',
-			 panelHeight:'auto',
-			 editable:false,
-			 value:'ALL'
-		});
-	});
-});
-var roleId = Array();
-function operation(index){
-//	var row = $('#dataGrid').datagrid('getSelected');
-	$("#id").val(index);
+        <!-- 需引入的js -->
+        <script src="../../static/third/jquery.js"></script>
+        <script src="../../static/third/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../../static/third/easyui/jquery.easyui.min.js"></script>
+        <script src="../../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+        <script src="../../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+        <script src="../../static/js/utils.js"></script>
+        <script src="../../static/js/easyui-extention_ws.js"></script>
+        <script src="../../static/js/customConfig.js"></script>
+        <!-- 自写的js -->
 
-	jQuery.getJSON("/sys/role/user/unassigned",{userId:index},function(result){
-		$("#select2").html("");
-		$.each(result.rows,function(i,item){
-			$("#select2").append("<option value="+item.roleId+">"+item.roleName+"</option>");
-		});
-	});
-	
-	jQuery.getJSON("/sys/role/user/assigned",{userId:index},function(result){
-		$("#select1").html("");
-		$.each(result.rows,function(i,item){
-			$("#select1").append("<option value="+item.roleId+">"+item.roleName+"</option>");
-		});
-		$('#role').dialog('open');
-	});
-}
-$(function () {
-	$('#role').dialog('close');
+        <script type="text/javascript">
+            function slideUpSlideClk(t) {
+                var $this = $(t);
+                if ($this.hasClass('open')) {
+                    $this.removeClass('open');
+                    setTimeout(function () {
+                        $this.addClass('close');
+                    }, 0);
+                    $(".search-panel").slideUp();
+                } else {
+                    $this.removeClass('close');
+                    setTimeout(function () {
+                        $this.addClass('open');
+                    }, 0);
+                    $(".search-panel").slideDown();
+                }
+                setTimeout(function () {
+                    $('#dataGrid').datagrid('resize');
+                }, 500);
+            }
 
-    //删除角色
-    $("#btnDel").click(function () {
-    	btnDel();
-        //获取选中的选项，删除自己并追加给对方
-        $("#select1 option:selected").appendTo("#select2");
-    });
-    //添加角色
-    $('#btnAdd').click(function () {
-    	btnAdd();
-        //获取选中的选项，删除自己并追加给对方
-        $('#select2 option:selected').appendTo('#select1');
-    });
-    //双击选项
-    //$('#select1').dblclick(function () { 
-        //获取双击的选项,删除自己并追加给对方
-        //$("option:selected", this).appendTo('#select2'); 
-    //});
-    //双击选项
-    //$('#select2').dblclick(function () {
-        //获取双击的选项,删除自己并追加给对方
-        //$("option:selected", this).appendTo('#select1');
-    //});
-});
+            /*
+            ## $(document).ready(function () {
 
-function btnDel(){
-	$.ajax({
-	    url: "/sys/role/user/unassign",
-	    type: "POST",
-	    data: {
-	    		"userId": $("#id").val(),
-	    		"roleIds": ""+$("#select1").val()+""
-	    	},
-		    success: function (data) {
-		        $.messager.alert('提示', '删除用户角色成功', 'info');
+
+            ##});
+*/
+            var dataList;
+            jQuery.getJSON("/sys/user/getStatus", function (result) {
+                dataList = result.data;
+            });
+
+            var datagrid;
+            $(function () {
+                //取得状态
+                jQuery.getJSON("/sys/user/getStatus", function (result) {
+                    var count = result.totalCount;
+                    var dataList = result.data;
+                    //添加全部
+                    dataList.unshift({value: 'ALL', value_meaning: '全部'});
+                    $("#status").combobox({
+                        data: dataList,
+                        valueField: 'value',
+                        textField: 'value_meaning',
+                        panelHeight: 'auto',
+                        editable: false,
+                        value: 'ALL'
+                    });
+                });
+
+                $(".textbox-text").keyup(function () {
+                    this.value = this
+                        .value
+                        .replace(/\s+/g, '');
+                });
+
+                datagrid = $('#dataGrid').datagrid({
+                    fit: true,
+                    pagination: true,
+                    singleSelect: true,
+                    checkOnSelect: true,
+                    onDblClickCell: onDblClickCell,
+                    pageSize: 100,
+                    pageList: [
+                        100, 200, 300
+                    ],
+                    nowrap: false,
+                    rownumbers: true,
+                    queryParams: {
+                        loginId: $("#loginId").val(),
+                        userName: $("#userName").val(),
+                        status: status
+                    },
+                    toolbar: '#datagridToolbar',
+                    columns: [
+                        [
+                            {
+                                field: 'operation',
+                                title: '操作',
+                                width: '100',
+                                align: 'center',
+                                formatter: function (value, row, index) {
+                                    return "<a id='oper' href='#' onclick='operation(" + row.userId + ")'>操作</a>";
+                                }
+                            }, {
+                                field: 'userId',
+                                title: '用户ID',
+                                width: '10',
+                                align: 'center',
+                                hidden: true
+                            }, {
+                                field: 'userName',
+                                title: '用户姓名',
+                                width: '100',
+                                align: 'center',
+                                editor: 'text'
+                            }, {
+                                field: 'status',
+                                title: '状态',
+                                width: '90',
+                                align: 'center',
+                                editor: {
+                                    type: 'combobox',
+                                    options: {
+                                        valueField: 'value',
+                                        textField: 'value_meaning',
+                                        data: dataList,
+                                        required: true
+                                    }
+                                },
+                                formatter: function (value) {
+                                    if (value == 1) {
+                                        return "有效";
+                                    }
+                                    if (value == 0) {
+                                        return "禁用";
+                                    }
+                                    if (value == -1) {
+                                        return "删除";
+                                    }
+                                }
+                            }, {
+                                field: 'loginId',
+                                title: '登录账号',
+                                width: '100',
+                                align: 'center'
+                                //			        	editor:'text'
+                            }, {
+                                field: 'email',
+                                title: '邮箱',
+                                width: '120',
+                                align: 'center',
+                                editor: 'text'
+                            }, {
+                                field: 'phone',
+                                title: '电话',
+                                width: '125',
+                                align: 'center',
+                                editor: 'text'
+                            }, {
+                                field: 'mobile',
+                                title: '手机',
+                                width: '125',
+                                align: 'center',
+                                editor: 'text'
+                            }, {
+                                field: 'updateUser',
+                                title: '最后更新人',
+                                align: 'center',
+                                width: '95'
+                            }, {
+                                field: 'updateTime',
+                                title: '最后更新时间',
+                                align: 'center',
+                                width: '180',
+                                formatter: function (value) {
+                                    var date = new Date(value);
+                                    var year = date
+                                        .getFullYear()
+                                        .toString();
+                                    var month = (date.getMonth() + 1);
+                                    var day = date
+                                        .getDate()
+                                        .toString();
+                                    var hour = date
+                                        .getHours()
+                                        .toString();
+                                    var minutes = date
+                                        .getMinutes()
+                                        .toString();
+                                    var seconds = date
+                                        .getSeconds()
+                                        .toString();
+                                    if (month < 10) {
+                                        month = "0" + month;
+                                    }
+                                    if (day < 10) {
+                                        day = "0" + day;
+                                    }
+                                    if (hour < 10) {
+                                        hour = "0" + hour;
+                                    }
+                                    if (minutes < 10) {
+                                        minutes = "0" + minutes;
+                                    }
+                                    if (seconds < 10) {
+                                        seconds = "0" + seconds;
+                                    }
+                                    return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+                                }
+                            }, {
+                                field: 'createUser',
+                                title: '创建人',
+                                width: '80',
+                                align: 'center'
+                            }, {
+                                field: 'createTime',
+                                title: '创建时间',
+                                width: '180',
+                                align: 'center',
+                                formatter: function (value) {
+                                    var date = new Date(value);
+                                    var year = date
+                                        .getFullYear()
+                                        .toString();
+                                    var month = (date.getMonth() + 1);
+                                    var day = date
+                                        .getDate()
+                                        .toString();
+                                    var hour = date
+                                        .getHours()
+                                        .toString();
+                                    var minutes = date
+                                        .getMinutes()
+                                        .toString();
+                                    var seconds = date
+                                        .getSeconds()
+                                        .toString();
+                                    if (month < 10) {
+                                        month = "0" + month;
+                                    }
+                                    if (day < 10) {
+                                        day = "0" + day;
+                                    }
+                                    if (hour < 10) {
+                                        hour = "0" + hour;
+                                    }
+                                    if (minutes < 10) {
+                                        minutes = "0" + minutes;
+                                    }
+                                    if (seconds < 10) {
+                                        seconds = "0" + seconds;
+                                    }
+                                    return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+                                }
+                            }
+                        ]
+                    ]
+                });
+            });
+
+            //点击查询
+            $("#search").click(function () {
+                console.log(datagrid);
+                //alert($("#userName").val());
+                var status;
+                if ($("#status").textbox('getValue') == "ALL") {
+                    status = "";
+                } else {
+                    status = $("#status").textbox('getValue');
+                }
+                //检索列表构筑
+                /*                if (datagrid) {
+
+                    //grid刷新
+                    $('#dataGrid').datagrid('load', {
+                        loginId: $("#loginId").val(),
+                        userName: $("#userName").val(),
+                        status: status
+                    });
+                } else {*/
+                //生成grid
+                datagrid = $('#dataGrid').datagrid({
+                    url: "/sys/user/find",
+                    fit: true,
+                    pagination: true,
+                    singleSelect: true,
+                    checkOnSelect: true,
+                    onDblClickCell: onDblClickCell,
+                    pageSize: 100,
+                    pageList: [
+                        100, 200, 300
+                    ],
+                    nowrap: false,
+                    rownumbers: true,
+                    queryParams: {
+                        loginId: $("#loginId").val(),
+                        userName: $("#userName").val(),
+                        status: status
+                    },
+                    toolbar: '#datagridToolbar',
+                    columns: [
+                        [
+                            {
+                                field: 'operation',
+                                title: '操作',
+                                width: '100',
+                                align: 'center',
+                                formatter: function (value, row, index) {
+                                    return "<a id='oper' href='#' onclick='operation(" + row.userId + ")'>操作</a>";
+                                }
+                            }, {
+                                field: 'userId',
+                                title: '用户ID',
+                                width: '10',
+                                align: 'center',
+                                hidden: true
+                            }, {
+                                field: 'userName',
+                                title: '用户姓名',
+                                width: '100',
+                                align: 'center',
+                                editor: 'text'
+                            }, {
+                                field: 'status',
+                                title: '状态',
+                                width: '90',
+                                align: 'center',
+                                editor: {
+                                    type: 'combobox',
+                                    options: {
+                                        valueField: 'value',
+                                        textField: 'value_meaning',
+                                        data: dataList,
+                                        required: true
+                                    }
+                                },
+                                formatter: function (value) {
+                                    if (value == 1) {
+                                        return "有效";
+                                    }
+                                    if (value == 0) {
+                                        return "禁用";
+                                    }
+                                    if (value == -1) {
+                                        return "删除";
+                                    }
+                                }
+                            }, {
+                                field: 'loginId',
+                                title: '登录账号',
+                                width: '100',
+                                align: 'center'
+                            }, {
+                                field: 'email',
+                                title: '邮箱',
+                                width: '120',
+                                align: 'center',
+                                editor: 'text'
+                            }, {
+                                field: 'phone',
+                                title: '电话',
+                                width: '125',
+                                align: 'center',
+                                editor: 'text'
+                            }, {
+                                field: 'mobile',
+                                title: '手机',
+                                width: '125',
+                                align: 'center',
+                                editor: 'text'
+                            }, {
+                                field: 'updateUser',
+                                title: '最后更新人',
+                                width: '95'
+                            }, {
+                                field: 'updateTime',
+                                title: '最后更新时间',
+                                width: '180',
+                                formatter: function (value) {
+                                    var date = new Date(value);
+                                    var year = date
+                                        .getFullYear()
+                                        .toString();
+                                    var month = (date.getMonth() + 1);
+                                    var day = date
+                                        .getDate()
+                                        .toString();
+                                    var hour = date
+                                        .getHours()
+                                        .toString();
+                                    var minutes = date
+                                        .getMinutes()
+                                        .toString();
+                                    var seconds = date
+                                        .getSeconds()
+                                        .toString();
+                                    if (month < 10) {
+                                        month = "0" + month;
+                                    }
+                                    if (day < 10) {
+                                        day = "0" + day;
+                                    }
+                                    if (hour < 10) {
+                                        hour = "0" + hour;
+                                    }
+                                    if (minutes < 10) {
+                                        minutes = "0" + minutes;
+                                    }
+                                    if (seconds < 10) {
+                                        seconds = "0" + seconds;
+                                    }
+                                    return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+                                }
+                            }, {
+                                field: 'createUser',
+                                title: '创建人',
+                                width: '80',
+                                align: 'center'
+                            }, {
+                                field: 'createTime',
+                                title: '创建时间',
+                                width: '180',
+                                align: 'center',
+                                formatter: function (value) {
+                                    var date = new Date(value);
+                                    var year = date
+                                        .getFullYear()
+                                        .toString();
+                                    var month = (date.getMonth() + 1);
+                                    var day = date
+                                        .getDate()
+                                        .toString();
+                                    var hour = date
+                                        .getHours()
+                                        .toString();
+                                    var minutes = date
+                                        .getMinutes()
+                                        .toString();
+                                    var seconds = date
+                                        .getSeconds()
+                                        .toString();
+                                    if (month < 10) {
+                                        month = "0" + month;
+                                    }
+                                    if (day < 10) {
+                                        day = "0" + day;
+                                    }
+                                    if (hour < 10) {
+                                        hour = "0" + hour;
+                                    }
+                                    if (minutes < 10) {
+                                        minutes = "0" + minutes;
+                                    }
+                                    if (seconds < 10) {
+                                        seconds = "0" + seconds;
+                                    }
+                                    return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+                                }
+                            }
+                        ]
+                    ]
+                });
+                //}
+                $('#dataGrid')
+                    .parent()
+                    .find("div .datagrid-header-check")
+                    .children("input[type='checkbox']")
+                    .eq(0)
+                    .attr("checked", false);
+            });
+
+            var editIndex = undefined;
+            function onDblClickCell(index, field, value) {
+                // 启用单元格编辑 $("#dataGrid").datagrid('beginEdit', index); var ed =
+                // $("#dataGrid").datagrid('getEditor', {index:index,field:field});
+
+                if (endEdit()) {
+                    //给editIndex对象赋值，index为当前行的索引
+                    editIndex = index;
+                    var selectRow = $('#dataGrid').datagrid('selectRow', editIndex);
+                    //启用单元格编辑
+                    selectRow.datagrid('beginEdit', editIndex);
+                }
+            }
+
+            function endEdit() {
+                //对editIndex进行判断单元格是否可以编辑
+                if (editIndex == undefined) {
+                    return true;
+                }
+
+                if ($('#dataGrid').datagrid('validateRow', editIndex)) {
+                    //结束当前行编辑
+                    $('#dataGrid').datagrid('endEdit', editIndex);
+                    editIndex = undefined;
+                    return true; //重置编辑行索引对象，返回true，允许编辑
+                } else {
+                    return false;
+                }
+            }
+
+            $("#searchPanel").click(function () {
+                $('#dataGrid').datagrid('endEdit', editIndex);
+                editIndex = undefined;
+                return true; //重置编辑行索引对象，返回true，允许编辑
+            });
+
+            $("#import").click(function () {
+                var row = $('#dataGrid').datagrid('getSelected');
+
+                jQuery.ajax({
+                    url: "/sys/user/update",
+                    type: "POST",
+                    data: {
+                        "userId": row.userId,
+                        "userName": row.userName,
+                        "userStatus": row.status,
+                        "loginId": row.loginId,
+                        "userEmail": row.email,
+                        "userPhone": row.phone,
+                        "userMobile": row.mobile
+                    },
+                    success: function (data) {
+                        $('#add_Role').dialog('close');
+                        $
+                            .messager
+                            .alert('提示', '用户修改成功', 'info');
+                        $('#dataGrid').datagrid('load', {
+                            loginId: $("#loginId").val(),
+                            userName: $("#userName").val(),
+                            status: status
+                        });
+                    },
+                    error: function (data) {
+                        $('#add_Role').dialog('close');
+                        $
+                            .messager
+                            .alert('提示', '用户修改失败', 'err');
+                    }
+                });
+            });
+
+            var roleId = Array();
+            function operation(index) {
+                //	var row = $('#dataGrid').datagrid('getSelected');
+                $("#id").val(index);
+
+                jQuery.getJSON("/sys/role/user/unassigned", {
+                    userId: index
+                }, function (result) {
+                    $("#select2").html("");
+                    $.each(result.rows, function (i, item) {
+                        $("#select2").append("<option value=" + item.roleId + ">" + item.roleName + "</option>");
+                    });
+                });
+
+                jQuery.getJSON("/sys/role/user/assigned", {
+                    userId: index
+                }, function (result) {
+                    $("#select1").html("");
+                    $.each(result.rows, function (i, item) {
+                        $("#select1").append("<option value=" + item.roleId + ">" + item.roleName + "</option>");
+                    });
+                    $('#role').dialog('open');
+                });
+            }
+            $(function () {
                 $('#role').dialog('close');
-		    },
-		    error: function (data) {
-		    	$.messager.alert('提示', '删除用户角色失败', 'err');
-                $('#role').dialog('close');
-		    }
-	});
-}
+                $('#add_User').dialog('close');
 
-function btnAdd(){
-	$.ajax({
-	    url: "/sys/role/user/assign",
-	    type: "POST",
-	    data: {
-	    		"userId": $("#id").val(),
-	    		"roleIds": ""+$("#select2").val()+""
-	    	},
-		    success: function (data) {
-		        $.messager.alert('提示', '分配用户角色成功', 'info');
-                $('#role').dialog('close');
-		    },
-		    error: function (data) {
-		    	$.messager.alert('提示', '分配用户角色失败', 'err');
-                $('#role').dialog('close');
-		    }
-	});
-}
+                //删除角色
+                $("#btnDel").click(function () {
+                    btnDel();
+                    //获取选中的选项，删除自己并追加给对方
+                    $("#select1 option:selected").appendTo("#select2");
+                });
+                //添加角色
+                $('#btnAdd').click(function () {
+                    btnAdd();
+                    //获取选中的选项，删除自己并追加给对方
+                    $('#select2 option:selected').appendTo('#select1');
+                });
+                // 双击选项 $('#select1').dblclick(function () { 获取双击的选项,删除自己并追加给对方 $("option:selected",
+                // this).appendTo('#select2'); }); 双击选项 $('#select2').dblclick(function () { 获取双击的选项,删除自己并追加给对方
+                // $("option:selected", this).appendTo('#select1'); });
+            });
 
-</script>
-</body>
+            function btnDel() {
+                $.ajax({
+                    url: "/sys/role/user/unassign",
+                    type: "POST",
+                    data: {
+                        "userId": $("#id").val(),
+                        "roleIds": "" + $("#select1").val() + ""
+                    },
+                    success: function (data) {
+                        $
+                            .messager
+                            .alert('提示', '删除用户角色成功', 'info');
+                        $('#role').dialog('close');
+                    },
+                    error: function (data) {
+                        $
+                            .messager
+                            .alert('提示', '删除用户角色失败', 'err');
+                        $('#role').dialog('close');
+                    }
+                });
+            }
+
+            function btnAdd() {
+                $.ajax({
+                    url: "/sys/role/user/assign",
+                    type: "POST",
+                    data: {
+                        "userId": $("#id").val(),
+                        "roleIds": "" + $("#select2").val() + ""
+                    },
+                    success: function (data) {
+                        $
+                            .messager
+                            .alert('提示', '分配用户角色成功', 'info');
+                        $('#role').dialog('close');
+                    },
+                    error: function (data) {
+                        $
+                            .messager
+                            .alert('提示', '分配用户角色失败', 'err');
+                        $('#role').dialog('close');
+                    }
+                });
+            }
+
+            $('#add').click(function () {
+                $(".easyui-textbox").textbox('setValue', '');
+                $("#add_User").dialog('open');
+            });
+
+            $('#user_Pre').click(function () {
+
+                if ($("#user_Name").textbox("getValue") == null || $("#user_Name").textbox("getValue") == "") {
+                    $
+                        .messager
+                        .alert('提示', '请输入用户姓名', 'err');
+                } else if ($("#user_Login").textbox("getValue") == null || $("#user_Login").textbox("getValue") == "") {
+                    $
+                        .messager
+                        .alert('提示', '请输入登录账户', 'err');
+                } else if ($("#user_Status").combobox("getValue") == "ALL") {
+                    $
+                        .messager
+                        .alert('提示', '请选择有效状态', 'err');
+                } else {
+                    rechecking();
+                }
+
+            });
+
+            function rechecking() {
+                jQuery.ajax({
+                    url: "/sys/user/findToLoginId",
+                    type: "POST",
+                    data: {
+                        "loginId": $("#user_Login").textbox("getValue")
+                    },
+                    success: function (data) {
+                        var msg = data;
+                        if (msg != "null") {
+                            alert(msg);
+                        } else {
+                            create();
+                        }
+                    }
+                });
+            }
+
+            function create() {
+                jQuery.ajax({
+                    url: "/sys/user/create",
+                    type: "POST",
+                    data: {
+                        "userName": $("#user_Name").textbox("getValue"),
+                        "userStatus": $("#user_Status").combobox("getValue"),
+                        "loginId": $("#user_Login").textbox("getValue"),
+                        "userEmail": $("#user_Email").textbox("getValue"),
+                        "userPhone": $("#user_Phone").textbox("getValue"),
+                        "userMobile": $("#user_Mobile").textbox("getValue")
+                    },
+                    success: function (data) {
+                        $
+                            .messager
+                            .alert('提示', '创建用户成功', 'info');
+                        $('#add_User').dialog('close');
+                    }
+                });
+            }
+
+            $('#user_Close').click(function () {
+                $("#add_User").dialog('close');
+            });
+        </script>
+    </body>
 </html>

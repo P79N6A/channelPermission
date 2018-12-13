@@ -19,6 +19,7 @@ public class OrderProductsVo extends  OrderProducts{
 	private String statusTs;
 	private String receiptAddTimeMin; //开票时间开始
 	private String receiptAddTimeMax;//开票时间结束
+	private String isMakeReceiptStatus;//网单发票状态中文
 	private String isSelfSell;//是否自营
 	private String numberMin;//数量 起始
 	private String numberMax;//数量 终止
@@ -45,7 +46,7 @@ public class OrderProductsVo extends  OrderProducts{
 	private String lessShipTimeMin;//LES出库时间
 	private String lessShipTimeMax;//LES出库时间 结束
 	private String addTimeMin;//下单时间
-	private String addTimeMix;//下单时间结束
+	private String addTimeMax;//下单时间结束
 	private String remark;//备注
 	private String smManualTime;//转人工确认时间
 	private String shippingTimeTs;//发货时间用来接收string类型的时间格式
@@ -60,9 +61,151 @@ public class OrderProductsVo extends  OrderProducts{
 	private String productTypeTs;//商品类型 用来接收String类型字符串
 	private String eaiWriteState;//开票状态(KPZT)
 	private String checkCode;//校验码
+	private String fiscalCode;//发票号码
 	private byte isCod;//是否货到付款
 	private String firstConfirmPerson;//首次确认人
+	private Integer provinceId;//省份id
+	private String makeReceiptTypeStatus;//开票类型
+	private Integer orderType;//orderType
 	
+	private String netPointName;//网点名称
+    private String invoiceType;//发票类型
+    
+    private String userAcceptTimeMin;//签收时间
+    private String userAcceptTimeMax;
+    
+    private String isExternal;//淘宝套装网单
+    private String regionAssign;//订单地区分配
+    private String shippingtime;//发货时间
+
+	public String getInvoicenumber() {
+		return invoicenumber;
+	}
+
+	public void setInvoicenumber(String invoicenumber) {
+		this.invoicenumber = invoicenumber;
+	}
+
+	private String invoicenumber;// 运单号
+
+	/**
+	 * 是否是赠品
+	 */
+	private Integer idGift;
+
+	public Integer getIdGift() {
+		return idGift;
+	}
+
+	public void setIdGift(Integer idGift) {
+		this.idGift = idGift;
+	}
+    /**
+	 * @return the shippingtime
+	 */
+	public String getShippingtime() {
+		return shippingtime;
+	}
+
+	/**
+	 * @param shippingtime the shippingtime to set
+	 */
+	public void setShippingtime(String shippingtime) {
+		this.shippingtime = shippingtime;
+	}
+
+	/**
+	 * @return the regionAssign
+	 */
+	public String getRegionAssign() {
+		return regionAssign;
+	}
+
+	/**
+	 * @param regionAssign the regionAssign to set
+	 */
+	public void setRegionAssign(String regionAssign) {
+		this.regionAssign = regionAssign;
+	}
+
+	/**
+	 * @return the isExternal
+	 */
+	public String getIsExternal() {
+		return isExternal;
+	}
+
+	/**
+	 * @param isExternal the isExternal to set
+	 */
+	public void setIsExternal(String isExternal) {
+		this.isExternal = isExternal;
+	}
+
+	/**
+	 * @return the userAcceptTimeMin
+	 */
+	public String getUserAcceptTimeMin() {
+		return userAcceptTimeMin;
+	}
+
+	/**
+	 * @param userAcceptTimeMin the userAcceptTimeMin to set
+	 */
+	public void setUserAcceptTimeMin(String userAcceptTimeMin) {
+		this.userAcceptTimeMin = userAcceptTimeMin;
+	}
+
+	/**
+	 * @return the userAcceptTimeMax
+	 */
+	public String getUserAcceptTimeMax() {
+		return userAcceptTimeMax;
+	}
+
+	/**
+	 * @param userAcceptTimeMax the userAcceptTimeMax to set
+	 */
+	public void setUserAcceptTimeMax(String userAcceptTimeMax) {
+		this.userAcceptTimeMax = userAcceptTimeMax;
+	}
+
+	public String getInvoiceType() {
+        return invoiceType;
+    }
+
+    public void setInvoiceType(String invoiceType) {
+        this.invoiceType = invoiceType;
+    }
+
+    public String getNetPointName() {
+		return netPointName;
+	}
+
+	public void setNetPointName(String netPointName) {
+		this.netPointName = netPointName;
+	}
+
+	public Integer getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(Integer orderType) {
+		this.orderType = orderType;
+	}
+
+	public String getMakeReceiptTypeStatus() {
+		return makeReceiptTypeStatus;
+	}
+	public void setMakeReceiptTypeStatus(String makeReceiptTypeStatus) {
+		this.makeReceiptTypeStatus = makeReceiptTypeStatus;
+	}
+	public String getIsMakeReceiptStatus() {
+		return isMakeReceiptStatus;
+	}
+	public void setIsMakeReceiptStatus(String isMakeReceiptStatus) {
+		this.isMakeReceiptStatus = isMakeReceiptStatus;
+	}
 	public String getType() {
 		return type;
 	}
@@ -153,17 +296,20 @@ public class OrderProductsVo extends  OrderProducts{
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
+	public String getAddTimeMax() {
+		return addTimeMax;
+	}
+
+	public void setAddTimeMax(String addTimeMax) {
+		this.addTimeMax = addTimeMax;
+	}
+
 	public String getAddTimeMin() {
 		return addTimeMin;
 	}
 	public void setAddTimeMin(String addTimeMin) {
 		this.addTimeMin = addTimeMin;
-	}
-	public String getAddTimeMix() {
-		return addTimeMix;
-	}
-	public void setAddTimeMix(String addTimeMix) {
-		this.addTimeMix = addTimeMix;
 	}
 	public String getMobile() {
 		return mobile;
@@ -368,4 +514,19 @@ public class OrderProductsVo extends  OrderProducts{
 		this.firstConfirmPerson = firstConfirmPerson;
 	}
 
+	public Integer getProvinceId() {
+		return provinceId;
+	}
+
+	public void setProvinceId(Integer provinceId) {
+		this.provinceId = provinceId;
+	}
+
+	public String getFiscalCode() {
+		return fiscalCode;
+	}
+
+	public void setFiscalCode(String fiscalCode) {
+		this.fiscalCode = fiscalCode;
+	}
 }

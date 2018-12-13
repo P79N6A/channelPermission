@@ -70,6 +70,7 @@ import com.haier.stock.service.InvStockQtyDifLogService;
 import com.haier.stock.service.InvStockService;
 import com.haier.stock.service.StockCenterItemService;
 import com.haier.stock.service.StockCenterLESService;
+import com.haier.stock.service.StockCommonService;
 import com.haier.stock.service.StockInvBaseStockService;
 import com.haier.stock.service.StockInvMachineSetService;
 import com.haier.stock.service.StockInvSectionService;
@@ -83,7 +84,6 @@ import com.haier.stock.service.SgFlagShipStoreAuthorizationService;
 
 /**
  * Created by Administrator on 2017/12/14 0014.
- * @param <T>
  */
 @Service
 public class StockModel {
@@ -151,6 +151,11 @@ public class StockModel {
     private StockCenterLESService          lesService;
     @Autowired
     private InvBaseStockDiffLogService invBaseStockDiffLogService;
+    @Autowired
+    private StockCommonService stockCommonService;
+    
+    
+    
     public List<BigStoragesRela> getBigStoragesRelaList() {
         return bigStoragesRelaService.getList();
     }
@@ -211,8 +216,9 @@ public class StockModel {
         List<StockHolder> stockHolders = new ArrayList<StockHolder>();
         //如果是套机需要解套，冻结子件
         List<InvMachineSet> machineSets = stockInvMachineSetService.getByMainSku(sku);
-        if (machineSets.size() <= 0)
+        if (machineSets.size() <= 0){
             stockHolders.add(StockHolder.newInstance(sku, secCode, frozenQty));
+        }
         for (InvMachineSet machineSet : machineSets) {
             String _sku = machineSet.getSubSku();
             Integer _frozenQty = machineSet.getMenge().intValue() * frozenQty;
@@ -241,7 +247,7 @@ public class StockModel {
                 //1.1. 假如把占用库存放在第一步执行，无法避免并发情况重复插入数据，因为处于事务操作中，在不同事务中无法知晓彼此是否占用
                 //1.2. 阻止并发操作基于对数据库表 inv_base_stock的物理锁，当一个事务提交之后，另一个事务才会检测到同一单是否被占用
                 //2. 不执行此句代码之后的操作，比如更新库存变化记录，无需通知
-                InvBaseStock baseStock = basicFrozeStockQty(stockHolder.getSku(), stockHolder.getSecCode(),
+                InvBaseStock baseStock = basicFrozeStockQtyHasChannel(stockHolder.getSku(), stockHolder.getSecCode(),
                     refNo, stockHolder.getChangeQty(), billType, section.getChannelCode(), optUser);
 
                 //计算此子件对应的套机
@@ -407,8 +413,9 @@ public class StockModel {
         List<StockHolder> holders = null;
         //确定占用库存的列表
         for (Entry<String, List<InvSection>> entry : sections.entrySet()) {
-            if (isSuccess)
+            if (isSuccess){
                 break;
+            }
             holders = new ArrayList<StockHolder>();
             usedLesSecCode = entry.getKey();
             List<InvSection> _sections = entry.getValue();
@@ -419,15 +426,17 @@ public class StockModel {
                         section.getSecCode());
                     Integer availableQty = baseStock == null ? 0
                         : baseStock.getStockQty() - baseStock.getFrozenQty();
-                    if (availableQty <= 0)
+                    if (availableQty <= 0){
                         continue;
+                    }
                     Integer _frozenQty = restFrozenQty > availableQty ? availableQty
                         : restFrozenQty;
                     restFrozenQty -= _frozenQty;
                     holders
                         .add(StockHolder.newInstance(holder.getSku(), section.getSecCode(), _frozenQty));
-                    if (restFrozenQty <= 0)
+                    if (restFrozenQty <= 0){
                         break;
+                    }
                 }
                 if (restFrozenQty > 0) {
                     isSuccess = false;
@@ -462,7 +471,7 @@ public class StockModel {
             Map<String, InvStock> skuStockMap = new HashMap<String, InvStock>();
             List<InvStock> stockList;
             for (StockHolder holder : holders) {
-                InvBaseStock baseStock = basicFrozeStockQty(holder.getSku(), holder.getSecCode(), refNo,
+                InvBaseStock baseStock = basicFrozeStockQtyHasChannel(holder.getSku(), holder.getSecCode(), refNo,
                     holder.getChangeQty(), billType, channelCode, channelCode);
                 //计算此子件对应的套机
                 stockList = regroupStockQtyBySku(holder.getSku(), baseStock.getSecCode(),
@@ -535,11 +544,11 @@ public class StockModel {
 
     }
 
-    private InvBaseStock basicFrozeStockQty(String sku, String secCode, String refNo,
+    private InvBaseStock basicFrozeStockQtyWithoutChannel(String sku, String secCode, String refNo,
                                             Integer frozenQty, InventoryBusinessTypes billType, String string, String string2) {
-        return this.basicFrozeStockQty1(sku, secCode, refNo, frozenQty, billType, "", "sys");
+        return this.basicFrozeStockQtyHasChannel(sku, secCode, refNo, frozenQty, billType, "", "sys");
     }
-    private InvBaseStock basicFrozeStockQty1(String sku, String secCode, String refNo,
+    private InvBaseStock basicFrozeStockQtyHasChannel(String sku, String secCode, String refNo,
             Integer frozenQty, InventoryBusinessTypes billType,
             String channel, String optUser) {
 		
@@ -647,8 +656,9 @@ public class StockModel {
             //套机数量为最小数量
             if (minStock == -1) {
                 minStock = freeStockQty / num;
-            } else if (minStock > freeStockQty / num)
+            } else if (minStock > freeStockQty / num){
                 minStock = freeStockQty / num;
+            }
         }
         invStock.setStockQty(minStock);
     }
@@ -725,15 +735,18 @@ public class StockModel {
             }
 
             for (InvStockLock stockLock : stockLocks) {
-                if (qty <= 0)
+                if (qty <= 0){
                     break;
+                }
                 Integer _releaseQty;
-                if (stockLock.getLockQty() <= stockLock.getRealeaseQty())
+                if (stockLock.getLockQty() <= stockLock.getRealeaseQty()) {
                     continue;
-                else
+                }else{
                     _releaseQty = stockLock.getLockQty() - stockLock.getRealeaseQty();
-                if (_releaseQty > qty)
+                }
+                if (_releaseQty > qty){
                     _releaseQty = qty;
+                }
                 qty -= _releaseQty;
                 stockHoldersForRelease.add(StockHolder.newInstance(stockLock.getSku(),
                     stockLock.getSecCode(), _releaseQty));
@@ -902,10 +915,11 @@ public class StockModel {
      * @param sku 物料
      * @return 物料信息
      */
-    private ItemBase getItemBaseBySku(String sku) {
+    public ItemBase getItemBaseBySku(String sku) {
         ServiceResult<ItemBase> result = itemService.getItemBaseBySku(sku);
-        if (result == null || !result.getSuccess())
+        if (result == null || !result.getSuccess()){
             return null;
+        }
         return result.getResult();
     }
     
@@ -1079,10 +1093,11 @@ public class StockModel {
                     }
                     stockLockService.updateLockQty(stockLock.getId(),
                         stockLock.getLockQty() + frozeQty, "sys");
-                } else
-                    baseStock = basicFrozeStockQty(stockTransaction.getSku(), section.getSecCode(),
+                } else{
+                    baseStock = basicFrozeStockQtyWithoutChannel(stockTransaction.getSku(), section.getSecCode(),
                         stockTransaction.getCorderSn(), frozeQty,
                         InventoryBusinessTypes.FROZEN_BY_ZBCC, mark, mark);
+                }
             }
 
             //正品需要更新销售库:inv_stock
@@ -1306,8 +1321,9 @@ public class StockModel {
     private ItemAttribute getItemAttributeByValueSetIdAndValue(String valueSetId, String value) {
         ServiceResult<ItemAttribute> result = itemService
             .getItemAttributeByValueSetIdAndValue(valueSetId, value);
-        if (result == null || !result.getSuccess())
+        if (result == null || !result.getSuccess()){
             return null;
+        }
         return result.getResult();
     }
     
@@ -1342,14 +1358,15 @@ public class StockModel {
             if (InvSection.CHANNEL_CODE_RRS.equalsIgnoreCase(channelCode)) {
                 //解套
                 List<InvMachineSet> machineSets = stockInvMachineSetService.getByMainSku(sku);
-                if (machineSets.size() <= 0)
+                if (machineSets.size() <= 0) {
                     syncRRSStockQtyFromLes(sku, secCode, newQty);
-                else
+                }else{
                     for (InvMachineSet machineSet : machineSets) {
                         String _sku = machineSet.getSubSku();
                         Integer _newQty = machineSet.getMenge().intValue() * newQty;
                         syncRRSStockQtyFromLes(_sku, secCode, _newQty);
                     }
+                }
             }
             transactionManagerShop.commit(statusShop);
 //            transactionManagerStock.commit(status);
@@ -1369,8 +1386,9 @@ public class StockModel {
     private void syncRRSStockQtyFromLes(String sku, String secCode, Integer newQty) {
         //如果日日顺库位不存在，新增库位信息
         InvSection section = stockInvSectionService.getBySecCode(secCode);
-        if (section == null)
+        if (section == null){
             insertInvSection(secCode, InvSection.CHANNEL_CODE_RRS, InvSection.W10);
+        }
         Date dateTime = new Date();
         InvBaseStock baseStock = stockInvBaseStockService.getForUpdate(sku, secCode);
         boolean isInsert = false;
@@ -1388,17 +1406,19 @@ public class StockModel {
         }
         //日日顺实际库存=LES同步的可用库存+CBS冻结库存数量
         Integer newStockQty = newQty + baseStock.getFrozenQty();// 库存数量=同步数量（可用库存）+开提单占用数量
-        if (newStockQty < 0)
+        if (newStockQty < 0){
             newStockQty = 0;
+        }
         recordBaseStockLog(baseStock, newStockQty, baseStock.getFrozenQty(), "", "",
             InventoryBusinessTypes.SYNC_STOCK, dateTime);
         baseStock.setStockQty(newStockQty);
         baseStock.setUpdateTime(dateTime);
         //更新InvBaseStock
-        if (isInsert)
-        	stockInvBaseStockService.insert(baseStock);
-        else
+        if (isInsert) {
+            stockInvBaseStockService.insert(baseStock);
+        }else{
         	stockInvBaseStockService.updateStockQty(baseStock.getStoId(), newStockQty, dateTime);
+        }
         //直接是可以数
         List<InvStock> stockList = regroupStockQtyBySku(sku, secCode, baseStock.getStockQty());
         //同步库存到商城
@@ -1477,8 +1497,9 @@ public class StockModel {
         try {
             for (StockHolder holder : stockHolderList) {
                 Integer newStockQty = holder.getChangeQty();
-                if (newStockQty < 0)
+                if (newStockQty < 0){
                     newStockQty = 0;
+                }
                 //查找库位
                 InvSection section = stockInvSectionService.getBySecCode(holder.getSecCode());
                 //不存在添加
@@ -1513,10 +1534,11 @@ public class StockModel {
                 baseStock.setStockQty(newStockQty);
                 baseStock.setUpdateTime(dateTime);
                 //更新InvBaseStock
-                if (isInsert)
-                	stockInvBaseStockService.insert(baseStock);
-                else
+                if (isInsert) {
+                    stockInvBaseStockService.insert(baseStock);
+                }else{
                 	stockInvBaseStockService.updateStockQty(baseStock.getStoId(), newStockQty, dateTime);
+                }
                 //计算销售库存数,包括涉及到的套机计算
                 List<InvStock> stockList = regroupStockQtyBySku(sku, secCode,
                     baseStock.getStockQty() - baseStock.getFrozenQty());
@@ -1623,9 +1645,10 @@ public class StockModel {
          * 都不记录入批次表
          */
         if (!InvSection.CHANNEL_CODE_RRS.equalsIgnoreCase(section.getChannelCode())
-            && !InvSection.CHANNEL_CODE_GD.equalsIgnoreCase(section.getChannelCode()))
+            && !InvSection.CHANNEL_CODE_GD.equalsIgnoreCase(section.getChannelCode())){
             //库存批次设置
             updateStockBatch(sku, section.getSecCode(), refNo, bizType, mark, qty);
+        }
         //更新基础库存
         Integer baseReleaseQty = 0;
         if (releaseQty > 0) {//确定基础库存冻结数量
@@ -1640,9 +1663,10 @@ public class StockModel {
                 if (baseReleaseQty <= 0) {
                     //log.info("此交易已经释放库存，不再释放");
                     baseReleaseQty = 0;
-                } else
+                } else{
                     updateStockLockAfterReleaseQty(sku, section.getSecCode(), refNo,
                         baseReleaseQty);
+                }
             }
         }
 
@@ -1654,11 +1678,12 @@ public class StockModel {
             List<InvStockLock> locks = stockLockService.getNotReleasedByRefNo(refNo);
             boolean isHasFrozen = false;
             for (InvStockLock lock : locks) {
-                if (lock.getSku().equalsIgnoreCase(sku))
+                if (lock.getSku().equalsIgnoreCase(sku)){
                     isHasFrozen = true;
+                }
             }
             if (!isHasFrozen) {
-                baseStock = basicFrozeStockQty(sku, section.getSecCode(), refNo, qty,
+                baseStock = basicFrozeStockQtyWithoutChannel(sku, section.getSecCode(), refNo, qty,
                     InventoryBusinessTypes.FROZEN_BY_ZBCC, refNo, refNo);
             }
         }
@@ -1726,8 +1751,9 @@ public class StockModel {
     }
     
     public Boolean machineSetSync(InvMachineSet machineSet) {
-        if (machineSet == null)
+        if (machineSet == null){
             return false;
+        }
         InvMachineSet machineSetNow = stockInvMachineSetService.getByMainSkuAndBomNum(machineSet.getMainSku(), machineSet.getPosnr());
         Date now = DateUtil.currentDateTime();
         if (machineSetNow == null) {
@@ -2088,4 +2114,37 @@ public class StockModel {
         diffLog.setLesZmenge1(stockDiff.getLesZmenge1());
         invBaseStockDiffLogService.insert(diffLog);
     }
+    
+    public List<InvStockChannel> getChannels() {
+        ServiceResult<List<InvStockChannel>> rs = stockCommonService.getChannels();
+        if (!rs.getSuccess()){
+            throw new BusinessException("通过库存服务获取渠道信息失败");
+        }
+        return rs.getResult();
+    }
+    
+    public InvSection getSectionByCode(String sec_code) {
+        ServiceResult<InvSection> rs = stockCommonService.getSectionByCode(sec_code);
+        if (!rs.getSuccess()) {
+            throw new BusinessException("通过库存服务获库位信息失败");
+        }
+        return rs.getResult();
+    }
+    /**
+     * 通过仓库和渠道编码查询库位
+     * @param whCode
+     * @param channelCode
+     * @return
+     */
+    public InvSection getSectionByCode(String whCode, String channelCode) {
+        ServiceResult<List<InvSection>> result = stockCommonService
+            .getSectionByWhCodeAndChannelCode(whCode, channelCode);
+        if (result.getSuccess() && result.getResult() != null && result.getResult().size() >= 0) {
+            return result.getResult().get(0);
+        }
+        return null;
+
+    }
+    
+    
 }

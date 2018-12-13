@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.distribute.data.dao.distribute.ManualInputOrderProductsDao">
+    
+    
+    <select id="getManualInputOrderProductsbyOrderId" parameterType="java.util.Map" resultType="java.util.Map">
+    
+     SELECT
+     `id`,
+     `orderId`,
+     `sku`,
+     `productName`,
+     `price`,
+     `num`
+     FROM
+     t_orders_manual_products
+     WHERE
+     orderId=#{orderId}
+    </select>
+    
+        <select id="findProduct"  resultType="com.haier.distribute.data.model.TOrdersManualProducts">
+    
+     SELECT
+     `id`,
+     `orderId`,
+     `sku`,
+     `productName`,
+     `price`,
+     `num`
+     FROM
+     t_orders_manual_products
+     WHERE
+     id=#{id}
+    </select>
+	
+ 	<select id="getManualInputOrderProductsbyOrderIdCount" parameterType="java.util.Map" resultType="Integer">
+	    select count(*) from t_orders_manual_products
+	    WHERE 1=1 and orderId=#{orderId}
+	</select>
+	<sql id="wherefrage">
+		t_orders_manual tmanual
+		WHERE 1=1
+        <if test="channelCode != null and channelCode !=''">
+                <![CDATA[ and tmanual.channelCode= #{channelCode}]]>
+            </if>
+            <if test="orderStatus != null and orderStatus !=''">
+                <![CDATA[ and tmanual.orderStatus= #{orderStatus}]]>
+            </if> 
+            <if test="invoiceType != null and invoiceType !=''">
+                <![CDATA[ and tmanual.invoiceType= #{invoiceType}]]>
+            </if> 
+            <if test="orderSn != null and orderSn !=''">
+                <![CDATA[ and tmanual.orderSn LIKE CONCAT('%', #{orderSn} ,'%') ]]>
+            </if>
+            <if test="startDate != null and startDate !='' and endDate != null and endDate !='' ">
+                <![CDATA[ and tmanual.addTime BETWEEN  #{startDate} and #{endDate} ]]>
+            </if> 
+	</sql>
+	<update id="updeteManualInputOrderProducts" parameterType="com.haier.distribute.data.model.TOrdersManualProducts">
+	
+		UPDATE t_orders_manual_products SET sku=#{sku},
+				productName=#{productName},
+				price=#{price},
+				num=#{num},
+				updateBy=#{updateBy},
+				updateTime=now()
+		WHERE id=#{id}
+	</update>
+	<insert id="inserManualInputOrderProducts" parameterType="com.haier.distribute.data.model.TOrdersManualProducts">
+	insert t_orders_manual_products( id, orderId,sku, productName, price,num,createBy,createTime)
+              value(#{id},#{orderId}, #{sku},#{productName},#{price}, #{num},#{createBy},now())
+	
+	</insert>
+	<delete id="deleteManualInputOrderProducts" parameterType="java.lang.Integer">
+    delete from t_orders_manual_products
+    where id = #{id,jdbcType=INTEGER}
+	</delete>
+</mapper>

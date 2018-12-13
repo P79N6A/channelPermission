@@ -1,843 +1,172 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1">
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>CRM手工采购订单查询</title>
-    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
-    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
-    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
-    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
-    <link rel="stylesheet" href="/static/css/common.css">
-    <script src="/static/third/jquery.js"></script>
-    <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/static/third/easyui/jquery.easyui.min.js"></script>
-    <script src="/static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
-    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
-    <script src="/static/js/utils.js"></script>
-    <script src="/static/js/easyui-extention_ws.js"></script>
-    <script src="/static/js/customConfig.js"></script>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>闸口价信息</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/purchase/serializeJson.js"></script>
+
 </head>
 
-<body>
-<div class="easyui-layout" data-options="fit : true,border : false">
-    <div data-options="region:'north',title:'查询条件',border:false" style="height: 170px;overflow: auto;" align="left">
-        <form id="filterForm" action="#">
-            <table border="0" cellpadding="1" cellspacing="1" width="100%" >
-                <tr>
-                    <td>订单号</td>
-                    <td>
-                        <input id="order_id" name="order_id" class="easyui-textbox" style="width: 150px"/>
-                    </td>
-                    <td>渠道</td>
-                    <td>
-                        <input id="channel" name="channel" class="easyui-combobox">
-                    </td>
-                    <td>品类</td>
-                    <td>
-                        <input id="cbsCategory" name="cbsCategory" class="easyui-combobox">
-                    </td>
-                    <td>产品组</td>
-                    <td>
-                        <input id="product_group" name="product_group" class="easyui-combobox">
-                    </td>
-                    <td>分公司</td>
-                    <td>
-                        <input id="CorpCode" name="CorpCode" class="easyui-textbox" style="width: 150px"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>仓库编码</td>
-                    <td>
-                        <input id="WhCode" name="WhCode" class="easyui-textbox" style="width: 150px"/>
-                    </td>
-                    <td>型号</td>
-                    <td>
-                        <input id="materials_desc" name="materials_desc" class="easyui-textbox" style="width: 150px"/>
-                    </td>
-                    <td>物料编码</td>
-                    <td>
-                        <input id="materials_id" name="materials_id" class="easyui-textbox" style="width: 150px"/>
-                    </td>
-                    <td>品牌</td>
-                    <td>
-                        <input id="brand" name="brand" class="easyui-combobox">
-                    </td>
-                    <td>订单类型</td>
-                    <td>
-                        <input id="BillType" name="BillType" class="easyui-combobox">
-                    </td>
-                </tr>
-                <tr>
-                    <td>订单状态</td>
-                    <td>
-                        <input id="flow_flag" name="flow_flag" class="easyui-combobox">
-                    </td>
-                    <td>提交开始日期</td>
-                    <td>
-                        <input id="PlanInDate_start" name="PlanInDate_start"
-                                data-options="formatter:myformatter,parser:myparser" editable="false"/>
-                    </td>
-                    <td>结束日期</td>
-                    <td>
-                        <input id="PlanInDate_end" name="PlanInDate_end"
-                                data-options="formatter:myformatter,parser:myparser" editable="false"/>
-                    </td>
-                    <td>SO号</td>
-                    <td>
-                        <input id="so_id" name="so_id" class="easyui-textbox" style="width: 150px"/>
-                    </td>
-                    <td>DN号</td>
-                    <td>
-                        <input id="dn_id" name="dn_id" class="easyui-textbox" style="width: 150px"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>来源单号</td>
-                    <td><input id="source_order_id" name="source_order_id" class="easyui-textbox" />
-                    </td>
-                </tr>
-            </table>
-            <a id='search' href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
-            <a id='add' href="#" class="easyui-linkbutton" iconCls="icon-add">新增</a>
-            <a id='modify' href="#" class="easyui-linkbutton" iconCls="icon-edit">修改</a>
-            <a id='delete' href="#" class="easyui-linkbutton" iconCls="icon-cancel">删除</a>
-            <a id='export' href="#" class="easyui-linkbutton" iconCls="icon-save">导出</a>
-            <a id='exportall' href="#" class="easyui-linkbutton" iconCls="icon-save">全部导出</a>
-
-            <input id="order_id_hidden" name="order_id_hidden" type="hidden">
-            <input id="CorpCode_hidden" name="CorpCode_hidden" type="hidden">
-            <input id="WhCode_hidden" name="WhCode_hidden" type="hidden">
-            <input id="materials_desc_hidden" name="materials_desc_hidden" type="hidden">
-            <input id="materials_id_hidden" name="materials_id_hidden" type="hidden">
-            <input id="product_group_id_hidden" name="product_group_id_hidden" type="hidden">
-            <input id="ed_channel_id_hidden" name="ed_channel_id_hidden" type="hidden">
-            <input id="brand_hidden" name="brand_hidden" type="hidden">
-            <input id="BillType_hidden" name="BillType_hidden" type="hidden">
-            <input id="flow_flag_hidden" name="flow_flag_hidden" type="hidden">
-            <input id="PlanInDate_start_hidden" name="PlanInDate_start_hidden" type="hidden">
-            <input id="PlanInDate_end_hidden" name="PlanInDate_end_hidden" type="hidden">
-            <input id="cbsCategory_hidden" name="cbsCategory_hidden" type="hidden">
-            <input id="so_id_hidden" name="so_id_hidden" type="hidden">
-            <input id="dn_id_hidden" name="dn_id_hidden" type="hidden">
-            <input id="source_order_id_hidden" name="source_order_id_hidden" type="hidden">
-
-            <!-- 下面隐藏控件用来存放点击导出后的数据 -->
-            <input id="exportData" name="exportData" type="hidden"/>
-            <input id="modifyData" name="modifyData" type="hidden"/>
-            <input id="deleteData" name="deleteData" type="hidden"/>
-        </form>
-    </div>
-    <div data-options="region:'center',title:'CRM手工采购订单查询结果',border:false">
-        <table id="dataGrid"></table>
-    </div>
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+    </table>
 </div>
 
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">订单号</span>
+                <input id="order_id" name="order_id" class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">渠道</span>
+                <input id="channel" name="channel"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">品类</span>
+                <input id="cbsCategory" name="cbsCategory"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">产品组</span>
+                <input id="product_group" name="product_group"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">分公司</span>
+                <input id="CorpCode" name="CorpCode"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">仓库编码</span>
+                <input id="WhCode" name="WhCode"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">型号</span>
+                <input id="materials_desc" name="materials_desc"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">物料编码</span>
+                <input id="materials_id" name="materials_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">品牌</span>
+                <input id="brand" name="brand"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">订单类型</span>
+                <input id="BillType" name="BillType"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">订单状态</span>
+                <input id="flow_flag" name="flow_flag"  class="easyui-combobox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">提交开始日期</span>
+                <input id="PlanInDate_start" name="PlanInDate_start"  class="easyui-datebox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">结束日期</span>
+                <input id="PlanInDate_end" name="PlanInDate_end"  class="easyui-datebox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">SO号</span>
+                <input id="so_id" name="so_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">DN号</span>
+                <input id="dn_id" name="dn_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">来源单号</span>
+                <input id="source_order_id" name="source_order_id"  class="easyui-textbox" style="width:120px">
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">日日顺库位编码</span>
+                <input id="rrsCode" name="rrsCode"  class="easyui-textbox" style="width:120px">
+            </div>
+
+        </div>
+        <input id="order_id_hidden" name="order_id_hidden" type="hidden">
+        <input id="CorpCode_hidden" name="CorpCode_hidden" type="hidden">
+        <input id="WhCode_hidden" name="WhCode_hidden" type="hidden">
+        <input id="materials_desc_hidden" name="materials_desc_hidden" type="hidden">
+        <input id="materials_id_hidden" name="materials_id_hidden" type="hidden">
+        <input id="product_group_id_hidden" name="product_group_id_hidden" type="hidden">
+        <input id="ed_channel_id_hidden" name="ed_channel_id_hidden" type="hidden">
+        <input id="brand_hidden" name="brand_hidden" type="hidden">
+        <input id="BillType_hidden" name="BillType_hidden" type="hidden">
+        <input id="flow_flag_hidden" name="flow_flag_hidden" type="hidden">
+        <input id="PlanInDate_start_hidden" name="PlanInDate_start_hidden" type="hidden">
+        <input id="PlanInDate_end_hidden" name="PlanInDate_end_hidden" type="hidden">
+        <input id="cbsCategory_hidden" name="cbsCategory_hidden" type="hidden">
+        <input id="so_id_hidden" name="so_id_hidden" type="hidden">
+        <input id="dn_id_hidden" name="dn_id_hidden" type="hidden">
+        <input id="rrsCode_hidden" name="rrsCode_hidden" type="hidden">
+        <input id="source_order_id_hidden" name="source_order_id_hidden" type="hidden">
+
+        <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+        <input id="exportData" name="exportData" type="hidden"/>
+        <input id="modifyData" name="modifyData" type="hidden"/>
+        <input id="deleteData" name="deleteData" type="hidden"/>
+
+
+        <a id='search' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" >查询</a>
+        <a id='add' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" >新增</a>
+        <a id='modify' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" >修改</a>
+        <a id='delete' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" >删除</a>
+        <a id='export' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >导出</a>
+        <a id='exportall' href="#" style="display: none;" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >全部导出</a>
+    </form>
+</div>
+
+
+<script src="../static/js/purchase/crmOrderManualQueryList.js"></script>
 <script type="text/javascript">
-
-    function compareDate(startdate, enddate, replaceblag, message) {
-        if(replaceblag){
-            if(startdate){
-                startdate = startdate.replace("年", "");
-                startdate = startdate.replace("周", "");
-            }
-            if(enddate){
-                enddate = enddate.replace("年", "");
-                enddate = enddate.replace("周", "");
-            }
-        }
-        if(startdate && enddate){
-            if(startdate > enddate){
-                //alert(message);
-                $.messager.alert('错误',message,'error');
-                return false;
-            }
-        }
-        return true;
+    var authMap = $!{authMap};
+    if(authMap.productGroup.length == 1 && authMap.productGroup[0] == ''){
+        $.messager.alert('错误', '请联系管理员分配权限', 'error');
     }
-
-    $('#search').click(function () {
-        if(!compareDate($('#PlanInDate_start').datebox('getValue'), $('#PlanInDate_end').datebox('getValue'), 0, "预计到货开始日期大于结束日期，请重新选择!")){
-            return false;
-        }
-
-        var product_group = $("#product_group").combobox("getValue");
-        //如果是ALL，产品组设为空
-        if(product_group=="ALL"){
-            product_group="";
-        }
-        var channel = $("#channel").combobox("getValue");
-        //如果是ALL，渠道设为空
-        if(channel=="ALL"){
-            channel="";
-        }
-
-        var brandValue = $("#brand").combobox("getValue");
-        //如果是ALL，品牌设为空
-        if(brandValue=="ALL"){
-            brandValue="";
-        }
-
-        var cbsCategoryValue = $("#cbsCategory").combobox("getValue");
-        //如果是ALL，品类设为空
-        if(cbsCategoryValue=="ALL"){
-            cbsCategoryValue="";
-        }
-
-        var billType = $("#BillType").combobox("getValue");
-        //如果是ALL，品类设为空
-        if(billType=="ALL"){
-            billType="";
-        }
-
-        //状态保存
-        var flow_flag = $("#flow_flag").combobox("getValues");
-
-        //产品组保存
-        $("#product_group_id_hidden").val(product_group);
-        //渠道保存
-        $("#ed_channel_id_hidden").val(channel);
-
-        $("#flow_flag_hidden").val(flow_flag);
-
-        var planInDatestart = $('#PlanInDate_start').datebox('getValue');
-        var planInDateend = $('#PlanInDate_end').datebox('getValue');
-        //if (planInDatestart && planInDateend) {
-        //
-        //} else {
-        //    if (planInDatestart) {
-        //        planInDateend = planInDatestart;
-        //    } else {
-        //       planInDatestart = planInDateend;
-        //   }
-        //}
-
-        $("#PlanInDate_start_hidden").val(planInDatestart);
-        $("#PlanInDate_end_hidden").val(planInDateend);
-
-
-        $("#order_id_hidden").val($("#order_id").val());
-        $("#CorpCode_hidden").val($("#CorpCode").val());
-        $("#WhCode_hidden").val($("#WhCode").val());
-        $("#materials_desc_hidden").val($("#materials_desc").val());
-        $("#materials_id_hidden").val($("#materials_id").val());
-        $("#brand_hidden").val(brandValue);
-        $("#cbsCategory_hidden").val(cbsCategoryValue);
-        $("#BillType_hidden").val(billType);
-        $("#so_id_hidden").val($("#so_id").val());
-        $("#dn_id_hidden").val($("#dn_id").val());
-        $("#source_order_id_hidden").val($("#source_order_id").val());
-
-        if(datagrid){
-            //grid加载
-            $('#dataGrid').datagrid('load',
-                    {
-                        order_id:$("#order_id_hidden").val(),
-                        corpCode:$("#CorpCode_hidden").val(),
-                        whCode:$("#WhCode_hidden").val(),
-                        materials_id:$("#materials_id_hidden").val(),
-                        materials_desc:$("#materials_desc_hidden").val(),
-                        brand_id:$("#brand_hidden").val(),
-                        category_id:$("#cbsCategory_hidden").val(),
-                        bill_type:$("#BillType_hidden").val(),
-                        channel:$("#ed_channel_id_hidden").val(),
-                        product_group:$("#product_group_id_hidden").val(),
-                        flow_flag:$("#flow_flag_hidden").val(),
-                        planInDate_start:$("#PlanInDate_start_hidden").val(),
-                        planInDate_end:$("#PlanInDate_end_hidden").val(),
-                        so_id:$("#so_id_hidden").val(),
-                        dn_id:$("#dn_id_hidden").val(),
-                        source_order_id:$("#source_order_id_hidden").val()
-                    });
-        }else{
-            datagrid = $('#dataGrid').datagrid({
-                url: "/CrmOrderManual/findCrmOrderManualList",
-                fit: true,
-                pagination: true,
-                singleSelect: true,
-                pageSize: 100,
-                pageList: [1,2,100,200,300],
-                nowrap: false,
-                rownumbers: true,
-                singleSelect: false,
-                selectOnCheck: true,
-                checkOnSelect: true,
-                queryParams: {
-                    order_id:$("#order_id_hidden").val(),
-                    corpCode:$("#CorpCode_hidden").val(),
-                    whCode:$("#WhCode_hidden").val(),
-                    materials_id:$("#materials_id_hidden").val(),
-                    materials_desc:$("#materials_desc_hidden").val(),
-                    brand_id:$("#brand_hidden").val(),
-                    category_id:$("#cbsCategory_hidden").val(),
-                    bill_type:$("#BillType_hidden").val(),
-                    channel:$("#ed_channel_id_hidden").val(),
-                    product_group:$("#product_group_id_hidden").val(),
-                    flow_flag:$("#flow_flag_hidden").val(),
-                    planInDate_start:$("#PlanInDate_start_hidden").val(),
-                    planInDate_end:$("#PlanInDate_end_hidden").val(),
-                    so_id:$("#so_id_hidden").val(),
-                    dn_id:$("#dn_id_hidden").val(),
-                    source_order_id:$("#source_order_id_hidden").val()
-                },
-                columns: [
-                    [
-                        {
-                            field: 'check',
-                            title: '全选',
-                            width: 100,
-                            align: 'center',
-                            checkbox:true
-                        },
-                        {
-                            field: 'wp_order_id',
-                            title: '订单号',
-                            width: 120,
-                            align: 'center'
-                        },
-                        {
-                            field: 'source_order_id',
-                            title: '来源单号',
-                            width: 120,
-                            align: 'center'
-                        },
-                        {
-                            field: 'po_id',
-                            title: 'PO号',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'so_id',
-                            title: 'SO号',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'dn_id',
-                            title: 'DN号',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'ed_channel_name',
-                            title: '渠道',
-                            width: 150,
-                            align: 'center'
-                        },
-                        {
-                            field: 'flow_flag_name',
-                            title: '状态',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'corpName',
-                            title: '分公司',
-                            width: 300,
-                            align: 'center'
-                        },
-                        {
-                            field: 'industry_trade_desc',
-                            title: '工贸',
-                            width: 200,
-                            align: 'center'
-                        },
-                        {
-                            field: 'billType',
-                            title: '订单类型',
-                            width: 100,
-                            align: 'center',
-                            hidden:true
-                        },
-                        {
-                            field: 'billTypeName',
-                            title: '订单类型',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'sap_flow_num',
-                            title: '配送方式',
-                            width: 100,
-                            align: 'center',
-                            hidden:true
-                        },
-                        {
-                            field: 'sap_flow_num_name',
-                            title: '配送方式',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'payment_name',
-                            title: '付款方',
-                            width: 200,
-                            align: 'center'
-                        },
-                        {
-                            field: 'esale_name',
-                            title: '送达方',
-                            width: 200,
-                            align: 'center'
-                        },
-                        {
-                            field: 'estorge_id',
-                            title: '仓库编码',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'estorge_name',
-                            title: '仓库名称',
-                            width: 200,
-                            align: 'center'
-                        },
-                        {
-                            field: 'whCode',
-                            title: '日日顺库位码',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'custMgr',
-                            title: '客户经理',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'porMgr',
-                            title: '产品经理',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'proDputy',
-                            title: '产品代表',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'isKPOName',
-                            title: '是否商用空调',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'planindate_display',
-                            title: '预计到货日期',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'budgetOrgName',
-                            title: '预算体',
-                            width: 250,
-                            align: 'center'
-                        },
-                        {
-                            field: 'ggg',
-                            title: '预算种类',
-                            width: 200,
-                            align: 'center',
-                            formatter:function(value,rowData,rowIndex){
-                                return '月度直扣(占PL市场费用)';
-                            }
-                        },
-                        {
-                            field: 'corpName',
-                            title: '销售组织',
-                            width: 200,
-                            align: 'center'
-                        },
-                        {
-                            field: 'maker',
-                            title: '开单人',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'releBillCode',
-                            title: '关联单号',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'rrs_distribution_name',
-                            title: '配送中心',
-                            width: 200,
-                            align: 'center'
-                        },
-                        {
-                            field: 'materials_id',
-                            title: '物料编号',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'materials_desc',
-                            title: '型号',
-                            width: 200,
-                            align: 'center'
-                        },
-                        {
-                            field: 'brand_name',
-                            title: '品牌',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'product_group_name',
-                            title: '产品组',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'invState',
-                            title: '批次',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'sumMoney',
-                            title: '价税合计',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'qty',
-                            title: '数量',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'unitPrice',
-                            title: '开票价格',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'retailPrice',
-                            title: '供价',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'actPrice',
-                            title: '执行价',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'bateRate',
-                            title: '直扣',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'bateMoney',
-                            title: '台返金额',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'lossRate',
-                            title: '折扣',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'isFLName',
-                            title: '是否返利',
-                            width: 100,
-                            align: 'center'
-                        },
-                        {
-                            field: 'bill_time_display',
-                            title: '提交时间',
-                            width: 150,
-                            align: 'center'
-                        },
-                        {
-                            field: 'rrs_out_time_display',
-                            title: '出日日顺库时间',
-                            width: 150,
-                            align: 'center'
-                        },
-                        {
-                            field: 'wa_in_time_display',
-                            title: '入WA库时间',
-                            width: 150,
-                            align: 'center'
-                        },
-                        {
-                            field: 'error_msg',
-                            title: '备注',
-                            width: 300,
-                            align: 'left'
-                        }
-                    ]
-                ]
-            });
-        }
-        $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
-    });
-
-    function myformatter(date) {
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        var d = date.getDate();
-        date = y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
-        return date;
-    }
-
-    function myparser(s) {
-        if (!s) return new Date();
-        var ss = (s.split('-'));
-        var y = parseInt(ss[0], 10);
-        var m = parseInt(ss[1], 10);
-        var d = parseInt(ss[2], 10);
-        if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-            return new Date(y, m - 1, d);
-        } else {
-            return new Date();
-        }
-    }
-
-    var datagrid;
-    $(function () {
-        var buttons = $.extend([], $.fn.datebox.defaults.buttons);
-        buttons.splice(1, 0, {
-            text: '清除',
-            handler: function(target){
-                $(target).datebox('setValue', '');
-                $(target).combo("hidePanel");
-            }
+    $(document).ready(function(){
+        $(".textbox-text").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
         });
-        $('#PlanInDate_start').datebox({
-            buttons: buttons
-        });
-        $('#PlanInDate_end').datebox({
-            buttons: buttons
-        });
-        //取得流程状态列表
-        var valueSetId = "manual_order_flow_flag";
-        jQuery.getJSON("/purchase/getByValueSetId"+ "?valueSetId=" + valueSetId, function(result){
-            var count = result.totalCount;
-            var dataList = result.data;
-            //添加全部
-            dataList.unshift( {value:'ALL',value_meaning:'全部'});
-            $("#flow_flag").combobox({
-                data:dataList,
-                valueField:'value',
-                textField:'value_meaning',
-                panelHeight:'auto',
-                editable:false,
-                value:'ALL'
-            });
-        });
-        //取得订单类型列表
-        var valueSetId = "bill_type";
-        jQuery.getJSON("/purchase/getByValueSetId"+ "?valueSetId=" + valueSetId, function(result){
-            var count = result.totalCount;
-            var dataList = result.data;
-            //添加全部
-            dataList.unshift( {value:'ALL',value_meaning:'全部'});
-            $("#BillType").combobox({
-                data:dataList,
-                valueField:'value',
-                textField:'value_meaning',
-                panelHeight:'auto',
-                editable:false,
-                value:'ALL'
-            });
-        });
-
-        jQuery.getJSON("/purchase/getCbsCategoryByAuth", function(result){
-            var JosnList=[];
-            var cbsCategoryJson = {id: "ALL", text: "全部"};
-            JosnList.push(cbsCategoryJson)
-            jQuery.each(result.data,function(i, v){
-                var item={id:v,text:v};
-                JosnList.push(item);
-            });
-            $("#cbsCategory").combobox({
-                data:JosnList,
-                valueField:'id',
-                textField:'text',
-                panelHeight:'auto',
-                editable:false,
-                value:'ALL'
-            });
-        });
-
-        jQuery.getJSON("/T2OrderQuery/getProductBrand", function(result){
-            var brand = result.data;
-            brand.unshift({value:'ALL',valueMeaning:'全部'});
-            $("#brand").combobox({
-                data:result.data,
-                valueField:'value',
-                textField:'valueMeaning',
-                editable:false,
-                value:'ALL'
-            });
-        });
-
-        jQuery.getJSON("/purchase/getProductGroupByAuth", function(result){
-            var productgroup = result.data;
-            productgroup.unshift({value:'ALL',valueMeaning:'全部'});
-            $("#product_group").combobox({
-                data:result.data,
-                valueField:'value',
-                textField:'valueMeaning',
-                panelHeight:'300',
-                editable:false,
-                value:'ALL'
-            });
-        });
-        //取得渠道列表
-        jQuery.getJSON("/purchase/getChannelsByAuth", function(result){
-            var channel = result.data;
-            //添加全部
-            channel.unshift( {channelCode:'ALL',name:'全部'});
-            $("#channel").combobox({
-                data:channel,
-                valueField:'channelCode',
-                textField:'name',
-                panelHeight:'auto',
-                editable:false,
-                value:'ALL'
-            });
+        $(".txt").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
         });
     });
-    //点击导出
-    $('#export').click(function(){
-        if(!datagrid){
-            $.messager.alert('提示','请查询！','info');
-            return;
-        }
-        //获得选中行
-        var checkedItems = $('#dataGrid').datagrid('getChecked');
-        var exportData = new Array();
-        //将订单号存入Array
-        $.each(checkedItems, function(index, item){
-            exportData.push(item.wp_order_id);
-        });
-        $("#exportData").val(JSON.stringify(exportData));
-        //判断是否都没选中
-        if(exportData==null||exportData.length==0){
-            $.messager.alert('错误','请至少选择一行要导出的行！','error');
-            return;
-        }
-        $.messager.confirm('确认', '确定要导出吗？', function(r){
-            if (r){
-                $('#filterForm').attr("action", '/CrmOrderManual/exportCrmList.export');
-                $('#filterForm').submit();
-            }
-        });
-    });
-    //点击全部导出
-    $('#exportall').click(function(){
-        if(!datagrid){
-            $.messager.alert('提示','请查询！','info');
-            return;
-        }
-        if ($("#dataGrid").datagrid("getData").rows.length == 0) {
-            $.messager.alert('提示', '无有效数据！', 'info');
-            return;
-        }
-        $.messager.confirm('确认','确定要全部导出吗？', function(r){
-            if (r){
-                $("#exportData").val('');
-                $('#filterForm').attr("action", '/CrmOrderManual/exportCrmList.export');
-                $('#filterForm').submit();
-            }
-        });
-    });
-    //点击新增
-    $('#add').click(function(){
-        $("#modifyData").val("add");
-        $('#filterForm').attr("action", '/CrmOrderManual/gotoAddCRMOrderManualDetail');
-        $('#filterForm').submit();
-    });
-    //点击修改
-    $('#modify').click(function(){
-        if(!datagrid){
-            $.messager.alert('提示','请查询！','info');
-            return;
-        }
-        //获得选中行
-        var checkedItems = $('#dataGrid').datagrid('getChecked');
-        //判断选中的数据是否符合条件
-        if(checkedItems.length==0){
-            $.messager.alert('错误','请至少选择一张要修改的订单！','error');
-            return;
-        }else if(checkedItems.length > 1){
-            $.messager.alert('错误','每次只能修改一张订单！','error');
-            return;
-        }else if(checkedItems[0].flow_flag != 0){
-            $.messager.alert('错误','只能修改未提交的订单！','error');
-            return;
-        }else{
-            $("#modifyData").val(checkedItems[0].wp_order_id);
-            $('#filterForm').attr("action", '/CrmOrderManual/gotoAddCRMOrderManualDetail');
-            $('#filterForm').submit();
-        }
-    });
-    //点击删除
-    $('#delete').click(function(){
-        if(!datagrid){
-            $.messager.alert('提示','请查询！','info');
-            return;
-        }
-        //获得选中行
-        var checkedItems = $('#dataGrid').datagrid('getChecked');
-        var deleteData = new Array();
-        //将订单号存入Array
-        $.each(checkedItems, function(index, item){
-            if(item.flow_flag == 0){
-                deleteData.push(item.wp_order_id);
-            }
-        });
-        $("#deleteData").val(JSON.stringify(deleteData));
-        //判断是否都没选中
-        if(deleteData==null||deleteData.length==0){
-            $.messager.alert('错误','请至少选择一张要删除的未提交订单！','error');
-            return;
-        }
-        $.messager.confirm('确认', '确定要删除吗？', function(r){
-            if (r){
-                jQuery.ajax({
-                    url: "/CrmOrderManual/deleteOrderManual",   // 提交的页面
-                    type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
-                    data:{"deleteData": JSON.stringify(deleteData)},
-                    success: function (data) {
-                        if(data.message) {$.messager.alert('提示',data.message,'info');}
-                        $('#dataGrid').datagrid('load',
-                                {order_id:$("#order_id_hidden").val(),
-                                    corpCode:$("#CorpCode_hidden").val(),
-                                    whCode:$("#WhCode_hidden").val(),
-                                    materials_id:$("#materials_id_hidden").val(),
-                                    materials_desc:$("#materials_desc_hidden").val(),
-                                    brand_id:$("#brand_hidden").val(),
-                                    category_id:$("#cbsCategory_hidden").val(),
-                                    bill_type:$("#BillType_hidden").val(),
-                                    channel:$("#ed_channel_id_hidden").val(),
-                                    product_group:$("#product_group_id_hidden").val(),
-                                    flow_flag:$("#flow_flag_hidden").val(),
-                                    planInDate_start:$("#PlanInDate_start_hidden").val(),
-                                    planInDate_end:$("#PlanInDate_end_hidden").val(),
-                                    so_id:$("#so_id_hidden").val(),
-                                    dn_id:$("#dn_id_hidden").val()});
-                        $('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
-                    }
-                });
-            }
-        });
-    });
-
-</script>
+    </script>
 </body>
+</html>

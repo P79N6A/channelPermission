@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.eop.data.dao.TransferOrderLogDao">
+
+    <select id="getByName"  resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM transferorder_log
+        WHERE name = #{name}
+    </select>
+
+    <update id="updateTransferLog">
+        UPDATE `transferorder_log`
+        <set>
+            <if test="updateouttime != null">
+                `updateouttime`=#{updateouttime},
+            </if>
+            <if test="updateintime != null">
+                `updateintime`=#{updateintime},
+            </if>
+            <if test="querytime != null">
+                `querytime`=#{querytime},
+            </if>
+            <if test="out_msg != null">
+                `out_msg`=#{out_msg},
+            </if>
+            <if test="in_msg != null">
+                `in_msg`=#{in_msg},
+            </if>
+            <if test="query_msg != null">
+                `query_msg`=#{query_msg}
+            </if>
+        </set>
+        where `name` = #{name}
+    </update>
+
+    <insert id="insertTransferLog">
+        INSERT INTO `transferorder_log`(`name`,`updateouttime`,`updateintime`,`querytime`,`out_msg`,`in_msg`,`query_msg`)
+        VALUES
+        (#{name},#{updateouttime},#{updateintime},#{querytime},#{out_msg},#{in_msg},#{query_msg})
+    </insert>
+</mapper>

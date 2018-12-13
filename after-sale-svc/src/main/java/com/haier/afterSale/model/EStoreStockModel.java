@@ -13,7 +13,7 @@ import com.haier.shop.model.MctStoreProducts;
 import com.haier.shop.model.ProductBase;
 import com.haier.shop.model.ProductsNew;
 import com.haier.shop.model.SgConstants;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.shop.model.StockHolder;
 import com.haier.shop.service.MctStoreProductsService;
 import com.haier.stock.model.BaseStock;

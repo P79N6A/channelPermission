@@ -17,7 +17,11 @@ import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
@@ -37,6 +41,9 @@ import com.haier.stock.service.StockInvStockLockService;
 @Service
 public class StockAgeModel {
 	private static org.apache.log4j.Logger log = org.apache.log4j.LogManager.getLogger(StockAgeModel.class);
+	
+	@Autowired
+	private DataSourceTransactionManager transactionManagerStock;
 	@Autowired
 	private InvStockInOutService invStockInOutService;
 	@Autowired
@@ -292,6 +299,78 @@ public class StockAgeModel {
 	public void calculateStockAgeTimely() {
 		List<InvStockInOut> stockInOuts = invStockInOutService.getByAgeStatus(0);
 		Date today = DateUtil.truncateTime(stockInvStockAgeService.getNow());
+		Map<String, List<InvStockInOut>> inOutMap = new HashMap<String, List<InvStockInOut>>();
+		for (InvStockInOut stockInOut : stockInOuts) {
+			Date billTime = stockInOut.getBillTime();
+			if (billTime.before(today)) {// 交易时间早于今天，不统计
+				invStockInOutService.updateAgeStatus(stockInOut.getId(), InvStockInOut.AGE_STATUS_DOWN,
+						InvStockInOut.AGE_STATUS_WAIT);
+				log.info("时时计算(stockInOut-id=" + stockInOut.getId() + ")完成:交易时间早于今天,不进行计算");
+				continue;
+			} else if (billTime.after(DateUtil.add(today, Calendar.DAY_OF_YEAR, 1))) { // 交易日期晚于今天，不统计
+				log.info("时时计算(stockInOut-id=" + stockInOut.getId() + ")完成:交易时间晚于今天,不进行计算");
+				continue;
+			}
+			String sku = stockInOut.getSku();
+			String secCode = stockInOut.getSecCode();
+			if (StringUtil.isEmpty(sku) || StringUtil.isEmpty(secCode) || secCode.length() < 2) {
+				invStockInOutService.updateAgeStatus(stockInOut.getId(), stockInOut.getAgeStatus(), 1);
+				log.info("时时计算库龄(stockInOut-id=" + stockInOut.getId() + ")完成:数据错误,不进行计算");
+				continue;
+			}
+			String key = sku + "#" + secCode;
+			List<InvStockInOut> list = inOutMap.get(key);
+			if (list == null) {
+				list = new ArrayList<InvStockInOut>();
+				inOutMap.put(key, list);
+			}
+			list.add(stockInOut);
+		}
+
+		for (Map.Entry<String, List<InvStockInOut>> stringListEntry : inOutMap.entrySet()) {
+			String key = stringListEntry.getKey();
+			String[] strs = key.split("#");
+			String sku = strs[0];
+			String secCode = strs[1];
+			List<InvStockAge> stockAges = stockInvStockAgeService.getBySkuAndSCode(secCode, sku);
+			if (stockAges.size() <= 0) {
+				log.error("库龄数据不存在，无法统计。sku=" + sku + "，secCode=" + secCode);
+				continue;
+			}
+			Date clearDate = stockAges.get(0).getDate();
+			// 如果库龄数据的清算日期早于今天，重新清算库龄
+			if (clearDate.before(today)) {
+				log.info("库龄（" + sku + "," + secCode + "）没有完成清算，当前清算日期为“" + DateUtil.format(clearDate, "yyyy-MM-dd")
+						+ "”，不支持实时计算");
+				continue;
+			}
+			StockAgeHandler ageHandler = new StockAgeHandler(sku, secCode);
+			ageHandler.buildUpAgeDataListByStockAge(stockAges);
+			for (InvStockInOut stockInOut : stringListEntry.getValue()) {
+				calculateStockAge(ageHandler, stockInOut, today, clearDate);
+				ageHandler.buildInvStockAges(stockAges);
+				int effectNum = invStockInOutService.updateAgeStatus(stockInOut.getId(), InvStockInOut.AGE_STATUS_DOWN,
+						InvStockInOut.AGE_STATUS_WAIT);
+				if (effectNum < 1) {
+					log.error("实时统计库龄出现并发情况（stock_in_out id=" + stockInOut.getId() + "）");
+					continue;
+				}
+
+				// Map<String, InvStockAge> channelStockAges =
+				// convertToChannelAgeData(stockAges);
+				for (InvStockAge stockAge : stockAges) {
+					// assertCurrentStockFrozenOutOrder(stockAge, channelStockAges,
+					// ageHandler.getDataList());
+					stockInvStockAgeService.update(stockAge);
+				}
+			}
+		}
+		syncAssertFrozenQty();
+	}
+
+	public void calculateStockAgeTimelyHistory(Date today) {
+		List<InvStockInOut> stockInOuts = invStockInOutService.getByAgeStatus(0);
+//		Date today = DateUtil.truncateTime(stockInvStockAgeService.getNow());
 		Map<String, List<InvStockInOut>> inOutMap = new HashMap<String, List<InvStockInOut>>();
 		for (InvStockInOut stockInOut : stockInOuts) {
 			Date billTime = stockInOut.getBillTime();
@@ -651,6 +730,31 @@ public class StockAgeModel {
                 lastClearDate);
         }
     }
+
+	/**
+	 * 根据出入库记录计算库龄数据,每天计算一次.<br/>
+	 * 增量计算,每条库龄数据记录上次计算的日期,下次计算时,只统计上次计算日期当今天的数据
+	 */
+	public void calculateStockAgeDayHistory(Date history) {
+		//按照secCode和sku分组获取库龄数据
+		long stepTime = System.currentTimeMillis();
+		List<InvStockAge> stockAgesGroupBySkuSecCode = invStockAgeService.getGroupBySecAndSku();
+		log.info(LOGGER_MARK + "-[calculateStockAgeDaily]:按照sku和secCode获取库龄信息完成，共"
+				+ stockAgesGroupBySkuSecCode.size() + "组数据需要处理，用时 "
+				+ (System.currentTimeMillis() - stepTime) + "ms" + history);
+
+//		Date today = DateUtil.truncateTime(invStockAgeService.getNow());//当前日期
+		//每组库龄数据统一计算
+		for (InvStockAge invStockAge : stockAgesGroupBySkuSecCode) {
+			Date lastClearDate = invStockAge.getDate();
+			if (!lastClearDate.before(history)) {
+				//已经计算到今天,不再计算
+				continue;
+			}
+			calculateStockAgeDaily(invStockAge.getSku(), invStockAge.getSecCode(), history,
+					lastClearDate);
+		}
+	}
     
     /**
      * 库龄计算
@@ -742,5 +846,29 @@ public class StockAgeModel {
         }
         retMap.put(DateUtil.add(temp, Calendar.DAY_OF_YEAR, -1), queue);
         return retMap;
+    }
+
+    /**
+     * 更新库齡表的物料基本信息(商品名称，品类，产品组，品牌)
+     *
+     * @param base 产品信息
+     */
+    public Integer updateMtlInfoForStockAge(ItemBase base) {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManagerStock.getTransaction(def);
+        try {
+            InvStockAge stockAge = new InvStockAge();
+            stockAge.setSku(base.getMaterialCode());
+            this.setDefaultMtlInfoForStockAge(stockAge);
+            this.setMtlInfoForStockAge(stockAge, base);
+            int cnt = invStockAgeService.updateMtlInfoForStockAge(stockAge);
+            transactionManagerStock.commit(status);
+            return cnt;
+        } catch (Exception e) {
+            transactionManagerStock.rollback(status);
+            log.error("更新库齡表的物料基本信息(商品名称，品类，产品组，品牌)时出现未知异常：", e);
+            throw new RuntimeException("更新库齡表的物料基本信息(商品名称，品类，产品组，品牌)时出现未知异常");
+        }
     }
 }

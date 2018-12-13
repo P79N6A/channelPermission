@@ -3,10 +3,11 @@ package com.haier.svc.service;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.haier.common.ServiceResult;
 import com.haier.distribute.data.model.ProductCates;
-import com.haier.purchase.data.model.LesFiveYardInfo;
 import com.haier.shop.model.*;
+import com.haier.stock.model.InvStockAge;
 
 /**
  * @author 李超
@@ -18,7 +19,13 @@ public interface ItemService {
      * @return
      */
     ServiceResult<List<String>> getAllCbsCategory();
-    
+
+    /**
+     * 根据条件查询产品属性列表,属性组编码大小写不敏感
+     * @param itemAttribute
+     * @return
+     */
+    JSONObject queryItemAttribute(ItemAttribute itemAttribute);
 
     public abstract ServiceResult<List<LesFiveYardInfo>> selectLesFiveYards(Map<String, Object> paramMap);
 
@@ -84,6 +91,14 @@ public interface ItemService {
     ServiceResult<ItemAttribute> getItemAttributeByValueSetIdAndValue(String valueSetId,
                                                                       String value);
     /**
+     * 手动添加物料基本信息
+     * @param itemBase
+     * @return
+     */
+    ServiceResult<Boolean> insertItemBaseInfo(ItemBase itemBase);
+
+    ServiceResult<Boolean> updateItemBaseById(ItemBase base);
+    /**
      * 根据id获取产品对象
      * @param id
      * @return
@@ -112,5 +127,24 @@ public interface ItemService {
     ServiceResult<List<ItemBase>> findItemBaseByMaterialId(String material_id);
 
     ServiceResult<List<String>> getCbsCategoryByProductGroup(Map<String, Object> map);
-    
+
+
+    /**
+     * 根据CBS品类查询产品组
+     * @param cbsCategory
+     * @return
+     */
+    ServiceResult<List<ItemAttribute>> queryProductGroupByCbsCategory(String cbsCategory);
+
+    List<ItemBase> getIncompleteItemBaseList();
+
+    int updateMtlInfoForStockAge(InvStockAge stockAge);
+
+    ServiceResult<String> getRegionsCode(Map<String, Object> param);
+
+	ServiceResult<Boolean> saveItemAttribute(ItemAttribute value);
+
+	ServiceResult<Boolean> saveItemBase(ItemBase value);
+
+	ServiceResult<Boolean> manualSyncMdmBySku(ItemBase mtl, String modifier);
 }

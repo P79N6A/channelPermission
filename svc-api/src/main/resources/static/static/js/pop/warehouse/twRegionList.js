@@ -10,17 +10,17 @@ var datagridOptions_twRegionListGoal = {
          hidden:true
     }]],
     columns: [[
-        {title: '渠道名称 ', field: 'channelName', sortable: true},
-        {title: '仓库编码', field: 'warehouseCode', sortable: true},
-        {title: '配送仓库', field: 'warehouseName', sortable: true},
-        {title: '省', field: 'province', sortable: true},
-        {title: '市', field: 'city', sortable: true},
-        {title: '县/区', field: 'county', sortable: true},
-        {title: '创建者', field: 'createBy', sortable: true},
-        {title: '创建时间', field: 'cTime', sortable: true},
-        {title: '更新者', field: 'updateBy', sortable: true},
-        {title: '更新时间', field: 'uTime', sortable: true},
-        {title: '备注', field: 'remark', sortable: true}
+        {title: '渠道名称 ', field: 'channelName', sortable: false},
+        {title: '仓库编码', field: 'warehouseCode', sortable: false},
+        {title: '配送仓库', field: 'warehouseName', sortable: false},
+        {title: '省', field: 'province', sortable: false},
+        {title: '市', field: 'city', sortable: false},
+        {title: '县/区', field: 'county', sortable: false},
+        {title: '创建者', field: 'createBy', sortable: false},
+        {title: '创建时间', field: 'cTime', sortable: false},
+        {title: '更新者', field: 'updateBy', sortable: false},
+        {title: '更新时间', field: 'uTime', sortable: false},
+        {title: '备注', field: 'remark', sortable: false}
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
     striped: true,
@@ -157,17 +157,17 @@ $("#searchBtn").on('click', function (event) {
              hidden:true
         }]],
         columns: [[
-            {title: '渠道名称 ', field: 'channelName', sortable: true},
-            {title: '仓库编码', field: 'warehouseCode', sortable: true},
-            {title: '配送仓库', field: 'warehouseName', sortable: true},
-            {title: '省', field: 'province', sortable: true},
-            {title: '市', field: 'city', sortable: true},
-            {title: '县/区', field: 'county', sortable: true},
-            {title: '创建者', field: 'createBy', sortable: true},
-            {title: '创建时间', field: 'cTime', sortable: true},
-            {title: '更新者', field: 'updateBy', sortable: true},
-            {title: '更新时间', field: 'uTime', sortable: true},
-            {title: '备注', field: 'remark', sortable: true}
+            {title: '渠道名称 ', field: 'channelName', sortable: false},
+            {title: '仓库编码', field: 'warehouseCode', sortable: false},
+            {title: '配送仓库', field: 'warehouseName', sortable: false},
+            {title: '省', field: 'province', sortable: false},
+            {title: '市', field: 'city', sortable: false},
+            {title: '县/区', field: 'county', sortable: false},
+            {title: '创建者', field: 'createBy', sortable: false},
+            {title: '创建时间', field: 'cTime', sortable: false},
+            {title: '更新者', field: 'updateBy', sortable: false},
+            {title: '更新时间', field: 'uTime', sortable: false},
+            {title: '备注', field: 'remark', sortable: false}
         ]],
     });
 });

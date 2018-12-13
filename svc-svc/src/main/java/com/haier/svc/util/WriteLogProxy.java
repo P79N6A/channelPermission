@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.Date;
+import org.springframework.stereotype.Component;
 
 /**
  * 写接口日志代理类
@@ -20,6 +21,7 @@ import java.util.Date;
  * @Email: yaoyu@ehaier.com
  *
  */
+@Component
 public class WriteLogProxy implements ApplicationContextAware {
 
     private static org.apache.log4j.Logger          log = org.apache.log4j.LogManager

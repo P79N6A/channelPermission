@@ -4,10 +4,9 @@ package com.haier.invoice.service;
 import com.haier.common.ServiceResult;
 import com.haier.invoice.model.eai.InvoiceEntity;
 import com.haier.invoice.model.eai.QueryInvoiceInputType;
-import com.haier.shop.model.InvoicesWwwLogs;
+import com.haier.invoice.util.HttpJsonResult;
 import com.haier.shop.model.MemberInvoices;
 import com.haier.shop.model.MemberInvoicesDispItem;
-import com.haier.stock.model.InvChannel2OrderSource;
 
 import java.util.List;
 import java.util.Map;
@@ -145,7 +144,7 @@ public interface InvoiceCommonService {
     String saveMemberInvoices(Integer id, Integer invoiceType, String invoiceTitle,
                               String taxPayerNumber, String registerAddress, String registerPhone,
                               String bankName, String bankCardNumber, Integer state, String remark,
-                              String auditor);
+                              String auditor,String userName,String vatremark);
 
     /**
      * 解锁发票信息
@@ -194,7 +193,7 @@ public interface InvoiceCommonService {
      * @param source
      * @return
      */
-    String getSapChannelCode(String source);
+    String getSapChannelCode(String cOrderSn,String source);
 
     /**
      * 发票批量修改
@@ -213,4 +212,48 @@ public interface InvoiceCommonService {
      * @return
      */
     String invoiceWwwLogsOperate(String flag, String orderId, String orderProductId, String auditor);
+
+    /**
+     //TODO 批量审核订单发票 
+     * @param cOrderSns
+     * @param modelMap
+     * @return
+     */
+	HttpJsonResult<Map<String, Object>> doBatchAuditingOrderInvoice(String cOrderSns, Map<String, Object> modelMap,String userName);
+
+	/**
+	 //TODO 批量共享开票
+	 * @param cOrderSns
+	 * @param modelMap
+	 * @return
+	 */
+	HttpJsonResult<Map<String, Object>> doBatchShareInvoice(String cOrderSns, Map<String, Object> modelMap);
+
+    /**
+     *天猫税控码查询(开票列表)
+     * @param params
+     * @return
+     */
+    Map<String,Object> getTianMaoFiscalCodeListByPage(Map<String,Object> params);
+
+    /**
+     * 查询导出发票信息
+     * @param params
+     * @return
+     */
+    List<Map<String,Object>> getExportTianMaoFiscalCodeList(Map<String,Object> params);
+
+    /**
+     * 税控码查询
+     * @param params
+     * @return
+     */
+    Map<String,Object> getFiscalCodeListByPage(Map<String,Object> params);
+
+    /**
+     * 批量推送共享优品发票
+     * @param line_nums
+     * @return
+     */
+    HttpJsonResult<Map<String,Object>> doBatchPushShareYoupinInvoice(String line_nums);
 }

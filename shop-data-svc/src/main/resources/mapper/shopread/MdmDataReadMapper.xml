@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.MdmDataReadDao">
+
+    <resultMap id="mdmDataResult" type="com.haier.shop.model.SysMdmVO">
+        <result property="rowId" column="row_id" />
+        <result property="materialCode" column="material_code" />
+        <result property="materialDescrition" column="material_descrition" />
+    </resultMap>
+
+    <select id="queryBySku" resultMap="mdmDataResult">
+        select `row_id`,`material_descrition` from sys_mdm
+        where `material_code`=#{sku} order by `row_id` desc limit 1
+    </select>
+</mapper>

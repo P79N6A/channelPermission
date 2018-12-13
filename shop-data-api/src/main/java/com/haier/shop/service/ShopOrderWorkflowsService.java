@@ -1,9 +1,11 @@
 package com.haier.shop.service;
 
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import com.haier.shop.model.OrderWorkflowRegion;
 import com.haier.shop.model.OrderWorkflows;
 
 public interface ShopOrderWorkflowsService {
@@ -256,4 +258,26 @@ public interface ShopOrderWorkflowsService {
      */
     
     Integer updateIsTimeoutFree(Integer orderProductId, Integer isTimeoutFree);
+    /**
+     * 根据网单号获取及时率报表逆向数据列表
+     */
+     List<Map<String, Object>> getOntimeRateReverseListByOrderSn(Map<String, Object> paramMap) throws Exception;
+
+    public List<Map<String, Object>> getOntimeRateReverseList(Map<String, Object> paramMap)
+            throws ParseException;
+
+    public List<Map<String, Object>> getOntimeRateReverseListNew(Map<String, Object> paramMap,Boolean need)
+            throws ParseException;
+
+    Integer getOntimeRateReverseDetailCount(Map<String, Object> paramMap);
+
+    Integer getOntimeRateReverseDetailCountNew(Map<String, Object> paramMap);
+
+    List<Map<String, Object>> getOntimeRateReverseDetailNew(Map<String, Object> paramMap);
+
+    List<Map<String, Object>> getOntimeRateReverseDetail(Map<String, Object> paramMap);
+
+    List<OrderWorkflowRegion> getOwfRegion();
+
+
 }

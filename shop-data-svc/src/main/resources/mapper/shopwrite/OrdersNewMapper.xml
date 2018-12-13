@@ -86,13 +86,15 @@
     <result property="couponCode" column="couponCode"/>
     <result property="couponCodeValue" column="couponCodeValue"/>
     <result property="ckCode" column="ckCode"/>
+
+    <result property="lbxSn" column="lbxSn"/>
     </resultMap>
 
 
     <select id="getByIds" resultMap="ordersResult">
         select
         `id`,`isTest`,`isBackend`,`isBook`,`isCod`,`notAutoConfirm`,`orderSn`,`relationOrderSn`,`memberId`,`memberEmail`,`addTime`,`syncTime`,`orderStatus`,`payTime`,`paymentStatus`,`receiptConsignee`,`receiptAddress`,`receiptZipcode`,`receiptMobile`,`productAmount`,`orderAmount`,`paidAmount`,`shippingAmount`,`totalEsAmount`,`paymentCode`,`payBankCode`,`paymentName`,`consignee`,`originRegionName`,`originAddress`,`province`,`city`,`region`,`street`,`markBuilding`,`poiId`,`poiName`,`regionName`,`address`,`zipcode`,`mobile`,`phone`,`receiptInfo`,`delayShipTime`,`remark`,`bankCode`,`agent`,`confirmTime`,`firstConfirmTime`,`firstConfirmPerson`,`finishTime`,`tradeSn`,`signCode`,`source`,`sourceOrderSn`,`onedayLimit`,`orderType`,`memberInvoiceId`,`taobaoGroupId`,`tradeType`,`stepTradeStatus`,`stepPaidFee`,`depositAmount`,`balanceAmount`,`autoCancelDays`,`isNoLimitStockOrder`,`autoConfirmNum`,`smConfirmStatus`,`smConfirmTime`,`smManualTime`,`smManualRemark`,`isTogether`,`isNotConfirm`,`points`,`isProduceDaily`,`ckCode`
-        from `Orders`
+        from `orders`
         where `id` in
         <foreach collection="ids" index="index" item="id" open="("
                  separator="," close=")">
@@ -101,26 +103,26 @@
     </select>
     
      <update id="completeClose">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `orderStatus` = 203, finishTime = #{finishTime}
         WHERE `id` = #{id} AND `orderStatus` != 202
     </update>
     
      <update id="updateSmConfirmStatus" parameterType="com.haier.shop.model.OrdersNew">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `smConfirmStatus` = #{smConfirmStatus}
         WHERE `id` = #{id} and `smConfirmStatus`=4
     </update>
     
      <update id="updateForConfirm" parameterType="com.haier.shop.model.OrdersNew">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `confirmTime`      = #{confirmTime}, `firstConfirmPerson` = #{firstConfirmPerson},
             `firstConfirmTime` = #{firstConfirmTime}, `orderStatus` = #{orderStatus}
         WHERE `id` = #{id} AND (`orderStatus` = 200 OR `orderStatus` = 204)
     </update>
     
      <update id="updateOrderStatus">
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `orderStatus` = #{orderStatus}
         WHERE `id` = #{id} AND `orderStatus` != 202
     </update>
@@ -128,7 +130,7 @@
        <select id="getByIdsForConfirm" resultMap="ordersResult">
         select
         id,orderStatus,orderSn,source,addTime,isProduceDaily,province,city,region,street,orderType,mobile,memberEmail,memberId,consignee,paymentStatus,isCod,tailPayTime,payTime,firstConfirmPerson,firstConfirmTime
-        from Orders
+        from orders
         where id in
         <foreach collection="ids" index="index" item="id" open="("
                  separator="," close=")">
@@ -213,37 +215,37 @@
         `isProduceDaily`,
         `tailPayTime`,
         `ckCode`
-        FROM `Orders`
+        FROM `orders`
         WHERE `id` = #{id}
     </select>
     <select id="getBySmConfirmStatus" resultMap="ordersResult">
         <![CDATA[
 		select id,province,city,region,street,regionName,address,remark,orderStatus,orderSn,paymentStatus,source,sourceOrderSn,addTime
-		from Orders
+		from orders
 		where  smConfirmStatus=1 and isTest='0' and syncTime<unix_timestamp()-30
 		order by id limit 4000
 		]]>
     </select>
     <update id="updateSmConfirmStatusById" >
-        update Orders set  smConfirmStatus=#{targetStatus}, smManualTime=#{smManualTime}, smManualRemark=#{smManualRemark}
+        update orders set  smConfirmStatus=#{targetStatus}, smManualTime=#{smManualTime}, smManualRemark=#{smManualRemark}
         where id=#{id} and smConfirmStatus=#{srcStatus}
     </update>
     <update id="updateSmConfirmStatusForAllProductsOrder" >
-        update Orders set smConfirmStatus=4,markBuilding=1,
+        update orders set smConfirmStatus=4,markBuilding=1,
         firstConfirmTime=unix_timestamp(),firstConfirmPerson='系统'
         where id=#{id} and smConfirmStatus=1
     </update>
     <select id="getNotAutoConfirmOrders" resultMap="ordersResult">
         <![CDATA[
         select distinct os.id,os.orderStatus,os.orderSn,os.source,os.isProduceDaily,os.province,os.city,os.region,os.street,os.orderType,os.mobile,os.memberEmail,os.memberId,os.consignee,os.paymentStatus,os.isCod,os.tailPayTime,os.payTime,os.firstConfirmPerson,os.firstConfirmTime,os.confirmTime,os.addTime,os.isBackend ,os.regionName ,os.address ,os.paymentCode
-        from Orders os,OrderProducts op
+        from orders os,orderproducts op
         where (((os.isCod = 0 and os.paymentStatus = 101 and os.source!='BLPHH') or (os.isCod = 0 and os.source='BLPHH')) or (os.isCod = 1)) and os.orderStatus = 200 and
               os.smConfirmStatus = 4 and os.orderType != 2 and os.isTest = 0 and os.isNotConfirm = 0 and os.notAutoConfirm = 0
         	  and os.id=op.orderId and op.status=1 limit 2000
         ]]>
     </select>
     <update id="updateNotAutoConfirm" >
-        UPDATE `Orders`
+        UPDATE `orders`
         SET `notAutoConfirm` = #{setValue}
         WHERE `id` = #{id} and `notAutoConfirm`= #{whereValue}
     </update>
@@ -325,14 +327,33 @@
             `isTogether`,
             `isNotConfirm`,
             `ckCode`
-        FROM `Orders`
+        FROM `orders`
         WHERE `orderSn` = #{orderSn}
     </select>
     <select id="getOneByOrderSn" resultMap="ordersResult">
         select top.*,o.source,o.consignee,o.sourceOrderSn from
-        OrderProducts top left join Orders o on top.orderId = o.id left
+        orderproducts top left join orders o on top.orderId = o.id left
         join
         t_channels_info tci on o.source = tci.channelCode
         where cOrderSn = #{cOrderSn} and tci.channelCode = 'PX'
     </select>
+
+    <update id="updateLbxSn">
+        UPDATE `orders`
+        SET `lbxSn` = #{lbxSn}
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="updateForTailPayTime" parameterType="com.haier.shop.model.OrdersNew">
+        UPDATE `orders`
+        SET `tailPayTime`=#{tailPayTime}
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="updateStatus" parameterType="java.lang.Integer">
+        UPDATE orders SET
+        orderStatus = '200'
+        WHERE orderStatus = '204'
+        AND id = #{orderId}
+    </update>
 </mapper>

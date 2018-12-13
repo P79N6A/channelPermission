@@ -1,4 +1,5 @@
 package com.haier.svc.api.controller.stock.mode;
+import com.haier.shop.service.OrderProductsNewService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -33,10 +34,23 @@ public class MemStockLockModel {
     private StockCommonService stockCommonService;
 	@Autowired
     private OrderService       orderService;
+	@Autowired
+  private OrderProductsNewService orderProductsNewService;
 
     public ServiceResult<Boolean> lockStock(String sku, String secCode, int frozenQty, 
                                             String refNo, InventoryBusinessTypes billType,
                                             String optUser) {
+        //***************后期要添加校验的话，可以用此代码优化
+        /*if (refNo.substring(0,1).equals("WA")){
+            OrderProductsNew orderProductsNew = this.orderProductsNewService.getByCOrderSn(refNo.trim());
+            if (null == orderProductsNew || null == orderProductsNew.getId()){
+                ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+                result.setMessage("未查询到对应的网单数据");
+                result.setResult(false);
+                return result;
+            }
+        }*/
+        //***************后期要添加校验的话，可以用此代码优化
         ServiceResult<Boolean> result = stockService.frozeStockQty(sku, secCode, refNo, frozenQty,
             InventoryBusinessTypes.FROZEN_BY_MEN, optUser);
         return result;

@@ -4,6 +4,10 @@ package com.haier.shop.dao.shopread;
 import com.haier.shop.model.NetPoints;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
+
 @Mapper
 public interface NetPointsReadDao {
 
@@ -19,4 +23,17 @@ public interface NetPointsReadDao {
     NetPoints get(Integer id);
     
     NetPoints getByNetPointByCode(@Param("netPointCode") String netPointCode);
+
+    /**
+     * 查询总条数
+     * @return
+     */
+    int getRowCnts();
+
+    /**
+     * 查询网点列表
+     * @param params
+     * @return
+     */
+    List<NetPoints> queryNetPointList(Map<String,Object> params);
 }

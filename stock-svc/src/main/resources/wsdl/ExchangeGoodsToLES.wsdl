@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="ExchangeGoodsToLES" targetNamespace="http://www.example.org/ExchangeGoodsToLES/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/ExchangeGoodsToLES/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/ExchangeGoodsToLES/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/ExchangeGoodsToLES/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="ExchangeGoodsToLES">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="INPUT">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="ADD1" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="ADD2" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="ARKTX" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="AUDAT" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="AUTIM" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="BSTNK" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="KUNAG" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="KUNNR" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="KWMENG" type="xsd:decimal">
+            			</xsd:element>
+                  <xsd:element name="LGORT" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="MATNR" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="MEINS" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="POSNR" type="xsd:string">
+            			</xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ExchangeGoodsToLESResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="OUTPUT">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="FLAG" type="xsd:string">
+            			</xsd:element>
+                  <xsd:element name="MESSAGE" type="xsd:string">
+            			</xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="ExchangeGoodsToLESRequest">
+    <WL5G3N0:part element="WL5G3N1:ExchangeGoodsToLES" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="ExchangeGoodsToLESResponse">
+    <WL5G3N0:part element="WL5G3N1:ExchangeGoodsToLESResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="ExchangeGoodsToLES">
+    <WL5G3N0:operation name="ExchangeGoodsToLES">
+      <WL5G3N0:input message="WL5G3N1:ExchangeGoodsToLESRequest"/>
+      <WL5G3N0:output message="WL5G3N1:ExchangeGoodsToLESResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="ExchangeGoodsToLESSOAP" type="WL5G3N1:ExchangeGoodsToLES">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="ExchangeGoodsToLES">
+      <WL5G3N2:operation soapAction="http://www.example.org/ExchangeGoodsToLES/ExchangeGoodsToLES"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="ExchangeGoodsToLES">
+    <WL5G3N0:port binding="WL5G3N1:ExchangeGoodsToLESSOAP" name="ExchangeGoodsToLESSOAP">
+      <!--  <WL5G3N2:address location="${pom.eai.url}/EAI/service/LES/ExchangeGoodsToLES/ExchangeGoodsToLES"/>-->
+       <WL5G3N2:address location="http://10.135.1.185:7001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EAI_INT_0472"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

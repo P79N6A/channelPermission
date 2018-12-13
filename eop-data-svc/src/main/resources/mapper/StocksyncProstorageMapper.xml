@@ -22,7 +22,8 @@
    <select id="Listf" resultMap="BaseResultMap">
 SELECT *
 	FROM stocksyncprostorage
-	where 1=1 and isOn=#{entity.isOn}
+	<where>
+     isOn=#{entity.isOn}
 	<if test="entity!=null">
 		<if test="entity.source != null and entity.source !='' ">
         <![CDATA[ and source = #{entity.source} ]]>
@@ -37,14 +38,15 @@ SELECT *
         <![CDATA[ and sCode like #{entity.sCode}]]>
       </if>
 	</if>
+    </where>
 	<include refid="pagination" />
   </select>
   
    <select id="getPagerCountS" resultType="int">
 		SELECT count(id)
 	FROM stocksyncprostorage
-		where 1=1
-		and isOn=#{entity.isOn}
+		<where>
+		isOn=#{entity.isOn}
 		<if test="entity!=null">
 		<if test="entity.source != null and entity.source !='' ">
         <![CDATA[ and source = #{entity.source} ]]>
@@ -59,6 +61,7 @@ SELECT *
         <![CDATA[ and sCode = #{entity.sCode}]]>
       </if>
 	</if>
+        </where>
 	</select>
   <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
   
@@ -71,6 +74,11 @@ SELECT *
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from stocksyncprostorage
     where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteBySourceAndSku">
+    delete from stocksyncprostorage
+    where source = #{source}
+    and sku = #{sku}
   </delete>
   <insert id="insert" parameterType="com.haier.eop.data.model.StocksyncProstorage" >
     insert into stocksyncprostorage (id, syncProductId, syncStorageId, 

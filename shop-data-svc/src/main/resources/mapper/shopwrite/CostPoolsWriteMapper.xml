@@ -3,8 +3,89 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.CostPoolsWriteDao">
 
 	<update id="updateCouponCostPool" parameterType="java.util.Map">
-		update CostPools set `balanceAmount` = balanceAmount + #{couponAmount}
+		update costpools set `balanceAmount` = balanceAmount + #{couponAmount}
 		where `id` = #{id} and amount-balanceAmount-${couponAmount} &gt;= 0
 	</update>
 
+    <update id="updateBanlacnAmount" parameterType="java.util.Map">
+        update costpools set
+        `balanceAmount` = balanceAmount + #{slPrices}
+        where `id` = #{id} and amount- balanceAmount-#{slPrices} &gt;= 0
+    </update>
+
+    <insert id="addCostPool" parameterType="com.haier.shop.model.CostPools">
+        INSERT INTO costpools (
+        siteId,
+        addTime,
+        masterName,
+        type,
+        yearMonth,
+        batch,
+        channel,
+        amount,
+        balanceAmount,
+        editTime,
+        remark,
+        chanYe
+        )
+        VALUES
+        (
+        #{siteId},
+        unix_timestamp(),
+        #{masterName},
+        #{type},
+        #{yearMonth},
+        #{batch},
+        #{channel},
+        #{amount},
+        #{balanceAmount},
+        #{editTime},
+        #{remark},
+        #{chanYe}
+        )
+
+    </insert>
+
+    <update id="updateCostPools" parameterType="com.haier.shop.model.CostPools">
+        update costpools
+        <set>
+            <if test="channel != null and channel != ''">
+                channel = #{channel},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="yearMonth != null and yearMonth != ''">
+                yearMonth = #{yearMonth},
+            </if>
+            <if test="amount != null and amount != ''">
+                amount = #{amount},
+            </if>
+            <if test="batch != null and batch != ''">
+                batch = #{batch},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="masterName != null and masterName != ''">
+                masterName = #{masterName},
+            </if>
+            `editTime` = unix_timestamp()
+        </set>
+        where `id` = #{id} and #{amount}>balanceAmount
+    </update>
+
+    <delete id="deleteCostPools" >
+        DELETE
+        FROM
+        costpools
+        WHERE
+        id = #{id}
+    </delete>
+
+    <update id="reverseUpdateBanlacnAmount" parameterType="java.util.Map">
+        update costpools set
+        `balanceAmount` = balanceAmount - #{slPrices}
+        where `id` = #{id}
+    </update>
 </mapper>

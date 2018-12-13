@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.haier.common.ServiceResult;
 import com.haier.purchase.data.model.T2OrderItem;
 import com.haier.stock.model.InvStockAge;
-import com.haier.svc.bean.StockAgeWapped;
+import com.haier.stock.model.StockAgeWapped;
 import com.haier.svc.service.T2OrderService;
 
 @Service

@@ -63,4 +63,16 @@ public interface OrderRepairLESRecordsService {
      * @return
      */
     Integer updateOpCancelFlag(OrderRepairLESRecords OrderRepairLESRecords);
+
+    public Integer updateRepairLesRecordcn(String id, String recordSn);
+
+    /**
+     *
+     * @param id
+     * @param success
+     * @return
+     */
+    public Integer updateRepairLesRecordcnSuccess(String id, Integer success);
+    
+    List<OrderRepairLESRecords> queryRecordSn(String operate,String storageType,String orderRepairId);
 }

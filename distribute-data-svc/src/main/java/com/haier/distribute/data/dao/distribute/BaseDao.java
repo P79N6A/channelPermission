@@ -5,6 +5,7 @@ package com.haier.distribute.data.dao.distribute;/**
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * \* Created with IntelliJ IDEA.
@@ -42,6 +43,6 @@ public interface BaseDao<T> {
 
     List<T> checkCode(@Param("entity") T entity);
 
-
+    public List<Map<String,Object>> selectIdAndUrl();
 
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.settleCenter.ReportWriteDao">
+	<resultMap id="kpiReportResult" type="com.haier.shop.model.OrdWfKpiData">
+		<result property="id" column="id" />
+		<result property="cOrderSn" column="c_order_sn" />
+		<result property="orderId" column="order_id" />
+		<result property="orderProductId" column="order_product_id" />
+		<result property="sourceName" column="source_name" />
+		<result property="areaName" column="area_name" />
+		<result property="tradeName" column="trade_name" />
+		<result property="centerName" column="center_name" />
+		<result property="nodeType" column="node_type" />
+		<result property="isTimeoutFree" column="is_timeout_free" />
+		<result property="orderType" column="order_type" />
+		<result property="date" column="date" />
+		<result property="isFinish" column="is_finish" />
+		<result property="timeoutType" column="timeout_type" />
+		<result property="mustFinishTime" column="must_finish_time" />
+		<result property="realFinishTime" column="real_finish_time" />
+		<result property="timeoutDay" column="timeout_day" />
+		<result property="orsId" column="ors_id" />
+		<result property="storeId" column="store_id" />
+	</resultMap>
+	<insert id="insertKpiDatas" parameterType="java.util.List">
+		insert into `ord_wf_kpidata`(`c_order_sn`,`order_id`,`order_product_id`,`source_name`,`area_name`,`trade_name`,`center_name`,`node_type`,`is_timeout_free`,`order_type`,`date`,`is_finish`,`timeout_type`,`must_finish_time`,`real_finish_time`,`timeout_day`,`ors_id`,`store_id`) values 
+		<foreach collection="list" item="item" index="index"  separator=",">
+		(#{item.cOrderSn,jdbcType=VARCHAR},#{item.orderId,jdbcType=INTEGER},#{item.orderProductId,jdbcType=INTEGER},#{item.sourceName,jdbcType=VARCHAR},#{item.areaName,jdbcType=VARCHAR},#{item.tradeName,jdbcType=VARCHAR},#{item.centerName,jdbcType=VARCHAR},#{item.nodeType,jdbcType=VARCHAR},#{item.isTimeoutFree,jdbcType=TINYINT},#{item.orderType,jdbcType=TINYINT},#{item.date,jdbcType=DATE},#{item.isFinish,jdbcType=TINYINT},#{item.timeoutType,jdbcType=TINYINT},#{item.mustFinishTime,jdbcType=TIMESTAMP},#{item.realFinishTime,jdbcType=TIMESTAMP},#{item.timeoutDay,jdbcType=INTEGER},#{item.orsId,jdbcType=INTEGER},#{item.storeId,jdbcType=INTEGER})
+		</foreach>
+	</insert>
+	<delete id="deleteKpiDatasByDate" parameterType="java.util.Date">
+		delete from `ord_wf_kpidata` where date = #{date}
+	</delete>
+</mapper>

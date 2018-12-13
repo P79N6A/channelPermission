@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopwrite.TmypProductDiscountWriteDao" >
+
+  <insert id="insert" parameterType="com.haier.shop.model.TmypProductDiscount" >
+      INSERT INTO `shop`.`tmyp_productdiscount`(`id`, `productName`, `productType`, `salePrice`, `purchasePrice`, `discount`, `addTime`, `modifyTime`, `sku`)
+       VALUES (#{id,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR} , #{salePrice,jdbcType=DECIMAL}, #{purchasePrice,jdbcType=DECIMAL},
+       #{discount,jdbcType=DECIMAL}, #{addTime,jdbcType=INTEGER}, #{modifyTime,jdbcType=INTEGER}, #{sku,jdbcType=VARCHAR});
+  </insert>
+    <update id="updateTmypProductDiscountInfo">
+        UPDATE `shop`.`tmyp_productdiscount` SET `productName` = #{productName,jdbcType=VARCHAR},
+        `productType` =  #{productType,jdbcType=VARCHAR}, `salePrice` =  #{salePrice,jdbcType=DECIMAL}, `purchasePrice` = #{purchasePrice,jdbcType=DECIMAL},
+        `discount` = #{discount,jdbcType=DECIMAL}, `modifyTime` = #{modifyTime,jdbcType=INTEGER}, `sku` = #{sku,jdbcType=VARCHAR}
+         WHERE `id` = #{id,jdbcType=INTEGER};
+    </update>
+
+</mapper>

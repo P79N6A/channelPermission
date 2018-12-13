@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>分销明细</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/ajaxfileupload.js"></script>
+    <style>
+        .i-mark {
+            font-size: 10px;
+        }
+        #importExecl table{
+            margin: 5px;
+        }
+        #importExecl button{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span class="search-row-label">
+                  结算月份
+                </span>
+                <input id="yearmonth" name="yearmonth" editable="true" style="width: 140px"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  销售代表
+                </span>
+                <input id="sellPeople" name="sellPeople" class="txt" style="width: 140px"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  结算方式
+                </span>
+                <input class="easyui-combobox" id="settlementType"  name="settlementType"  data-options="
+				valueField: 'value',textField: 'text',panelHeight:'auto',editable:false,value:'',
+			data: [{value: '',text: '全部'},
+			       {value: '0',text: '人工'},
+			       {value: '1',text: '系统'}
+			       ]" />
+            </div>
+
+            <div class="search-row">
+                <span class="search-row-label">
+                  发票状态
+                </span>
+                <input class="easyui-combobox" id="statusType"  name="statusType"  data-options="
+				valueField: 'value',textField: 'text',panelHeight:'auto',editable:false,value:'',
+			data: [{value: '',text: '全部'},
+			       {value: '1',text: '已开票'},
+			       {value: '4',text: '冲红、作废'}
+			       ]" />
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  付款时间
+                </span>
+                <input id="payTimeMin" name="payTimeMin" editable="false" style="width: 140px"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  至
+                </span>
+                <input id="payTimeMax" name="payTimeMax"  editable="false" style="width: 140px"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  发票时间
+                </span>
+                <input id="invoiceTimeMin" name="invoiceTimeMin" editable="false" style="width: 140px"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  至
+                </span>
+                <input id="invoiceTimeMax" name="invoiceTimeMax"  editable="false" style="width: 140px"/>
+            </div>
+            <div class="search-row">
+                <span class="search-row-label">
+                  审核状态
+                </span>
+                <input class="easyui-combobox" id="state"  name="state"  data-options="
+				valueField: 'value',textField: 'text',panelHeight:'auto',editable:false,value:'',
+			data: [{value: '',text: '全部'},
+			       {value: '0',text: '无需审核'},
+			       {value: '1',text: '待业务审核'},
+			       {value: '-1',text: '业务审核拒绝'},
+			       {value: '2',text: '待财务审核'},
+			       {value: '-2',text: '财务审核拒绝'},
+			       {value: '3',text: '审核通过'}
+			       ]" />
+            </div>
+            <div class="search-row">
+            <span class="search-row-label">订单来源：</span>
+            <select class="easyui-combobox" id="source"  name="source" style="width: 140px;" >
+            </select>
+          </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="resetBtn_orderOp"
+           data-options="iconCls:'icon-redo',plain:true">重置</a>
+        <a href="#" class="easyui-linkbutton" id="bAudit"
+           data-options="iconCls:'icon-man',plain:true" onclick="busAuditor('ok')">业务审核通过</a>
+        <a href="#" class="easyui-linkbutton" id="bAudit"
+           data-options="iconCls:'icon-man',plain:true" onclick="busAuditor('no')">业务审核拒绝</a>
+        <a href="#" class="easyui-linkbutton" id="fAudit"
+           data-options="iconCls:'icon-man',plain:true" onclick="finAuditor('ok')">财务审核通过</a>
+        <a href="#" class="easyui-linkbutton" id="fAudit"
+           data-options="iconCls:'icon-man',plain:true" onclick="finAuditor('no')">财务审核拒绝</a>
+        <a href="#" class="easyui-linkbutton" id="export"
+           data-options="iconCls:'icon-save',plain:true" onclick="exp()">导出</a>
+        <a href="#" class="easyui-linkbutton" id="import"
+           data-options="iconCls:'icon-save',plain:true">导入</a>
+    </form>
+</div>
+<div id="importExecl" class="easyui-dialog"
+     closed="true">
+    <div class="import-panel">
+        <input type="hidden" id="rowId" value="{{_USER_.id}}"  />
+        <table>
+            <tr>
+                <td colspan="2">
+                    请仔细阅读以下注意事项：
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    1、请使用最新的导入模板导入数据，最新模板为<a href='/static/excel/settlement_invoice_template.xls' target='_blank'>【结算发票报表导入.xls】</a>。
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    2、请直接在<b><span style="color:#dc143c">导入模板的基础上 拷贝粘贴实际业务数据，不要添加删除行或列，也不要更改模板的公式、格式等</span></b>。
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    3、模板中的<b><span style="color:#dc143c">数据不能超过2000行</span></b>，超过后请分成多个excel导入。
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td >EXCEL 导入：</td>
+                <td >
+                    <input type="file" id="file" name="file"  label="上传文件" />
+                    <input type="hidden" id="uploadfileId">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button id="upload" href="javascript:void(0)" class="btn btn-default easyui-linkbutton c6 "  style="width:250px">导入</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script type="application/javascript">
+    var buttons = $.extend([], $.fn.datetimebox.defaults.buttons);
+    buttons.splice(1, 0, {
+        text: '清除',
+        handler: function(target){
+            $(target).datetimebox('setValue', '');
+            $(target).combo("hidePanel");
+        }
+    });
+    $('#payTimeMin').datetimebox({buttons: buttons});
+    $('#payTimeMax').datetimebox({buttons: buttons});
+    $('#invoiceTimeMin').datetimebox({buttons: buttons});
+    $('#invoiceTimeMax').datetimebox({buttons: buttons});
+
+/*
+
+    $(function(){
+        var currTime=new Date();
+        var strDate=currTime.getFullYear()+"-"+(currTime.getMonth()+1)+"-01";
+        $('#yearmonth').datebox({formatter:function(date){
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? '0' + m : m;
+            return y.toString() + '-' + m.toString();
+        },parser:function(date){
+            console.log(date);
+            if (date) {
+                return new Date(String(date).substring(0, 4) + '-'
+                        + String(date).substring(5,7));
+            } else {
+                return new Date();
+            }
+        }});
+        $('#yearmonth').datebox('setValue',strDate);//默认加载当前月份
+    });
+*/
+
+    $(function() {
+        var currTime=new Date();
+        var strDate=currTime.getFullYear()+"-"+(currTime.getMonth()+1)+"-01";
+        $('#yearmonth').datebox({
+            onShowPanel : function() {// 显示日趋选择对象后再触发弹出月份层的事件，初始化时没有生成月份层
+                span.trigger('click'); // 触发click事件弹出月份层
+                if (!tds)
+                    setTimeout(function() {// 延时触发获取月份对象，因为上面的事件触发和对象生成有时间间隔
+                        tds = p.find('div.calendar-menu-month-inner td');
+                        tds.click(function(e) {
+                            e.stopPropagation(); // 禁止冒泡执行easyui给月份绑定的事件
+                            var year = /\d{4}/.exec(span.html())[0]// 得到年份
+                                    , month = parseInt($(this).attr('abbr'), 10) + 1; // 月份
+                            $('#yearmonth').datebox('hidePanel')// 隐藏日期对象
+                                    .datebox('setValue', year + '-' + month); // 设置日期的值
+                            p.find(".calendar-menu-year").attr("readonly","readonly");
+                        });
+                    }, 0);
+
+                p.find(".calendar-dtable").hide()
+            },
+            parser : function(s) {// 配置parser，返回选择的日期
+                if (!s)
+                    return new Date();
+                var arr = s.split('-');
+                return new Date(parseInt(arr[0], 10), parseInt(arr[1], 10) - 1, 1);
+            },
+            formatter : function(d) {
+                var month = d.getMonth();
+                if(month<10){
+                    month = "0"+month;
+                }
+                if (d.getMonth() == 0) {
+                    return d.getFullYear()-1 + '-' + 12;
+                } else {
+                    return d.getFullYear() + '-' + month;
+                }
+            }// 配置formatter，只返回年月
+        });
+        var p = $('#yearmonth').datebox('panel'), // 日期选择对象
+                tds = false, // 日期选择对象中月份
+                span = p.find('span.calendar-text'); // 显示月份层的触发控件
+        $('#yearmonth').datebox('setValue',strDate);//默认加载当前月份
+    });
+    var dataGrid = $('#dg').datagrid({
+        url:"/settlementInvoice/getList",
+        fit: true,
+        fitColumns : false,
+        pagination: true,
+        pageSize: 50,
+        pageList: [50, 100, 200 ],
+        pageNumber:1,
+        autoRowHeight : true,
+        striped : true,
+        toolbar : '#datagridToolbar',
+        rownumbers : true,
+        nowrap : false,
+        columns: [
+            [
+                {
+                    field: 'id',
+                    title: '序号',
+                    align: 'center',
+                    hidden:true
+                },
+                {
+                    field: 'checked',
+                    align: 'center',
+                    checkbox:true
+                },
+                {
+                    field: 'cordersn',
+                    title: '网单号',
+                    align: 'center'
+                },
+                {
+                    field: 'oldcordersn',
+                    title: '原网单号',
+                    align: 'center'
+                },
+                {
+                    field: 'sourceordersn',
+                    title: '来源订单号',
+                    align: 'center'
+                },
+                {
+                    field: 'source',
+                    title: '订单来源',
+                    align: 'center'
+                },
+                {
+                    field: 'sellpeople',
+                    title: '销售代表',
+                    align: 'center'
+                },
+                {
+                    field: 'productcatename',
+                    title: '品类',
+                    align: 'center'
+                },
+                {
+                    field: 'brandname',
+                    title: '品牌',
+                    align: 'center'
+                },
+                {
+                    field: 'sku',
+                    title: 'sku',
+                    align: 'center'
+                },
+                {
+                    field: 'productname',
+                    title: '宝贝型号',
+                    align: 'center'
+                },
+                {
+                    field: 'consignee',
+                    title: '收货人姓名',
+                    align: 'center'
+                },
+                {
+                    field: 'paytime',
+                    title: '订单付款时间',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return DateUtil.NumberToDate(value*1000);
+                    }
+                },
+                {
+                    field: 'number',
+                    title: '销售数量',
+                    align: 'center'
+                },
+                {
+                    field: 'amount',
+                    title: '总价(发票金额)',
+                    align: 'center'
+                },
+                {
+                    field: 'year',
+                    title: '年度',
+                    align: 'center'
+                },
+                {
+                    field: 'month',
+                    title: '期间',
+                    align: 'center'
+                },
+                {
+                    field: 'invoicetime',
+                    title: '发票时间',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return DateUtil.NumberToDate(value*1000);
+                    }
+                },
+                {
+                    field: 'ismakereceipt',
+                    title: '开票状态',
+                    align: 'center'
+                },
+                {
+                    field: 'statustype',
+                    title: '发票状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        if (value == "1") {
+                            return "已开票";
+                        } else if (value == "4") {
+                            return "作废/冲红";
+                        }
+                    }
+                },
+                {
+                    field: 'state',
+                    title: '审核状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        if (value == "0") {
+                            return "无需审核";
+                        } else if (value == "1") {
+                            return "待业务审核";
+                        }else if (value == "-1") {
+                            return "业务审核拒绝";
+                        }else if (value == "2") {
+                            return "待财务审核";
+                        }else if (value == "-2") {
+                            return "财务审核拒绝";
+                        }else if (value == "3") {
+                            return "审核通过";
+                        }
+                    }
+                }
+            ]
+        ]
+    });
+
+
+    var DateUtil = (function() {
+        function DateUtil() {}
+
+        DateUtil.AddDays = function(date, days) {
+            var cdate, d, m, nd, y;
+            nd = new Date(date);
+            nd = nd.valueOf();
+            nd = nd + days * 24 * 60 * 60 * 1000;
+            nd = new Date(nd);
+            y = nd.getFullYear();
+            m = nd.getMonth() + 1;
+            d = nd.getDate();
+            if (m <= 9) {
+                m = "0" + m;
+            }
+            if (d <= 9) {
+                d = "0" + d;
+            }
+            cdate = y + "-" + m + "-" + d;
+            return cdate;
+        };
+
+        DateUtil.DaysBetween = function(DateOne, DateTwo) {
+            var cha;
+            cha = (Date.parse(DateOne) - Date.parse(DateTwo)) / 86400000;
+            return Math.abs(cha);
+        };
+
+        DateUtil.StringToDate = function(DateStr) {
+            var arys, converted, myDate;
+            converted = Date.parse(DateStr);
+            myDate = new Date(converted);
+            if (isNaN(myDate)) {
+                arys = DateStr.split('-');
+                myDate = new Date(arys[0], --arys[1], arys[2]);
+            }
+            return myDate;
+        };
+
+        DateUtil.NumberToDate = function(DateStr) {
+            if (DateStr) {
+                return new Date(DateStr).toLocaleString();
+            } else {
+                return '';
+            }
+        };
+
+        DateUtil.GetMonthBeginEnd = function(DateTemp) {
+            var beginDate, d, e, endDate, f;
+            d = new Date(DateTemp);
+            f = d.setDate(1);
+            f = new Date(f);
+            e = d.setDate(1);
+            e = new Date(e);
+            e = e.setMonth(d.getMonth() + 1) - 24 * 60 * 60 * 1000;
+            e = new Date(e);
+            beginDate = f.toLocaleDateString();
+            endDate = e.toLocaleDateString();
+            beginDate = beginDate.replace(/\//gm, '-').replace('骞�', '-').replace('鏈�', '-').replace('鏃�', '');
+            endDate = endDate.replace(/\//gm, '-').replace('骞�', '-').replace('鏈�', '-').replace('鏃�', '');
+            return [beginDate, endDate];
+        };
+
+        return DateUtil;
+
+    })();
+</script>
+<script src="../static/js/settleCenter/settlementInvoice.js"></script>
+##<script src="../static/js/report/workOrder.js"></script>
+</body>
+</html>

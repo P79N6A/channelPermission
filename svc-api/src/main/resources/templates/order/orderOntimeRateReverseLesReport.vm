@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet"
+          href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet"
+          href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet"
+          href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet"
+          href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet"
+          href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet"
+          href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet"
+          href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
+    <script src="/static/third/easyui/jquery.min2.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/third/easyui/glo.js"></script>
+    <script src="/static/third/easyui/comm.js"></script>
+    <script src="/static/third/easyui/commgrid.js"></script>
+    <script src="/static/third/easyui/jQuery.Form.js"></script>
+    <script src="/static/js/pop/common/pop.js"></script>
+    <script src="/static/js/bootstrap-datepicker.js"></script>
+    <style type="text/css">
+        body {
+            color: #444444;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        #fontclor {
+            font-color: #660000;
+        }
+
+        .popup_box {
+            clear: both;
+            padding: 5 10 5 10;
+            width: 98%;
+            overflow: hidden;
+        }
+
+        .popup_box li {
+            list-style: none outside none;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            float: left;
+            margin: 0 1px;
+            width: 240px;
+            height: 27px;
+            text-align: left;
+            color: #000000;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .popup_box li input {
+            width: 20px;
+        }
+
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            /*获得市*/
+            jQuery.getJSON("/orderles/getRegions?parentId=0", function (result) {
+                $("#province").append("<option value=''>请选择</option>");
+                $("#province").append("<option value='-1'>全部</option>");
+                jQuery.each(result.data, function (i, v) {
+                    $("#province").append("<option value=" + v.id + ">" + v.regionName + "</option>");
+                });
+            });
+            /*  add 渠道:*/
+            jQuery.getJSON("/orderles/getChannelNames", function (result) {
+                jQuery.each(result.data, function (i, v) {
+                    $(".popup_box").append("<li title=\"" + v.note + "\"><input id=\"" + v.order_source + "\" type=\"checkbox\" value=\"" + v.note + "\" name=\"source_Index\"/><label for=\"" + v.order_source + "\" >" + v.note + "</label></li>");
+                });
+            });
+
+            // $('#area').change(function () {
+            //     var area = $("#area option:selected").val();
+            //     if (area == '') {
+            //         $('#areaCommissioner').empty();
+            //         $("#areaCommissioner").append("<option value=''>请选择</option>");
+            //     } else if (area == '-1') {
+            //         $('#areaCommissioner').empty();
+            //         $("#areaCommissioner").append("<option value=''>请选择</option>");
+            //         $("#areaCommissioner").append("<option value='-1'>全部</option>");
+            //     } else {
+            //         $('#areaCommissioner').empty();
+                    jQuery.getJSON("/orderles/getCommissioner?area="+"", function (result) {
+                        // $("#areaCommissioner").append("<option value=''>请选择</option>");
+                        $("#areaCommissioner").append("<option value='-1'>全部</option>");
+                        jQuery.each(result.data, function (i, v) {
+                            $("#areaCommissioner").append("<option value=" + v.value + ">" + v.value + "</option>");
+                        });
+                    });
+                // }
+                // $('#areaTrade').empty();
+                // $("#areaTrade").append("<option value=''>请选择</option>");
+                // $('#areaSCode').empty();
+                // $("#areaSCode").append("<option value=''>请选择</option>");
+            // });
+
+            $('#areaCommissioner').change(function () {
+                var areaCommissioner = $("#areaCommissioner option:selected").val();
+                if (areaCommissioner == '') {
+                    $('#areaTrade').empty();
+                    $("#areaTrade").append("<option value=''>请选择</option>");
+                } else if (areaCommissioner == '-1') {
+                    $('#areaTrade').empty();
+                    $("#areaTrade").append("<option value=''>请选择</option>");
+                    $("#areaTrade").append("<option value='-1'>全部</option>");
+                } else {
+                    $('#areaTrade').empty();
+                    jQuery.getJSON("/orderles/getCommissionerTrade?areaCommissioner=" + areaCommissioner, function (result) {
+                        $("#areaTrade").append("<option value=''>请选择</option>");
+                        $("#areaTrade").append("<option value='-1'>全部</option>");
+                        jQuery.each(result.data, function (i, v) {
+                            $("#areaTrade").append("<option value=" + v.value + ">" + v.value + "</option>");
+                        });
+                    });
+                }
+                $('#areaSCode').empty();
+                $("#areaSCode").append("<option value=''>请选择</option>");
+            });
+
+            $('#fdArea').change(function () {
+                var fdArea = $("#fdArea option:selected").val();
+                if (fdArea == '') {
+                    $('#fdAreaTrade').empty();
+                    $("#fdAreaTrade").append("<option value=''>请选择</option>");
+                } else if (fdArea == '-1') {
+                    $('#fdAreaTrade').empty();
+                    $("#fdAreaTrade").append("<option value=''>请选择</option>");
+                    $("#fdAreaTrade").append("<option value='-1'>全部</option>");
+                } else {
+                    $('#fdAreaTrade').empty();
+                    jQuery.getJSON("/orderles/getTrade?area=" + fdArea, function (result) {
+                        $("#fdAreaTrade").append("<option value=''>请选择</option>");
+                        $("#fdAreaTrade").append("<option value='-1'>全部</option>");
+                        jQuery.each(result.data, function (i, v) {
+                            $("#fdAreaTrade").append("<option value=" + v.value + ">" + v.value + "</option>");
+                        });
+                    });
+                }
+                $('#fdAreaSCode').empty();
+                $("#fdAreaSCode").append("<option value=''>请选择</option>");
+            });
+            $('#areaTrade').change(function () {
+                var areaTrade = $("#areaTrade option:selected").val();
+                if (areaTrade == '') {
+                    $('#areaSCode').empty();
+                    $("#areaSCode").append("<option value=''>请选择</option>");
+                } else if (areaTrade == '-1') {
+                    $('#areaSCode').empty();
+                    $("#areaSCode").append("<option value=''>请选择</option>");
+                    $("#areaSCode").append("<option value='-1'>全部</option>");
+                } else {
+                    $('#areaSCode').empty();
+                    jQuery.getJSON("/orderles/getSCode?trade=" + areaTrade, function (result) {
+                        $("#areaSCode").append("<option value=''>请选择</option>");
+                        $("#areaSCode").append("<option value='-1'>全部</option>");
+                        jQuery.each(result.data, function (i, v) {
+                            $("#areaSCode").append("<option value=" + v.value + ">" + v.value + "</option>");
+                        });
+                    });
+                }
+            });
+
+            $('#fdAreaTrade').change(function () {
+                var fdAreaTrade = $("#fdAreaTrade option:selected").val();
+                if (fdAreaTrade == '') {
+                    $('#fdAreaSCode').empty();
+                    $("#fdAreaSCode").append("<option value=''>请选择</option>");
+                } else if (fdAreaTrade == '-1') {
+                    $('#fdAreaSCode').empty();
+                    $("#fdAreaSCode").append("<option value=''>请选择</option>");
+                    $("#fdAreaSCode").append("<option value='-1'>全部</option>");
+                } else {
+                    $('#fdAreaSCode').empty();
+                    jQuery.getJSON("/orderles/getSCode?trade=" + fdAreaTrade, function (result) {
+                        $("#fdAreaSCode").append("<option value=''>请选择</option>");
+                        $("#fdAreaSCode").append("<option value='-1'>全部</option>");
+                        jQuery.each(result.data, function (i, v) {
+                            $("#fdAreaSCode").append("<option value=" + v.value + ">" + v.value + "</option>");
+                        });
+                    });
+                }
+            });
+
+            $('#province').change(function () {
+                var province = $("#province option:selected").val();
+                if (province == '') {
+                    $('#city').empty();
+                    $("#city").append("<option value=''>请选择</option>");
+                }
+                else if (province == '-1') {
+                    $('#city').empty();
+                    $("#city").append("<option value=''>请选择</option>");
+                    $("#city").append("<option value='-1'>全部</option>");
+                } else {
+                    $('#city').empty();
+                    jQuery.getJSON("/orderles/getRegions?parentId=" + province, function (result) {
+                        $("#city").append("<option value=''>请选择</option>");
+                        $("#city").append("<option value='-1'>全部</option>");
+                        jQuery.each(result.data, function (i, v) {
+                            $("#city").append("<option value=" + v.id + ">" + v.regionName + "</option>");
+                        });
+                    });
+                }
+                $('#region').empty();
+                $("#region").append("<option value=''>请选择</option>");
+            });
+
+            $('#city').change(function () {
+                var city = $("#city option:selected").val();
+                if (city == '') return;
+                else if (city == '-1') {
+                    $('#region').empty();
+                    $("#region").append("<option value=''>请选择</option>");
+                    $("#region").append("<option value='-1'>全部</option>");
+                } else {
+                    $('#region').empty();
+                    jQuery.getJSON("/orderles/getRegions?parentId=" + city, function (result) {
+                        $("#region").append("<option value=''>请选择</option>");
+                        $("#region").append("<option value='-1'>全部</option>");
+                        jQuery.each(result.data, function (i, v) {
+                            $("#region").append("<option value=" + v.id + ">" + v.regionName + "</option>");
+                        });
+                    });
+                }
+            });
+
+            if ($(".tool-toggle").length) {
+                $(".tool-toggle").toggle(function () {
+                    var index = $(".tool-toggle").index(this);
+                    $(this).attr("class", "tool-toggle tool-toggle-hide");
+                    $("fieldset").eq(index).addClass("hidefieldset");
+                    $("fieldset form").eq(index).hide();
+                }, function () {
+                    var index = $(".tool-toggle").index(this);
+                    $(this).attr("class", "tool-toggle tool-toggle-show");
+                    $("fieldset").eq(index).removeClass("hidefieldset");
+                    $("fieldset form").eq(index).show();
+                })
+            }
+
+            $('#queryButton').click(function () {
+                $('#queryButton').attr('disabled', true);
+                onQuery();
+            });
+
+            function addzero(v) {
+                if (v < 10) return '0' + v;
+                return v.toString();
+            }
+
+            var nowTime = new Date().getFullYear().toString() + addzero(new Date().getMonth() + 1) + addzero(new Date().getDate());
+            $('#startDate').datebox("setValue",nowTime);
+            $('#endDate').datebox("setValue",nowTime);
+
+            $('#body').height($(window).height() - 30);
+            $('#list').height($(window).height() - 163);
+
+            $("#dialog-message").dialog({
+                autoOpen: false,
+                modal: true,
+                closeOnEscape: false,
+                resizable: false,
+                minHeight: 200,
+                height: 410,
+                width: 810,
+                title: '订单来源列表',
+            });
+            jQuery("select").each(function () {
+                jQuery(this).attr("disabled", "disabled");
+            });
+            $("#areaCommissioner").removeAttr("disabled");
+            $("#areaTrade").removeAttr("disabled");
+            $("#areaSCode").removeAttr("disabled");
+
+        });
+
+        function SearchClear() {
+            $("#sourceCode").val("");
+            $("#sourceName").val("");
+        }
+        function te() {
+            var codevalue = "";
+            var namevalue = "";
+            $.each($('input:checkbox:checked'), function () {
+                if ($(this).attr("name") == "source_Index") {
+                    namevalue = namevalue + $(this).val() + ";";
+                    codevalue = codevalue + $(this).attr("id") + ";";
+                }
+            });
+            $("#sourceCode").val(codevalue);
+            $("#sourceName").val(namevalue);
+            $("#dialog-message").dialog("close");
+        }
+
+
+        function onQuery() {
+            var url;
+            if($("#queryHistory").is(":checked")){
+                //历史信息查询
+                url = "/historyles/getKpiOrderOntimeRateReverseLesReportList";
+            }else{
+                //时时信息查询
+                url = "/orderles/getOrderOntimeRateReverseLesReportList";
+            }
+
+            $('#orderSn').val($('#orderSn').val().trim());
+            jQuery.ajax({
+                url: url,
+                data: $('#filterForm').serialize(),
+                type: "GET",
+                success: function (data) {
+                    $("#list").html(data);
+                    $('#queryButton').removeAttr("disabled");
+                }
+            });
+            return false;
+        }
+        function getSource() {
+            jQuery("#dialog-message").dialog("open");
+        }
+        $("#dialog-message").dialog({
+            autoOpen: false,
+            modal: true,
+            closeOnEscape: false,
+            resizable: false,
+            minHeight: 200,
+            height: 410,
+            width: 810,
+            title: '订单来源列表'
+        });
+
+        function onExport() {
+            if($("#queryHistory").is(":checked")){
+                //历史导出
+                jQuery('#filterForm').prop('action', '/historyles/exportKpiOrderOntimeRateReverseReport.html');
+                var form = document.getElementById("filterForm");
+                form.submit();
+            }else{
+                jQuery('#filterForm').prop('action', '/orderles/exportOrderOntimeRateReverseReport.html');
+                var form = document.getElementById("filterForm");
+                form.submit();
+            }
+        }
+
+        function hiddenSelect(obj) {
+            jQuery("select").each(function () {
+                jQuery(this).attr("disabled", "disabled");
+            });
+            if (obj.value == 'PCR') {
+                $("#province").removeAttr("disabled");
+                $("#city").removeAttr("disabled");
+                $("#region").removeAttr("disabled");
+            } else if (obj.value == 'A') {
+                // $("#area").removeAttr("disabled");
+                $("#areaCommissioner").removeAttr("disabled");
+                $("#areaTrade").removeAttr("disabled");
+                $("#areaSCode").removeAttr("disabled");
+            } else if (obj.value == 'FDA') {
+                $("#fdArea").removeAttr("disabled");
+                $("#fdAreaTrade").removeAttr("disabled");
+                $("#fdAreaSCode").removeAttr("disabled");
+            }
+            $("#stockType").removeAttr("disabled");
+        }
+
+
+    </script>
+
+</head>
+
+
+<body style="font-size:14px;">
+<div class="easyui-layout"
+     style="width:100%;height:auto;font-color:red;">
+    <div id="datagridToolbar_orderForecastGoal">
+        <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+            <div class="slide_line fa fa-window-minimize"></div>
+
+        </div>
+        <div class="search-panel" style="font-size: 11px;">
+            <form id="filterForm">
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">开始时间:</span> <input
+                        id="startDate" name="startDate" class="easyui-datebox"
+                        data-options="editable:false"
+                        style="height:26px;width: 166px;margin-right: 40px">
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">结束时间:</span>
+                    <input id="endDate" name="endDate" class="easyui-datebox"
+                       data-options="editable:false"
+                                                                          style="height:26px;width: 166px;margin-right: 40px">
+                </div>
+                <!-- <input type="submit" value="asd" onclick="ad()">-->
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">渠道:</span>
+                    <input type="text"
+                           style="width:257px;cursor:pointer;" onclick="getSource()"
+                           id="sourceName" name="sourceName" value="" readonly="readonly"/>
+                    <input type="hidden" id="sourceCode" name="sourceCode" value=""/>
+                    <a href="#" class="easyui-linkbutton" onclick="SearchClear()"
+                       data-options="iconCls:'icon-redo',plain:true">重置</a>
+                </div>
+                <br>
+                <div class="search-row_nowidth mar_r6px">
+                <span style="margin-left:34px;color:red;">省市区筛选:</span>
+                <input type="radio" name="queryGroup" value="PCR" id="queryGroupPCR" style="width:80px;"
+                       onclick="hiddenSelect(this);">
+                <span style="margin-left:42px;">省:</span>
+                <select name="province" id="province"></select>
+                <span style="margin-left:42px;">市:</span>
+                <select name="city" id="city">
+                    <option value="">请选择</option>
+                </select>
+                <span style="margin-left:42px;">区:</span>
+                <select name="region" id="region">
+                    <option value="">请选择</option>
+                </select>
+                </div>
+                <br/>
+                <div class="search-row_nowidth mar_r6px">
+                <span style="margin-left:34px;color:red;">区域筛选:</span>
+                <input type="radio" name="queryGroup" value="A" id="queryGroupA" style="width:103px;"
+                       onclick="hiddenSelect(this);" checked>
+                <span style="margin-left:19px;">区域:</span>
+                <select name="area" id="area" disabled="disabled">
+                <option value="">请选择</option>
+                  <option value='-1'>全部</option>
+                    <option value="东区">东区</option>
+                    <option value="西区">西区</option>
+                    <option value="南区">南区</option>
+                    <option value="北区">北区</option>
+                </select>
+                <span style="margin-left:30px;">人员:</span>
+                <select name="areaCommissioner" id="areaCommissioner">
+                    <option value="">请选择</option>
+                </select>
+                <span style="margin-left:30px;">工贸:</span>
+                <select name="areaTrade" id="areaTrade">
+                    <option value="">请选择</option>
+                </select>
+                <span style="margin-left:30px;">中心:</span>
+                <select name="areaSCode" id="areaSCode">
+                    <option value="">请选择</option>
+                </select>
+                </div>
+                <br/>
+                <div class="search-row_nowidth mar_r6px">
+                <span style="margin-left:34px;color:red;">物流区域筛选:</span>
+                <input type="radio" name="queryGroup" value="FDA" id="queryGroupFDA" style="width:56px;"
+                       onclick="hiddenSelect(this);">
+                <span style="margin-left:18px;">物流区域:</span>
+                <select name="fdArea" id="fdArea">
+                    <option value="">请选择</option>
+                    <option value='-1'>全部</option>
+                    <option value="华东">华东</option>
+                    <option value="华北">华北</option>
+                    <option value="华南">华南</option>
+                    <option value="山东">山东</option>
+                    <option value="东北">东北</option>
+                    <option value="中南">中南</option>
+                    <option value="西南">西南</option>
+                    <option value="西北">西北</option>
+                </select>
+                <span style="margin-left:30px;">工贸:</span>
+                <select name="fdAreaTrade" id="fdAreaTrade">
+                    <option value="">请选择</option>
+                </select>
+                <span style="margin-left:30px;">中心:</span>
+                <select name="fdAreaSCode" id="fdAreaSCode">
+                    <option value="">请选择</option>
+                </select>
+                </div>
+                <br/>
+                <div class="search-row_nowidth mar_r6px">
+                <!--增加筛选-->
+                <span style="margin-left:34px;color:red;">网单号:(只根据网单号筛选,忽略其它筛选条件)</span>
+                <input name="orderSn" id="orderSn" type="text" style="width:115px"/>
+                <input name="nodeType" id="nodeType" type="hidden" value="les"/>
+                <input name="tradeComissorType" id="tradeComissorType" type="hidden" value="$!userType"/>
+                <input name="channel" id="channel" type="hidden" value="$!channel"/>
+
+                <span id="queryHistorySpan" style="margin-left:5px;color:red;">历史查询:</span>
+                <input type="checkbox" id="queryHistory" name="queryHistory" style="width:15px"/>
+
+                <span style="margin-left:30px;">网单类型:</span>
+                <select name="stockType" id="stockType">
+                    <option value="all">WA+3W</option>
+                    <option value="WA" selected="selected">WA</option>
+                    <option value="3W">3W</option>
+                </select>
+                </div>
+            </form>
+
+
+            <div style="margin-left:34px;font-size:14px;width: 100%">
+                <a href="#" class="easyui-linkbutton" onclick="onQuery()"
+                   data-options="iconCls:'icon-search',plain:true">提交</a>
+                <a href="#" class="easyui-linkbutton" onclick="onExport()"
+                   data-options="iconCls:'icon-save',plain:true">导出</a>
+            </div>
+        </div>
+    </div>
+    <div id="list" class="list"></div>
+</div>
+
+<div id="dialog-message" class="easyui-dialog" closed="true" center="true" modal="true" title="订单来源列表"
+     style="top:100px; left:300px;line-height:200%;display:none;">
+
+    <div class="popup_box" style="overflow:auto;width:800px;height:320px;">
+
+    </div>
+
+
+    <div id="dlg-buttons6" data-options="region:'south'"
+         style="height:40px" align="right">
+        <a href="javascript:void(0)" class="easyui-linkbutton"
+           onclick="javascript:te()" iconcls="icon-ok">选择</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton"
+            iconcls="icon-cancel" onclick="javascript: $('#dialog-message').dialog('close')"
+            iconcls="icon-cancel">关闭</a>
+    </div>
+</div>
+
+
+</body>
+</html>
+

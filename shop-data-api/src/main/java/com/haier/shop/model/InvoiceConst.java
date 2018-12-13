@@ -42,6 +42,9 @@ public class InvoiceConst {
     public static Integer SUCCESS = 1;
     //失败标记
     public static Integer FAILED = 0;
+  //状态类型   对应 successType
+    public static Integer                    one_type   =1;
+    public static Integer                    four_type =4;
     //对应返回结果名称
     public static Map<Integer, String> RESULTSTATUS = new HashMap<Integer, String>();
 
@@ -155,11 +158,11 @@ public class InvoiceConst {
     /*开票类型：共享开票*/
     public static Integer MR_TYPE_SHARE = 2;
     /*开票类型名称*/
-    public static final Map<String, String> MAKE_RECEIPT_TYPE_NAMES = new HashMap<String, String>();
+    public static final Map<Integer, String> MAKE_RECEIPT_TYPE_NAMES = new HashMap<Integer, String>();
 
     static {
-        MAKE_RECEIPT_TYPE_NAMES.put(MR_TYPE_HOUSE + "", "库房开票");
-        MAKE_RECEIPT_TYPE_NAMES.put(MR_TYPE_SHARE + "", "共享开票");
+        MAKE_RECEIPT_TYPE_NAMES.put(MR_TYPE_HOUSE , "库房开票");
+        MAKE_RECEIPT_TYPE_NAMES.put(MR_TYPE_SHARE , "共享开票");
     }
 
     /**

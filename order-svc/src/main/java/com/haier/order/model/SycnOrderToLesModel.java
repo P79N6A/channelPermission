@@ -12,8 +12,8 @@ import com.haier.order.services.OrderCenterLESServiceImpl;
 import com.haier.order.services.OrderCenterStockCommonServiceImpl;
 import com.haier.order.services.OrderCenterStockServiceImpl;
 import com.haier.order.util.*;
-import com.haier.purchase.data.model.LesFiveYardInfo;
-import com.haier.purchase.data.service.PurchaseLesFiveYardsService;
+import com.haier.shop.model.LesFiveYardInfo;
+import com.haier.shop.service.PurchaseLesFiveYardsService;
 import com.haier.shop.model.*;
 import com.haier.shop.service.*;
 import com.haier.stock.model.InvChannel2OrderSource;
@@ -181,6 +181,20 @@ public class SycnOrderToLesModel {
             log.error(this.logPrefix(lesQueue.getId() + "") + "网单" + orderProductId + "不存在");
             return -101;//网单不存在
         }
+        //**********若网单关闭则不再同步VOM数据start*********
+        if (null != orderProduct.getStatus() &&
+            OrderProductStatus.CANCEL_CLOSE.getCode().intValue() ==
+                orderProduct.getStatus().intValue()
+            ){
+            lesQueue.setIsStop(1);//不再同步
+            lesQueue.setLastMessage("网单已关闭");
+            lesQueue.setCount(lesQueue.getCount() + 1);
+            lesQueue.setLastTryTime(new Date().getTime() / 1000);
+            lesQueuesService.updateAfterSyncLes(lesQueue);
+            log.error(this.logPrefix(lesQueue.getId() + "") + "网单" + orderProductId + "已经关闭");
+            return -102;//网单已关闭
+        }
+        //**********若网单关闭则不再同步VOM数据end***********
         OrdersNew order = ordersNewService.get(orderProduct.getOrderId());
         if (order == null) {
             if (lesQueue.getCount() >= 10) {//处理由于主从库延时同步导致订单不存在的个别异常情况，超过10分钟还未找到订单则停止同步
@@ -222,12 +236,12 @@ public class SycnOrderToLesModel {
         if (lesQueue == null) {
             return -1;
         }
-        //检测订单信息是否符合开提单要求   
+        //检测订单信息是否符合开提单要求
         if (OrderStatus.OS_CANCEL.getCode().equals(order.getOrderStatus())) {
             return -2;//订单取消，关闭推送
         }
 
-        //检测网单信息是否符合开提单要求   
+        //检测网单信息是否符合开提单要求
         if (orderProduct.getStatus().equals(OrderProductStatus.CANCEL_CLOSE.getCode())) {
             return -16;//网单取消，关闭推送
         }
@@ -648,7 +662,7 @@ public class SycnOrderToLesModel {
         //        //2016-08-30,新增920限时达
         //        //订单来源 （商城订单、移动商城、微店、移动社交、优家移动）+地区 （三小时急速达区县表）+sku （3小时极速达选品.xlsx）+
         //        //订金付款时间 （付订金时间在 9月8日  0:00——9月17日17:00） 符合这四个条件的订金尾款订单
-        //        //在 vom订单接口字段 remark1 打标 3H, HP派工接口字段 attribute2 打标 3H 
+        //        //在 vom订单接口字段 remark1 打标 3H, HP派工接口字段 attribute2 打标 3H
         //        Long tempTime = orderProduct.getCPayTime();
         //        if ((OrderType.TYPE_GROUP_ADVANCE.getValue().intValue() == orderType.intValue())
         //            && tempTime >= 1473264000l && tempTime <= 1474102800l) {
@@ -702,6 +716,13 @@ public class SycnOrderToLesModel {
         //                if (!isPaidTailAmount) {
         //                    payStatus = "P1";//如果订单没有付尾款，付款状态为P3---旧版；        新版写P1。因为钱是在线支付，不需要售后收款
         //                }
+        //****************2018/8/30尾款订单需要结清尾款*************start***
+        //除了普通订单和普通团购订单，其他都认为是尾款订单
+        //***经跟业务确认定金尾款订单，付完尾款后再按照普通网单下发订单
+        /*if (orderType != null && !orderType.equals(0) && !orderType.equals(3)&&orderProduct.getShippingOpporunity().intValue() == 2) {
+            payStatus = "P3";
+        }*/
+        //****************2018/8/30尾款订单需要结清尾款*************end*****
         String payType = order.getPaymentCode().toLowerCase().equals("cod") ? "POS" : paymentName;// 付款方式
         String remark = order.getRemark();//客户备注
         remark = remark != null ? remark.replace("=", "~") : remark;
@@ -870,6 +891,19 @@ public class SycnOrderToLesModel {
             //                sku = sku.substring(0, 18);
             //            }
             //            input.setMATNR(sku); --被订单类型占用
+            //2017-10-10 B2C模式传小件打标传递“XJ”
+            if ("B2C".equalsIgnoreCase(orderProduct.getShippingMode())) {
+                if (!StringUtil.isEmpty(ddlx)) {
+                    if (ddlx.endsWith(",")) {
+                        ddlx = ddlx + "XJ";
+                    } else {
+                        ddlx = ddlx + ",XJ";
+                    }
+                } else {
+                    ddlx = "XJ";
+                }
+            }
+
             //订单类型 - 10
             if (ddlx.length() > 10) {
                 ddlx = ddlx.substring(0, 10);
@@ -926,14 +960,14 @@ public class SycnOrderToLesModel {
             //                posnr_e = posnr_e.substring(0, 6);
             //            }
             //            input.setPOSNRE(posnr_e);
-            input.setKBETR(unitPrice);//单价 - 12 
+            input.setKBETR(unitPrice);//单价 - 12
             //            input.setKWERT(subtotal);//商品金额小计
-            input.setSHIPCO(shipFee);//运费 - 12 
+            input.setSHIPCO(shipFee);//运费 - 12
             //            input.setKWERZ(total);//订单总金额----旧版
             input.setKWERZ(productAmount);//订单总金额----新版
             //       TODO 自营转单二期，去掉限制
             //            //自营转单
-            //            if(changeOrderCustomerInfo != null){ 
+            //            if(changeOrderCustomerInfo != null){
             //            	consignee = changeOrderCustomerInfo.getContactsName();//联系人
             //            	mobile = changeOrderCustomerInfo.getContactsPhone();//联系手机
             //                phone = changeOrderCustomerInfo.getContactsMobile(); //联系电话
@@ -1158,6 +1192,10 @@ public class SycnOrderToLesModel {
             vomInterData.setNotifyid(orderProduct.getId() + "");
             vomInterData.setNotifytime(DateFormatUtil.format(new Date()));
             vomInterData.setContent(content);
+
+            //*********2018-06-07 添加log记录————start
+            log.warn("!!网单" + corderSn + "即将调用VOM接口开提单，内容数据为：" + content+"!!");
+            //*********2018-06-07 添加log记录————end
 
             //VOM开提单，生成开提单加密参数
             String paramLes_tem = accessExternalInterface.orderToLesParam(content, vomInterData);

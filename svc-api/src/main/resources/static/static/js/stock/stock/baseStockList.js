@@ -3,15 +3,16 @@ var datagridOptions_orderForecastGoal = {
     singleSelect: true,//多选
     url: '',
     columns: [[
-        {title: '物料编号 ', field: 'stockSku', sortable: true},
-        {title: '品类 ', field: 'cbsCategory', sortable: true},
-        {title: '产品型号', field: 'productName', sortable: true},
-        {title: '库位编码', field: 'secCode', sortable: true},
-        {title: '库位名称', field: 'secName', sortable: true},
-        {title: '实际库存', field: 'stockStockQty', sortable: true},
-        {title: '占用库存', field: 'stockFrozenQty', sortable: true},
-        {title: '创建时间', field: 'createTime', sortable: true},
-        {title: '更新时间', field: 'updateTime', sortable: true},
+        {title: '物料编号 ', field: 'stockSku', sortable: false},
+        {title: '品类 ', field: 'cbsCategory', sortable: false},
+        {title: '产品型号', field: 'productName', sortable: false},
+        {title: '库位编码', field: 'secCode', sortable: false},
+        {title: '库位名称', field: 'secName', sortable: false},
+        {title: '实际库存', field: 'stockStockQty', sortable: false},
+        {title: '占用库存', field: 'stockFrozenQty', sortable: false},
+        {title: '商品属性', field: 'stockItemProperty', sortable: false},
+        {title: '创建时间', field: 'createTime', sortable: false},
+        {title: '更新时间', field: 'updateTime', sortable: false},
 
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
@@ -109,18 +110,19 @@ $("#searchBtn").on('click', function (event) {
 
         },
         columns: [[
-            {title: '物料编号 ', field: 'stockSku', sortable: true},
-            {title: '品类 ', field: 'cbsCategory', sortable: true},
-            {title: '产品型号', field: 'productName', sortable: true},
-            {title: '库位编码', field: 'secCode', sortable: true},
-            {title: '库位名称', field: 'secName', sortable: true},
-            {title: '实际库存', field: 'stockStockQty', sortable: true},
-            {title: '占用库存', field: 'stockFrozenQty', sortable: true},
+            {title: '物料编号 ', field: 'stockSku', sortable: false},
+            {title: '品类 ', field: 'cbsCategory', sortable: false},
+            {title: '产品型号', field: 'productName', sortable: false},
+            {title: '库位编码', field: 'secCode', sortable: false},
+            {title: '库位名称', field: 'secName', sortable: false},
+            {title: '实际库存', field: 'stockStockQty', sortable: false},
+            {title: '占用库存', field: 'stockFrozenQty', sortable: false},
+            {title: '商品属性', field: 'stockItemProperty', sortable: false, formatter: changeCode},
             {
-                title: '创建时间', field: 'createTime', sortable: true, formatter: formatDatebox
+                title: '创建时间', field: 'createTime', sortable: false, formatter: formatDatebox
             },
             {
-                title: '更新时间', field: 'updateTime', sortable: true, formatter: formatDatebox
+                title: '更新时间', field: 'updateTime', sortable: false, formatter: formatDatebox
             },
         ]],
     });
@@ -184,17 +186,18 @@ $("#searchMachineBtn").on('click', function (event) {
 
         },
         columns: [[
-            {title: '物料编号 ', field: 'stockSku', sortable: true},
-            {title: '品类 ', field: 'cbsCategory', sortable: true},
-            {title: '产品型号', field: 'productName', sortable: true},
-            {title: '库位编码', field: 'secCode', sortable: true},
-            {title: '库位名称', field: 'secName', sortable: true},
-            {title: '可用库存', field: 'avaiableQty', sortable: true},
+            {title: '物料编号 ', field: 'stockSku', sortable: false},
+            {title: '品类 ', field: 'cbsCategory', sortable: false},
+            {title: '产品型号', field: 'productName', sortable: false},
+            {title: '库位编码', field: 'secCode', sortable: false},
+            {title: '库位名称', field: 'secName', sortable: false},
+            {title: '可用库存', field: 'avaiableQty', sortable: false},
+            {title: '商品属性', field: 'stockItemProperty', sortable: false, formatter: changeCode},
             {
-                title: '创建时间', field: 'createTime', sortable: true, formatter: formatDatebox
+                title: '创建时间', field: 'createTime', sortable: false, formatter: formatDatebox
             },
             {
-                title: '更新时间', field: 'updateTime', sortable: true, formatter: formatDatebox
+                title: '更新时间', field: 'updateTime', sortable: false, formatter: formatDatebox
             },
         ]],
     });
@@ -239,4 +242,19 @@ function formatDatebox(value) {
     }
 
     return dt.format("yyyy-MM-dd hh:mm:ss"); // 扩展的Date的format方法(上述插件实现)
+}
+
+//商品属性编码转名称
+function changeCode(value) {
+    if (value == 10) {
+        return "正品";
+    }else if (value == 21) {
+      return "不良品";
+    } else if (value == 22) {
+      return "开箱正品";
+    } else if (value == 40) {
+      return "样品";
+    } else if (value == 41) {
+      return "夺宝机";
+    }
 }

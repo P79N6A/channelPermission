@@ -63,4 +63,11 @@ public interface PurchaseVehicleOrderDetailService extends
 
 	void updateByOrderNo(VehicleOrderDetailsDTO order);
 
+	List<VehicleOrderDetailsDTO> getByVbeln(String vbeln);
+
+	void updateEntry3wOrderById(Cn3wPurchaseStock cn3wPurchaseStock);
+
+	int updateVbelnSpareByItemNo(String itemNo, String vbelnSpare);
+
+	boolean vbelnExists(String itemNo, String vbelnSpare);
 }

@@ -1,8 +1,11 @@
 package com.haier.shop.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class HpNoticeQueues {
+public class HpNoticeQueues implements Serializable {
+
+    private static final long serialVersionUID = -3143394810257995191L;
     private Integer id;
 
     private Integer orderProductId;

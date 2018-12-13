@@ -1,5 +1,6 @@
 package com.haier.purchase.data.service;
 
+import com.haier.common.ServiceResult;
 import com.haier.purchase.data.model.PrivilegeItem;
 
 
@@ -18,6 +19,8 @@ public interface PurchaseCommonService {
     /**订单流水号取得
      */
     public int getNextVal();
+
+	public ServiceResult<PrivilegeItem> getPrivilege(String userId);
 
 
 }

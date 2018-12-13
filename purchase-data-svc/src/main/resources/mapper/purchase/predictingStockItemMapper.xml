@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.PredictingStockDao">
+    <resultMap id="predictingStockItemResult" type="com.haier.purchase.data.model.PredictingStockItem">
+        <result property="id" column="id"/>
+        <result property="report_year_week" column="report_year_week"/>
+        <result property="product_group_id" column="product_group_id"/>
+        <result property="ed_channel_id" column="ed_channel_id"/>
+        <result property="category_id" column="category_id"/>
+        <result property="materials_id" column="materials_id"/>
+        <result property="materials_desc" column="materials_desc"/>
+        <result property="t3_require_prediction" column="T3_require_prediction"/>
+        <result property="t4_require_prediction" column="T4_require_prediction"/>
+        <result property="t5_require_prediction" column="T5_require_prediction"/>
+        <result property="t6_require_prediction" column="T6_require_prediction"/>
+        <result property="t7_require_prediction" column="T7_require_prediction"/>
+        <result property="t8_require_prediction" column="T8_require_prediction"/>
+        <result property="t9_require_prediction" column="T9_require_prediction"/>
+        <result property="t10_require_prediction" column="T10_require_prediction"/>
+        <result property="t11_require_prediction" column="T11_require_prediction"/>
+        <result property="t12_require_prediction" column="T12_require_prediction"/>
+        <result property="t13_require_prediction" column="T13_require_prediction"/>
+        
+        <result property="create_user" column="create_user"/>
+        <result property="delete_flag" column="delete_flag"/>
+        <result property="flow_flag" column="flow_flag"/>
+	<result property="create_time_display" column="create_time_display"/>
+        <result property="audit_user" column="audit_user"/>
+        <result property="audit_time_display" column="audit_time_display"/>
+    </resultMap>
+    <resultMap id="predictingStockReportResult" type="com.haier.purchase.data.model.PredictingStockItem">
+        <result property="report_year_week" column="report_year_week"/>
+        <result property="product_group_id" column="product_group_id"/>
+        <result property="not_commit_count" column="not_commit_count"/>
+        <result property="commit_count" column="commit_count"/>
+        <result property="failure_count" column="failure_count"/>
+    </resultMap>
+    <sql id="findPredictingStockOrdersSQLCond">
+    	FROM
+			haier_t3_prediction_t p
+		where p.delete_flag = 0
+        <if test="start_week  !=null and start_week  != ''">
+        	<![CDATA[
+				and p.report_year_week >= #{start_week}
+			]]>
+        </if>
+        <if test="end_week  !=null and end_week  != ''">
+         	<![CDATA[
+				and p.report_year_week <= #{end_week}
+			]]>
+        </if>
+        <if test="channel_id !=null and channel_id != ''">
+					AND ed_channel_id in 
+				<foreach item="item" index="index" collection="channel_id" open="(" separator="," close=")">  
+	  				#{item}  
+	  			</foreach>
+        </if>
+        <if test="product_group_id !=null and product_group_id != ''">
+					AND product_group_id in 
+				<foreach item="item" index="index" collection="product_group_id" open="(" separator="," close=")">  
+	  				#{item}  
+	  			</foreach>
+        </if>
+        <if test="create_user !=null and create_user != ''">
+            and p.create_user = #{create_user}
+        </if>
+		GROUP BY p.report_year_week,p.product_group_id,p.ed_channel_id
+    </sql>
+    <select id="findPredictingStockOrders" parameterType="Map" resultMap="predictingStockItemResult">
+        SELECT p.id,
+			p.product_group_id,
+			p.report_year_week,
+			p.ed_channel_id,
+			p.create_user,
+			p.delete_flag
+		<include refid="findPredictingStockOrdersSQLCond"/>
+		ORDER BY p.report_year_week, p.product_group_id, p.ed_channel_id 
+        <if test="m!=null and n!=null">
+				limit ${m},${n}
+		</if>
+    </select>
+    <select id="findPredictingStockOrdersCNT" resultType="int">
+    SELECT COUNT(1)
+    FROM (SELECT	p.product_group_id,
+			p.report_year_week,
+			p.ed_channel_id
+    <include refid="findPredictingStockOrdersSQLCond"/>) CNT
+    </select>
+    <sql id="findPredictingStockDetailsSQLCond">
+    	FROM
+			db_purchase.haier_t3_prediction_t
+		WHERE
+			delete_flag = 0
+        <if test="report_year_week  !=null and report_year_week  != ''">
+			and report_year_week = #{report_year_week}
+        </if>
+        <if test="materials_id !=null and materials_id != ''">
+            and materials_id = #{materials_id}
+        </if>
+        <if test="channel !=null and channel != ''">
+            and ed_channel_id = #{channel}
+        </if>
+        <if test="start_week  !=null and start_week  != ''">
+        	<![CDATA[
+				and report_year_week >= #{start_week}
+			]]>
+        </if>
+        <if test="end_week  !=null and end_week  != ''">
+        	<![CDATA[
+				and report_year_week <= #{end_week}
+			]]>
+        </if>
+        <if test="ed_channel_id !=null and ed_channel_id.length > 0">
+					AND ed_channel_id in 
+				<foreach item="item" index="index" collection="ed_channel_id" open="(" separator="," close=")">  
+	  				#{item}  
+	  			</foreach>
+        </if>
+        <if test="product_group_id !=null and product_group_id.length > 0">
+					AND product_group_id in 
+				<foreach item="item" index="index" collection="product_group_id" open="(" separator="," close=")">  
+	  				#{item}  
+	  			</foreach>
+        </if>
+        <if test="flow_flag !=null and flow_flag != ''">
+            and flow_flag = #{flow_flag}
+        </if>
+        <if test="flow_flag_list !=null and flow_flag_list != ''">
+					AND flow_flag in 
+				<foreach item="item" index="index" collection="flow_flag_list" open="(" separator="," close=")">  
+	  				#{item}  
+	  			</foreach>
+        </if>
+    </sql>
+    <select id="findPredictingStockDetails" parameterType="Map" resultMap="predictingStockItemResult">
+		SELECT  id,
+			report_year_week,
+			-- 填报周
+			ed_channel_id,
+			-- 渠道
+			product_group_id,
+			-- 产品组
+			materials_id,
+			-- 物料号
+			category_id,
+			T3_require_prediction,
+			T4_require_prediction,
+			T5_require_prediction,
+			T6_require_prediction,
+			T7_require_prediction,
+			T8_require_prediction,
+			T9_require_prediction,
+			T10_require_prediction,
+			T11_require_prediction,
+			T12_require_prediction,
+			T13_require_prediction,
+			flow_flag,
+			error_msg,
+			delete_flag,
+			create_user,
+			date_format(create_time,'%Y-%m-%d %H:%i:%S') as create_time_display,
+			audit_user,
+			date_format(audit_time,'%Y-%m-%d %H:%i:%S') as audit_time_display
+		<include refid="findPredictingStockDetailsSQLCond"/>
+		ORDER BY report_year_week desc, product_group_id, ed_channel_id 
+        <if test="m!=null and n!=null">
+				limit ${m},${n}
+		</if>
+    </select>
+    <select id="findPredictingStockDetailCNT" resultType="int">
+    	SELECT COUNT(1)
+    	<include refid="findPredictingStockDetailsSQLCond"/>
+    </select>
+    <select id="findPredictingStockReport" parameterType="Map" resultMap="predictingStockReportResult">
+    SELECT 
+			p.report_year_week,
+			p.product_group_id,
+			flow_flag,
+			sum(case p.flow_flag when 1 then p.count else 0 end) not_commit_count,
+			sum(case p.flow_flag when 2 then p.count else 0 end ) commit_count,
+			sum(case p.flow_flag when 3 then p.count else 0 end) failure_count
+	FROM (select  report_year_week,
+		             product_group_id,
+					 flow_flag,
+		             count(flow_flag) as count
+		             from haier_t3_prediction_t
+		             where delete_flag = 0
+		             <if test="report_year_week  !=null and report_year_week  != ''">
+						and report_year_week = #{report_year_week}
+        			 </if>
+        			 <if test="product_group_id !=null and product_group_id.length > 0">
+						AND product_group_id in 
+					 <foreach item="item" index="index" collection="product_group_id" open="(" separator="," close=")">  
+	  					#{item}  
+	  				 </foreach>
+        			 </if>
+					<if test="ed_channel_id !=null and ed_channel_id.length > 0">
+						AND ed_channel_id in
+						<foreach item="item" index="index" collection="ed_channel_id"
+							open="(" separator="," close=")">
+							#{item}
+						</foreach>
+					</if>
+					 GROUP BY report_year_week,product_group_id,flow_flag
+					) p	
+					GROUP BY p.report_year_week,p.product_group_id
+					ORDER BY p.report_year_week, p.product_group_id
+    </select>
+    <select id="findPredictingStockNoChannel" parameterType="Map" resultMap="predictingStockItemResult">
+		SELECT
+			report_year_week,
+			product_group_id,
+			materials_id,
+			sum(T3_require_prediction) as T3_require_prediction,
+			sum(T4_require_prediction) as T4_require_prediction,
+			sum(T5_require_prediction) as T5_require_prediction,
+			sum(T6_require_prediction) as T6_require_prediction,
+			sum(T7_require_prediction) as T7_require_prediction,
+			sum(T8_require_prediction) as T8_require_prediction,
+			sum(T9_require_prediction) as T9_require_prediction,
+			sum(T10_require_prediction) as T10_require_prediction,
+			sum(T11_require_prediction) as T11_require_prediction,
+			sum(T12_require_prediction) as T12_require_prediction,
+			sum(T13_require_prediction) as T13_require_prediction
+		FROM
+			haier_t3_prediction_t
+		where delete_flag = 0
+        <if test="report_year_week  !=null and report_year_week  != ''">
+			and report_year_week = #{report_year_week}
+        </if>
+        <if test="productGroupId!=null and productGroupId != ''">
+        	AND product_group_id = #{productGroupId}
+        </if>
+        <if test="product_group_id !=null and product_group_id != ''" >
+					AND product_group_id in 
+				<foreach item="item" index="index" collection="product_group_id" open="(" separator="," close=")">  
+	  				#{item}  
+	  			</foreach>
+        </if>
+		GROUP BY report_year_week,product_group_id,materials_id
+		ORDER BY report_year_week, product_group_id, materials_id
+    </select>
+    <select id="findPredictingStockWithChannel" parameterType="Map" resultMap="predictingStockItemResult">
+		SELECT
+			report_year_week,
+			product_group_id,
+			materials_id,
+			sum(T3_require_prediction) as T3_require_prediction,
+			sum(T4_require_prediction) as T4_require_prediction,
+			sum(T5_require_prediction) as T5_require_prediction,
+			sum(T6_require_prediction) as T6_require_prediction,
+			sum(T7_require_prediction) as T7_require_prediction,
+			sum(T8_require_prediction) as T8_require_prediction,
+			sum(T9_require_prediction) as T9_require_prediction,
+			sum(T10_require_prediction) as T10_require_prediction,
+			sum(T11_require_prediction) as T11_require_prediction,
+			sum(T12_require_prediction) as T12_require_prediction,
+			sum(T13_require_prediction) as T13_require_prediction
+		FROM
+			haier_t3_prediction_t
+		where delete_flag = 0
+        <if test="report_year_week  !=null and report_year_week  != ''">
+			and report_year_week = #{report_year_week}
+        </if>
+<!--         <if test="productGroupId!=null and productGroupId != ''"> -->
+<!--         	AND product_group_id = #{productGroupId} -->
+<!--         </if> -->
+        <if test="productGroupId !=null and productGroupId.length > 0">
+				AND product_group_id in 
+			<foreach item="item" index="index" collection="productGroupId" open="(" separator="," close=")">  
+  				#{item}  
+  			</foreach>
+        </if>
+        <if test="ed_channel_id !=null and ed_channel_id.length > 0">
+			AND ed_channel_id in
+			<foreach item="item" index="index" collection="ed_channel_id"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		GROUP BY report_year_week,product_group_id,materials_id
+		ORDER BY report_year_week, product_group_id, materials_id
+    </select>
+    <insert id="insertsummaryt" parameterType="com.haier.purchase.data.model.PredictingStockItem">
+        insert into
+        `haier_t3_prediction_summary_t`(`product_group_id`,`report_year_week`,`materials_id`,
+        		`T3_require_prediction`,`T4_require_prediction`,`T5_require_prediction`,`T6_require_prediction`,`T7_require_prediction`,`T8_require_prediction`,`T9_require_prediction`,`T10_require_prediction`,`T11_require_prediction`,`T12_require_prediction`,`T13_require_prediction`,
+        		`flow_flag`,`error_msg`)
+        values(#{product_group_id},#{report_year_week},#{materials_id},
+        		#{t3_require_prediction},#{t4_require_prediction},#{t5_require_prediction},#{t6_require_prediction},#{t7_require_prediction},#{t8_require_prediction},#{t9_require_prediction},#{t10_require_prediction},#{t11_require_prediction},#{t12_require_prediction},#{t13_require_prediction},
+        		#{flow_flag},#{error_msg})
+        <selectKey resultType="java.lang.Integer"  order="AFTER" keyProperty="id" >
+        SELECT LAST_INSERT_ID()
+      </selectKey>
+    </insert>
+    <update id="updateStatus" parameterType="com.haier.purchase.data.model.PredictingStockItem">
+		update `haier_t3_prediction_t` set `flow_flag`=#{flow_flag},`error_msg`=#{error_msg},`audit_user`=#{audit_user},`audit_time`=CURRENT_TIMESTAMP()
+		where delete_flag = 0 and report_year_week = #{report_year_week} and product_group_id = #{product_group_id} and materials_id = #{materials_id}
+	</update>
+	<update id="updateSummyStatus" parameterType="com.haier.purchase.data.model.PredictingStockItem">
+		update `haier_t3_prediction_summary_t` set `flow_flag`=#{flow_flag},`error_msg`=#{error_msg}
+		where id = #{id} 
+	</update>
+	<sql id="findPredictingStockListSQLCond">
+		FROM(
+			SELECT o.product_group_id
+					 ,o.report_year_week
+					 ,o.ed_channel_id
+					 ,o.flow_flag
+					 ,count(o.flow_flag) as count
+		    FROM haier_t3_prediction_t o
+		    WHERE  delete_flag = 0 
+        <if test="report_year_week  !=null and report_year_week  != '' ">
+			and report_year_week = #{report_year_week}
+        </if>
+        <if test="ed_channel_id !=null and ed_channel_id.length > 0">
+					AND ed_channel_id in 
+				<foreach item="item" index="index" collection="ed_channel_id" open="(" separator="," close=")">  
+	  				#{item}  
+	  			</foreach>
+        </if>
+        <if test="product_group_id !=null and product_group_id.length > 0">
+					AND product_group_id in 
+				<foreach item="item" index="index" collection="product_group_id" open="(" separator="," close=")">  
+	  				#{item}  
+	  			</foreach>
+        </if>
+        <if test="create_user !=null and create_user != ''">
+            and create_user = #{create_user}
+        </if>
+        GROUP BY report_year_week,ed_channel_id,product_group_id,flow_flag
+        ) t
+		GROUP BY t.report_year_week,t.ed_channel_id,t.product_group_id
+		</sql>
+    <select id="findPredictingStockList" parameterType="Map" resultMap="predictingStockItemResult">
+        SELECT t.report_year_week
+			,t.ed_channel_id
+			,t.product_group_id
+			,sum(case t.flow_flag when 1 then t.count else 0 end) not_commit_count,
+			sum(case t.flow_flag when 2 then t.count else 0 end ) commit_count,
+			sum(case t.flow_flag when 3 then t.count else 0 end) failure_count
+		<include refid="findPredictingStockListSQLCond"/>
+		ORDER BY t.report_year_week
+						,t.product_group_id
+						,t.ed_channel_id
+        limit ${m},${n}
+    </select>
+    <select id="findPredictingStockListCNT" resultType="int">
+    	SELECT COUNT(1)
+    	FROM ( SELECT t.report_year_week,t.ed_channel_id,t.product_group_id
+    	<include refid="findPredictingStockListSQLCond"/>) CNT
+    </select>
+    <select id="isExistPredictingStock" parameterType="String" resultType="Integer">
+        SELECT
+            count(`id`)
+        FROM `haier_t3_prediction_t`
+        WHERE `product_group_id` = #{productGroupId} AND `materials_id` = #{materialsId} AND `report_year_week` = #{reportYearWeek} AND `ed_channel_id` = #{edChannelId}  
+    </select>
+    <insert id="insert" parameterType="com.haier.purchase.data.model.PredictingStockItem">
+	    insert into
+		`haier_t3_prediction_t` (`product_group_id`,`materials_id`,`report_year_week`,`ed_channel_id`,`category_id`,
+								`T3_require_prediction`,`T4_require_prediction`,`T5_require_prediction`,`T6_require_prediction`,`T7_require_prediction`,`T8_require_prediction`,`T9_require_prediction`,`T10_require_prediction`,`T11_require_prediction`,`T12_require_prediction`,`T13_require_prediction`,
+								`create_user`,`create_time`,`delete_flag`,`flow_flag`)
+		values(#{product_group_id},#{materials_id},#{report_year_week},#{ed_channel_id},#{category_id},
+								#{t3_require_prediction},#{t4_require_prediction},#{t5_require_prediction},#{t6_require_prediction},#{t7_require_prediction},#{t8_require_prediction},#{t9_require_prediction},#{t10_require_prediction},#{t11_require_prediction},#{t12_require_prediction},#{t13_require_prediction},
+								#{create_user},current_timeStamp,#{delete_flag},#{flow_flag})
+    </insert>
+	<update id="update" parameterType="com.haier.purchase.data.model.PredictingStockItem">
+        UPDATE `haier_t3_prediction_t`
+        SET
+		    T3_require_prediction = #{t3_require_prediction},
+		    T4_require_prediction = #{t4_require_prediction},
+		    T5_require_prediction = #{t5_require_prediction},
+		    T6_require_prediction = #{t6_require_prediction},
+		    T7_require_prediction = #{t7_require_prediction},
+		    T8_require_prediction = #{t8_require_prediction},
+		    T9_require_prediction = #{t9_require_prediction},
+		    T10_require_prediction = #{t10_require_prediction},
+		    T11_require_prediction = #{t11_require_prediction},
+		    T12_require_prediction = #{t12_require_prediction},
+		    T13_require_prediction = #{t13_require_prediction},
+			create_user = #{create_user},
+			create_time = current_timeStamp,
+			flow_flag = #{flow_flag},
+			error_msg = null
+        WHERE `product_group_id` = #{product_group_id} AND `materials_id` = #{materials_id} AND `report_year_week` = #{report_year_week} AND `ed_channel_id` = #{ed_channel_id}
+    </update>
+	<update id="updatePredictionStockById" parameterType="com.haier.purchase.data.model.PredictingStockItem">
+        UPDATE `haier_t3_prediction_t`
+        SET
+        	report_year_week = #{report_year_week},
+		    T3_require_prediction = #{t3_require_prediction},
+		    T4_require_prediction = #{t4_require_prediction},
+		    T5_require_prediction = #{t5_require_prediction},
+		    T6_require_prediction = #{t6_require_prediction},
+		    T7_require_prediction = #{t7_require_prediction},
+		    T8_require_prediction = #{t8_require_prediction},
+		    T9_require_prediction = #{t9_require_prediction},
+		    T10_require_prediction = #{t10_require_prediction},
+		    T11_require_prediction = #{t11_require_prediction},
+		    T12_require_prediction = #{t12_require_prediction},
+		    T13_require_prediction = #{t13_require_prediction},
+			create_user = #{create_user},
+			create_time = current_timeStamp,
+			error_msg = null
+        WHERE `id` = #{id}
+    </update>
+    <select id="getPredictingStockForAnalyzeReport" parameterType="Map" resultMap="predictingStockItemResult">
+		SELECT
+			product_group_id,
+			ed_channel_id,
+			report_year_week,
+			materials_id,
+			sum(T3_require_prediction) T3_require_prediction,
+			sum(T6_require_prediction) T6_require_prediction
+		FROM
+			haier_t3_prediction_t
+		WHERE
+			flow_flag = '2'
+			AND  delete_flag = 0
+        	<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND ed_channel_id = #{ed_channel_id}
+			</if>
+        	<if test="report_year_week_t3 !=null and report_year_week_t3 != ''">
+			AND report_year_week = #{report_year_week_t3}
+			</if>
+	        <if test="report_year_week_start_t3 !=null and report_year_week_start_t3 != ''">
+        	<![CDATA[
+			AND report_year_week >= #{report_year_week_start_t3}
+			]]>
+	        </if>
+	        <if test="report_year_week_end_t3 !=null and report_year_week_end_t3 != ''">
+        	<![CDATA[
+			AND report_year_week <= #{report_year_week_end_t3}
+			]]>
+	        </if>
+        	<if test="ed_channel_id !=null and ed_channel_id != ''">
+			AND ed_channel_id = #{ed_channel_id}
+			</if>
+        	<if test="report_year_week_t6 !=null and report_year_week_t6 != ''">
+			AND report_year_week = #{report_year_week_t6}
+			</if>
+	        <if test="report_year_week_start_t6 !=null and report_year_week_start_t6 != ''">
+        	<![CDATA[
+			AND report_year_week >= #{report_year_week_start_t6}
+			]]>
+	        </if>
+	        <if test="report_year_week_end_t6 !=null and report_year_week_end_t6 != ''">
+        	<![CDATA[
+			AND report_year_week <= #{report_year_week_end_t6}
+			]]>
+	        </if>
+		GROUP BY
+			product_group_id,
+			report_year_week,
+			materials_id
+    </select>
+</mapper>

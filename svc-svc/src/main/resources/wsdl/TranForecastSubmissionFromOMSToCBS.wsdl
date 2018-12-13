@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://service.oms.haier.com/services/InterfaceOMSForecast" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://service.oms.haier.com/services/InterfaceOMSForecast" xmlns:intf="http://service.oms.haier.com/services/InterfaceOMSForecast" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://service.oms.haier.com/services/InterfaceOMSForecast" xmlns="http://www.w3.org/2001/XMLSchema">
+   <complexType name="RequestData">
+    <sequence>
+     <element name="customerCode" nillable="true" type="xsd:string"/>
+     <element name="customerName" nillable="true" type="xsd:string"/>
+     <element name="fromSystem" nillable="true" type="xsd:string"/>
+     <element name="omsRole" nillable="true" type="xsd:string"/>
+     <element name="productCode" nillable="true" type="xsd:string"/>
+     <element name="roleChannel" nillable="true" type="xsd:string"/>
+     <element name="t10_num" nillable="true" type="xsd:double"/>
+     <element name="t10_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t10_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t10_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t10_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t11_num" nillable="true" type="xsd:double"/>
+     <element name="t11_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t11_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t11_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t11_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t12_num" nillable="true" type="xsd:double"/>
+     <element name="t12_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t12_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t12_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t12_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t13_num" nillable="true" type="xsd:double"/>
+     <element name="t13_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t13_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t13_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t13_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t3_num" nillable="true" type="xsd:double"/>
+     <element name="t3_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t3_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t3_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t3_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t4_num" nillable="true" type="xsd:double"/>
+     <element name="t4_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t4_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t4_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t4_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t5_num" nillable="true" type="xsd:double"/>
+     <element name="t5_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t5_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t5_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t5_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t6_num" nillable="true" type="xsd:double"/>
+     <element name="t6_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t6_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t6_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t6_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t7_num" nillable="true" type="xsd:double"/>
+     <element name="t7_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t7_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t7_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t7_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t8_num" nillable="true" type="xsd:double"/>
+     <element name="t8_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t8_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t8_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t8_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="t9_num" nillable="true" type="xsd:double"/>
+     <element name="t9_num_tm" nillable="true" type="xsd:double"/>
+     <element name="t9_num_tm1" nillable="true" type="xsd:double"/>
+     <element name="t9_num_tm2" nillable="true" type="xsd:double"/>
+     <element name="t9_num_tm3" nillable="true" type="xsd:double"/>
+     <element name="tradeCode" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <element name="requestData" type="impl:RequestData"/>
+   <complexType name="ResponseData">
+    <sequence>
+     <element name="reason" nillable="true" type="xsd:string"/>
+     <element name="status" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <element name="getForecastRecordReturn" type="impl:ResponseData"/>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="getForecastRecordRequest">
+
+      <wsdl:part element="impl:requestData" name="requestData">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getForecastRecordResponse">
+
+      <wsdl:part element="impl:getForecastRecordReturn" name="getForecastRecordReturn">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="InterfaceOMSForecast">
+
+      <wsdl:operation name="getForecastRecord" parameterOrder="requestData">
+
+         <wsdl:input message="impl:getForecastRecordRequest" name="getForecastRecordRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getForecastRecordResponse" name="getForecastRecordResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="InterfaceOMSForecastSoapBinding" type="impl:InterfaceOMSForecast">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="getForecastRecord">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getForecastRecordRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getForecastRecordResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="InterfaceOMSForecastService">
+
+      <wsdl:port binding="impl:InterfaceOMSForecastSoapBinding" name="InterfaceOMSForecast">
+
+         <wsdlsoap:address location="http://10.135.27.10:9015/services/InterfaceOMSForecast"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

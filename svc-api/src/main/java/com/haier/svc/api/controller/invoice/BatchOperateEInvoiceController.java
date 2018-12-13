@@ -4,14 +4,6 @@ import com.haier.invoice.service.BatchBillEInvoiceService;
 import com.haier.invoice.service.BatchInvalidEInvoiceService;
 import com.haier.invoice.service.BatchRebillEInvoiceService;
 import com.haier.invoice.util.HttpJsonResult;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +11,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 批量操作电子发票（开票、作废、重开）
@@ -164,6 +165,75 @@ public class BatchOperateEInvoiceController {
             result.setMessage(serviceResult);
         } catch (Exception e) {
             logger.error("[eInvoiceBatchReBilling]更新Invoices[电子发票批量重推开票]时发生未知错误", e);
+            result.setMessage("更新失败！");
+            return result;
+        }
+        return result;
+    }
+
+
+    /**
+     * 根据网单id开票
+     * @param orderProductId
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    @RequestMapping(value={"eInvoiceBatchBillingByOrderProductId"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+    @ResponseBody
+    HttpJsonResult<Map<String, Object>> eInvoiceBatchBillingByOrderProductId(@RequestParam(required=false) String orderProductId, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ParseException
+    {
+        response.setCharacterEncoding("UTF-8");
+        HttpJsonResult<Map<String, Object>> result = new HttpJsonResult();
+
+        try
+        {
+            if (orderProductId == null || orderProductId == "") {
+                result.setMessage("网单号为空！");
+                return result;
+            }
+
+
+            String serviceResult = this.batchBillEInvoiceService.eInvoiceBatchBillingByOrderProductId(orderProductId);
+            result.setMessage(serviceResult);
+        } catch (Exception e) {
+            logger.error("[eInvoiceBatchBilling]更新Invoices[电子发票开票]时发生未知错误", e);
+            result.setMessage("更新失败！");
+            return result;
+        }
+        return result;
+    }
+
+    /**
+     * 根据网单id重新开票
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    @RequestMapping(value={"eInvoiceBatchReBillingByOrderProductId"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+    @ResponseBody
+    HttpJsonResult<Map<String, Object>> eInvoiceBatchReBillingByOrderProductId(@RequestParam(required=false) String orderProductId, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ParseException
+    {
+        response.setCharacterEncoding("UTF-8");
+        HttpJsonResult<Map<String, Object>> result = new HttpJsonResult();
+
+        try
+        {
+            if (orderProductId == null || orderProductId == "") {
+                result.setMessage("网单号为空！");
+                return result;
+            }
+
+            String serviceResult = this.batchBillEInvoiceService.eInvoiceBatchReBillingByOrderProductId(orderProductId);
+            result.setMessage(serviceResult);
+        } catch (Exception e) {
+            logger.error("[eInvoiceBatchBilling]更新Invoices[电子发票重新开票]时发生未知错误", e);
             result.setMessage("更新失败！");
             return result;
         }

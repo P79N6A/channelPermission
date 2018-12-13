@@ -13,7 +13,6 @@ public class SysPermission implements Serializable {
 	private Integer ownerId;
 	private Integer ownerType;
 	private Integer resId;
-	private String channelIds;
 	private Integer resType;
 	private Date startTime;
 	private Date endTime;
@@ -104,13 +103,5 @@ public class SysPermission implements Serializable {
 
 	public void setUpdateTime(Date value) {
 		this.updateTime = value;
-	}
-
-	public String getChannelIds() {
-		return channelIds;
-	}
-
-	public void setChannelIds(String channelIds) {
-		this.channelIds = channelIds;
 	}
 }

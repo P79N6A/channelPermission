@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.shopread.TradingFlowReadDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.TradingFlow" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="start_money" property="startMoney" jdbcType="INTEGER" />
+    <result column="end_money" property="endMoney" jdbcType="INTEGER" />
+    <result column="income_money" property="incomeMoney" jdbcType="INTEGER" />
+    <result column="expenditure_money" property="expenditureMoney" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_time, shop_name, start_money, end_money, income_money, expenditure_money
+  </sql>
+  <select id="getFindQueryOrderList" resultMap="BaseResultMap" parameterType="com.haier.shop.model.QueryZFBOrderParameter" >
+    select 
+    <include refid="Base_Column_List" />
+    from trading_flow
+    where 1=1  
+      <if test="shopName != null and shopName != ''">
+          and shop_name=#{shopName}
+      </if>
+      <if test="addTimeBegine != null and addTimeBegine != ''">
+             and create_time &gt;= #{addTimeBegine}
+         </if>
+         <if test="addTimeEnd != null and addTimeEnd != ''">
+             and  create_time &lt;= #{addTimeEnd}
+         </if>
+      <if test="page  != null and rows  != null">
+         Limit #{page} , #{rows}
+      </if>
+  </select>
+  <select id="getFindQueryOrderListCount" resultType="Integer" parameterType="com.haier.shop.model.QueryZFBOrderParameter" >
+    select 
+    count(1)
+    from trading_flow
+    where 1=1	
+	  <if test="shopName != null and shopName != ''">
+          and shop_name=#{shopName}
+      </if>
+      <if test="addTimeBegine != null and addTimeBegine != ''">
+          and create_time &gt;= #{addTimeBegine}
+      </if>
+      <if test="addTimeEnd != null and addTimeEnd != ''">
+          and  create_time &lt;=  #{addTimeEnd}
+      </if>
+  </select>
+</mapper>

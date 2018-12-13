@@ -14,7 +14,7 @@ import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.StringUtil;
 import com.haier.shop.model.*;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.shop.service.StockChangeQueueService;
 import com.haier.stock.model.*;
 import com.haier.stock.model.BaseStock;

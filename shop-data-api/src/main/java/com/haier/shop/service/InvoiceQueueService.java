@@ -1,8 +1,8 @@
 package com.haier.shop.service;
 
-import java.util.List;
-
 import com.haier.shop.model.InvoiceQueue;
+
+import java.util.List;
 
 /*
 * 作者:张波
@@ -39,4 +39,13 @@ public interface InvoiceQueueService {
      * @return
      */
     int insertInvoiceQueue(Integer orderProductId);
+
+    /**
+     *跟新队列相关信息,设置success为否
+     * @param queue
+     * @return
+     */
+    Integer updateInvoiceQueueSuccessByOrderProductId(InvoiceQueue queue);
+
+    Integer updateInvoiceQueueSuccessByOrderProductIds(List<Integer> ids);
 }

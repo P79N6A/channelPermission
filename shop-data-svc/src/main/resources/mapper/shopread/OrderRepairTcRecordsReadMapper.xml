@@ -34,14 +34,14 @@
 		id,addTime,orderRepairTcId,vomTcSn,sku,num,sCode,scodeName,productName,orderRepairId,
 		orderRepairSn,relationSn,lesOrderSn,lesOrderSnTime,lesOutPing,lesOutPingTime,hpCheckResult,
 		caiNiaoCheckResult,isTj,success,hpCheckType,wwwScode,wwwSku,realNum,machineNum 
-		from OrderRepairTcRecords where 
+		from orderrepairtcrecords where
 		orderRepairSn=#{orderRepairSn} and sku=#{sku}
 	</select>
 
 	<select id="getByRecordSn" parameterType="map" resultMap="orderRepairTcRecordsResult">
 		select `id`,`addTime`,`vomTcSn`,`sku`,`num`,`sCode`,`scodeName`,`orderRepairTcId`,`productName`,`orderRepairId`,`orderRepairSn`,`relationSn`,
 		`lesOrderSn`,`lesOrderSnTime`,`lesOutPing`,`lesOutPingTime`,`hpCheckResult`,`caiNiaoCheckResult`,`isTj`,`success`,`hpCheckType`,`wwwScode`,`wwwSku`,`realNum`,`vomNum`
-		from `OrderRepairTcRecords`
+		from `orderrepairtcrecords`
 		where `vomTcSn` = #{recordSn} 
 		order by id desc
 		limit 1
@@ -50,7 +50,7 @@
 	<select id="queryByOrderRepairTcId" parameterType="map" resultMap="orderRepairTcRecordsResult">
 		select `id`,`addTime`,`vomTcSn`,`sku`,`num`,`sCode`,`scodeName`,`orderRepairTcId`,`productName`,`orderRepairId`,`orderRepairSn`,`relationSn`,
 		`lesOrderSn`,`lesOrderSnTime`,`lesOutPing`,`lesOutPingTime`,`hpCheckResult`,`caiNiaoCheckResult`,`isTj`,`success`,`hpCheckType`,`wwwScode`,`wwwSku`,`realNum`,`vomNum`
-		from `OrderRepairTcRecords`
+		from `orderrepairtcrecords`
 		where `orderRepairTcId` = #{orderRepairTcId}
 		order by id desc
 	</select>

@@ -1,6 +1,7 @@
 package com.haier.shop.service;
 
 import com.haier.shop.model.BigStoragesRela;
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -21,4 +22,38 @@ public interface BigStoragesRelaService {
      * @return
      */
     List<BigStoragesRela> getListByCodes(@Param("codeList") List<String> codeList);
+
+    /**
+     * 获取大家电多层级列表 带条件
+     * @param params
+     * @return
+     */
+    List<BigStoragesRela> getListByParam(Map<String, Object> params);
+
+    /**
+     * 获取大家电多层级列表数量 带条件
+     * @param params
+     * @return
+     */
+    Integer getListCountByParam(Map<String, Object> params);
+
+    /**
+     * 创建大家电多层级列表
+     * @param bigStoragesRela
+     * @return
+     */
+    int createBigStoragesRela(BigStoragesRela bigStoragesRela);
+    /**
+     * 更新大家电多层级列表
+     * @param bigStoragesRela
+     * @return
+     */
+    int updateBigStoragesRela(BigStoragesRela bigStoragesRela);
+
+    /**
+     * 根据库位主库位中心库位判断是否存在
+     * @param bigStoragesRela
+     * @return
+     */
+    int selectByCode(BigStoragesRela bigStoragesRela);
 }

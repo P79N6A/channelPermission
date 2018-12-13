@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.haier.shop.model.MemberInvoices;
 import com.haier.shop.model.Orders;
 
 
@@ -37,6 +38,8 @@ public interface OrdersDao {
 
 
     int insert(Orders orders);
+    
+    int insertOrders(Orders orders);
 
     int updateForInvoice(Orders orders);
 
@@ -136,5 +139,26 @@ public interface OrdersDao {
     List<Orders> getBySourceOrderSn(String sourceOrderSn);
 
     int updateIsNotConfirm(@Param("orderSns") Set<String> orderSns);
+    
+    List<Orders> getOrderList(String sourceOrderNumber);
+    
+    int updateSourceOrderNumber(@Param("sourceOrderSn") String sourceOrderSn, @Param("orderSn") String orderSn);
+    
+    int updatePayState(@Param("id") Integer id, @Param("selectStateInteger") Integer selectStateInteger);
+    
+    int updateNotes(@Param("id") Integer id, @Param("textNotes") String textNotes);
+    
+    int updateInvoiceAddress(Orders orders);
 
+    int updateInvoiceState(@Param("id") Integer id, @Param("isLock") Integer isLock);
+    
+    int updateInvoiceInfo(MemberInvoices memberInvoices);
+    
+    int updateAddress(Orders orders);
+    
+    int updateSmConfirmStatusByIdState(@Param("id") Integer id, @Param("smConfirmStatus") Integer smConfirmStatus);
+    
+    Orders getOrderNo(String orderSn);
+
+    int updateMemberInvoicesId(@Param("memberInvoiceId") int memberInvoiceId,@Param("id")  int id);
 }

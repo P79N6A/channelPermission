@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.TmypAreaCenterInfoDao">
+
+    <!-- =========================================================== -->
+    <!-- 定义resultMap -->
+    <!-- =========================================================== -->
+    <resultMap id="TmypAreaCenterInfoMap" type="com.haier.purchase.data.model.vehcile.TmypAreaCenterInfo">
+        <result column="id" property="id" jdbcType="DECIMAL"/>
+        <result column="delivery_to_code" property="deliveryToCode" jdbcType="VARCHAR"/>
+        <result column="distribution_centre_code" property="distributionCentreCode" jdbcType="VARCHAR"/>
+        <result column="distribution_centre_name" property="distributionCentreName" jdbcType="VARCHAR"/>
+        <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR"/>
+        <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"/>
+        <result column="area_code" property="areaCode" jdbcType="VARCHAR"/>
+        <result column="area_name" property="areaName" jdbcType="VARCHAR"/>
+        <result column="rrs_center_code" property="rrsCenterCode" jdbcType="VARCHAR"/>
+        <result column="rrs_center_name" property="rrsCenterName" jdbcType="VARCHAR"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR"/>
+        <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
+        <result column="wh_code" property="whCode" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        ,delivery_to_code
+        ,distribution_centre_code
+        ,distribution_centre_name
+        ,warehouse_code
+        ,warehouse_name
+        ,area_code
+        ,area_name
+        ,rrs_center_code
+        ,rrs_center_name
+        ,active_flag
+        ,create_by
+        ,create_time
+        ,last_update_by
+        ,last_update_time
+        ,wh_code
+    </sql>
+
+
+    <select id="getTmypAreaCenterInfo" parameterType="Map" resultMap="TmypAreaCenterInfoMap">
+        select
+        <include refid="Base_Column_List" />
+        from `area_center_info_tmyp`
+        where 1=1
+        <if test="areaCenterInfo!=null">
+            <if test="areaCenterInfo.id != null and areaCenterInfo.id !='' ">
+                <![CDATA[ and id  = #{areaCenterInfo.id} ]]>
+            </if>
+            <if test="areaCenterInfo.deliveryToCode != null and areaCenterInfo.deliveryToCode !='' ">
+                <![CDATA[ and delivery_to_code  = #{areaCenterInfo.deliveryToCode} ]]>
+            </if>
+            <if test="areaCenterInfo.distributionCentreCode != null and areaCenterInfo.distributionCentreCode !='' ">
+                <![CDATA[ and distribution_centre_code  = #{areaCenterInfo.distributionCentreCode} ]]>
+            </if>
+            <if test="areaCenterInfo.distributionCentreName != null and areaCenterInfo.distributionCentreName !='' ">
+                <![CDATA[ and distribution_centre_name  = #{areaCenterInfo.distributionCentreName} ]]>
+            </if>
+            <if test="areaCenterInfo.warehouseCode != null and areaCenterInfo.warehouseCode !='' ">
+                <![CDATA[ and warehouse_code  = #{areaCenterInfo.warehouseCode} ]]>
+            </if>
+            <if test="areaCenterInfo.warehouseName != null and areaCenterInfo.warehouseName !='' ">
+                <![CDATA[ and warehouse_name  = #{areaCenterInfo.warehouseName} ]]>
+            </if>
+            <if test="areaCenterInfo.whCode != null and areaCenterInfo.whCode !='' ">
+                <![CDATA[ and wh_code  = #{areaCenterInfo.whCode} ]]>
+            </if>
+            <if test="areaCenterInfo.areaCode != null and areaCenterInfo.areaCode !='' ">
+                <![CDATA[ and area_code  = #{areaCenterInfo.areaCode} ]]>
+            </if>
+            <if test="areaCenterInfo.areaName != null and areaCenterInfo.areaName !='' ">
+                <![CDATA[ and area_name  = #{areaCenterInfo.areaName} ]]>
+            </if>
+            <if test="areaCenterInfo.rrsCenterCode != null and areaCenterInfo.rrsCenterCode !='' ">
+                <![CDATA[ and rrs_center_code  = #{areaCenterInfo.rrsCenterCode} ]]>
+            </if>
+            <if test="areaCenterInfo.rrsCenterName != null and areaCenterInfo.rrsCenterName !='' ">
+                <![CDATA[ and rrs_center_name  = #{areaCenterInfo.rrsCenterName} ]]>
+            </if>
+            <if test="areaCenterInfo.activeFlag != null and areaCenterInfo.activeFlag !='' ">
+                <![CDATA[ and active_flag  = #{areaCenterInfo.activeFlag} ]]>
+            </if>
+            <if test="areaCenterInfo.createBy != null and areaCenterInfo.createBy !='' ">
+                <![CDATA[ and create_by  = #{areaCenterInfo.createBy} ]]>
+            </if>
+            <if test="areaCenterInfo.createTime != null ">
+                <![CDATA[ and create_time  = #{areaCenterInfo.createTime} ]]>
+            </if>
+            <if test="areaCenterInfo.lastUpdateBy != null and areaCenterInfo.lastUpdateBy !='' ">
+                <![CDATA[ and last_update_by  = #{areaCenterInfo.lastUpdateBy} ]]>
+            </if>
+            <if test="areaCenterInfo.lastUpdateTime != null ">
+                <![CDATA[ and last_update_time  = #{areaCenterInfo.lastUpdateTime} ]]>
+            </if>
+        </if>
+        <if test="rows != null  and index != null ">
+            LIMIT #{index},#{rows}
+        </if>
+    </select>
+
+
+    <!-- 根据送达方查询 -->
+    <select id="getOneByDeliveryToCode" resultMap="TmypAreaCenterInfoMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM area_center_info_tmyp
+        where delivery_to_code = #{deliveryToCode}
+    </select>
+
+
+    <select id="getTmypAreaCenterInfoCount" parameterType="Map" resultType="java.lang.Integer">
+        select
+        count(1)
+        from `area_center_info_tmyp`
+        where 1=1
+        <if test="areaCenterInfo!=null">
+            <if test="areaCenterInfo.id != null and areaCenterInfo.id !='' ">
+                <![CDATA[ and id  = #{areaCenterInfo.id} ]]>
+            </if>
+            <if test="areaCenterInfo.deliveryToCode != null and areaCenterInfo.deliveryToCode !='' ">
+                <![CDATA[ and delivery_to_code  = #{areaCenterInfo.deliveryToCode} ]]>
+            </if>
+            <if test="areaCenterInfo.distributionCentreCode != null and areaCenterInfo.distributionCentreCode !='' ">
+                <![CDATA[ and distribution_centre_code  = #{areaCenterInfo.distributionCentreCode} ]]>
+            </if>
+            <if test="areaCenterInfo.distributionCentreName != null and areaCenterInfo.distributionCentreName !='' ">
+                <![CDATA[ and distribution_centre_name  = #{areaCenterInfo.distributionCentreName} ]]>
+            </if>
+            <if test="areaCenterInfo.warehouseCode != null and areaCenterInfo.warehouseCode !='' ">
+                <![CDATA[ and warehouse_code  = #{areaCenterInfo.warehouseCode} ]]>
+            </if>
+            <if test="areaCenterInfo.warehouseName != null and areaCenterInfo.warehouseName !='' ">
+                <![CDATA[ and warehouse_name  = #{areaCenterInfo.warehouseName} ]]>
+            </if>
+            <if test="areaCenterInfo.whCode != null and areaCenterInfo.whCode !='' ">
+                <![CDATA[ and wh_code  = #{areaCenterInfo.whCode} ]]>
+            </if>
+            <if test="areaCenterInfo.areaCode != null and areaCenterInfo.areaCode !='' ">
+                <![CDATA[ and area_code  = #{areaCenterInfo.areaCode} ]]>
+            </if>
+            <if test="areaCenterInfo.areaName != null and areaCenterInfo.areaName !='' ">
+                <![CDATA[ and area_name  = #{areaCenterInfo.areaName} ]]>
+            </if>
+            <if test="areaCenterInfo.rrsCenterCode != null and areaCenterInfo.rrsCenterCode !='' ">
+                <![CDATA[ and rrs_center_code  = #{areaCenterInfo.rrsCenterCode} ]]>
+            </if>
+            <if test="areaCenterInfo.rrsCenterName != null and areaCenterInfo.rrsCenterName !='' ">
+                <![CDATA[ and rrs_center_name  = #{areaCenterInfo.rrsCenterName} ]]>
+            </if>
+            <if test="areaCenterInfo.activeFlag != null and areaCenterInfo.activeFlag !='' ">
+                <![CDATA[ and active_flag  = #{areaCenterInfo.activeFlag} ]]>
+            </if>
+            <if test="areaCenterInfo.createBy != null and areaCenterInfo.createBy !='' ">
+                <![CDATA[ and create_by  = #{areaCenterInfo.createBy} ]]>
+            </if>
+            <if test="areaCenterInfo.createTime != null ">
+                <![CDATA[ and create_time  = #{areaCenterInfo.createTime} ]]>
+            </if>
+            <if test="areaCenterInfo.lastUpdateBy != null and areaCenterInfo.lastUpdateBy !='' ">
+                <![CDATA[ and last_update_by  = #{areaCenterInfo.lastUpdateBy} ]]>
+            </if>
+            <if test="areaCenterInfo.lastUpdateTime != null ">
+                <![CDATA[ and last_update_time  = #{areaCenterInfo.lastUpdateTime} ]]>
+            </if>
+        </if>
+    </select>
+
+
+    <insert id="insertSelective" parameterType="com.haier.purchase.data.model.vehcile.TmypAreaCenterInfo">
+        INSERT INTO area_center_info_tmyp
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null and id !='' ">
+                <![CDATA[ id, ]]>
+            </if>
+            <if test="deliveryToCode != null and deliveryToCode !='' ">
+                <![CDATA[ delivery_to_code, ]]>
+            </if>
+            <if test="distributionCentreCode != null and distributionCentreCode !='' ">
+                <![CDATA[ distribution_centre_code, ]]>
+            </if>
+            <if test="distributionCentreName != null and distributionCentreName !='' ">
+                <![CDATA[ distribution_centre_name, ]]>
+            </if>
+            <if test="warehouseCode != null and warehouseCode !='' ">
+                <![CDATA[ warehouse_code, ]]>
+            </if>
+            <if test="warehouseName != null and warehouseName !='' ">
+                <![CDATA[ warehouse_name, ]]>
+            </if>
+            <if test="areaCode != null and areaCode !='' ">
+                <![CDATA[ area_code, ]]>
+            </if>
+            <if test="areaName != null and areaName !='' ">
+                <![CDATA[ area_name, ]]>
+            </if>
+            <if test="rrsCenterCode != null and rrsCenterCode !='' ">
+                <![CDATA[ rrs_center_code, ]]>
+            </if>
+            <if test="rrsCenterName != null and rrsCenterName !='' ">
+                <![CDATA[ rrs_center_name, ]]>
+            </if>
+            <if test="activeFlag != null and activeFlag !='' ">
+                <![CDATA[ active_flag, ]]>
+            </if>
+            <if test="createBy != null and createBy !='' ">
+                <![CDATA[ create_by, ]]>
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[ create_time, ]]>
+            </if>
+            <if test="lastUpdateBy != null and lastUpdateBy !='' ">
+                <![CDATA[ last_update_by, ]]>
+            </if>
+            <if test="lastUpdateTime != null ">
+                <![CDATA[ last_update_time, ]]>
+            </if>
+            <if test="whCode != null and whCode !='' ">
+                <![CDATA[ wh_code, ]]>
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+            <if test="id != null and id !='' ">
+                <![CDATA[ #{id,jdbcType=DECIMAL}, ]]>
+            </if>
+            <if test="deliveryToCode != null and deliveryToCode !='' ">
+                <![CDATA[ #{deliveryToCode,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="distributionCentreCode != null and distributionCentreCode !='' ">
+                <![CDATA[ #{distributionCentreCode,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="distributionCentreName != null and distributionCentreName !='' ">
+                <![CDATA[ #{distributionCentreName,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="warehouseCode != null and warehouseCode !='' ">
+                <![CDATA[ #{warehouseCode,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="warehouseName != null and warehouseName !='' ">
+                <![CDATA[ #{warehouseName,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="areaCode != null and areaCode !='' ">
+                <![CDATA[ #{areaCode,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="areaName != null and areaName !='' ">
+                <![CDATA[ #{areaName,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="rrsCenterCode != null and rrsCenterCode !='' ">
+                <![CDATA[ #{rrsCenterCode,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="rrsCenterName != null and rrsCenterName !='' ">
+                <![CDATA[ #{rrsCenterName,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="activeFlag != null and activeFlag !='' ">
+                <![CDATA[ #{activeFlag,jdbcType=DECIMAL}, ]]>
+            </if>
+            <if test="createBy != null and createBy !='' ">
+                <![CDATA[ #{createBy,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="createTime != null ">
+                <![CDATA[ #{createTime,jdbcType=TIMESTAMP}, ]]>
+            </if>
+            <if test="lastUpdateBy != null and lastUpdateBy !='' ">
+                <![CDATA[ #{lastUpdateBy,jdbcType=VARCHAR}, ]]>
+            </if>
+            <if test="lastUpdateTime != null ">
+                <![CDATA[ #{lastUpdateTime,jdbcType=TIMESTAMP}, ]]>
+            </if>
+            <if test="whCode != null and whCode !='' ">
+                <![CDATA[ #{whCode,jdbcType=VARCHAR}, ]]>
+            </if>
+
+        </trim>
+    </insert>
+
+    <update id="updateSelectiveByDeliveryToCode" parameterType="com.haier.purchase.data.model.vehcile.TmypAreaCenterInfo">
+        UPDATE area_center_info_tmyp
+        <set>
+            <if test="entity!=null">
+                <if test="entity.id != null and entity.id !='' ">
+                    <![CDATA[ id = #{entity.id}, ]]>
+                </if>
+                <if test="entity.deliveryToCode != null and entity.deliveryToCode !='' ">
+                    <![CDATA[ delivery_to_code = #{entity.deliveryToCode}, ]]>
+                </if>
+                <if test="entity.distributionCentreCode != null and entity.distributionCentreCode !='' ">
+                    <![CDATA[ distribution_centre_code = #{entity.distributionCentreCode}, ]]>
+                </if>
+                <if test="entity.distributionCentreName != null and entity.distributionCentreName !='' ">
+                    <![CDATA[ distribution_centre_name = #{entity.distributionCentreName}, ]]>
+                </if>
+                <if test="entity.warehouseCode != null and entity.warehouseCode !='' ">
+                    <![CDATA[ warehouse_code = #{entity.warehouseCode}, ]]>
+                </if>
+                <if test="entity.warehouseName != null and entity.warehouseName !='' ">
+                    <![CDATA[ warehouse_name = #{entity.warehouseName}, ]]>
+                </if>
+                <if test="entity.areaCode != null and entity.areaCode !='' ">
+                    <![CDATA[ area_code = #{entity.areaCode}, ]]>
+                </if>
+                <if test="entity.areaName != null and entity.areaName !='' ">
+                    <![CDATA[ area_name = #{entity.areaName}, ]]>
+                </if>
+                <if test="entity.rrsCenterCode != null and entity.rrsCenterCode !='' ">
+                    <![CDATA[ rrs_center_code = #{entity.rrsCenterCode}, ]]>
+                </if>
+                <if test="entity.rrsCenterName != null and entity.rrsCenterName !='' ">
+                    <![CDATA[ rrs_center_name = #{entity.rrsCenterName}, ]]>
+                </if>
+                <if test="entity.activeFlag != null and entity.activeFlag !='' ">
+                    <![CDATA[ active_flag = #{entity.activeFlag}, ]]>
+                </if>
+                <if test="entity.createBy != null and entity.createBy !='' ">
+                    <![CDATA[ create_by = #{entity.createBy}, ]]>
+                </if>
+                <if test="entity.createTime != null ">
+                    <![CDATA[ create_time = #{entity.createTime}, ]]>
+                </if>
+                <if test="entity.lastUpdateBy != null and entity.lastUpdateBy !='' ">
+                    <![CDATA[ last_update_by = #{entity.lastUpdateBy}, ]]>
+                </if>
+                <if test="entity.lastUpdateTime != null ">
+                    <![CDATA[ last_update_time = #{entity.lastUpdateTime}, ]]>
+                </if>
+                <if test="entity.whCode != null ">
+                    <![CDATA[ wh_code = #{entity.whCode}, ]]>
+                </if>
+
+            </if>
+        </set>
+        WHERE delivery_to_code = #{entity.deliveryToCode}
+    </update>
+
+    <update id="openStatusAreaCenterInfo" parameterType="Map">
+        UPDATE area_center_info_tmyp SET active_flag=1 , last_update_by = #{open_user,jdbcType=VARCHAR} WHERE delivery_to_code IN
+        <foreach collection="openList" item="item" index="index" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="closeStatusAreaCenterInfo" parameterType="Map">
+        UPDATE area_center_info_tmyp SET active_flag=0 ,last_update_by = #{close_user,jdbcType=VARCHAR} WHERE delivery_to_code IN
+        <foreach collection="closeList" item="item" index="index"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getAreaCenterInfoExport" parameterType="Map" resultMap="TmypAreaCenterInfoMap">
+        select
+        <include refid="Base_Column_List" />
+        from `area_center_info_tmyp`
+        <![CDATA[ WHERE  1=1]]>
+        <if test="deliveryToCode != null and deliveryToCode != ''">
+            AND delivery_to_code IN
+            <foreach collection="deliveryToCode" item="item" index="index" open="("
+                     separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>

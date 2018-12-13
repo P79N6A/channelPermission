@@ -3,12 +3,12 @@
 <mapper namespace="com.haier.shop.dao.shopwrite.InvoiceElectricSyncLogsWriteDao">
 
     <insert id="insert" parameterType="com.haier.shop.model.InvoiceElectricSyncLogs">
-        insert into `InvoiceElectricSyncLogs`(`siteId`,`addTime`,`orderId`,`orderProductId`,`cOrderSn`,`orderSource`,`invoiceNumber`,`fiscalCode`,`viewUrl`,`downloadUrl`,`pushData`,`returnData`,`success`,`count`,`lastMessage`,`successTime`,`statusType`,`pdfUrl`,`operateTime`,`amount`)
+        insert into `invoiceelectricsynclogs`(`siteId`,`addTime`,`orderId`,`orderProductId`,`cOrderSn`,`orderSource`,`invoiceNumber`,`fiscalCode`,`viewUrl`,`downloadUrl`,`pushData`,`returnData`,`success`,`count`,`lastMessage`,`successTime`,`statusType`,`pdfUrl`,`operateTime`,`amount`)
         values(#{siteId},#{addTime},#{orderId},#{orderProductId},#{cOrderSn},#{orderSource},#{invoiceNumber},#{fiscalCode},#{viewUrl},#{downloadUrl},#{pushData},#{returnData},#{success},#{count},#{lastMessage},#{successTime},#{statusType},#{pdfUrl},#{operateTime},#{amount})
     </insert>
 
     <update id="update" parameterType="com.haier.shop.model.InvoiceElectricSyncLogs">
-        update `InvoiceElectricSyncLogs` set `siteId`=#{siteId},`addTime`=#{addTime},`orderId`=#{orderId},`orderProductId`=#{orderProductId},`cOrderSn`=#{cOrderSn},`orderSource`=#{orderSource},`invoiceNumber`=#{invoiceNumber},`fiscalCode`=#{fiscalCode},`viewUrl`=#{viewUrl},`downloadUrl`=#{downloadUrl},`pushData`=#{pushData},`returnData`=#{returnData},`success`=#{success},`count`=#{count},`lastMessage`=#{lastMessage},`successTime`=#{successTime}
+        update `invoiceelectricsynclogs` set `siteId`=#{siteId},`addTime`=#{addTime},`orderId`=#{orderId},`orderProductId`=#{orderProductId},`cOrderSn`=#{cOrderSn},`orderSource`=#{orderSource},`invoiceNumber`=#{invoiceNumber},`fiscalCode`=#{fiscalCode},`viewUrl`=#{viewUrl},`downloadUrl`=#{downloadUrl},`pushData`=#{pushData},`returnData`=#{returnData},`success`=#{success},`count`=#{count},`lastMessage`=#{lastMessage},`successTime`=#{successTime}
         <if test="statusType != null">
             ,`statusType`=#{statusType}
         </if>

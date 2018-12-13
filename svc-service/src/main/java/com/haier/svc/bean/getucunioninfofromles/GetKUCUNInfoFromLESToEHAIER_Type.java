@@ -1,3 +1,4 @@
+
 package com.haier.svc.bean.getucunioninfofromles;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,32 +7,40 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+
 /**
- * <p>Java class for anonymous complex type.
+ * <p>anonymous complex type的 Java 类。
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>以下模式片段指定包含在此类中的预期内容。
  * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="CRK" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="DATE_BEGIN" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="DATE_END" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="KUWEI" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="TIME_BEGIN" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="TIME_END" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="CRK" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="DATE_BEGIN" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="DATE_END" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="KUWEI" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="TIME_BEGIN" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="TIME_END" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = { "crk", "datebegin", "dateend", "kuwei", "timebegin", "timeend" })
+@XmlType(name = "", propOrder = {
+    "crk",
+    "datebegin",
+    "dateend",
+    "kuwei",
+    "timebegin",
+    "timeend"
+})
 @XmlRootElement(name = "GetKUCUNInfoFromLESToEHAIER")
 public class GetKUCUNInfoFromLESToEHAIER_Type {
 
@@ -49,7 +58,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     protected String timeend;
 
     /**
-     * Gets the value of the crk property.
+     * 获取crk属性的值。
      * 
      * @return
      *     possible object is
@@ -61,7 +70,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Sets the value of the crk property.
+     * 设置crk属性的值。
      * 
      * @param value
      *     allowed object is
@@ -73,7 +82,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Gets the value of the datebegin property.
+     * 获取datebegin属性的值。
      * 
      * @return
      *     possible object is
@@ -85,7 +94,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Sets the value of the datebegin property.
+     * 设置datebegin属性的值。
      * 
      * @param value
      *     allowed object is
@@ -97,7 +106,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Gets the value of the dateend property.
+     * 获取dateend属性的值。
      * 
      * @return
      *     possible object is
@@ -109,7 +118,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Sets the value of the dateend property.
+     * 设置dateend属性的值。
      * 
      * @param value
      *     allowed object is
@@ -121,7 +130,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Gets the value of the kuwei property.
+     * 获取kuwei属性的值。
      * 
      * @return
      *     possible object is
@@ -133,7 +142,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Sets the value of the kuwei property.
+     * 设置kuwei属性的值。
      * 
      * @param value
      *     allowed object is
@@ -145,7 +154,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Gets the value of the timebegin property.
+     * 获取timebegin属性的值。
      * 
      * @return
      *     possible object is
@@ -157,7 +166,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Sets the value of the timebegin property.
+     * 设置timebegin属性的值。
      * 
      * @param value
      *     allowed object is
@@ -169,7 +178,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Gets the value of the timeend property.
+     * 获取timeend属性的值。
      * 
      * @return
      *     possible object is
@@ -181,7 +190,7 @@ public class GetKUCUNInfoFromLESToEHAIER_Type {
     }
 
     /**
-     * Sets the value of the timeend property.
+     * 设置timeend属性的值。
      * 
      * @param value
      *     allowed object is

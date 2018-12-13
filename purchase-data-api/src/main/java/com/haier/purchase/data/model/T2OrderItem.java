@@ -151,6 +151,10 @@ public class T2OrderItem implements Serializable {
     private int 			  sapStatus;							//推送sap状态
     private String 			  sapMessage;							//推送sap信息
     private String			  sapProcessTime;						//推送sap时间
+    
+    private String			order_num_73;				//参考单号(73单号)
+    
+    private String 			send_flag;					//更改发货方向标识(Y)
 
 
 	public String getOrder_close_user() {
@@ -2012,5 +2016,21 @@ public class T2OrderItem implements Serializable {
                + payment_id + ", payment_name=" + payment_name + ", order_category="
                + order_category + ", order_category_name=" + order_category_name + "]";
     }
+
+	public String getOrder_num_73() {
+		return order_num_73;
+	}
+
+	public void setOrder_num_73(String order_num_73) {
+		this.order_num_73 = order_num_73;
+	}
+
+	public String getSend_flag() {
+		return send_flag;
+	}
+
+	public void setSend_flag(String send_flag) {
+		this.send_flag = send_flag;
+	}
 
 }

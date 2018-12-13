@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.settleCenter.OdsTMFXPromotionCostDao">
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.OdsTMFXPromotionCost">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-23 13:33
+    -->
+    <id column="ID" property="id" jdbcType="VARCHAR"/>
+    <result column="YEAR" property="year" jdbcType="VARCHAR"/>
+    <result column="MONTH" property="month" jdbcType="VARCHAR"/>
+    <result column="ECOLOGY_SHOP" property="ecologyShop" jdbcType="VARCHAR"/>
+    <result column="INDUSTRY" property="industry" jdbcType="VARCHAR"/>
+    <result column="BRAND" property="brand" jdbcType="VARCHAR"/>
+    <result column="COST_DES" property="costDes" jdbcType="VARCHAR"/>
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+    <result column="FIRST_AUDIT" property="firstAudit" jdbcType="VARCHAR"/>
+    <result column="SECOND_AUDIT" property="secondAudit" jdbcType="VARCHAR"/>
+    <result column="AUDIT_BY" property="auditBy" jdbcType="VARCHAR"/>
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP"/>
+    <result column="YX_COST_AMOUNT" property="yxCostAmount" jdbcType="DECIMAL"/>
+    <result column="QT_COST_AMOUNT" property="qtCostAmount" jdbcType="DECIMAL"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-23 13:33
+    -->
+    ID, YEAR, MONTH, ECOLOGY_SHOP, INDUSTRY, BRAND, COST_DES, CREATE_TIME,
+    CREATE_BY, FIRST_AUDIT, SECOND_AUDIT, AUDIT_BY, AUDIT_TIME, YX_COST_AMOUNT, QT_COST_AMOUNT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-23 13:33
+    -->
+    select
+    <include refid="Base_Column_List"/>
+    from ods_tmfx_promotion_cost
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-23 13:33
+    -->
+    delete from ods_tmfx_promotion_cost
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-23 13:33
+    -->
+    insert into ods_tmfx_promotion_cost
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="year != null">
+        YEAR,
+      </if>
+      <if test="month != null">
+        MONTH,
+      </if>
+      <if test="ecologyShop != null">
+        ECOLOGY_SHOP,
+      </if>
+      <if test="industry != null">
+        INDUSTRY,
+      </if>
+      <if test="brand != null">
+        BRAND,
+      </if>
+      <if test="costDes != null">
+        COST_DES,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="createBy != null">
+        CREATE_BY,
+      </if>
+      <if test="firstAudit != null">
+        FIRST_AUDIT,
+      </if>
+      <if test="secondAudit != null">
+        SECOND_AUDIT,
+      </if>
+      <if test="auditBy != null">
+        AUDIT_BY,
+      </if>
+      <if test="auditTime != null">
+        AUDIT_TIME,
+      </if>
+      <if test="yxCostAmount != null">
+        YX_COST_AMOUNT,
+      </if>
+      <if test="qtCostAmount != null">
+        QT_COST_AMOUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null">
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="ecologyShop != null">
+        #{ecologyShop,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="costDes != null">
+        #{costDes,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="firstAudit != null">
+        #{firstAudit,jdbcType=VARCHAR},
+      </if>
+      <if test="secondAudit != null">
+        #{secondAudit,jdbcType=VARCHAR},
+      </if>
+      <if test="auditBy != null">
+        #{auditBy,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yxCostAmount != null">
+        #{yxCostAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="qtCostAmount != null">
+        #{qtCostAmount,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    <!--
+      WARNING - 
+      		此SQL语句为自动生成，请不要修改.
+      DATE: 2017-10-23 13:33
+    -->
+    update ods_tmfx_promotion_cost
+    <set>
+      <if test="year != null">
+        YEAR = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        MONTH = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="ecologyShop != null">
+        ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        INDUSTRY = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        BRAND = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="costDes != null">
+        COST_DES = #{costDes,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="firstAudit != null">
+        FIRST_AUDIT = #{firstAudit,jdbcType=VARCHAR},
+      </if>
+      <if test="secondAudit != null">
+        SECOND_AUDIT = #{secondAudit,jdbcType=VARCHAR},
+      </if>
+      <if test="auditBy != null">
+        AUDIT_BY = #{auditBy,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yxCostAmount != null">
+        YX_COST_AMOUNT = #{yxCostAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="qtCostAmount != null">
+        QT_COST_AMOUNT = #{qtCostAmount,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="queryPromotionCostCount" resultType="int">
+    SELECT
+    count(1)
+    FROM ods_tmfx_promotion_cost
+    WHERE 1=1
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="costType!=null and costType=='YX'.toString()">
+      and YX_COST_AMOUNT is not null
+    </if>
+    <if test="costType!=null and costType=='QT'.toString()">
+      and QT_COST_AMOUNT is not null
+    </if>
+    <if test="brand!=null and brand!=''">
+      and brand = #{brand,jdbcType=VARCHAR}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryPromotionCostList" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ods_tmfx_promotion_cost
+    <where>
+      <if test="ecologyShop!=null and ecologyShop!=''">
+        and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+      </if>
+      <if test="year!=null and year!=''">
+        and YEAR = #{year,jdbcType=VARCHAR}
+      </if>
+      <if test="month!=null and month!=''">
+        and MONTH = #{month,jdbcType=VARCHAR}
+      </if>
+      <if test="costType!=null and costType=='YX'.toString()">
+        and YX_COST_AMOUNT is not null
+      </if>
+      <if test="costType!=null and costType=='QT'.toString()">
+        and QT_COST_AMOUNT is not null
+      </if>
+      <if test="brand!=null and brand!=''">
+        and brand = #{brand,jdbcType=VARCHAR}
+      </if>
+      <if test="industry!=null and industry!=''">
+        and industry = #{industry,jdbcType=VARCHAR}
+      </if>
+    </where>
+    <if test="start != null and rows != null ">
+      LIMIT #{start}, #{rows}
+    </if>
+  </select>
+  <select id="queryPromotionCostExcel" resultMap="BaseResultMap">
+    SELECT
+    ID, YEAR, MONTH, ECOLOGY_SHOP, INDUSTRY, BRAND, COST_DES,
+    CREATE_TIME,YX_COST_AMOUNT,QT_COST_AMOUNT,
+    CREATE_BY, case FIRST_AUDIT when 'B' then '待业务审核' when 'F' then '待财务审核' when 'A' then '审核通过' end
+    FIRST_AUDIT,
+    case SECOND_AUDIT when 'B' then '待业务审核' when 'F' then '待财务审核' when 'A' then '审核通过' end
+    SECOND_AUDIT, AUDIT_BY, AUDIT_TIME
+    FROM ods_tmfx_promotion_cost
+    WHERE 1=1
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="costType!=null and costType=='YX'.toString()">
+      and YX_COST_AMOUNT is not null
+    </if>
+    <if test="costType!=null and costType=='QT'.toString()">
+      and QT_COST_AMOUNT is not null
+    </if>
+    <if test="brand!=null and brand!=''">
+      and brand = #{brand,jdbcType=VARCHAR}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryRepetition" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ods_tmfx_promotion_cost
+    WHERE 1=1
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="brand!=null and brand!=''">
+      and BRAND = #{brand,jdbcType=VARCHAR}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry,jdbcType=VARCHAR}
+    </if>
+    <if test="industry==null or industry==''.toString()">
+      and industry is null
+    </if>
+  </select>
+  <insert id="bulkImport" parameterType="java.util.List">
+    INSERT INTO ods_tmfx_promotion_cost
+    (
+    YEAR, MONTH, ECOLOGY_SHOP, BRAND,industry, COST_DES,CREATE_BY,YX_COST_AMOUNT,QT_COST_AMOUNT
+    )
+    values
+    <foreach collection="list" item="opc" separator="," index="index">
+      (#{opc.year,jdbcType=VARCHAR},#{opc.month,jdbcType=VARCHAR},#{opc.ecologyShop,jdbcType=VARCHAR},
+      #{opc.brand,jdbcType=VARCHAR},#{opc.industry,jdbcType=VARCHAR},#{opc.costDes,jdbcType=VARCHAR},#{opc.createBy,jdbcType=VARCHAR},
+      #{opc.yxCostAmount,jdbcType=DECIMAL},#{opc.qtCostAmount,jdbcType=DECIMAL})
+    </foreach>
+  </insert>
+  <select id="findPromotionCost" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ods_tmfx_promotion_cost
+    WHERE ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    and YEAR = #{year,jdbcType=VARCHAR}
+    and MONTH = #{month,jdbcType=VARCHAR}
+    and BRAND = #{brand,jdbcType=VARCHAR}
+  </select>
+  <select id="findPromotionCostByShop" resultMap="BaseResultMap">
+    select
+    p.ecology_shop,
+    p.year,
+    p.month,
+    IFNULL(sum(p.amount),0)amount
+    from ods_tmfx_promotion_cost p
+    where 1=1
+    and p.first_audit = 'A'
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="cost!=null and cost!=''">
+      and COST = #{cost,jdbcType=VARCHAR}
+    </if>
+    group by
+    p.ecology_shop,
+    p.year,
+    p.month
+  </select>
+  <select id="queryYXCostFromBrand" resultType="java.math.BigDecimal">
+    select
+    IFNULL(sum(yx_cost_amount),0) yx_cost_amount
+    from ods_tmfx_promotion_cost
+    where first_audit = 'A'
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="brand!=null and brand!=''">
+      and BRAND = #{brand,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryQTCostAmount" resultType="java.math.BigDecimal">
+    select
+    IFNULL(sum(qt_cost_amount),0) qt_cost_amount
+    from ods_tmfx_promotion_cost
+    where SECOND_AUDIT = 'A'
+    <if test="ecologyShop!=null and ecologyShop!=''">
+      and ECOLOGY_SHOP = #{ecologyShop,jdbcType=VARCHAR}
+    </if>
+    <if test="year!=null and year!=''">
+      and YEAR = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="month!=null and month!=''">
+      and MONTH = #{month,jdbcType=VARCHAR}
+    </if>
+    <if test="brand!=null and brand!=''">
+      and BRAND = #{brand,jdbcType=VARCHAR}
+    </if>
+    <if test="industry!=null and industry!=''">
+      and industry = #{industry,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

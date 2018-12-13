@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.settleCenter.OrderWorkflowsDao">
+	<resultMap id="orderWorkflowRegionResult" type="com.haier.shop.model.OrderWorkflowRegion">
+		<result property="regionId" column="region_id" />
+		<result property="regionName" column="region_name" />
+		<result property="cityId" column="city_id" />
+		<result property="cityName" column="city_name" />
+		<result property="provinceId" column="province_id" />
+		<result property="provinceName" column="province_name" />
+		<result property="secCode" column="sec_code" />
+		<result property="secName" column="sec_name" />
+		<result property="gmName" column="gm_name" />
+		<result property="wlqyName" column="wlqy_name" />
+		<result property="qyName" column="qy_name" />
+	</resultMap>
+
+	<resultMap id="bigStoragesRelaResult" type="com.haier.shop.model.BigStoragesRela">
+        <result property="id" column="id"/>
+        <result property="siteId" column="siteId"/>
+        <result property="code" column="Code"/>
+        <result property="masterCode" column="masterCode"/>
+        <result property="centerCode" column="centerCode"/>
+        <result property="masterShippingTime" column="masterShippingTime"/>
+        <result property="centerShippingTime" column="centerShippingTime"/>
+    </resultMap>
+
+	<select id="getOntimeRate" parameterType="java.util.Map" resultType="java.util.Map">
+		select op.id as orderProductId,max(ors.id) as orsId,ors.addTime as orsAddTime,op.cOrderSn,convert(op.status,SIGNED) as status,op.productType,op.sCode,op.lessShipTInTime,op.lessShipTOutTime,op.tsCode,os.isCod,convert(os.codConfirmState,SIGNED) as codConfirmState,os.orderStatus,
+			os.province,os.city,os.region,os.regionName,os.orderType,os.isBook,os.source,os.id as orderId,ors.orderId as repairsFlag,ow.shippingTime,os.addTime,os.smManualTime,
+			os.codConfirmTime,os.confirmTime,os.firstConfirmTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,op.hpRegisterDate,ow.hpAllotNetPointTime,ow.lesShipping,
+			ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime as userAcceptTime,convert(ow.isTimeoutFree,SIGNED) as isTimeoutFree,op.closeTime as finishCloseTime,rs.date,rs.time,
+			op.hpReservationDate,os.tailPayTime,op.pdOrderStatus,op.cPaymentStatus,op.productAmount,les.successTime as vomTime,op.stockType,op.storeId
+		from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+			left join reservationshipping rs on ow.orderId = rs.orderId left join orderrepairs ors on ow.orderProductId = ors.orderProductId
+			left join lesqueues les on op.id=les.orderProductId
+		where 
+			os.addTime &gt;= #{startDate} and os.addTime &lt;= #{endDate} and 
+			<if test="orderProductId != null"> op.id &gt; #{orderProductId} and </if>
+			(op.shippingMode ='' or op.shippingMode = 'B2B2C') and os.isTest != 1 
+			group by op.id order by op.id limit 1000
+	</select>
+	<select id="getOntimeRateReverse" parameterType="java.util.Map" resultType="java.util.Map">
+		select ors.id,ors.orderId,ors.orderProductId,op.cOrderSn,convert(op.status,SIGNED) as status,op.sCode,os.province,os.city,os.region,os.regionName,os.orderType,os.source,os.isCod,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.hpFirstAddTime,ors.hpSecondAddTime,ors.count,
+			convert(ors.typeActual,SIGNED) as typeActual,ors.storageStatus,ors.storageTime,orh.addTime as hpTime,convert(orh.checkType,SIGNED) as checkType,convert(orh.quality,SIGNED) as quality,convert(orh.checkResult,SIGNED) as checkResult,orl.lesOrderSnTime as lesTime,orl.lesOutPingTime,convert(orl.success,SIGNED) as success,convert(orl.operate,SIGNED) as operate,convert(orl.storageType,SIGNED) as storageType,ors.receiptTime as invalidTime,ors.receiptStatus as state,ow.finishTime,ow.cancelTime,convert(ow.isTimeoutFree,SIGNED) as isTimeoutFree,ors.paymentTime,op.stockType,op.storeId
+		from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+			inner join orderrepairs ors on op.id = ors.orderProductId
+			left join orderrepairlesrecords orl on ors.id=orl.orderRepairId and orl.lesOrderSn!='' left join
+			(select max(id) as id,orderRepairId from `orderrepairhprecords` where checkType = 1 group by orderRepairId) temp on ors.id=temp.orderRepairId
+            left join orderrepairhprecords orh on orh.id=temp.id
+		where 
+			ors.id &gt;= #{startOrsId} and ors.id &lt;= #{endOrsId} and 
+			os.isTest != 1
+			order by ors.id,orh.checkType,orl.operate
+	</select>
+	<select id="getOntimeRateReverseOrsIds" parameterType="java.util.Map" resultType="Long">
+		select ors.id from orderrepairs ors where ors.addTime &gt;= #{startDate} and ors.addTime &lt;= #{endDate} order by ors.id
+	</select>
+	<select id="getOntimeRateByOrderProductIds" parameterType="java.util.Map" resultType="java.util.Map">
+		select op.id as orderProductId,max(ors.id) as orsId,ors.addTime as orsAddTime,op.cOrderSn,convert(op.status,SIGNED) as status,op.productType,op.sCode,op.lessShipTInTime,op.lessShipTOutTime,op.tsCode,os.isCod,convert(os.codConfirmState,SIGNED) as codConfirmState,os.orderStatus,
+			os.province,os.city,os.region,os.regionName,os.orderType,os.isBook,os.source,os.id as orderId,ors.orderId as repairsFlag,ow.shippingTime,os.addTime,os.smManualTime,
+			os.codConfirmTime,os.confirmTime,os.firstConfirmTime,if(op.cPayTime>0,op.cPayTime,os.payTime) as payTime,op.hpRegisterDate,ow.hpAllotNetPointTime,ow.lesShipping,
+			ow.netPointAcceptTime,ow.netPointArriveTime,ow.userAcceptTime as userAcceptTime,convert(ow.isTimeoutFree,SIGNED) as isTimeoutFree,op.closeTime as finishCloseTime,rs.date,rs.time,
+			op.hpReservationDate,os.tailPayTime,op.pdOrderStatus,op.cPaymentStatus,les.successTime as vomTime,op.stockType,op.storeId
+		from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+			left join reservationshipping rs on ow.orderId = rs.orderId left join orderrepairs ors on ow.orderProductId = ors.orderProductId
+			left join lesqueues les on op.id=les.orderProductId
+		where 
+			op.id in 
+			<foreach collection="orderProductIds" index="index" item="opId" open="(" separator="," close=")">
+            #{opId}
+        	</foreach>
+			and (op.shippingMode ='' or op.shippingMode = 'B2B2C') and os.isTest != 1 
+			group by op.id
+	</select>
+	<select id="getOntimeRateReverseByOrsIds" parameterType="java.util.Map" resultType="java.util.Map">
+		select ors.id,ors.orderId,ors.orderProductId,op.cOrderSn,convert(op.status,SIGNED) as status,op.sCode,os.province,os.city,os.region,os.regionName,os.orderType,os.source,ors.addTime,ors.handleStatus,ors.handleTime,ors.finishTime as endTime,ors.hpFirstAddTime,ors.hpSecondAddTime,ors.count,
+		convert(ors.typeActual,SIGNED) as typeActual,ors.storageTime,orh.addTime as hpTime,convert(orh.checkType,SIGNED) as checkType,convert(orh.quality,SIGNED) as quality,convert(orh.checkResult,SIGNED) as checkResult,orl.lesOrderSnTime as lesTime,orl.lesOutPingTime,convert(orl.success,SIGNED) as success,convert(orl.operate,SIGNED) as operate,convert(orl.storageType,SIGNED) as storageType,ors.receiptTime as invalidTime,ors.receiptStatus as state,ow.finishTime,ow.cancelTime,convert(ow.isTimeoutFree,SIGNED) as isTimeoutFree,ors.paymentTime,op.storeId
+		from orderworkflows ow inner join orderproducts op on ow.orderProductId = op.id inner join orders os on ow.orderId = os.id
+		inner join orderrepairs ors on op.id = ors.orderProductId
+		left join orderrepairlesrecords orl on ors.id=orl.orderRepairId and orl.lesOrderSn!='' left join
+		(select max(id) as id,orderRepairId from `orderrepairhprecords` where checkType = 1 group by orderRepairId) temp on ors.id=temp.orderRepairId
+		left join orderrepairhprecords orh on orh.id=temp.id
+		where 
+			ors.id in 
+			<foreach collection="orsIds" index="index" item="orsId" open="(" separator="," close=")">
+            #{orsId}
+        	</foreach>
+			and os.isTest != 1 and op.stockType='WA' 
+			order by ors.id,orh.checkType,orl.operate
+	</select>
+
+	<select id="getShippingTimeByRegionId" resultType="java.util.Map">
+		select id,shippingTime,receivingTime from regions where regionType=3
+	</select>
+
+	<select id="getOwfRegion" resultMap="orderWorkflowRegionResult">
+		select `region_id`,`region_name`,`city_id`,`city_name`,`province_id`,`province_name`,`sec_code`,`sec_name`,`gm_name`,`wlqy_name`,`qy_name`
+		from `ord_wf_region`
+	</select>
+
+	<select id="getStorages" resultType="java.util.Map">
+		select code,name from storages
+	</select>
+	
+	<select id="getBigStoragesRelaList" resultMap="bigStoragesRelaResult">
+        SELECT
+            `id`,
+            `siteId`,
+            `Code`,
+            `masterCode`,
+            `centerCode`,
+            `masterShippingTime`,
+            `centerShippingTime`
+        FROM `bigstoragesrela` where flag = 1
+    </select>
+    
+    <select id="getTradePersonCfg" resultType="java.util.Map">
+		select trade,commissioner from `person_trade_cfg`
+	</select>
+	
+	<!-- 获取改约信息 -->
+	<select id="getGaiyueInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			addTime as logTime,hpReservationDate as gaiyueTime,orderProductId
+		from 
+			hpreservationdatelogs
+		where 
+			orderProductId =#{orderProductId } 
+		group by 
+			orderProductId,hpReservationDate
+		order by 
+			id
+	</select>
+	
+	<!-- 区域表配送距离 -->
+	<select id="getDistances" parameterType="java.util.Map" resultType="String">
+		select 
+			`shippingDistance`
+		from 
+			`regions`
+		where id = #{regionId}
+	</select>
+</mapper>

@@ -45,12 +45,12 @@
 
     <select id="get" parameterType="Integer" resultMap="orderRepairsResult">
     select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn
-    from `OrderRepairs`
+    from `orderrepairs`
     where `id` = #{id}
     </select>
     <select id="getValidByOrderProductId" parameterType="Integer" resultMap="orderRepairsResult">
         select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn
-        from `OrderRepairs`
+        from `orderrepairs`
         where `handleStatus` != 5 and `handleStatus` != 6
         and `orderProductId` = #{orderProductId}
         order by id desc
@@ -58,7 +58,7 @@
     </select>
     
     <update id="update" parameterType="com.haier.shop.model.OrderRepairsNew">
-		update `OrderRepairs` 
+		update `orderrepairs`
 		<trim prefix="set" suffixOverrides=",">
 		<if test="siteId != null">
 			`siteId`=#{siteId},
@@ -177,37 +177,47 @@
 		</trim>
 		 where `id` = #{id}
 	</update>
+
 	<select id="queryWaitCloseForCompleteList" resultMap="orderRepairsResult">
 		SELECT `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn 
-		FROM Shop.OrderRepairs WHERE (storageStatus=221 or storageStatus=121 or storageStatus=21) 
+		FROM Shop.orderrepairs WHERE (storageStatus=221 or storageStatus=121 or storageStatus=21)
 		and (receiptStatus = 4 or receiptStatus = 2) and (paymentStatus = 3 or paymentStatus = 5) and handleStatus = 2 
 		and addTime >= unix_timestamp("2014-12-20") order by id asc limit 50
 	</select>
 	
 	<update id="updateForComplete" parameterType="com.haier.shop.model.OrderRepairsNew">
-		update `OrderRepairs` set `handleStatus`=#{handleStatus},`finishTime`=unix_timestamp()
+		update `orderrepairs` set `handleStatus`=#{handleStatus},`finishTime`=unix_timestamp()
 		where `id` = #{id}
 	</update>
 	
 	<select id="getByRepairSn" parameterType="Integer" resultMap="orderRepairsResult">
 		select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,`receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,`contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,`requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn 
-		from `OrderRepairs`
+		from `orderrepairs`
 		where `repairSn` = #{repairSn}
 	</select>
 	<update id="updateForRepairSn" parameterType="com.haier.shop.model.OrderRepairsNew">
-		update `OrderRepairs` set `storageStatus`=#{storageStatus}, `storageTime`=unix_timestamp() where `repairSn`=#{repairSn}
+		update `orderrepairs` set `storageStatus`=#{storageStatus}, `storageTime`=unix_timestamp() where `repairSn`=#{repairSn}
 	</update>
 	
 	<select id="getCountByOrderProductId" parameterType="Integer" resultType="Integer">
-		SELECT SUM(s.count) as alreadyCount FROM `OrderRepairs` s
+		SELECT SUM(s.count) as alreadyCount FROM `orderrepairs` s
 		WHERE s.handleStatus != 5
 		AND s.handleStatus != 6
 		AND s.orderProductId = #{orderProductId}
 	</select>
 	
 	<select id="getCountRepairSn" parameterType="Integer" resultType="Integer">
-		SELECT count(s.repairSn) as countRepairSn FROM `OrderRepairs` s 
+		SELECT count(s.repairSn) as countRepairSn FROM `orderrepairs` s
 		where UPPER(s.repairSn) like CONCAT(UPPER(#{cOrderSn}),'%');
 	</select>
-	
+	<select id="getByOrderProductId" parameterType="Integer" resultMap="orderRepairsResult">
+        select `id`,`siteId`,`addTime`,`memberId`,`orderId`,`orderProductId`,`paymentStatus`,`paymentTime`,`paymentName`,
+        `receiptStatus`,`receiptTime`,`storageStatus`,`storageTime`,`typeExpect`,`typeActual`,`reason`,`description`,
+        `contactName`,`contactMobile`,`handleStatus`,`handleRemark`,`repairSn`,`count`,`requestServiceRemark`,
+        `requestServiceDate`,`offlineFlag`,`offlineReason`,`offlineAmount`,`offlineRemark`,`offlineConfirmFlag`,
+        hpFirstAddTime,hpSecondAddTime,modified,finishTime,refundAmount,ybkExchangeType,typeFlag,cOrderSnStatus,vomRepairSn
+        from `orderrepairs`
+        where `orderProductId` = #{orderProductId}
+        order by id desc
+    </select>
 </mapper>

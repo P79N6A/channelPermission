@@ -22,7 +22,7 @@
 		<result property="batch" column="batch" />
 		<result property="expressNum" column="express_num" />
 		<result property="storeCode" column="store_code" />
-		<result property="addTime" column="add_time" />
+		<result property="addTime" column="add_time" />   
 		<result property="sapStatus" column="sap_status" />
 		<result property="stockStatus" column="stock_status" />
 		<result property="markMessage" column="mark_message" />
@@ -49,6 +49,16 @@
 		and trade_no = #{tradeNo}
 		and sub_trade_no = #{subTradeNo}
 		and bus_type = 1
+	</select>
+	
+		<select id="outStockSap" resultMap="vomwwwOutinstockAnalysisResult">
+		select `id`,`trade_no`,`sub_trade_no`,`sc_order_no`,`item_no`,`order_status`,`certification`,`lbx_no`,`sku`,`type`,`num`,`receipt_voucher`,`out_in_date`,`tb_no`,`www_stock`,`hp_info`,`back_no`,`batch`,`express_num`,`store_code`,`add_time`,`sap_status`,`sap_count`,`stock_status`,`mark_message`,`bus_type`,`order_type`,`delay`,`process_time`,`message`,`vom_www_logs_id`,`mark_message1`,`mark_message2`,`mark_message3`,`handle_status`,`eai_data_log_id`
+		 from
+			vomwww_outinstock_analysis
+		where 1 = 1
+		and sap_status = 1
+		and bus_type = 1
+		and tb_no = #{tbNo}
 	</select>
 	
 	<update id="updateSapStatusById" parameterType="com.haier.eis.model.VomwwwOutinstockAnalysis">
@@ -124,5 +134,50 @@
 	WHERE
 		bus_type = '2'
 	and tb_no=#{tbNo}
+		</select>
+		<select id="quereyBackNo"  resultMap="vomwwwOutinstockAnalysisResult" parameterType="java.lang.String">
+		SELECT
+		`id`,
+		`trade_no`,
+		`sub_trade_no`,
+		`sc_order_no`,
+		`item_no`,
+		`order_status`,
+		`certification`,
+		`lbx_no`,
+		`sku`,
+		`type`,
+		`num`,
+		`receipt_voucher`,
+		`out_in_date`,
+		`tb_no`,
+		`www_stock`,
+		`hp_info`,
+		`back_no`,
+		`batch`,
+		`express_num`,
+		`store_code`,
+		`add_time`,
+		`sap_status`,
+		`sap_count`,
+		`stock_status`,
+		`mark_message`,
+		`bus_type`,
+		`order_type`,
+		`delay`,
+		`process_time`,
+		`message`,
+		`vom_www_logs_id`,
+		`mark_message1`,
+		`mark_message2`,
+		`mark_message3`,
+		`handle_status`,
+		`eai_data_log_id`
+	FROM
+		vomwww_outinstock_analysis
+	WHERE
+		bus_type = '2'
+	AND batch = '10'
+	AND back_no =#{backNo}
 		</select>
 </mapper>

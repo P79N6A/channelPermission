@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopread.GuaranteePriceUnLockReadDao">
+	
+	<resultMap id="orderPriceGateResult" type="com.haier.shop.model.OrderPriceGate">
+		<result property="id" column="id" />
+		<result property="orderSource" column="order_source" />
+		<result property="channelCode" column="channel_code" />
+		<result property="industryCode" column="industry_code" />
+		<result property="productGroup" column="product_group" />
+		<result property="corderSn" column="corder_sn" />
+		<result property="orderSn" column="order_sn" />
+		<result property="sku" column="sku" />
+		<result property="cateId" column="cate_id" />
+		<result property="cateName" column="cate_name" />
+		<result property="brandId" column="brand_id" />
+		<result property="brandName" column="brand_name" />
+		<result property="orderProductPrice" column="order_product_price" />
+		<result property="couponAmount" column="coupon_amount" />
+		<result property="platformCouponAmount" column="platform_coupon_amount" />
+		<result property="orderProductAmount" column="order_product_amount" />
+		<result property="orderProductNumber" column="order_product_number" />
+		<result property="guaranteePrice" column="guarantee_price" />
+		<result property="subductionPrice" column="subduction_price" />
+		<result property="orderAddTime" column="order_add_time" />
+		<result property="createTime" column="create_time" />
+		<result property="lockReason" column="lock_reason" />
+		<result property="operator" column="operator" />
+		<result property="responsiblePerson" column="responsible_person" />
+		<result property="unlockReason" column="unlock_reason" />
+		<result property="unlockTime" column="unlock_time" />
+		<result property="gateStatus" column="gate_status" />
+		<result property="gateType" column="gate_type" />
+		<result property="orderStatus" column="order_status" />
+		<result property="orderProductStatus" column="order_product_status" />
+		<result property="payStatus" column="cpayment_status" />
+		<result property="productName" column="productName" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<resultMap id="orderPriceSourceChannelResult" type="com.haier.shop.model.OrderPriceSourceChannel">
+		<result property="id" column="id" />
+		<result property="channelCode" column="channel_code" />
+		<result property="channelName" column="channel_name" />
+		<result property="orderSource" column="order_source" />
+		<result property="orderSourceName" column="order_source_name" />
+		<result property="status" column="status" />
+		<result property="gateType" column="gate_type" />
+		<result property="person" column="person" />
+		<result property="mobile" column="mobile" />
+		<result property="email" column="email" />
+		<result property="sendType" column="send_type" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<select id="getGuaranteePriceChannel" resultType="java.util.Map">
+		SELECT 
+		    DISTINCT channel_code,channel_name
+		FROM 
+		    `order_price_source_channel`
+	</select>
+	
+	<select id="getGuaranteePriceSource" resultType="java.util.Map">
+		SELECT 
+		    DISTINCT order_source,order_source_name
+		FROM 
+		    `order_price_source_channel`
+		<where>
+			<if test="channel !=null and channel !='' ">
+	       		channel_code=#{channel}
+	       	</if>
+	    </where>
+	</select>
+	
+	<select id="getGuaranteePriceChannelSource" resultType="java.util.Map">
+		SELECT 
+		    DISTINCT order_source,order_source_name,channel_code,channel_name
+		FROM 
+		    `order_price_source_channel`
+	</select>
+	
+	<sql id="commonQuery">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="startDate!=null and startDate!='' ">
+				AND order_add_time &gt;= #{startDate}
+			</if>
+			<if test="endDate!=null and endDate!='' ">
+				AND order_add_time &lt;= #{endDate}
+			</if>
+			<if test="channel!=null and channel!='' ">
+				AND channel_code = #{channel}
+			</if>
+			<if test="source!=null and source!='' ">
+				AND order_source = #{source}
+			</if>
+			<if test="industry !=null and industry !='' ">
+				AND industry_code = #{industry}
+			</if>
+			<if test="productGroup !=null and productGroup !='' ">
+				AND product_group = #{productGroup}
+			</if>
+			<if test="orderSns!=null and orderSns!='' ">
+				AND order_sn in
+		        <foreach collection="orderSns" index="index" item="os" open="(" separator="," close=")">
+		            #{os}
+		        </foreach>
+			</if>
+			<if test="cOrderSns!=null and cOrderSns!='' ">
+				AND corder_sn in
+		        <foreach collection="cOrderSns" index="index" item="cos" open="(" separator="," close=")">
+		            #{cos}
+		        </foreach>
+			</if>
+			<if test="gateStatus!=null and gateStatus!='' ">
+				AND gate_status = #{gateStatus}
+			</if>
+			<if test="gateType!=null and gateType!='' ">
+				AND gate_type = #{gateType}
+			</if>
+		</trim>
+	</sql>
+	
+	<select id="getGuaranteePriceListCount" parameterType="java.util.Map" resultType="Integer" statementType="PREPARED">
+		select 
+			count(*) count
+		from 
+			`order_price_gate` price
+		inner join
+		orderproducts op on price.corder_sn=op.cOrderSn
+		inner join
+		orders os on price.order_sn=os.orderSn
+		<include refid="commonQuery"/>
+	</select>
+	
+	<select id="getGuaranteePriceList" parameterType="java.util.Map" resultMap="orderPriceGateResult" statementType="PREPARED">
+		select 
+			price.`id`,price.`order_source`,price.`channel_code`,price.`corder_sn`,price.`order_sn`,price.`sku`,price.`cate_id`,
+			price.`cate_name`,price.`brand_id`,price.`brand_name`,price.`order_product_price`,price.`coupon_amount`,
+			price.`platform_coupon_amount`,price.`order_product_amount`,price.`order_product_number`,price.`guarantee_price`,
+			price.`subduction_price`,from_unixtime(price.`order_add_time`,'%Y-%m-%d %H:%i:%S') as order_add_time,
+			from_unixtime(price.`create_time`,'%Y-%m-%d %H:%i:%S') as create_time,os.orderStatus as order_status,
+			op.status as order_product_status,op.cPaymentStatus as cpayment_status,op.productName,price.lock_reason,
+			price.operator,price.responsible_person,price.unlock_reason,price.unlock_time,
+			price.`gate_status`,price.`update_time`,price.`gate_type`,price.industry_code,price.product_group 
+		from 
+			order_price_gate price 
+				inner join
+			orderproducts op on price.corder_sn=op.cOrderSn
+				inner join 
+			orders os on price.order_sn=os.orderSn
+		<include refid="commonQuery"/>
+		order by order_sn
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getGateOrderSnList" resultType="java.util.Map">  
+		 select 
+		 	order_sn,corder_sn
+		 from 
+			order_price_gate
+         where 
+		     order_sn in
+             <foreach collection="orderSns" item="ordersn" open="(" separator="," close=")" index="index">
+		     #{ordersn}
+		     </foreach>
+		 and gate_status=1
+	</select>
+	
+	<sql id="channelSourceCommonQuery">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="source!=null and source!='' ">
+				AND order_source= #{source}
+			</if>
+			<if test="channel!=null and channel!='' ">
+				AND channel_code= #{channel}
+			</if>
+			<if test="status!=null and status!='' ">
+				AND status = #{status}
+			</if>
+			<if test="gateType!=null and gateType!='' ">
+				AND gate_type = #{gateType}
+			</if>
+			<if test="person!=null and person!='' ">
+				AND person LIKE CONCAT('%',#{person},'%')
+			</if>
+			<if test="sendType!=null and sendType!='' ">
+				AND send_type = #{sendType}
+			</if>
+		</trim>
+	</sql>
+	
+	<select id="getOrderPriceSourceChannelListCount" parameterType="java.util.Map" resultType="Integer" statementType="PREPARED">
+		select 
+			count(*) count
+		from 
+			order_price_source_channel
+		<include refid="channelSourceCommonQuery"/>
+	</select>
+	
+	<select id="getOrderPriceSourceChannelList" parameterType="java.util.Map" resultMap="orderPriceSourceChannelResult">
+		select 
+			`id`,`channel_code`,`channel_name`,`order_source`,`order_source_name`,`status`,`gate_type`,`person`,`mobile`,`email`,`send_type`,`create_time`,`update_time` 
+		from 
+			order_price_source_channel
+		<include refid="channelSourceCommonQuery"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+</mapper>

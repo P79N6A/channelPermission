@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.haier.common.ServiceResult;
+import com.haier.purchase.data.model.CrmOrderManualItem;
 import com.haier.purchase.data.model.T2OrderInterfaceLog;
 import com.haier.purchase.data.model.T2OrderItem;
 import com.haier.shop.model.ItemAttribute;
 import com.haier.shop.model.ItemBase;
 import com.haier.shop.model.QueryOrderParameter;
+import com.haier.stock.model.InvStockChannel;
 
 
 public interface T2OrderService {
@@ -147,4 +149,8 @@ public interface T2OrderService {
     ServiceResult<Boolean> reviewKXOrderList(Map<String, Object> params);
 
 	ServiceResult<List<T2OrderInterfaceLog>> findPurchaseLog(Map<String, Object> params);
+
+    List<T2OrderItem> getT2WdOrderId(Map<String, Object> params);
+
+	List<InvStockChannel> getzChannelMap();
 }

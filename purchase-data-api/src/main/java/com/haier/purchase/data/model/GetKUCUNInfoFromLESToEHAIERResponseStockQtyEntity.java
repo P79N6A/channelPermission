@@ -1,5 +1,6 @@
 package com.haier.purchase.data.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "kunnr", "lgort", "matnr", "charg", "lfimg" })
-public class GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity {
+public class GetKUCUNInfoFromLESToEHAIERResponseStockQtyEntity implements Serializable{
     @XmlElement(name = "KUNNR", required = true)
     protected String     kunnr;
     @XmlElement(name = "LGORT", required = true)

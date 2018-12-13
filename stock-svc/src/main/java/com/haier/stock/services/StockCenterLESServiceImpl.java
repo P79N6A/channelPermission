@@ -7,6 +7,8 @@ import javax.xml.ws.Holder;
 
 import com.haier.stock.eai.transaccountcheckingfromcbstoles.OutType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.dubbo.common.utils.StringUtils;
@@ -29,6 +31,7 @@ import com.haier.stock.util.HttpServiceUtil;
  * @Email: weiyunjun@ehaier.com
  *
  */
+@ConfigurationProperties(prefix = "url")
 @Service
 public class StockCenterLESServiceImpl implements StockCenterLESService {
     private static org.apache.log4j.Logger log = org.apache.log4j.LogManager

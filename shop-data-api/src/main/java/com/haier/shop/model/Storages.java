@@ -1,6 +1,7 @@
 package com.haier.shop.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 库位信息表。
@@ -279,4 +280,30 @@ public class Storages implements Serializable {
         this.remark = value;
     }
 
+
+    /**
+     * 添加时间
+     */
+    private Date addTime;
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    /**
+     * www库位
+     */
+    private String wwwCode;
+
+    public String getWwwCode() {
+        return wwwCode;
+    }
+
+    public void setWwwCode(String wwwCode) {
+        this.wwwCode = wwwCode;
+    }
 }

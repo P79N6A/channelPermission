@@ -10,4 +10,12 @@
 		insert into `eis_stock_business_queue`(`stock_trans_queue_id`,`add_time`)
 		values(#{stockTransQueueId},#{addTime})
 	</insert>
+	<select id="getTops" resultMap="eisStockBusinessQueueResult">
+		select `id`,`stock_trans_queue_id`,`add_time`
+		from `eis_stock_business_queue`
+		limit #{topx}
+	</select>
+	<delete id="delete" parameterType="com.haier.eis.model.EisStockBusinessQueue">
+		delete from `eis_stock_business_queue` where `id` = #{id}
+	</delete>
 </mapper>

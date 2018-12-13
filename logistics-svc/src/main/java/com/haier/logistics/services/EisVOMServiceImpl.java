@@ -58,6 +58,7 @@ public class EisVOMServiceImpl implements EisVOMService {
 
 //  @Override
 //    @Scheduled(cron="0/5 * *  * * ?")
+    @Override
   public ServiceResult<Boolean> processOutInStoreForGenerateStockTransaction() {
       ServiceResult<Boolean> result = new ServiceResult<Boolean>();
       try {

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.PurchaseTmallCAMachineDAO">	
+	<resultMap type="com.haier.purchase.data.model.vehcile.TmallCAMachineDTO" id="rm">
+		<result column="cgb_gbid" property="CGB_GBID" jdbcType="VARCHAR" />
+		<result column="cgb_factory" property="CGB_FACTORY" jdbcType="VARCHAR" />
+		<result column="cgb_subgbid" property="CGB_SUBGBID" jdbcType="VARCHAR" />
+		<result column="cgb_subsl" property="CGB_SUBSL" jdbcType="VARCHAR" />
+		<result column="cgb_subname1" property="CGB_SUBNAME1" jdbcType="VARCHAR" />
+		<result column="cgb_subname2" property="CGB_SUBNAME2" jdbcType="VARCHAR" />
+		<result column="cgb_gxtime" property="CGB_GXTIME" jdbcType="VARCHAR" />
+	</resultMap>
+	<insert id="save" parameterType="com.haier.purchase.data.model.vehcile.TmallCAMachineDTO">
+		insert into tmall_ca_machine
+		(rowno, cgb_gbid, cgb_factory, cgb_subgbid, cgb_subsl, cgb_subname1, cgb_subname2, cgb_gxtime)
+		values
+		(#{ROWNO}, #{CGB_GBID}, #{CGB_FACTORY}, #{CGB_SUBGBID}, #{CGB_SUBSL}, #{CGB_SUBNAME1}, #{CGB_SUBNAME2}, #{CGB_GXTIME})
+	</insert>
+	<delete id="deleteAll">
+		delete from tmall_ca_machine
+	</delete>
+	<update id="updateDeleteMark">
+		update tmall_ca_machine set deleted = 1;
+	</update>
+	<update id="restoreDeleted">
+		update tmall_ca_machine set deleted = 0;
+	</update>
+	<delete id="deleteAllMarked">
+		delete from tmall_ca_machine where deleted = 1
+	</delete>
+	<delete id="deleteTmpData">
+		delete from tmall_ca_machine where deleted = 0
+	</delete>
+	<select id="getByMaterialCode" parameterType="com.haier.purchase.data.model.vehcile.TmallCAMachineDTO" resultMap="rm">
+		select * from tmall_ca_machine where cgb_gbid = #{vbeln} order by cgb_subgbid
+	</select>
+</mapper> 

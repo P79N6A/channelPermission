@@ -19,12 +19,115 @@
 	</resultMap>
 	<select id="get" parameterType="Integer" resultMap="storagesResult">
 		select `id`,`isFreightInvoice`,`isSupportCod`,`name`,`code`,`type`,`centerCode`,`taobaoStoreCode`,`centerCity`,`industryCode`,`industryName`,`area`,`limitTime`,`remark`
-		from `Storages`
+		from `storages`
 		where `id` = #{id}
 	</select>
 	<select id="getByCode" parameterType="String" resultMap="storagesResult">
 		select `id`,`isFreightInvoice`,`isSupportCod`,`name`,`code`,`type`,`centerCode`,`taobaoStoreCode`,`centerCity`,`industryCode`,`industryName`,`area`,`limitTime`,`remark`
-		from `Storages`
+		from `storages`
 		where `code` = #{code}
 	</select>
+
+	<select id="getBywwwCode" parameterType="String" resultType="java.lang.String">
+		select `centerCode`
+		from `storages`
+		where `wwwCode` = #{wwwCode}
+	</select>
+	<select id="queryCenterCode" resultType="java.lang.String" parameterType="java.lang.String">
+	SELECT
+		s.centerCode
+	FROM
+		netpoints p,
+		storages s
+	where 
+		p.TCCode = s.`code`
+	and p.netPointN8=#{netPointN8}
+	</select>
+	
+	<select id="queryCode" parameterType="java.lang.String" resultType="java.lang.String" >
+		SELECT
+			s.`code`
+		FROM
+		storages s
+		where 
+		 s.`centerCode`=#{centerCode,jdbcType=VARCHAR}
+		 and isSupportCod='1'
+	</select>
+
+
+	<select id="getInfoByType" parameterType="Integer" resultType="java.util.Map">
+		SELECT
+		DISTINCT name,code
+		FROM
+		`storages`
+		where `type` = #{type}
+	</select>
+
+	<select id="getInfoByCode" parameterType="java.util.List" resultType="java.util.Map">
+		SELECT
+		name
+		FROM
+		`storages`
+		where `code` in
+		<foreach collection="codeList" index="index" item="code" open="(" separator="," close=")">
+			#{code}
+		</foreach>
+	</select>
+
+	<select id="getRowCnts" resultType="int">
+        select
+        FOUND_ROWS();
+    </select>
+	<select id="queryStoragesList"  parameterType="Map" resultType="com.haier.shop.model.StoragesVo">
+		SELECT
+		SQL_CALC_FOUND_ROWS
+		DISTINCT  s.id, s.name, s.code, isFreightInvoice, isSupportCod,s.type ,centerCity,centerCode,s.area ,st.cityName , s.addTime
+		FROM  `storages` s LEFT JOIN storagecities st on s.centerCity = st.cityId
+		where  1=1
+		<if test="storageName != null and storageName != ''">
+			and s.name = #{storageName}
+		</if>
+		<if test="storageCode != null and storageCode != ''">
+			and s.code = #{storageCode}
+		</if>
+		<if test="storageType != null and storageType != ''">
+			and s.type = #{storageType}
+		</if>
+		<if test="isTogether != null and isTogether != ''">
+			and isFreightInvoice = #{isTogether}
+		</if>
+		<if test="isSupportCod != null and isSupportCod != ''">
+			and isSupportCod = #{isSupportCod}
+		</if>
+		<if test="m!=null and n!=null">
+			Limit ${m},${n}
+		</if>
+	</select>
+
+	<select id="getExportStoragesListByParams"  parameterType="Map" resultType="Map">
+		SELECT
+		SQL_CALC_FOUND_ROWS
+		DISTINCT  s.id, s.name, s.code, isFreightInvoice, isSupportCod,s.type ,centerCity,centerCode,s.area ,st.cityName , s.addTime
+		FROM  `storages` s LEFT JOIN storagecities st on s.centerCity = st.cityId
+		WHERE  1=1
+		<if test="storageName != null and storageName != ''">
+			and s.name = #{storageName}
+		</if>
+		<if test="storageCode != null and storageCode != ''">
+			and s.code = #{storageCode}
+		</if>
+		<if test="storageType != null and storageType != ''">
+			and s.type = #{storageType}
+		</if>
+		<if test="isTogether != null and isTogether != ''">
+			and isFreightInvoice = #{isTogether}
+		</if>
+		<if test="isSupportCod != null and isSupportCod != ''">
+			and isSupportCod = #{isSupportCod}
+		</if>
+		<if test="m!=null and n!=null">
+			Limit ${m},${n}
+		</if>
+	</select>
+
 </mapper>

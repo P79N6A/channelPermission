@@ -36,4 +36,6 @@ public interface RegionsDao extends BaseDao<Regions>{
 
     List<Regions> getByIds(@Param("ids") String ids);
     public Regions getRegions(Map<String, Object> params);
+
+	List<Regions> pushAvailable();
 }

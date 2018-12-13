@@ -75,19 +75,19 @@ public class HPReturn_transfer {
 	   */
 
 	  public Json ModifyPushHP(List<OrderRepairsVo> orderRepairsVo) throws MalformedURLException, ParseException{
-		  return  operationAreaServiceImpl.ModifyPushHP(orderRepairsVo);
+		  return  operationAreaServiceImpl.ModifyPushHP(orderRepairsVo,"");
 	  }
 	  
 	  
-/**
-		 * 插入保存HP回传回来的鉴定结果
-		 * @param orderrepairHPrecords
-		 * @return
-		 */
-
-	  public int insertHPrecords(OrderRepairshpLogs bean){
-			return operationAreaServiceImpl.insertHPrecords(bean);
-		}
+///**
+//		 * 插入保存HP回传回来的鉴定结果
+//		 * @param orderrepairHPrecords
+//		 * @return
+//		 */
+//
+//	  public int insertHPrecords(OrderRepairshpLogs bean){
+//			return operationAreaServiceImpl.insertHPrecords(bean);
+//		}
 	  
 	  
 /***

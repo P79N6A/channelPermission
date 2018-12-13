@@ -1057,7 +1057,7 @@ public class OrderRepairModel {
         orderRepairLogs.setSiteId(1);
         orderRepairLogs.setAddTime(((Long) (System.currentTimeMillis() / 1000)).intValue());
         orderRepairLogs.setOrderRepairId(orderRepairs.getId());
-        orderRepairLogs.setOperate("[CBS]" + (StringUtil.isEmpty(operate) ? "退货申请" : operate));
+        orderRepairLogs.setOperate("[HBDM]" + (StringUtil.isEmpty(operate) ? "退货申请" : operate));
         orderRepairLogs.setOperator((StringUtil.isEmpty(operator) ? "系统" : operator));
         orderRepairLogs.setRemark(StringUtil.isEmpty(remark) ? "" : remark);
         orderRepairLogsNewService.insert(orderRepairLogs);

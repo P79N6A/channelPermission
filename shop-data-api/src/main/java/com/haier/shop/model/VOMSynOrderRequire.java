@@ -85,12 +85,32 @@ public class VOMSynOrderRequire implements Serializable {
 	private String busFlag = "";
 	//备注
 	private String remark = "";
+
+	private String remark5 = "";
+
+	private String netPointCode="";//用来接收86码
 	//子订单 
 	private List<VOMSynSubOrderRequire> subOrderList;
 	
 	public String getOrderNo() {
 		return orderNo;
 	}
+	public String getNetPointCode() {
+		return netPointCode;
+	}
+
+
+
+
+
+	public void setNetPointCode(String netPointCode) {
+		this.netPointCode = netPointCode;
+	}
+
+
+
+
+
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
 	}
@@ -334,10 +354,12 @@ public class VOMSynOrderRequire implements Serializable {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
-	
-	
-	
-	
-	
+
+    public String getRemark5() {
+        return remark5;
+    }
+
+    public void setRemark5(String remark5) {
+        this.remark5 = remark5;
+    }
 }

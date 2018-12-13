@@ -17,4 +17,13 @@ public interface CnT2PurchaseStockService {
 	public List<CnT2PurchaseStock> queryCnT2PurchaseStock(
 			Map<String, Object> map);
 
+	/**
+	 * 根据ID更新
+	 * @param cnT2PurchaseStock
+	 */
+	public void updateCnT2PurchaseStockById(CnT2PurchaseStock cnT2PurchaseStock);
+
+	int getCnT2PurchaseStockCNT(Map<String, Object> params);
+
+	List<CnT2PurchaseStock> getPurchaseStockList(Map<String, Object> params);
 }

@@ -1,6 +1,7 @@
 package com.haier.purchase.data.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 
@@ -25,6 +26,42 @@ public class WAAddress implements Serializable {
     private String  contact_crm;    //'CRM正品退货联系人',
     private String  mobilePhone;    //'联系电话(手机)',
     private String  phone;          //'固定电话',
+    private String createUser;
+    private String updateUser;
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    private String createTime;
+    private String updateTime;
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
+    }
 
     private Integer is_enabled;     //'启用和禁用状态，启用是0，禁用是1',
 

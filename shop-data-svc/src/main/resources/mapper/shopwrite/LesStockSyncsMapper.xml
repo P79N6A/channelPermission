@@ -14,7 +14,7 @@
 	<select id="getUnDoneLesStockSyncs" resultMap="lesStockSyncsResult">
 		select
 		`id`,`receivedData`,`addTime`,`isDone`,`doneTime`,`errorMsg`,`isRedone`,`reDoneSns`
-		from `LesStockSyncs`
+		from `lesstocksyncs`
 		where `isDone` = 0
 	</select>
 	<insert id="insert" parameterType="com.haier.shop.model.LesStockSyncs">
@@ -22,31 +22,31 @@
 			SELECT LAST_INSERT_ID() 
 		</selectKey>
 		insert into
-		`LesStockSyncs`(`receivedData`,`addTime`,`isDone`,`doneTime`,`errorMsg`,`isRedone`,`reDoneSns`)
+		`lesstocksyncs`(`receivedData`,`addTime`,`isDone`,`doneTime`,`errorMsg`,`isRedone`,`reDoneSns`)
 		values(#{receivedData},#{addTime},#{isDone},#{doneTime},#{errorMsg},#{isRedone},#{reDoneSns})
 	</insert>
 	<update id="setLesStockSyncsDone" >
-		update `LesStockSyncs` set
+		update `lesstocksyncs` set
 		`isDone` = 1,
 		`doneTime` =
 		date_format(now(),'%Y-%m-%d %H:%i:%S')
 		where `id` = #{id}
 	</update>
 	<update id="update">
-		update `LesStockSyncs` set
+		update `lesstocksyncs` set
 		`isDone` = #{isDone} ,
 		`errorMsg` = #{errMsg} , `doneTime` = #{doneTime}
 		where `id` =
 		#{id}
 	</update>
 	<update id="setErrMsg">
-		update `LesStockSyncs` set
+		update `lesstocksyncs` set
 		`errorMsg`=#{errorMsg}
 		where `id` = #{id}
 	</update>
 	<select id="getIdbyDonetime"  resultType="java.lang.Integer" >
 		select `id`
-		from `LesStockSyncs`
+		from `lesstocksyncs`
 		where `doneTime`=#{doneTime}
 	</select>
 </mapper>

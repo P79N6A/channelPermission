@@ -3,6 +3,7 @@ package com.haier.shop.services;
 import java.util.List;
 
 import com.haier.shop.dao.shopread.OrderRepairsNewDao;
+import com.haier.shop.dao.shopwrite.OrderRepairsWriteDao;
 import com.haier.shop.model.OrderRepairsNew;
 import com.haier.shop.service.OrderRepairsNewService;
 
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 public class OrderRepairsNewServiceImpl implements OrderRepairsNewService {
     @Autowired
     private OrderRepairsNewDao orderRepairsNewDao;
+    @Autowired
+    private OrderRepairsWriteDao orderRepairsWriteDao;
+
 
     @Override
     public OrderRepairsNew get(Integer id) {
@@ -91,6 +95,11 @@ public class OrderRepairsNewServiceImpl implements OrderRepairsNewService {
     public Integer updateForStatus(OrderRepairsNew orderRepairs) {
         // TODO Auto-generated method stub
         return orderRepairsNewDao.updateForStatus(orderRepairs);
+    }
+
+    @Override
+    public int updateExchange(Integer repairId) {
+        return orderRepairsWriteDao.updateExchange(repairId);
     }
 
 }

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<link>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+<!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+<link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+<!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+<link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+<!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+<!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+<link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+<link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+<link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+<link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+<link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+<!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+<link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+
+
+<link rel="stylesheet" href="../static/css/common.css"></link>
+<title>costPoolsForecastGoal</title>
+<script src="../static/third/jquery.js"></script>
+<script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/third/easyui/jquery.easyui.min.js"></script>
+<script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+<script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script src="../static/js/utils.js"></script>
+<script src="../static/js/customConfig.js"></script>
+<script src="../static/js/easyui-extention.js"></script>
+
+
+<style>
+    .search-row_nowidth{
+        margin: 4px 8px;
+    }
+    .selectCity{
+        width:137px;
+        height:32px;
+        position:relative;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        vertical-align: middle;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 0;
+    }
+</style>
+</head>
+
+<body class="iframe-body">
+<div style="height:100%;width:100%;overflow:auto">
+    <div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px; width:100%;  position: fixed;z-index: 20">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;font-weight: bold;">
+            	添加新费用
+        </span>
+        ## <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+        ##        value="返回" onclick="window.history.back()"
+        ##        style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+               value="保存" id="addCostPool"
+               style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+    </div>
+    <!-- new -->
+    <div style="margin-left:50px; margin-top:60px;">
+        <form id="addForm_costPoolsManage" method="post">
+            <div class="search-panel" style="font-size: 11px;">
+
+            <dl class="search-row_nowidth">
+                <dt>所属渠道:</dt>
+                <dd>
+                <select id="channel" name="channel" class="easyui-combobox" panelHeight="auto" editable="false">
+                    <option value="">所属渠道</option>
+                    <option value="1">商城</option>
+                    <option value="2">天猫</option>
+                    <option value="3">电商平台</option>
+                    <option value="4">微店</option>
+                </select>
+                </dd>
+            </dl><br>
+
+            <dl class="search-row_nowidth">
+                <dt>费用类型:</dt>
+                <dd>
+                <select id="type" name="type" class="easyui-combobox" panelHeight="auto" editable="false">
+                    <option value="">费用类型</option>
+                    <option value="0" selected = "selected">赠品机</option>
+                    <option value="1">优惠券</option>
+                </select><br>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>年月:</dt>
+                <dd>
+                    <input class="easyui-numberbox" name="yearMonth" id="yearMonth" required="true"/>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>产业费用:</dt>
+                <dd>
+                    <span style="margin-left: 20px; width: 100px; float:left; display:block;">
+                    冰箱:</span>
+                    <input class="easyui-numberbox" name="C200076226" id="C200076226"/>
+                </dd>
+                <br/>
+                <dd>
+                    <span style="margin-left: 20px; width: 100px; float:left; display:block;">
+                    冷柜:</span>
+                    <input class="easyui-numberbox" name="C200076227" id="C200076227"/>
+                </dd>
+                <br/>
+                <dd>
+                    <span style="margin-left: 20px; width: 100px; float:left; display:block;">
+                    洗衣机:</span>
+                    <input class="easyui-numberbox" name="C200076228" id="C200076228"/>
+                </dd>
+                <br/>
+                <dd>
+                    <span style="margin-left: 20px; width: 100px; float:left; display:block;">
+                    家用空调:</span>
+                    <input class="easyui-numberbox" name="C200076229" id="C200076229"/>
+                </dd>
+                <br/>
+                <dd>
+                    <span style="margin-left: 20px; width: 100px; float:left; display:block;">
+                    热水器:</span>
+                    <input class="easyui-numberbox" name="C200076230" id="C200076230"/>
+                </dd>
+                <br/>
+                <dd>
+                    <span style="margin-left: 20px; width: 100px; float:left; display:block;">
+                    厨电:</span>
+                    <input class="easyui-numberbox" name="C200076231" id="C200076231"/>
+                </dd>
+                <br/>
+                <dd>
+                    <span style="margin-left: 20px; width: 100px; float:left; display:block;">
+                    彩电:</span>
+                    <input class="easyui-numberbox" name="C200076232" id="C200076232"/>
+                </dd>
+                <br/>
+                <dd>
+                    <span style="margin-left: 20px; width: 100px; float:left; display:block;">
+                    商用空调及其他:</span>
+                    <input class="easyui-numberbox" name="C200076233" id="C200076233"/>
+                </dd>
+                <br/>
+                <dd>
+                    <span style="margin-left: 20px; width: 100px; float:left; display:block;">海尔集团电子商务有限公司(赠品):</span>
+                    <input class="easyui-numberbox" name="C20170825" id="C20170825"/>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>备注:</dt>
+                <dd>
+                    <input class="easyui-textbox" name="remark" id="remark" style="width:260px;"/>
+                </dd>
+            </dl><br>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        function proof(v){
+            var special = new RegExp(/^[0-9]{6}$/);
+            if(special.test(v)){
+                return true;
+            }
+        }
+        var ym = new Date();
+        Y = ym.getFullYear();
+        M = (ym.getMonth()+1 < 10 ? '0'+(ym.getMonth()+1) : ym.getMonth()+1);
+        $('#yearMonth').textbox({prompt:Y+M,value:Y+M});
+
+        $("#addCostPool").on('click', function (ev) {
+            event.preventDefault();
+
+            if ($("#channel").val() == null || $("#channel").val() == "") {
+                alert("没有选择所属渠道");
+                return false;
+            }
+            if ($("#yearMonth").val() == null || $("#yearMonth").val() == "") {
+                alert("年月不能为空");
+                return false;
+            }
+            if (!proof($("#yearMonth").val())) {
+                alert("年月必须是 "+Y+M+" 格式");
+                return false;
+            }
+            if ($("#type").val() == null || $("#type").val() == "") {
+                alert("您没有选择费用类型");
+                return false;
+            }
+            if (($("#C200076226").val() == null || $("#C200076226").val() == "")
+                &&($("#C200076227").val() == null || $("#C200076227").val() == "")
+                &&($("#C200076228").val() == null || $("#C200076228").val() == "")
+                &&($("#C200076229").val() == null || $("#C200076229").val() == "")
+                &&($("#C200076230").val() == null || $("#C200076230").val() == "")
+                &&($("#C200076231").val() == null || $("#C200076231").val() == "")
+                &&($("#C200076232").val() == null || $("#C200076232").val() == "")
+                &&($("#C200076233").val() == null || $("#C200076233").val() == "")
+                &&($("#C20170825").val() == null || $("#C20170825").val() == "")
+                ) {
+                alert("您没有选择填写任何产业费用,无法添加!");
+                return false;
+            }
+
+            $.ajax({
+                url      : "/costPool/addCostPool",
+                type     : 'POST',
+                dataType : 'json',
+                data     : $('#addForm_costPoolsManage').serialize(),
+                success  : function(data) {
+                    if (data.flag==1) {
+                        $.messager.confirm('新增成功', '点击确定跳转列表页面', function(r){
+                            if (r){
+                                window.location.href="/costPool/toCostPool";
+                            }
+                        });
+                    }
+                    if(data.flag==0){
+                        alert('重要参数不能为空');
+                    }
+                    if(data.flag==2){
+                        alert('操作异常');
+                    }
+                    if(data.flag==3){
+                        alert(data.text);
+                    }
+                }
+            });
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

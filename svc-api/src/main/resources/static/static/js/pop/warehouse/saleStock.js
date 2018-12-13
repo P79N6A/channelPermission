@@ -10,16 +10,16 @@ var datagridOptions_saleStockListGoal = {
          hidden:true
     }]],
     columns: [[
-        {title: '渠道名称 ', field: 'channelName', sortable: true},
-        {title: '商品编码', field: 'productCode', sortable: true},
-        {title: '配送仓库', field: 'warehouseName', sortable: true},
-        {title: '商品数量', field: 'quantity', sortable: true,align:'right'},
-        {title: '锁库存数量', field: 'lockQuantity', sortable: true,align:'right'},
-        {title: '创建者', field: 'createBy', sortable: true},
-        {title: '创建时间', field: 'cTime', sortable: true},
-//        {title: '更新者', field: 'updateby', sortable: true},
-//        {title: '更新时间', field: 'uTime', sortable: true},
-        {title: '备注', field: 'remark', sortable: true}
+        {title: '渠道名称 ', field: 'channelName', sortable: false},
+        {title: '商品编码', field: 'productCode', sortable: false},
+        {title: '配送仓库', field: 'warehouseName', sortable: false},
+        {title: '商品数量', field: 'quantity', sortable: false,align:'right'},
+        {title: '锁库存数量', field: 'lockQuantity', sortable: false,align:'right'},
+        {title: '创建者', field: 'createBy', sortable: false},
+        {title: '创建时间', field: 'cTime', sortable: false},
+//        {title: '更新者', field: 'updateby', sortable: false},
+//        {title: '更新时间', field: 'uTime', sortable: false},
+        {title: '备注', field: 'remark', sortable: false}
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
     striped: true,
@@ -177,16 +177,16 @@ $("#searchBtn").on('click', function (event) {
              hidden:true
         }]],
         columns: [[
-            {title: '渠道名称 ', field: 'channelName', sortable: true},
-            {title: '商品编码', field: 'productCode', sortable: true},
-            {title: '配送仓库', field: 'warehouseName', sortable: true},
-            {title: '商品数量', field: 'quantity', sortable: true,align:'right'},
-            {title: '锁库存数量', field: 'lockQuantity', sortable: true,align:'right'},
-            {title: '创建者', field: 'createBy', sortable: true},
-            {title: '创建时间', field: 'cTime', sortable: true},
-//        {title: '更新者', field: 'updateby', sortable: true},
-//        {title: '更新时间', field: 'uTime', sortable: true},
-            {title: '备注', field: 'remark', sortable: true}
+            {title: '渠道名称 ', field: 'channelName', sortable: false},
+            {title: '商品编码', field: 'productCode', sortable: false},
+            {title: '配送仓库', field: 'warehouseName', sortable: false},
+            {title: '商品数量', field: 'quantity', sortable: false,align:'right'},
+            {title: '锁库存数量', field: 'lockQuantity', sortable: false,align:'right'},
+            {title: '创建者', field: 'createBy', sortable: false},
+            {title: '创建时间', field: 'cTime', sortable: false},
+//        {title: '更新者', field: 'updateby', sortable: false},
+//        {title: '更新时间', field: 'uTime', sortable: false},
+            {title: '备注', field: 'remark', sortable: false}
         ]],
     });
 });

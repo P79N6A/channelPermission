@@ -2,6 +2,7 @@ package com.haier.svc.api.controller.stock;
 
 import com.alibaba.dubbo.common.utils.Assert;
 import com.alibaba.dubbo.common.utils.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
@@ -12,8 +13,13 @@ import com.haier.shop.model.QueryLesStockOutType;
 import com.haier.shop.model.QueryLesStockToCbs;
 import com.haier.stock.model.InvBaseStockExcel;
 import com.haier.stock.service.LESService;
+import com.haier.svc.api.controller.excel.LesBaseStockExport;
+import com.haier.svc.api.controller.excel.LesStockQueryExport;
 import com.haier.svc.api.controller.stock.mode.BaseInventoryModel;
 import com.haier.svc.api.controller.stock.mode.ItemAttributeModel;
+import com.haier.svc.api.controller.util.excel.MultiHeadExcelHandler;
+import java.util.LinkedList;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -133,7 +139,7 @@ public class LesStockQueryController {
         return "stock/lesStockList";
     }
     @RequestMapping(value = { "/exportLesBaseStockList.html" }, method = { RequestMethod.GET })
-    public String exportLesBaseStockList(HttpServletRequest request, Map<String, Object> modelMap,
+    public void exportLesBaseStockList(HttpServletRequest request, Map<String, Object> modelMap,
                                          @RequestParam(required = false) String itemProperty,
                                          HttpServletResponse response) {
         try{
@@ -141,7 +147,7 @@ public class LesStockQueryController {
             PagerInfo page = new PagerInfo(999999,1);
             InvBaseStockExcel invBaseStock= handleParameters(itemProperty,request);
             List<InvBaseStockExcel> rowList = baseInventoryModel.queryBaseStockRows1(invBaseStock, page);
-            modelMap.put("rowList", rowList);
+            /*modelMap.put("rowList", rowList);
             response.setContentType("application/vnd.ms-excel;charset=utf-8");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
@@ -149,11 +155,21 @@ public class LesStockQueryController {
             fileName = new String(fileName.getBytes("GB2312"), "ISO8859-1");
             System.out.println(fileName);
            // fileName = new String(fileName.getBytes("GB2312"), "ISO8859-1");
-            response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + ".xls\"");
+            response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + ".xls\"");*/
+            List<LesBaseStockExport> myDatas = new LinkedList<LesBaseStockExport>();
+            for (InvBaseStockExcel excel : rowList) {
+                LesBaseStockExport export = new LesBaseStockExport();
+                export = JSON.parseObject(JSON.toJSONString(excel), LesBaseStockExport.class);
+//            BeanUtils.copyProperties(invStockTransExport,demo);
+                myDatas.add(export);
+            }
+            MultiHeadExcelHandler excelHandler = new MultiHeadExcelHandler(LesBaseStockExport.class);
+            excelHandler.setData(myDatas);
+            excelHandler.exportExcel(response);
         }catch(Exception e){
             logger.error("[LesStockQueryController_queryBaseStockList]导出库存时发生未知错误", e);
         }
-        return "stock/exportLesBaseStockRowList";
+//        return "stock/exportLesBaseStockRowList";
     }
     public InvBaseStockExcel handleParameters(String itemProperty, HttpServletRequest request){
         InvBaseStockExcel invBaseStock = new InvBaseStockExcel();
@@ -226,7 +242,7 @@ public class LesStockQueryController {
         return json;
     }
     @RequestMapping(value = { "/exportLesStockList.html" }, method = { RequestMethod.GET })
-    public String exportLesStock(HttpServletRequest request, Map<String, Object> modelMap,
+    public void exportLesStock(HttpServletRequest request, Map<String, Object> modelMap,
                                  @RequestParam(required = false) String sku,
                                  @RequestParam(required = false) String lesSecCode,
                                  HttpServletResponse response){
@@ -236,17 +252,31 @@ public class LesStockQueryController {
             stock.setSku(sku);
             stock.setFlag("4");//CBS库存对账使用
             ServiceResult<QueryLesStockOutType> res=lesService.queryLesStock(stock);
+            List<CBSKCType> lists = new ArrayList<CBSKCType>();
             if(res.getSuccess()){
-                List<CBSKCType> lists=res.getResult().getCbskc();
+                lists=res.getResult().getCbskc();
                 modelMap.put("rowList", lists);
             }
-            response.setContentType("application/vnd.ms-excel;charset=utf-8");
+
+            List<LesStockQueryExport> myDatas = new LinkedList<LesStockQueryExport>();
+            if (null != lists){
+                for (CBSKCType excel : lists) {
+                    LesStockQueryExport export = new LesStockQueryExport();
+                    BeanUtils.copyProperties(excel,export);
+                    myDatas.add(export);
+                }
+            }
+            MultiHeadExcelHandler excelHandler = new MultiHeadExcelHandler(LesStockQueryExport.class);
+            excelHandler.setData(myDatas);
+            excelHandler.exportExcel(response);
+
+            /*response.setContentType("application/vnd.ms-excel;charset=utf-8");
             String fileName = "LES库存数据报表";
             fileName = new String(fileName.getBytes("GB2312"), "ISO8859-1");
-            response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + ".xls\"");
+            response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + ".xls\"");*/
         }catch(Exception e){
             logger.error("[LesStockQueryController_getLesStockList]导出les库存时发生未知错误", e);
         }
-        return "stock/exportLesStockList";
+//        return "stock/exportLesStockList";
     }
 }

@@ -1,5 +1,8 @@
 package com.haier.svc.api.controller.stock;
 
+import com.alibaba.fastjson.JSON;
+import com.haier.svc.api.controller.excel.InvStockTransExport;
+import com.haier.svc.api.controller.util.excel.MultiHeadExcelHandler;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -18,7 +22,10 @@ import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -54,7 +61,7 @@ import jxl.read.biff.BiffException;
  * Created by 钊 on 2014/12/23.
  */
 @Controller
-@RequestMapping("/stockTrans")
+@RequestMapping("stockTrans")
 public class StockTransController {
     private static org.apache.log4j.Logger logger       = org.apache.log4j.LogManager
             .getLogger(StockTransController.class);
@@ -122,12 +129,16 @@ public class StockTransController {
                             HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> retMap = new HashMap<String, Object>();
         try {
-        	response.setCharacterEncoding("utf-8");
-            String userName = WebUtil.readCookie(request, WebUtil.CBS_USER_NAME);
+        	response.setContentType("text/html;charset=UTF-8");
+        	//********改成从session中获取userName----start
+            /*String userName = WebUtil.readCookie(request, WebUtil.CBS_USER_NAME);
 
             if (!StringUtil.isEmpty(userName)) {
                 userName = EncryptUtil.fromBASE64(userName);
-            }
+            }*/
+            //********改成从session中获取userName----end
+            HttpSession session = request.getSession();
+            String userName = (String) session.getAttribute("userName");
 
             if (StringUtil.isEmpty(userName)) {
                 retMap.put("flag", "F");
@@ -166,9 +177,9 @@ public class StockTransController {
                                           HttpServletResponse response) {
         try {
             Map<String, Object> parameterMap = new HashMap<String, Object>();
-            parameterMap.put("corder_sn", corder_sn);
-            parameterMap.put("sku", sku);
-            parameterMap.put("sec_code", sec_code);
+            parameterMap.put("corder_sn", corder_sn.trim());
+            parameterMap.put("sku", sku.trim());
+            parameterMap.put("sec_code", sec_code.trim());
             parameterMap.put("item_property", item_property);
             parameterMap.put("process_status", process_status);
             parameterMap.put("bill_type", bill_type);
@@ -189,7 +200,7 @@ public class StockTransController {
             List<Map<String, Object>> result = transModel.getInvStockTransList(parameterMap);
 
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("total", transModel.getTotalOfInvTrans());
+            map.put("total", transModel.getTotalOfInvTrans(parameterMap));
             map.put("rows", result);
             response.setContentType("text/html;charset=utf-8");
             response.getWriter().write(JsonUtil.toJson(map));
@@ -202,7 +213,7 @@ public class StockTransController {
     }
 
     @RequestMapping(value = { "/exportStockTrans.html" })
-    String exportBaseInventoryList(HttpServletRequest request, HttpServletResponse response,
+    public void exportBaseInventoryList(HttpServletRequest request, HttpServletResponse response,
                                    @RequestParam(required = false) String corder_sn,
                                    @RequestParam(required = false) String sku,
                                    @RequestParam(required = false) String sec_code,
@@ -227,7 +238,7 @@ public class StockTransController {
         parameterMap.put("size", 5000);
 
         List<Map<String, Object>> items = transModel.getInvStockTransList(parameterMap);
-        modelMap.put("rowList", items);
+        /*modelMap.put("rowList", items);
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         String fileName = "库存交易列表";
         try {
@@ -236,16 +247,25 @@ public class StockTransController {
             e.printStackTrace();
         }
         response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + ".xls\"");
-        return "stock/invStockTransExport";
+        return "stock/invStockTransExport";*/
 
-        /*return "stock/invStockTrans";*/
+        List<InvStockTransExport> myDatas = new LinkedList<InvStockTransExport>();
+        for (Map<String, Object> demo : items) {
+            InvStockTransExport export = new InvStockTransExport();
+            export = JSON.parseObject(JSON.toJSONString(demo), InvStockTransExport.class);
+//            BeanUtils.copyProperties(invStockTransExport,demo);
+            myDatas.add(export);
+        }
+        MultiHeadExcelHandler excelHandler = new MultiHeadExcelHandler(InvStockTransExport.class);
+        excelHandler.setData(myDatas);
+        excelHandler.exportExcel(response);
     }
-    
+
     @RequestMapping(value = { "/invStockTransImport.html" }, method = { RequestMethod.GET })
     String geInvStockTransImportList() {
         return "stock/invStockTransImport";
     }
-    
+
     /**
      * 手动导入库存交易页面多条件查询功能
      * @param corder_sn
@@ -289,10 +309,10 @@ public class StockTransController {
             parameterMap.put("mark", mark);
             parameterMap.put("bill_time_s", bill_time_s);
             parameterMap.put("bill_time_e", bill_time_e);
-          
+
             parameterMap.put("start", page.getStart());
             parameterMap.put("size", page.getPageSize());
-            
+
 
             int listcount =  transModel.findInvStockTransCount(parameterMap);
             if (listcount > 0) {
@@ -317,7 +337,6 @@ public class StockTransController {
      * @param process_status
      * @param bill_time_s
      * @param bill_time_e
-     * @param pageIndex
      * @param modelMap
      * @param request
      * @param response
@@ -336,9 +355,9 @@ public class StockTransController {
                                           Map<String, Object> modelMap,HttpServletRequest request,
                                           HttpServletResponse response) {
             Map<String, Object> parameterMap = new HashMap<String, Object>();
-            parameterMap.put("corder_sn", corder_sn);
-            parameterMap.put("sku", sku);
-            parameterMap.put("sec_code", sec_code);
+            parameterMap.put("corder_sn", corder_sn.trim());
+            parameterMap.put("sku", sku.trim());
+            parameterMap.put("sec_code", sec_code.trim());
             parameterMap.put("item_property", item_property);
             parameterMap.put("process_status", process_status);
             parameterMap.put("bill_type", bill_type);
@@ -371,13 +390,13 @@ public class StockTransController {
             }
         return "stock/invStockTransExportRow";
     }
-    
+
     @RequestMapping(value = { "/importInvStockTransData.html" })
  public    String importInvStockTransData(HttpServletRequest request,
                                                                  HttpServletResponse response,
                                                                  Map<String, Object> modelMap) {
 
-        // 转型为MultipartHttpRequest   
+        // 转型为MultipartHttpRequest
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
         // 获得文件
@@ -487,7 +506,7 @@ public class StockTransController {
                         return "stock/eisInterfaceDataText";
                     }
                 }
-                
+
                 InvStockTransaction invStockTransaction= new InvStockTransaction();
                 invStockTransaction.setAddTime(new Date());
                 invStockTransaction.setBillTime(billTime);
@@ -507,7 +526,7 @@ public class StockTransController {
                 invStockTransaction.setSku(sku);
                 listData.add(invStockTransaction);
             }
-          
+
             if(listData.size()>0){
                 transModel.insertInvStockTransaction(listData);
             }
@@ -591,9 +610,9 @@ public class StockTransController {
         }
         return fileName;
     }
-    
-    
-    /** 
+
+
+    /**
      * 接口状态更新(重推:2 禁止重推: 3)
      * @param eaiDataLogId 每行数据的唯一id
      * @param status 接口状态
@@ -606,7 +625,7 @@ public class StockTransController {
         Map<String, Object> params = new HashMap<String, Object>();
         String[] idArray = eaiDataLogId.split(",");
         //String[] strArray = rowStatus.split(",");
-        
+
         ArrayList<Object> list = new ArrayList<Object>();
         for(int i=0;i<idArray.length;i++){
         	if(status == -1){
@@ -615,7 +634,7 @@ public class StockTransController {
         }
         final int size = list.size();
         Map<String, Object> error = new HashMap<String, Object>();
-        
+
         try {
             if (size != 0) {
                 String[] arr = (String[]) list.toArray(new String[size]);
@@ -635,7 +654,7 @@ public class StockTransController {
 
         return "stock/eisInterfaceDataText";
     }
-    
+
 
 
 }

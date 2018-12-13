@@ -4,12 +4,13 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.haier.common.ServiceResult;
-import com.haier.shop.model.OrderProductsVo;
-import com.haier.shop.model.QueryOrderParameter;
+import com.haier.shop.model.*;
 //import com.haier.svc.bean.QueryOrderParameter;
 //import com.haier.svc.bean.TaoBaoGroups;
 import com.haier.stock.model.InvChannel2OrderSource;
+import com.haier.system.model.SyncOrderConfigs;
 
 public interface OrderCenterOrderOperationService {
 
@@ -81,4 +82,12 @@ public interface OrderCenterOrderOperationService {
 	ServiceResult<List<OrderProductsVo>> searchList(OrderProductsVo vo);
 
 	ServiceResult<List<InvChannel2OrderSource>> getSource();
+	Map<String,Object> copyProductView(String productId,String orderSn);
+	
+	 List<OrderPriceProductGroupIndustry> getProductGroupIndustryList();
+	 List<SyncOrderConfigs> selectSyncOrderonfigs();
+
+	List<OrderPriceSourceChannel> selectOrderPriceSourceChannel();
+	 Json copyProductSave(JSONObject params,String username);
+
 }

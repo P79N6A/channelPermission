@@ -9,39 +9,62 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.haier.order.service.OrderCenterOrderOperationService;
-import com.haier.order.util.PHPSerializer;
-import com.haier.order.util.SerializedPhpParser;
-import com.haier.shop.model.OrderProductsVo;
-import com.haier.shop.model.QueryOrderParameter;
-import com.haier.shop.service.ShopOperationAreaService;
-import com.haier.shop.service.ShopOrdersService;
-import com.haier.shop.service.ShopTaoBaoGroupsService;
-import com.haier.stock.model.InvChannel2OrderSource;
-import com.haier.stock.model.OrderProductStatus;
-import com.haier.stock.service.StockInvChannel2OrderSourceService;
-
+import com.haier.common.util.StringUtil;
+import com.haier.shop.model.*;
+import com.haier.shop.service.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import com.haier.common.PagerInfo;
 import com.haier.common.ServiceResult;
+import com.haier.order.model.Ustring;
+import com.haier.order.service.OrderCenterOrderOperationService;
+import com.haier.order.util.HelpUtils;
+import com.haier.order.util.OrderSnUtil;
+import com.haier.order.util.PHPSerializer;
+import com.haier.order.util.SerializedPhpParser;
+import com.haier.stock.model.InvChannel2OrderSource;
+import com.haier.stock.service.StockInvChannel2OrderSourceService;
+import com.haier.system.model.SyncOrderConfigs;
+import com.haier.system.service.SyncOrderConfigsService;
+
+import net.sf.json.JSONArray;
 
 @Service
 public class OrderCenterOrderOperationServiceImpl implements OrderCenterOrderOperationService {
 
     private static org.apache.log4j.Logger log = org.apache.log4j.LogManager
             .getLogger(OrderCenterOrderOperationServiceImpl.class);
-
+    @Autowired
+    private OrderPriceProductGroupIndustryService orderPriceProductGroupIndustryService;
+    @Autowired
+    private SyncOrderConfigsService syncOrderConfigsService;
     @Autowired
     private ShopOrdersService shopOrdersService;
     @Autowired
-    ShopOperationAreaService  shopOperationAreaService;
+    ShopOperationAreaService   shopOperationAreaService;
     @Autowired
     private ShopTaoBaoGroupsService shopTaoBaoGroupsService;
     @Autowired
     private StockInvChannel2OrderSourceService stockInvChannel2OrderSourceService;
+    @Autowired
+    private InvoicesService invoicesService;
+    @Autowired
+    private ShopOrderWorkflowsService shopOrderWorkflowsService;
+    @Autowired
+    private MemberInvoicesService memberInvoicesService;
+    @Autowired
+    private OrderProductsNewService orderProductsNewService;
+    @Autowired
+    private ShopOrderOperateLogsService  shopOrderOperateLogsService;
+    @Autowired
+    private HelpUtils helpUtils;
+    @Autowired
+    private OrderPriceSourceChannelService orderPriceSourceChannelService;
+
 
     public ServiceResult<List<QueryOrderParameter>> getFindQueryOrderList(QueryOrderParameter queryOrder) {
         ServiceResult<List<QueryOrderParameter>> result = new ServiceResult<List<QueryOrderParameter>>();
@@ -53,6 +76,7 @@ public class OrderCenterOrderOperationServiceImpl implements OrderCenterOrderOpe
                 return result;
             }
             List<QueryOrderParameter> findQueryOrderList = shopOrdersService.getFindQueryOrderList(queryOrder);
+            //Integer count = shopOrdersService.getRowCnts();
             Integer count = shopOrdersService.getFindQueryOrderListCount(queryOrder);
             result.setResult(findQueryOrderList);
             PagerInfo pi = new PagerInfo();
@@ -78,6 +102,20 @@ public class OrderCenterOrderOperationServiceImpl implements OrderCenterOrderOpe
                 result.setMessage("【getExportOrderList】获取导出订单信息服务参数并为null");
                 log.error("【getExportOrderList】获取导出订单信息服务参数并为null");
                 return result;
+            }
+            Integer count = shopOrdersService.getRowCnts();
+            //导出条数大于1000则只导出前1000条
+            if(count > 1000){
+                if(queryOrder.getPage() == null){
+                    queryOrder.setPage(1);
+                }
+                if (queryOrder.getRows() == null) {
+                    queryOrder.setRows(1000);
+                }
+                if (queryOrder.getPage() != null && queryOrder.getPage() != 0) {
+                    queryOrder.setPage((queryOrder.getPage() - 1) * queryOrder.getRows());
+                }
+
             }
             List<QueryOrderParameter> findQueryOrderList = shopOrdersService.getFindQueryOrderList(queryOrder);
             result.setResult(findQueryOrderList);
@@ -125,14 +163,18 @@ public class OrderCenterOrderOperationServiceImpl implements OrderCenterOrderOpe
             }
 			String specIds = (String) map.get("specIds");
 			String prices = (String) map.get("prices");
-			String[] specIdsSplit = specIds.substring(1, specIds.length()).split(",");
-			String[] pricesSplit = prices.substring(1, prices.length()).split(",");
-			Map<String,String> specIdsMap = new HashMap<String,String>();
-			for (int i = 0; i < specIdsSplit.length; i++) {
-				specIdsMap.put(specIdsSplit[i], pricesSplit[i]);			
-			}
-			String orderExtention = getOrderExtention(specIdsMap);
-			map.put("productSpecs", orderExtention);
+			if(!StringUtil.isEmpty(specIds) && !StringUtil.isEmpty(prices)) {
+                String[] specIdsSplit = specIds.substring(1, specIds.length()).split(",");
+                String[] pricesSplit = prices.substring(1, prices.length()).split(",");
+                Map<String,String> specIdsMap = new HashMap<String,String>();
+                for (int i = 0; i < specIdsSplit.length; i++) {
+                    specIdsMap.put(specIdsSplit[i], pricesSplit[i]);
+                }
+                String orderExtention = getOrderExtention(specIdsMap);
+                map.put("productSpecs", orderExtention);
+            } else{
+                map.put("productSpecs", "");
+            }
 			Integer addTaoBaoGroups = shopTaoBaoGroupsService.addTaoBaoGroups(map);
             if (addTaoBaoGroups != null && addTaoBaoGroups > 0) {
                 result.setSuccess(true);
@@ -162,14 +204,18 @@ public class OrderCenterOrderOperationServiceImpl implements OrderCenterOrderOpe
             }
 			String specIds = (String) map.get("specIds");
 			String prices = (String) map.get("prices");
-			String[] specIdsSplit = specIds.substring(1, specIds.length()).split(",");
-			String[] pricesSplit = prices.substring(1, prices.length()).split(",");
-			Map<String,String> specIdsMap = new HashMap<String,String>();
-			for (int i = 0; i < specIdsSplit.length; i++) {
-				specIdsMap.put(specIdsSplit[i], pricesSplit[i]);			
-			}
-			String orderExtention = getOrderExtention(specIdsMap);
-			map.put("productSpecs", orderExtention);
+			if(!StringUtil.isEmpty(specIds) && !StringUtil.isEmpty(prices)) {
+                String[] specIdsSplit = specIds.substring(1, specIds.length()).split(",");
+                String[] pricesSplit = prices.substring(1, prices.length()).split(",");
+                Map<String, String> specIdsMap = new HashMap<String, String>();
+                for (int i = 0; i < specIdsSplit.length; i++) {
+                    specIdsMap.put(specIdsSplit[i], pricesSplit[i]);
+                }
+                String orderExtention = getOrderExtention(specIdsMap);
+                map.put("productSpecs", orderExtention);
+            }else{
+                map.put("productSpecs", "");
+            }
 			Integer updateTaoBaoGroups = shopTaoBaoGroupsService.updateTaoBaoGroups(map);
             if (updateTaoBaoGroups != null && updateTaoBaoGroups > 0) {
                 result.setSuccess(true);
@@ -335,7 +381,11 @@ public class OrderCenterOrderOperationServiceImpl implements OrderCenterOrderOpe
 			}
 			 Map<String, Object> taoBaoGroups = shopTaoBaoGroupsService.getTaoBaoGroupsById(id);
 			if(taoBaoGroups!=null && taoBaoGroups.get("productSpecs")!=null){
-				List<Map<String,Object>> productList = getProductList(taoBaoGroups.get("productSpecs").toString());
+			    String productSpecsStr = taoBaoGroups.get("productSpecs").toString();
+                List<Map<String, Object>> productList = new ArrayList<>();
+			    if(!StringUtil.isEmpty(productSpecsStr)) {
+                    productList = getProductList(productSpecsStr);
+                }
 				result.setSuccess(true);
 				result.setResult(productList);
 			}else{
@@ -391,5 +441,189 @@ public class OrderCenterOrderOperationServiceImpl implements OrderCenterOrderOpe
 		result.setResult(list_source);
 		return result;
 	}
+	/**
+	 * 查询复制网单的信息
+	 * @param productId
+	 * @param orderSn
+	 * @return
+	 */
+	public Map<String,Object> copyProductView(String productId,String orderSn){
+		Gson gson = new Gson();
+		Map<String,Object> map = new HashMap<>();
+		Orders order = shopOrdersService.selectOrderView(orderSn);//查询订单信息
+        List<Map<String,Object>> productsVo=shopOperationAreaService.selectOrderProductViewTwo(orderSn);//查询网单数据
+		Invoices invoices =invoicesService.selectInvoiceView(orderSn);
+		map.put("order", order);
+		map.put("productsVo", gson.toJson(productsVo));
+		map.put("productsVoSize",productsVo);
+        //map.put("productsVo", productsVo);
+		map.put("invoices", invoices);	
+		return map;
 	}
+	
+	public List<OrderPriceProductGroupIndustry> getProductGroupIndustryList(){
+		return orderPriceProductGroupIndustryService.getProductGroupIndustryList();
+	}
+	
+	public List<SyncOrderConfigs> selectSyncOrderonfigs(){
+		return syncOrderConfigsService.selectSyncOrderConfigs();
+	}
+	/**
+	 * 保存复制网单信息
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public Json copyProductSave(JSONObject params,String username) {
+		Json json = new Json();
+		// TODO Auto-generated method stub
+		Orders  orders= shopOrdersService.get(Integer.parseInt(params.get("id").toString()));//根据订单id查询订单信息
+		//把前台修改的数据放到数据库
+		orders.setRelationOrderSn(Ustring.getString(orders.getOrderSn()));//关联订单编号
+		orders.setIsProduceDaily(Integer.parseInt(Ustring.getString0(params.get("isProduceDaily"))));//是否日日单
+
+        if (params.get("source") != null && StringUtils.isNotBlank(params.get("source").toString())){
+            orders.setSource(Ustring.getString(params.get("source")));//订单来源
+        }
+//		orders.setSourceOrderSn(Ustring.getString(params.get("sourceOrderSn")));//来源订单号
+		orders.setConsignee(Ustring.getString(params.get("consignee")));//收获人
+		orders.setProvince(Integer.parseInt(Ustring.getString0(params.get("province"))));//省
+		orders.setAddress(Ustring.getString(params.get("address")));//详细地址
+		orders.setZipcode(Ustring.getString(params.get("zipcode")));//邮遍
+		orders.setMobile(Ustring.getString(params.get("mobile")));//电话
+		orders.setPhone(Ustring.getString(params.get("phone")));//手机
+		orders.setSyncTime(new Date().getTime()/1000);
+		String oldOrderSn = orders.getOrderSn();
+		orders.setOrderSn(helpUtils.getOrderNo());
+		orders.setAgent("系统");
+
+		/*orders.setConfirmTime(Long.valueOf(new Date().getTime()).intValue());
+		orders.setFirstConfirmTime(Long.valueOf(new Date().getTime()).intValue());*/
+		orders.setFirstConfirmPerson("系统");
+		orders.setFinishTime(null);
+		orders.setSmConfirmStatus(1);
+
+		net.sf.json.JSONArray jsonArray = JSONArray.fromObject(params.get("productsVo"));
+		List<OrderProductsVo> productsVo = (List<OrderProductsVo>) net.sf.json.JSONArray.toCollection(jsonArray,OrderProductsVo.class);
+		OrderProducts products = new OrderProducts();
+
+        //Map mapType = com.alibaba.fastjson.JSON.parseObject(params.get("invocie").toString(),Map.class);
+        orders.setOrderStatus(200);
+        orders =helpUtils.isPanOrder(orders);
+        orders.setPaymentStatus(100);
+        orders.setPoints(0L);
+        //手动复制订单标志
+        orders.setIsCopy(1);
+        int orderId=shopOrdersService.insertOrders(orders);//插入订单信息
+        //网单List
+        List<String>  NetSingleNumberList = new ArrayList<>();
+        for(OrderProductsVo vo:productsVo){
+            products=shopOperationAreaService.queryGetId(vo.getId().toString());//根据id查询网单信息
+
+
+                products.setOrderId(orderId);//关联网单id
+                products =helpUtils.isPanOrderProduct(products);
+                products.setStatus(0);
+                products.setInvoiceNumber("");
+                products.setLessOrderSn("");
+                products.setOutping("");
+                products.setLessShipTime(0);
+                products.setCloseTime(0);
+                products.setReceiptNum("");
+                products.setReceiptAddTime("");
+                products.setTbOrderSn("");
+                products.setcPaymentStatus(200);
+                products.setLockedNumber(0);
+                products.setUnlockedNumber(0);
+                products.setcPayTime(0L);
+                products.setExpressName("");
+                products.setWaitGetLesShippingInfo(0);
+                products.setIsMakeReceipt(9);
+                products.setSystemRemark("");
+                products.setHpRegisterDate(0);
+                products.setHpReservationDate(0);
+                products.setShippingOpporunity(0);
+                products.setNetPointId(0);
+                products.setScode("");
+                products.setTsCode("");
+
+                int orderProducrId=shopOperationAreaService.insertOrderProducts(products);//插入网单信息
+                //插入原订单操作日志
+                shopOrderOperateLogsService.insert(
+                        constructOperateLog(orders,products,username,"复制订单（系统自动）生成新的换机单","原订单号为:"+oldOrderSn + "新订单号为:"+orders.getOrderSn(),null));
+
+                OrderWorkflows orderWorkflows= shopOrderWorkflowsService.getByOrderProductId(products.getId());
+                if(orderWorkflows != null) {
+                    OrderWorkflows newOrderWorkflows = new OrderWorkflows();
+                    newOrderWorkflows.setOrderId(orderId);
+                    newOrderWorkflows.setOrderProductId(orderProducrId);
+                    newOrderWorkflows.setAddTime(orderWorkflows.getAddTime());
+                    newOrderWorkflows.setPayTime(0L);
+                    shopOrderWorkflowsService.insert(newOrderWorkflows);//插入订单全流程监控表
+                }
+
+                MemberInvoices memberInvoices= memberInvoicesService.getByOrderId(orders.getId()); //查询 用户发票信息
+                if (memberInvoices != null) {
+                    memberInvoices.setId(null);
+                    memberInvoices.setOrderId(orderId);
+                    memberInvoicesService.insert(memberInvoices);//插入 用户发票表
+                }
+
+            orders.setId(orderId);
+            products.setId(orderProducrId);
+            //插入新订单操作日志
+            shopOrderOperateLogsService.insert(
+                    constructOperateLog(orders,products,username,"复制订单（系统自动）生成新的换机单","原订单号为:"+oldOrderSn + "新订单号为:"+orders.getOrderSn(),null));
+
+                String cOrderSn = OrderSnUtil.getCOrderSn(orderProducrId);
+                products.setCOrderSn(cOrderSn);//生成网单号
+                products.setId(orderProducrId);
+                orderProductsNewService.updateCOrderSn(products);//更改网单号
+                NetSingleNumberList.add(products.getCOrderSn());
+            }
+        json.setMsg("保存成功！ 复制订单号为："+orders.getOrderSn()+"   网单号为："+String.valueOf(NetSingleNumberList));
+        json.setSuccess(true);
+        return json;
+    }
+
+
+
+    @Override
+    public List<OrderPriceSourceChannel> selectOrderPriceSourceChannel() {
+        return orderPriceSourceChannelService.getOrderPriceSourceChannelList();
+    }
+
+    /**
+     * 构造订单操作日志对象
+     * @param orders 订单对象
+     * @param orderProducts  网单对象
+     * @param operator 操作人
+     * @param changeLog 变更记录
+     * @param remark 备注
+     * @param log OrderOperateLogs
+     * @return
+     */
+    public static OrderOperateLogs constructOperateLog(Orders orders, OrderProducts orderProducts,
+                                                       String operator, String changeLog,
+                                                       String remark, OrderOperateLogs log) {
+        log = new OrderOperateLogs();
+        log.setChangeLog(StringUtil.isEmpty(changeLog) ? "" : changeLog);
+        log.setOperator(StringUtil.isEmpty(operator) ? "系统" : operator);
+        log.setPaymentStatus(
+                null == orders || orders.getPaymentStatus() == null ? 0 : orders.getPaymentStatus());
+        log.setRemark(StringUtil.isEmpty(remark) ? ""
+                : (remark.length() > 255 ? remark.substring(0, 255) : remark));
+        log.setSiteId(1);
+        log.setOrderId(Integer.valueOf(orders.getId()));
+        if (orderProducts != null) {
+            log.setNetPointId(orderProducts.getNetPointId());
+            log.setOrderProductId(orderProducts.getId());
+            log.setStatus(orderProducts.getStatus());
+        } else {
+            log.setNetPointId(0);
+            log.setOrderProductId(0);
+            log.setStatus(0);
+        }
+        return log;
+    }
+}
 

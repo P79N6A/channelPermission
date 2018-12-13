@@ -20,4 +20,11 @@ public interface EisVomShippingStatusService {
      */
     List<VomShippingStatus> getByProcessStatus3W(Integer processStatus);
     Integer insert(VomShippingStatus shippingStatus);
+
+    /**
+     * 根据网单号查询是否已下发顺丰
+     * @param orderNo
+     * @return
+     */
+    int queryCountByOrderNo(String orderNo);
 }

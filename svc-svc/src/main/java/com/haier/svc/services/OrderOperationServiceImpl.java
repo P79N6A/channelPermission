@@ -39,7 +39,7 @@ public class OrderOperationServiceImpl implements OrderOperationService{
                 return result;
         	}
         	List<QueryOrderParameter> findQueryOrderList = shopOrdersService.getFindQueryOrderList(queryOrder);
-        	Integer count = shopOrdersService.getFindQueryOrderListCount(queryOrder);
+        	Integer count = shopOrdersService.getRowCnts();
             result.setResult(findQueryOrderList);
             PagerInfo pi = new PagerInfo();
             pi.setRowsCount(count !=null ? count : 0 );

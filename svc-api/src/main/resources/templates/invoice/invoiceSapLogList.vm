@@ -78,7 +78,7 @@
             <span class="search-row-label">
               是否成功
             </span>
-                <select class="easyui-combobox" id="success"  name="success" style="width: 174px;">
+                <select class="easyui-combobox" id="success"  name="success" style="width: 174px;" panelHeight="auto">
                     <option value="-1" selected="true">全部</option>
                     <option value="1">成功</option>
                     <option value="0">失败</option>
@@ -88,7 +88,7 @@
             <span class="search-row-label">
               开票类型
             </span>
-                <select class="easyui-combobox" id="pushType"  name="pushType" style="width: 174px;">
+                <select class="easyui-combobox" id="pushType"  name="pushType" style="width: 174px;" panelHeight="auto">
                     <option value="-1" selected="true">全部</option>
                     <option value="1">普通开票</option>
                     <option value="2">作废/冲红</option>
@@ -299,18 +299,18 @@
             pagination: true,
             columns: [[
                 {title: "序号", field: "id", hidden: true},
-                {title: "操作", field: "caozuo", sortable: true},
-                {title: "网单号", field: "cOrderSn", sortable: true},
-                {title: "发票ID", field: "invoiceId", sortable: true},
-                {title: "网单ID", field: "orderProductId", sortable: true},
-                {title: "差异/专项 ID", field: "diffId", sortable: true},
-                {title: "网单类型", field: "cOrderType", sortable: true},
-                {title: "开票类型", field: "pushType", sortable: true},
-                {title: "记录时间", field: "addTime", sortable: true},
-                {title: "是否成功", field: "success", sortable: true},
-                {title: "次数", field: "count", sortable: true},
-                {title: "最后推送时间", field: "lastTime", sortable: true},
-                {title: "提示信息", field: "lastMessage",sortable: true}
+                {title: "操作", field: "caozuo", sortable: false},
+                {title: "网单号", field: "cOrderSn", sortable: false},
+                {title: "发票ID", field: "invoiceId", sortable: false},
+                {title: "网单ID", field: "orderProductId", sortable: false},
+                {title: "差异/专项 ID", field: "diffId", sortable: false},
+                {title: "网单类型", field: "cOrderType", sortable: false},
+                {title: "开票类型", field: "pushType", sortable: false},
+                {title: "记录时间", field: "addTime", sortable: false},
+                {title: "是否成功", field: "success", sortable: false},
+                {title: "次数", field: "count", sortable: false},
+                {title: "最后推送时间", field: "lastTime", sortable: false},
+                {title: "提示信息", field: "lastMessage",sortable: false}
             ]],
             pageSize: 50,
             pageList: [50,100,200],
@@ -376,16 +376,14 @@ $('#search').click(function () {
 					{
 	                     field: 'id',
 	                     title: '序号',
-	                     width: 10,
-                         sortable:true,
+                         sortable: false,
 	                     align: 'center',
 	                     hidden:true
 	                },
 					{
 						 field: 'caozuo',
 						 title: '操作',
-						 width: 100,
-                        sortable:true,
+                        sortable: false,
 						 align: 'center',
 						 formatter:function(value,rowData,rowIndex){
 							 if(value=='0' && rowData.count=='0') return "待推送";
@@ -397,8 +395,7 @@ $('#search').click(function () {
 					{
 						 field: 'cOrderSn',
 						 title: '网单号',
-						 width: 150,
-                        sortable:true,
+                        sortable: false,
 						 align: 'center',
 						 formatter:function(value,rowData,rowIndex){
 							 return "<a href='javascript:void(0);' onclick='showInvoiceInfo("+'"'+value+'","'+rowData.id+'","'+rowData.invoiceId+'"'+");return false;'>"+value+"</a>";
@@ -407,29 +404,25 @@ $('#search').click(function () {
 					{
 	                     field: 'invoiceId',
 	                     title: '发票ID',
-	                     width: 100,
-                        sortable:true,
+                        sortable: false,
 	                     align: 'center'
 	                },
 					{
 	                     field: 'orderProductId',
 	                     title: '网单ID',
-	                     width: 100,
-                        sortable:true,
+                        sortable: false,
 	                     align: 'center'
 	                },
 					{
 	                     field: 'diffId',
 	                     title: '差异/专项 ID',
-	                     width: 150,
-                        sortable:true,
+                        sortable: false,
 	                     align: 'center'
 	                },
 					{
 						 field: 'cOrderType',
 						 title: '网单类型',
-						 width: 130,
-                        sortable:true,
+                        sortable: false,
 						 align: 'center',
 						 formatter:function(value,rowData,rowIndex){
 								if(value=='1') return '普通网单';
@@ -441,8 +434,7 @@ $('#search').click(function () {
 					 {
 						 field: 'pushType',
 						 title: '开票类型',
-						 width: 130,
-                         sortable:true,
+                         sortable: false,
 						 align: 'center',
 						 formatter:function(value,rowData,rowIndex){
 								if(value=='1') return '普通开票';
@@ -454,15 +446,13 @@ $('#search').click(function () {
 					 {
 						 field: 'addTime',
 						 title: '记录时间',
-						 width: 200,
-                         sortable:true,
+                         sortable: false,
 						 align: 'center'
                      },
 					 {
  	                     field: 'success',
  	                     title: '是否成功',
- 	                     width: 120,
-                         sortable:true,
+                         sortable: false,
  	                     align: 'center',
 						 formatter:function(value,rowData,rowIndex){
 								if(value=='1') return '成功';
@@ -474,22 +464,19 @@ $('#search').click(function () {
 					 {
 	                     field: 'count',
 	                     title: '次数',
-	                     width: 80,
-                         sortable:true,
+                         sortable: false,
 	                     align: 'center'
 	                },
 					 {
 						 field: 'lastTime',
 						 title: '最后推送时间',
-						 width: 160,
-                         sortable:true,
+                         sortable: false,
 						 align: 'center'
                     },
 					{
 	                     field: 'lastMessage',
 	                     title: '提示信息',
-	                     width: 400,
-                        sortable:true,
+                        sortable: false,
 	                     align: 'left'
 	                }
 				]

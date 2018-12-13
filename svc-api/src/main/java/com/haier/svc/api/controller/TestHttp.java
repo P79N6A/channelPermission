@@ -20,7 +20,7 @@ public class TestHttp {
 		String date = df.format(new Date());// new Date()为获取当前系统时间，也可使用当前时间戳
 		System.out.println(date);
 		try {
-			URL url = new URL("http://localhost:8081/acceptTimeController/accept_time");
+			URL url = new URL("http://localhost:8081/hp/accept_time");
 
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();

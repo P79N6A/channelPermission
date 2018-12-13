@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="QueryDNFromLEStoAPP" targetNamespace="http://www.example.org/QueryDNFromLEStoAPP/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/QueryDNFromLEStoAPP/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/QueryDNFromLEStoAPP/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/QueryDNFromLEStoAPP/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="QueryDNFromLEStoAPP">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CALLCODE" type="xsd:string"/>
+            <xsd:element name="SOURCE" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="INPUT" type="tns:ZINT_WX_WT_LOG"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="QueryDNFromLEStoAPPResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="FLAG" type="xsd:string"/>
+            <xsd:element name="MESSAGE" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ZINT_WX_WT_LOG">
+        <xsd:sequence>
+          <xsd:element name="MANDT" type="xsd:string"/>
+          <xsd:element name="BSTNK" type="xsd:string"/>
+          <xsd:element name="BSTKD" type="xsd:string"/>
+          <xsd:element name="POSNR" type="xsd:string"/>
+          <xsd:element name="TKNUM" type="xsd:string"/>
+          <xsd:element name="SOURCE" type="xsd:string"/>
+          <xsd:element name="SOURCE_SN" type="xsd:string"/>
+          <xsd:element name="CRDAT" type="xsd:string"/>
+          <xsd:element name="CRZET" type="xsd:string"/>
+          <xsd:element name="SDABW" type="xsd:string"/>
+          <xsd:element name="KUNNR" type="xsd:string"/>
+          <xsd:element name="KUNWE" type="xsd:string"/>
+          <xsd:element name="NAME1" type="xsd:string"/>
+          <xsd:element name="MESSAGE" type="xsd:string"/>
+          <xsd:element name="ADD1" type="xsd:string"/>
+          <xsd:element name="ADD2" type="xsd:string"/>
+          <xsd:element name="ADD3" type="xsd:string"/>
+          <xsd:element name="ADD4" type="xsd:string"/>
+          <xsd:element name="ADD5" type="xsd:string"/>
+          <xsd:element name="ADD6" type="xsd:string"/>
+          <xsd:element name="ADD7" type="xsd:string"/>
+          <xsd:element name="ADD8" type="xsd:string"/>
+          <xsd:element name="ADD9" type="xsd:string"/>
+          <xsd:element name="ADD10" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="QueryDNFromLEStoAPPRequest">
+    <WL5G3N0:part element="WL5G3N1:QueryDNFromLEStoAPP" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="QueryDNFromLEStoAPPResponse">
+    <WL5G3N0:part element="WL5G3N1:QueryDNFromLEStoAPPResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="QueryDNFromLEStoAPP">
+    <WL5G3N0:operation name="QueryDNFromLEStoAPP">
+      <WL5G3N0:input message="WL5G3N1:QueryDNFromLEStoAPPRequest"/>
+      <WL5G3N0:output message="WL5G3N1:QueryDNFromLEStoAPPResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="QueryDNFromLEStoAPPSOAP" type="WL5G3N1:QueryDNFromLEStoAPP">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="QueryDNFromLEStoAPP">
+      <WL5G3N2:operation soapAction="http://www.example.org/QueryDNFromLEStoAPP/QueryDNFromLEStoAPP"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="QueryDNFromLEStoAPP">
+    <WL5G3N0:documentation>OSB Service</WL5G3N0:documentation>
+    <WL5G3N0:port binding="WL5G3N1:QueryDNFromLEStoAPPSOAP" name="QueryDNFromLEStoAPPSOAP">
+      <WL5G3N2:address location="http://10.138.40.168:8001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EAI_INT_27253"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

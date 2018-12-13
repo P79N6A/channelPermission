@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.haier.purchase.data.model.vehcile.PurchaseProductPaymentDTO;
 import com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO;
 
 /**
@@ -16,7 +17,7 @@ import com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO;
  * Copyright (c) 2015 北京柯莱特科技有限公司 交付部
  */
 public interface VehicleProductPaymentDao {
-    List<VehicleProductPaymentDTO> getList();
+    List<PurchaseProductPaymentDTO> getList();
 
     List<VehicleProductPaymentDTO> listByCondition(@Param("entity") VehicleProductPaymentDTO entity);
     
@@ -29,6 +30,8 @@ public interface VehicleProductPaymentDao {
     VehicleProductPaymentDTO getOneById(long id);
 
     VehicleProductPaymentDTO getOneByCondition(@Param("entity") VehicleProductPaymentDTO entity);
+    
+    PurchaseProductPaymentDTO getPurchasePaymentOneByCondition(@Param("entity") VehicleProductPaymentDTO entity);
 
     List<VehicleProductPaymentDTO> getListByCondition(@Param("entity") VehicleProductPaymentDTO entity);
 

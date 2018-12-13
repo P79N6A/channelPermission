@@ -38,13 +38,13 @@
 		1=1
 		<if test="log!=null">
 			<if test="log.secCode != null and log.secCode !=''">
-				<![CDATA[ and log.sec_Code LIKE CONCAT('%', #{log.secCode} ,'%') ]]>
+				<![CDATA[ and log.sec_Code LIKE CONCAT( TRIM(#{log.secCode}) ,'%') ]]>
 			</if>
 			<if test="log.sku != null and log.sku !=''">
-				and log.sku = #{log.sku}
+				and log.sku like CONCAT( TRIM(#{log.sku}),'%')
 			</if>
 			<if test="log.refNo != null and log.refNo !=''">
-				and log.ref_no = #{log.refNo}
+				and log.ref_no like CONCAT(TRIM(#{log.refNo}),'%')
 			</if>
 			<if test="log.startCreateDate != null ">
 				and log.create_time &gt;= #{log.startCreateDate}

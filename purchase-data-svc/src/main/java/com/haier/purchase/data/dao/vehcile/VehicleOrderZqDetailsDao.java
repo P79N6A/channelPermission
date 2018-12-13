@@ -21,7 +21,10 @@ public interface VehicleOrderZqDetailsDao {
 
 	int updateSelectiveByZqItemNo(
 			@Param("entity") VehicleOrderZqDetailsDTO entity);
-
+	
+	int updateSelectiveByZqOrderNo(
+			@Param("entity") VehicleOrderZqDetailsDTO entity);
+	
 	int updateStatusDetail(@Param("orderNo")String orderNo);
 
 	int updateMessageDetail(@Param("orderNo")String orderNo, @Param("mesageg")String mesageg);
@@ -47,4 +50,6 @@ public interface VehicleOrderZqDetailsDao {
 			@Param("deliveryToCode") String deliveryToCode);
 
 	List<VehicleOrderZqDetailsDTO> selectByStatus();
+
+	List<VehicleOrderZqDetailsDTO> getListByOrderNo(String orderNo);
 }

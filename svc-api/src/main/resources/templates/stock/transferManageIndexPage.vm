@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>调拨管理</title>
+    
+    <style type="text/css">
+        .dlg{
+            width:400px;
+            height:100px;
+            padding:10px;	
+            margin-top:20px;	
+        }
+        .easyui-panel{
+            overflow-x: show;
+        }
+    </style>
+    
+</head>
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel" style="width:100%;height:100%;" data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,collapsible:false">
+    <table id="dataGrid">
+	</table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+        
+    </div>
+	<form action="/stock/exportTransferLines" method="get" style="display: none;" id="exportForm">
+		<input name="lineNum" />
+		<input name="soLineNum" />
+		<input name="startTime" />
+		<input name="endTime" />
+		<input name="channelFrom" />
+		<input name="channelTo" />
+		<input name="itemCode" />
+		<input name="secFrom" />
+		<input name="secTo" />
+		<input name="lineStatusStr" />
+		<input name="transferReason" />
+	</form>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel" style="font-size: 12px;">
+            <div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">单据号</span>
+                <input id="lineNum" name="lineNum" class="easyui-textbox" data-options="prompt:''">
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">LBX</span>
+                <input id="lbx" name="lbx" class="easyui-textbox"  data-options="prompt:''">
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">从</span>
+                <input id="startTime" name="startTime" type="text" class="easyui-datetimebox" >
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">到</span>
+                <input id="endTime" name="endTime" type="text" class="easyui-datetimebox" >
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">调入渠道</span>
+                <select name="channelFrom" id="channelFrom" class="easyui-combobox"  panelHeight="auto">
+                </select>
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">调出渠道</span>
+                <select name="channelTo" id="channelTo" class="easyui-combobox"  panelHeight="auto">
+                </select>
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">原因</span>
+                <select name="transferReason" id="transferReason" class="easyui-combobox"  panelHeight="auto">
+                </select>
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">物料编码</span>
+                <input id="itemCode" name="itemCode" class="easyui-textbox"  data-options="prompt:''">
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">调出库位</span>
+                <input id="secFrom" name="secFrom" class="easyui-textbox"  data-options="prompt:''">
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">调入库位</span>
+                <input id="secTo" name="secTo" class="easyui-textbox"  data-options="prompt:''">
+            </div>
+			<div class="search-row_nowidth mar_r6px">
+                <span class="search-row-label_80">状态</span>
+                <select name="lineStatus" id="lineStatus" multiple="multiple" class="easyui-combobox"  data-options="editable:false">
+					<option value="ALL">全部</option>
+					<option value="-1">删除状态</option>
+					<option value="0" selected>初始状态</option>
+					<option value="5" selected>确认状态</option>
+					<option value="210" selected>3W调拨确认状态</option>
+					<option value="10" selected>待录费用</option>
+					<option value="20" selected>待审核费用</option>
+					<option value="30" selected>待传LES</option>
+					<option value="40" selected>待出库</option>
+					<option value="50" selected>待入库</option>
+					<option value="100">已完成</option>
+					<option value="110">已取消</option>
+					<option value="310">3W调拨取消状态</option>
+					<option value="140">3W入库推SAP成功</option>
+					<option value="150">WA入库推SAP成功</option>
+				</select>
+            </div>
+			
+
+
+
+            ## <div class="search-row_nowidth mar_r6px">
+            ##     <span class="search-row-label_80">日期控件</span>
+            ##     <input id="date" name="date" type="text" class="easyui-datebox" data-options="prompt:''">
+            ## </div>
+            ## <div class="search-row_nowidth mar_r6px">
+            ##     <span class="search-row-label_80">日期时间控件</span>
+            ##     <input id="time" name="time" type="text" class="easyui-datetimebox">
+            ## </div> 
+
+            ## <div class="search-row_nowidth mar_r6px">
+            ##     <span class="search-row-label_80">库位名称</span>
+            ##     <select name="example" id="example" class="easyui-combobox"  panelHeight="auto">
+            ##         <option value="0">haha</option>
+            ##         <option value="0">heihei</option>
+            ##         <option value="0">xixi</option>
+            ##         <option value="0">hengheng</option>
+            ##     </select>
+            ## </div>
+            ## <div class="search-row_nowidth mar_r6px">
+            ##     <span class="search-row-label_80">库位名称</span>
+            ##     <select name="example" id="example" class="easyui-combobox" >
+            ##         <option value="0">haha</option>
+            ##         <option value="0">heihei</option>
+            ##         <option value="0">xixi</option>
+            ##         <option value="0">hengheng</option>
+            ##         <option value="0">haha</option>
+            ##         <option value="0">heihei</option>
+            ##         <option value="0">xixi</option>
+            ##         <option value="0">hengheng</option>
+            ##         <option value="0">haha</option>
+            ##         <option value="0">heihei</option>
+            ##         <option value="0">xixi</option>
+            ##         <option value="0">hengheng</option>
+            ##         <option value="0">haha</option>
+            ##         <option value="0">heihei</option>
+            ##         <option value="0">xixi</option>
+            ##         <option value="0">hengheng</option>
+            ##     </select>
+            ## </div>
+
+        </div>
+		<input name="pageIndex" id="pageIndex" type="hidden" value="1"/>
+		<input name="pageSize" id="pageSize" type="hidden" value="10"/>
+
+
+
+		<a id='search' href="javascript:onQuery(1);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查询</a>
+		<a id='ppTransfer' href="javascript:ppQhTransfer(1);" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">平铺</a>
+##		<a id='qhTransfer' href="javascript:ppQhTransfer(2);" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">缺货</a>
+		<a id='xnTransfer' href="javascript:ppQhTransfer(3);" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">虚拟调拨</a>
+		<a id='3wTransfer' href="javascript:ppQhTransfer(4);" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">3W调拨</a>
+        <a id='ypTransfer' href="javascript:ppQhTransfer(5);" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">优品调拨</a>
+        <a id='submitBtn' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">提交</a>
+		<a id='removeBtn' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">删除</a>
+		<a id='cancelBtn' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">非3W取消</a>
+		<a id='cancel3WBtn' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">3W取消</a>
+		<a id='exportBtn' href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true">导出</a>
+
+    </form>
+	
+</div>
+<form id="excelForm">
+	<input name="reason" type="hidden" value="">
+</form>
+
+<div id="oprationWindow"  data-options="region:'center',title:'操作历史',border:false">
+    <br/>
+    <div style="height:340px;" data-options="region:'center',border:false"><table id="oprationDataGrid"></table></div>
+</div>
+
+<!-- 需引入的js -->
+<script src="../static/third/jquery.js"></script>
+<script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/third/easyui/jquery.easyui.min.js"></script>
+<script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+<script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script src="../static/js/utils.js"></script>
+<script src="../static/js/easyui-extention_ws.js"></script>
+<script src="../static/js/customConfig.js"></script>
+<script type="" src="/static/js/dayjs.min.js"></script>
+<!-- 自写的js -->
+## <script src="index.js"></script>
+
+<script type="text/javascript">
+function slideUpSlideClk(t) {
+    var $this = $(t);
+    if ($this.hasClass('open')) {
+        $this.removeClass('open');
+        setTimeout(function () {
+            $this.addClass('close');
+        }, 0);
+        $(".search-panel").slideUp();
+    } else {
+        $this.removeClass('close');
+        setTimeout(function () {
+            $this.addClass('open');
+        }, 0);
+        $(".search-panel").slideDown();
+    }
+    setTimeout(function () {
+        $('#dataGrid').datagrid('resize');
+    }, 500);
+}
+
+
+
+//订单履历
+function opration(wp_order_id){
+    $("#oprationWindow").show();
+    $("#oprationWindow").window('open');
+    $('#oprationDataGrid').datagrid({
+        url: "/stock/findTransferOperationHistory",
+        fit: true,
+        singleSelect: true,
+        nowrap: false,
+        rownumbers: true,
+        queryParams: {
+            "lineId": wp_order_id
+        },
+        columns: [
+            [
+                {
+                    field: 'logTime',
+                    title: '日志时间',
+                    width: 220,
+                    align: 'center'
+                },
+                {
+                    field: 'logType',
+                    title: '日志类型',
+                    width: 120,
+                    align: 'center',
+                    formatter:function(value){
+                        if(value==null||value=="")
+                            ret="";
+                        if (value == -1)
+                            ret = "删除调拨网单";
+                        else if (value ==  1)
+                            ret = "创建调拨网单";
+                        else if (value ==  2)
+                            ret = "修改调拨网单";
+                        else if (value ==  3)
+                            ret = "确认调拨单";
+                        else if (value ==  4)
+                            ret = "提交物流中心录入费用";
+                        else if (value ==  5)
+                            ret = "录入费用";
+                        else if (value ==  6)
+                            ret = "提交费用审核";
+                        else if (value ==  7)
+                            ret = "费用审核";
+                        else if (value ==  8)
+                            ret = "传LES";
+                        else if (value ==  9)
+                            ret = "LES出库";
+                        else if (value ==  10)
+                            ret = "LES入库";
+                        else if (value ==  11)
+                            ret = "取消";
+                        else if (value ==  21)
+                            ret = "3W转库-传VOM出库";
+                        else if (value == 22)
+                            ret = "加入3W取消物流队列，自动调用物流接口";
+                        return ret;
+                    }
+                },
+                {
+                    field: 'optTime',
+                    title: '业务操作时间',
+                    width: 220,
+                    align: 'center',
+                },
+                {
+                    field: 'logUser',
+                    title: '操作人',
+                    width: 100,
+                    align: 'center'
+                },
+                {
+                    field: 'logRemark',
+                    title: '备注',
+                    width: 200,
+                    align: 'center'
+                }
+            ]
+        ]
+    });
+}
+//构筑订单履历的dialog
+$('#oprationWindow').window({
+    shadow:false,
+    resizable:false,
+    autoOpen: false,
+    closed:true,
+    width:1100,
+    height:400,
+    collapsible:false,
+    minimizable:false,
+    maximizable:false,
+    modal:true,
+    closeOnEscape:true,
+});
+/*
+var datagridOptions = {
+    fit: true,//自适应
+    fitColumns: true,//fitColumns: true,
+    singleSelect: true,//多选
+    url: '',
+    //    idField: 'id',
+    frozenColumns: [[{
+        field: 'id',
+        checkbox: false,
+        hidden: true
+    }, {
+        title: '库位编码',
+        field: 'secCode',
+        sortable: false
+    }]],
+    columns: [[
+        { title: 'LES库位', field: 'lesSecCode', width:95,sortable: false },
+        { title: '库位名称', field: 'secName',width:100, sortable: false },
+        {
+            title: '状态', field: 'status', width:95,sortable: false,
+            formatter: function (val, rec) {
+                if (val == "0") {
+                    return "未启用";
+                } else if (val == "1") {
+                    return "已启用";
+                }
+            }
+        },
+        { title: '仓库（TC）代码', field: 'whCode',width:140, sortable: false },
+        { title: '库位属性', field: 'sectionProperty', width:100,sortable: false },
+        { title: '渠道编码', field: 'channelCode', width:100,sortable: false },
+        { title: '批次', field: 'itemProperty', width:60,sortable: false },
+        { title: '销售组织编码', field: 'corpCode',width:100, sortable: false },
+        { title: '付款方编码', field: 'custCode',width:100, sortable: false },
+        { title: '地区编码', field: 'regionCode',width:100, sortable: false },
+        { title: '分渠道送达方', field: 'ehaierDeliverCode',width:100, sortable: false },
+        { title: '物流OE码', field: 'les0eCode',width:100, sortable: false },
+        { title: '创建者', field: 'createUser', width:100,sortable: false },
+        { title: '创建时间', field: 'createTime',width:100, sortable: false, formatter: formatDatebox },
+        { title: '最后更新人', field: 'updateUser', width:100,sortable: false },
+        { title: '最后更新时间', field: 'updateTime', width:100,sortable: false, formatter: formatDatebox }
+    ]],
+    toolbar: '#datagridToolbar',
+    striped: true,
+    autoRowHeight: true,
+    nowrap: true,
+    pagination: true,
+    rownumbers: true,
+    pageSize: 50,
+    pageList: [50, 100, 200],
+};
+*/
+
+$(document).ready(function(){
+        $(".textbox-text").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+        $(".txt").keyup(function(){
+            this.value=this.value.replace(/\s+/g,'');
+        });
+        
+        
+        $.getJSON("/purchase/getChannelsByAuth", function(result){
+            window.channel = result.data;
+            window.channel.unshift({
+            	name: '全部渠道',
+            	channelCode: 'ALL',
+            	selected: true
+            });
+            $("#channelFrom,#channelTo").combobox({
+                data:channel,
+                valueField:'channelCode',
+                textField:'name',
+                panelHeight:'auto',
+                editable:false
+            });
+        });
+        $.getJSON("/invParams/getParams", {group : 'GROUP_TRANSFER_REASON'}, function(result){
+        	window.reason = result.data;
+        	$("#transferReason").combobox({
+        		data: reason,
+                valueField:'paramKey',
+                textField:'paramName',
+                panelHeight:'auto',
+                editable:false
+            });
+        });
+        
+        
+        $('#dataGrid').datagrid({
+            fit: true,
+            method: 'get',
+            pagination: true,
+            singleSelect: true,
+            pageSize: 100,
+            pageList: [100,200,300],
+            nowrap: false,
+            rownumbers: true,
+            singleSelect: false,
+            selectOnCheck: true,
+            checkOnSelect: true,
+			toolbar: '#datagridToolbar',
+            queryParams: {
+            	lineNum: function(){return $('#lineNum').val();},
+            	soLineNum: function(){return $('#lbx').val();},
+            	startTime: function(){return $('#startTime').val();},
+            	endTime: function(){return $('#endTime').val();},
+            	channelFrom: function(){return $('#channelFrom').combobox('getValue');},
+            	channelTo: function(){return $('#channelTo').combobox('getValue');},
+            	itemCode: function(){return $('#itemCode').val();},
+            	secFrom: function(){return $('#secFrom').val();},
+            	secTo: function(){return $('#secTo').val();},
+            	lineStatusStr: function(){return $('#lineStatus').combobox('getValues').join(',');},
+            	transferReason: function(){return $('#transferReason').combobox('getValue');}
+            },
+			columns: [[
+				{field:'lineId',checkbox:true, title:'操作',width:120,sortable: false},
+
+                {
+                    field: 'operation',
+                    title: '操作',
+                    width: 200,
+                    align: 'center',
+                    formatter:function(value,rowData,rowIndex){
+                        //function里面的三个参数代表当前字段值，当前行数据对象，行号（行号从0开始）
+                        return "<a class='opration' href='javascript:void(0);' onclick='opration("+'"'+rowData.lineId+'"'+");return false;'>历史</a>";
+                    }
+                },
+				{field:'lineNum', title:'单据号',width:120,sortable: false},
+				{field:'soLineNum', title:'LBX',width:120,sortable: false},
+				{field:'lineStatusStr', title:'状态',width:120,sortable: false},
+				{field:'channelFromStr', title:'调出渠道',width:120,sortable: false},
+				{field:'channelToStr', title:'调入渠道',width:120,sortable: false},
+				{field:'transferReasonStr', title:'原因',width:120,sortable: false},
+				{field:'itemCode', title:'物料编码',width:120,sortable: false},
+				{field:'itemName', title:'物料名称',width:120,sortable: false},
+				{field:'secFrom', title:'调出库位',width:120,sortable: false},
+				{field:'secTo', title:'调入库位',width:120,sortable: false},
+				{field:'qty', title:'期望调货数量',width:120,sortable: false},
+				{field:'transferQty', title:'实际调货数量',width:120,sortable: false},
+				{field:'freeTransfer', title:'是否免费调货',width:120,sortable: false},
+				{field:'transferFee', title:'费用',width:120,sortable: false},
+				{field:'haulCycle', title:'运输周期',width:120,sortable: false},
+				{field:'createTimeStr', title:'创建时间',width:120,sortable: false},
+				{field:'createUser', title:'创建人',width:120,sortable: false},
+				{field:'remark', title:'备注',width:120,sortable: false}
+				,
+                {
+                    field: 'salesAmount',
+                    title: '采购总金额',
+                    width: 200,
+                    align: 'center'
+                }
+			]],
+            loadFilter: function(data){
+            	var status_ = $('#lineStatus').combobox('getData');
+            	if(data){
+            		$.each(data.rows, function(k, v){
+            			$.each(window.channel, function(k2, v2){
+            				var code_ = v2.channelCode;
+            				var name_ = v2.name;
+            				if(code_ == v.channelFrom){
+            					v.channelFromStr = name_;
+            				}
+            				if(code_ == v.channelTo){
+            					v.channelToStr = name_;
+            				}
+            			});
+            			$.each(window.reason, function(k2, v2){
+            				var code_ = v2.paramKey;
+            				var name_ = v2.paramName;
+            				if(v.transferReason == code_){
+            					v.transferReasonStr = name_;
+            				}
+            			});
+            			$.each(status_, function(k2, v2){
+            				if(v.lineStatus == v2.value){
+            					v.lineStatusStr = v2.text;
+            				}
+            			});
+            			v.createTimeStr = dayjs(v.createTime).format('YYYY-MM-DD HH:mm:ss');
+            		})
+            	}
+            	return data;
+            }
+        });
+    });
+    
+    $("#submitBtn").click(function() {
+    	var rows = $('#dataGrid').datagrid('getChecked');
+    	if(rows.length == 0){
+			$.messager.alert("错误",  "请选择要提交的调拨网单");
+			return false;
+    	}
+    	var statusValid = rows.every(function(v){
+    		return $.inArray(v.lineStatus + '', ['0']) > -1;
+    	});
+		if (statusValid == false) {
+			$.messager.alert("错误",  "只有初始状态的调拨网单能执行该操作");
+			return false;
+		}
+		$.ajax({
+			url: "/stock/submitTransfer",   // 提交的页面
+			data: {
+				lineIds: rows.map(function(v){
+								return v.lineId
+							}).join(','),
+				isFirst: true
+			},
+			type: "POST",
+			success: function(data) {
+				if(data.data != null && data.data !=''){
+					$.messager.confirm('请确认',data.message+'原因为：期望与实际库存不一致，是否继续提交不一致的调货单?',function(r){
+					    if (r){
+					    	$.ajax({
+	                        	url: "/stock/submitTransfer",
+	                        	data: {
+	                				lineIds: rows.map(function(v){
+				    								return v.lineId
+				    							}).join(','),
+				    				isFirst: false
+				    			}, 
+	                        	type: "POST", 
+	                        	success: function(result) {
+									$('#dataGrid').datagrid('reload');
+									$.messager.alert('提示', result.message);
+	                        	}
+	            			});
+					    }
+					});
+				}else{
+					$.messager.alert('提示', data.message, 'info');
+					$('#dataGrid').datagrid('reload');
+				}
+			},
+			dataType:"json"
+		});
+	});
+    
+    $("#removeBtn").click(function(){
+		
+		var rows = $('#dataGrid').datagrid('getChecked');
+    	if(rows.length == 0){
+			$.messager.alert("错误",  "请选择要删除的调拨网单！");
+			return false;
+    	}
+    	var statusValid = rows.every(function(v){
+    		return $.inArray(v.lineStatus + '', ['0']) > -1;
+    	});
+		if (statusValid == false) {
+			$.messager.alert("错误",  "只有初始状态的调拨网单能执行该操作");
+			return false;
+		}
+		
+		$.messager.confirm('请确认', '确定删除选中的调拨单?',function(r){
+		    if (r){
+				jQuery.ajax({
+					url: "/stock/removeTransfer",   // 提交的页面
+					data: {
+						lineIds: rows.map(function(v){
+										return v.lineId
+									}).join(','),
+						isFirst: true
+					},
+					type: "POST",
+					success: function(data) {
+						$('#dataGrid').datagrid('reload');
+						$.messager.alert('提示', data.message);
+					},
+					dataType:"json"
+				});
+		    }
+		});
+	});
+    
+    $("#cancelBtn").click(function(){
+		var rows = $('#dataGrid').datagrid('getChecked');
+    	if(rows.length == 0){
+			$.messager.alert("错误",  "请选择要取消的非3W调拨单！");
+			return false;
+    	}
+    	var statusValid = rows.every(function(v){
+    		return $.inArray(v.lineStatus + '', ['10','20','30','40']) > -1;
+    	});
+		if (statusValid == false) {
+			$.messager.alert("错误",  "只有状态为待录费用、待审核费用、待传LES、待出库的调拨单能执行该操作");
+			return false;
+		}
+		
+    	var reasonValid = rows.every(function(v){
+    		return $.inArray(v.transferReason + '', ['1','2']) > -1;
+    	});
+		if (reasonValid == false) {
+			$.messager.alert("错误",  "只能取消非3W调拨单");
+			return false;
+		}
+		
+		jQuery.ajax({
+			url: "/stock/cancelTransfer",   // 提交的页面
+			data: {
+				lineIds: rows.map(function(v){
+								return v.lineId
+							}).join(','),
+				isFirst: true
+			},
+			type: "POST",
+			success: function(data) {
+				$('#dataGrid').datagrid('reload');
+				$.messager.alert('提示', data.message);
+			},
+			dataType:"json"
+		});
+		
+	});
+    
+    $("#cancel3WBtn").click(function(){
+		var rows = $('#dataGrid').datagrid('getChecked');
+    	if(rows.length == 0){
+			$.messager.alert("错误",  "请选择要取消的3W调拨单！");
+			return false;
+    	}
+    	var statusValid = rows.every(function(v){
+    		return $.inArray(v.lineStatus + '', ['40']) > -1;
+    	});
+		if (statusValid == false) {
+			$.messager.alert("错误",  "只有待出库的调拨单能执行该操作");
+			return false;
+		}
+		
+    	var reasonValid = rows.every(function(v){
+    		return $.inArray(v.transferReason + '', ['4','5']) > -1;
+    	});
+		if (reasonValid == false) {
+			$.messager.alert("错误",  "只能取消3W调拨单");
+			return false;
+		}
+		
+		jQuery.ajax({
+			url: "/stock/cancel3WTransfer",   // 提交的页面
+			data: {
+				lineIds: rows.map(function(v){
+								return v.lineId
+							}).join(','),
+				isFirst: true
+			},
+			type: "POST",
+			success: function(data) {
+				$('#dataGrid').datagrid('reload');
+				if(data.data != null && data.data !==''){
+					$.messager.confirm('请确认', '存在取消物流失败的单子，是否需要系统后台自动调用物流取消接口?信息汇总如下:\n\n'+data.message,function(r){
+					    if (r){
+					    	jQuery.ajax({
+	                        	url: "/stock/addCancelQueue",
+	                        	data: "lineIds=" + data.data, 
+	                        	type: "POST", 
+	                        	success: function(result) {
+	                        		$('#dataGrid').datagrid('reload');
+	                				$.messager.alert('提示', data.message, 'info');
+	                        	}
+	            			});
+					    }
+					});
+				}else{
+					$('#dataGrid').datagrid('reload');
+					$.messager.alert('提示', data.message, 'info');
+				}
+			},
+			dataType:"json"
+		});
+	});
+    
+    $("#exportBtn").click(function() {
+    	
+    	var queryParams = {
+        	lineNum: function(){return $('#lineNum').val();},
+        	soLineNum: function(){return $('#lbx').val();},
+        	startTime: function(){return $('#startTime').val();},
+        	endTime: function(){return $('#endTime').val();},
+        	channelFrom: function(){return $('#channelFrom').combobox('getValue');},
+        	channelTo: function(){return $('#channelTo').combobox('getValue');},
+        	itemCode: function(){return $('#itemCode').val();},
+        	secFrom: function(){return $('#secFrom').val();},
+        	secTo: function(){return $('#secTo').val();},
+        	lineStatusStr: function(){return $('#lineStatus').combobox('getValues').join(',');},
+        	transferReason: function(){return $('#transferReason').combobox('getValue');}
+        };
+		$("#exportForm").form('load', queryParams).submit();
+	});
+    
+    function ppQhTransfer(reason) {
+		## $("input[name=reason]").val(reason);
+		## $('#excelForm').attr("action","/stock/excelUpload").attr("method", "get").submit();
+
+		if(reason == 1){
+			window.top.addTab('平铺',"/stock/excelUpload?reason="+reason,true);
+		}
+		else if(reason == 2){
+			window.top.addTab('缺货',"/stock/excelUpload?reason="+reason,true);
+		}
+		else if(reason == 3){
+			window.top.addTab('虚拟调拨',"/stock/excelUpload?reason="+reason,true);
+		}
+		else if(reason == 4){
+			window.top.addTab('3W调拨',"/stock/excelUpload?reason="+reason,true);
+		}else if(reason == 5){
+            window.top.addTab('优品调拨',"/stock/excelUpload?reason="+reason,true);
+        }
+		
+	}
+    
+    function onQuery(pageIndex){
+		$('#dataGrid').datagrid({
+			url: "/stock/findTransferData"
+		});
+	}
+</script>
+</body>
+</html>

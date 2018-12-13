@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Haier EIS - Enterprise Integration System</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/stock/orderworkflow.css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/jquery.ui.all.css" />
+	<script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.form.js"></script>
+	<script src="/static/third/jqueryui/jquery.ui.core.js"></script>
+	<script src="/static/third/jqueryui/jquery.ui.widget.js"></script>
+	<script src="/static/third/jqueryui/jquery.ui.mouse.js"></script>
+	<script src="/static/third/jqueryui/jquery.ui.button.js"></script>
+	<script src="/static/third/jqueryui/jquery.ui.draggable.js"></script>
+	<script src="/static/third/jqueryui/jquery.ui.position.js"></script>
+	<script src="/static/third/jqueryui/jquery.ui.resizable.js"></script>
+	<script src="/static/third/jqueryui/jquery.ui.dialog.js"></script>
+	
+	
+    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css">
+    <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    
+    
+	<script type="text/javascript">
+		
+	   var processing = false;
+       $(function(){
+	   	 $( "#dialog-message" ).dialog({
+		 	autoOpen:false,
+			modal: true,
+			closeOnEscape:false,
+			resizable:false,
+			close: function( event, ui ) {
+				if(processing)
+					$( this ).dialog( "open" );
+			},
+			minHeight:200,
+			minWidth:350,
+			buttons:{
+				'确 定':function(){
+						$(this).dialog('close');
+					  }
+			}
+		});
+	   
+	   	var options = {
+		 	url:'/stock/uploadTransferRecored',
+			type:'POST',
+		 	beforeSubmit: beforeSubmit,
+		 	timeout:3600000,
+			resetForm:true,
+			dataType:'json',
+			success:function(data) {
+				hideLoading();
+				var message = data.message;
+				$('#submitBtn').removeAttr('disabled');
+				processing = false;
+				if(data.success){
+// 					$('#errMsg').hide();
+// 					$('#message').html("成功！");
+					var msg = "<font color='red'>共导入"+data.data.total+"条记录</font>";
+					if(data.data.msg != '' && data.data.msg != null){
+						msg = msg + "<br/><font color='red'>"+data.data.msg+"</font>";
+					}
+// 					$('#total').html(msg);
+// 					$("#result").show();
+					$.messager.alert('成功', msg);
+				}else{
+// 					$('#message').html("失败！");
+// 					$('#errMsg').html("<font color='red'>"+data.message+"</font>");
+// 					$('#errMsg').show();
+// 					$("#result").hide();
+					$.messager.alert('失败', "<font color='red'>"+data.message+"</font>");
+				}
+			},
+			error:function(XMLHttpRequest, status, errorThrown){
+				hideLoading();
+				processing = false;
+// 				$('#message').html("失败!");
+				var msg = '';
+				$('#submitBtn').removeAttr('disabled');
+				if(status=='timeout'){
+					msg = "<font color='red'>超时，请稍等会去页面检查数据是否已经全部导入，不要急于再次导入，避免重复！</font>";
+				}else if(status=='error'){
+					msg = "<font color='red'>服务器繁忙或者响应失败，请稍等会去页面检查数据是否已经全部导入，不要急于再次导入，避免重复！</font>";
+				}else{
+					msg = status+"<font color='red'>异常，请稍等会去页面检查数据是否已经全部导入，不要急于再次导入，避免重复！</font>";
+				}
+// 				$('#errMsg').show();
+// 				$('#result').hide();
+				
+				$.messager.alert('失败', msg);
+			}
+		 };
+		 
+		 $("#submitBtn").click(function(){
+		 	try{
+		 		$("#filterForm").ajaxSubmit(options);
+			}catch(e){
+				alert(e.message);
+			}
+			return false;
+		 })
+		 
+		 $('#body').height($(window).height() - 30);
+		 $('#list').height($(window).height() - 169);
+	   });
+	   
+	   function beforeSubmit(){
+	   	  if(checkFile()){
+			$('#submitBtn').attr('disabled','disabled');	
+			processing = true;
+// 			$('#errMsg').html('');
+// 			$('#errMsg').hide();
+// 			$('#result').hide();
+// 			$('#dialog-message').dialog("open");
+			showLoading();
+		  }else
+		  	return false;
+	   }
+	   
+	   function checkFile()
+	   {
+	   	 var target = document.getElementById('file');
+		 var filePath = target.value;
+		 if(!filePath)
+		 {
+		 	$.messager.alert('请选择文件');
+		 	return false;
+		 }
+		 
+		 filePath = jQuery.trim(filePath);//filePath.trim();  
+         var extendName = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length);
+		 if(!extendName)
+		 {
+			 $.messager.alert("文件类型不正确，文件的扩展名必须为.xls或.XLS");
+			return false;
+		 }
+		 
+         var strRegex = "(xls|XLS)$";
+     	 var re=new RegExp(strRegex);
+     	 if (!re.test(extendName.toLowerCase())){
+     		$.messager.alert("文件格式不合法，文件的扩展名必须为.xls或.XLS格式");
+         	return false;
+       	 }
+		 return true;
+       } 
+	   
+	   
+	   function showLoading() {
+		   $.messager.progress({
+               title:'请等待',
+               msg:'正在处理...'
+           });
+       }
+	   
+	   function hideLoading(){
+		   $.messager.progress('close');
+	   }
+	   
+	   function onDownload(){
+// 			$('#download').submit();
+			window.location.href = 
+			#if($!{reason}=='1') '/stock/平铺调货模板.xls';
+			#elseif($!{reason} == '2') '/stock/缺货调货模板.xls';
+			#elseif($!{reason} == '3') '/stock/虚拟调拨模板.xls';
+			#elseif($!{reason} == '4') '/stock/3W调拨模板.xls';
+			#elseif($!{reason} == '5') '/stock/优品调拨模板.xls';
+			#end
+		}
+		function onBack(){
+			$('#backForm').submit();
+		}
+    </script>
+	<style type="text/css">
+		input{ vertical-align:middle; margin:0; padding:0}                                                          
+		.file-box{ position:relative;width:100%}                                                                   
+		.txt{ height:22px; border:1px solid #cdcdcd; width:360px;}                                                  
+		.btn{ background-color:#FFF; border:1px solid #CDCDCD;height:24px; width:70px;} 
+ 
+         .layout {
+             display: none;
+             position: absolute;
+             top: 20%;
+             left: 40%;
+             width: 20%;
+             height: 20%;
+             z-index: 1001;
+             text-align:center;
+         }
+	</style>
+</head>
+<body id="body">
+		<div class="tabbutton">
+			## <input name="typeButton" class="cur" style="border:0;cursor:default;" type="text" disabled value="#if($!{reason}=='1')导入平铺调货记录#elseif($!{reason} == '3' ) 导入虚拟调拨记录#elseif($!{reason} == '2' )  导入缺货调拨记录#elseif($!{reason} == '4' )  导入3W调拨记录#{else}类型不对无需导入记录#end" onClick="javascript:void(0);"/>
+			<span style="font-size:16px;">
+				#if($!{reason}=='1')导入平铺调货记录#elseif($!{reason} == '3' ) 导入虚拟调拨记录#elseif($!{reason} == '2' )  导入缺货调拨记录#elseif($!{reason} == '4' )  导入3W调拨记录  #elseif($!{reason} == '5' ) 导入优品调拨记录 #{else}类型不对无需导入记录#end
+			</span>
+			## <input name="typeButton" class="cur" type="button" style="position:absolute; right:80px;" value="返回" onclick="onBack()">
+		</div>
+		<!--过滤器-->
+		<fieldset style="border:0;">
+			<legend >
+				## <a href="javascript:void(0)" class="tool-toggle tool-toggle-show" style="cursor: default;"></a>
+				<span></span>
+				#if($!{reason}=='1')平铺调货记录文件
+				#elseif($!{reason} == '2') 缺货调货记录文件
+				#elseif($!{reason} == '3') 虚拟调货记录文件
+				#elseif($!{reason} == '4') 3W调货记录文件
+				#elseif($!{reason} == '5') 优品调货记录文件
+				#{else}无文件#end：
+			</legend>
+			
+    		<div class="file-box">
+                <div>
+				<form id="filterForm" name="filterForm" method="post" enctype="multipart/form-data">
+				    <span style=" display:inline-block;width:375px; overflow:hidden; position:relative; vertical-align:middle;">
+				    <input type='text' readonly="readonly" name='textfield'  id='textfield' class='txt' style="width:300px;" />  
+				    <input type='button' class='btn' style="width:60px;"  value='浏览...'/>
+				    <input id="file" style="height:24px;position:absolute;top:0;right:0;filter:alpha(opacity:0);-moz-opacity:0;opacity:0;"  name="file" type="file"  onchange="document.getElementById('textfield').value=this.value" />
+				    </span>
+				    <input type="submit"  id="submitBtn" name="submitBtn" class="btn" value="上传" />
+				    <input type="button" id="down" style=" position:absolute; top:0; right:80px;cursor:pointer;background-color:#efeded;border:0;" class="btn" value="下载模版" onclick='onDownload()'/>
+				    <input type="hidden" name="reason" value="$!{reason}">
+				</form>
+				</div>
+				
+            	<form id="backForm" action="/stock/transferManageIndex.html" method="get">
+            	</form>
+    		</div>
+		</fieldset>
+		<div id="list" class="list">
+    		<div class="well">
+    			<h3>注意</h3>
+    			<ul>
+    				<li>一次最多导入 <strong>500条</strong> .</li>
+    				<li>最大支持 <strong>5 MB</strong> .</li>
+                    <li>只支持Excel 2003(<strong>xls</strong>) .</li>
+                    <li>系统会自动跳过第一行的处理，系统默认文档有标题.</li>
+                    <li>上传中请不要关闭浏览器.</li>
+                    <li>备注可为空，其它字段信息均不能为空.</li>
+                    <li>实物（包括平铺、缺货）调拨的调入渠道不能是‘WA共享’.</li>
+    			</ul>
+    		</div>
+		</div>
+		
+</body>
+</html>

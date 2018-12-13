@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+
+
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>发票异常报表</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+</head>
+
+<body class="iframe-body">
+
+<div id="searchPanel_dmmtlPbcsMtlMeasure" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="datagrid">
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+
+<div id="datagridToolbar_dmmtlPbcsMtlMeasure">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="filterForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+			<span class="search-row-label">
+			  订单编号
+			</span>
+                <input class="easyui-textbox" name="orderSn" id="orderSn"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  网单编号
+			</span>
+                <input class="easyui-textbox" name="cOrderSn" id="cOrderSn"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  网单状态
+			</span>
+                <select class="easyui-combobox" id="status" name="status" style="width: 174px;">
+                    <option value="" selected="true">全部</option>
+                    <option value="0">处理中</option>
+                    <option value="1">已占用库存</option>
+                    <option value="2">同步到HP</option>
+                    <option value="3">同步到EC</option>
+                    <option value="4">分配网点</option>
+                    <option value="8">待出库</option>
+                    <option value="10">待审核</option>
+                    <option value="11">待转运入库</option>
+                    <option value="12">待转运出库</option>
+                    <option value="40">待发货</option>
+					<option value="150">网点拒绝</option>
+					<option value="70">待交付</option>
+                    <option value="140">用户签收</option>
+                    <option value="130">完成关闭</option>
+                    <option value="160">用户拒收</option>
+                    <option value="110">取消关闭</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  开票类型
+			</span>
+                <select class="easyui-combobox" id="makeReceiptType" name="makeReceiptType" style="width: 174px;" panelHeight="auto">
+                    <option value="" selected="true">全部</option>
+                    <option value="1">库房开票</option>
+                    <option value="2">共享开票</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  开票状态
+			</span>
+                <select class="easyui-combobox" id="isMakeReceipt" name="isMakeReceipt" style="width: 174px;">
+                    <option value="" selected="true">全部</option>
+                    <option value="1">未开票</option>
+                    <option value="9">待开票</option>
+                    <option value="5">开票中</option>
+                    <option value="6">开票失败</option>
+                    <option value="3">作废发票</option>
+                    <option value="4">冲红发票</option>
+                    <option value="10">取消开票</option>
+                    <option value="20">期初数据封存</option>
+                </select>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  下单时间
+			</span>
+                <input class="easyui-datebox" id="addTimeMin" name="addTimeMin" editable="false"/>
+            </div>
+            <div class="search-row">
+			<span class="search-row-label">
+			  至
+			</span>
+                <input class="easyui-datebox" id="addTimeMax" name="addTimeMax" editable="false"/>
+            </div>
+
+            <div class="search-row">
+			<span class="search-row-label">
+			  支付状态
+			</span>
+                <select class="easyui-combobox" id="cPaymentStatus" name="cPaymentStatus" style="width: 174px;" panelHeight="auto">
+                    <option value="" selected="true">全部</option>
+                    <option value="200">未付款</option>
+                    <option value="201">已付款</option>
+                    <option value="206">待退款</option>
+                    <option value="207">已退款</option>
+                </select>
+            </div>
+
+            <div class="search-row">
+			<span class="search-row-label">
+			  发票类型
+			</span>
+                <select class="easyui-combobox" id="invoiceType" name="invoiceType" style="width: 174px;" panelHeight="auto">
+                    <option value="" selected="true">全部</option>
+                    <option value="1">增值税发票</option>
+                    <option value="2">普通发票</option>
+                </select>
+            </div>
+
+            <div class="search-row">
+			<span class="search-row-label">
+			  发票审核状态
+			</span>
+                <select class="easyui-combobox" id="state" name="state" style="width: 174px;" panelHeight="auto">
+                    <option value="" selected="true">全部</option>
+                    <option value="0">待审核</option>
+                    <option value="1">审核通过</option>
+                    <option value="2">拒绝</option>
+                </select>
+            </div>
+
+        </div>
+        <a href="#" class="easyui-linkbutton" id="search"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="export"
+           data-options="iconCls:'icon-save',plain:true">导出</a>
+
+        <!-- 修改时传的id-->
+        <!-- 下面隐藏控件用来存放点击导出后的数据 -->
+        <input id="exportData" name="exportData" type="hidden"/>
+    </form>
+</div>
+
+<script type="text/javascript">
+
+    var datagrid;
+    var queryParameters;
+
+
+    $(function () {
+        datagrid = {
+            fit: true,
+            fitColumns: true,
+            toolbar: '#datagridToolbar_dmmtlPbcsMtlMeasure',
+            striped: true,
+            singleSelect: true,
+            pagination: true,
+
+
+
+            columns: [[
+                {title: "序号", field: "id", hidden: true},
+                {title: "操作", field: "caozuo", sortable: false},
+                {title: "订单号", field: "orderSn", sortable: false},
+                {title: "网单号", field: "cOrderSn", sortable: false},
+                {title: "库存类型", field: "stockType", sortable: false},
+                {title: "网单状态", field: "status", sortable: false},
+                {title: "网单付款状态", field: "cPaymentStatus", sortable: false},
+                {title: "付款方式", field: "paymentCode", sortable: false},
+                {title: "开票类型", field: "makeReceiptType", sortable: false},
+                {title: "开票状态", field: "isMakeReceipt", sortable: false},
+                {title: "下单时间", field: "addTime", sortable: false},
+                {title: "订单来源", field: "source", sortable: false},
+                {title: "LES出库号", field: "outping",sortable: false},
+                {title: "发票类型", field: "invoiceType",sortable: false},
+                {title: "发票审核状态", field: "state",sortable: false}
+            ]],
+            pageSize: 50,
+            pageList: [50,100,200],
+            rownumbers: true
+        }
+
+        $('#datagrid').datagrid(datagrid);
+    });
+
+    var buttons = $.extend([], $.fn.datetimebox.defaults.buttons);
+    buttons.splice(1, 0, {
+        text: '清除',
+        handler: function(target){
+            $(target).datetimebox('setValue', '');
+            $(target).combo("hidePanel");
+        }
+    });
+    $('#addTimeMin').datetimebox({buttons: buttons});
+    $('#addTimeMax').datetimebox({buttons: buttons});
+
+    $('#search').click(function () {
+
+        if(($("#orderSn").val()==null||$("#orderSn").val()=='')&&($("#cOrderSn").val()==null||$("#cOrderSn").val()=='')){
+
+            if($('#addTimeMin').datetimebox('getValue')==null||$('#addTimeMin').datetimebox('getValue')==''
+                    ||$('#addTimeMax').datetimebox('getValue')==null||$('#addTimeMax').datetimebox('getValue')==''){
+                $.messager.alert('警告','订单号、网单号为空的情况下：<br>请选择下单时间作为筛选条件，否则数据量太大！','warning');
+                return false;
+            }
+
+            if($('#addTimeMin').datetimebox('getValue')>$('#addTimeMax').datetimebox('getValue')){
+                $.messager.alert('错误','下单开始时间大于结束时间','error');
+                return false;
+            }
+
+            var sd = $('#addTimeMin').datebox('getValue').replace(/-/g, '/'), ed = $('#addTimeMax').datebox('getValue').replace(/-/g, '/');
+            var totalMS = new Date(ed).getTime() - new Date(sd).getTime();//得到相差的毫秒数
+            day = Math.ceil(totalMS / 1000 / 24 / 60 / 60);//得到相差天数，不满一天不算一天将Math.ceil改为Math.floor
+            if(day>31){
+                $.messager.alert('错误','下单时间范围不能超过31天!','error');
+                return false;
+            }
+        }
+
+        queryParameters = {
+            orderSn:$("#orderSn").val(),
+            cOrderSn:$("#cOrderSn").val(),
+            cPaymentStatus:$("#cPaymentStatus").combobox('getValue'),
+            status:$("#status").combobox('getValue'),
+            makeReceiptType:$("#makeReceiptType").combobox('getValue'),
+            isMakeReceipt:$("#isMakeReceipt").combobox('getValue'),
+            invoiceType:$("#invoiceType").combobox('getValue'),
+            state:$("#state").combobox('getValue'),
+            addTimeMin:$("#addTimeMin").datetimebox('getValue'),
+            addTimeMax:$("#addTimeMax").datetimebox('getValue'),
+            nowDate:new Date()
+        };
+
+            datagrid = $('#datagrid').datagrid({
+                url: "/invoiceException/getInvoiceExceptionList.html",
+                fit: true,
+                pagination: true,
+                singleSelect: true,
+                pageSize: 100,
+                pageList: [100,200,300],
+                nowrap: true,
+                rownumbers: true,
+                singleSelect: false,
+                selectOnCheck: true,
+                checkOnSelect: true,
+                queryParams:queryParameters,
+                columns: [
+                    [
+
+                        {
+                            field: 'id',
+                            title: '序号',
+                            align: 'center',
+                            hidden:true
+                        },
+                        {
+                            field: 'orderSn',
+                            title: '订单号',
+                            align: 'center'
+                        },
+                        {
+                            field: 'cOrderSn',
+                            title: '网单号',
+                            align: 'center'
+                        },
+                        {
+                            field: 'stockType',
+                            title: '库存类型',
+                            align: 'center'
+                        },
+                        {
+                            field: 'status',
+                            title: '网单状态',
+                            align: 'center'
+                        },
+                        {
+                            field: 'cPaymentStatus',
+                            title: '网单付款状态',
+                            align: 'center'
+                        },
+                        {
+                            field: 'paymentCode',
+                            title: '付款方式',
+                            align: 'center'
+                        },
+                        {
+                            field: 'makeReceiptType',
+                            title: '开票类型',
+                            align: 'center'
+                        },
+                        {
+                            field: 'isMakeReceipt',
+                            title: '开票状态',
+                            align: 'center'
+                        },
+                        {
+                            field: 'addTime',
+                            title: '下单时间',
+                            align: 'center'
+                        },
+                        {
+                            field: 'source',
+                            title: '订单来源',
+                            align: 'center'
+                        },
+                        {
+                            field: 'outping',
+                            title: 'LES出库号',
+                            align: 'center'
+                        },
+                        {
+                            field: 'invoiceType',
+                            title: '发票类型',
+                            align: 'center'
+                        },
+                        {
+                            field: 'state',
+                            title: '发票审核状态',
+                            align: 'center'
+                        }
+                    ]
+                ]
+            });
+
+    });
+    //点击导出
+    $('#export').click(function(){
+        if(!datagrid){
+            $.messager.alert('提示','请查询！','info');
+            return;
+        }
+        $.messager.confirm('确认','确定要导出吗？', function(r){
+            if (r){
+                $('#exportData').val(JSON.stringify(queryParameters));
+                $('#filterForm').attr("action", '/invoiceException/exportInvoiceExceptionList.html');
+                $('#filterForm').submit();
+            }
+        });
+    });
+
+</script>
+</body>

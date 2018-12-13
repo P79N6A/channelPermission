@@ -4,7 +4,7 @@
 
     <select id="getCustomerCode" parameterType="String" resultType="String">
         select `code`
-        from `CustomerCodes`
+        from `customercodes`
         where `title` = #{title}
     </select>
     <resultMap id="customerCodesResult" type="com.haier.shop.model.CustomerCodes">
@@ -17,7 +17,7 @@
     </resultMap>
     <select id="getByTitle" parameterType="Integer" resultMap="customerCodesResult">
         select `id`,`siteId`,`addTime`,`code`,`title`,`updateTime`
-        from `CustomerCodes`
+        from `customercodes`
         where `title` = #{title}
     </select>
 

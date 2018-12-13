@@ -59,6 +59,12 @@ public class Regions implements Serializable{
     private String col04;
     
     private String col05;
+    
+    private String province;
+    
+    private String city;
+    
+    private String region;
 
 	public Integer getId() {
 		return id;
@@ -272,8 +278,32 @@ public class Regions implements Serializable{
 	public void setCol05(String col05) {
 		this.col05 = col05;
 	}
-    
 
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+    
+	
     
    
 

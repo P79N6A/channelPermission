@@ -38,22 +38,22 @@
 
 	<select id="get" resultMap="orderProductsAttributesResult">
 		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
-		from OrderProductsAttributes where `id`=#{id} 
+		from orderproductsattributes where `id`=#{id}
 	</select>
 
 	<select id="getByOrderProductId" resultMap="orderProductsAttributesResult">
 		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
-		from OrderProductsAttributes where `order_product_id`=#{orderProductId} 
+		from orderproductsattributes where `order_product_id`=#{orderProductId}
 	</select>
 	
 	<select id="getByOrderIdAndOid" resultMap="orderProductsAttributesResult">
 		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
-		from OrderProductsAttributes where `order_id`=#{orderId} and `oid`=#{oid} 
+		from orderproductsattributes where `order_id`=#{orderId} and `oid`=#{oid}
 	</select>
 	
 	<select id="getByCondition" parameterType="Map" resultMap="orderProductsAttributesResult">
 		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
-		from OrderProductsAttributes 
+		from orderproductsattributes
 		where 1=1 
 		<if test="orderId != null">
 		and `order_id`=#{orderId} 
@@ -67,14 +67,14 @@
 	</select>
 
 	<select id="isSelfSellByOrderSn" resultType="Integer">
-		SELECT oa.`is_self_sell` FROM OrderProducts o , OrderProductsAttributes oa
+		SELECT oa.`is_self_sell` FROM orderproducts o , orderproductsattributes oa
 		WHERE o.`id` = oa.`order_product_id`
 		and o.`cOrderSn` = #{orderSn}
 	</select>
 	
 	<select id="getByOrderOrderId" resultMap="orderProductsAttributesResult">
 		select `id`,`order_product_id`,`order_id`,`commission_proportion`,`platform_proportion`,`oid`,`is_nofrozenstock`,`create_time`,`update_time`,`tb_order_sn`,`is_tz`,`tz_sku`,`is_self_sell`,`customer_id`,`is_cd`,`is_dispatching`,`diamond_count`,`diamond_amt`,`diamond_commi_settle`,`diamond_payment_settle`,`diamond_billing`,`seashell_count`,`seashell_amt`,`seashell_commi_settle`,`seashell_payment_settle`,`seashell_billing`,`insurance_count`,`insurance_amt`,`insurance_commi_settle`,`insurance_payment_settle`,`insurance_billing`
-		from OrderProductsAttributes where `order_id`=#{orderId} 
+		from orderproductsattributes where `order_id`=#{orderId}
 	</select>
 
 </mapper>

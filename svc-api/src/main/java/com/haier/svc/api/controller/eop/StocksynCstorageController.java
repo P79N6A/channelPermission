@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
@@ -60,6 +61,37 @@ public class StocksynCstorageController {
     		   sse, sku, sourceProductId, sCode, sourceStoreCode,
     		   stockSyncResult, addTimeStart, addTimeEnd);
   }
+
+	//菜单配置显示天猫库存同步日志
+	@RequestMapping("/TmStockSyncLogList")
+	public String showTmCommissionList1() {
+
+		return "eop/monitoring/TmStockSyncLogList";
+	}
+	/**
+	 * 天猫库存同步日志
+	 *
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	@RequestMapping(value = "/TmlogListF", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject TmLogList(@RequestParam("page") int page,
+								@RequestParam("rows") int rows,
+								@RequestParam("sse") String sse,
+								@RequestParam("sku") String sku,
+								@RequestParam("sCode") String sCode,
+								@RequestParam("stockSyncResult") String stockSyncResult,
+								@RequestParam("addTimeStart") String addTimeStart,
+								@RequestParam("addTimeEnd") String addTimeEnd) {
+		page = page == 0 ? 1 : page;
+		PagerInfo pager = new PagerInfo(rows, page);
+
+		return eopCenterStockSyncLogService.TmLogListf(pager,
+				sse, sku, sCode, stockSyncResult,
+				addTimeStart, addTimeEnd);
+	}
   /**
    * 商品
    * @param page

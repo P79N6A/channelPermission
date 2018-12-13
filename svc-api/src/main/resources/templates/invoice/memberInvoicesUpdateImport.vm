@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
+
+    <title>会员发票信息修改</title>
+
+##    <style type="text/css">
+##        .dlg{
+##            width:400px;
+##            height:100px;
+##            padding:10px;
+##            margin-top:20px;
+##        }
+##        .easyui-panel{
+##            overflow-x: show;
+##        }
+##    </style>
+</head>
+<body class="iframe-body">
+
+<div id="content" class="span10">
+    <div class="row-fluid sortable ui-sortable">
+        <div class="box span12">
+            <div data-original-title="" class="box-header well">
+                <h2>会员发票信息批量修改</h2>
+            </div>
+            <div class="box-content">
+                <div role="grid" class="dataTables_wrapper" id="DataTables_Table_0_wrapper">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="file-box dataTables_length">
+                                <form id="importForm" name="importForm" method="post" enctype="multipart/form-data">
+                                    <span>发票信息数据文件:</span>
+                                    <input readonly="readonly" name='textfield' id='textfield' style="width:280px" onclick="document.getElementById('file').click();"/>
+
+                                    <a href="javascript:void(0);" class="easyui-linkbutton" id="btnSearch" onclick="document.getElementById('file').click();"
+                                       data-options="iconCls:'icon-add',plain:true">选择</a>
+
+                                    <a href="javascript:void(0);" class="easyui-linkbutton" id="btnback" onclick="f();"
+                                       data-options="iconCls:'icon-back',plain:true">导入</a>
+
+                                    <input id="file" name="file" type="file" style="display:none" onchange="document.getElementById('textfield').value=this.value" />
+
+##                                    <a title="下载模版" href="#" class="btn" onclick="downloadExcel();"><i class="icon-download-alt"></i> 下载模版</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="dialog-message"  class="easyui-dialog" title="请稍后" closed="true" style="display:none;">
+    <div id="layout" class="layout">
+        <img src="/static/img/loading.gif"  />
+    </div>
+    <h4 id="message" ></h4>
+</div>
+
+
+
+<!-- 需引入的js -->
+
+<script src="/static/third/easyui/jquery.min2.js"></script>
+<script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+<script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script src="/static/third/easyui/glo.js"></script>
+<script src="/static/third/easyui/comm.js"></script>
+<script src="/static/third/easyui/commgrid.js"></script>
+<script src="/static/third/easyui/jQuery.Form.js"></script>
+<script src="/static/js/pop/common/pop.js"></script>
+<script src="/static/js/bootstrap-datepicker.js"></script>
+
+<script type="text/javascript">
+
+    $(function(){
+        $( "#dialog-message" ).dialog({
+            autoOpen:false,
+            modal: true,
+            closeOnEscape:false,
+            resizable:true,
+            width:500,
+            height:300,
+            close: function( event, ui ) {
+                $( "#dialog-message" ).dialog( "close" );
+            }
+        });
+        $('#body').height($(window).height());
+
+    });
+    function beforeSubmit(){
+        $('#btnback').attr('disabled','disabled');
+        $('#dialog-message').dialog("open");
+        $('#dialog-message').window('center');
+        showLoading();
+    }
+
+    function showLoading() {
+        $('#message').html('');
+        $('#dialog-message').panel({
+            title : "第1次处理中"
+        });
+        document.getElementById("layout").style.display = "block";
+    }
+
+    function beforeSubmit2(){
+        $('#btnback').attr('disabled','disabled');
+        $('#dialog-message').dialog("open");
+        $('#dialog-message').window('center');
+        showLoading2();
+    }
+
+    function showLoading2() {
+        $('#message').html('');
+        $('#dialog-message').panel({
+            title : "第2次处理中"
+        });
+        document.getElementById("layout").style.display = "block";
+    }
+
+    function hideLoading(){
+        $('#dialog-message').dialog("open");
+        $('#dialog-message').panel({
+            title : "提示"
+        });
+        document.getElementById("layout").style.display = "none";
+    }
+
+
+    function f() {
+        beforeSubmit();
+        var formData = new FormData($("#importForm")[0]);
+        // console.log(formData);
+        $.ajax({
+            async: true,
+            cache: false,
+            type: "post",
+            // beforeSend:beforeSubmit,
+            data: formData,
+            url:'/invoice/checkMemberInvoicesUpdate',
+            dataType: 'json',
+            timeout:360000,
+            contentType: false, //必须
+            processData: false, //必须
+            success: function (data) {
+                $( "#dialog-message" ).dialog( "close" );
+                // console.log(data);
+                var json=data.data;
+                var message = data.message;
+                if(json==null || json=="" || json=="undefined"){
+                    hideLoading();
+                    $('#message').html(message);
+                }else{
+                    if(data.totalCount==1){
+                        $( "#dialog-message" ).dialog( "close" );
+                        var r=confirm(message+"是否继续执行？")
+                        if(r==true){
+                            beforeSubmit2();
+                            $.ajax({
+                                type: "POST",
+                                url:"/invoice/importMemberInvoicesUpdate",
+                                type:'POST',
+                                datatype : "json",
+                                async:true,
+                                data:{"json":json},
+                                resetForm:true,
+                                clearForm:true,
+                                timeout:360000,
+                                error: function(request) {
+                                    hideLoading();
+                                    $('#message').html("修改失败!");
+                                    $('#submit').removeAttr('disabled');
+                                    $("#file").val("");//清空文件域
+                                    $("#textfield").val("");//清空文件域
+                                },
+                                success: function(data) {
+                                    hideLoading();
+                                    var message = data.message;
+                                    processing = false;
+                                    $('#message').html(message);
+                                }
+                            });
+                        }
+                    }else{
+                        hideLoading();
+                        $('#message').html(message);
+                    }
+                }
+
+
+
+            },
+            error: function (data) {
+                hideLoading();
+                $('#message').html("处理失败!");
+                $('#submit').removeAttr('disabled');
+                $("#file").val("");//清空文件域
+                $("#textfield").val("");//清空文件域
+            }
+        });
+    }
+
+
+    //下载模板
+    function downloadExcel(){
+        window.location.href="/invoice/downloadMemberInvoicesUpdateTemplate";
+    }
+
+
+</script>
+</body>
+</html>

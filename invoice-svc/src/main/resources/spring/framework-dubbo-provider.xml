@@ -9,18 +9,23 @@
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!--广播注册中心暴露服务地址 -->
-  <!--  <dubbo:registry id="invoiceRegistry" address="zookeeper://127.0.0.1:2181"/>-->
+    <!--<dubbo:registry id="invoiceRegistry" address="zookeeper://127.0.0.1:2181"/>-->
+  
     <!--  暴露服务 -->
+    <dubbo:service retries="0" interface="com.haier.invoice.service.ZfbOrderDetailsService"
+                   ref="zfbOrderDetailsServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.TransactionSapService"
+                   ref="transactionSapServiceImpl" version="1.0.0" timeout="120000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.BatchUpdateEInvoiceService"
-                   ref="batchUpdateEInvoiceServiceImpl" version="1.0.0" timeout="120000"/>
+                   ref="batchUpdateEInvoiceServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.BatchUpdateTaxInfoService"
-                   ref="batchUpdateTaxInfoServiceImpl" version="1.0.0" timeout="120000"/>
+                   ref="batchUpdateTaxInfoServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.BatchBillEInvoiceService"
-                   ref="batchBillEInvoiceServiceImpl" version="1.0.0" timeout="120000"/>
+                   ref="batchBillEInvoiceServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.BatchInvalidEInvoiceService"
-                   ref="batchInvalidEInvoiceServiceImpl" version="1.0.0" timeout="120000"/>
+                   ref="batchInvalidEInvoiceServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.BatchRebillEInvoiceService"
-                   ref="batchRebillEInvoiceServiceImpl" version="1.0.0" timeout="120000"/>
+                   ref="batchRebillEInvoiceServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.CancelInvoicesService"
                    ref="cancelInvoicesServiceImpl" version="1.0.0" timeout="120000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.GetCustomerCodeService"
@@ -28,11 +33,41 @@
     <dubbo:service retries="0" interface="com.haier.invoice.service.InvalidInvoicesService"
                    ref="invalidInvoicesServiceImpl" version="1.0.0" timeout="120000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.InvoiceCommonService"
-                   ref="invoiceCommonServiceImpl" version="1.0.0" timeout="120000"/>
-    <!--<dubbo:service retries="0" interface="com.haier.invoice.service.InvoiceExceptionService"-->
-                   <!--ref="invoiceExceptionServiceImpl" version="1.0.0" timeout="120000"/>-->
+                   ref="invoiceCommonServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.InvoiceExceptionService"
+                   ref="invoiceExceptionServiceImpl" version="1.0.0" timeout="120000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.ResendInvoicesService"
                    ref="resendInvoicesServiceImpl" version="1.0.0" timeout="120000"/>
     <dubbo:service retries="0" interface="com.haier.invoice.service.SyncStatusInvoicesService"
                    ref="syncStatusInvoicesServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.OdsTMFXPointMaintainService"
+                   ref="odsTMFXPointMaintainServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.OdsTMFXPromotionCostService"
+                   ref="odsTMFXPromotionCostServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.SNOdsTMFXPromotionCostService"
+                   ref="SNOdsTMFXPromotionCostServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.OdsGatePriceService"
+                   ref="odsGatePriceServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.DistributionDetailsService"
+                   ref="distributionDetailsServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.OdsTMFXTargetMaintainService"
+      ref="odsTMFXTargetMaintainServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.OdsTMFXRebatesSummaryService"
+      ref="odsTMFXRebatesSummaryServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.OdsTMFXRebatesMonthlyDetailService"
+                   ref="odsTMFXRebatesMonthlyDetailServiceImpl"  version="1.0.0"  timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.SettlementInvoiceService"
+                   ref="settlementInvoiceServiceImpl"  version="1.0.0"  timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.OdsTMFXPeculiarCategoryService"
+                   ref="odsTMFXPeculiarCategoryServiceImpl"  version="1.0.0"  timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.OdsGateGrossprofitService"
+                   ref="odsGateGrossprofitServiceImpl"  version="1.0.0"  timeout="120000"/>
+	<dubbo:service retries="0" interface="com.haier.invoice.service.TradingFlowSerivce"
+                   ref="tradingFlowServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.SNOdsTMFXTargetMaintainService"
+     			   ref="SNOdsTMFXTargetMaintainServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.SNOdsTMFXPointMaintainService"
+     			   ref="SNOdsTMFXPointMaintainServiceImpl" version="1.0.0" timeout="120000"/>
+    <dubbo:service retries="0" interface="com.haier.invoice.service.SNOdsTMFXRebatesMonthlyDetailService"
+                   ref="SNOdsTMFXRebatesMonthlyDetailServiceImpl"  version="1.0.0"  timeout="120000"/>
 </beans>

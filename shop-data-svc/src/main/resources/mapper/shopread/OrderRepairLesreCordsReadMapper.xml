@@ -18,6 +18,8 @@
     <result column="success" property="success" jdbcType="TINYINT" />
     <result column="opCancelFlag" property="opCancelFlag" jdbcType="TINYINT" />
     <result column="addTimeTs" property="addTimeTs" jdbcType="VARCHAR" />
+    <result column="lesOutPingTimeTs" property="lesOutPingTimeTs" jdbcType="VARCHAR" />
+    <result column="lesOrderSnTimeTS" property="lesOrderSnTimeTS" jdbcType="VARCHAR" />
   </resultMap>
 	<resultMap id="orderRepairLESRecordsResult" type="com.haier.shop.model.OrderRepairLESRecords">
 		<result property="id" column="id" />
@@ -44,43 +46,48 @@
 	</resultMap>
   <select id="get" parameterType="Integer" resultMap="orderRepairLESRecordsResult">
 		select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`recordSn`,`operate`,`storageType`,`lesOrderSn`,`lesOutPing`,`lesOutPingTime`,`sCode`,`success`
-		from `OrderRepairLESRecords`
+		from `orderrepairlesrecords`
 		where `id` = #{id}
 	</select>
 	<select id="getByRecordSn" parameterType="map" resultMap="orderRepairLESRecordsResult">
 		select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`recordSn`,`operate`,`storageType`,`lesOrderSn`,`lesOutPing`,`lesOutPingTime`,`sCode`,`success`
-		from `OrderRepairLESRecords`
+		from `orderrepairlesrecords`
 		where `recordSn` = #{recordSn} 
 		order by id desc
 		limit 1
 	</select>
 	<select id="queryLesreCodrdsId" parameterType="java.lang.String" resultMap="BaseResultMap">
 	 SELECT
+		 id,
 		from_unixtime(addTime) addTimeTs,
 		operate,
 		storageType,
 		lesOrderSn,
-		lesOrderSnTime
+		from_unixtime(lesOrderSnTime) lesOrderSnTimeTS,
+		lesOutPing,
+		from_unixtime(lesOutPingTime) lesOutPingTimeTs,
+		success,
+		recordSn
 	FROM
-		OrderRepairLESRecords
+		orderrepairlesrecords
 	WHERE
 		orderRepairId = #{id}
   </select>
 	<select id="countOrderChangesByOperate" parameterType="map" resultType="int">
 		select count(*)
-		from `OrderRepairLESRecords`
+		from `orderrepairlesrecords`
 		where `orderProductId` = #{orderProductId} and `operate`=#{operate}
 	</select>
 	<select id="getByLesOrderSn" resultMap="orderRepairLESRecordsResult">
 	  select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`recordSn`,`operate`,`storageType`,
 		`lesOrderSn`,`lesOutPing`,`lesOutPingTime`,`sCode`,`success`
-		from `OrderRepairLESRecords`
+		from `orderrepairlesrecords`
 		where `lesOrderSn` = #{lesOrderSn} and recordSn=#{cOrderSn} limit 1
 	</select>
 	<select id="queryLesRecords" parameterType="com.haier.shop.model.OrderRepairLESRecords" resultMap="orderRepairLESRecordsResult">
 		select `id`,`siteId`,`addTime`,`orderProductId`,`orderRepairId`,`recordSn`,`operate`,`storageType`,
 		`lesOrderSn`,`lesOutPing`,`lesOutPingTime`,`sCode`,`success`
-		from `OrderRepairLESRecords`
+		from `orderrepairlesrecords`
 		where `orderRepairId` = #{orderRepairId} 
 		<if test="operate != null">
 			and operate = #{operate} 
@@ -94,11 +101,11 @@
 	</select>
 	<select id="queryUNSucCancelLesRecordsCnt" resultType="int">
 		select count(*)
-		from `OrderRepairLESRecords` where `orderRepairId`=#{orderRepairId} and `operate`=#{operate}
+		from `orderrepairlesrecords` where `orderRepairId`=#{orderRepairId} and `operate`=#{operate}
 		and `storageType`=#{storageType} and `success` != 2
 	</select>
     <select id="getWaitforCancelOP" resultMap="orderRepairLESRecordsResult">
-    	select * from OrderRepairLESRecords 
+    	select * from orderrepairlesrecords
     	where 
     	opCancelFlag = 0 and lesOutPing != '' 
     	and lesOutPingTime > 0 
@@ -129,14 +136,52 @@
 		r.pushFailNumber,
 		s.repairSn
 	FROM
-		OrderRepairLESRecords r,
-		OrderProducts p,
-		OrderRepairs s
+		 orderrepairlesrecords r,
+		 orderproducts p,
+		 orderrepairs s
 	WHERE
 		r.orderProductId = p.id
 	AND r.orderRepairId = s.id
+	and s.handleStatus != '6'
 	AND r.falg in ('0','2')
 	and r.PushFailNumber <![CDATA[  < ]]>10
+	AND p.shippingMode != 'B2C'
+    </select>
+	<select id="queryOutofStorageByRepairid" resultMap="orderRepairLESRecordsResult">
+     SELECT
+		r.id,
+		r.orderProductId,
+		r.orderRepairId,
+		r.recordSn,
+		r.operate,
+		r.storageType,
+		r.lesOrderSn,
+		r.lesOrderSnTime,
+		r.lesOutPing,
+		r.lesOutPingTime,
+		r.sCode,
+		r.success,
+		r.opCancelFlag,
+		r.falg,
+		p.productId,
+		p.price,
+		p.number,
+		p.productName,
+		p.sku,
+		r.pushFailNumber,
+		s.repairSn
+	FROM
+		 orderrepairlesrecords r,
+		 orderproducts p,
+		 orderrepairs s
+	WHERE
+		r.orderProductId = p.id
+	AND r.orderRepairId = s.id
+	and s.handleStatus != '6'
+	AND r.falg in ('0','2')
+	and r.PushFailNumber <![CDATA[  < ]]>10
+	AND p.shippingMode != 'B2C'
+	and s.id = #{orderRepairsId}
     </select>
 	<select id="queryRecordSn" resultMap="BaseResultMap" parameterType="java.lang.String">
 	 SELECT
@@ -145,10 +190,165 @@
 		orderRepairId,
 		recordSn,
 		operate,
-		storageType
+		storageType,
+		success
 	FROM
-		OrderRepairLESRecords
+		orderrepairlesrecords
 	WHERE
-		orderRepairId = #{orderRepairId}
+		operate =#{operate}
+	and storageType=#{storageType}
+	and	orderRepairId = #{orderRepairId}
 	 </select>
+	<select id="queryNotLesOrder" resultMap="BaseResultMap" >
+	 SELECT
+		id,
+		orderProductId,
+		orderRepairId,
+		recordSn,
+		operate,
+		storageType,
+		success
+	FROM
+		orderrepairlesrecords
+	WHERE lesOrderSn is null
+	  limit 1000
+	 </select>
+	 
+	<select id="queryStorageType" resultMap="orderRepairLESRecordsResult">
+		SELECT
+		  l.siteId,
+		  l.addTime,
+		  l.orderProductId,
+		  l.orderRepairId,
+		  l.recordSn,
+		  l.operate,
+		  l.storageType,
+		  l.lesOrderSn,
+		  l.lesOrderSnTime,
+		  l.lesOutPing,
+		  l.lesOutPingTime,
+		  l.sCode,
+		  l.success,
+		  l.opCancelFlag,
+		  l.falg,
+		  l.failReason,
+		  l.pushFailNumber
+		FROM orderrepairlesrecords l,
+		orderrepairs r,
+		orderrepairhprecords h
+		WHERE
+		  l.orderRepairId = r.id
+		  AND l.operate = '2'
+		  AND l.storageType IN ('10', '41')
+		  AND l.falg = '1'
+		  AND r.handleStatus != '6'
+		  AND  r.id = h.orderRepairId
+		  AND h.quality ='2'
+		AND  r.storageStatus NOT  IN ('110','141')
+	</select>
+	<select id="b2cqueryStorageType" resultMap="orderRepairLESRecordsResult">
+		SELECT
+		  l.siteId,
+		  l.addTime,
+		  l.orderProductId,
+		  l.orderRepairId,
+		  l.recordSn,
+		  l.operate,
+		  l.storageType,
+		  l.lesOrderSn,
+		  l.lesOrderSnTime,
+		  l.lesOutPing,
+		  l.lesOutPingTime,
+		  l.sCode,
+		  l.success,
+		  l.opCancelFlag,
+		  l.falg,
+		  l.failReason,
+		  l.pushFailNumber
+		FROM orderrepairlesrecords l,
+		orderrepairs r,
+      orderproducts p
+		WHERE
+		  l.orderRepairId = r.id
+        AND r.orderProductId = p.id
+        AND p.shippingMode = 'B2C'
+		  AND l.operate = '2'
+		  AND l.storageType = '10'
+		  AND l.falg = '1'
+		  AND r.handleStatus != '6'
+		AND  r.storageStatus != '110'
+	</select>
+	
+	<select id="queryTransferBatch" parameterType="java.lang.String" resultMap="orderRepairLESRecordsResult">
+	SELECT
+		r.id,
+		r.orderProductId,
+		r.orderRepairId,
+		r.recordSn,
+		r.operate,
+		r.storageType,
+		r.lesOrderSn,
+		r.lesOrderSnTime,
+		r.lesOutPing,
+		r.lesOutPingTime,
+		r.sCode,
+		r.success,
+		r.opCancelFlag,
+		r.falg,
+		p.productId,
+		p.price,
+		p.number,
+		p.productName,
+		p.sku,
+		r.pushFailNumber,
+		s.repairSn
+	FROM
+		orderrepairlesrecords r,
+		orderproducts p,
+		orderrepairs s
+	WHERE
+		r.orderProductId = p.id
+	AND r.orderRepairId = s.id
+	and s.handleStatus != '6'
+	AND r.falg in ('0','2')
+	AND s.id =#{orderRepairsId}
+	</select>
+
+	<select id="queryRepairLesOrder" parameterType="java.lang.String" resultMap="orderRepairLESRecordsResult">
+	SELECT
+		r.id,
+		r.orderProductId,
+		r.orderRepairId,
+		r.recordSn,
+		r.operate,
+		r.storageType,
+		r.lesOrderSn,
+		r.lesOrderSnTime,
+		r.lesOutPing,
+		r.lesOutPingTime,
+		r.sCode,
+		r.success,
+		r.opCancelFlag,
+		r.falg,
+		p.productId,
+		p.price,
+		p.number,
+		p.productName,
+		p.sku,
+		r.pushFailNumber,
+		s.repairSn
+	FROM
+		orderrepairlesrecords r,
+		orderproducts p,
+		orderrepairs s
+	WHERE
+		r.orderProductId = p.id
+	AND r.orderRepairId = s.id
+	AND s.id =#{orderRepairsId}
+	</select>
+	<select id="queryStorageRegion" parameterType="java.lang.String" resultType="java.util.Map">
+	 SELECT storage_code, province, city, region, adress, zip_code, contact, tel
+      FROM storage_region r
+      WHERE r.storage_code = #{code}
+  </select>
 </mapper>

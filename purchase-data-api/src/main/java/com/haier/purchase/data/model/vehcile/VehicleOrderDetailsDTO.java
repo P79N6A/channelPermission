@@ -46,6 +46,10 @@ public class VehicleOrderDetailsDTO extends BaseDTO {
     private String vbelnStatus;//85单号状态
     private String lbx;
     private Date zspdt;//lbx入库时间
+    private String lbxErrMsg; //lbx错误信息
+    
+    private Date startOrderTime;//查询用，用来关联父表时间
+    private Date endOrderTime;//查询用，用来关联父表时间
 
     public Long getItemId() {
         return itemId;
@@ -372,6 +376,30 @@ public class VehicleOrderDetailsDTO extends BaseDTO {
 
 	public void setVbelnSpare(String vbelnSpare) {
 		this.vbelnSpare = vbelnSpare;
+	}
+
+    public String getLbxErrMsg() {
+        return lbxErrMsg;
+    }
+
+    public void setLbxErrMsg(String lbxErrMsg) {
+        this.lbxErrMsg = lbxErrMsg;
+    }
+
+	public Date getStartOrderTime() {
+		return startOrderTime;
+	}
+
+	public void setStartOrderTime(Date startOrderTime) {
+		this.startOrderTime = startOrderTime;
+	}
+
+	public Date getEndOrderTime() {
+		return endOrderTime;
+	}
+
+	public void setEndOrderTime(Date endOrderTime) {
+		this.endOrderTime = endOrderTime;
 	}
 }
 

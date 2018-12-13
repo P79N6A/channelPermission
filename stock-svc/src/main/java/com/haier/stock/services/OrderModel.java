@@ -110,6 +110,9 @@ public class OrderModel {
     private StockCenterPayCenterFallBackService payCenterFallBackService;
     @Autowired
     private OrderRepairHPRecordsnNewService orderRepairHPRecordsnNewService;
+
+    @Autowired
+    private OrdersNewService ordersNewService;
     private static final String RAS_PRIVATE_KEY = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBALEOFaUEqEG7cfWcv0SLpHlQmr3qIiFH3ttwBVmnffwF/9xVp2zAZCbgOFDPu+tCedXgEWD13d2W6xG/qp8vhe+Oqo93+J19LnajRyjyGkmDH+pzCn5aS7D7SZ/j1cIu2CuNQNwj9IFmGEEASgimRhHeFnGGfY7PzZqI3XRlzbr/AgMBAAECgYBKTKzMmQ26t9x0w5iIPUmCF084jz5PVQeycmnsW5tE3YengNJHktz0a3d2ghZL/ZN/Kw5f8A1w5dozkokZUCoV0Mpd63JE0BZF9LQH7vJpHSC8MaPHntXB4di9O2//A8KrWDzz8f0lNcnw9vxvDzL3VnAUIiIaFkCwEhcToOJwsQJBANZR47SMc+KziSmg+F8d7dR6mFCczmrB1BEMcASEf45Ij6JFwuU67s1Z5ZmTSH2sFWGJKUEUy20v3oXVyBwCkaMCQQDTfO4PRAWwMidwXAhyH7X/KjuRQTMtuXpl/3ZRF5AAQSD7h0gYRV+1SoQgT4UXQBlnbV4k2KEzkHBiDuYhj971AkAaPykdwV2n08jmejowm9+2d9UTekClPluUQuutAfUFHcnJW7XEkPUR3QKLTkhAa8SqjzuoJr3K/2PHDClXlND1AkB3uZjXYY3K0onLLP7HBLa2TkVMlNmRQBhPl9B2Vd16l2RBoLMqslNdQWMNG5dfszTufVa3iz+u/kzw5jhXtaflAkAb/IPuTy3afvI7f04alHqkSDRQuDoO0QP0dTCQbih0kFPItNGB/l0J86fbGYiF4Uiugdm1aGUJ9dwKR8uO2aMx";
     @SuppressWarnings("serial")
     private static Map<Integer, String> orderStatusMap = new HashMap<Integer, String>() {
@@ -301,14 +304,22 @@ public class OrderModel {
 
         //3W-更新'订单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-27
         //3W-更新'网单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-28
-        OrdersAttributes ordersAttributes = null;
+        //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+        //OrdersAttributes ordersAttributes = null;
+        //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 end
+
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
         //'网单扩展属性表'
-        OrderProductsAttributes orderProductsAttributes = orderProductsAttributesService
-                .getByOrderProductId(orderProduct.getId());
+        /*OrderProductsAttributes orderProductsAttributes = orderProductsAttributesService
+                .getByOrderProductId(orderProduct.getId());*/
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
         if (orderProduct.getStockType() != null
                 && orderProduct.getStockType().equalsIgnoreCase("3W")) {
+
+            //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
             //'订单扩展属性表'
-            ordersAttributes = ordersAttributesService.getByOrderId(Integer.valueOf(order.getId()));
+            /*ordersAttributes = ordersAttributesService.getByOrderId(Integer.valueOf(order.getId()));
             if (ordersAttributes == null) {
                 log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "],order.id["
                         + order.getId() + "]没有查到[订单扩展属性信息]");
@@ -316,9 +327,12 @@ public class OrderModel {
                 result.setMessage("CaiNiao网单出库：order.id[" + order.getId() + "]在[订单扩展属性表]没有查到");
                 return result;
             }
-            ordersAttributes.setLbx(cainiaoMap.get("lbxSn"));
+            ordersAttributes.setLbx(cainiaoMap.get("lbxSn"));*/
+            order.setLbxSn(cainiaoMap.get("lbxSn"));
+            //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
 
-            if (orderProductsAttributes == null) {
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+            /*if (orderProductsAttributes == null) {
                 log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "],orderProduct.id["
                         + orderProduct.getId() + "]没有查到[网单扩展属性信息]");
                 result.setResult(false);
@@ -326,7 +340,9 @@ public class OrderModel {
                         "CaiNiao网单出库：orderProduct.id[" + orderProduct.getId() + "]在[网单扩展属性表]没有查到");
                 return result;
             }
-            orderProductsAttributes.setTbOrderSn(cainiaoMap.get("tbOrderSn"));
+            orderProductsAttributes.setTbOrderSn(cainiaoMap.get("tbOrderSn"));*/
+            orderProduct.setTbOrderSn(cainiaoMap.get("tbOrderSn"));
+            //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
 
             //更新网单相关数据（3W订单没有HP相关业务逻辑，导致网单有的没有数据，但后续业务需要）
             orderProduct.setSCode(cainiaoMap.get("sCode"));
@@ -414,16 +430,26 @@ public class OrderModel {
             //3W-更新'订单扩展属性表'，仅3W菜鸟出库时候 XinM 2016-9-27
             if (orderProduct.getStockType() != null
                     && orderProduct.getStockType().equalsIgnoreCase("3W")) {
-                int n = ordersAttributesService.update(ordersAttributes);
+
+                //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+                //int n = ordersAttributesService.update(ordersAttributes);
+                int n = ordersNewDao.updateLbxSn(order);
                 if (n < 1) {
+                    /*log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
+                            + orderProduct.getCOrderSn() + "]跟新'订单扩展属性表'失败！");*/
                     log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
-                            + orderProduct.getCOrderSn() + "]跟新'订单扩展属性表'失败！");
+                        + orderProduct.getCOrderSn() + "]跟新'订单表'失败！");
                 }
-                n = orderProductsAttributesService.update(orderProductsAttributes);
+                //2018-07-10 ordersattributes表合并相关逻辑根据字段进行优化 start
+
+                //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+                /*n = orderProductsAttributesService.update(orderProductsAttributes);
                 if (n < 1) {
                     log.error("CaiNiao网单出库：lbxSn[" + cainiaoMap.get("lbxSn") + "]cOrderSn["
                             + orderProduct.getCOrderSn() + "]跟新'网单扩展属性表'失败！");
-                }
+                }*/
+                //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
                 orderProductsNewService.updateAfterDelivery3W(orderProduct);
             } else {
                 //更新网单
@@ -912,7 +938,7 @@ public class OrderModel {
     		log.setChangeLog(StringUtil.isEmpty(changeLog) ? "" : changeLog);
     		log.setLogTime(((Long) (System.currentTimeMillis() / 1000)).intValue());
     		log.setNetPointId(orderProduct == null ? 0 : orderProduct.getNetPointId());
-    		log.setOperator("CBS系统");
+    		log.setOperator("系统");
     		log.setOrderId(orderProduct.getOrderId());
     		log.setOrderProductId(orderProduct == null ? 0 : orderProduct.getId());
     		log.setPaymentStatus(orderProduct.getCPaymentStatus());
@@ -1108,7 +1134,7 @@ public class OrderModel {
                         acceptTime.getTime() / 1000);
             }
             //记录网单日志
-            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "CBS系统", "网点接单",
+            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "系统", "网点接单",
                     "网点接单时间为：" + DateUtil.format(acceptTime, "yyyy-MM-dd HH:mm:ss"));
             shopOrderOperateLogsService.insert(orderProductOperateLogs);
 
@@ -1163,7 +1189,7 @@ public class OrderModel {
                         shipTime.getTime() / 1000);
             }
             //记录网单日志
-            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "CBS系统", "网点出库",
+            orderProductOperateLogs = getOrderOperateLog(orders, orderProducts, "系统", "网点出库",
                     "网点出库时间为：" + DateUtil.format(shipTime, "yyyy-MM-dd HH:mm:ss"));
             shopOrderOperateLogsService.insert(orderProductOperateLogs);
 
@@ -1305,7 +1331,7 @@ public class OrderModel {
                 if (orderWorkflows.getUserAcceptTime().intValue() == 0) {
                     shopOrderWorkflowsService.updateUserAcceptTime(orderWorkflows.getId(),
                             signTime.getTime() / 1000);
-                    shopOrderOperateLogsService.insert(getOrderOperateLog(orders, orderProductsNew, "CBS系统",
+                    shopOrderOperateLogsService.insert(getOrderOperateLog(orders, orderProductsNew, "系统",
                             "用户签收时间同步", (StringUtil.isEmpty(mes[0]) ? "HP同步用户签收时间:" : mes[0])
                                     + DateUtil.format(signTime, "yyyy-MM-dd HH:mm:ss")));
                     //报表增加更新网单表modified字段，报表使用全流程NetPointArriveTime，但是订单网单没有及时更新
@@ -1389,7 +1415,7 @@ public class OrderModel {
                     if (n == opList.size()) {
                         ordersNewDao.completeClose(Integer.parseInt(orders.getId()), now.getTime() / 1000);
                         orderOperateLogs = getOrderOperateLog(orders, null,
-                                "CBS系统", "订单状态由“"
+                                "系统", "订单状态由“"
                                         + OrderStatus.getByCode(orders.getOrderStatus()).getName()
                                         + "”变成“" + OrderStatus.OS_COMPLETE.getName()
                                         + "”",
@@ -1403,7 +1429,7 @@ public class OrderModel {
 
                 orderProductsNewService.completeClose(orderProductsNew.getId(), now.getTime() / 1000);
                 orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew,
-                        "CBS系统", "网单状态：由 ”"
+                        "系统", "网单状态：由 ”"
                                 + OrderProductStatus.getByCode(orderProductsNew.getStatus()).getName()
                                 + "“变成 ”" + OrderProductStatus.COMPLETED_CLOSE.getName()
                                 + "“",
@@ -1481,7 +1507,7 @@ public class OrderModel {
                 if (orderWorkflows.getUserAcceptTime().intValue() == 0) {
                     shopOrderWorkflowsService.updateUserAcceptTime(orderWorkflows.getId(),
                             signTime.getTime() / 1000);
-                    orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew, "CBS系统",
+                    orderProductOperateLogs = getOrderOperateLog(orders, orderProductsNew, "系统",
                             "用户签收时间同步",
                             //根据mes[0]区分是否为快递100回传签收
                             (StringUtil.isEmpty(mes[0]) ? "HP同步用户签收时间:" : mes[0])
@@ -1549,7 +1575,9 @@ public class OrderModel {
     			log.error("HPRecords没有不良品退机信息,单号:" + repairSn + ",退换货ID:" + ors.getId());
     			return true;
     		}
-    		OrderProductsAttributes opAttribute = orderProductsAttributesService
+
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 start
+    		/*OrderProductsAttributes opAttribute = orderProductsAttributesService
     				.getByOrderProductId(orderProduct.getId());
     		if (opAttribute == null) {
     			return true;
@@ -1650,7 +1678,9 @@ public class OrderModel {
     				message[0] = "调用支付中心回退接口失败！Success=false," + JsonUtil.toJson(result);
     				return false;
     			}
-    		}
+    		}*/
+        //2018-07-09 orderproductsattributes表合并相关逻辑根据字段进行优化 end
+
     		return true;
     	} catch (Exception e) {
     		message[0] = "不良品调用支付中心回退接口异常" + e.getMessage();
@@ -1682,4 +1712,70 @@ public class OrderModel {
     public Integer deleteOrderShippedQueue(Integer id) {
         return orderShippedQueueService.delete(id);
     }
+
+    /**
+     * 根据日日单状态获取网单列表
+     * @param pdOrderStatus
+     * @return
+     */
+    public ServiceResult<List<OrderProductsNew>> getByPdOrderStatusPaging(Integer pdOrderStatus,
+        Integer minId,
+        Integer size) {
+        ServiceResult<List<OrderProductsNew>> result = null;
+        try {
+            result = new ServiceResult<List<OrderProductsNew>>();
+            result.setResult(orderProductsNewService.getByPdOrderStatusPaging(pdOrderStatus, minId, size));
+        } catch (Exception e) {
+            log.error("根据日日单状态获取网单列表出错", e);
+        }
+        return result;
+    }
+
+    /**
+     * 根据主键，获取订单对象
+     * @param orderId
+     * @return
+     */
+    public OrdersNew getOrder(Integer orderId) {
+        return ordersNewService.get(orderId);
+    }
+
+    /**
+     * 根据网单id更新日日单信息
+     * @param orderProducts
+     * @return
+     */
+    public ServiceResult<Boolean> updateRRSById(OrderProductsNew orderProducts) {
+        ServiceResult<Boolean> result = new ServiceResult<Boolean>();
+        try {
+            orderProductsNewService.updateRRSById(orderProducts);
+            OrdersNew order = new OrdersNew();
+            order.setPaymentStatus(0);
+            order.setId(orderProducts.getOrderId().toString());
+            OrderOperateLogs log = this.getOrderOperateLog(order, orderProducts, "系统", "更新日日单状态",
+                "日日单状态更新为:" + rrsStatusMap.get(orderProducts.getPdOrderStatus()));
+            shopOrderOperateLogsService.insert(log);
+            result.setResult(true);
+            result.setSuccess(true);
+        } catch (Exception e) {
+            result.setMessage(e.getMessage());
+            result.setResult(false);
+            result.setSuccess(false);
+            log.error("更新网单日日单信息出错", e);
+        }
+        return result;
+    }
+
+    private static Map<Integer, String> rrsStatusMap = new HashMap<Integer, String>() {
+        {
+            put(OrderProductsNew.RRSSTATUS_DEFAULT, "普通单初始值");
+            put(OrderProductsNew.RRSSTATUS_INIT, "日日单初始值");
+            put(OrderProductsNew.RRSSTATUS_PRODUCTION, "生产中");
+            put(OrderProductsNew.RRSSTATUS_STOCK_IN, "已入库");
+            put(OrderProductsNew.RRSSTATUS_NOTICE_USER, "已通知用户");
+            put(OrderProductsNew.RRSSTATUS_FINISH_CLOSE, "完成关闭");
+            put(OrderProductsNew.RRSSTATUS_CANCEL_CLOSE, "取消关闭");
+        }
+    };
+
 }

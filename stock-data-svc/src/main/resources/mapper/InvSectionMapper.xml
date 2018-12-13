@@ -368,4 +368,54 @@
         WHERE `status` = 1 AND item_property = 10
               AND `les_sec_code` = #{les_sec_code} AND `channel_code` = #{channelCode}
     </select>
+
+    <select id="getInvSectionList"  parameterType="com.haier.stock.model.InvSection" resultMap="BaseResultMap">
+        select sec_code as secCode, sec_name as secName, status as status, wh_code as whCode, channel_code as ChannelCode,
+        item_property as itemProperty, update_time as updateTime,
+        corp_code as corpCode, cust_code as custCode, region_code as regionCode
+        from inv_section where 1=1
+        <!-- 查询条件 -->
+        <if test="secCode != null and secCode != '' ">
+            and sec_code = #{secCode}
+        </if>
+        <!-- 查询条件 -->
+        <if test="secName != null and secName != '' ">
+            and sec_name like CONCAT(CONCAT('%', #{secName}),'%')
+        </if>
+        order by create_time desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>    </select>
+
+
+    <select id="queryInvSectionExcel"  parameterType="com.haier.stock.model.InvSection" resultMap="BaseResultMap">
+        select sec_code as secCode, sec_name as secName, case STATUS when 0 then '停用' else '在用' end	AS statusExcel, wh_code as whCode, channel_code as ChannelCode,
+        item_property as itemProperty, update_time as updateTime,
+        corp_code as corpCode, cust_code as custCode, region_code as regionCode
+        from inv_section where 1=1
+        <!-- 查询条件 -->
+        <if test="secCode != null and secCode != '' ">
+            and sec_code = #{secCode}
+        </if>
+        <!-- 查询条件 -->
+        <if test="secName != null and secName != '' ">
+            and sec_name like CONCAT(CONCAT('%', #{secName}),'%')
+        </if>
+        ORDER BY
+        create_time DESC
+    </select>
+
+
+    <!-- 计算列表数量 -->
+    <select id="countInvSectionWithLike" parameterType="com.haier.stock.model.InvSection" resultType="Integer">
+        select
+        count(1)
+        from inv_section where 1=1
+        <!-- 查询条件 -->
+        <if test="secCode != null and secCode != '' ">
+            and sec_code = #{secCode}
+        </if>
+        <!-- 查询条件 -->
+        <if test="secName != null and secName != '' ">
+            and sec_name like CONCAT(CONCAT('%', #{secName}),'%')
+        </if>
+    </select>
 </mapper>

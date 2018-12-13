@@ -3,7 +3,7 @@ package com.haier.stock.model;
 import com.haier.common.BusinessException;
 import com.haier.common.ServiceResult;
 import com.haier.common.util.StringUtil;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.shop.model.StorageCities;
 import com.haier.stock.service.StockCenterEStoreService;
 import com.haier.stock.service.StockCommonService;
@@ -38,14 +38,15 @@ public class StoreModel {
      * @return
      */
     public Stock getStockBySkuAndRegion(String sku, int regionId, int requireQty, String channelCode) {
-
-        ServiceResult<Stock> ret = eStoreService.getStockBySkuAndRegionTimely(sku, regionId,
-            channelCode, requireQty, true);
-        if (!ret.getSuccess()) {
+        ServiceResult<Stock> ret = new ServiceResult<>();
+        try {
+            ret = eStoreService.getStockBySkuAndRegionTimely(sku, regionId,
+                channelCode, requireQty, true);
+        } catch (Exception e) {
             throw new BusinessException("利用StoreModel根据物料编码[" + sku + "],区县编码[" + regionId
-                                        + "],数量[" + requireQty + "],渠道编码[" + channelCode
-                                        + "]取得区域库存信息时发生异常"
-                                        + (ret == null ? "" : ":" + ret.getMessage()));
+                + "],数量[" + requireQty + "],渠道编码[" + channelCode
+                + "]取得区域库存信息时发生异常"
+                + (ret == null ? "" : ":" + ret.getMessage()));
         }
         return ret.getResult();
     }

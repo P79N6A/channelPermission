@@ -1,5 +1,7 @@
 package com.haier.order.services;
 
+import com.haier.purchase.data.service.OrderOperationLogService;
+import com.haier.stock.model.Stock;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -1004,7 +1006,6 @@ public class OrderCenterOrderBizHelper {
                                             OrderCenterPurchaseGdServiceImpl orderThirdCenterPurchaseGdService,
                                             LesQueuesService lesQueuesService, HPQueuesService hpQueuesService,
                                             OrdersNewService ordersNewService, OrderProductsNewService orderProductsNewService,
-                                            ShopOrderOperateLogsService ShopOrderOperateLogsService,
                                             ShopOrderOperateLogsService orderOperateLogsService,
                                             ShopOrderWorkflowsService orderWorkflowsService,
                                             OrderQueueExtendService orderQueueExtendService) {
@@ -1068,9 +1069,9 @@ public class OrderCenterOrderBizHelper {
         ServiceResult<ProductsNew> result = orderThirdCenterItemService.getProductBySku(orderProduct.getSku());
         if (null != result && result.getSuccess() && null != result.getResult()) {
             if (result.getResult().getIsVirtual().intValue() == 1) {
-                ShopOrderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
+                orderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
                     "虚拟商品", "虚拟商品，不传HP或LES。", null));
-                handleVirtualProduct(orderProduct, ordersNewService, orderProductsNewService, ShopOrderOperateLogsService,
+                handleVirtualProduct(orderProduct, ordersNewService, orderProductsNewService, orderOperateLogsService,
                     orderOperateLogsService, orderWorkflowsService);
                 message[0] = "虚拟商品，不传HP或LES。";
                 return false;
@@ -1085,7 +1086,7 @@ public class OrderCenterOrderBizHelper {
         if (result != null && !result.getSuccess()) {
             purchaseGdQueue = resultPurchaseGdQueue.getResult();
             if (purchaseGdQueue != null) {
-                ShopOrderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
+                orderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
                     "基地库直发订单", "基地库直发订单，不传HP或LES。", null));
                 message[0] = "基地库直发订单，不传HP或LES。";
                 return false;
@@ -1095,7 +1096,7 @@ public class OrderCenterOrderBizHelper {
         List<OrderQueueExtend> orderQueueExtendList = orderQueueExtendService
             .getByCOrderSnAndOrderSource(orderProduct.getCOrderSn(), InvSection.CHANNEL_CODE_HAIP);
         if (orderQueueExtendList != null && orderQueueExtendList.size() > 0) {
-            ShopOrderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName, "海鹏发货订单",
+            orderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName, "海鹏发货订单",
                 "海鹏发货订单，不传HP或LES。", null));
             message[0] = "海鹏发货订单，不传HP或LES。";
             return false;
@@ -1105,8 +1106,8 @@ public class OrderCenterOrderBizHelper {
         if ("B2C".equalsIgnoreCase(orderProduct.getShippingMode())) {
             //加入LES队列
             if (lesQueuesService.getCountByOpId(orderProduct.getId()) > 0) {
-                ShopOrderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
-                    "网单插入VOM队列", "VOM队列已经存在网单，不在插入。", null));
+                orderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
+                    "网单插入VOM队列", "VOM队列已经存在网单，不再插入。", null));
                 return true;
             }
             lesQueues = new LesQueues();
@@ -1128,7 +1129,7 @@ public class OrderCenterOrderBizHelper {
                 lesQueuesService.insert(lesQueuesList);
             }
             //插入日志
-            ShopOrderOperateLogsService
+            orderOperateLogsService
                 .insert(constructOperateLog(order, orderProduct, userName, "待同步到LES",
                     "小库直接进les，写入到les同步队列，网单号:" + orderProduct.getCOrderSn() + "，网单ID:"
                                                                               + orderProduct.getId()
@@ -1137,8 +1138,8 @@ public class OrderCenterOrderBizHelper {
         } else {
             //加入HP队列
             if (hpQueuesService.getCountByOpId(orderProduct.getId()) > 0) {
-                ShopOrderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
-                    "网单插入HP队列", "HP队列已经存在网单，不在插入。", null));
+                orderOperateLogsService.insert(constructOperateLog(order, orderProduct, userName,
+                    "网单插入HP队列", "HP队列已经存在网单，不再插入。", null));
                 return true;
             }
             hpQueues = new HPQueues();
@@ -1156,7 +1157,7 @@ public class OrderCenterOrderBizHelper {
                 hpQueuesService.insert(hpQueuesList);
             }
             //插入日志
-            ShopOrderOperateLogsService
+            orderOperateLogsService
                 .insert(constructOperateLog(order, orderProduct, userName,
                     "待同步到HP", "大库走HP，写入到HP同步队列，网单号:" + orderProduct.getCOrderSn() + "，SKU:"
                               + orderProduct.getSku() + ",数量:" + orderProduct.getNumber() + "。",
@@ -1168,10 +1169,6 @@ public class OrderCenterOrderBizHelper {
     /**
      * 发HP／LES队列，虚拟商品网单状态修改(doOrderStatus)
      * @param orderProducts
-     * @param orderIdOrdersMap
-     * @param ordersDao
-     * @param orderProductsDao
-     * @param orderOperateLogsDao
      */
     private static void handleVirtualProduct(OrderProductsNew orderProducts, OrdersNewService ordersNewService,
                                              OrderProductsNewService orderProductsNewService,
@@ -1215,22 +1212,19 @@ public class OrderCenterOrderBizHelper {
 
     /**
      * 天猫定金发货尾款合并写开票队列
-     * @param orders
      * @param orderOperateLogsDao
      * @param groupOrdersDao
      * @param orderProductsDao
      * @param invoiceQueueDao
      */
     public static boolean invoiceQueueAdd(int orderProductId,
-    									  ShopOrderOperateLogsService ShopOrderOperateLogsService,
-    		ShopOrderOperateLogsService orderOperateLogsService,
-                                          GroupOrdersService groupOrdersService,
-                                          OrderProductsNewService orderProductsNewService,
-                                          InvoiceQueueService invoiceQueueService, OrdersNewService ordersNewService
-    //                                        , OrderProductsAttributes orderProductsAttributes
+        ShopOrderOperateLogsService orderOperateLogsDao,
+        GroupOrdersService groupOrdersDao,
+        OrderProductsNewService orderProductsDao,
+        InvoiceQueueService invoiceQueueDao, OrdersNewService ordersDao
     ) {
         //根据网单ID获取groupOrders 列表
-        List<GroupOrders> groupOrdersList = groupOrdersService
+        List<GroupOrders> groupOrdersList = groupOrdersDao
             .getListByDepositOrderProductId(orderProductId);
 
         for (GroupOrders groupOrders : groupOrdersList) {
@@ -1239,18 +1233,18 @@ public class OrderCenterOrderBizHelper {
 
             if (!groupOrders.getType().equals(2) && groupOrders.getFrom().equals("taobao")) {
                 //根据groupOrder的 定金网单ID查询网单
-                orderProduct = orderProductsNewService.get(groupOrders.getDepositOrderProductId());
+                orderProduct = orderProductsDao.get(groupOrders.getDepositOrderProductId());
                 if (null != orderProduct && orderProduct.getShippingOpporunity().equals(0)) {
                     if (orderProduct.getStatus().intValue() >= 10) {//网单出库后，才插入发票队列
                         //2016-10-18 3W网单发票信息特殊处理
-                        OrdersNew order = ordersNewService.get(orderProduct.getOrderId());
+                        OrdersNew order = ordersDao.get(orderProduct.getOrderId());
                         List<OrderProductsNew> orderProductsList = new ArrayList<OrderProductsNew>();
                         orderProductsList.add(orderProduct);
                         if ("3W".equalsIgnoreCase(orderProduct.getStockType())
                             && orderProduct.getMakeReceiptType().intValue() == 0) {
                             insertOperateLog(order, "CBS系统", "添加网单到发票队列",
                                 "定金发货模式，3W特殊网单人工客服没有处理，不开票！", orderProductsList,
-                                ShopOrderOperateLogsService);
+                                orderOperateLogsDao);
                         } else {
                             //  TODO 自营转单二期，去掉定金尾款限制
                             //                            if (orderProductsAttributes != null
@@ -1258,13 +1252,13 @@ public class OrderCenterOrderBizHelper {
                             //                                insertOperateLog(order, "CBS系统", "添加网单到发票队列", "尾款发货模式，自营不开票",
                             //                                    orderProductsList, orderOperateLogsDao);
                             //                            } else {
-                            flag = InvoiceQueueInsert(invoiceQueueService, orderProduct.getId());
+                            flag = InvoiceQueueInsert(invoiceQueueDao, orderProduct.getId());
                             if (flag == 0) {
                                 insertOperateLog(order, "CBS系统", "添加网单到发票队列", "定金发货模式，添加失败，已存在",
-                                    orderProductsList, ShopOrderOperateLogsService);
+                                    orderProductsList, orderOperateLogsDao);
                             } else {
                                 insertOperateLog(order, "CBS系统", "添加网单到发票队列", "定金发货模式，添加成功",
-                                    orderProductsList, ShopOrderOperateLogsService);
+                                    orderProductsList, orderOperateLogsDao);
                             }
                             //                            }
                         }
@@ -1283,22 +1277,22 @@ public class OrderCenterOrderBizHelper {
                     } else {
                         List<OrderProductsNew> orderProductsList = new ArrayList<OrderProductsNew>();
                         orderProductsList.add(orderProduct);
-                        OrdersNew order = ordersNewService.get(orderProduct.getOrderId());
+                        OrdersNew order = ordersDao.get(orderProduct.getOrderId());
                         insertOperateLog(order, "CBS系统", "添加网单到发票队列",
                             "定金发货模式，添加失败，网单已收尾款，但未出库，不插入开票队列", orderProductsList,
-                            ShopOrderOperateLogsService);
+                            orderOperateLogsDao);
                     }
                 } else if (null != orderProduct && orderProduct.getShippingOpporunity().equals(2)) {//尾款发货模式，并且已付尾款 shippingOpporunity = 2。等于1时代表尾款发货模式未付尾款
                     if (orderProduct.getStatus().intValue() >= 10) {//网单出库后，才插入发票队列
                         //2016-10-18 3W网单发票信息特殊处理
-                        OrdersNew order = ordersNewService.get(orderProduct.getOrderId());
+                        OrdersNew order = ordersDao.get(orderProduct.getOrderId());
                         List<OrderProductsNew> orderProductsList = new ArrayList<OrderProductsNew>();
                         orderProductsList.add(orderProduct);
                         if ("3W".equalsIgnoreCase(orderProduct.getStockType())
                             && orderProduct.getMakeReceiptType().intValue() == 0) {
                             insertOperateLog(order, "CBS系统", "添加网单到发票队列",
                                 "尾款发货模式，3W特殊网单人工客服没有处理，不开票！", orderProductsList,
-                                ShopOrderOperateLogsService);
+                                orderOperateLogsDao);
                         } else {
                             //  TODO 自营转单二期，去掉定金尾款限制
                             //                            if (orderProductsAttributes != null
@@ -1306,13 +1300,13 @@ public class OrderCenterOrderBizHelper {
                             //                                insertOperateLog(order, "CBS系统", "添加网单到发票队列", "尾款发货模式，自营不开票",
                             //                                    orderProductsList, orderOperateLogsDao);
                             //                            } else {
-                            flag = InvoiceQueueInsert(invoiceQueueService, orderProduct.getId());
+                            flag = InvoiceQueueInsert(invoiceQueueDao, orderProduct.getId());
                             if (flag == 0) {
                                 insertOperateLog(order, "CBS系统", "添加网单到发票队列", "尾款发货模式，添加失败，已存在",
-                                    orderProductsList, ShopOrderOperateLogsService);
+                                    orderProductsList, orderOperateLogsDao);
                             } else {
                                 insertOperateLog(order, "CBS系统", "添加网单到发票队列", "尾款发货模式，添加成功",
-                                    orderProductsList, ShopOrderOperateLogsService);
+                                    orderProductsList, orderOperateLogsDao);
                             }
                             //                            }
                         }
@@ -1331,10 +1325,10 @@ public class OrderCenterOrderBizHelper {
                     } else {
                         List<OrderProductsNew> orderProductsList = new ArrayList<OrderProductsNew>();
                         orderProductsList.add(orderProduct);
-                        OrdersNew order = ordersNewService.get(orderProduct.getOrderId());
+                        OrdersNew order = ordersDao.get(orderProduct.getOrderId());
                         insertOperateLog(order, "CBS系统", "添加网单到发票队列",
                             "尾款发货模式，添加失败，网单已收尾款，但未出库，不插入开票队列", orderProductsList,
-                            ShopOrderOperateLogsService);
+                            orderOperateLogsDao);
                     }
                 }
             }
@@ -1344,7 +1338,6 @@ public class OrderCenterOrderBizHelper {
 
     /**
      * 插入开票队列
-     * @param invoiceQueueDao
      * @param orderProductId 网单ID
      * @return
      */

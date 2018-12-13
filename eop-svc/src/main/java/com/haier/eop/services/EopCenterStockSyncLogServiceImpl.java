@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.haier.eop.data.model.TmStockSyncLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
@@ -58,7 +59,39 @@ public class EopCenterStockSyncLogServiceImpl implements  EopCenterStockSyncLogS
         }
         return jsonResult(res,total);
 	}
-	private <T> JSONObject jsonResult(List<T> list, long total) {
+
+    @Override
+    public JSONObject TmLogListf(PagerInfo pager, String sse, String sku, String sCode, String stockSyncResult, String addTimeStart, String addTimeEnd) {
+        List<TmStockSyncLog> list = stockSyncLogService.TmLogListf(
+                pager.getStart(), pager.getPageSize(),  sse,  sku,
+                sCode, stockSyncResult,  addTimeStart,
+                addTimeEnd);
+        int total = stockSyncLogService.getTmPagerCountS(sse,  sku,
+                sCode, stockSyncResult,  addTimeStart,
+                addTimeEnd);
+        JSONArray res = new JSONArray();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (Object o : list) {
+            TmStockSyncLog dto = (TmStockSyncLog)o;
+            JSONObject json = new JSONObject();
+            json.put("id", dto.getId());
+            json.put("addTime",sdf.format(dto.getAddTime()));
+            json.put("sse",dto.getSse());
+            json.put("sku",dto.getSku());
+            json.put("channelStockNum",dto.getChannelStockNum());
+            json.put("ehaierStockNum",dto.getEhaierStockNum());
+            json.put("unconfirmStockNum",dto.getUnconfirmStockNum());
+            json.put("finalStockNum",dto.getFinalStockNum());
+            json.put("stockSyncResult",dto.getStockSyncResult());
+            json.put("systemInfo",dto.getSystemInfo());
+            json.put("textInfo",dto.getTextInfo());
+            json.put("sCode",dto.getScode());
+            res.add(json);
+        }
+        return jsonResult(res,total);
+    }
+
+    private <T> JSONObject jsonResult(List<T> list, long total) {
         JSONObject json = new JSONObject();
         json.put("total", total);
         if (list == null || list.isEmpty()) {

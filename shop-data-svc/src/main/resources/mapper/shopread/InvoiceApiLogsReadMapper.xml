@@ -29,7 +29,7 @@
 
     <select id="getInvoiceApiLogs" parameterType="Map" resultMap="InvoiceApiLogsDispItem">
         select SQL_CALC_FOUND_ROWS ial.cOrderSn,ial.type,
-        CASE WHEN ial.addTime=0 THEN '' ELSE from_unixtime(ial.addTime) END as addTime,ial.isSuccess,ial.countNum,ial.lastMessage from InvoiceApiLogs ial,Invoices ins
+        CASE WHEN ial.addTime=0 THEN '' ELSE from_unixtime(ial.addTime) END as addTime,ial.isSuccess,ial.countNum,ial.lastMessage from invoiceapilogs ial,invoices ins
         where 1=1 AND ial.invoiceId = ins.id
         <if test="cOrderSn !=null and cOrderSn != ''">
             and ins.cOrderSn = #{cOrderSn}
@@ -59,13 +59,13 @@
 
     <select id="get" parameterType="Integer" resultMap="invoiceApiLogsResult">
         select `id`,`orderProductId`,`cOrderSn`,`invoiceId`,`type`,`pushData`,`returnData`,`receiveData`,`addTime`,`isSuccess`,`lastTime`,`countNum`
-        from `InvoiceApiLogs`
+        from `invoiceapilogs`
         where `id`=#{id}
     </select>
 
     <select id="getByInvoiceIdAndType" parameterType="Integer" resultMap="invoiceApiLogsResult">
         select `id`,`orderProductId`,`cOrderSn`,`invoiceId`,`type`,`pushData`,`returnData`,`receiveData`,`addTime`,`isSuccess`,`lastTime`,`countNum`
-        from `InvoiceApiLogs`
+        from `invoiceapilogs`
         where `invoiceId`=#{invoiceId} and `type`=#{type}
         order by id desc limit 1
     </select>

@@ -47,5 +47,10 @@ StocksyncproductsDao stocksyncproductsDao;
 		// TODO Auto-generated method stub
 		return stocksyncproductsDao.getId(sku,source);
 	}
-    
+
+	@Override
+	public Stocksyncproducts getBySourceAndSku(String source, String sku) {
+		return stocksyncproductsDao.getBySourceAndSku(source, sku);
+	}
+
 }

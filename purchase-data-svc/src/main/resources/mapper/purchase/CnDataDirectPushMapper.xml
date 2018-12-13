@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.purchase.data.dao.purchase.CnDataDirectPushDao">
+	<resultMap id="BaseResult" type="com.haier.purchase.data.model.CnDataDirectPush">
+		<result property="id" column="id" />
+		<result property="data" column="data" />
+	</resultMap>	
+
+	
+		<select id="find3WExchange" 
+		resultMap="BaseResult">
+		select
+		id,
+		data
+		from cn_data_direct_push
+		where data_type = 'BMS_CONSIGN_ORDER_CONFIRM'
+		and status = 0 
+  		and id > #{_parameter}
+		limit 1000
+	</select>
+	
+	<select id="find3WReturn" 
+		resultMap="BaseResult">
+		select
+		id,
+		data
+		from cn_data_direct_push
+		where data_type = 'ERP_AUTO_STOCK_IN_ORDER_CONFIRM'
+		and status = 0 
+  		and id > #{_parameter}
+		
+	</select>
+    <update id="update" parameterType="com.haier.purchase.data.model.CnDataDirectPush">
+        UPDATE `cn_data_direct_push`
+        SET
+        status= 1
+        WHERE id=#{id}
+    </update>
+</mapper>

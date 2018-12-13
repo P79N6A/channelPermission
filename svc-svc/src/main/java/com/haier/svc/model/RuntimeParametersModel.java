@@ -19,6 +19,10 @@ public class RuntimeParametersModel {
 		return purchaseRuntimeParametersService.getRuntimeParameterByKey(key);
 	}
 
+	public void updateRuntimeWpOrderId(RuntimeParametersVO vo) {
+		purchaseRuntimeParametersService.updateRuntimeWpOrderId(vo);
+	}
+
 	public List<RuntimeParametersVO> getRuntimeParameters() {
 		return purchaseRuntimeParametersService.getRuntimeParameters();
 	}

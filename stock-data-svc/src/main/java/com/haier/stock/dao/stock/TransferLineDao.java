@@ -115,4 +115,14 @@ public interface TransferLineDao {
      */
     Integer updateRemarkByLineId(@Param("id") Integer id, @Param("remark") String remark);
 
+    /**
+     * 根据单号更新状态
+     * @param params
+     * @return
+     */
+	Integer updateLineStatusByLineNum(Map<String, Object> params);
+
+    Integer updateRemarkByLineNum(@Param("lineNum")String lineNum, @Param("remark")String remark);
+
+    InvTransferLine getYpInvTransferLineBySoLineNum(@Param("soLineNum") String soLineNum);
 }

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>数据维护</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+    <script src="../static/js/easyui-extention_ws.js"></script>
+    <script src="../static/js/i18n/zh_CN.js"></script>
+    <script src="../static/js/ajaxfileupload.js"></script>
+    <style>
+        .i-mark {
+            font-size: 10px;
+        }
+        #importExecl table{
+            margin: 5px;
+        }
+        #importExecl button{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body class="iframe-body">
+<div id="searchPanel" class="easyui-panel"
+     style="width:100%;height:100%;"
+     data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,
+		collapsible:false">
+    <table id="dg">
+    </table>
+</div>
+
+<div id="datagridToolbar">
+    <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_line fa fa-window-minimize"></div>
+        <div class="slide_circle fa fa-map-marker"></div>
+    </div>
+    <form id="paramForm" class="param-form">
+        <div class="search-panel">
+            <div class="search-row">
+                <span  class="search-row-label">
+                    品牌：
+                </span>
+                <select  class="easyui-combobox" style="width:174px;" id="search-brand" name="brand" data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+            </div>
+
+            <div class="search-row">
+                <span  class="search-row-label">
+                    品类：
+                </span>
+                <select  class="easyui-combobox" style="width:174px;" id="cateName" name="cateGory" data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+            </div>
+            <div class="search-row">
+                <span  class="search-row-label">
+                    有效标志：
+                </span>
+                <select  class="easyui-combobox" style="width:174px;" id="flag" name="flag" data-options="valueField: 'value',textField: 'valueMeaning',editable:false"></select>
+            </div>
+        </div>
+        <a href="#" class="easyui-linkbutton" id="searchBtn"
+           data-options="iconCls:'icon-search',plain:true">查询</a>
+        <a href="#" class="easyui-linkbutton" id="addBtn"
+           data-options="iconCls:'icon-add',plain:true">新增</a>
+        <a href="#" class="easyui-linkbutton" id="editBtn"
+           data-options="iconCls:'icon-edit',plain:true">编辑</a>
+        <a href="#" class="easyui-linkbutton" id="import"
+           data-options="iconCls:'icon-save',plain:true">导入</a>
+    </form>
+</div>
+<div id="importExecl" class="easyui-dialog"
+     closed="true">
+    <div class="import-panel">
+        <input type="hidden" id="rowId" value="{{_USER_.id}}"  />
+        <table>
+            <tr>
+                <td colspan="2">
+                    请仔细阅读以下注意事项：
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    1、请使用最新的导入模板导入数据，最新模板为<a href='/static/excel/OdsGateGrossprofit.xlsx' target='_blank'>【数据导入.xls】</a>。
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    2、请直接在<b><span style="color:#dc143c">导入模板的基础上 拷贝粘贴实际业务数据，不要添加删除行或列，也不要更改模板的公式、格式等</span></b>。
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    3、模板中的<b><span style="color:#dc143c">数据不能超过2000行</span></b>，超过后请分成多个excel导入。
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td >EXCEL 导入：</td>
+                <td >
+                    <input type="file" id="file" name="file"  label="上传文件" />
+                    <input type="hidden" id="uploadfileId">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button id="upload" href="javascript:void(0)" class="btn btn-default easyui-linkbutton c6 "  style="width:250px">导入</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="userEdit" data-options="title:'',resizable:true,modal:true"
+     class="easyui-dialog add-dlg"
+     style="width:600px;height:300px;"
+     closed="true" buttons="#dlg-buttons">
+    <form id="fm" method="post">
+        <div class="fitem">
+            <label class="" style="width:70px">品牌：</label>
+            <select class="easyui-combobox" style="width:145px;" id="brand" name="brand" data-options="valueField: 'value',textField: 'valueMeaning',editable:false" required="true"></select>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:70px">品类：</label>
+            <select  class="easyui-combobox" style="width:145px;" id="cateGory" name="cateGory" data-options="valueField: 'value',textField: 'valueMeaning',editable:false" required="true"></select>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:70px">毛利率：</label>
+            <input id="grossProfit"  name="grossProfit" class="easyui-numberbox" style="width:145px" required="true"  precision="5"><i class="i-mark">(小数)</i>
+        </div>
+        <div class="fitem">
+            <label class="" style="width:70px">开始时间：</label>
+            <input id="beginTime"  name="beginTime" class="easyui-datetimebox" required="required" style="width:145px" required="true">
+        </div>
+        <div class="fitem">
+            <label class="" style="width:70px">结束时间：</label>
+            <input id="endTime"  name="endTime" class="easyui-datetimebox" required="required" style="width:145px" required="true">
+        </div>
+
+        <input type="hidden" name="id" id="id">
+    </form>
+    <div id="dlg-buttons">
+        <a href="#" class="easyui-linkbutton" id="addDlgSaveBtn" iconCls="icon-ok">确认</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#userEdit').dialog('close')">关闭</a>
+    </div>
+</div>
+
+<script type="application/javascript">
+    var dataGrid = $('#dg').datagrid({
+        url:"/GateGrossprofit/getList",
+        fit: true,
+        fitColumns : false,
+        pagination: true,
+        pageSize: 50,
+        pageList: [50, 100, 200 ],
+        pageNumber:1,
+        autoRowHeight : true,
+        striped : true,
+        toolbar : '#datagridToolbar',
+        rownumbers : true,
+        nowrap : false,
+        columns: [
+            [
+                {
+                field: 'ck',
+                title: '选择',
+                checkbox: true
+            }, {
+                field: "brand",
+                title: "品牌",
+                width : 100
+            }, {
+                field: "cateGory",
+                title: "品类",
+                width : 100
+            }, {
+                field: "grossProfit",
+                title: "毛利率",
+                width : 80,
+                formatter: function(value, row, index) {
+                    if (value) {
+                        return (value * 100) + '%';
+                    } else if (value === 0) {
+                        return '0.000%';
+                    }
+                }
+            }, {
+                field: "beginTime",
+                title: "开始时间",
+                width : 160
+            }, {
+                field: "endTime",
+                title: "结束时间  ",
+                width : 160
+            }, {
+                field: "flag",
+                title: "是否有效  ",
+                width : 80
+            }, {
+                field: "createBy",
+                title: "导入人",
+                width : 100
+            }
+
+            ]
+        ]
+    });
+
+
+    var DateUtil = (function() {
+        function DateUtil() {}
+
+        DateUtil.AddDays = function(date, days) {
+            var cdate, d, m, nd, y;
+            nd = new Date(date);
+            nd = nd.valueOf();
+            nd = nd + days * 24 * 60 * 60 * 1000;
+            nd = new Date(nd);
+            y = nd.getFullYear();
+            m = nd.getMonth() + 1;
+            d = nd.getDate();
+            if (m <= 9) {
+                m = "0" + m;
+            }
+            if (d <= 9) {
+                d = "0" + d;
+            }
+            cdate = y + "-" + m + "-" + d;
+            return cdate;
+        };
+
+        DateUtil.DaysBetween = function(DateOne, DateTwo) {
+            var cha;
+            cha = (Date.parse(DateOne) - Date.parse(DateTwo)) / 86400000;
+            return Math.abs(cha);
+        };
+
+        DateUtil.StringToDate = function(DateStr) {
+            var arys, converted, myDate;
+            converted = Date.parse(DateStr);
+            myDate = new Date(converted);
+            if (isNaN(myDate)) {
+                arys = DateStr.split('-');
+                myDate = new Date(arys[0], --arys[1], arys[2]);
+            }
+            return myDate;
+        };
+
+        DateUtil.NumberToDate = function(DateStr) {
+            if (DateStr) {
+                return new Date(DateStr).toLocaleString();
+            } else {
+                return '';
+            }
+        };
+
+        DateUtil.GetMonthBeginEnd = function(DateTemp) {
+            var beginDate, d, e, endDate, f;
+            d = new Date(DateTemp);
+            f = d.setDate(1);
+            f = new Date(f);
+            e = d.setDate(1);
+            e = new Date(e);
+            e = e.setMonth(d.getMonth() + 1) - 24 * 60 * 60 * 1000;
+            e = new Date(e);
+            beginDate = f.toLocaleDateString();
+            endDate = e.toLocaleDateString();
+            beginDate = beginDate.replace(/\//gm, '-').replace('骞�', '-').replace('鏈�', '-').replace('鏃�', '');
+            endDate = endDate.replace(/\//gm, '-').replace('骞�', '-').replace('鏈�', '-').replace('鏃�', '');
+            return [beginDate, endDate];
+        };
+
+        return DateUtil;
+
+    })();
+</script>
+<script src="../static/js/settleCenter/GateGrossprofit.js"></script>
+##<script src="../static/js/report/workOrder.js"></script>
+</body>
+</html>

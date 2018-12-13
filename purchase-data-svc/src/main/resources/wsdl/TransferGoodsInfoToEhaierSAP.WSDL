@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="TransferGoodsInfoToEhaierSAP"
+	targetNamespace="http://www.example.org/TransferGoodsInfoToEhaierSAP/"
+	xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/TransferGoodsInfoToEhaierSAP/"
+	xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+	<WL5G3N0:types>
+		<xsd:schema targetNamespace="http://www.example.org/TransferGoodsInfoToEhaierSAP/"
+			xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/TransferGoodsInfoToEhaierSAP/"
+			xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:element name="TransferGoodsInfoToEhaierSAP">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="unbounded" minOccurs="0"
+							name="T_ZMMS0010" type="tns:ZMMS0010" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="TransferGoodsInfoToEhaierSAPResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element maxOccurs="unbounded" minOccurs="0" name="T_MSG"
+							type="tns:ZSDS0002" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="ZMMS0010">
+				<xsd:sequence>
+					<xsd:element name="ZLSOT" type="xsd:string" />
+					<xsd:element name="ZLSIN" type="xsd:string" />
+					<xsd:element name="BLDAT" type="xsd:string" />
+					<xsd:element name="BUDAT" type="xsd:string" />
+					<xsd:element name="ZCBSN" type="xsd:string" />
+					<xsd:element name="MATNR" type="xsd:string" />
+					<xsd:element name="MENGE" type="xsd:decimal" />
+					<xsd:element name="ZLGORT_O" type="xsd:string" />
+					<xsd:element name="ZLGORT_I" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ZSDS0002">
+				<xsd:sequence>
+					<xsd:element name="TYPE" type="xsd:string" />
+					<xsd:element name="ID" type="xsd:string" />
+					<xsd:element name="NUMBER" type="xsd:string" />
+					<xsd:element name="MESSAGE" type="xsd:string" />
+					<xsd:element name="MESSAGE_V1" type="xsd:string" />
+					<xsd:element name="MESSAGE_V2" type="xsd:string" />
+					<xsd:element name="MESSAGE_V3" type="xsd:string">
+					</xsd:element>
+					<xsd:element name="MESSAGE_V4" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+	</WL5G3N0:types>
+	<WL5G3N0:message name="TransferGoodsInfoToEhaierSAPRequest">
+		<WL5G3N0:part element="WL5G3N1:TransferGoodsInfoToEhaierSAP"
+			name="parameters" />
+	</WL5G3N0:message>
+	<WL5G3N0:message name="TransferGoodsInfoToEhaierSAPResponse">
+		<WL5G3N0:part element="WL5G3N1:TransferGoodsInfoToEhaierSAPResponse"
+			name="parameters" />
+	</WL5G3N0:message>
+	<WL5G3N0:portType name="TransferGoodsInfoToEhaierSAP">
+		<WL5G3N0:operation name="TransferGoodsInfoToEhaierSAP">
+			<WL5G3N0:input message="WL5G3N1:TransferGoodsInfoToEhaierSAPRequest" />
+			<WL5G3N0:output message="WL5G3N1:TransferGoodsInfoToEhaierSAPResponse" />
+		</WL5G3N0:operation>
+	</WL5G3N0:portType>
+	<WL5G3N0:binding name="TransferGoodsInfoToEhaierSAPSOAP"
+		type="WL5G3N1:TransferGoodsInfoToEhaierSAP">
+		<WL5G3N2:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<WL5G3N0:operation name="TransferGoodsInfoToEhaierSAP">
+			<WL5G3N2:operation
+				soapAction="http://www.example.org/TransferGoodsInfoToEhaierSAP/TransferGoodsInfoToEhaierSAP" />
+			<WL5G3N0:input>
+				<WL5G3N2:body use="literal" />
+			</WL5G3N0:input>
+			<WL5G3N0:output>
+				<WL5G3N2:body use="literal" />
+			</WL5G3N0:output>
+		</WL5G3N0:operation>
+	</WL5G3N0:binding>
+	<WL5G3N0:service name="TransferGoodsInfoToEhaierSAP">
+		<WL5G3N0:port binding="WL5G3N1:TransferGoodsInfoToEhaierSAPSOAP"
+			name="TransferGoodsInfoToEhaierSAPSOAP">
+			<!-- <WL5G3N2:address location="${pom.eai.url}/EAI/service/GVS/TransferGoodsInfoToEhaierSAP/TransferGoodsInfoToEhaierSAP"/> -->
+			<WL5G3N2:address
+				location=" http://10.135.1.185:7001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EAI_INT_0539" />
+		</WL5G3N0:port>
+	</WL5G3N0:service>
+</WL5G3N0:definitions>

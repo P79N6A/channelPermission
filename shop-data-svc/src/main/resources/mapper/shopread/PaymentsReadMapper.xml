@@ -14,12 +14,12 @@
 	</resultMap>
 	<select id="get" parameterType="Integer" resultMap="paymentsResult">
 		select `id`,`siteId`,`paymentCode`,`paymentName`,`paymentDesc`,`paymentConfig`,`sortNum`,`enabled`,`onlyBackend`
-		from `Payments`
+		from `payments`
 		where `id` = #{id}
 	</select>
 	<select id="getByCode" parameterType="String" resultMap="paymentsResult">
 		select `id`,`siteId`,`paymentCode`,`paymentName`,`paymentDesc`,`paymentConfig`,`sortNum`,`enabled`,`onlyBackend`
-		from `Payments`
+		from `payments`
 		where `paymentCode` = #{paymentCode} limit 1
 	</select>
 </mapper>

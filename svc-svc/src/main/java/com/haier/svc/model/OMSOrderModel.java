@@ -5,37 +5,38 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.haier.common.ServiceResult;
-import com.haier.stock.model.InvWarehouse;
-import com.haier.system.model.BaseErr;
-import com.haier.system.service.BaseErrService;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-
+import com.alibaba.fastjson.JSONObject;
+import com.haier.common.ServiceResult;
 import com.haier.common.util.JsonUtil;
-
+import com.haier.purchase.data.service.PurchaseT2OrderService;
+import com.haier.stock.model.InvWarehouse;
 import com.haier.svc.bean.OMST2OrderCreateRequire;
 import com.haier.svc.bean.OMST2OrderCreateResponse;
 import com.haier.svc.bean.PredictingStockItem;
 import com.haier.svc.bean.queryfrostorderfromehaiertooms.InType;
 import com.haier.svc.bean.queryfrostorderfromehaiertooms.OutType;
-import com.haier.svc.purchase.omst3.TransForecastInfoFromOMS;
-import com.haier.svc.purchase.omst3.TransForecastInfoFromOMS_Service;
+import com.haier.svc.purchase.omst3.InterfaceOMSForecast;
+import com.haier.svc.purchase.omst3.InterfaceOMSForecastService;
+import com.haier.svc.purchase.omst3.ResponseData;
 import com.haier.svc.purchase.queryfrostorderfromehaiertooms.QueryFrostOrderFromEHAIERToOMS;
 import com.haier.svc.purchase.queryfrostorderfromehaiertooms.QueryFrostOrderFromEHAIERToOMS_Service;
 import com.haier.svc.purchase.transforecastpracticalfromb2ctooms.TransForecastPracticalFromB2CToOMS;
 import com.haier.svc.purchase.transforecastpracticalfromb2ctooms.TransForecastPracticalFromB2CToOMS_Service;
 import com.haier.svc.service.PurchaseBaseCommonService;
 import com.haier.svc.util.WebCommonUtil;
-
-import org.springframework.beans.factory.annotation.Value;
+import com.haier.system.model.BaseErr;
+import com.haier.system.service.BaseErrService;
 @Service("omsOrderModel")
 public class OMSOrderModel {
     private static org.apache.log4j.Logger log                   = org.apache.log4j.LogManager
@@ -50,6 +51,8 @@ public class OMSOrderModel {
     private String                         eaiUrl                = null;
     @Autowired
     private PurchaseBaseCommonService      purchaseBaseCommonService;
+    @Autowired
+    private PurchaseT2OrderService purchaseT2OrderService;
     @Value("${t2OrderResponse.location}")
 	private String						   wsdlLocation;
 //    private String                         wsdlLocation          = "/wsdl";
@@ -96,7 +99,7 @@ public class OMSOrderModel {
 //        order.setBillType("J001");
 //        order.setCorpDest("C12809");
 //        order.setWhCode("JOR2");
-        //TODO用户登录完善后此处代码去掉
+        //TODO 用户登录完善后此处代码去掉
         order.setCustMgr("01381518");
         order.setProMgr("01381518");
         order.setProDeputy("01381518");
@@ -113,6 +116,16 @@ public class OMSOrderModel {
         String url = wsdlUrl;
         //新的测试地址  zzb
 //        String url = "http://10.138.40.168:8001/EAI/RoutingProxyService/EAI_REST_POST_ServiceRoot?INT_CODE=CRM_INT_OMS_4";
+        Map<String, Object> paramsToLog = new HashMap<>();
+        String isSysJob = order.getAdd18();
+        if("Y".equalsIgnoreCase(isSysJob)){
+        	paramsToLog.put("interfaceName","T+2订单自动审核");
+        	paramsToLog.put("interfaceCategory","T+2订单审核");
+        	paramsToLog.put("interfaceDate",new Date());
+        	paramsToLog.put("interfaceMessage","单号【" + order.getBillCode() + "】参数：" + order.toXMLMessage());
+        }
+        
+        
         String resultMsg = WebCommonUtil.PostMessage(url, order.toXMLMessage());
 
         OMST2OrderCreateResponse result = new OMST2OrderCreateResponse();
@@ -129,6 +142,17 @@ public class OMSOrderModel {
             } else if (el.getName().equals("ReturnMsg") || el.getName().equals("MSG")) {
                 result.setReturnMsg(el.getText());
             }
+        }
+        
+        if(!"Y".equalsIgnoreCase(result.getFlag())){
+        	//传输不成功，记录日志
+        	paramsToLog.put("interfaceMessage", paramsToLog.get("interfaceMessage") + "返回信息：" + resultMsg);
+        	try{
+        		log.info("开始记录日志，内容：" + JSONObject.toJSONString(paramsToLog));
+        		purchaseT2OrderService.insertT2OrderInterfaceLog(paramsToLog);
+        	}catch(Exception e){
+        		log.error("记录日志出错：", e);
+        	}
         }
         BaseErr base = new BaseErr();
         base.setInterface_path(url);
@@ -197,35 +221,80 @@ public class OMSOrderModel {
 //                              .getPath();
 //            URL url = new URL(path);
         	URL url = this.getClass().getResource(
-        			wsdlLocation + "/TransForecastInfoFromOMS.wsdl");
-            TransForecastInfoFromOMS_Service service = new TransForecastInfoFromOMS_Service(url);
-            TransForecastInfoFromOMS soap = service.getTransForecastInfoFromOMSSOAP();
+        			wsdlLocation + "/TranForecastSubmissionFromOMSToCBS.wsdl");
+        	InterfaceOMSForecastService service = new InterfaceOMSForecastService(url);
+        	InterfaceOMSForecast soap = service.getInterfaceOMSForecast();
+//            TransForecastInfoFromOMS_Service service = new TransForecastInfoFromOMS_Service(url);
+//            TransForecastInfoFromOMS soap = service.getTransForecastInfoFromOMSSOAP();
             String sysName = "EHAIER";
             for (PredictingStockItem item : l_items) {
                 try {
                 	com.haier.svc.purchase.omst3.RequestData requestData = new com.haier.svc.purchase.omst3.RequestData();
-                    //FIXME 此处需要完善对应关系
-                    requestData.setSysName(sysName);
+                	requestData.setFromSystem(sysName);
+//                    requestData.setSysName(sysName);
                     requestData.setFromSystem("CBS_WEEK");
                     requestData.setOmsRole("BDM");
                     requestData.setRoleChannel("1020");
                     requestData.setCustomerCode("");
                     requestData.setCustomerName("");
                     requestData.setProductCode(item.getMaterials_id());
-                    requestData.setT3Num(item.getT3_require_prediction());
-                    requestData.setT4Num(item.getT4_require_prediction());
-                    requestData.setT5Num(item.getT5_require_prediction());
-                    requestData.setT6Num(item.getT6_require_prediction());
-                    requestData.setT7Num(item.getT7_require_prediction());
-                    requestData.setT8Num(item.getT8_require_prediction());
-                    requestData.setT9Num(item.getT9_require_prediction());
-                    requestData.setT10Num(item.getT10_require_prediction());
-                    requestData.setT11Num(item.getT11_require_prediction());
-                    requestData.setT12Num(item.getT12_require_prediction());
-                    requestData.setT13Num(item.getT13_require_prediction());
+                    
+                    //OMS要求单独区分天猫数，后缀Tm的就是天猫数，必填，没有填0；
+                    //先把预测数填上，在把天猫数单独填上
+                    requestData.setT3Num(Double.valueOf(item.getT3_require_prediction()));
+                    requestData.setT4Num(Double.valueOf(item.getT4_require_prediction()));
+                    requestData.setT5Num(Double.valueOf(item.getT5_require_prediction()));
+                    requestData.setT6Num(Double.valueOf(item.getT6_require_prediction()));
+                    requestData.setT7Num(Double.valueOf(item.getT7_require_prediction()));
+                    requestData.setT8Num(Double.valueOf(item.getT8_require_prediction()));
+                    requestData.setT9Num(Double.valueOf(item.getT9_require_prediction()));
+                    requestData.setT10Num(Double.valueOf(item.getT10_require_prediction()));
+                    requestData.setT11Num(Double.valueOf(item.getT11_require_prediction()));
+                    requestData.setT12Num(Double.valueOf(item.getT12_require_prediction()));
+                    requestData.setT13Num(Double.valueOf(item.getT13_require_prediction()));
+                    
+                    if("TB".equals(item.getEd_channel_id())){
+                    	requestData.setT3NumTm(Double.valueOf(item.getT3_require_prediction()));
+                    	requestData.setT4NumTm(Double.valueOf(item.getT4_require_prediction()));
+                    	requestData.setT5NumTm(Double.valueOf(item.getT5_require_prediction()));
+                    	requestData.setT6NumTm(Double.valueOf(item.getT6_require_prediction()));
+                    	requestData.setT7NumTm(Double.valueOf(item.getT7_require_prediction()));
+                    	requestData.setT8NumTm(Double.valueOf(item.getT8_require_prediction()));
+                    	requestData.setT9NumTm(Double.valueOf(item.getT9_require_prediction()));
+                    	requestData.setT10NumTm(Double.valueOf(item.getT10_require_prediction()));
+                    	requestData.setT11NumTm(Double.valueOf(item.getT11_require_prediction()));
+                    	requestData.setT12NumTm(Double.valueOf(item.getT12_require_prediction()));
+                    	requestData.setT13NumTm(Double.valueOf(item.getT13_require_prediction()));
+                    }else{
+                    	requestData.setT3NumTm(0D);
+                    	requestData.setT4NumTm(0D);
+                    	requestData.setT5NumTm(0D);
+                    	requestData.setT6NumTm(0D);
+                    	requestData.setT7NumTm(0D);
+                    	requestData.setT8NumTm(0D);
+                    	requestData.setT9NumTm(0D);
+                    	requestData.setT10NumTm(0D);
+                    	requestData.setT11NumTm(0D);
+                    	requestData.setT12NumTm(0D);
+                    	requestData.setT13NumTm(0D);
+                    }
+                    
+                    
+//                    requestData.setT3Num(item.getT3_require_prediction());
+//                    requestData.setT4Num(item.getT4_require_prediction());
+//                    requestData.setT5Num(item.getT5_require_prediction());
+//                    requestData.setT6Num(item.getT6_require_prediction());
+//                    requestData.setT7Num(item.getT7_require_prediction());
+//                    requestData.setT8Num(item.getT8_require_prediction());
+//                    requestData.setT9Num(item.getT9_require_prediction());
+//                    requestData.setT10Num(item.getT10_require_prediction());
+//                    requestData.setT11Num(item.getT11_require_prediction());
+//                    requestData.setT12Num(item.getT12_require_prediction());
+//                    requestData.setT13Num(item.getT13_require_prediction());
 
-                    com.haier.svc.purchase.omst3.ResponseData responseData = soap
-                        .transForecastInfoFromOMS(requestData);
+//                    com.haier.svc.purchase.omst3.ResponseData responseData = soap
+//                        .transForecastInfoFromOMS(requestData);
+                    ResponseData responseData = soap.getForecastRecord(requestData);
 
                     if (responseData.getStatus().equalsIgnoreCase("F")) {
                         item.setFlow_flag(3);
@@ -246,6 +315,7 @@ public class OMSOrderModel {
                 }
             }
         } catch (Exception e) {
+        	e.printStackTrace();
             log.error("OMS T+3上报失败，发生未知异常", e);
             returnCode = -1;
         }

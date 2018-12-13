@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:WL5G3N2="http://xmlns.oracle.com/VOM/TransSCTailOrder/TransSCTailOrder" xmlns:WL5G3N3="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://xmlns.oracle.com/VOM/TransSCTailOrder/TransSCTailOrder" name="TransSCTailOrder">
+	<WL5G3N0:types>
+		<schema  targetNamespace="http://xmlns.oracle.com/VOM/TransSCTailOrder/TransSCTailOrder" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:client="http://xmlns.oracle.com/VOM/TransSCTailOrder/TransSCTailOrder" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"   xmlns:HaierEAI="http://xmlns.oracle.com/VOM/TransSCTailOrder/TransSCTailOrder" attributeFormDefault="unqualified" elementFormDefault="qualified">
+			<element name="process">
+				<complexType>
+					<sequence>
+						<element name="input" type="HaierEAI:inputType" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+			<complexType name="inputType">
+				<sequence>
+					<element name="ORDER_NO" type="string"/>
+					<element name="TAIL_SECTION_NO" type="string"/>
+					<element name="TAIL_SECTION_DATE" type="string"/>
+					<element name="CREATED_DATE" type="date"/>
+					<element name="USER_CODE" type="string"/>
+					<element name="ReserverDate" type="string"/>
+				</sequence>
+			</complexType>
+			<element name="processResponse">
+				<complexType>
+					<sequence>
+						<element name="MSCODE" type="string"/>
+						<element name="MESSAGE" type="string"/>
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</WL5G3N0:types>
+	<WL5G3N0:message name="TransSCTailOrderRequestMessage">
+		<WL5G3N0:part name="payload" element="WL5G3N2:process"/>
+	</WL5G3N0:message>
+	<WL5G3N0:message name="TransSCTailOrderResponseMessage">
+		<WL5G3N0:part name="payload" element="WL5G3N2:processResponse"/>
+	</WL5G3N0:message>
+	<WL5G3N0:portType name="TransSCTailOrder">
+		<WL5G3N0:operation name="process">
+			<WL5G3N0:input message="WL5G3N2:TransSCTailOrderRequestMessage"/>
+			<WL5G3N0:output message="WL5G3N2:TransSCTailOrderResponseMessage"/>
+		</WL5G3N0:operation>
+	</WL5G3N0:portType>
+	<WL5G3N0:binding name="TransSCTailOrderBinding" type="WL5G3N2:TransSCTailOrder">
+		<WL5G3N3:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<WL5G3N0:operation name="process">
+			<WL5G3N3:operation soapAction="process" style="document"/>
+			<WL5G3N0:input>
+				<WL5G3N3:body use="literal" namespace="http://xmlns.oracle.com/VOM/TransSCTailOrder/TransSCTailOrder"/>
+			</WL5G3N0:input>
+			<WL5G3N0:output>
+				<WL5G3N3:body use="literal" namespace="http://xmlns.oracle.com/VOM/TransSCTailOrder/TransSCTailOrder"/>
+			</WL5G3N0:output>
+		</WL5G3N0:operation>
+	</WL5G3N0:binding>
+	<WL5G3N0:service name="transsctailorder_client_ep">
+		<WL5G3N0:port name="TransSCTailOrder_pt" binding="WL5G3N2:TransSCTailOrderBinding">
+			<WL5G3N3:address location="http://10.138.40.168:8001/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EHAIER_INT_HP_2"/>
+		</WL5G3N0:port>
+	</WL5G3N0:service>
+	<WL5G3N1:partnerLinkType name="TransSCTailOrder">
+		<WL5G3N1:role name="TransSCTailOrderProvider">
+			<WL5G3N1:portType name="WL5G3N2:TransSCTailOrder"/>
+		</WL5G3N1:role>
+	</WL5G3N1:partnerLinkType>
+</WL5G3N0:definitions>

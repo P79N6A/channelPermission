@@ -24,6 +24,13 @@
         <result column="shippingDistance" property="shippingDistance" jdbcType="VARCHAR"/>
         <result column="isOto" property="isOto" jdbcType="INTEGER"/>
     </resultMap>
+     <resultMap id="PushAvailableResultMap" type="com.haier.distribute.data.model.Regions">
+     	<result column="province" property="province" />
+        <result column="code" property="code" />
+        <result column="city" property="city" />
+        <result column="region" property="region" />
+        <result column="activeFlag" property="activeFlag" />
+     </resultMap>
     <sql id="Base_Column_List">
     id, parentId, regionName, parentPath, firstLetter, regionType, shippingTime, visible, 
     rowId, testNum, standardRegionId, code, activeFlag, hasRead, isSupportCod, addTime, 
@@ -38,6 +45,25 @@
         select
         <include refid="Base_Column_List"/>
         from Regions where regionType &lt; 4
+    </select>
+    
+        <select id="pushAvailable" resultMap="PushAvailableResultMap">
+				SELECT
+					r.`code`,
+					r.regionName province,
+					r1.regionName city,
+					r2.regionName region,
+					r.regionType,
+					r.activeFlag
+				FROM
+					Regions r,
+					Regions r1,
+					Regions r2
+				WHERE
+					r.activeFlag = '1'
+				AND r.id = r1.parentId
+				AND r1.id = r2.parentId
+				LIMIT 20
     </select>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select

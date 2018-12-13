@@ -5,6 +5,7 @@ package com.haier.distribute.data.service;
 
 
 import java.util.List;
+import java.util.Map;
 
 import com.haier.distribute.data.model.PopOrders;
 
@@ -64,4 +65,5 @@ public interface PopOrderService {
     PopOrders getOneByCondition(PopOrders entity);
 
     int finishToCancel(String orderSn);
+    public List<Map<String,Object>> selectIdAndUrl();
 }

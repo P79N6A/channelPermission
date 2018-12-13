@@ -15,9 +15,25 @@ public interface OrderWorkflowRegionService {
 
     List<Map<String, String>> getFdArea(String area);
 
+    List<Map<String, String>> getSCodeTradeWl();
+
+    List<Map<String, String>> getSCodeByLes(String les);
+
     List<Map<String, String>> getTrade( String area);
 
     List<Map<String, String>> getSCode(String trade);
 
     List<OrderWorkflowRegion> getOwfRegion();
+
+    List<Map<String, String>> getCommissioner(String area);
+
+    List<Map<String, String>> getCommissionerTrade(String areaCommissioner);
+
+    List<Map<String, String>> getSmallChannelPeopleTrade(String areaCommissioner);
+
+    List<Map<String, Object>> getCateInfo();
+
+    List<Map<String, Object>> getStoreIdAndName();
+
+    String getLoginPersonChannel(String userName);
 }

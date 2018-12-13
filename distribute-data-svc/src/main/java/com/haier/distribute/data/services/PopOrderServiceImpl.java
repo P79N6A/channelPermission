@@ -5,6 +5,7 @@ package com.haier.distribute.data.services;
 
 
 import java.util.List;
+import java.util.Map;
 
 import com.haier.distribute.data.dao.distribute.PopOrderDao;
 import com.haier.distribute.data.model.PopOrders;
@@ -119,5 +120,9 @@ public class PopOrderServiceImpl implements PopOrderService {
     @Override
     public int finishToCancel(String orderSn) {
         return popOrderDao.finishToCancel(orderSn);
+    }
+    @Override
+    public List<Map<String,Object>> selectIdAndUrl(){
+        return popOrderDao.selectIdAndUrl();
     }
 }

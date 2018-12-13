@@ -9,23 +9,105 @@
 		<result property="centerCode" column="centerCode" />
 		<result property="mulStoreCode" column="mulStoreCode" />
 		<result property="isMaster" column="isMaster" />
+		<result property="name" column="name"/>
+		<result property="masterName" column="masterName"/>
+		<result property="centerName" column="centerName"/>
 	</resultMap>
 	<select id="get" parameterType="Integer" resultMap="storagesRelaResult">
 		select `id`,`siteId`,`Code`,`masterCode`,`centerCode`,`mulStoreCode`,`isMaster`
-		from `StoragesRela`
+		from `storagesrela`
 		where `id` = #{id}
 	</select>
 	<select id="getList" resultMap="storagesRelaResult">
 		select `id`,`siteId`,`Code`,`masterCode`,`centerCode`,`mulStoreCode`,`isMaster`
-		from `StoragesRela`
+		from `storagesrela`
 	</select>
 	<select id="getListByCodes" parameterType="map" resultMap="storagesRelaResult">
 		select `id`,`siteId`,`Code`,`masterCode`,`centerCode`,`mulStoreCode`,`isMaster`
-		from `StoragesRela`
+		from `storagesrela`
 		where `code` in
 		<foreach collection="codeList" index="index" item="code" open="("
 					separator="," close=")">
 					#{code}
 		</foreach>
+	</select>
+
+	<select id="getListByParam" resultMap="storagesRelaResult" parameterType="java.util.Map">
+		SELECT
+		t.id,
+		t.siteId,
+		t.CODE,
+		t.masterCode,
+		t.centerCode,
+		t.mulStoreCode,
+		t.isMaster,
+		t1.name name,
+		t2.name masterName,
+		t3.name centerName
+		FROM
+		storagesrela t
+		LEFT JOIN storages t1 ON t.Code = t1.code
+		LEFT JOIN storages t2 ON t.masterCode = t2.code
+		LEFT JOIN storages t3 ON t.centerCode = t3.code
+		WHERE 1=1
+		<if test="code !=null and code !=''">
+			AND t.code = #{code}
+		</if>
+		<if test="masterCode !=null and masterCode !=''">
+			AND t.masterCode = #{masterCode}
+		</if>
+		<if test="centerCode !=null and centerCode !=''">
+			AND t.centerCode = #{centerCode}
+		</if>
+		<if test="name !=null and name !=''">
+			AND t1.name like '%${name}%'
+		</if>
+		<if test="masterName !=null and masterName !=''">
+			AND t2.name like '%${masterName}%'
+		</if>
+		<if test="centerName !=null and centerName !=''">
+			AND t3.name like '%${centerName}%'
+		</if>
+		ORDER BY t.id
+		<if test="size != null and size &gt; 0">
+			limit #{start},#{size}
+		</if>
+	</select>
+
+	<select id="getListCountByParam" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+		count(*)
+		FROM
+		storagesrela t
+		LEFT JOIN storages t1 ON t.Code = t1.code
+		LEFT JOIN storages t2 ON t.masterCode = t2.code
+		LEFT JOIN storages t3 ON t.centerCode = t3.code
+		WHERE 1=1
+		<if test="code !=null and code !=''">
+			AND t.code = #{code}
+		</if>
+		<if test="masterCode !=null and masterCode !=''">
+			AND t.masterCode = #{masterCode}
+		</if>
+		<if test="centerCode !=null and centerCode !=''">
+			AND t.centerCode = #{centerCode}
+		</if>
+		<if test="name !=null and name !=''">
+			AND t1.name like '%${name}%'
+		</if>
+		<if test="masterName !=null and masterName !=''">
+			AND t2.name like '%${masterName}%'
+		</if>
+		<if test="centerName !=null and centerName !=''">
+			AND t3.name like '%${centerName}%'
+		</if>
+		ORDER BY t.id
+	</select>
+
+	<select id="selectByCode" resultType="java.lang.Integer">
+		select count(*) from storagesrela t
+		where t.code = #{entity.code}
+		AND t.masterCode = #{entity.masterCode}
+		AND t.centerCode = #{entity.centerCode}
 	</select>
 </mapper>

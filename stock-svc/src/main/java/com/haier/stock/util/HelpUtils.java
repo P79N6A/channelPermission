@@ -2,7 +2,9 @@ package com.haier.stock.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.Map;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.haier.common.BusinessException;
@@ -18,8 +21,10 @@ import com.haier.common.ServiceResult;
 import com.haier.common.util.DateUtil;
 import com.haier.common.util.JsonUtil;
 import com.haier.common.util.StringUtil;
+import com.haier.eis.model.EisExternalSku;
 import com.haier.eis.model.EisInterfaceDataLog;
 import com.haier.eis.model.EisInterfaceQueueData;
+import com.haier.eis.service.EisExternalSkuService;
 import com.haier.eis.service.EisInterfaceDataLogService;
 import com.haier.eis.service.EisInterfaceQueueDataService;
 //import com.haier.shop.model.OrdersNew;
@@ -29,6 +34,7 @@ import com.haier.shop.model.CustomerCodes;
 import com.haier.shop.model.GroupOrders;
 import com.haier.shop.model.MemberInvoices;
 import com.haier.shop.model.OrderProductsNew;
+import com.haier.shop.model.OrderRepairLESRecords;
 import com.haier.shop.model.OrderRepairsNew;
 import com.haier.shop.model.OrdersNew;
 import com.haier.shop.model.ProductActivities;
@@ -38,12 +44,16 @@ import com.haier.shop.service.CustomerCodesService;
 import com.haier.shop.service.GroupOrdersService;
 import com.haier.shop.service.ProductActivitiesService;
 import com.haier.shop.service.ShopMemberInvoicesService;
+import com.haier.shop.service.ShopOrderRepairLesreCordsService;
 import com.haier.shop.service.ShopTaoBaoGroupsService;
 import com.haier.stock.model.InvChannel2OrderSource;
+import com.haier.stock.model.InvMachineSet;
 import com.haier.stock.model.InvSection;
 import com.haier.stock.model.InvStockChannel;
 import com.haier.stock.model.InvWarehouse;
 import com.haier.stock.service.StockCenterItemService;
+import com.haier.stock.service.StockInvMachineSetService;
+import com.haier.stock.services.ItemBaseFromMdmServiceImpl;
 import com.haier.stock.services.StockCenterInvoiceNewServiceImpl;
 import com.haier.stock.services.StockCenterOrderServiceImpl;
 import com.haier.stock.services.StockCommonServiceImpl;
@@ -65,10 +75,12 @@ public class HelpUtils {
 
     @Autowired
     private ShopMemberInvoicesService shopMemberInvoicesService;
-
+	@Autowired
+	private ShopOrderRepairLesreCordsService shopOrderRepairLesreCordsService;
     @Autowired
     private CustomerCodesService customerCodesService;
-
+    @Autowired
+    private StockInvMachineSetService         invMachineSetDao;
     @Autowired
     private StockCenterItemService              itemService;
     @Autowired
@@ -79,15 +91,20 @@ public class HelpUtils {
     private ShopTaoBaoGroupsService shopTaoBaoGroupsService;
     @Autowired
     private EisInterfaceDataLogService eisInterfaceDataLogService;
-
+    @Autowired
+	private EisExternalSkuService eisExternalSkuService;
     private Map<String, String>      reasons      = new HashMap<String, String>();
     @Autowired
     private StockCommonServiceImpl       stockCommonService;
-    private String                   wsdlLocation = "/wsdl";
+    @Value("${wsdlPath}")
+	private String wsdlPath;
+    private String  wsdlLocation = "/wsdl";
     @Autowired
     private EisInterfaceQueueDataService eisInterfaceQueueDataService;
     @Autowired
     private StockCenterInvoiceNewServiceImpl           invoiceService;
+    @Autowired
+    private ItemBaseFromMdmServiceImpl itemBaseFromMdmServiceImpl;
 
     public String getInvStockChannelCodeBySource(String source) {
         ServiceResult<String> rs3 = stockCommonService.getChannelCodeByOrderSource(source);
@@ -246,12 +263,14 @@ public class HelpUtils {
      */
     public URL getWSDLURL(String wsdlFile) {
         try {
-            String path = "file:"
-                    + this.getClass().getResource( "/" + wsdlFile).getPath();
-            return new URL(path);
+        	
+        		
+        	URL url = itemBaseFromMdmServiceImpl.getClass().getResource(wsdlPath+ "/" + wsdlFile);
+//            String path =itemBaseFromMdmServiceImpl.getClass().getResource(wsdlLocation+ "/" + wsdlFile).getPath();
+            return url;
         } catch (Exception e) {
             logger.error("WSDL文件路径配置错误或WSDL文件不存在：" + wsdlFile);
-            throw new BusinessException("解析WSDL文件失败，配置错误");
+            throw new BusinessException("解析WSDL文件失败，路径配置错误或WSDL文件不存在");
         }
     }
 
@@ -262,12 +281,12 @@ public class HelpUtils {
      */
     public String getWSDLPATH(String wsdlFile) {
         try {
-            String path = "file:"
-                    + this.getClass().getResource(wsdlLocation + "/" + wsdlFile).getPath();
+        	String path = "file:"
+                    + this.getClass().getResource( "/" + wsdlFile).getPath();
             return path;
         } catch (Exception e) {
             logger.error("WSDL文件路径配置错误或WSDL文件不存在：" + wsdlFile);
-            throw new BusinessException("解析WSDL文件失败，配置错误");
+            throw new BusinessException("解析WSDL文件失败，路径配置错误或WSDL文件不存在");
         }
     }
 
@@ -757,6 +776,87 @@ public class HelpUtils {
         }
         return "";
     }
+    
+    public String getProductCode(int id,String sku,Integer pushFailNumber){
+		 //套机列表查询
+	      List<InvMachineSet> imsList = null;
+		 InvMachineSet machineSet = new InvMachineSet();
+         machineSet.setMainSku(sku);
+         ServiceResult<List<InvMachineSet>> stockcommresult = getSubMachinesByMainSku(machineSet);
+         if (stockcommresult != null && stockcommresult.getSuccess()) {
+             imsList = stockcommresult.getResult();
+             if (imsList == null || imsList.size() == 0) {//判断如果不是套机就做一个常规处理
+                 imsList = new ArrayList<InvMachineSet>();
+                 InvMachineSet ims = new InvMachineSet();
+                 ims.setPosnr("10");
+                 ims.setSubSku(convertToExternalSku(sku));//转换为R码
+                 if (ims.getSubSku() == null || ims.getSubSku().equals("")) {
+                 	OrderRepairLESRecords records = new OrderRepairLESRecords();
+                 	records.setId(id);
+                 	records.setFalg("2"); //修改推送状态
+                 	records.setFailReason("套机产品编码不能为空");
+                 	records.setPushFailNumber(pushFailNumber+1); //修改失败推送次数
+                 	shopOrderRepairLesreCordsService.updataRecords(records);
+                 }
+                 ims.setMenge(new BigDecimal(1));
+                 imsList.add(ims);
+                 
+                 return ims.getSubSku();
+             }
+         }
+         	return sku;
+	}
+		
+		 public ServiceResult<List<InvMachineSet>> getSubMachinesByMainSku(InvMachineSet machineSet) {
+		        ServiceResult<List<InvMachineSet>> result = new ServiceResult<List<InvMachineSet>>();
+		        try {
+		            result.setResult(invMachineSetDao.getByMainSku(machineSet.getMainSku()));
+		        } catch (Exception e) {
+		        	logger.error("根据mainSku(" + machineSet.getMainSku() + ")获取仓库信息时发生异常:", e);
+		            result.setSuccess(false);
+		            result.setMessage(e.getMessage());
+		        }
+
+		        return result;
+		    }
+		 /**
+		     * 转换为外部系统使用的物料编码
+		     *
+		     * @param sku 内部的物料编码
+		     * @return 外部的物料编码
+		     */
+		    //12
+		    private String convertToExternalSku(String sku) {
+		        if (sku == null || sku.equals("")) {
+		            return null;
+		        }
+		        ServiceResult<EisExternalSku> result = getBySkuType(sku, EisExternalSku.TYPE_R);
+		        EisExternalSku es = result.getResult();
+
+		        if (!result.getSuccess()) {
+		        	logger.error("通过itemService转换物料编码发生未知异常：" + result.getMessage());
+		            //throw new BusinessException("通过itemService转换物料编码发生未知异常：" + result.getMessage());
+		            return sku;
+		        } else {
+		            if (es != null && es.getExternalSku() != null && !es.getExternalSku().equals("")) {
+		                return es.getExternalSku();
+		            } else {
+		                return sku;
+		            }
+		        }
+		    }
+		    public ServiceResult<EisExternalSku> getBySkuType(String sku, String type) {
+		        ServiceResult<EisExternalSku> result = new ServiceResult<EisExternalSku>();
+		        try {
+		            result.setResult(eisExternalSkuService.getBySkuType(sku, type));
+		        } catch (Exception e) {
+		        	logger.error("根据sku和type查询物料对照信息时，发生未知异常：", e);
+		            result.setMessage("根据sku和type查询物料对照信息发生未知异常：" + e.getMessage());
+		            result.setSuccess(false);
+		        }
+		        return result;
+		    }
+		    
 
     public static String getKunnrRgNull(String source) {
         return KUNNR_RG_MAP.get(source);

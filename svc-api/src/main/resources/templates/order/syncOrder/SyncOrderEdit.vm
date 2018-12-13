@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<link>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/adminlte/css/skins/_all-skins.min.css">-->
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/ionicons/css/ionicons.min.css">-->
+
+    <!--  <link rel="stylesheet" href="../static/third/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/color.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/icon.css">-->
+
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+
+
+    <link rel="stylesheet" href="../static/css/common.css"></link>
+    <title>orderForecastGoal</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+</head>
+
+<body class="iframe-body">
+<div style="height:100%;width:100%;overflow:auto">
+<div id="paramForm_waAddressT" class="param-form" style="background-color:#d2e0f0;height: 45px; width:100%; position: fixed;z-index:20">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;font-weight: bold;">
+            	编辑同步配置信息
+        </span>
+        ## <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+        ##        value="返回" onclick="window.history.back()"
+        ##        style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+               value="保存"  id="updateSyncOrder"
+               style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+ </div>
+<div style="margin-left:50px;margin-top:50px;">
+    <form id="addForm_syncOrderManage" method="post">
+        <input name="id" type="text" value="$!{SyncOrderConfigs.id}" style="display:none;"/>
+        <input __actType type="hidden"/>
+            <dl class="search-row_nowidth">
+                <dt>外部网店名称:</dt>
+                <dd>
+                    <input class="easyui-textbox" name="shopName" id="shopName" value="$!{SyncOrderConfigs.shopName}" style="width:260px;"/>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>外部网店类型:</dt>
+                <dd>
+                <select id="configType" name="configType" class="easyui-combobox" panelHeight="300" editable="false" style="width:180px;">
+                    <option value="">--请选择外部网店类型--</option>
+                    <option value="TaoBao">海尔官方淘宝旗舰店</option>
+                    <option value="TopSHJD">海尔生活电器专卖店</option>
+                    <option value="TopBoiler">海尔热水器专卖店</option>
+                    <option value="TaoBaoMobile">淘宝网手机专卖</option>
+                    <option value="TopMobileFenXiao">淘宝手机淘宝店</option>
+                    <option value="TopTongShuai">淘宝网统帅日日顺乐家专卖店</option>
+                    <option value="TaobaoFenXiao">海尔官方旗舰店分销平台订单</option>
+                    <option value="TopPAD">海尔PAD专卖店</option>
+                    <option value="TopSHSC">海尔生活家电旗舰店</option>
+                    <option value="TaobaoFenXiaoSHJD">海尔生活家电旗舰店分销平台</option>
+                    <option value="TopXB">统帅日日顺分销平台</option>
+                    <option value="TaobaoFenXiaoXB">海尔新宝旗舰店分销平台</option>
+                    <option value="TopTSFX">统帅日日顺分销平台</option>
+                    <option value="TMMK">mooka模卡官方旗舰店</option>
+                    <option value="WASHER">海尔洗衣机官方旗舰店</option>
+                    <option value="FRIDGE">海尔冰冷官方旗舰店</option>
+                    <option value="AIR">海尔空调官方旗舰店</option>
+                    <option value="TBCT">村淘海尔商家</option>
+                    <option value="GQGYS">海尔官方旗舰店供应商</option>
+                    <option value="TMMKFX">模卡淘宝官方旗舰店分销店铺</option>
+                    <option value="TMKSD">海尔卡萨帝旗舰店</option>
+                    <option value="TMTV">海尔电视旗舰店</option>
+                    <option value="TBCFDD">海尔厨房大电旗舰店</option>
+                    <option value="TBXCR">小超人空调旗舰店</option>
+                    <option value="TBZYKT">海尔中央空调旗舰店</option>
+                    <option value="CSSJ">测试显示</option>
+                </select>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>自动订单同步:</dt>
+                <dd>
+                    <label>
+                        #if($SyncOrderConfigs.autoSync == "1")
+                        <input type="radio" name="autoSync" id="autoSync" value="1" checked>是
+                        #else
+                        <input type="radio" name="autoSync" id="autoSync" value="1">是
+                        #end
+                    </label>
+                    <label>
+                        #if($SyncOrderConfigs.autoSync == "0")
+                        <input type="radio" name="autoSync" id="autoSync" value="0" checked>否
+                        #else
+                        <input type="radio" name="autoSync" id="autoSync" value="0">否
+                        #end
+                    </label>
+                </dd>
+                <dd>
+                    <ul style="color: red">
+                        <li style="list-style-type:none;">
+                            如果设置此选项，系统会在后台自动订单同步，否则您需要手动同步。
+                        </li>
+                    </ul>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>是否使用发票:</dt>
+                <dd>
+                    <label>
+                        #if($ConfigValue.useReceipt == true)
+                        <input type="radio" name="useReceipt" id="useReceipt" value="1" checked>是
+                        #else
+                        <input type="radio" name="useReceipt" id="useReceipt" value="1">是
+                        #end
+                    </label>
+                    <label>
+                        #if($ConfigValue.useReceipt == false)
+                        <input type="radio" name="useReceipt" id="useReceipt" value="0" checked>否
+                        #else
+                        <input type="radio" name="useReceipt" id="useReceipt" value="0">否
+                        #end
+                    </label>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>默认发票抬头:</dt>
+                <dd>
+                    <input class="easyui-textbox" name="receiptTitle" id="receiptTitle" value="$!{ConfigValue.receiptTitle}" style="width:260px;"/>
+                </dd>
+                <ul style="color: red">
+                    <li style="list-style-type:none;">
+                        如果外部网店没有传回发票抬头信息，则使用此发票抬头。
+                    </li>
+                </ul>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>App Key:</dt>
+                <dd>
+                    <input class="easyui-textbox" name="appKey" id="appKey" style="width:260px;" value="$!{ConfigValue.appKey}"/>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>Secret:</dt>
+                <dd>
+                    <input class="easyui-textbox" name="secret" id="secret" style="width:260px;" value="$!{ConfigValue.secret}"/>
+                </dd>
+            </dl><br>
+            <dl class="search-row_nowidth">
+                <dt>Session:</dt>
+                <dd>
+                    <input class="easyui-textbox" name="session" id="session" style="width:260px;" value="$!{ConfigValue.session}"/>
+                </dd>
+            </dl><br>
+	</form>
+</div>	
+<script>    
+
+    $(function () {
+        $('#configType').combobox('select','$!{SyncOrderConfigs.configType}');
+
+        function proof(v){
+            var special = new RegExp(/^[0-9]{6}$/);
+            if(special.test(v)){
+                return true;
+            }
+        }
+	    $("#updateSyncOrder").on('click', function (ev) {
+            if ($("#shopName").val() == null || $("#shopName").val() == "") {
+                alert("请输入外部网店名称");
+                return false;
+            }
+            if ($("#configType").val() == null || $("#configType").val() == "") {
+                alert("没有选择外部网店类型");
+                return false;
+            }
+
+            if ($("#appKey").val() == null || $("#appKey").val() == "") {
+                alert("App Key不能为空");
+                return false;
+            }
+            if ($("#secret").val() == null || $("#secret").val() == "") {
+                alert("Secret不能为空");
+                return false;
+            }
+            if ($("#session").val() == null || $("#session").val() == "") {
+                alert("Session不能为空");
+                return false;
+            }
+     		$.ajax({
+	        	url      : "/syncOrder/updateSyncOrder",
+	         	type     : 'POST',
+	         	dataType : 'json',
+	          	data     : $('#addForm_syncOrderManage').serialize(),
+		        success  : function(data) {
+		            if (data.flag==1) {
+                        $.messager.confirm('编辑成功', '点击确定跳转列表页面', function(r){
+                            if (r){
+                                window.location.href="/syncOrder/toSyncOrder";
+                            }
+                        });
+                    }
+                    if(data.flag==0){
+                        alert(data.text);
+                    }
+		        }
+     		});
+	    });
+    
+    });
+    
+   
+</script>
+</body>
+</html>

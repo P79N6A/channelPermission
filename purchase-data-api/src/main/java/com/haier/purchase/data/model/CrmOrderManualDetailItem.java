@@ -97,6 +97,9 @@ public class CrmOrderManualDetailItem implements Serializable {
     private String            wa_in_time_display;                      //WA库时间
     private String            source_order_id;                         //来源单号
     private String            billOrderId;                             //销售单号
+    private String            push_status;                      		//推送SAP状态
+    private String            push_message;                         	//推送SAP消息
+    private String            push_process_time;                             //推送SAP时间
     /**
      * @return Returns the wp_order_id
      */
@@ -1244,4 +1247,28 @@ public class CrmOrderManualDetailItem implements Serializable {
     public void setBillOrderId(String billOrderId) {
         this.billOrderId = billOrderId;
     }
+
+	public String getPush_status() {
+		return push_status;
+	}
+
+	public void setPush_status(String push_status) {
+		this.push_status = push_status;
+	}
+
+	public String getPush_message() {
+		return push_message;
+	}
+
+	public void setPush_message(String push_message) {
+		this.push_message = push_message;
+	}
+
+	public String getPush_process_time() {
+		return push_process_time;
+	}
+
+	public void setPush_process_time(String push_process_time) {
+		this.push_process_time = push_process_time;
+	}
 }

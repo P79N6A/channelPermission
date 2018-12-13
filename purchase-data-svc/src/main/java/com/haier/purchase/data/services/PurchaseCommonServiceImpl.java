@@ -3,6 +3,7 @@ package com.haier.purchase.data.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.haier.common.ServiceResult;
 import com.haier.purchase.data.dao.purchase.PurchaseCommonDao;
 import com.haier.purchase.data.model.PrivilegeItem;
 import com.haier.purchase.data.service.PurchaseCommonService;
@@ -13,6 +14,9 @@ import com.haier.purchase.data.service.PurchaseCommonService;
  */
 @Service
 public class PurchaseCommonServiceImpl implements PurchaseCommonService{
+	
+	private static org.apache.log4j.Logger log = org.apache.log4j.LogManager
+			.getLogger(PurchaseCommonServiceImpl.class);
 
 	@Autowired
 	PurchaseCommonDao purchaseCommonDao;
@@ -31,6 +35,24 @@ public class PurchaseCommonServiceImpl implements PurchaseCommonService{
 	@Override
     public int getNextVal(){
 		return purchaseCommonDao.getNextVal();
+	}
+
+	/**
+	 * 登录者权限情报取得
+	 * @param userId     ----登录者ID
+	 * @return
+	 */
+	@Override
+	public ServiceResult<PrivilegeItem> getPrivilege(String userId) {
+		ServiceResult<PrivilegeItem> result = new ServiceResult<PrivilegeItem>();
+		try {
+			result.setResult(purchaseCommonDao.findPrivilege(userId));
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setMessage(e.getMessage());
+			log.error("获取登录者权限情报失败：", e);
+		}
+		return result;
 	}
 
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.InvTransferLineSalesDao">
+    <resultMap id="InvTransferLineSalesResult" type="com.haier.shop.model.InvTransferLineSales">
+        <result property="lineNum" column="line_num" />
+        <result property="soLineNum" column="so_line_num" />
+        <result property="itemCode" column="item_code" />
+        <result property="secTo" column="sec_to" />
+        <result property="transferQty" column="transfer_qty" />
+        <result property="create_time " column="createTime " />
+        <result property="sales_amounts" column="salesAmounts" />
+    </resultMap>
+    <insert id="insertSalse" parameterType="com.haier.shop.model.InvTransferLineSales">
+        INSERT INTO inv_transfer_line_sales (
+        `line_num`,
+        `so_line_num`,
+        `item_code`,
+        `sec_to`,
+        `transfer_qty`,
+        `create_time`,
+        `sales_amounts`
+        )
+        VALUES
+        (
+        #{lineNum},
+        #{soLineNum},
+        #{itemCode},
+        #{secTo},
+        #{transferQty},
+        #{createTime},
+        #{salesAmounts}
+        )
+    </insert>
+    <update id="updateInvoiceState" parameterType="int">
+        UPDATE `shop`.`inv_transfer_line_sales` SET
+       `invoiceState` = #{invoiceState} WHERE `id` = #{id};
+    </update>
+</mapper>

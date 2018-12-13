@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_animation.css"></link>
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/easyui_plus.css"></link>
+    <!--<link rel="stylesheet" href="../static/third/easyui/themes/insdep/insdep_theme_default.css">-->
+    <link rel="stylesheet" href="../static/third/easyui/themes/insdep/icon.css"></link>
+    <link rel="stylesheet" href="../static/css/common.css">
+    <title>添加物流宝库存同步库位</title>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/jquery.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-editable.js"></script>
+    <script src="../static/third/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/third/easyui/jquery.easyui.min.js"></script>
+    <script src="../static/third/easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+    <script src="../static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../static/js/utils.js"></script>
+    <script src="../static/js/easyui-extention.js"></script>
+    <script src="../static/js/customConfig.js"></script>
+
+    <style>
+        .input_form {
+            width: 60%;
+        }
+
+        .input_form_short {
+            width: 20%;
+        }
+
+        .div div span {
+            position: absolute;
+            right: 50%;
+        }
+
+        .radio label {
+            margin-right: 15px;
+        }
+
+        .penel {
+            background: #b5bbc8;
+            color: #404040;
+            border: 1px solid #b5bbc8;
+            filter: none;
+        }
+
+        .breadcrumb {
+            position: relative;
+            margin-top: 5px;
+            top: 0;
+            right: 0;
+            float: none;
+            background: #b5bbc8;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="paramForm_waAddressT" class="param-form"
+         style="background-color:#d2e0f0;height: 45px; width:100%;  position: fixed;z-index: 20">
+        <span style="margin-top: 5px;padding-left: 15px;padding-bottom: 5px;font-weight: bold;">
+            	添加库存同步库位
+        </span>
+        <input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+               value="返回" onclick="window.history.back()" readonly="readonly"
+               style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>
+    #*<input class="easyui-linkbutton" data-options="iconCls:'icon-redo',plain:true"
+           value="保存" id="addProduct" readonly="readonly"
+           style="margin-top: 5px;padding-left: 10px;padding-bottom: 5px;float: right;"/>*#
+    </div>
+    <fieldset>
+        <hr/>
+    </fieldset>
+    <div>
+        <ol class="breadcrumb">
+            <li class="penel">基本信息</li>
+        </ol>
+        <form class="form-horizontal" id="baseInfo">
+
+            <div class="form-group">
+                <label for="taoBaoShop" class="col-sm-2 control-label">所属淘宝店铺：</label>
+                <div class="col-sm-10">
+                    <select id="taoBaoShop" name="taoBaoShop" class="easyui-combobox" style="width: 200px">
+                        <option value="">全部</option>
+                        <option value="taobao">淘宝淘宝官方旗舰店</option>
+                        <option value="taobaorsq">海尔热水器专卖店</option>
+                        <option value="toptongshuai">统帅日日顺乐家专卖店</option>
+                        <option value="taobaoxb">海尔新宝旗舰店</option>
+                        <option value="tongshuaifx">统帅品牌分销店</option>
+                        <option value="WASHER">海尔洗衣机官方旗舰店</option>
+                        <option value="FRIDGE">海尔冰冷官方旗舰店</option>
+                        <option value="TMMK">mooka模卡官方旗舰店</option>
+                        <option value="AIR">淘宝空调旗舰店</option>
+                        <option value="TMMKFX">天猫模卡分销店铺</option>
+                        <option value="GQGYS">天猫分销</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="storageCode" class="col-sm-2 control-label">库位编码：</label>
+                <div class="col-sm-10">
+                    <select id="storageCode" name="storageCode" style="width: 200px" class="easyui-combobox">
+                        <option value="">全部</option>
+                        <option value="12456634">杨浦区一号库(12456634)</option>
+                        <option value="AKWA">安康网单库(AKWA)</option>
+                        <option value="ASWA">阿克苏网单库(ASWA)</option>
+                        <option value="BBWA">蚌埠网单库(BBWA)</option>
+                        <option value="BDWA">保定网单库(BDWA)</option>
+                        <option value="BJWA">北京网单库(BJWA)</option>
+                        <option value="BJWB">北京网单小电库(BJWB)</option>
+                        <option value="BTWA">包头网单库(BTWA)</option>
+                        <option value="CCWA">长春网单库(CCWA)</option>
+                        <option value="CDWA">成都网单库(CDWA)</option>
+                        <option value="CQWA">重庆网单库(CQWA)</option>
+                        <option value="CQWB">重庆网单小电库(CQWB)</option>
+                        <option value="CSWA">长沙网单库(CSWA)</option>
+                        <option value="CT01">海朋库位(CT01)</option>
+                        <option value="CYWA">宜昌网单库(CYWA)</option>
+                        <option value="CZWA">沧州网单库(CZWA)</option>
+                        <option value="DBWA">哈尔滨网单库(DBWA)</option>
+                        <option value="DCWA">常德网单库(DCWA)</option>
+                        <option value="DGWA">东莞网单库(DGWA)</option>
+                        <option value="DLWA">大连网单库(DLWA)</option>
+                        <option value="DQWA">大庆网单库(DQWA)</option>
+                        <option value="DTWA">大同网单库(DTWA)</option>
+                        <option value="DWWA">龙岩网单库(DWWA)</option>
+                        <option value="FSWA">佛山网单库(FSWA)</option>
+                        <option value="FSWB">佛山网单小电库(FSWB)</option>
+                        <option value="FYWA">阜阳网单库(FYWA)</option>
+                        <option value="FZWA">福州网单库(FZWA)</option>
+                        <option value="GAWA">广安网单库(GAWA)</option>
+                        <option value="GSWA">天水网单库(GSWA)</option>
+                        <option value="GXWA">柳州网单库(GXWA)</option>
+                        <option value="GYWA">贵阳网单库(GYWA)</option>
+                        <option value="HAWA">淮安网单库(HAWA)</option>
+                        <option value="HBWA">石家庄网单库(HBWA)</option>
+                        <option value="HDWA">邯郸网单库(HDWA)</option>
+                        <option value="HFWA">合肥网单库(HFWA)</option>
+                        <option value="HKWA">海口网单库(HKWA)</option>
+                        <option value="HMWA">侯马网单库(HMWA)</option>
+                        <option value="HNWA">鹤壁网单库(HNWA)</option>
+                        <option value="HSWA">呼市网单库(HSWA)</option>
+                        <option value="HYWA">衡阳网单库(HYWA)</option>
+                        <option value="HZWA">杭州网单库(HZWA)</option>
+                        <option value="JHWA">金华网单库(JHWA)</option>
+                        <option value="JLWA">辽源网单库(JLWA)</option>
+                        <option value="JMWA">佳木斯网单库(JMWA)</option>
+                        <option value="JNWA">济宁网单库(JNWA)</option>
+                        <option value="JOWA">即墨网单库(JOWA)</option>
+                        <option value="JOWB">即墨网单小电库(JOWB)</option>
+                        <option value="JXWA">赣州网单库(JXWA)</option>
+                        <option value="JZWA">锦州网单库(JZWA)</option>
+                        <option value="KMWA">昆明网单库(KMWA)</option>
+                        <option value="LDWA">大理网单库(LDWA)</option>
+                        <option value="LHWA">漯河网单库(LHWA)</option>
+                        <option value="LMWA">洛阳网单库(LMWA)</option>
+                        <option value="LXWA">泸州网单库(LXWA)</option>
+                        <option value="LYWA">临沂网单库(LYWA)</option>
+                        <option value="LZWA">兰州网单库(LZWA)</option>
+                        <option value="MMWA">茂名网单库(MMWA)</option>
+                        <option value="MYWA">绵阳网单库(MYWA)</option>
+                        <option value="NBWA">宁波网单库(NBWA)</option>
+                        <option value="NCWA">南昌网单库(NCWA)</option>
+                        <option value="NJWA">南京网单库(NJWA)</option>
+                        <option value="NNWA">南宁网单库(NNWA)</option>
+                        <option value="NPWA">南平网单库(NPWA)</option>
+                        <option value="NSWA">南宁二网单库(NSWA)</option>
+                        <option value="NYWA">南阳网单库(NYWA)</option>
+                        <option value="SCWA">南充网单库(SCWA)</option>
+                        <option value="SDWA">济南网单库(SDWA)</option>
+                        <option value="SHWA">上海网单库(SHWA)</option>
+                        <option value="SHWB">上海网单小电库(SHWB)</option>
+                        <option value="SHZF">上海基地库(SHZF)</option>
+                        <option value="SOWA">松原网单库(SOWA)</option>
+                        <option value="SRWA">上饶网单库(SRWA)</option>
+                        <option value="STWA">汕头网单库(STWA)</option>
+                        <option value="SYWA">沈阳网单库(SYWA)</option>
+                        <option value="SZWA">深圳网单库(SZWA)</option>
+                        <option value="TJWA">天津网单库(TJWA)</option>
+                        <option value="TSWA">唐山网单库(TSWA)</option>
+                        <option value="TYWA">太原网单库(TYWA)</option>
+                        <option value="TZWA">台州网单库(TZWA)</option>
+                        <option value="WFWA">潍坊网单库(WFWA)</option>
+                        <option value="WHWA">武汉网单库(WHWA)</option>
+                        <option value="WXWA">无锡网单库(WXWA)</option>
+                        <option value="WYWA">衡水网单库(WYWA)</option>
+                        <option value="XAWA">西安网单库(XAWA)</option>
+                        <option value="XFWA">襄樊网单库(XFWA)</option>
+                        <option value="XJWA">新疆网单库(XJWA)</option>
+                        <option value="XMWA">厦门网单库(XMWA)</option>
+                        <option value="XNWA">西宁网单库(XNWA)</option>
+                        <option value="XYWA">信阳网单库(XYWA)</option>
+                        <option value="XZWA">徐州网单库(XZWA)</option>
+                        <option value="YAWA">延安网单库(YAWA)</option>
+                        <option value="YCWA">银川网单库(YCWA)</option>
+                        <option value="YLWA">玉林网单库(YLWA)</option>
+                        <option value="YTWA">烟台网单库(YTWA)</option>
+                        <option value="ZBWA">淄博网单库(ZBWA)</option>
+                        <option value="ZJWA">张家口网单库(ZJWA)</option>
+                        <option value="ZYWA">遵义网单库(ZYWA)</option>
+                        <option value="ZZWA">郑州网单库(ZZWA)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="taoBaoStorageCode" class="col-sm-2 control-label">淘宝仓库编码：</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control input_form" name="taoBaoStorageCode" id="taoBaoStorageCode"
+                           placeholder="淘宝仓库编码">
+                    <h6 id="ntaoBaoStorageCodeInfo"></h6>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div>
+        <div style="text-align: center">
+            <a id="saveBtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-save'"
+               onclick="onSaveWlbStockSyncStorageInfo()">保存信息</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+    }
+</style>
+<script src="../static/js/netpointstorage/wlbStockSynStorageAdd.js"></script>
+</body>
+</html>

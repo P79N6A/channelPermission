@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="TransOrderCancelFromEHAIERToHP" targetNamespace="http://xmlns.oracle.com/MyFirstSOA/TransOrderCancelFromEHAIERToHP/TransOrderCancelFromEHAIERToHP" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:WL5G3N2="http://xmlns.oracle.com/MyFirstSOA/TransOrderCancelFromEHAIERToHP/TransOrderCancelFromEHAIERToHP" xmlns:WL5G3N3="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:documentation>
+        http://192.168.99.136:7777/soa-infra/services/TEST/TransOrderCancelFromEHAIERToHP!1.0/TransOrderCancelFromEHAIERToHP.wsdl
+    </WL5G3N0:documentation>
+  <WL5G3N1:partnerLinkType name="TransOrderCancelFromEHAIERToHP">
+    <WL5G3N1:role name="TransOrderCancelFromEHAIERToHPProvider">
+      <WL5G3N1:portType name="WL5G3N2:TransOrderCancelFromEHAIERToHP"/>
+    </WL5G3N1:role>
+  </WL5G3N1:partnerLinkType>
+  <WL5G3N0:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:client="http://xmlns.oracle.com/MyFirstSOA/TransOrderCancelFromEHAIERToHP/TransOrderCancelFromEHAIERToHP" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+      <import namespace="http://xmlns.oracle.com/MyFirstSOA/TransOrderCancelFromEHAIERToHP/TransOrderCancelFromEHAIERToHP" schemaLocation="http://10.135.1.198:7002/EAI/service/HP/TransOrderCancelFromEHAIERToHP/TransOrderCancelFromEHAIERToHP?SCHEMA%2FProduction%2FHCSP%2FTransOrderCancelFromEHAIERToHP%2FXMLSchema_33327031"/>
+    </schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="TransOrderCancelFromEHAIERToHPRequestMessage">
+    <WL5G3N0:part element="WL5G3N2:process" name="payload"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="TransOrderCancelFromEHAIERToHPResponseMessage">
+    <WL5G3N0:part element="WL5G3N2:processResponse" name="payload"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="TransOrderCancelFromEHAIERToHP">
+    <WL5G3N0:operation name="process">
+      <WL5G3N0:input message="WL5G3N2:TransOrderCancelFromEHAIERToHPRequestMessage"/>
+      <WL5G3N0:output message="WL5G3N2:TransOrderCancelFromEHAIERToHPResponseMessage"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="TransOrderCancelFromEHAIERToHPBinding" type="WL5G3N2:TransOrderCancelFromEHAIERToHP">
+    <WL5G3N3:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="process">
+      <WL5G3N3:operation soapAction="process" style="document"/>
+      <WL5G3N0:input>
+        <WL5G3N3:body namespace="http://xmlns.oracle.com/MyFirstSOA/TransOrderCancelFromEHAIERToHP/TransOrderCancelFromEHAIERToHP" use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N3:body namespace="http://xmlns.oracle.com/MyFirstSOA/TransOrderCancelFromEHAIERToHP/TransOrderCancelFromEHAIERToHP" use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="transordercancelfromehaiertohp_client_ep">
+    <WL5G3N0:documentation>OSB Service</WL5G3N0:documentation>
+    <WL5G3N0:port binding="WL5G3N2:TransOrderCancelFromEHAIERToHPBinding" name="TransOrderCancelFromEHAIERToHP_pt">
+      <WL5G3N3:address location="http://10.135.1.198:7002/EAI/service/HP/TransOrderCancelFromEHAIERToHP/TransOrderCancelFromEHAIERToHP"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

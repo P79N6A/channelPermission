@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.workorder.ReviewSmsQueueDao" >
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.ReviewSmsQueue" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+    <result column="issend" property="issend" jdbcType="INTEGER" />
+    <result column="addtime" property="addtime" jdbcType="TIMESTAMP" />
+    <result column="sendtime" property="sendtime" jdbcType="TIMESTAMP" />
+    <result column="trytime" property="trytime" jdbcType="INTEGER" />
+    <result column="back1" property="back1" jdbcType="VARCHAR" />
+    <result column="back2" property="back2" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.haier.shop.model.ReviewSmsQueue" extends="BaseResultMap" >
+    <result column="information" property="information" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, receiver, issend, addtime, sendtime, trytime, back1, back2
+  </sql>
+  <sql id="Blob_Column_List" >
+    information
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wo_reviewsmsqueue
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectSendSms" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wo_reviewsmsqueue
+    where issend = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="Long" >
+    delete from wo_reviewsmsqueue
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.haier.shop.model.ReviewSmsQueue" >
+    insert into wo_reviewsmsqueue (id, receiver, issend,
+    addtime, sendtime, trytime,
+    back1, back2, information
+    )
+    values (#{id,jdbcType=BIGINT}, #{receiver,jdbcType=VARCHAR}, #{issend,jdbcType=INTEGER},
+    #{addtime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP}, #{trytime,jdbcType=INTEGER},
+    #{back1,jdbcType=VARCHAR}, #{back2,jdbcType=INTEGER}, #{information,jdbcType=LONGVARCHAR}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.shop.model.ReviewSmsQueue" >
+    insert into wo_reviewsmsqueue
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="receiver != null" >
+        receiver,
+      </if>
+      <if test="issend != null" >
+        issend,
+      </if>
+      <if test="addtime != null" >
+        addtime,
+      </if>
+      <if test="sendtime != null" >
+        sendtime,
+      </if>
+      <if test="trytime != null" >
+        trytime,
+      </if>
+      <if test="back1 != null" >
+        back1,
+      </if>
+      <if test="back2 != null" >
+        back2,
+      </if>
+      <if test="information != null" >
+        information,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="receiver != null" >
+        #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="issend != null" >
+        #{issend,jdbcType=INTEGER},
+      </if>
+      <if test="addtime != null" >
+        #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendtime != null" >
+        #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trytime != null" >
+        #{trytime,jdbcType=INTEGER},
+      </if>
+      <if test="back1 != null" >
+        #{back1,jdbcType=VARCHAR},
+      </if>
+      <if test="back2 != null" >
+        #{back2,jdbcType=INTEGER},
+      </if>
+      <if test="information != null" >
+        #{information,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.shop.model.ReviewSmsQueue" >
+    update wo_reviewsmsqueue
+    <set >
+      <if test="receiver != null" >
+        receiver = #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="issend != null" >
+        issend = #{issend,jdbcType=INTEGER},
+      </if>
+      <if test="addtime != null" >
+        addtime = #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendtime != null" >
+        sendtime = #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="trytime != null" >
+        trytime = #{trytime,jdbcType=INTEGER},
+      </if>
+      <if test="back1 != null" >
+        back1 = #{back1,jdbcType=VARCHAR},
+      </if>
+      <if test="back2 != null" >
+        back2 = #{back2,jdbcType=INTEGER},
+      </if>
+      <if test="information != null" >
+        information = #{information,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.haier.shop.model.ReviewSmsQueue" >
+    update wo_reviewsmsqueue
+    set receiver = #{receiver,jdbcType=VARCHAR},
+    issend = #{issend,jdbcType=INTEGER},
+    addtime = #{addtime,jdbcType=TIMESTAMP},
+    sendtime = #{sendtime,jdbcType=TIMESTAMP},
+    trytime = #{trytime,jdbcType=INTEGER},
+    back1 = #{back1,jdbcType=VARCHAR},
+    back2 = #{back2,jdbcType=INTEGER},
+    information = #{information,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.shop.model.ReviewSmsQueue" >
+    update wo_reviewsmsqueue
+    set receiver = #{receiver,jdbcType=VARCHAR},
+    issend = #{issend,jdbcType=INTEGER},
+    addtime = #{addtime,jdbcType=TIMESTAMP},
+    sendtime = #{sendtime,jdbcType=TIMESTAMP},
+    trytime = #{trytime,jdbcType=INTEGER},
+    back1 = #{back1,jdbcType=VARCHAR},
+    back2 = #{back2,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!-- 批量添加短信 -->
+  <insert id="addReviewSmsList" parameterType="java.util.List">
+    insert into
+    wo_reviewsmsqueue(receiver,information)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.receiver},
+      #{item.information})
+    </foreach>
+  </insert>
+  
+</mapper>

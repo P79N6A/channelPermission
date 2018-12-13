@@ -11,13 +11,15 @@
     <!--广播注册中心暴露服务地址 -->
     <!--<dubbo:registry id="shopRegistry" address="zookeeper://127.0.0.1:2181"/>-->
     <!--  暴露服务 -->
+    <dubbo:provider id="payload" payload="167772160"/>
     <dubbo:service retries="0" version="1.0.0" timeout="1200000"
                    interface="com.haier.shop.service.ShopDepartMentCodeSkuService"
                    ref="shopDepartMentCodeSkuServiceImpl"/>
     <dubbo:service retries="0" version="1.0.0" timeout="1200000"
                    interface="com.haier.shop.service.ShopItemAttributeService"
                    ref="shopItemAttributeServiceImpl"/>
-    <dubbo:service retries="0" version="1.0.0" timeout="1200000" interface="com.haier.shop.service.ShopItemBaseService"
+    <dubbo:service retries="0" version="1.0.0" timeout="1200000" 
+    			   interface="com.haier.shop.service.ShopItemBaseService"
                    ref="shopItemBaseServiceImpl"/>
     <dubbo:service retries="0" version="1.0.0" timeout="1200000"
                    interface="com.haier.shop.service.ShopOperationAreaService"
@@ -40,7 +42,8 @@
     <dubbo:service retries="0" version="1.0.0" timeout="1200000"
                    interface="com.haier.shop.service.ShopOrderRepairsService"
                    ref="shopOrderRepairsServiceImpl"/>
-    <dubbo:service retries="0" version="1.0.0" timeout="1200000" interface="com.haier.shop.service.ShopOrdersService"
+    <dubbo:service retries="0" version="1.0.0" timeout="1200000" 
+    			   interface="com.haier.shop.service.ShopOrdersService"
                    ref="shopOrdersServiceImpl"/>
     <dubbo:service retries="0" version="1.0.0" timeout="1200000"
                    interface="com.haier.shop.service.ShopOrderTmallReturnLogsService"
@@ -91,6 +94,8 @@
                    ref="corderStatusToLesServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.shop.service.CostPoolsService"
                    ref="costPoolsServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.CostPoolsUsedLogsService"
+                   ref="costPoolsUsedLogsServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.shop.service.CustomerCodesService"
                    ref="customerCodesServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.shop.service.EcQueuesService"
@@ -155,6 +160,8 @@
                    ref="order2thsServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.shop.service.Order4InvoicesService"
                    ref="order4InvoicesServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.InvTransferLineSalesService"
+                   ref="invTransferLineSalesServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.shop.service.OrderCouponsService"
                    ref="orderCouponsServiceImpl" version="1.0.0" timeout="1200000"/>
     <dubbo:service retries="0" interface="com.haier.shop.service.OrderGuaranteePriceInfoService"
@@ -270,6 +277,149 @@
     <dubbo:service retries="0" interface="com.haier.shop.service.RefundBillSyncRecordService"
                    ref="refundBillSyncRecordServiceImpl" version="1.0.0" timeout="1200000"/>
      <dubbo:service retries="0" interface="com.haier.shop.service.OrdersService"
-                   ref="ordersServiceImpl" version="1.0.0" timeout="1200000"/>
+                   ref="ordersServiceImpl" version="1.0.0" timeout="12000000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.OmsInStoreRecordService"
+                   ref="omsInStoreRecordServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.AllocateDefectLogsService"
+                   ref="allocateDefectLogsServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.HPIdentificationResultService"
+                   ref="HPIdentificationResultServiceImpl" version="1.0.0" timeout="1200000"/>
+	<dubbo:service retries="0" interface="com.haier.shop.service.ProductCatesService"
+                   ref="productCatesServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.BrandsService"
+                   ref="brandsServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ShopProductSpecificationDataService"
+                   ref="shopProductSpecificationDataServiceImpl" version="1.0.0" timeout="1200000"/>
 
+    <dubbo:service retries="0" interface="com.haier.shop.service.ShopProductOuterPackingBoxeDataService"
+                   ref="shopProductOuterPackingBoxeDataServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.shop.service.ShopProductGatefoldDataService"
+                   ref="shopProductGatefoldDataServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.shop.service.ShopProductFeatureDataService"
+                   ref="shopProductFeatureDataServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.shop.service.ShopProductPictureDataService"
+                   ref="shopProductPictureDataServiceImpl" version="1.0.0" timeout="1200000"/>
+
+    <dubbo:service retries="0" interface="com.haier.shop.service.WwwHpRecordService"
+                   ref="wwwHpRecordServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.WOUserDataService"
+                     ref="WOUserDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.WoDictionaryDataService"
+                     ref="woDictionaryDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.WoReviewContactsDataService"
+                    ref="woReviewContactsDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ReviewMiddleService"
+                   ref="reviewMiddleServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ReviewPoolService"
+                   ref="reviewPoolServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ReviewContextDataService"
+                   ref="reviewContextDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.WoReviewpoolfordhzxDataService"
+                   ref="woReviewpoolfordhzxDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ReviewPoolJobSetService"
+                   ref="reviewPoolJobSetServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ReviewSmsQueueService"
+                   ref="reviewSmsQueueServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ReviewMailQueueService"
+                   ref="reviewMailQueueServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ReviewWorkOrderDataService"
+                   ref="reviewWorkOrderDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.WoReviewLogDataService"
+                   ref="woReviewLogDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ReviewImageDataService"
+                   ref="reviewImageDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.OdsTMFXPromotionCostDataService"
+      ref="odsTMFXPromotionCostDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.SNOdsTMFXPromotionCostDataService"
+      ref="SNOdsTMFXPromotionCostDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.PurchaseLesFiveYardsService"
+                   ref="purchaseLesFiveYardsServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.OrdersService"
+      ref="ordersServiceImpl" version="1.0.0" timeout="12000000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.OdsGatePriceDataService"
+                   ref="odsGatePriceDataServiceImpl" version="1.0.0" timeout="1200000"/>
+  <dubbo:service retries="0" interface="com.haier.shop.service.ShopZfbOrdersService"
+                   ref="shopZfbOrdersServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.DistributionDetailsDataService"
+                   ref="distributionDetailsDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.OdsTMFXCategoryIndustryService"
+                   ref="odsTMFXCategoryIndustryServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.OdsTMFXRebatesMonthlyDetailDataService"
+                   ref="odsTMFXRebatesMonthlyDetailDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.OdsTMFXPointMaintainDataService"
+                   ref="odsTMFXPointMaintainDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.OdsTMFXTargetMaintainDataService"
+      ref="odsTMFXTargetMaintainDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.InvoiceOrderProductsService"
+                   ref="invoiceOrderProductsServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.AddRessDataService"
+                   ref="addRessDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.SettlementInvoiceDataDataService"
+                   ref="settlementInvoiceDataDataServiceImpl" version="1.0.0" timeout="1200000"/>
+  <dubbo:service retries="0" interface="com.haier.shop.service.OdsTMFXIndustrySummaryDataService"
+    ref="odsTMFXIndustrySummaryDataServiceImpl" version="1.0.0" timeout="1200000"/>
+  <dubbo:service retries="0" interface="com.haier.shop.service.OdsTMFXShopSummaryDataService"
+    ref="odsTMFXShopSummaryDataServiceImpl" version="1.0.0" timeout="1200000"/>
+  <dubbo:service retries="0" interface="com.haier.shop.service.OdsTMFXRebatesSummaryDataService"
+    ref="odsTMFXRebatesSummaryDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.ShopSuningGroupsService"
+                   ref="shopSuNingGroupsServiceImpl"  version="1.0.0"  timeout="1200000"/>
+
+    <dubbo:service retries="0"  interface="com.haier.shop.service.OdsTMFXPeculiarCategoryDataService"
+                   ref="odsTMFXPeculiarCategoryDataServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    
+    <dubbo:service retries="0" interface="com.haier.shop.service.SpecializedInvoiceOrderProductsService"
+                   ref="specializedInvoiceOrderProductsServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.ShopOrderWorkflowsService"
+                   ref="shopOrderWorkflowsServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.ShopPersonTradeCfgService"
+                   ref="shopPersonTradeCfgServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.OrderWorkflowRegionService"
+                   ref="orderWorkflowRegionServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.ReverseReportService"
+                   ref="reverseReportServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.ShopOrderWorkflowsRunTimeService"
+                   ref="shopOrderWorkflowsRunTimeServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.GuaranteePriceUnLockShopService"
+      ref="guaranteePriceUnLockShopServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.OdsGateGrossprofitDataService"
+                   ref="odsGateGrossprofitDataServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.InterfaceLogService"
+                   ref="interfaceLogServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.CenterExternalSalesettingsService"
+                   ref="centerExternalSalesettingsServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.ShopTradingFlowSerivce"
+                   ref="shopTradingFlowServiceImpl"  version="1.0.0"  timeout="1200000"/>
+
+    <dubbo:service retries="0"  interface="com.haier.shop.service.ShopRegionsService"
+                   ref="shopRegionsServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.EvaluationService"
+                   ref="evaluationServiceImpl"  version="1.0.0"  timeout="1200000"/>
+
+    <dubbo:service retries="0"  interface="com.haier.shop.service.WLBStockSyncStoragesService"
+                   ref="WLBStockSyncStoragesServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.TBOrderSnExportService"
+                   ref="TBOrderSnExportServiceImpl"  version="1.0.0"  timeout="12000000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.ShopTransactionSapService"
+                   ref="shopTransactionSapServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.TianMaoDataStatisticsService"
+                   ref="tianMaoDataStatisticsServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.RejectsdetailDataService"
+                   ref="rejectsdetailDataServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.TmypProductDiscountService"
+                   ref="tmypProductDiscountServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.ReportModelDataService"
+                   ref="reportModelDataServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0"  interface="com.haier.shop.service.OrderWorkFlowModelDataService"
+                   ref="orderWorkFlowModelDataServiceImpl"  version="1.0.0"  timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.SNOdsTMFXTargetMaintainDataService"
+      				ref="SNOdsTMFXTargetMaintainDataServiceImpl" version="1.0.0" timeout="1200000"/>
+    <dubbo:service retries="0" interface="com.haier.shop.service.SNOdsTMFXPointMaintainDataService"
+      				ref="SNOdsTMFXPointMaintainDataServiceImpl" version="1.0.0" timeout="1200000"/> 
+    <dubbo:service retries="0" interface="com.haier.shop.service.SNOdsTMFXRebatesMonthlyDetailDataService"
+      				ref="SNOdsTMFXRebatesMonthlyDetailDataServiceImpl" version="1.0.0" timeout="1200000"/> 
+      								
 </beans>

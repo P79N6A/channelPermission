@@ -48,7 +48,7 @@ import com.haier.shop.model.OrderProductsNew;
 * */
 
 @Controller
-@RequestMapping("hopReturnController")
+@RequestMapping("hp")
 public class HopReturnController {
     private static Logger log = LogManager.getLogger(HopReturnController.class);
    private static String INTERFACE_HP_HOP_SHOP_API = "hp_hop_shop_api";
@@ -123,20 +123,22 @@ public class HopReturnController {
                                continue;
                    }
                     //保存预约送货时间
-                    orderProduct.setHpReservationDate(orderProducts.getHpReservationDate());
-                    boolean flag =orderRebackService.saveHpReservationDateRelation(
-                           orderProduct,
-                           "HP系统回传预约送货时间：" + DateFormatUtilNew.formatTime(orderProduct.getHpReservationDate()),
-                           "HP回传网单数据");//保存订单日志
-                   //发送短信
-                   if (flag) {
-                       orderRebackService.sendSms(orderProduct);
-                   }
-                   //【接受HP回传接口】每一个网单记录一次日志 xinm 2016-6-14
-                    this.recordLog(JsonUtil.toJson(orderProducts), message,
-                           System.currentTimeMillis() - startTime, INTERFACE_HP_HOP_SHOP_API,
-                           orderProducts.getCOrderSn());
-               }
+                  if (orderProduct.getHpReservationDate().intValue() != orderProducts.getHpReservationDate().intValue()){
+                      orderProduct.setHpReservationDate(orderProducts.getHpReservationDate());
+                      boolean flag =orderRebackService.saveHpReservationDateRelation(
+                             orderProduct,
+                             "HP系统回传预约送货时间：" + DateFormatUtilNew.formatTime(orderProduct.getHpReservationDate()),
+                             "HP回传网单数据");//保存订单日志
+                     //发送短信
+                     if (flag) {
+                         orderRebackService.sendSms(orderProduct);
+                     }
+                     //【接受HP回传接口】每一个网单记录一次日志 xinm 2016-6-14
+                      this.recordLog(JsonUtil.toJson(orderProducts), message,
+                             System.currentTimeMillis() - startTime, INTERFACE_HP_HOP_SHOP_API,
+                             orderProducts.getCOrderSn());
+                    }
+                }
                message = "<receiveFlag>" + EisInterfaceDataLog.RESPONSE_STATUS_SUCCESS
                        + "</receiveFlag>";
             } else {

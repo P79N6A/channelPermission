@@ -17,6 +17,8 @@ public class OrderRepairsConst {
     public static final int QUALITY_GOOD   = 1;
     public static final int QUALITY_OPENED = 2;
     public static final int QUALITY_BAD    = 3;
+    public static final int QUALITY_BADCHANGE = 5;
+    public static final int QUALITY_BADRETREAT = 6;
 
     public static Map<Integer, String> QUALITYMAP = new HashMap<Integer, String>();
 
@@ -24,7 +26,8 @@ public class OrderRepairsConst {
         QUALITYMAP.put(QUALITY_GOOD, "未开箱正品");
         QUALITYMAP.put(QUALITY_OPENED, "已开箱正品");
         QUALITYMAP.put(QUALITY_BAD, "不良品");
-
+        QUALITYMAP.put(QUALITY_BADCHANGE, "不良品换机");
+        QUALITYMAP.put(QUALITY_BADRETREAT, "不良品退机");
     }
 
     public static final int CHECKRESULT_CONFORM   = 1;

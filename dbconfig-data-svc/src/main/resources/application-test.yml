@@ -1,0 +1,32 @@
+interconn:
+  project: 3W-CBS
+  app: dbconfig-data
+  monitor:
+    url: http://collector.c.haier.net
+    enable: false
+  trace:
+    url: http://collector-trace.c.haier.net
+    sample: 0.1 #抽样率，0：关闭，1：全采样，sample<1：部分采样
+
+dubbo:
+  registry: 10.162.162.43:2181,10.162.162.44:2181,10.162.162.45:2181
+  port: 20893     #服务提供者服务端口，默认-1
+  threads: 100    #服务线程池大小(固定大小)，默认为2
+  heartBeats: 10000 #心跳间隔，检查连接是否已断开，默认30000
+  serialization: hessian2    #协议序列化方式（可选配置，Dubbo有默认值）;
+
+spring:
+  datasource:
+    distribute:
+     url: jdbc:mysql://10.135.26.223:3306/db_config?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF8&useSSL=false&allowMultiQueries=true
+     username: root
+     password: haier123456
+     driver-class-name: com.mysql.jdbc.Driver
+     testOnBorrow: true
+     testOnReturn: true
+     testWhileIdle: true
+     validation-query: SELECT 1
+     time-between-eviction-runs-millis: 30000
+     min-evictable-idle-time-millis: 60000
+     max-active: 200
+     max-idle: 10

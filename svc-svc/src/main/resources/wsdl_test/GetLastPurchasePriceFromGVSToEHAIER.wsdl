@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WL5G3N0:definitions name="GetLastPurchasePriceFromGVSToEHAIER" targetNamespace="http://www.example.org/GetLastPurchasePriceFromGVSToEHAIER/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://www.example.org/GetLastPurchasePriceFromGVSToEHAIER/" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://www.example.org/GetLastPurchasePriceFromGVSToEHAIER/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.example.org/GetLastPurchasePriceFromGVSToEHAIER/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="GetLastPurchasePriceFromGVSToEHAIER">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="in" type="tns:inType"/>
+            <xsd:element name="SysName" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetLastPurchasePriceFromGVSToEHAIERResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="out" type="tns:outType"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="inType">
+        <xsd:sequence>
+          <xsd:element name="MATNR" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="outType">
+        <xsd:sequence>
+          <xsd:element name="MATNR" type="xsd:string"/>
+          <xsd:element name="SPART" type="xsd:string"/>
+          <xsd:element name="WRBTR_BHS" type="xsd:decimal"/>
+          <xsd:element name="WRBTR_HS" type="xsd:decimal"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="GetLastPurchasePriceFromGVSToEHAIERRequest">
+    <WL5G3N0:part element="WL5G3N1:GetLastPurchasePriceFromGVSToEHAIER" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="GetLastPurchasePriceFromGVSToEHAIERResponse">
+    <WL5G3N0:part element="WL5G3N1:GetLastPurchasePriceFromGVSToEHAIERResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="GetLastPurchasePriceFromGVSToEHAIER">
+    <WL5G3N0:operation name="GetLastPurchasePriceFromGVSToEHAIER">
+      <WL5G3N0:input message="WL5G3N1:GetLastPurchasePriceFromGVSToEHAIERRequest"/>
+      <WL5G3N0:output message="WL5G3N1:GetLastPurchasePriceFromGVSToEHAIERResponse"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="GetLastPurchasePriceFromGVSToEHAIERSOAP" type="WL5G3N1:GetLastPurchasePriceFromGVSToEHAIER">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="GetLastPurchasePriceFromGVSToEHAIER">
+      <WL5G3N2:operation soapAction="http://www.example.org/GetLastPurchasePriceFromGVSToEHAIER/GetLastPurchasePriceFromGVSToEHAIER"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="GetLastPurchasePriceFromGVSToEHAIER">
+    <WL5G3N0:port binding="WL5G3N1:GetLastPurchasePriceFromGVSToEHAIERSOAP" name="GetLastPurchasePriceFromGVSToEHAIERSOAP">
+      <WL5G3N2:address location="http://10.135.1.198:7002/EAI/RoutingProxyService/EAI_SOAP_ServiceRoot?INT_CODE=EAI_INT_2836"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

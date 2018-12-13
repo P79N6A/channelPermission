@@ -167,7 +167,7 @@
 	<select id="getOneById" resultMap="popOrderMap" parameterType="Long">
 		SELECT
 		<include refid="Base_Column_List" />
-		FROM Adjust
+		FROM adjust
 		WHERE order_id = #{id}
 	</select>
 
@@ -175,7 +175,7 @@
 	<select id="getOneByCondition" resultMap="popOrderMap">
 		SELECT
 		<include refid="Base_Column_List" />
-		FROM Adjust
+		FROM adjust
 		<include refid="where_fragement_equals" />
 	</select>
 
@@ -183,14 +183,14 @@
 	<select id="getPageByCondition" resultMap="popOrderMap">
 		SELECT
 		<include refid="Base_Column_List" />
-		FROM Adjust
+		FROM adjust
 		<include refid="where_fragement" />
 		<include refid="pagination" />
 	</select>
 	<!--分页count -->
 	<select id="getPagerCount" resultType="long"
 		parameterType="com.haier.shop.model.Adjust">
-		select count(1) from Adjust
+		select count(1) from adjust
 		<include refid="where_fragement" />
 	</select>
 
@@ -200,7 +200,7 @@
 		<include refid="count_Start_Head" />
 		SELECT
 		<include refid="Base_Column_List" />
-		FROM Adjust
+		FROM adjust
 		<include refid="where_fragement" />
 		<include refid="count_Start_Tail" />
 	</select>
@@ -209,7 +209,7 @@
 	<select id="listByCondition" resultMap="popOrderMap">
 		SELECT
 		<include refid="Base_Column_List" />
-		FROM Adjust
+		FROM adjust
 		<include refid="where_fragement" />
 	</select>
 </mapper>

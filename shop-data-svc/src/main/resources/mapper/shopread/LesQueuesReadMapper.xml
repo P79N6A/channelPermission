@@ -17,15 +17,15 @@
 	</resultMap>
 	<select id="get" parameterType="Integer" resultMap="lesQueuesResult">
 		select `id`,`orderProductId`,`action`,`pushData`,`success`,`count`,`addTime`,`lastMessage`,`isLock`,`isStop`,`successTime`,`lastTryTime`
-		from `LesQueues`
+		from `lesqueues`
 		where `id` = #{id}
 	</select>
 	<select id="getSendQueues" parameterType="Integer" resultMap="lesQueuesResult">
 		select lq.`id`,lq.`orderProductId`,lq.`action`,lq.`pushData`,lq.`success`,lq.`count`,lq.`addTime`,lq.`lastMessage`,lq.`isLock`,lq.`isStop`,lq.`successTime`,lq.`lastTryTime`
-		from `LesQueues` lq 
-		inner join OrderProducts ops on ops.id=lq.orderProductId and ops.status&lt;8 and ops.shippingOpporunity != 1
-		inner join Orders o on o.id=ops.orderId
-		left join DoNotSyncLesSku dns on dns.sku=ops.sku and dns.OrderSource=o.`source`
+		from `lesqueues` lq
+		inner join orderproducts ops on ops.id=lq.orderProductId and ops.status&lt;8 and ops.shippingOpporunity != 1
+		inner join orders o on o.id=ops.orderId
+		left join donotsynclessku dns on dns.sku=ops.sku and dns.OrderSource=o.`source`
 		where lq.`success` = 0 and lq.`isStop` = 0 and lq.`count` &lt;= 75 and dns.sku is null
 		order by ops.pdOrderStatus desc,lq.`count` asc,lq.`id` asc
 		limit #{topX}
@@ -33,18 +33,18 @@
 	<select id="getCreateInvoiceQueues" parameterType="map" resultMap="lesQueuesResult">
 		<![CDATA[
 		select lq.`id`,lq.`orderProductId`,lq.`action`,lq.`pushData`,lq.`success`,lq.`count`,lq.`addTime`,lq.`lastMessage`,lq.`isLock`,lq.`isStop`,lq.`successTime`,lq.`lastTryTime`
-		from `LesQueues` lq 
-		inner join (select id,orderid,pdOrderStatus from `OrderProducts` where status < 8 and `shippingOpporunity` != 1) ops on(ops.`id`=lq.`orderProductId`)
-		inner join Orders ors on ops.orderid=ors.id
+		from `lesqueues` lq
+		inner join (select id,orderid,pdOrderStatus from `orderproducts` where status < 8 and `shippingOpporunity` != 1) ops on(ops.`id`=lq.`orderProductId`)
+		inner join orders ors on ops.orderid=ors.id
 		where `success` = 0
 		and `isStop` = 0
 		and `count` <= 75 
 		and ors.`source`!='RRS'
 		and `orderProductid` not in(
-		select op.`id` from `OrderProducts` op
-		inner join `DoNotSyncLesSku` dns
+		select op.`id` from `orderproducts` op
+		inner join `donotsynclessku` dns
 	    on(op.`sku`=dns.`sku`)
-		inner join `Orders` o
+		inner join `orders` o
 		on(op.orderid=o.id and o.`source`=dns.OrderSource)
 		where op.status<8
 		)
@@ -53,6 +53,17 @@
 		]]>
 	</select>
 	<select id="getCountByOpId" resultType="int">
-		select count(id) from LesQueues where orderProductId = #{orderProductId}
+		select count(id) from lesqueues where orderProductId = #{orderProductId}
+	</select>
+
+	<select id="getLesQueueByOpId" resultMap="lesQueuesResult">
+		select * from lesqueues where orderProductId = #{orderProductId}
+	</select>
+
+	<select id="checkOrderLessSuccess" resultType="map">
+		SELECT orderProductId, success FROM lesqueues
+        WHERE orderProductId = #{orderProductId}
+        AND success = 1
+        AND action = 'createOrder'
 	</select>
 </mapper>

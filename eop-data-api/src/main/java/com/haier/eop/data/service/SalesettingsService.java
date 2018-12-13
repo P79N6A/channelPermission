@@ -12,4 +12,5 @@ public interface SalesettingsService {
     int updateByPrimaryKeySelective(Salesettings record);
     List<Salesettings> Listf(Salesettings entity, int start, int rows);
     int getPagerCountS(Salesettings entity);
+    Salesettings findByWhere(String externalSkus);
 }

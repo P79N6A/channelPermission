@@ -2,6 +2,7 @@ package com.haier.vehicle.service;
 
 import java.util.List;
 
+import com.haier.purchase.data.model.vehcile.PurchaseProductPaymentDTO;
 import com.haier.purchase.data.model.vehcile.VehicleOrderDTO;
 import com.haier.purchase.data.model.vehcile.VehicleProductPaymentDTO;
 
@@ -16,6 +17,8 @@ public interface VehicleProductPaymentService {
 
 	public VehicleProductPaymentDTO getOneByCondition(
 			VehicleProductPaymentDTO entity);
+	
+	public PurchaseProductPaymentDTO getPurchasePaymentOneByCondition(VehicleProductPaymentDTO entity);
 
 	public List<VehicleProductPaymentDTO> getListByCondition(
 			VehicleProductPaymentDTO entity);
@@ -27,7 +30,7 @@ public interface VehicleProductPaymentService {
 
 	public VehicleProductPaymentDTO getOneByDeliveryToCode(String deliveryToCode);
 
-	public List<VehicleProductPaymentDTO> getList();
+	public List<PurchaseProductPaymentDTO> getList();
 
 	public List<VehicleProductPaymentDTO> listByCondition(
 			VehicleProductPaymentDTO entity);

@@ -22,10 +22,10 @@ public class ProductsServiceImpl implements ProductsService {
         return productsDao.selectProducts1(sku, productname);
     }
 
-    @Override
-    public List<Products> selectProducts(Products products) {
-        return productsDao.selectProducts(products);
-    }
+//    @Override
+//    public List<Products> selectProducts(Products products) {
+//        return productsDao.selectProducts(products);
+//    }
 
     @Override
     public Products getBySku(String sku) {

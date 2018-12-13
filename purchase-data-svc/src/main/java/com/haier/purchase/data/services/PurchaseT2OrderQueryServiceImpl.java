@@ -33,13 +33,24 @@ public class PurchaseT2OrderQueryServiceImpl implements PurchaseT2OrderQueryServ
 	}
 
 	/**
+	 * 获取入库时间为空的订单
+	 *
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public CrmOrderItem getIsNullWaInTime(Map<String, Object> params) {
+		return t2OrderQueryDao.getIsNullWaInTime(params);
+	}
+
+	/**
 	 * 获得条数
 	 * 
 	 * @return
 	 */
 	@Override
-	public int getRowCnts() {
-		return t2OrderQueryDao.getRowCnts();
+	public int getRowCnts(Map<String, Object> params) {
+		return t2OrderQueryDao.getRowCnts(params);
 	}
 
 	/**
@@ -93,5 +104,15 @@ public class PurchaseT2OrderQueryServiceImpl implements PurchaseT2OrderQueryServ
 	@Override
 	public int findPOListCNT(Map<String, Object> params) {
 		return t2OrderQueryDao.findPOListCNT(params);
+	}
+
+	@Override
+	public List<T2OrderItem> findT2OrderMultipleExportList(Map<String, Object> params) {
+		return  t2OrderQueryDao.findT2OrderMultipleExportList(params);
+	}
+
+	@Override
+	public Integer getByOrderId(String orderId) {
+		return t2OrderQueryDao.getByOrderId(orderId);
 	}
 }

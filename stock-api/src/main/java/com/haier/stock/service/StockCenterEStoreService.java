@@ -6,7 +6,7 @@ import java.util.List;
 import com.haier.common.ServiceResult;
 import com.haier.shop.model.BatchOrderLockVO;
 import com.haier.shop.model.OrderLockResult;
-import com.haier.shop.model.Stock;
+import com.haier.stock.model.Stock;
 import com.haier.stock.model.InvStoreLock;
 import com.haier.stock.model.InvStoreRegions;
 /*import com.haier.svc.bean.pop.BatchOrderLockVO;

@@ -1,0 +1,414 @@
+<!--列表数据-->
+<link rel="stylesheet"
+      href="/static/third/adminlte/css/AdminLTE.min.css">
+<link rel="stylesheet"
+      href="/static/third/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet"
+      href="/static/third/easyui/themes/insdep/easyui.css">
+<link rel="stylesheet"
+      href="/static/third/easyui/themes/insdep/easyui_animation.css">
+<link rel="stylesheet"
+      href="/static/third/easyui/themes/insdep/easyui_plus.css">
+<link rel="stylesheet"
+      href="/static/third/easyui/themes/insdep/icon.css">
+<link rel="stylesheet"
+      href="/static/third/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/css/common.css">
+<link rel="stylesheet"
+      href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
+<script src="/static/third/easyui/jquery.min2.js"></script>
+<script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+
+
+<style>
+    @charset "utf-8";
+    /*  body, html {
+          margin:0 auto;
+          font-size:12px;
+          line-height:1.5em;
+          color:#333333;
+
+      }*/
+
+    body{ position:relative;padding-bottom:30px;
+    }
+
+    form { line-height:2.2em;padding:0px 5px 5px 5px }
+
+    .tabbutton{
+        overflow:hidden;
+        padding:5px 0px 0px 5px;
+    }
+    .tabbutton input {
+        cursor:pointer;
+        float:left;
+        padding:2px 15px;
+        margin:0;
+        margin-left:0px;
+        color:#99bce8;
+        font-weight:bold;
+        font-size:12px;
+        font-family:微软雅黑;
+        border:1px solid #99bce8;
+    }
+
+    .tabbutton input:hover, .tabbutton input.cur {
+        color:black;
+    }
+
+    .toolbar{
+        overflow:hidden;
+        padding:0px 0px 2px 15px;
+    }
+
+    .toolbar input {
+        cursor:pointer;
+        float:left;
+        padding:2px 15px;
+        margin:0;
+        margin-left:0px;
+        color:black;
+        font-size:13px;
+        border:0px solid #99bce8;
+        width:70px;
+    }
+
+    .toolbar-separator {
+        width:1px;
+        height:10px;
+        z-index:1;
+        background-color: #000000;
+        border: 1px none #000000;
+    }
+
+
+    .list{
+        overflow-x:auto;
+        overflow-y:auto;
+        background:#ffffff;
+    }
+
+    .list tr:hover {
+        background:#d5e6ff;
+        color:#000000;
+    }
+
+    .tr-bg {
+        background:#f3f3f3;
+    }
+    .tr-bg-light {
+        background:#d5e6ff;
+    }
+
+    .list th {
+        padding:4px 5px 4px 8px;
+        text-align:center;
+        line-height:1.2em;
+        font-weight:normal;
+        color:#000000;
+        border-top:1px solid #99bce8;
+        border-bottom:1px solid #c5c5c5;
+        border-right:1px solid #c5c5c5;
+        min-width:90px;
+    }
+
+    .list td {
+        padding:5px;
+        min-width:50px;
+        text-align:center;
+    }
+
+    /* span { color:#777; margin-left:15px; }*/
+
+
+    h3{ padding:0; margin:0; background:#99bce8;font-size:14px; font-weight:bold; color:#ffffff; line-height:30px; text-indent:5px;}
+
+
+    input{ vertical-align:middle; width:100px; border:1px solid #B5B8C8;}
+
+    select{ vertical-align:middle; width:102px; border:1px solid #B5B8C8; }
+
+
+
+    fieldset,.pagelist{ margin:0; padding:0;repeat-x; overflow:hidden;}
+    fieldset{ margin:0px 2px 0px 2px; padding:0px 2px 0px 2px;}
+    fieldset table{background:none;}
+
+    .hidefieldset{ height:22px; }
+    legend{ padding:5px;}
+    a{color:15428b;}
+    a.take-action {
+        text-decoration:underline;
+    }
+    a.take-action:hover, a.take-action:active {
+        color:white;
+        background:#15428b;
+        padding:2px 3px;
+        text-decoration:none;
+    }
+    a.take-action:active {
+        background:#335682;
+    }
+    a.tool-toggle,.pagelist a{width:15px; height:15px;display:inline-block;
+        vertical-align:middle;}
+    a.tool-toggle-show{ background-position:0 -60px}
+    a.tool-toggle-show:hover{background-position:-15px -60px}
+    a.tool-toggle-hide{background-position:0 -75px}
+    a.tool-toggle-hide:hover{background-position:-15px -75px}
+
+    .pagelist{ position:absolute; bottom:0; width:99.8%;border:1px solid #99bce8; padding:3px 0; vertical-align:middle; }
+    a.firstpagedisabled{background-position:-15px -360px; margin-left:10px;}
+    a.firstpage{ background-position:0 -360px; margin-left:10px;}
+    a.prevpagedisabled{background-position:-15px -405px;}
+    a.prevpage{ background-position:0 -405px;}
+    a.nextpagedisabled{background-position:-15px -390px;}
+    a.nextpage{ background-position:0 -390px;}
+    a.lastpagedisabled{background-position:-15px -375px;}
+    a.lastpage{ background-position:0 -375px;}
+    a.refreshpage{background-position:0 -420px;}
+    .spaceline{ display:inline-block; width:1px; height:14px; font-size:0; overflow:hidden; background:white; border-left:1px solid #98c8ff; vertical-align:middle; margin:0 10px;}
+    .messageright{ float:right; margin-right:10px;}
+    .x-form-invalid-field {
+        border-color: #cc3300
+    }
+
+</style>
+
+<script>
+
+    function onQuery(pageIndex){
+        //增加网单查询
+        var cOrderSn = $( '#cOrderSn' ).val();
+        var repairId = $( '#repairId' ).val();
+        var url=null;
+        if("$!{queryHistory}"=="true"){
+            var startDate = $( '#startDate' ).val();
+//            var timeoutType = $( '#timeoutType' ).val();
+            var endDate = $( '#endDate' ).val();
+            var orderSnFlag = $( '#orderSnFlag' ).val();
+            url= "/orderclosehistory/getKpiOrderOntimeRateReverseReportDetailList.html";
+            data="repairId="+repairId+"&startDate="+startDate+"&cOrderSn="+cOrderSn+"&endDate="+endDate+"&orderSnFlag="+orderSnFlag+"&pageIndex=1&pageSize=10&sign=other&nodeType=orderclose";
+        }else{
+            url= "/orderClose/getOrderOntimeRateReverseReportDetailList";
+            data="repairId="+repairId+"&cOrderSn="+cOrderSn+"&pageIndex="+pageIndex+"&pageSize=10&sign=other&nodeType=orderclose";
+        }
+
+        jQuery.ajax({
+            url: url,
+            data: data,
+            type: "post",
+            success: function(data) {
+                $("#hpOntime").html(data);
+            }
+        });
+        return false;
+    }
+
+    function onExport(){
+        if("$!{queryHistory}"=="true"){
+            $('#filterForm').attr("action","/orderclosehistory/exportKpiOrderOntimeRateReverseReportDetail.html");
+        }else{
+            $('#filterForm').prop("action","/orderClose/exportOrderOntimeRateReverseReportDetail.html");
+        }
+        var form = document.getElementById("filterForm");
+        form.submit();
+    }
+</script>
+#if($!{sign} == 'first')
+<form id="filterForm" name="filterForm">
+    <input id="nodeType" name="nodeType" type="hidden" value="orderclose"/>
+    <div>
+        <input id="startDate" name="startDate" type="hidden" value="$!{startDate}"/>
+    </div>
+    <div>
+        <input id="endDate" name="endDate" type="hidden" value="$!{endDate}"/>
+    </div>
+</form>
+
+<div class="search-panel" style="font-size: 11px;">
+    <!--增加网单查询开始-->
+    <div class="search-row_nowidth mar_r6px">
+        <!--增加网单查询开始-->
+        <span class="search-row-label_80">网单号:</span>
+        <input id="cOrderSn" type="text" name="cOrderSn" style="width:150px;margin-right:10px;cursor:default;"/>
+        <input id="query" type="button" value="查询" onClick="onQuery(1)" class="button-query"/>
+        <!--增加网单查询结束-->
+        <input id="exportButton" type="button" value="导出" onClick="onExport()" class="button-export"/>
+    </div>
+</div>
+<div>
+    <input id="repairId" name="repairId" type="hidden" value="$!{repairId}"/>
+</div>
+<div>
+    <input id="sign" name="sign" type="hidden" value="$!{sign}"/>
+</div>
+<div>
+    <input id="orderSnFlag" name="orderSnFlag" type="hidden" value="$!{orderSnFlag}"/>
+</div>
+<div>
+    <input id="timeoutType" name="timeoutType" type="hidden" value="$!{timeoutType}"/>
+</div>
+<div id="hpOntime" >
+#end
+    <div class="list">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:0 auto;font-size:12px;line-height:1.5em;color:#333333;">
+            <tr>
+                <th>WD单号</th>
+                <th>订单号</th>
+                <th>区域</th>
+                <th>中心</th>
+                <th>工贸</th>
+                <th>转运库位</th>
+                <th style="min-width:120px">网单状态</th>
+                <th>商品分类</th>
+                <th>顶级品类</th>
+                <th style="min-width:300px">型号</th>
+                <th>数量</th>
+                <th>单价</th>
+            ##                <th>网单金额</th>
+                <th>退款申请金额</th>
+            ##                <th>是否金额差异</th>
+                <th>收货人</th>
+                <th>退换货处理状态</th>
+                <th>退换货类型</th>
+                <th>退款状态</th>
+                <th>货物状态</th>
+                <th>发票状态</th>
+                <th>检验结果</th>
+                <th>质检结果</th>
+                <th style="min-width:120px">申请退款时间</th>
+                <th style="min-width:120px">已退款时间</th>
+                <th style="min-width:120px">审核完成时间</th>
+                <th style="min-width:120px">终止完成时间</th>
+                <th style="min-width:120px">推送HP时间</th>
+                <th style="min-width:120px">HP回传时间</th>
+                <th style="min-width:120px">LES开提单时间</th>
+                <th style="min-width:120px">LES入库时间</th>
+                <th style="min-width:120px">发票作废时间</th>
+                <th style="min-width:120px">入日日顺21库时间</th>
+
+                <th style="min-width:120px">取消关闭时间</th>
+                <th style="min-width:120px">超时天数</th>
+                <!--<th style="min-width:120px">应完成时间</th>-->
+                <!-- add by zhaozj begin -->
+                <th style="min-width:120px">订单来源</th>
+                <th style="min-width:120px">网点</th>
+                <th style="min-width:120px">网单类型</th>
+                #if($!queryHistory=="true")
+                    <th style="min-width:120px">应完成时间</th>
+                    <th style="min-width:120px">实际完成时间</th>
+                    <th style="min-width:120px">统计时间</th>
+                #end
+                <th style="min-width:120px">TB单号</th>
+                <!-- add by zhaozj end -->
+            </tr>
+            #set($count=0)
+            #foreach($map in $!orderOntimeRateReportDetailList)
+                #if($count%2==0)
+                <tr>
+                #else
+                <tr class="tr-bg">
+                #end
+                #set($count=$count+1)
+                <td>$!{map.cOrderSn}</td>
+                <td>$!{map.orderSn}</td>
+                <td>$!{map.area}</td>
+                <td>$!{map.sCode}</td>
+                <td>$!{map.trade}</td>
+                <td>$!{map.tsCode}</td>
+                <td>$!{map.status}</td>
+                <td>$!{map.cateId}</td>
+                <td>$!{map.superCateId}</td>
+                <td style="text-align:left">$!{map.productName}</td>
+                <td>$!{map.number}</td>
+                <td>$!{map.price}</td>
+            ##                <td>$!{map.opMoney}</td>
+                <td>$!{map.refMoney}</td>
+            ##                <td>$!{map.isDiffMoney}</td>
+                <td>$!{map.consignee}</td>
+                <td>$!{map.handleStatus}</td>
+                <td>$!{map.typeActual}</td>
+                <td>$!{map.paymentStatus}</td>
+                <td>$!{map.storageStatus}</td>
+                <td>$!{map.state}</td>
+                <td>$!{map.checkResult}</td>
+                <td>$!{map.quality}</td>
+                <td>$!{map.applyTime}</td>
+                <td>$!{map.paymentTime}</td>
+                <td>$!{map.handleTime}</td>
+                <td>$!{map.endTime}</td>
+                <td>$!{map.hpFirstAddTime}</td>
+                <td>$!{map.hpTime}</td>
+                <td>$!{map.lesTime}</td>
+                <td>$!{map.lesOutPingTime}</td>
+                <td>$!{map.invalidTime}</td>
+                <td>$!{map.storageTime}</td>
+
+                <td>$!{map.finishTime}</td>
+                <td>$!{map.outTime}(天)</td>
+                <!-- <td>$!{map.mustDate}</td>-->
+                <!-- add by zhaozj begin -->
+                <td>$!{map.channelName}</td>
+                <td>$!{map.netPointName}</td>
+                <td>$!{map.stockType}</td>
+                #if($!queryHistory=="true")
+                    <td>$!{map.mustFinishTime}</td>
+                    <td>$!{map.realFinishTime}</td>
+                    <td>$!{map.date}</td>
+                #end
+                <td>$!{map.tb_order_sn}</td>
+            </tr>
+            #end
+        </table>
+    </div>
+##分页
+    <div class='pagelist'>
+        #if($!{totalPage}==0)
+            <span class='messageright'>没有数据</span>
+        #else
+            <span class='messageright'>显示$!{startNum}-$!{endNum}条，共$!{totalCount}条数据</span>
+        #end
+    ##首页
+        #if($!{hasFirst})
+            <a href='javascript:void(0)' class='l-btn-icon pagination-first' style="width: 18px ;margin-left: 0px" onClick='onQuery(1)'>&nbsp;</a>
+        #else
+            <a href='javascript:void(0)' class='l-btn-icon pagination-first' style="width: 18px ;margin-left: 0px" onClick='onQuery(1)'>&nbsp;</a>
+        #end
+    ##上一页
+        #if($!{hasPrevious})
+            <a href='javascript:void(0)' class='l-btn-icon pagination-prev'style="margin-left: 20;width: 18px" onClick='onQuery($!{curPage}-1)'>&nbsp;</a>
+        #else
+            <a href='javascript:void(0)' class='l-btn-icon pagination-prev' style="margin-left: 20;width: 18px" onClick='onQuery($!{curPage}-1)'>&nbsp;</a>
+        #end
+
+    ##页码输入文本框
+        <span style="margin-left: 50px">第 <input id='pageText' name='pageText' type='text' value='$!{curPage}' style='width:20px; text-align:center;' onKeyDown='if(event.keyCode==13){onQuery($("#pageText").val());}'/> 页，共 $!{totalPage}页</span>
+
+    ##下一页
+        #if($!{hasNext})
+        #*<a href='javascript:void(0)' class='l-btn-icon pagination-next' onClick='onQuery($!{curPage}+1)'>&nbsp;</a>*#
+            <a href="javascript:void(0)" class="l-btn-icon pagination-next " style="width: 18px;margin-left: 20px" onClick='onQuery($!{curPage}+1)'>
+                &nbsp;</a>
+        #else
+        #*<a href='javascript:void(0)' class='l-btn-icon pagination-next'>&nbsp;</a>*#
+            <a href="javascript:void(0)" class="l-btn-icon pagination-next " style="width: 18px;margin-left: 20px " onClick='onQuery($!{curPage}+1)'>
+                &nbsp;</a>
+        #end
+    ##末页
+        #if($!{hasLast})
+        #*<a href='javascript:void(0)' class='l-btn-icon pagination-last' onClick='onQuery($!{totalPage})'>&nbsp;</a>*#
+            <a href="javascript:void(0)" class="l-btn-icon pagination-last " style="width: 17px;margin-left: 40px" onClick='onQuery($!{totalPage})'>
+                &nbsp;</a>
+        #else
+            <a href="javascript:void(0)" class="l-btn-icon pagination-last " style="width: 17px; margin-left: 40px " onClick='onQuery($!{totalPage})'>
+                &nbsp;</a>
+        #*<a href='javascript:void(0)' class='l-btn-icon pagination-last'>&nbsp;</a>*#
+        #end
+
+    ##刷新
+        #if($!{curPage} > 0)
+            <a href='javascript:void(0)' class='refreshpage' onClick='onQuery($!{curPage})'></a>
+        #end
+    </div>
+
+</div>

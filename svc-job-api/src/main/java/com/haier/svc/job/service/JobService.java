@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.haier.common.ServiceResult;
 import com.haier.svc.job.model.JobLog;
+import com.haier.svc.job.model.SysJob;
 import com.haier.svc.job.model.SysJobEx;
 
 /**
@@ -22,4 +23,6 @@ public interface JobService {
 	boolean checkExists(SysJobEx job);
 
 	ServiceResult<List<JobLog>> findJobLog(Map<String, Object> params);
+
+	SysJob getById(Integer jobId);
 }

@@ -2,6 +2,8 @@ package com.haier.shop.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+
 /*
 * 作者:张波
 * 2017/12/19
@@ -1839,5 +1841,79 @@ public class OrderProductsNew implements Serializable{
         this.djAmount = djAmount;
     }
 
+    /**
+     * 订单号
+     */
+    private String orderSn;
 
+    public String getOrderSn() {
+        return orderSn;
+    }
+
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
+    }
+
+    /**
+     * 类型名称
+     */
+    private String typeName;
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    /**
+     * 拆单标识
+     */
+    private Integer isCd;
+
+    public Integer getIsCd() {
+        return isCd;
+    }
+
+    public void setIsCd(Integer isCd) {
+        this.isCd = isCd;
+    }
+
+    /**
+     * tb单号
+     */
+    private String tbOrderSn;
+
+    public String getTbOrderSn() {
+        return tbOrderSn;
+    }
+
+    public void setTbOrderSn(String tbOrderSn) {
+        this.tbOrderSn = tbOrderSn;
+    }
+
+    private String oid;
+
+    private int isSelfSell;
+
+    public int isSelfSell() {
+        return isSelfSell;
+    }
+
+    public void setSelfSell(int selfSell) {
+        isSelfSell = selfSell;
+    }
+
+    /**
+     * 天猫子订单号
+     * @return
+     */
+    public String getOid() {
+        return oid;
+    }
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
 }

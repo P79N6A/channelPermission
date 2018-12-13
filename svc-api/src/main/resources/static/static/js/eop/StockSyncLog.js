@@ -33,63 +33,63 @@ $('#gridView').datagrid({
             width: 120,
             field: 'sse',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '物料编码',
             width: 152,
             field: 'sku',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '外部产品编码',
             width: 120,
             field: 'sourceproductId',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '库位编码',
             width: 120,
             field: 'sCode',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '外部库位编码',
             width: 120,
             field: 'sourceStoreCode',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '库存同步数量',
             width: 120,
             field: 'ehaierStockNum',
             align: 'left'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '记录时间',
             width: 162,
             field: 'addTime',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '同步结果',
             width: 120,
             field: 'stockSyncResult',
             align: 'center'
-            , sortable: true
+            , sortable: false
         },
         {
             title: '备注',
             width: 	120,
             field: 'textInfo',
             align: 'center'
-            , sortable: true
+            , sortable: false
         }
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
@@ -108,23 +108,23 @@ $(function () {
         onSelectPage: function (pageNo, pageSize) {
 
             var start = (pageNo - 1) * pageSize;//页码分页自增
-            var sse = $('#sse').val();
+            var sse = $('#sse').combobox('getValue');
             var sourceproductId = $('#sourceproductId').val();
             var sku = $('#sku').val();
             var scode = $('#scode').val();
             var sourceStoreCode = $('#sourceStoreCode').val();
             var stockSyncResult = $('#stockSyncResult').combobox('getValue');
             if (sku != "") {
-                sku =  sku + "%";
+                sku =  sku ;
             }
             if (sourceproductId != "") {
-            	sourceproductId = sourceproductId+"%";
+            	sourceproductId = sourceproductId;
             }
             if (sse != "") {
-            	sse = sse+"%";
+            	sse = sse;
             }
            if(sourceStoreCode != ""){
-        	   sourceStoreCode=sourceStoreCode+"%";
+        	   sourceStoreCode=sourceStoreCode;
            }
             var options = $('#gridView').datagrid('getPager').data("pagination").options;
             $.ajax({
@@ -316,8 +316,8 @@ $("#oDialog").css('display', 'none');
 
 //物料条件
 function product() {
-    var sku = $("#sku1").val() == '' ? '%' : $("#sku1").val() + '%';
-    var productName = $("#productName1").val() == '' ? '%' : $("#productName1").val() + '%';
+    var sku = $("#sku1").val() == '' ? '' : $("#sku1").val();
+    var productName = $("#productName1").val() == '' ? '' : $("#productName1").val() ;
     $.ajax({
         type: 'POST',
         async: true,
@@ -527,7 +527,7 @@ function jiaoyan(sku){
 
 }
 function SearchClear() {
-	$('#sse').val('');
+	$('#sse').combobox('setValue',"");
     $('#sku').val('');
     $('#stockSyncResult').combobox('setValue', "成功");
     $('#sourceproductId').val(""); 
@@ -539,7 +539,7 @@ function SearchClear() {
 }
 //主表查询
 function SearchUnit() {
-	 var sse = $('#sse').val();
+	 var sse = $('#sse').combobox('getValue');
      var sourceproductId = $('#sourceproductId').val();
      var sku = $('#sku').val();
      var scode = $('#scode').val();
@@ -553,17 +553,26 @@ function SearchUnit() {
      	autoAlt('结束时间必须选择！'); 
      	return;
       }
+     var addTimeStart1 = $("#addTimeStart").datetimebox('getValue');
+     var addTimeStart = Date.parse(new Date(addTimeStart1))/1000;
+     var addTimeEnd1 = $("#addTimeEnd").datetimebox('getValue');
+     var addTimeEnd = Date.parse(new Date(addTimeEnd1))/1000;
+     if (addTimeStart >= addTimeEnd){
+         autoAlt('开始时间必须大于结束时间');
+         return;
+     }
+
      if (sku != "") {
-         sku =  sku + "%";
+         sku =  sku ;
      }
      if (sourceproductId != "") {
-     	sourceproductId = sourceproductId+"%";
+     	sourceproductId = sourceproductId;
      }
      if (sse != "") {
-     	sse = sse+"%";
+     	sse = sse;
      }
     if(sourceStoreCode != ""){
- 	   sourceStoreCode=sourceStoreCode+"%";
+ 	   sourceStoreCode=sourceStoreCode;
     }
     var options = $('#gridView').datagrid('getPager').data("pagination").options;
     options.pageNumber = 1;
@@ -576,9 +585,9 @@ function SearchUnit() {
         	 page: options.pageNumber,
              rows: options.pageSize,
              'sse': sse,
-             'sourceproductId': sourceproductId,
+             'sourceProductId': sourceproductId,
              'sku':sku,
-             'scode':scode,
+             'sCode':scode,
              'sourceStoreCode':sourceStoreCode,
              'stockSyncResult':stockSyncResult,
              'addTimeStart':$('#addTimeStart').datetimebox('getValue'),

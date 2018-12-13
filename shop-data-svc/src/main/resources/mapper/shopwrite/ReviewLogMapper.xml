@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.haier.shop.dao.workorder.WoReviewLogDao" >
+  <resultMap id="ReviewLogReadDao" type="com.haier.shop.dto.LogBean" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="userName" property="username" jdbcType="VARCHAR" />
+    <result column="mkName" property="mkname" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="logtime" property="logtime" jdbcType="TIMESTAMP" />
+    <result column="fkid" property="fkid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userName, mkName, type, content, logtime, fkid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ReviewLogReadDao" parameterType="Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wo_reviewlog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="Long" >
+    delete from wo_reviewlog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert">
+    insert into wo_reviewlog (id, userName, mkName,
+      type, content, logtime, 
+      fkid)
+    values (#{id}, #{username,jdbcType=VARCHAR}, #{mkname,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{logtime,jdbcType=TIMESTAMP}, 
+      #{fkid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective">
+    insert into wo_reviewlog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        userName,
+      </if>
+      <if test="mkname != null" >
+        mkName,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="logtime != null" >
+        logtime,
+      </if>
+      <if test="fkid != null" >
+        fkid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mkname != null" >
+        #{mkname,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="logtime != null" >
+        #{logtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fkid != null" >
+        #{fkid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update wo_reviewlog
+    <set >
+      <if test="username != null" >
+        userName = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mkname != null" >
+        mkName = #{mkname,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="logtime != null" >
+        logtime = #{logtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fkid != null" >
+        fkid = #{fkid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey">
+    update wo_reviewlog
+    set userName = #{username,jdbcType=VARCHAR},
+      mkName = #{mkname,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      logtime = #{logtime,jdbcType=TIMESTAMP},
+      fkid = #{fkid,jdbcType=VARCHAR}
+    where id = #{id}
+  </update>
+  
+  <sql id="search_where">
+			<if test="record.username != null">
+			 	<!-- and userName = #{record.username} -->
+			 	and userName like concat('%',#{record.username},'%')
+			</if>
+			<if test="record.type != null">
+			 	and type = #{record.type} 
+			</if>
+			<if test="record.mkname != null">
+			 	and mkName = #{record.mkname} 
+			</if>
+			<if test="record.logtime != null">
+			 	and logtime = #{record.logtime} 
+			</if>
+			<if test="record.fkid != null">
+			 	and fkid = #{record.fkid} 
+			</if>
+	</sql>
+	<sql id="pagination_Tail">
+	  <![CDATA[ limit #{pager.start},#{pager.pageSize}]]>
+	</sql>
+  <select id="findPageList" resultMap="ReviewLogReadDao">
+		select 
+		<include refid="Base_Column_List" /> 
+			from `wo_reviewlog`
+		  where 1 = 1
+		  <if test="startTime!=null">
+				and `logtime` <![CDATA[>=]]> #{startTime}
+		  </if>
+		  <if test="endTime!=null">
+				and `logtime` <![CDATA[<=]]> #{endTime}
+		  </if>
+		  
+			<if test="record.username != null">
+			 	and userName like concat('%',#{record.username},'%')
+			</if>
+			<if test="record.type != null">
+			 	and type = #{record.type} 
+			</if>
+			<if test="record.mkname != null">
+			 	and mkName = #{record.mkname} 
+			</if>
+			<if test="record.fkid != null">
+			 	and content like concat('%',#{record.fkid},'%')
+			</if>
+		ORDER BY logtime desc
+		<include refid="pagination_Tail" />
+		
+	</select>
+	<select id="findPageCount" resultType="int">
+		select count(1) 
+			from `wo_reviewlog`
+		  where 1 = 1
+		  		  <if test="startTime!=null">
+				and `logtime` <![CDATA[>=]]> #{startTime}
+		  </if>
+		  <if test="endTime!=null">
+				and `logtime` <![CDATA[<=]]> #{endTime}
+		  </if>
+		  
+			<if test="record.username != null">
+			 	and userName like concat('%',#{record.username},'%')
+			</if>
+			<if test="record.type != null">
+			 	and type = #{record.type} 
+			</if>
+			<if test="record.mkname != null">
+			 	and mkName = #{record.mkname} 
+			</if>
+			<if test="record.fkid != null">
+			 	and content like concat('%',#{record.fkid},'%')
+			</if>
+	</select>
+  
+</mapper>

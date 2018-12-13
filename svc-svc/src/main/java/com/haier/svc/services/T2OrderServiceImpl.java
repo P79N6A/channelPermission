@@ -322,7 +322,7 @@ public class T2OrderServiceImpl implements T2OrderService {
 			// transactionManager.getTransaction(def);
 			for (T2OrderItem t2OrderItem : t2OrderItems) {
 				try {
-					if (t2OrderItem.getFlow_flag() == 0 || t2OrderItem.getFlow_flag() == null) {
+					if (t2OrderItem.getFlow_flag() == null || t2OrderItem.getFlow_flag() == 0) {
                         // 提报状态（0：未提交）
                         t2OrderItem.setFlow_flag(FLOW_FLAG_NOCOMMITED);
                     }
@@ -674,8 +674,7 @@ public class T2OrderServiceImpl implements T2OrderService {
 			}
 			List<QueryOrderParameter> findQueryOrderList = shopOrdersService
 					.getFindQueryOrderList(queryOrder);
-			Integer count = shopOrdersService
-					.getFindQueryOrderListCount(queryOrder);
+			Integer count = shopOrdersService.getRowCnts();
 			result.setResult(findQueryOrderList);
 			PagerInfo pi = new PagerInfo();
 			pi.setRowsCount(count != null ? count : 0);
@@ -950,6 +949,10 @@ public class T2OrderServiceImpl implements T2OrderService {
 										.getCancelOrderId());
 								reviewedItem.setCancelFlag(reviewedOrder
 										.getCancelFlag());
+								reviewedItem.setAudit_user(String.valueOf(params
+										.get("audit_user")));
+								reviewedItem.setAudit_remark(String.valueOf(params
+										.get("audit_remark")));
 
 								orders.add(reviewedItem);
 							}
@@ -1384,6 +1387,7 @@ public class T2OrderServiceImpl implements T2OrderService {
 								vbeln, vbelnDN);
 
                         insertInterface("款先订单CRM手工采购出参","款先直发订单",message.value);
+                        result.setMessage(message.value);
 
 //                        log.info("CRM开单结果：" + flag.value);
 						// CRM开单成功
@@ -1410,7 +1414,7 @@ public class T2OrderServiceImpl implements T2OrderService {
 									message, vbeln, vbelnDN);
 
                             insertInterface("款先订单CRM手工采购出参","款先直发订单",message.value);
-
+                            result.setMessage(message.value);
 //							log.info("CRM开单结果：" + flag.value);
 							// 测试
 							/*
@@ -1750,7 +1754,7 @@ public class T2OrderServiceImpl implements T2OrderService {
 										sb.toString(), order_id);
 
                                 insertInterface("款先订单推送OMS出参","款先直发订单",omsResult.getMessage());
-
+                                result.setMessage(omsResult.getMessage());
 								if (omsResult.getSuccess()) {
 									reviewedOrder.setAudit_user(String
 											.valueOf(params.get("audit_user")));
@@ -1774,6 +1778,7 @@ public class T2OrderServiceImpl implements T2OrderService {
 									reviewedOrder.setError_msg(omsResult
 											.getMessage());
 									result.setSuccess(false);
+                                    result.setResult(false);
 								}
 							}
 						} else {
@@ -1803,6 +1808,7 @@ public class T2OrderServiceImpl implements T2OrderService {
 			}
 		} catch (Exception e) {
 			result.setSuccess(false);
+            result.setResult(false);
 			result.setMessage(e.getMessage());
 			log.error("审核订单失败：", e);
 		}
@@ -1967,4 +1973,16 @@ public class T2OrderServiceImpl implements T2OrderService {
         }
         return result;
     }
+
+	@Override
+	public List<T2OrderItem> getT2WdOrderId(Map<String, Object> params) {
+		return purchaseT2OrderService.getT2WdOrderId(params);
+	}
+
+	@Override
+	public List<InvStockChannel> getzChannelMap() {
+		List<InvStockChannel> InvStockChannel = stockInvStockChannelService
+				.getAll();
+		return InvStockChannel;
+	}
 }

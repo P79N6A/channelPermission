@@ -39,4 +39,19 @@ public interface InvRrsWarehouseDao {
 	
 	 List<InvRrsWarehouse> getRrsWhByEstorgeId(Map<String, Object> params);
 
+	List<InvRrsWarehouse> getPurRrsWhByEstorgeId(Map<String, Object> params);
+
+	Integer countTotal(Map<String, Object> params);
+
+	Integer checkMainKey(Map<String, Object> params);
+
+	void insertInvRrsWarehouse(Map<String, Object> params);
+
+	void updateInvRrsWarehouse(Map<String, Object> params);
+
+	void deleteInvRrsWarehouse(Map<String, Object> params);
+
+	Integer countT2Status(Map<String, Object> params);
+
+	List<InvRrsWarehouse>  selectRrsWhByEstorgeExport(Map<String, Object> params);
 }

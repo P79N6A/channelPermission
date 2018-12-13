@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+    <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+    <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
+    <title>差评信息导出</title>
+
+    <style type="text/css">
+
+    </style>
+
+</head>
+<body class="iframe-body">
+
+
+    <div data-original-title="" class="box-header well">
+        <h2>差评信息导出</h2>
+    </div>
+
+
+    <form id="filterForm" class="param-form" action="/operationArea/exportBadCommentsList" method="post">
+        <div class="search-panel">
+            <div class="search-row" style="width: 100%">
+                <span class="search-row-label" style="float:left;font-weight:bold;font-size:16px;">
+                  来源订单号:
+                </span>
+                <textarea rows="18" name="sourceOrderSns" id="sourceOrderSns" style="resize: none;width:600px;"></textarea>
+                <div style="margin-left:120px">
+
+                    <span style="color: red">每行一条来源订单号，多条用回车分割。</span>
+                    <div class="clearfix"></div>
+                    <input type="button" value="提交" id="submitButton" onClick="onSend()"
+                           style="margin-left:150px;padding: 5px 20px;border: 0;border-radius: 4px;">
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+
+        function onSend() {
+            if ($('#sourceOrderSns').val() == '') {
+                alert("来源订单号不能为空");
+                return false;
+            }
+            document.getElementById("filterForm").submit();
+            return false;
+        }
+    </script>
+
+    <!-- 需引入的js -->
+    <script src="/static/third/easyui/jquery.min2.js"></script>
+    <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+    <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/static/third/easyui/glo.js"></script>
+    <script src="/static/third/easyui/comm.js"></script>
+    <script src="/static/third/easyui/commgrid.js"></script>
+    <script src="/static/third/easyui/jQuery.Form.js"></script>
+    <script src="/static/js/pop/common/pop.js"></script>
+    <script src="/static/js/bootstrap-datepicker.js"></script>
+</body>
+</html>

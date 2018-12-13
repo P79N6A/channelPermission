@@ -8,5 +8,4 @@ import java.util.List;
 public interface LesShippingInfosRradDao {
     public List<LesShippingInfos> getByCorderSn(@Param("corderSn") String corderSn);
 
-    public Integer insert(LesShippingInfos lesShippingInfos);
 }

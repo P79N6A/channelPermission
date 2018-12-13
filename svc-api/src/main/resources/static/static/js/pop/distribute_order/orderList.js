@@ -7,22 +7,22 @@ var datagridOptions_orderForecastGoal = {
     //     field: 'id', checkbox: true
     // }]],
     columns: [[
-        {title: '订单号 ', field: 'orderSn', sortable: true},
-//        {title: '货到付款', field: 'isCodDisplay', sortable: true},
-//        {title: '预定', field: 'book', sortable: true},
-        {title: '订单来源', field: 'source', sortable: true},
-        {title: '来源订单号', field: 'sourceOrderSn', sortable: true},
-//        {title: '发票类型', field: 'invoiceType', sortable: true},
-        {title: '下单时间', field: 'addTimeStart', sortable: true},
-//        {title: '同步到商城时间', field: 'syncShopTime', sortable: true},
-        {title: '首次确认时间', field: 'firstTureTime', sortable: true},
-        {title: '确认时间', field: 'sureTime', sortable: true},
-//        {title: '首次确认时间', field: 'firstConfirmTime', sortable: true,align: "center"},
-//        {title: '会员等级', field: 'memberLevel', sortable: true},
-        {title: '订单金额', field: 'orderAmount', sortable: true, align: 'right'},
-//        {title: '订单类型', field: 'orderType', sortable: true},
+        {title: '订单号 ', field: 'orderSn', sortable: false},
+//        {title: '货到付款', field: 'isCodDisplay', sortable: false},
+//        {title: '预定', field: 'book', sortable: false},
+        {title: '订单来源', field: 'source', sortable: false},
+        {title: '来源订单号', field: 'sourceOrderSn', sortable: false},
+//        {title: '发票类型', field: 'invoiceType', sortable: false},
+        {title: '下单时间', field: 'addTimeStart', sortable: false},
+//        {title: '同步到商城时间', field: 'syncShopTime', sortable: false},
+        {title: '首次确认时间', field: 'firstTureTime', sortable: false},
+        {title: '确认时间', field: 'sureTime', sortable: false},
+//        {title: '首次确认时间', field: 'firstConfirmTime', sortable: false,align: "center"},
+//        {title: '会员等级', field: 'memberLevel', sortable: false},
+        {title: '订单金额', field: 'orderAmount', sortable: false, align: 'right'},
+//        {title: '订单类型', field: 'orderType', sortable: false},
         {
-            title: '订单状态', field: 'orderStatus', sortable: true,
+            title: '订单状态', field: 'orderStatus', sortable: false,
             formatter: function (val, rec) {
                 if (val == "200" || val == "0") {
                     return "未确认";
@@ -39,11 +39,11 @@ var datagridOptions_orderForecastGoal = {
                 }
             }
         },
-        {title: '订单操作', field: 'operation', sortable: true, width: 130},
-        {title: '关联订单号', field: 'oid', sortable: true},
-        {title: '物流编号', field: 'expressNo', sortable: true},
+        {title: '订单操作', field: 'operation',align:'center', sortable: false, width: 130},
+        {title: '关联订单号', field: 'oid', sortable: false},
+        {title: '物流编号', field: 'expressNo', sortable: false},
         {
-            title: '订单取消状态', field: 'cancelStatus', sortable: true,
+            title: '订单取消状态', field: 'cancelStatus', sortable: false,
 //        	101申请中，102已确认，103拒绝，104退货完成
             formatter: function (val, rec) {
                 if (val == "206") {
@@ -55,9 +55,9 @@ var datagridOptions_orderForecastGoal = {
                 }
             }
         },
-        {title: '订单取消操作', field: 'cancelOperation', sortable: true, width: 130}  //订单状态的更新更网单状态的更新在业务上有些关联，暂不确定，故先注释掉
-//        {title: '支付状态', field: 'payStatus', sortable: true},
-//        {title: '已确认次数', field: 'haveConfirmTime', sortable: true}
+        {title: '订单取消操作', field: 'cancelOperation', sortable: false, width: 130}  //订单状态的更新更网单状态的更新在业务上有些关联，暂不确定，故先注释掉
+//        {title: '支付状态', field: 'payStatus', sortable: false},
+//        {title: '已确认次数', field: 'haveConfirmTime', sortable: false}
     ]],
     toolbar: '#datagridToolbar_orderForecastGoal',
     striped: true,
@@ -257,22 +257,22 @@ function SearchUnit() {
             addTimeEnd: addTimeEndData
         },
         columns: [[
-            {title: '订单号 ', field: 'orderSn', sortable: true},
-//        {title: '货到付款', field: 'isCodDisplay', sortable: true},
-//        {title: '预定', field: 'book', sortable: true},
-            {title: '订单来源', field: 'source', sortable: true},
-            {title: '来源订单号', field: 'sourceOrderSn', sortable: true},
-//        {title: '发票类型', field: 'invoiceType', sortable: true},
-            {title: '下单时间', field: 'addTimeStart', sortable: true},
-//        {title: '同步到商城时间', field: 'syncShopTime', sortable: true},
-            {title: '首次确认时间', field: 'firstTureTime', sortable: true},
-            {title: '确认时间', field: 'sureTime', sortable: true},
-//        {title: '首次确认时间', field: 'firstConfirmTime', sortable: true,align: "center"},
-//        {title: '会员等级', field: 'memberLevel', sortable: true},
-            {title: '订单金额', field: 'orderAmount', sortable: true, align: 'right'},
-//        {title: '订单类型', field: 'orderType', sortable: true},
+            {title: '订单号 ', field: 'orderSn', sortable: false},
+//        {title: '货到付款', field: 'isCodDisplay', sortable: false},
+//        {title: '预定', field: 'book', sortable: false},
+            {title: '订单来源', field: 'source', sortable: false},
+            {title: '来源订单号', field: 'sourceOrderSn', sortable: false},
+//        {title: '发票类型', field: 'invoiceType', sortable: false},
+            {title: '下单时间', field: 'addTimeStart', sortable: false},
+//        {title: '同步到商城时间', field: 'syncShopTime', sortable: false},
+            {title: '首次确认时间', field: 'firstTureTime', sortable: false},
+            {title: '确认时间', field: 'sureTime', sortable: false},
+//        {title: '首次确认时间', field: 'firstConfirmTime', sortable: false,align: "center"},
+//        {title: '会员等级', field: 'memberLevel', sortable: false},
+            {title: '订单金额', field: 'orderAmount', sortable: false, align: 'right'},
+//        {title: '订单类型', field: 'orderType', sortable: false},
             {
-                title: '订单状态', field: 'orderStatus', sortable: true,
+                title: '订单状态', field: 'orderStatus', sortable: false,
                 formatter: function (val, rec) {
                     if (val == "200" || val == "0") {
                         return "未确认";
@@ -289,11 +289,11 @@ function SearchUnit() {
                     }
                 }
             },
-            {title: '订单操作', field: 'operation', sortable: true, width: 130},
-            {title: '关联订单号', field: 'oid', sortable: true},
-            {title: '物流编号', field: 'expressNo', sortable: true},
+            {title: '订单操作', field: 'operation', align:'center',sortable: false, width: 130},
+            {title: '关联订单号', field: 'oid', sortable: false},
+            {title: '物流编号', field: 'expressNo', sortable: false},
             {
-                title: '订单取消状态', field: 'cancelStatus', sortable: true,
+                title: '订单取消状态', field: 'cancelStatus', sortable: false,
 //        	101申请中，102已确认，103拒绝，104退货完成
                 formatter: function (val, rec) {
                     if (val == "206") {
@@ -305,9 +305,9 @@ function SearchUnit() {
                     }
                 }
             },
-            {title: '订单取消操作', field: 'cancelOperation', sortable: true, width: 130}  //订单状态的更新更网单状态的更新在业务上有些关联，暂不确定，故先注释掉
-//        {title: '支付状态', field: 'payStatus', sortable: true},
-//        {title: '已确认次数', field: 'haveConfirmTime', sortable: true}
+            {title: '订单取消操作', field: 'cancelOperation', sortable: false, width: 130}  //订单状态的更新更网单状态的更新在业务上有些关联，暂不确定，故先注释掉
+//        {title: '支付状态', field: 'payStatus', sortable: false},
+//        {title: '已确认次数', field: 'haveConfirmTime', sortable: false}
         ]],
     });
 }

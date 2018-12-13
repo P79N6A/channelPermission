@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/static/third/adminlte/css/AdminLTE.min.css">
+        <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui.css">
+        <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_animation.css">
+        <link rel="stylesheet" href="/static/third/easyui/themes/insdep/easyui_plus.css">
+        <link rel="stylesheet" href="/static/third/easyui/themes/insdep/icon.css">
+        <link rel="stylesheet" href="/static/third/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/static/css/common.css">
+        <link rel="stylesheet" href="/static/third/bootstrap/css/bootstrap-datepicker.min.css">
+
+        <title>苏宁团购</title>
+        <script src="/static/third/easyui/jquery.min2.js"></script>
+        <script src="/static/third/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/static/third/easyui/jquery.easyui.min2.js"></script>
+        <script src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+##        <script src="/static/js/easyui-extention.js"></script>
+        <script src="/static/third/easyui/glo.js"></script>
+        <script src="/static/third/easyui/comm.js"></script>
+        <script src="/static/third/easyui/commgrid.js"></script>
+        <script src="/static/third/easyui/jQuery.Form.js"></script>
+        <script src="/static/js/pop/common/pop.js"></script>
+        <script src="/static/js/bootstrap-datepicker.js"></script>
+        <style type="text/css">
+            body {
+                color: #444444;
+            }
+
+            label {
+                font-weight: 600;
+            }
+
+            #fontclor {
+                font-color: #660000;
+            }
+        </style>
+    </head>
+
+    <body style="font-size:14px;">
+        ## <div class="easyui-layout"  style="width:100%;height:100%;font-color:red;">
+        <div
+            data-options="iconCls:'glyphicon glyphicon-search',collapsed:false,collapsible:false"
+            style="width:100%;height: 100%">
+            <table id="gridView" style="width:100%;height: 100%"></table>
+        </div>
+        <div id="datagridToolbar_orderForecastGoal">
+
+            <div class="slide_up_span open" onclick="slideUpSlideClk(this);">
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_line fa fa-window-minimize"></div>
+                <div class="slide_circle fa fa-map-marker"></div>
+            </div>
+            <div class="search-panel" style="font-size: 11px;">
+                <!-- <div style="height: 18px"></div> -->
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">来源店铺</span>
+                    <select id="csource" editable="false" class="easyui-combobox" name="csource" panelHeight="auto">
+                        <option value="">来源店铺</option>
+                        <option value="SNYG">海尔统帅苏宁旗舰店</option>
+                        <option value="SNHEGQ">海尔官旗苏宁旗舰店</option>
+                    </select>
+                </div>
+
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">团购名称</span>
+                    <input
+                        type="text"
+                        class="easyui-textbox"
+                        name="cgroupName"
+                        id="cgroupName"
+                        placeholder="团购名称"
+                        value=""/>
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">团购商品</span>
+                    <input type="text" class="easyui-textbox" name="csku" id="csku" alt="团购商品" value=""/>
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">订金开始时间</span>
+                    <input
+                        id="cdepositStartTime"
+                        name="cdepositStartTime"
+                        class="easyui-datetimebox"
+                        data-options="editable:false"
+                        style="height:26px;">
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+
+                    <span class="search-row-label_80">订金结束时间</span>
+                    <input
+                        id="cdepositEndTime"
+                        name="cdepositEndTime"
+                        class="easyui-datetimebox"
+                        data-options="editable:false"
+                        style="height:26px;">
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">尾款开始时间</span>
+                    <input
+                        id="cbalanceStartTime"
+                        name="cbalanceStartTime"
+                        class="easyui-datetimebox"
+                        data-options="editable:false"
+                        style="height:26px;">
+                </div>
+                <div class="search-row_nowidth mar_r6px">
+
+                    <span class="search-row-label_80">尾款结束时间</span>
+                    <input
+                        id="cbalanceEndTime"
+                        name="cbalanceEndTime"
+                        class="easyui-datetimebox"
+                        data-options="editable:false"
+                        style="height:26px;">
+                </div>
+
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">发货时机</span>
+                    <select
+                        id="cshippingOpporunity"
+                        class="easyui-combobox"
+                        name="cshippingOpporunity"
+                        style="height:24px;width: 140px"
+                        data-options="editable:false" >
+                        <option value="">发货时机</option>
+                        <option value="0">定金发货</option>
+                        <option value="1">尾款发货</option>
+                    </select>
+
+                </div>
+
+                <div class="search-row_nowidth mar_r6px">
+                    <span class="search-row-label_80">是否启用</span>
+                    <select
+                        id="cstatus"
+                        class="easyui-combobox"
+                        name="cstatus"
+                        style="height:24px;width: 140px"
+                        data-options="editable:false">
+                        <option value="">是否启用</option>
+                        <option value="1">开启</option>
+                        <option value="0">关闭</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div style="font-size:14px;width: 100%">
+                <a
+                    href="#"
+                    class="easyui-linkbutton"
+                    onclick="SearchUnit()"
+                    data-options="iconCls:'icon-search',plain:true">查询</a>
+                <a href="#" class="easyui-linkbutton" onclick="Add()" data-options="iconCls:'icon-add',plain:true">增加</a>
+                <a
+                    href="#"
+                    class="easyui-linkbutton"
+                    onclick="list()"
+                    data-options="iconCls:'icon-edit',plain:true">修改</a>
+                <a
+                    href="#"
+                    class="easyui-linkbutton"
+                    onclick="Delete()"
+                    data-options="iconCls:'icon-remove',plain:true">删除</a>
+                <a
+                    href="#"
+                    class="easyui-linkbutton"
+                    onclick="SearchClear()"
+                    data-options="iconCls:'icon-redo',plain:true">重置</a>
+
+            </div>
+        </div>
+
+        ## </div>
+
+        <!-- 新建&修改表格 -->
+        <div
+            id="oDialog4"
+            class="easyui-dialog"
+            title="修改"
+            style="width: 800px; height: 535px;font-size:14px; padding: 0px 0px;overflow-y: hidden"
+            closed="true"
+            center="true"
+            modal="true">
+            <div class="easyui-layout" style="width:100%;height:100%;display: block">
+
+                <div data-options="region:'center'" style="width:100%;height:100%;">
+                    <br>&nbsp;&nbsp;
+                    <label>来源店铺<span style="color: red;padding-right:10px">*</span></label>
+                    <select id="source" editable="false" class="easyui-combobox" name="source">
+                        <option value="">来源店铺</option>
+                        <option value="SNYG">海尔统帅苏宁旗舰店</option>
+                        <option value="SNHEGQ">海尔官旗苏宁旗舰店</option>
+                    </select>
+                    &nbsp;&nbsp;<label>团购名称<span style="color: red;padding-right:10px">*</span></label>
+                    <input
+                        type="text"
+                        data-options="validType:'length[1,255]'"
+                        class="easyui-textbox"
+                        name="groupName"
+                        id="groupName"
+                        placeholder="团购名称"
+                        value=""/>
+                    &nbsp;&nbsp;<label>团购商品sku<span style="color: red;padding-right:10px">*</span></label>
+                    <input
+                        type="text"
+                        class="easyui-textbox"
+                        name="sku"
+                        id="sku"
+                        alt="团购商品"
+                        value=""
+                        style="width: 170px"/>
+                    <br>
+                    <br>&nbsp;&nbsp;
+                    <label>订金金额<span style="color: red;padding-right:10px">*</span></label>
+                    <input
+                        type="text"
+                        placeholder="订金金额"
+                        class="easyui-textbox"
+                        name="depositAmount"
+                        id="depositAmount"
+                        value=""/>
+                    &nbsp;&nbsp;<label>尾款金额<span style="color: red;padding-right:10px">*</span></label>
+                    <input
+                        type="text"
+                        class="easyui-textbox"
+                        name="balanceAmount"
+                        id="balanceAmount"
+                        placeholder="尾款金额"
+                        value=""/>
+                    <br>
+                    <br>&nbsp;&nbsp;
+                    <label>订金开始时间<span style="color: red;padding-right:10px">*</span></label>
+                    <input
+                        id="depositStartTime"
+                        name="depositStartTime"
+                        class="easyui-datetimebox"
+                        value=""
+                        data-options="editable:false"
+                        style="height:26px;">
+                    &nbsp;&nbsp;<label>订金结束时间<span style="color: red;padding-right:10px">*</span></label>
+                    <input
+                        id="depositEndTime"
+                        name="depositEndTime"
+                        class="easyui-datetimebox"
+                        value=""
+                        data-options="editable:false"
+                        style="height:26px;">
+                    <br>
+                    <br>&nbsp;&nbsp;
+                    <label>尾款开始时间<span style="color: red;padding-right:10px">*</span></label>
+                    <input
+                        id="balanceStartTime"
+                        name="balanceStartTime"
+                        value=""
+                        class="easyui-datetimebox"
+                        data-options="editable:false"
+                        style="height:26px;">
+                    &nbsp;&nbsp;<label>尾款结束时间<span style="color: red;padding-right:10px">*</span></label>
+                    <input
+                        id="balanceEndTime"
+                        name="balanceEndTime"
+                        class="easyui-datetimebox"
+                        value=""
+                        data-options="editable:false"
+                        style="height:26px;">
+                    <br>
+                    <br>&nbsp;&nbsp;
+                    <label>发货时机<span style="color: red;padding-right:10px">*</span></label>
+                    <select
+                        id="shippingOpporunity"
+                        class="easyui-combobox"
+                        name="shippingOpporunity"
+                        style="height:24px;width: 140px"
+                        data-options="editable:false,panelHeight:65">
+                        <option value="1">尾款发货</option>
+                        <option value="0">定金发货</option>
+
+                    </select>&nbsp;&nbsp;
+                    <label>是否启用<span style="color: red;padding-right:10px">*</span></label>
+                    <select
+                        id="status"
+                        class="easyui-combobox"
+                        name="status"
+                        style="height:24px;width: 140px"
+                        data-options="editable:false,panelHeight:65">
+
+                        <option value="1">开启</option>
+                        <option value="0">关闭</option>
+                    </select>
+                    <br>
+                    <br>&nbsp;&nbsp;
+                    <label>套装商品<span style="color: red;padding-right:10px">*</span></label>
+                    &nbsp;&nbsp;&nbsp;
+                    <input id="" name="" type="button" value="添加商品栏" onclick='additem("tb")'/>
+                    <!-- <div id='update'> <div class="field-hints"> &nbsp;&nbsp;&nbsp;此套装包含的sku及其商品价格为： <br
+                    />&nbsp;&nbsp;&nbsp;<font color="red"><span id='price'></font> <br
+                    />&nbsp;&nbsp;&nbsp;请仔细按照对应的sku修改商品的价格！ </div> </div> &nbsp;&nbsp;&nbsp;请仔细认真填写套装商品Sku及其对应的商品价格 -->
+                    <table id="tb"></table>
+                    <input id="productSpec" name="productSpec" type="hidden" value="" class="easyui-textbox"/>
+                    <input id="id" type="text" hidden="hidden" value=""/>
+
+                </div>
+
+                <div id="dlg-buttons6" data-options="region:'south'" style="height:40px" align="right">
+                    <a
+                        href="javascript:void(0)"
+                        class="easyui-linkbutton"
+                        onclick="javascript:SetCodeValue4()"
+                        iconcls="icon-ok">保存</a>
+                    <a
+                        href="javascript:void(0)"
+                        class="easyui-linkbutton"
+                        iconcls="icon-cancel"
+                        onclick="javascript: $('#oDialog4').dialog('close')">关闭</a>
+                </div>
+
+            </div>
+        </div>
+
+        <div
+            id="oDialog"
+            class="easyui-dialog"
+            title="选择"
+            style="width: 500px; height: 440px; padding: 0px 0px; center:true;font-size:14px"
+            closed="true"
+            center="true"
+            modal="true">
+            <div class="easyui-layout" style="width:100%;height:100%;">
+                <div class="easyui-layout" style="width:100%;height:100%;">
+                    <div data-options="region:'north'" style="height:40px">
+
+                        <span class="search-row-label_80">物料编码</span>
+                        <input id="sku1" style="width:100px" type="text" data-options="prompt:'物料编码'">
+                        <span class="search-row-label_80">物料名称</span>
+                        <input id="productName1" style="width:100px" type="text" data-options="prompt:'物料名称'">
+                        <a href="#" class="easyui-linkbutton" onclick="product()" data-options="plain:true">查找</a>
+                    </div>
+
+                    <div data-options="region:'center'">
+                        <table
+                            class="easyui-datagrid"
+                            id="code"
+                            style="width:600px;height:auto"
+                            fit="true"
+                            data-options="singleSelect:true,region:'center'">
+                            <thead>
+                                <tr>
+                                    <th
+                                        data-options="field:'ck',checkbox:true ,width:50,
+                            checkOnSelect: true,
+                            selectOnCheck :true">选择
+                                    </th>
+                                    <th data-options="field:'sku',width:200">物料编码</th>
+                                    <th data-options="field:'productName',width:200">物料名称</th>
+                                    <th data-options="field:'productTypeid',width:200" hidden="hidden">品类的id</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <div id="dlg-buttons1" data-options="region:'south'" style="height:35px" align="right">
+                        <a
+                            href="javascript:void(0)"
+                            class="easyui-linkbutton"
+                            onclick="javascript:SetCodeValuep()"
+                            iconcls="icon-ok">确定</a>
+                        <a
+                            href="javascript:void(0)"
+                            class="easyui-linkbutton"
+                            iconcls="icon-cancel"
+                            onclick="javascript:$('#oDialog').dialog('close')">关闭</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            id="oDialog2"
+            class="easyui-dialog"
+            title="选择"
+            style="width: 210px; height: 300px;font-size:14px; padding: 0px 0px; center:true"
+            closed="true"
+            center="true"
+            modal="true">
+            <div class="easyui-layout" style="width:100%;height:100%;">
+
+                <div data-options="region:'center'">
+                    <div region="west" class="west" title="导航菜单" id="datetimepicker"></div>
+                </div>
+
+                <div id="dlg-buttons4" data-options="region:'south'" style="height:40px" align="right">
+                    <a
+                        href="javascript:void(0)"
+                        class="easyui-linkbutton"
+                        iconcls="icon-cancel"
+                        onclick="javascript:$('#oDialog2').dialog('close')">关闭</a>
+                </div>
+            </div>
+        </div>
+
+        <div
+            id="oDialog3"
+            class="easyui-dialog"
+            title="选择"
+            style="width: 210px; height: 300px;font-size:14px; padding: 0px 0px; center:true"
+            closed="true"
+            center="true"
+            modal="true">
+            <div class="easyui-layout" style="width:100%;height:100%;">
+
+                <div data-options="region:'center'">
+                    <div region="west" class="west" title="导航菜单" id="datetimepicker1"></div>
+                </div>
+                <input id="id" name="id"/>
+
+                <div id="dlg-buttons3" data-options="region:'south'" style="height:40px" align="right">
+                    <a
+                        href="javascript:void(0)"
+                        class="easyui-linkbutton"
+                        iconcls="icon-cancel"
+                        onclick="javascript:$('#oDialog3').dialog('close')">关闭</a>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function slideUpSlideClk(t) {
+                var $this = $(t);
+                if ($this.hasClass('open')) {
+                    $this.removeClass('open');
+                    setTimeout(function () {
+                        $this.addClass('close');
+                    }, 0);
+                    $(".search-panel").slideUp();
+                } else {
+                    $this.removeClass('close');
+                    setTimeout(function () {
+                        $this.addClass('open');
+                    }, 0);
+                    $(".search-panel").slideDown();
+                }
+                setTimeout(function () {
+                    $('#gridView').datagrid('resize');
+                }, 500);
+            }
+        </script>
+
+        <script src="/static/js/eop/SuningGroups.js"></script>
+    </body>
+</html>

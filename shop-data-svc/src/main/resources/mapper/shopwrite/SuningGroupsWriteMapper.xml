@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.shop.dao.shopwrite.SuNingGroupsWriteDao">
+  <resultMap id="BaseResultMap" type="com.haier.shop.model.SuningGroups">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="siteId" jdbcType="INTEGER" property="siteId" />
+    <result column="groupName" jdbcType="VARCHAR" property="groupName" />
+    <result column="sku" jdbcType="VARCHAR" property="sku" />
+    <result column="depositStartTime" jdbcType="INTEGER" property="depositStartTime" />
+    <result column="depositEndTime" jdbcType="INTEGER" property="depositEndTime" />
+    <result column="balanceStartTime" jdbcType="INTEGER" property="balanceStartTime" />
+    <result column="balanceEndTime" jdbcType="INTEGER" property="balanceEndTime" />
+    <result column="depositAmount" jdbcType="DECIMAL" property="depositAmount" />
+    <result column="balanceAmount" jdbcType="DECIMAL" property="balanceAmount" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="shippingOpporunity" jdbcType="TINYINT" property="shippingOpporunity" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.haier.shop.model.SuningGroups">
+    <result column="productSpecs" jdbcType="LONGVARCHAR" property="productSpecs" />
+  </resultMap>
+    
+  <sql id="Base_Column_List">
+    id, source, siteId, groupName, sku, depositStartTime, depositEndTime, balanceStartTime, 
+    balanceEndTime, depositAmount, balanceAmount, status, shippingOpporunity
+  </sql>
+  <sql id="Blob_Column_List">
+    productSpecs
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from suninggroups
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <sql id="pagination"> LIMIT #{start}, #{rows}  </sql>
+  <select id="Listf" resultMap="ResultMapWithBLOBs">
+      SELECT
+      `id`, `siteId`, `groupName`, `sku`, `depositStartTime`, `depositEndTime`,
+      `balanceStartTime`, `balanceEndTime`, `depositAmount`, `balanceAmount`,
+      `status`, `shippingOpporunity`, `productSpecs`, `source`
+      FROM `suninggroups`
+      WHERE 1=1
+      <if test="entity.source != null and entity.source !=''">
+          AND source=#{entity.source}
+      </if>
+      <if test="entity.sku != null and entity.sku !=''">
+          AND sku LIKE CONCAT('%',#{entity.sku},'%')
+      </if>
+      <if test="entity.groupName != null and entity.groupName !=''">
+          AND groupName LIKE CONCAT('%',#{entity.groupName},'%')
+      </if>
+      <if test="entity.depositStartTime != null and entity.depositStartTime >=0">
+          AND depositStartTime &gt;= #{entity.depositStartTime}
+      </if>
+      <if test="entity.depositEndTime != null and entity.depositEndTime >=0">
+          AND depositEndTime &lt;= #{entity.depositEndTime}
+      </if>
+      <if test="entity.balanceStartTime != null and entity.balanceStartTime >=0">
+          AND balanceStartTime &gt;= #{entity.balanceStartTime}
+      </if>
+      <if test="entity.balanceEndTime != null and entity.balanceEndTime >=0">
+          AND balanceEndTime &lt;= #{entity.balanceEndTime}
+      </if>
+      <if test="entity.shippingOpporunity != null and entity.shippingOpporunity !=-1">
+          AND shippingOpporunity=#{entity.shippingOpporunity}
+      </if>
+      <if test="entity.status != null">
+          AND status=#{entity.status}
+      </if>
+      ORDER BY balanceEndTime DESC
+      <include refid="pagination" />
+	</select>	
+  
+  <select id="getPagerCountS" resultType="int">
+  	SELECT count(id)
+		
+		FROM `suninggroups`
+		WHERE 1=1
+		<if test="entity.source != null and entity.source !=''">
+			AND source=#{entity.source}
+		</if>
+		<if test="entity.sku != null and entity.sku !=''">
+			AND sku LIKE CONCAT('%',#{entity.sku},'%')
+		</if>
+		<if test="entity.groupName != null and entity.groupName !=''">
+			AND groupName LIKE CONCAT('%',#{entity.groupName},'%')
+		</if>
+		<if test="entity.depositStartTime != null and entity.depositStartTime >=0">
+			AND depositStartTime &gt;= #{entity.depositStartTime}
+		</if>
+		<if test="entity.depositEndTime != null and entity.depositEndTime >=0">
+			AND depositEndTime &lt;= #{entity.depositEndTime}
+		</if>
+		<if test="entity.balanceStartTime != null and entity.balanceStartTime >=0">
+			AND balanceStartTime &gt;= #{entity.balanceStartTime}
+		</if>
+		<if test="entity.balanceEndTime != null and entity.balanceEndTime >=0">
+			AND balanceEndTime &lt;= #{entity.balanceEndTime}
+		</if>
+		<if test="entity.shippingOpporunity != null and entity.shippingOpporunity !=-1">
+			AND shippingOpporunity=#{entity.shippingOpporunity}
+		</if>
+		<if test="entity.status != null">
+			AND status=#{entity.status}
+		</if>
+  	
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from suninggroups
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.haier.shop.model.SuningGroups">
+    insert into suninggroups (id, source, siteId, 
+      groupName, sku, depositStartTime, 
+      depositEndTime, balanceStartTime, balanceEndTime, 
+      depositAmount, balanceAmount, status, 
+      shippingOpporunity, productSpecs)
+    values (#{id,jdbcType=INTEGER}, #{source,jdbcType=VARCHAR}, #{siteId,jdbcType=INTEGER}, 
+      #{groupName,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{depositStartTime,jdbcType=INTEGER}, 
+      #{depositEndTime,jdbcType=INTEGER}, #{balanceStartTime,jdbcType=INTEGER}, #{balanceEndTime,jdbcType=INTEGER}, 
+      #{depositAmount,jdbcType=DECIMAL}, #{balanceAmount,jdbcType=DECIMAL}, #{status,jdbcType=BIT}, 
+      #{shippingOpporunity,jdbcType=TINYINT}, #{productSpecs,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.haier.shop.model.SuningGroups">
+    insert into suninggroups
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="siteId != null">
+        siteId,
+      </if>
+      <if test="groupName != null">
+        groupName,
+      </if>
+      <if test="sku != null">
+        sku,
+      </if>
+      <if test="depositStartTime != null">
+        depositStartTime,
+      </if>
+      <if test="depositEndTime != null">
+        depositEndTime,
+      </if>
+      <if test="balanceStartTime != null">
+        balanceStartTime,
+      </if>
+      <if test="balanceEndTime != null">
+        balanceEndTime,
+      </if>
+      <if test="depositAmount != null">
+        depositAmount,
+      </if>
+      <if test="balanceAmount != null">
+        balanceAmount,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="shippingOpporunity != null">
+        shippingOpporunity,
+      </if>
+      <if test="productSpecs != null">
+        productSpecs,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="siteId != null">
+        #{siteId,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="depositStartTime != null">
+        #{depositStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="depositEndTime != null">
+        #{depositEndTime,jdbcType=INTEGER},
+      </if>
+      <if test="balanceStartTime != null">
+        #{balanceStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="balanceEndTime != null">
+        #{balanceEndTime,jdbcType=INTEGER},
+      </if>
+      <if test="depositAmount != null">
+        #{depositAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceAmount != null">
+        #{balanceAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="shippingOpporunity != null">
+        #{shippingOpporunity,jdbcType=TINYINT},
+      </if>
+      <if test="productSpecs != null">
+        #{productSpecs,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.shop.model.SuningGroups">
+    update suninggroups
+    <set>
+      <if test="source != null">
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="siteId != null">
+        siteId = #{siteId,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        groupName = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        sku = #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="depositStartTime != null">
+        depositStartTime = #{depositStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="depositEndTime != null">
+        depositEndTime = #{depositEndTime,jdbcType=INTEGER},
+      </if>
+      <if test="balanceStartTime != null">
+        balanceStartTime = #{balanceStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="balanceEndTime != null">
+        balanceEndTime = #{balanceEndTime,jdbcType=INTEGER},
+      </if>
+      <if test="depositAmount != null">
+        depositAmount = #{depositAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceAmount != null">
+        balanceAmount = #{balanceAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="shippingOpporunity != null">
+        shippingOpporunity = #{shippingOpporunity,jdbcType=TINYINT},
+      </if>
+      <if test="productSpecs != null">
+        productSpecs = #{productSpecs,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.haier.shop.model.SuningGroups">
+    update suninggroups
+    set source = #{source,jdbcType=VARCHAR},
+      siteId = #{siteId,jdbcType=INTEGER},
+      groupName = #{groupName,jdbcType=VARCHAR},
+      sku = #{sku,jdbcType=VARCHAR},
+      depositStartTime = #{depositStartTime,jdbcType=INTEGER},
+      depositEndTime = #{depositEndTime,jdbcType=INTEGER},
+      balanceStartTime = #{balanceStartTime,jdbcType=INTEGER},
+      balanceEndTime = #{balanceEndTime,jdbcType=INTEGER},
+      depositAmount = #{depositAmount,jdbcType=DECIMAL},
+      balanceAmount = #{balanceAmount,jdbcType=DECIMAL},
+      status = #{status,jdbcType=BIT},
+      shippingOpporunity = #{shippingOpporunity,jdbcType=TINYINT},
+      productSpecs = #{productSpecs,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.haier.shop.model.SuningGroups">
+    update suninggroups
+    set source = #{source,jdbcType=VARCHAR},
+      siteId = #{siteId,jdbcType=INTEGER},
+      groupName = #{groupName,jdbcType=VARCHAR},
+      sku = #{sku,jdbcType=VARCHAR},
+      depositStartTime = #{depositStartTime,jdbcType=INTEGER},
+      depositEndTime = #{depositEndTime,jdbcType=INTEGER},
+      balanceStartTime = #{balanceStartTime,jdbcType=INTEGER},
+      balanceEndTime = #{balanceEndTime,jdbcType=INTEGER},
+      depositAmount = #{depositAmount,jdbcType=DECIMAL},
+      balanceAmount = #{balanceAmount,jdbcType=DECIMAL},
+      status = #{status,jdbcType=BIT},
+      shippingOpporunity = #{shippingOpporunity,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

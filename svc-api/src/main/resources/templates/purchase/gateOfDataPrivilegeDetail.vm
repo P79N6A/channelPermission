@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>数据权限查看</title>
+    <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/gray/easyui.css"/>
+  <link rel="stylesheet" type="text/css" href="../static/third/easyui/themes/icon.css"/>
+  <script type="text/javascript" src="../static/third/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="../static/third/easyui/jquery.easyui.min.js"></script>
+  <script type="text/javascript" src="/static/third/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.form.js"></script>
+</head>
+<body>
+<table id="dataGrid"></table>
+<div id="tb" style="padding:5px;height:auto">
+    <form id="filterForm" action="#">
+        <a id='add' href="javascript:;" class="easyui-linkbutton" iconCls="icon-add"  onclick="add()">添加岗位</a>
+        <a id='edit' href="javascript:;" class="easyui-linkbutton" iconCls="icon-edit"  onclick="edit()">修改岗位</a>
+        <a id='remove' href="javascript:;" class="easyui-linkbutton" iconCls="icon-remove" onclick="removeThem()">删除岗位</a>
+        <a id='editUser' href="javascript:;" class="easyui-linkbutton" iconCls="icon-edit"  onclick="editUser()">岗位设定</a>
+    </form>
+</div>
+
+<script type="text/javascript">
+$(function () {
+	//datagrid
+	var datagrid = $('#dataGrid').datagrid({
+        url: "/gate/findGateOfDataPrivilege",
+        fit: true,
+        fitColumns: true,
+        toolbar: $('#tb'),
+        singleSelect: false,
+        nowrap: false,
+        rownumbers: true,
+		selectOnCheck: true,
+		checkOnSelect: true,
+        columns: [
+            [
+             {field:'check',title:'选择',width:40,align:'center',
+                 checkbox:true
+             },
+             	
+				{field:'role_id',title:'岗位ID',hidden:true},
+				{field:'role_name',title:'岗位',align:'center',width:100},
+				{field:'user_id',title:'用户ID',hidden:true},
+             	{field:'user_name',title:'用户',align:'center',width:100},
+				{field: 'gate_limit', title: '闸口忽视ID',hidden:true},
+				{field: 'gate_limit_name', title: '闸口忽视', width: 100, align: 'center'},
+				{field: 'ed_channel_id', title: '适用渠道ID',hidden:true},
+				{field: 'ed_channel_name', title: '适用渠道', width: 350, align: 'left'},
+				{field: 'product_group_id', title: '适用产品组ID',hidden:true},
+				{field: 'product_group_name', title: '适用产品组', width: 750, align: 'left'}
+        ]
+        ]
+    });
+	$('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+});
+function add(){
+	window.open("/gate/gotoEditGateOfDataPrivilege?operatorType=add",'_self');
+}
+function edit(){
+	var rows = $('#dataGrid').datagrid('getChecked');
+	if(rows.length==0 || rows.length > 1){
+		$.messager.alert('错误','请选择一条要修改的数据！','error');
+	}else{
+		var role_id = rows[0].role_id;
+		var role_name = rows[0].role_name;
+		var gate_limit = rows[0].gate_limit;
+		var productGroupIds = rows[0].product_group_id;
+		var channelIds = rows[0].ed_channel_id;
+
+		window.open("/gate/gotoEditGateOfDataPrivilege?operatorType=modify&role_id="+role_id+"&role_name="+role_name+"&productGroupIds="+productGroupIds+"&channelIds="+channelIds+"&gate_limit="+gate_limit,'_self');
+	}
+}
+function editUser(){
+	window.open("/gate/gotoGateOfUserPrivilege",'_self');
+}
+function removeThem(){
+	var removeIds = new Array();
+	var rows = $('#dataGrid').datagrid('getChecked');
+	$.each(rows,function(index, item){
+		removeIds.push(item.role_id);
+	});
+	//判断是否选择
+	if(removeIds==null||removeIds.length==0){
+		$.messager.alert('错误','请选择要删除的数据！','error');
+		return;
+	}
+	$.messager.confirm('确认','确定要删除吗？', function(r){
+		if (r){
+			 jQuery.ajax({
+	             url: "/gate/removeGateOfDataPrivilege",   
+	             type: "POST",                   // 设置请求类型为"POST"，默认为"GET"
+	             data:{"removeIds": JSON.stringify(removeIds)},
+	             success: function (data) {
+	 				var result = data.message;
+					if(result){
+						$.messager.alert('提示',result,'info', function(){
+							if(data.totalCount==1){
+				             	$('#dataGrid').datagrid('reload');
+				             	$('#dataGrid').parent().find("div .datagrid-header-check").children("input[type='checkbox']").eq(0).attr("checked", false);
+							}
+						});
+					}
+	             }
+	 		});
+		}
+	});
+}
+</script>
+</body>

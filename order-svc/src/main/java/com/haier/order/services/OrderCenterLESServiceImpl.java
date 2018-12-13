@@ -11,6 +11,8 @@ import com.haier.order.util.HttpServiceUtil;
 import com.haier.order.util.IExecute;
 import com.haier.order.util.WriteLogProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.dubbo.common.utils.StringUtils;
@@ -29,6 +31,7 @@ import com.haier.shop.model.QueryPayTimeToLes;
  * @Author: weiyunjun
  * @Email: weiyunjun@ehaier.com
  */
+@ConfigurationProperties(prefix = "url")
 @Service
 public class OrderCenterLESServiceImpl {
     private static org.apache.log4j.Logger log = org.apache.log4j.LogManager
